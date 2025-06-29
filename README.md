@@ -1,69 +1,85 @@
-# 🎬 Prepare Movies Task
+# 🎬 Cairo Squad – Movies App Preparation
 
-This project sets up the foundation for our Movies app. Each squad is responsible for handling a few key tasks before feature development begins.
+Welcome to our Movies app project!  
+We are **Cairo Squad** (part of the Movio team), and this README outlines the setup and responsibilities we've taken on during the preparation phase.
 
 ---
 
-## ✅ What to Do
+## ✅ What We've Done
 
-### 1. Modularization
-Set up the project using the structure assigned to your squad:
+### 🧱 Modularization: By Component
 
-- **By Feature**: Paris, Sanaa, Rome  
-- **By Component**: Amsterdam, Baghdad, Berlin, Cairo  
-- **By Layer (Presentation/Data/Domain)**: Moscow, London, Qudus, Washington DC  
+We followed the **By Component** structure:  
+Each part of the app (e.g., networking, UI components, image loader) is separated into reusable modules.
 
-### 2. Design System
-Use the design system for your squad:
+Examples:
+- `core_networking`
+- `core_ui`
+- `core_image_viewer`
+- `feature_home`
 
-- **Aflami** → Paris, Amsterdam, Berlin  
-- **Novix** → Sanaa, Baghdad, London  
-- **CineVerse** → Rome, Moscow, Qudus  
-- **Movio** → Cairo, Washington DC  
+---
 
-> Presentation modules should only depend on the `design_system` module — **do not add Material 3 directly**.
+### 🎨 Design System: Movio
 
-### 3. Firebase Integration
-Integrate these Firebase tools:
+As part of the **Movio** team, we implemented the **Movio design system** in a separate `design_system` module.
+
+✅ Presentation modules **only depend on `design_system`**.  
+🚫 We did **not** add Material 3 directly to any screen.
+
+---
+
+### 🔥 Firebase Setup
+
+We integrated the following Firebase tools into the app:
+
 - App Performance Monitoring  
 - Analytics  
 - Crashlytics  
 
-### 4. CI/CD Setup
+---
 
-- ✅ CI must check that the app **builds** before merging into `develop`.
-- ✅ Test coverage must be **over 80%** to allow merging.
-- ✅ CD should build and upload a new APK/app bundle to **Firebase App Distribution** after merging.
+### ⚙️ CI/CD Setup
+
+#### ✅ CI (Continuous Integration)
+
+- Checks that the project **builds** before merging into `develop`.
+- Ensures **test coverage is above 80%** — otherwise, merging is blocked.
+
+#### 🚀 CD (Continuous Deployment)
+
+- When a PR is approved and merged into `develop`, a new **APK/app bundle** is automatically built and uploaded to **Firebase App Distribution**.
 
 ---
 
-## ⭐ Extra Task
+## ⭐ Extra Work: Custom Image Viewer
 
-Create a new module:  
-**Image Viewer Library** using Coil.
+We created a new module: `core_image_viewer`
 
-- Should expose one `Image` composable.
-- Use on-device machine learning to **blur images** that may be inappropriate in **Islamic culture**.
+- Built on top of **Coil**
+- Exposes a single `Image` composable
+- Uses on-device ML to **blur inappropriate content** (based on Islamic culture)
 
 ---
 
-## 🧰 Required Libraries
+## 🧰 Libraries We Used
 
-Make sure to use:
-
-- `ktor` → Networking  
-- `koin` → Dependency Injection  
-- `Navigation 2` → Navigation  
-- `Coil` → Image Loading  
+| Purpose         | Library   |
+|----------------|-----------|
+| Networking      | ktor      |
+| Dependency Injection | koin  |
+| Navigation      | Navigation 2 |
+| Image Loading   | Coil      |
 
 ---
 
 ## 🧠 Notes
 
-- Don’t rush — it’s okay if some members don’t have tasks this week.
-- Focus only on the tasks listed above.
-- Keep code clean and modular.
+- We focused only on the required tasks.
+- Some teammates didn’t have tasks this week — and that’s totally okay.
+- Code is clean, modular, and ready for feature development.
 
 ---
 
-Let’s build something great — together! 🚀
+### 🏁 We're ready for the next sprint!  
+**– Cairo Squad 🚀**
