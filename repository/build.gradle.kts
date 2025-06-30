@@ -12,5 +12,5 @@ kotlin {
     }
 }
 dependencies {
-    implementation(project(":domain:usecase"))
+    implementation(project(":usecase"))
 }
