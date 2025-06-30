@@ -1,7 +1,7 @@
 plugins {
     id("java-library")
     alias(libs.plugins.jetbrains.kotlin.jvm)
-    jacoco                                           // ↙️ فعّلي Jacoco
+    jacoco
 }
 
 java {
@@ -18,7 +18,6 @@ kotlin {
 dependencies {
     implementation(project(":domain:usecase"))
 
-    // 🧪 Unit‑test deps
     testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
 }
@@ -27,10 +26,9 @@ jacoco {
     toolVersion = "0.8.10"
 }
 
-/** ❶ شغّلي JUnit 5 */
 tasks.test {
     useJUnitPlatform()
-    finalizedBy("jacocoTestReport")               // يولِّد التقرير بعد التستات
+    finalizedBy("jacocoTestReport")
 }
 
 /** ❷ عدّلي التاسك الجاهز بدل ما تعيدي تعريفه */

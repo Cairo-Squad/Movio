@@ -50,7 +50,6 @@ dependencies {
 
     implementation(project(":domain:usecase"))
 
-    //  Unit test
     testImplementation(kotlin("test"))
     testImplementation("junit:junit:4.13.2")
 }

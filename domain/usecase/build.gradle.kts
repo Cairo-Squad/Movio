@@ -18,7 +18,6 @@ kotlin {
 dependencies {
     api(project(":domain:entity"))
 
-    // 🧪 Unit test deps
     testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
 }
