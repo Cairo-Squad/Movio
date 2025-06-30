@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    jacoco
 }
 
 android {
@@ -9,7 +10,6 @@ android {
 
     defaultConfig {
         minSdk = 26
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -23,21 +23,67 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
+    // test Android Studio
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.10"
 }
 
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+
     implementation(project(":domain:usecase"))
+
+    //  Unit test
+    testImplementation(kotlin("test"))
+    testImplementation("junit:junit:4.13.2")
+}
+
+/**
+ * Jacoco reports (unit test)
+ */
+tasks.register<JacocoReport>("jacocoTestReport") {
+    dependsOn("testDebugUnitTest") // test Android library
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+
+    val fileFilter = listOf("**/R.class", "**/BuildConfig.*", "**/*Test*.*")
+
+    classDirectories.setFrom(
+        fileTree("${buildDir}/intermediates/classes/debug") {
+            exclude(fileFilter)
+        }
+    )
+
+    sourceDirectories.setFrom(
+        files(
+            "src/main/java",
+            "src/main/kotlin"
+        )
+    )
+
+    executionData.setFrom(
+        fileTree(buildDir) {
+            include("jacoco/testDebugUnitTest.exec")
+        }
+    )
 }
