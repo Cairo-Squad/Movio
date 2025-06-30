@@ -11,12 +11,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 11
 
       - name: Cache Gradle
         uses: actions/cache@v4
@@ -28,8 +30,61 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Run tests & generate merged coverage
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      - name: Verify compilation
+        run: ./gradlew assemble --stacktrace
+
+      - name: Run tests and generate coverage reports
+        run: ./gradlew test --stacktrace
+
+      - name: Generate aggregated coverage report
         run: ./gradlew jacocoMergedReport
 
-      - name: Run tests and enforce 80% coverage
-        run: ./gradlew clean jacocoMergedReport
+      - name: Check coverage threshold
+        run: |
+          # Find all XML coverage reports
+          coverage_files=$(find . -type f -name "jacocoTestReport.xml")
+          total_coverage=0
+          module_count=0
+          
+          for file in $coverage_files; do
+            # Extract line coverage percentage using xmllint
+            if [ -f "$file" ]; then
+              coverage=$(xmllint --xpath '//*[local-name()="counter"][@type="LINE"]/@covered' "$file" | grep -o '[0-9]\+')
+              missed=$(xmllint --xpath '//*[local-name()="counter"][@type="LINE"]/@missed' "$file" | grep -o '[0-9]\+')
+              if [ -n "$coverage" ] && [ -n "$missed" ]; then
+                total_lines=$((coverage + missed))
+                if [ $total_lines -gt 0 ]; then
+                  percentage=$((100 * coverage / total_lines))
+                  echo "Coverage for $file: $percentage%"
+                  total_coverage=$((total_coverage + percentage))
+                  module_count=$((module_count + 1))
+                fi
+              fi
+            fi
+          done
+
+          # Calculate average coverage
+          if [ $module_count -gt 0 ]; then
+            avg_coverage=$((total_coverage / module_count))
+            echo "Average coverage across $module_count modules: $avg_coverage%"
+            if [ $avg_coverage -lt 80 ]; then
+              echo "Error: Test coverage ($avg_coverage%) is below the 80% threshold."
+              exit 1
+            else
+              echo "Test coverage ($avg_coverage%) meets the 80% threshold."
+            fi
+          else
+            echo "Error: No coverage reports found."
+            exit 1
+          fi
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-reports
+          path: |
+            **/build/reports/jacoco/**/jacocoTestReport.xml
+            **/build/reports/jacoco/**/html

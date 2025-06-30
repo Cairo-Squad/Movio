@@ -31,23 +31,19 @@ tasks.test {
     finalizedBy("jacocoTestReport")
 }
 
-/** ❷ عدّلي التاسك الجاهز بدل ما تعيدي تعريفه */
 tasks.named<JacocoReport>("jacocoTestReport") {
 
     dependsOn(tasks.test)
 
-    // 📝 شكل التقارير
     reports {
-        xml.required.set(true)                   // نحتاجه للـ CI
-        html.required.set(true)                  // للقراءة المحلية
+        xml.required.set(true)
+        html.required.set(true)
     }
 
-    // استبعد الملفات اللي ملهاش لازمة في الكڤرج
     val fileFilter = listOf(
         "**/R.class", "**/BuildConfig.*", "**/*Test*.*"
     )
 
-    /** أين توجد الـ .class */
     classDirectories.setFrom(
         files(
             fileTree("${buildDir}/classes/kotlin/main") {
@@ -56,10 +52,8 @@ tasks.named<JacocoReport>("jacocoTestReport") {
         )
     )
 
-    /** السورس */
     sourceDirectories.setFrom(files("src/main/java", "src/main/kotlin"))
 
-    /** ملفات الـ exec */
     executionData.setFrom(
         fileTree(buildDir) { include("jacoco/test.exec") }
     )

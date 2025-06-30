@@ -54,11 +54,8 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
 }
 
-/**
- * Jacoco reports (unit test)
- */
 tasks.register<JacocoReport>("jacocoTestReport") {
-    dependsOn("testDebugUnitTest") // test Android library
+    dependsOn("testDebugUnitTest")
 
     reports {
         xml.required.set(true)
