@@ -21,11 +21,11 @@ dependencyResolutionManagement {
 
 rootProject.name = "Movio"
 include(":app")
-include(":presentation:ui")
-include(":presentation:design_system")
-include(":presentation:viewmodel")
-include(":domain:usecase")
-include(":domain:entity")
-include(":data:repository")
-include(":data:remote")
+include(":ui")
+include(":design_system")
+include(":viewmodel")
+include(":usecase")
+include(":entity")
+include(":repository")
+include(":remote")
 include(":safe_image_viewer")
