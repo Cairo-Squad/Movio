@@ -41,4 +41,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(platform(libs.androidx.compose.bom))
 }
