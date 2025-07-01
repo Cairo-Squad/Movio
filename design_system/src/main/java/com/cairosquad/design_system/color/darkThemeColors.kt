@@ -8,8 +8,7 @@ val darkThemeColors = MovioColors(
         onPrimary = Color(0xFFEBE6FE),
         primaryContainer = Color(0xFF181D32),
         onPrimaryContainer = Color(0xFFEFEFF1),
-    ),
-    surfaces = Surfaces(
+    ), surfaces = Surfaces(
         surface = Color(0xFF080D24),
         onSurface = Color(0xFFF0F5FF),
         surfaceContainer = Color(0xFF1A162F),
@@ -22,8 +21,7 @@ val darkThemeColors = MovioColors(
         onSurfaceAt2 = Color(0x61FFFFFF),
         onSurfaceAt3 = Color(0x1FFFFFFF),
         onSurfaceAt4 = Color(0x991A162F)
-    ),
-    system = System(
+    ), system = System(
         error = Color(0xFF2A1010),
         onError = Color(0xFFFFDEDF),
         errorContainer = Color(0xFFEE7277),
