@@ -8,8 +8,7 @@ val lightThemeColors = MovioColors(
         onPrimary = Color(0xFFE6DFFF),
         primaryContainer = Color(0xFFD3CBF1),
         onPrimaryContainer = Color(0xFF292244)
-    ),
-    surfaces = Surfaces(
+    ), surfaces = Surfaces(
         surface = Color(0xFFFFFFFF),
         onSurface = Color(0xFF221D36),
         surfaceContainer = Color(0xFFFAF9FF),
@@ -22,8 +21,7 @@ val lightThemeColors = MovioColors(
         onSurfaceAt2 = Color(0x61ACABAC),
         onSurfaceAt3 = Color(0x1FACABAC),
         onSurfaceAt4 = Color(0x66919191)
-    ),
-    system = System(
+    ), system = System(
         error = Color(0xFFFEF4F2),
         onError = Color(0xFFB8311D),
         errorContainer = Color(0xFFEB5A44),
