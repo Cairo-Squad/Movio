@@ -15,10 +15,10 @@ import com.cairosquad.design_system.text_style.defaultTextStyle
 
 @Composable
 fun MovioTheme(
-    isDarkTheme: Boolean= isSystemInDarkTheme(),
-    content: @Composable ()-> Unit
-){
-    val theme=if (isDarkTheme) darkThemeColors else lightThemeColors
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    val theme = if (isDarkTheme) darkThemeColors else lightThemeColors
     CompositionLocalProvider(
         LocalMovioColor provides theme,
         LocalMovioTextStyle provides defaultTextStyle
