@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.cairosquad.design_system"
+    namespace = "com.cairosquad.ui"
     compileSdk = 35
 
     defaultConfig {
@@ -39,6 +39,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation(libs.androidx.material3)
-    implementation(libs.androidx.activity.compose)
+    implementation(project(":design_system"))
+    implementation(project(":viewmodel"))
 }

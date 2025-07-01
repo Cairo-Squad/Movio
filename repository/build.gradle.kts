@@ -3,20 +3,17 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.jvm)
     jacoco
 }
-
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
 }
-
 kotlin {
     compilerOptions {
         jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
     }
 }
-
 dependencies {
-    implementation(project(":data:repository"))
+    implementation(project(":usecase"))
     testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
 }
