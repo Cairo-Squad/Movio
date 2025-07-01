@@ -10,7 +10,10 @@ import org.tensorflow.lite.task.core.BaseOptions
 import org.tensorflow.lite.task.vision.classifier.ImageClassifier
 
 @Immutable
-internal class SafeImageClassifier(context: Context) {
+internal class SafeImageClassifier(
+    context: Context,
+    factory: ImageClassifierFactory = DefaultImageClassifierFactory()
+) {
     private val imageClassifier: ImageClassifier
 
     init {
@@ -24,7 +27,7 @@ internal class SafeImageClassifier(context: Context) {
             .build()
 
         val modelBuffer = FileUtil.loadMappedFile(context, MODEL)
-        imageClassifier = ImageClassifier.createFromBufferAndOptions(modelBuffer, options)
+        imageClassifier = factory.create(modelBuffer, options)
     }
 
     fun isInappropriate(
