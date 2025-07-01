@@ -12,5 +12,5 @@ kotlin {
     }
 }
 dependencies {
-    implementation(project(":data:repository"))
+    api(project(":entity"))
 }
