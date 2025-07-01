@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    id("org.jetbrains.kotlin.plugin.compose") // Adding Compose compiler plugin
 }
 
 android {
@@ -30,6 +31,12 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.8" // Use a version compatible with Kotlin 2.1.0
+    }
 }
 
 dependencies {
@@ -43,4 +50,10 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.foundation.layout.android)
     implementation(platform(libs.androidx.compose.bom))
+
+    // Add these Compose UI dependencies
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    debugImplementation(libs.androidx.ui.tooling)
 }
