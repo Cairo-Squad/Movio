@@ -9,14 +9,16 @@ import org.gradle.api.tasks.testing.Test
             alias(libs.plugins.jetbrains.kotlin.jvm) apply false
         }
 
-subprojects {
-    apply(plugin = "jacoco")
+        subprojects {
+            apply(plugin = "jacoco")
 
-    tasks.withType<Test>().configureEach {
-        useJUnitPlatform()
-        finalizedBy(tasks.named("jacocoTestReport"))
-    }
-}
+            tasks.withType<Test>().configureEach {
+                project.tasks.matching { it.name == "jacocoTestReport" }
+                    .firstOrNull()
+                    ?.let { finalizedBy(it) }
+            }
+        }
+
 
 tasks.register<JacocoReport>("jacocoMergedReport") {
     group = "verification"

@@ -36,55 +36,34 @@ jobs:
       - name: Verify compilation
         run: ./gradlew assemble --stacktrace
 
-      - name: Run tests and generate coverage reports
-        run: ./gradlew test --stacktrace
+      - name: Run tests + generate merged coverage
+        run: ./gradlew jacocoMergedReport --stacktrace
 
-      - name: Generate aggregated coverage report
-        run: ./gradlew jacocoMergedReport
+      - name: Install xmllint
+        run: sudo apt-get update && sudo apt-get install -y libxml2-utils
 
       - name: Check coverage threshold
         run: |
-          # Find all XML coverage reports
-          coverage_files=$(find . -type f -name "jacocoTestReport.xml")
-          total_coverage=0
-          module_count=0
-          
-          for file in $coverage_files; do
-            # Extract line coverage percentage using xmllint
-            if [ -f "$file" ]; then
-              coverage=$(xmllint --xpath '//*[local-name()="counter"][@type="LINE"]/@covered' "$file" | grep -o '[0-9]\+')
-              missed=$(xmllint --xpath '//*[local-name()="counter"][@type="LINE"]/@missed' "$file" | grep -o '[0-9]\+')
-              if [ -n "$coverage" ] && [ -n "$missed" ]; then
-                total_lines=$((coverage + missed))
-                if [ $total_lines -gt 0 ]; then
-                  percentage=$((100 * coverage / total_lines))
-                  echo "Coverage for $file: $percentage%"
-                  total_coverage=$((total_coverage + percentage))
-                  module_count=$((module_count + 1))
-                fi
-              fi
-            fi
-          done
-
-          # Calculate average coverage
-          if [ $module_count -gt 0 ]; then
-            avg_coverage=$((total_coverage / module_count))
-            echo "Average coverage across $module_count modules: $avg_coverage%"
-            if [ $avg_coverage -lt 80 ]; then
-              echo "Error: Test coverage ($avg_coverage%) is below the 80% threshold."
-              exit 1
-            else
-              echo "Test coverage ($avg_coverage%) meets the 80% threshold."
-            fi
-          else
-            echo "Error: No coverage reports found."
+          report="build/reports/jacoco/merged/jacocoTestReport.xml"
+          if [ ! -f "$report" ]; then
+            echo "Error: merged coverage report not found!"
             exit 1
           fi
+          covered=$(xmllint --xpath 'string(//counter[@type="LINE"]/@covered)' "$report")
+          missed=$(xmllint --xpath 'string(//counter[@type="LINE"]/@missed)' "$report")
+          total=$((covered + missed))
+          percent=$((100 * covered / total))
+          echo "Total line coverage: $percent%"
+          if [ $percent -lt 80 ]; then
+            echo "❌ Test coverage ($percent%) is below required 80%"
+            exit 1
+          fi
+          echo "✅ Test coverage ($percent%) meets threshold"
 
       - name: Upload coverage reports
         uses: actions/upload-artifact@v4
         with:
           name: coverage-reports
           path: |
-            **/build/reports/jacoco/**/jacocoTestReport.xml
+            **/build/reports/jacoco/**/*.xml
             **/build/reports/jacoco/**/html
