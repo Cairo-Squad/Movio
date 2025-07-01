@@ -20,53 +20,58 @@ import org.gradle.api.tasks.testing.Test
         }
 
 
-tasks.register<JacocoReport>("jacocoMergedReport") {
-    group = "verification"
-    description = "Generates an aggregated JaCoCo coverage report from all subprojects."
+        tasks.register<JacocoReport>("jacocoMergedReport") {
+            group = "verification"
+            description = "Aggregated JaCoCo coverage for selected modules."
 
-    val subprojectReports = subprojects.map { it.tasks.named<JacocoReport>("jacocoTestReport") }
-    dependsOn(subprojectReports)
+             val coveredModules = setOf("repository", "remote", "usecase", "viewmodel")
 
-    val fileFilter = listOf(
-        "**/R.class", "**/BuildConfig.*", "**/*Test*.*"
-    )
+            val fileFilter = listOf("**/R.class", "**/BuildConfig.*", "**/*Test*.*")
 
-    classDirectories.setFrom(
-        subprojects.map { project ->
-            files(
-                fileTree("${project.buildDir}/classes/kotlin/main") {
-                    exclude(fileFilter)
-                },
-                fileTree("${project.buildDir}/tmp/kotlin-classes/debug") {
-                    exclude(fileFilter)
+
+            val includedProjects = subprojects.filter { it.path in coveredModules }
+
+            val subprojectReports = includedProjects.mapNotNull { it.tasks.findByName("jacocoTestReport") }
+            dependsOn(subprojectReports)
+
+            classDirectories.setFrom(
+                includedProjects.map { project ->
+                    files(
+                        fileTree("${project.buildDir}/classes/kotlin/main") {
+                            exclude(fileFilter)
+                        },
+                        fileTree("${project.buildDir}/tmp/kotlin-classes/debug") {
+                            exclude(fileFilter)
+                        }
+                    )
                 }
             )
-        }
-    )
 
-    sourceDirectories.setFrom(
-        subprojects.map { project ->
-            files(
-                "${project.projectDir}/src/main/java",
-                "${project.projectDir}/src/main/kotlin",
-                "${project.projectDir}/src/debug/java",
-                "${project.projectDir}/src/debug/kotlin"
+            sourceDirectories.setFrom(
+                includedProjects.map { project ->
+                    files(
+                        "${project.projectDir}/src/main/java",
+                        "${project.projectDir}/src/main/kotlin"
+                    )
+                }
             )
-        }
-    )
 
-    executionData.setFrom(
-        subprojects.map { project ->
-            fileTree(project.buildDir) {
-                include("jacoco/test.exec", "jacoco/test*.exec")
+            executionData.setFrom(
+                includedProjects.map { project ->
+                    fileTree(project.buildDir) {
+                        include(
+                            "jacoco/test.exec",
+                            "jacoco/test*.exec",
+                            "jacoco/testDebugUnitTest.exec"
+                        )
+                    }
+                }
+            )
+
+            reports {
+                xml.required.set(true)
+                html.required.set(true)
+                xml.outputLocation.set(file("$buildDir/reports/jacoco/merged/jacocoTestReport.xml"))
+                html.outputLocation.set(file("$buildDir/reports/jacoco/merged/html"))
             }
         }
-    )
-
-    reports {
-        xml.required.set(true)
-        html.required.set(true)
-        xml.outputLocation.set(file("$buildDir/reports/jacoco/merged/jacocoTestReport.xml"))
-        html.outputLocation.set(file("$buildDir/reports/jacoco/merged/html"))
-    }
-}
