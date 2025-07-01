@@ -29,7 +29,7 @@ import org.gradle.api.tasks.testing.Test
             val fileFilter = listOf("**/R.class", "**/BuildConfig.*", "**/*Test*.*")
 
 
-            val includedProjects = subprojects.filter { it.path in coveredModules }
+            val includedProjects = subprojects.filter { it.name in coveredModules }
 
             val subprojectReports = includedProjects.mapNotNull { it.tasks.findByName("jacocoTestReport") }
             dependsOn(subprojectReports)
@@ -41,6 +41,9 @@ import org.gradle.api.tasks.testing.Test
                             exclude(fileFilter)
                         },
                         fileTree("${project.buildDir}/tmp/kotlin-classes/debug") {
+                            exclude(fileFilter)
+                        },
+                        fileTree("${project.buildDir}/intermediates/classes/debug") {
                             exclude(fileFilter)
                         }
                     )
@@ -73,5 +76,14 @@ import org.gradle.api.tasks.testing.Test
                 html.required.set(true)
                 xml.outputLocation.set(file("$buildDir/reports/jacoco/merged/jacocoTestReport.xml"))
                 html.outputLocation.set(file("$buildDir/reports/jacoco/merged/html"))
+            }
+
+            doFirst {
+                executionData.setFrom(
+                    executionData.filter { it.exists() }
+                )
+                if (executionData.isEmpty) {
+                    println("⚠️  No execution data found — generating empty coverage report")
+                }
             }
         }

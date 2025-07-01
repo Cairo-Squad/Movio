@@ -47,6 +47,7 @@ jobs:
           report="build/reports/jacoco/merged/jacocoTestReport.xml"
           if [ ! -f "$report" ]; then
             echo "Error: merged coverage report not found!"
+            find . -name "*.xml"
             exit 1
           fi
           covered=$(xmllint --xpath 'string(//counter[@type="LINE"]/@covered)' "$report")
