@@ -37,51 +37,51 @@ jobs:
 
       - name: Enforce 80% Coverage
         run: ./gradlew koverVerify
-#
-#      - name: Upload Test Results (JUnit XML)
-#        if: always()
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: test-results
-#          path: '**/build/test-results/test/TEST-*.xml'
-#
-#      - name: Upload HTML Coverage Report
-#        if: always()
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: kover-html-report
-#          path: build/reports/kover/html/
-#
-#  comment-on-pr:
-#    name: Comment on PR with Test Results
-#    needs: build-and-test
-#    runs-on: ubuntu-latest
-#    if: ${{ always() && github.event_name == 'pull_request' }}
-#
-#    steps:
-#      - name: Download Test Results
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: test-results
-#          path: test-results
-#
-#      - name: Publish Results as PR Comment
-#        uses: EnricoMi/publish-unit-test-result-action@v2
-#        with:
-#          files: test-results/TEST-*.xml
-#
-#  confirm-coverage:
-#    name: Confirm Coverage Upload
-#    needs: build-and-test
-#    runs-on: ubuntu-latest
-#    if: always()
-#
-#    steps:
-#      - name: Download HTML Report
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: kover-html-report
-#          path: build/reports/kover/html/
-#
-#      - name: Confirm Coverage Artifact
-#        run: echo "Kover HTML report is uploaded successfully."
+
+      - name: Upload Test Results (JUnit XML)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: '**/build/test-results/test/TEST-*.xml'
+
+      - name: Upload HTML Coverage Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kover-html-report
+          path: build/reports/kover/html/
+
+  comment-on-pr:
+    name: Comment on PR with Test Results
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: ${{ always() && github.event_name == 'pull_request' }}
+
+    steps:
+      - name: Download Test Results
+        uses: actions/download-artifact@v4
+        with:
+          name: test-results
+          path: test-results
+
+      - name: Publish Results as PR Comment
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: test-results/TEST-*.xml
+
+  confirm-coverage:
+    name: Confirm Coverage Upload
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Download HTML Report
+        uses: actions/download-artifact@v4
+        with:
+          name: kover-html-report
+          path: build/reports/kover/html/
+
+      - name: Confirm Coverage Artifact
+        run: echo "Kover HTML report is uploaded successfully."
