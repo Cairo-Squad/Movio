@@ -14,4 +14,7 @@ kotlin {
 }
 dependencies {
     implementation(project(":usecase"))
+    implementation(libs.junit.junit)
+    implementation(libs.junit.jupiter)
+    testImplementation(libs.junit.jupiter)
 }
