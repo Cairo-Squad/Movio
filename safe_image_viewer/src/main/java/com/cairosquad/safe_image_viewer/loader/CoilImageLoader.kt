@@ -15,7 +15,6 @@ internal class CoilImageLoader(private val context: Context) {
             .data(url)
             .allowHardware(false)
             .build()
-
         return (loader.execute(request).drawable as BitmapDrawable).bitmap
     }
 }

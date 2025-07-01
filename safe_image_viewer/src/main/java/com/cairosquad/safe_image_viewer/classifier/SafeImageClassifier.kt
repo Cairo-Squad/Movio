@@ -15,12 +15,12 @@ internal class SafeImageClassifier(context: Context) {
 
     init {
         val baseOptions = BaseOptions.builder()
-            .setNumThreads(2)
+            .setNumThreads(NUMBER_OF_THREADS)
             .build()
 
         val options = ImageClassifier.ImageClassifierOptions.builder()
             .setBaseOptions(baseOptions)
-            .setMaxResults(2)
+            .setMaxResults(MAX_RESULTS)
             .build()
 
         val modelBuffer = FileUtil.loadMappedFile(context, MODEL)
@@ -34,7 +34,6 @@ internal class SafeImageClassifier(context: Context) {
         isLogEnabled: Boolean
     ): Boolean {
         val tensorImage = TensorImage.fromBitmap(bitmap)
-
         val results = imageClassifier.classify(tensorImage)[0]
 
         val nonNudeScore = results.categories[NON_NUDE_INDEX].score
@@ -52,5 +51,7 @@ internal class SafeImageClassifier(context: Context) {
         private const val MODEL = "nsfw.tflite"
         private const val NON_NUDE_INDEX = 0
         private const val NUDE_INDEX = 1
+        private const val NUMBER_OF_THREADS = 2
+        private const val MAX_RESULTS = 2
     }
 }

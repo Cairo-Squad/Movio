@@ -9,10 +9,10 @@ import androidx.compose.ui.unit.Dp
 
 @Stable
 fun Modifier.imageBlur(
-    isBlurEnabled: Boolean = true,
-    isImageSafe: Boolean = false,
     blur: Dp,
-    bitmap: Bitmap
+    bitmap: Bitmap,
+    isBlurEnabled: Boolean = true,
+    isImageSafe: Boolean = false
 ): Modifier {
     return if (!isImageSafe && isBlurEnabled) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
