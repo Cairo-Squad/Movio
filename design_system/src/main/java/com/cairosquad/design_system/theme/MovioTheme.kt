@@ -6,9 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowInsetsControllerCompat
-import com.cairosquad.design_system.color.LocalMovioColors
-import com.cairosquad.design_system.color.darkThemeColor
-import com.cairosquad.design_system.color.lightThemeColor
+import com.cairosquad.design_system.color.LocalMovioColor
+import com.cairosquad.design_system.color.darkThemeColors
+import com.cairosquad.design_system.color.lightThemeColors
 import com.cairosquad.design_system.text_style.LocalMovioTextStyle
 import com.cairosquad.design_system.text_style.defaultTextStyle
 
@@ -18,9 +18,9 @@ fun MovioTheme(
     isDarkTheme: Boolean= isSystemInDarkTheme(),
     content: @Composable ()-> Unit
 ){
-    val theme=if (isDarkTheme) darkThemeColor else lightThemeColor
+    val theme=if (isDarkTheme) darkThemeColors else lightThemeColors
     CompositionLocalProvider(
-        LocalMovioColors provides theme,
+        LocalMovioColor provides theme,
         LocalMovioTextStyle provides defaultTextStyle
     ) {
         content()
