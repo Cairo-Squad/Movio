@@ -37,7 +37,9 @@ jobs:
 
       - name: Enforce 80% Coverage
         run: ./gradlew koverVerify
-
+      - name:
+        Debug: List Test Result Files
+        run: find . -type f -name "TEST-*.xml"
       - name: Upload Test Results (JUnit XML)
         if: always()
         uses: actions/upload-artifact@v4
