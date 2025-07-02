@@ -43,5 +43,5 @@ jobs:
             app/build/outputs/apk/release/app-release-unsigned.apk \
             --app ${{ secrets.FIREBASE_APP_ID }} \
             --token ${{ secrets.FIREBASE_AUTH_TOKEN }}
-            --groups "cairo_squad"
-            --release-notes-file release_notes.txt
+#            --groups "cairo_squad"
+#            --release-notes-file release_notes.txt
