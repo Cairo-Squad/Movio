@@ -15,4 +15,5 @@ kotlin {
 dependencies {
     testImplementation(kotlin("test"))
     api(project(":entity"))
+    testImplementation(libs.junit.jupiter)
 }

@@ -15,4 +15,5 @@ kotlin {
 dependencies {
     implementation(project(":repository"))
     testImplementation(kotlin("test"))
+    testImplementation(libs.junit.jupiter)
 }

@@ -19,4 +19,9 @@ dependencies {
     testImplementation(libs.junit.junit)
     testImplementation(libs.junit.jupiter)
     testImplementation(kotlin("test"))
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.jupiter)
 }
