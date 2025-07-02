@@ -14,18 +14,24 @@ import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 
 @Composable
-fun MovioChip (isSelected: Boolean, modifier: Modifier = Modifier) {
-    val backgroundColor = if (isSelected) Theme.color.brand.primary else Theme.color.surfaces.onSurfaceAt3
-    val textColor = if (isSelected) Theme.color.brand.onPrimary else Theme.color.surfaces.onSurfaceVariant
+fun MovioChip(
+    title: String,
+    modifier: Modifier = Modifier,
+    isSelected: Boolean = false,
+) {
+    val backgroundColor =
+        if (isSelected) Theme.color.brand.primary else Theme.color.surfaces.onSurfaceAt3
+    val textColor =
+        if (isSelected) Theme.color.brand.onPrimary else Theme.color.surfaces.onSurfaceVariant
 
     Box(
         modifier = modifier
             .background(color = backgroundColor, shape = RoundedCornerShape(24.dp))
             .padding(horizontal = 12.dp, vertical = 8.dp)
-    ){
+    ) {
         Text(
             modifier = Modifier.align(Alignment.Center),
-            text = "All",
+            text = title,
             color = textColor,
             style = Theme.textStyle.label.smallRegular14,
         )
@@ -34,8 +40,8 @@ fun MovioChip (isSelected: Boolean, modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-private fun MovioChipPreview(){
+private fun MovioChipPreview() {
     MovioTheme {
-        MovioChip(isSelected = true)
+        MovioChip(title = "All", isSelected = true)
     }
 }
