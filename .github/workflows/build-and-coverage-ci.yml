@@ -1,4 +1,4 @@
-name: Ci for coverage check
+name: Ci For Build And Coverage Check
 
 on:
   pull_request:
