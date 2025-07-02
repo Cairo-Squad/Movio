@@ -1,6 +1,5 @@
 package com.cairosquad.ui.composable
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,30 +20,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.R
+import com.cairosquad.ui.model.BottomNavItem
 
 @Composable
 fun MovioNavigationBar(
+    navigationItems: List<BottomNavItem>,
     onItemSelected: (Int) -> Unit,
     modifier: Modifier = Modifier,
     selectedItemIndex: Int = 0,
 ) {
-    val navigationItems = listOf(
-        BottomNavItem(R.drawable.home_bottom_nav, R.drawable.home_bottom_nav_colored, "Home"),
-        BottomNavItem(R.drawable.search_bottom_nav, R.drawable.search_bottom_nav_colored, "Search"),
-        BottomNavItem(
-            R.drawable.library_bottom_nav,
-            R.drawable.library_bottom_nav_colored,
-            "Library"
-        ),
-        BottomNavItem(R.drawable.more_bottom_nav, R.drawable.more_bottom_nav_colored, "More")
-    )
-
     Box(
         modifier = modifier
             .background(color = Theme.color.surfaces.surface)
@@ -77,8 +68,8 @@ fun MovioNavigationBar(
                         tint = Color.Unspecified
                     )
                     Text(
-                        text = item.label,
                         modifier = Modifier.align(Alignment.BottomCenter),
+                        text = item.label,
                         color = Theme.color.surfaces.onSurfaceVariant,
                         style = Theme.textStyle.label.smallRegular12
                     )
@@ -87,12 +78,6 @@ fun MovioNavigationBar(
         }
     }
 }
-
-data class BottomNavItem(
-    @DrawableRes val unColoredIcon: Int,
-    @DrawableRes val coloredIcon: Int,
-    val label: String
-)
 
 @Preview
 @Composable
@@ -142,10 +127,48 @@ private fun PreviewNavBarLightSelectedItem3() {
     PreviewMovioNavigationBar(isDarkTheme = false, selectedIndex = 3)
 }
 
+@Preview(locale = "ar", name = "Arabic - Light Theme")
+@Composable
+private fun PreviewNavBarArabicLight() {
+    PreviewMovioNavigationBar(
+        isDarkTheme = false,
+        selectedIndex = 0
+    )
+}
+
+@Preview(locale = "ar", name = "Arabic - Dark Theme")
+@Composable
+private fun PreviewNavBarArabicDark() {
+    PreviewMovioNavigationBar(
+        isDarkTheme = true,
+        selectedIndex = 0
+    )
+}
+
 @Composable
 private fun PreviewMovioNavigationBar(isDarkTheme: Boolean, selectedIndex: Int) {
     MovioTheme(isDarkTheme = isDarkTheme) {
+        val navigationItems = listOf(
+            BottomNavItem(
+                R.drawable.home_bottom_nav, R.drawable.home_bottom_nav_colored,
+                stringResource(R.string.home)
+            ),
+            BottomNavItem(
+                R.drawable.search_bottom_nav, R.drawable.search_bottom_nav_colored,
+                stringResource(R.string.search)
+            ),
+            BottomNavItem(
+                R.drawable.library_bottom_nav,
+                R.drawable.library_bottom_nav_colored,
+                stringResource(R.string.library)
+            ),
+            BottomNavItem(
+                R.drawable.more_bottom_nav, R.drawable.more_bottom_nav_colored,
+                stringResource(R.string.more)
+            )
+        )
         MovioNavigationBar(
+            navigationItems = navigationItems,
             onItemSelected = {},
             selectedItemIndex = selectedIndex
         )
