@@ -21,7 +21,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
@@ -51,24 +50,24 @@ fun MovioTopBar(
              var tabWidth by remember { mutableIntStateOf(0) }
 
              Column(
-                 horizontalAlignment = Alignment.CenterHorizontally,
                  modifier = Modifier
                      .clickable(
                      indication = null,
                      interactionSource = remember { MutableInteractionSource() },
                      onClick = {onTabSelected(index)}
-                 )
+                 ),
+                 horizontalAlignment = Alignment.CenterHorizontally,
              ) {
                  Text(
-                     text = title,
-                     color = textColor,
-                     textAlign = TextAlign.Center,
-                     style = Theme.textStyle.title.mediumMedium16,
                      modifier = Modifier
                          .widthIn(min = 56.dp, max = 100.dp)
                          .onGloballyPositioned { coordinates ->
                              tabWidth = coordinates.size.width
-                         }
+                         },
+                     text = title,
+                     color = textColor,
+                     textAlign = TextAlign.Center,
+                     style = Theme.textStyle.title.mediumMedium16,
                  )
                  if (isSelected){
                      Box(
@@ -78,9 +77,9 @@ fun MovioTopBar(
                              .background(
                                  brush = Brush.horizontalGradient(
                                      colors = listOf(
-                                         Color(0x33EBE6FE),
-                                         Color(0xFFF5F3FF),
-                                         Color(0x33FFFFFF)
+                                         Theme.color.indicatorGradiant.start,
+                                         Theme.color.indicatorGradiant.medium,
+                                         Theme.color.indicatorGradiant.end
                                      ),
                                  )
                              )
