@@ -33,5 +33,10 @@ val darkThemeColors = MovioColors(
         onSuccess = Color(0xFFF6FFF6),
         successContainer = Color(0xFFE7FFE6),
         onSuccessContainer = Color(0xFF136912)
+    ),
+    IndicatorGradiant(
+        start = Color(0x33EBE6FE),
+        medium = Color(0xFFF5F3FF),
+        end = Color(0x33FFFFFF)
     )
 )

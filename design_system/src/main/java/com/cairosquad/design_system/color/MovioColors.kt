@@ -6,7 +6,8 @@ import androidx.compose.ui.graphics.Color
 data class MovioColors(
     val brand: Brand,
     val surfaces: Surfaces,
-    val system: System
+    val system: System,
+    val indicatorGradiant: IndicatorGradiant
 )
 
 data class Surfaces(
@@ -43,6 +44,12 @@ data class System(
     val onSuccess: Color,
     val successContainer: Color,
     val onSuccessContainer: Color,
+)
+
+data class IndicatorGradiant(
+    val start: Color,
+    val medium: Color,
+    val end: Color
 )
 
 internal val LocalMovioColor = staticCompositionLocalOf { lightThemeColors }
