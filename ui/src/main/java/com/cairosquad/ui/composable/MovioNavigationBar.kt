@@ -94,69 +94,60 @@ data class BottomNavItem(
     val label: String
 )
 
-
-@Preview("MovioNavigationBarDark")
+@Preview
 @Composable
-fun MovioNavigationBarPreviewDark() {
-    MovioTheme(isDarkTheme = true) {
-        MovioNavigationBar(onItemSelected = {})
-    }
+private fun PreviewNavBarNightSelectedItem0() {
+    PreviewMovioNavigationBar(isDarkTheme = true, selectedIndex = 0)
 }
 
-@Preview("MovioNavigationBarLight")
+@Preview
 @Composable
-fun MovioNavigationBarPreviewLight() {
-    MovioTheme(isDarkTheme = false) {
-        MovioNavigationBar(onItemSelected = {})
-    }
+private fun PreviewNavBarLightSelectedItem0() {
+    PreviewMovioNavigationBar(isDarkTheme = false, selectedIndex = 0)
 }
 
-@Preview("MovioNavigationBarDark")
+@Preview
 @Composable
-fun MovioNavigationBarPreviewDark2() {
-    MovioTheme(isDarkTheme = true) {
-        MovioNavigationBar(onItemSelected = {}, selectedItemIndex = 1)
-    }
+private fun PreviewNavBarNightSelectedItem1() {
+    PreviewMovioNavigationBar(isDarkTheme = true, selectedIndex = 1)
 }
 
-@Preview("MovioNavigationBarLight")
+@Preview
 @Composable
-fun MovioNavigationBarPreviewLight2() {
-    MovioTheme(isDarkTheme = false) {
-        MovioNavigationBar(onItemSelected = {}, selectedItemIndex = 1)
-    }
+private fun PreviewNavBarLightSelectedItem1() {
+    PreviewMovioNavigationBar(isDarkTheme = false, selectedIndex = 1)
 }
 
-@Preview("MovioNavigationBarDark")
+@Preview
 @Composable
-fun MovioNavigationBarPreviewDark3() {
-    MovioTheme(isDarkTheme = true) {
-        MovioNavigationBar(onItemSelected = {}, selectedItemIndex = 2)
-    }
+private fun PreviewNavBarNightSelectedItem2() {
+    PreviewMovioNavigationBar(isDarkTheme = true, selectedIndex = 2)
 }
 
-@Preview("MovioNavigationBarLight")
+@Preview
 @Composable
-fun MovioNavigationBarPreviewLight3() {
-    MovioTheme(isDarkTheme = false) {
-        MovioNavigationBar(onItemSelected = {}, selectedItemIndex = 2)
-    }
+private fun PreviewNavBarLightSelectedItem2() {
+    PreviewMovioNavigationBar(isDarkTheme = false, selectedIndex = 2)
 }
 
-@Preview("MovioNavigationBarDark")
+@Preview
 @Composable
-fun MovioNavigationBarPreviewDark4() {
-    MovioTheme(isDarkTheme = true) {
-        MovioNavigationBar(onItemSelected = {}, selectedItemIndex = 3)
-    }
+private fun PreviewNavBarNightSelectedItem3() {
+    PreviewMovioNavigationBar(isDarkTheme = true, selectedIndex = 3)
 }
 
-@Preview("MovioNavigationBarLight")
+@Preview
 @Composable
-fun MovioNavigationBarPreviewLight4() {
-    MovioTheme(isDarkTheme = false) {
-        MovioNavigationBar(onItemSelected = {}, selectedItemIndex = 3)
-    }
+private fun PreviewNavBarLightSelectedItem3() {
+    PreviewMovioNavigationBar(isDarkTheme = false, selectedIndex = 3)
 }
 
-
+@Composable
+private fun PreviewMovioNavigationBar(isDarkTheme: Boolean, selectedIndex: Int) {
+    MovioTheme(isDarkTheme = isDarkTheme) {
+        MovioNavigationBar(
+            onItemSelected = {},
+            selectedItemIndex = selectedIndex
+        )
+    }
+}
