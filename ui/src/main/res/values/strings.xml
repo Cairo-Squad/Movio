@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back_icon">back icon</string>
+    <string name="share_icon">share icon</string>
+    <string name="favorite_icon">favorite icon</string>
+</resources>
