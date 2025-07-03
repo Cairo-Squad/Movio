@@ -11,4 +11,9 @@
     <string name="favorites_list_empty">قائمة المفضلة فارغة!</string>
     <string name="favorite_list_empty_description">ابدأ بإضافة الأفلام والعروض التي تحبها — واحتفظ بها جميعًا في مكان واحد للوصول السريع.</string>
     <string name="state_message_image">صورة رسالة الحالة</string>
+    <string name="home">الرئيسية</string>
+    <string name="search">بحث</string>
+    <string name="library">المكتبة</string>
+    <string name="more">المزيد</string>
+    <string name="icon">ايقونة</string>
 </resources>

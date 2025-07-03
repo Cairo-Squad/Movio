@@ -11,4 +11,9 @@
     <string name="favorites_list_empty">Your favorites list is empty!</string>
     <string name="favorite_list_empty_description">Start adding the movies and shows you love — keep them all in one place for easy access.</string>
     <string name="state_message_image">State Message Image</string>
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="library">Library</string>
+    <string name="more">More</string>
+    <string name="icon">icon</string>
 </resources>
