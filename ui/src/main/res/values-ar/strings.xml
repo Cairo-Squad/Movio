@@ -5,4 +5,6 @@
     <string name="library">المكتبة</string>
     <string name="more">المزيد</string>
     <string name="icon">ايقونة</string>
+    <string name="movie_poster">بوستر الفيلم</string>
+
 </resources>
