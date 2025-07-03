@@ -24,7 +24,7 @@ import com.cairosquad.design_system.R
 
 
 @Composable
-fun MovioAppBar(
+fun AppBar(
     modifier: Modifier = Modifier,
     title: String? = null,
     onBackButtonClicked: (() -> Unit)? = null,
@@ -43,18 +43,16 @@ fun MovioAppBar(
             .padding(vertical = 4.dp, horizontal = 16.dp)
     ) {
         if (onBackButtonClicked != null){
-            Box(modifier = modifier.padding(8.dp)) {
-                Icon(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .align(Alignment.Center)
-                        .padding(end = 8.dp)
-                        .clickable(onClick = onBackButtonClicked),
-                    painter = painterResource(R.drawable.arrow_left_icon_round),
-                    contentDescription = stringResource(R.string.back_icon),
-                    tint = Theme.color.surfaces.onSurface,
-                )
-            }
+            Icon(
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .size(40.dp)
+                    .padding(8.dp)
+                    .clickable(onClick = onBackButtonClicked),
+                painter = painterResource(R.drawable.arrow_left_icon_round),
+                contentDescription = stringResource(R.string.back_icon),
+                tint = Theme.color.surfaces.onSurface,
+            )
         }
 
         Box(modifier = Modifier
@@ -71,33 +69,29 @@ fun MovioAppBar(
         }
 
         if (onShareButtonClicked != null){
-            Box(modifier = modifier.padding(8.dp)) {
-                Icon(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .align(Alignment.Center)
-                        .padding(start = 8.dp)
-                        .clickable(onClick = onShareButtonClicked),
-                    painter = painterResource(R.drawable.share_icon_round),
-                    contentDescription = stringResource(R.string.share_icon),
-                    tint = Theme.color.surfaces.onSurface,
-                )
-            }
+            Icon(
+                modifier = Modifier
+                    .padding(start = 8.dp)
+                    .size(40.dp)
+                    .padding(8.dp)
+                    .clickable(onClick = onShareButtonClicked),
+                painter = painterResource(R.drawable.share_icon_round),
+                contentDescription = stringResource(R.string.share_icon),
+                tint = Theme.color.surfaces.onSurface,
+            )
         }
 
         if (onFavoriteButtonClicked != null){
-            Box(modifier = modifier.padding(8.dp)) {
-                Icon(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .align(Alignment.Center)
-                        .padding(start = 4.dp)
-                        .clickable(onClick = onFavoriteButtonClicked),
-                    painter = painterResource(R.drawable.heart_icon_round),
-                    contentDescription = stringResource(R.string.favorite_icon),
-                    tint = Theme.color.surfaces.onSurface,
-                )
-            }
+            Icon(
+                modifier = Modifier
+                    .padding(start = 4.dp)
+                    .size(40.dp)
+                    .padding(8.dp)
+                    .clickable(onClick = onFavoriteButtonClicked),
+                painter = painterResource(R.drawable.heart_icon_round),
+                contentDescription = stringResource(R.string.favorite_icon),
+                tint = Theme.color.surfaces.onSurface,
+            )
         }
     }
 }
@@ -106,6 +100,6 @@ fun MovioAppBar(
 @Composable
 private fun MovioAppBarPreview() {
     MovioTheme {
-        MovioAppBar(onBackButtonClicked = {}, onShareButtonClicked = {})
+        AppBar(onBackButtonClicked = {}, onShareButtonClicked = {}, onFavoriteButtonClicked = {})
     }
 }
