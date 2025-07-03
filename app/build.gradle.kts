@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.gms.google.services)
     alias(libs.plugins.google.firebase.crashlytics)
-    id("com.google.firebase.firebase-perf")
+    alias(libs.plugins.google.firebase.perf)
     alias(libs.plugins.google.firebase.appdistribution)
 }
 

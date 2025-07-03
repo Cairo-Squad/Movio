@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
     alias(libs.plugins.google.gms.google.services) apply false
     alias(libs.plugins.google.firebase.crashlytics) apply false
-    id("com.google.firebase.firebase-perf") version "1.4.2" apply false
+    alias(libs.plugins.google.firebase.perf) apply false
     alias(libs.plugins.google.firebase.appdistribution) apply false
 
 }
