@@ -9,7 +9,7 @@ plugins {
     alias(libs.plugins.google.firebase.crashlytics) apply false
     alias(libs.plugins.google.firebase.perf) apply false
     alias(libs.plugins.google.firebase.appdistribution) apply false
-    id("org.jetbrains.kotlinx.kover") version "0.9.1"
+    alias(libs.plugins.kover)
 }
 
 kover {
@@ -31,7 +31,7 @@ kover {
         total {
             verify {
                 rule {
-                    minBound(0) //temporary until adding the real tests
+                    minBound(80)
                 }
             }
         }
