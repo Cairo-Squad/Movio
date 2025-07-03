@@ -30,13 +30,14 @@ import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 
 @Composable
-fun MovioTopBar(
+fun TopBar(
     tabs: List<String>,
     selectedTabIndex: Int,
     onTabSelected: (Int) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
      Row(
-         modifier = Modifier
+         modifier = modifier
              .fillMaxWidth()
              .height(36.dp)
              .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -49,6 +50,11 @@ fun MovioTopBar(
                  Theme.color.brand.onPrimaryContainer
              else
                  Theme.color.surfaces.onSurfaceVariant
+
+             val textStyle = if (isSelected)
+                 Theme.textStyle.title.mediumMedium16
+             else
+                 Theme.textStyle.body.smallRegular16
              var tabWidth by remember { mutableIntStateOf(0) }
 
              Column(
@@ -69,7 +75,7 @@ fun MovioTopBar(
                      text = title,
                      color = textColor,
                      textAlign = TextAlign.Center,
-                     style = Theme.textStyle.title.mediumMedium16,
+                     style = textStyle,
                  )
                  if (isSelected){
                      Box(
@@ -95,14 +101,16 @@ fun MovioTopBar(
 
 @Preview
 @Composable
-private fun MovioTopBarPreview(){
+private fun TopBarPreview(){
     MovioTheme {
         val tabs = listOf("All", "Movies", "TV Shows", "Categories")
         var selectedTabIndex by remember { mutableIntStateOf(0) }
-        MovioTopBar(
-            tabs = tabs,
-            selectedTabIndex = selectedTabIndex,
-            onTabSelected = {selectedTabIndex = it}
-        )
+        Box(Modifier.background(Theme.color.surfaces.surface)){
+            TopBar(
+                tabs = tabs,
+                selectedTabIndex = selectedTabIndex,
+                onTabSelected = {selectedTabIndex = it}
+            )
+        }
     }
 }
