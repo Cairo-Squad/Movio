@@ -1,4 +1,4 @@
-package com.cairosquad.ui.composable
+package com.cairosquad.design_system.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,8 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
-import com.cairosquad.ui.R
-import com.cairosquad.ui.model.BottomNavItem
+import com.cairosquad.design_system.R
+
 
 @Composable
 fun MovioNavigationBar(
