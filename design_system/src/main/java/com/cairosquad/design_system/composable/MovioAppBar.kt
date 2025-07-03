@@ -1,4 +1,4 @@
-package com.cairosquad.ui.composable
+package com.cairosquad.design_system.composable
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
-import com.cairosquad.ui.R
+import com.cairosquad.design_system.R
 
 
 @Composable
@@ -35,7 +35,11 @@ fun MovioAppBar(
         modifier = modifier
             .fillMaxWidth()
             .height(48.dp)
-            .shadow(elevation = 12.dp, ambientColor = Color(0x0FFFFFFF), spotColor = Color(0x0FFFFFFF))
+            .shadow(
+                elevation = 12.dp,
+                ambientColor = Color(0x0FFFFFFF),
+                spotColor = Color(0x0FFFFFFF)
+            )
             .padding(vertical = 4.dp, horizontal = 16.dp)
     ) {
         if (onBackButtonClicked != null){
