@@ -1,4 +1,4 @@
-package com.cairosquad.ui.composable
+package com.cairosquad.design_system.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,7 +22,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
@@ -32,22 +31,22 @@ import com.cairosquad.ui.R
 fun MovieCard(
     title: String,
     rating: String,
-    imgRes: Int
+    imgRes: Int,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
-            .widthIn(max = 102.dp)
+        modifier = modifier
+            .widthIn(max = 101.33.dp)
     ) {
         Box(
             modifier = Modifier
-                .widthIn(max = 101.5.dp)
-                .heightIn(max = 178.dp)
         ) {
             AsyncImage(
-                model = painterResource(id = imgRes),
+                model = imgRes,
                 contentDescription = stringResource(R.string.movie_poster),
                 modifier = Modifier
                     .heightIn(max = 136.dp)
+                    .widthIn(max = 101.33.dp)
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(5.dp)),
                 contentScale = ContentScale.Crop,
@@ -62,8 +61,8 @@ fun MovieCard(
             ) {
                 Icon(
                     modifier = Modifier
-                        .size(16.dp)
-                        .padding(end = 4.dp),
+                        .padding(end = 4.dp)
+                        .size(16.dp),
                     painter = painterResource(id = R.drawable.star),
                     contentDescription = "Rating Star",
                     tint = Theme.color.system.warning,
@@ -71,8 +70,7 @@ fun MovieCard(
 
                 Text(
                     text = rating,
-                    fontSize = 10.sp,
-                    color = Theme.color.system.warning,
+                    color = Theme.color.system.onWarning,
                     style = Theme.textStyle.label.smallRegular12
                 )
             }
@@ -85,12 +83,13 @@ fun MovieCard(
             style = Theme.textStyle.title.mediumMedium14,
             textAlign = TextAlign.Start,
             maxLines = 2,
+            minLines = 2,
             overflow = TextOverflow.Ellipsis
         )
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun MovieCardPreview() {
     MovioTheme {
@@ -101,3 +100,29 @@ private fun MovieCardPreview() {
         )
     }
 }
+
+@Preview(name = "MovieCard Light", showBackground = true)
+@Composable
+fun MovieCardPreviewLight() {
+    MovioTheme(isDarkTheme = false) {
+        MovieCard(
+            title = "Our girl",
+            rating = "4.2",
+            imgRes = R.drawable.girl
+        )
+    }
+}
+
+@Preview(name = "MovieCard Dark", showBackground = true)
+@Composable
+fun MovieCardPreviewDark() {
+    MovioTheme(isDarkTheme = true) {
+        MovieCard(
+            title = "Spider-Man: Into the Spider-Verse",
+            rating = "4.8",
+            imgRes = R.drawable.spider,
+            modifier = Modifier.padding(8.dp)
+        )
+    }
+}
+
