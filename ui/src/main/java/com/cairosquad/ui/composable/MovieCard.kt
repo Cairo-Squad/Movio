@@ -1,6 +1,5 @@
 package com.cairosquad.ui.composable
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +23,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.R
@@ -43,26 +43,16 @@ fun MovieCard(
                 .widthIn(max = 101.5.dp)
                 .heightIn(max = 178.dp)
         ) {
-            Image(
-                painter = painterResource(id = imgRes),
+            AsyncImage(
+                model = painterResource(id = imgRes),
                 contentDescription = stringResource(R.string.movie_poster),
                 modifier = Modifier
                     .heightIn(max = 136.dp)
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(5.dp)),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                error = painterResource(id = R.drawable.movie_card_img)
             )
-//            todo: change if added coil
-//            AsyncImage(
-//                model = imgRes,
-//                contentDescription = stringResource(R.string.movie_poster),
-//                modifier = Modifier
-//                .heightIn(max = 136.dp)
-//                .fillMaxWidth()
-//                .clip(RoundedCornerShape(5.dp)),
-//                contentScale = ContentScale.Crop,
-//                error = painterResource(id = R.drawable.movie_card_img)
-//            )
 
             Row(
                 modifier = Modifier

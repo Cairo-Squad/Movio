@@ -58,4 +58,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(project(":design_system"))
     implementation(project(":viewmodel"))
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 }
