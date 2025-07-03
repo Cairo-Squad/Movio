@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "655496250808",
+    "project_id": "cairo-movio",
+    "storage_bucket": "cairo-movio.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:655496250808:android:64b23608a5a9cdadc3fb4d",
+        "android_client_info": {
+          "package_name": "com.cairosquad.movio"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbMDvzzI9h4bw6d8BW0YpD7Cc8xewtglo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
