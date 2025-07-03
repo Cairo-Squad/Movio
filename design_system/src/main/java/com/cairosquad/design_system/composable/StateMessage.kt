@@ -38,7 +38,7 @@ fun StateMessage(
         Image(
             modifier = Modifier.size(width = 180.dp, height = 150.dp),
             painter = painterResource(imageDrawable),
-            contentDescription = "State Message Image"
+            contentDescription = stringResource(R.string.state_message_image)
         )
         Column(
             modifier = Modifier

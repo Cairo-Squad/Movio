@@ -10,4 +10,5 @@
     <string name="watch_later_empty_description">Save the movies and shows you want to watch, and they’ll appear here when you’re ready.</string>
     <string name="favorites_list_empty">Your favorites list is empty!</string>
     <string name="favorite_list_empty_description">Start adding the movies and shows you love — keep them all in one place for easy access.</string>
+    <string name="state_message_image">State Message Image</string>
 </resources>
