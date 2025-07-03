@@ -124,7 +124,7 @@ private fun GuestPreview() {
 
 @MultiThemePreviews
 @Composable
-private fun FavoriteListEmptyPreview() {
+private fun FavouriteListEmptyPreview() {
     MovioTheme {
         Box(
             Modifier.background(Theme.color.surfaces.surface)
