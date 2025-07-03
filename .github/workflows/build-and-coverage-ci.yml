@@ -2,8 +2,8 @@ name: Ci For Build and Coverage Check
 
 on:
   pull_request:
+    types: [ opened, edited, synchronize, reopened ]
     branches: [ develop ]
-  workflow_dispatch:
 
 permissions:
   contents: read
@@ -46,6 +46,7 @@ jobs:
 
       - name: Build Project
         run: ./gradlew build -x koverVerify -x test
+
   test:
 
     name: Verify Coverage
