@@ -31,8 +31,8 @@ import com.cairosquad.design_system.theme.Theme
 
 @Composable
 fun MovioTopBar(
-    items: List<String>,
-    selectedItemIndex: Int,
+    tabs: List<String>,
+    selectedTabIndex: Int,
     onTabSelected: (Int) -> Unit,
 ) {
      Row(
@@ -41,8 +41,8 @@ fun MovioTopBar(
              .padding(horizontal = 16.dp, vertical = 8.dp),
          horizontalArrangement = Arrangement.SpaceAround
      ) {
-         items.forEachIndexed { index, title ->
-             val isSelected = selectedItemIndex == index
+         tabs.forEachIndexed { index, title ->
+             val isSelected = selectedTabIndex == index
              val textColor = if (isSelected)
                  Theme.color.brand.onPrimaryContainer
              else
@@ -95,11 +95,11 @@ fun MovioTopBar(
 @Composable
 private fun MovioTopBarPreview(){
     MovioTheme {
-        val items = listOf("All", "Movies", "TV Shows", "Categories")
+        val tabs = listOf("All", "Movies", "TV Shows", "Categories")
         var selectedTabIndex by remember { mutableIntStateOf(0) }
         MovioTopBar(
-            items = items,
-            selectedItemIndex = selectedTabIndex,
+            tabs = tabs,
+            selectedTabIndex = selectedTabIndex,
             onTabSelected = {selectedTabIndex = it}
         )
     }
