@@ -31,9 +31,9 @@ fun ArtistCard(name: String, imgRes: Int) {
     ) {
         Image(
             modifier = Modifier
+                .padding(horizontal = 6.dp)
                 .size(88.dp)
-                .clip(CircleShape)
-                .padding(horizontal = 6.dp),
+                .clip(CircleShape),
             painter = painterResource(id = imgRes),
             contentDescription = null,
             contentScale = ContentScale.Crop,
