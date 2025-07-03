@@ -1,4 +1,4 @@
-package com.cairosquad.ui.composable
+package com.cairosquad.design_system.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -18,9 +18,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.cairosquad.design_system.R
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
-import com.cairosquad.ui.R
 
 @Composable
 fun ArtistCard(name: String, imgRes: Int) {
@@ -49,7 +49,6 @@ fun ArtistCard(name: String, imgRes: Int) {
             overflow = TextOverflow.Ellipsis
 
         )
-
     }
 }
 
