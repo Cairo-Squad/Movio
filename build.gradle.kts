@@ -39,4 +39,5 @@ dependencies {
     kover(project(":usecase"))
     kover(project(":repository"))
     kover(project(":viewmodel"))
+    kover(project(":safe_image_viewer"))
 }
