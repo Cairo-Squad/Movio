@@ -38,8 +38,10 @@ fun MovioTopBar(
      Row(
          modifier = Modifier
              .fillMaxWidth()
+             .height(36.dp)
              .padding(horizontal = 16.dp, vertical = 8.dp),
-         horizontalArrangement = Arrangement.SpaceAround
+         horizontalArrangement = Arrangement.SpaceAround,
+         verticalAlignment = Alignment.CenterVertically
      ) {
          tabs.forEachIndexed { index, title ->
              val isSelected = selectedTabIndex == index
