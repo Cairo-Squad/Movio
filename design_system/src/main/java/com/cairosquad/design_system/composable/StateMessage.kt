@@ -4,7 +4,6 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,41 +30,37 @@ fun StateMessage(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            modifier = Modifier.size(width = 180.dp, height = 150.dp),
+            modifier = Modifier
+                .size(width = 180.dp, height = 150.dp)
+                .padding(bottom = 16.dp),
             painter = painterResource(imageDrawable),
             contentDescription = stringResource(R.string.state_message_image)
         )
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = stringResource(titleId),
-                color = Theme.color.surfaces.onSurface,
-                style = Theme.textStyle.title.mediumMedium16
-            )
-            Text(
-                text = stringResource(descriptionId),
-                color = Theme.color.surfaces.onSurfaceContainer,
-                style = Theme.textStyle.label.smallRegular12,
-                textAlign = TextAlign.Center
-            )
-        }
+        Text(
+            modifier = Modifier.padding(bottom = 8.dp),
+            text = stringResource(titleId),
+            color = Theme.color.surfaces.onSurface,
+            style = Theme.textStyle.title.mediumMedium16
+        )
+        Text(
+            text = stringResource(descriptionId),
+            color = Theme.color.surfaces.onSurfaceContainer,
+            style = Theme.textStyle.label.smallRegular12,
+            textAlign = TextAlign.Center
+        )
     }
 }
 
 @MultiThemePreviews
 @Composable
 private fun NoResultPreview() {
-    MovioTheme() {
+    MovioTheme {
         Box(
             Modifier.background(Theme.color.surfaces.surface)
         ) {
@@ -81,7 +76,7 @@ private fun NoResultPreview() {
 @MultiThemePreviews
 @Composable
 private fun NoInternetPreview() {
-    MovioTheme() {
+    MovioTheme {
         Box(
             Modifier.background(Theme.color.surfaces.surface)
         ) {
@@ -97,7 +92,7 @@ private fun NoInternetPreview() {
 @MultiThemePreviews
 @Composable
 private fun EmptyWatchLaterPreview() {
-    MovioTheme() {
+    MovioTheme {
         Box(
             Modifier.background(Theme.color.surfaces.surface)
         ) {
@@ -113,7 +108,7 @@ private fun EmptyWatchLaterPreview() {
 @MultiThemePreviews
 @Composable
 private fun GuestPreview() {
-    MovioTheme() {
+    MovioTheme {
         Box(
             Modifier.background(Theme.color.surfaces.surface)
         ) {
@@ -129,7 +124,7 @@ private fun GuestPreview() {
 @MultiThemePreviews
 @Composable
 private fun FavoriteListEmptyPreview() {
-    MovioTheme() {
+    MovioTheme {
         Box(
             Modifier.background(Theme.color.surfaces.surface)
         ) {
