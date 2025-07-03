@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.theme.MovioTheme
@@ -47,7 +48,7 @@ fun ArtistCard(name: String, imgRes: Int) {
             style = Theme.textStyle.title.mediumMedium14,
             overflow = TextOverflow.Ellipsis
 
-            )
+        )
 
     }
 }
