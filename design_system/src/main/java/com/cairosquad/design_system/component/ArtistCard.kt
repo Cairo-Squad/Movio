@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,7 +37,7 @@ fun ArtistCard(name: String, imgRes: Int) {
                 .size(88.dp)
                 .clip(CircleShape),
             painter = painterResource(id = imgRes),
-            contentDescription = null,
+            contentDescription = stringResource(R.string.artist_image),
             contentScale = ContentScale.Crop,
         )
         Text(
