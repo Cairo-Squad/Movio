@@ -1,8 +1,8 @@
 package com.cairosquad.design_system.component
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
@@ -51,11 +52,10 @@ fun TopBar(
      ) {
          tabs.forEachIndexed { index, title ->
              val isSelected = selectedTabIndex == index
-             val textColor = if (isSelected)
-                 Theme.color.brand.onPrimaryContainer
-             else
-                 Theme.color.surfaces.onSurfaceVariant
-
+             val textColor by animateColorAsState(
+                 targetValue = if (isSelected) Theme.color.brand.onPrimaryContainer else Theme.color.surfaces.onSurfaceVariant,
+                 animationSpec = tween(durationMillis = 300)
+             )
              val textStyle = if (isSelected)
                  Theme.textStyle.title.mediumMedium16
              else
@@ -77,25 +77,23 @@ fun TopBar(
                          .widthIn(min = 48.dp, max = 100.dp)
                          .onGloballyPositioned { coordinates ->
                              tabWidth = coordinates.size.width
-                         }
-                         .then(if (isSelected) Modifier else Modifier.padding(bottom = 8.5.dp)),
+                         },
                      text = title,
                      color = textColor,
                      textAlign = TextAlign.Center,
                      style = textStyle,
                  )
-                 AnimatedVisibility(
-                     isSelected,
-                     enter = fadeIn(),
-                     exit = fadeOut(),
-                 ){
-                     Box(
-                         modifier = Modifier
-                             .height(1.dp)
-                             .width(with(LocalDensity.current) { tabWidth.toDp() })
-                             .background(brush = Theme.color.indicatorGradiant.horizontalGradient)
-                     )
-                 }
+                 val alpha by animateFloatAsState(
+                     targetValue = if (isSelected) 1f else 0f,
+                     animationSpec = tween(durationMillis = 300)
+                 )
+                 Box(
+                     modifier = Modifier
+                         .height(1.dp)
+                         .width(with(LocalDensity.current) { tabWidth.toDp() })
+                         .alpha(alpha)
+                         .background(brush = Theme.color.indicatorGradiant.horizontalGradient)
+                 )
              }
 
          }
