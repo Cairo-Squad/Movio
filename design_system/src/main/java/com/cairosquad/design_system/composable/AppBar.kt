@@ -7,11 +7,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -48,6 +51,7 @@ fun AppBar(
                     .padding(end = 8.dp)
                     .size(40.dp)
                     .padding(8.dp)
+                    .clip(RoundedCornerShape(2.dp))
                     .clickable(onClick = onBackButtonClicked),
                 painter = painterResource(R.drawable.arrow_left_icon_round),
                 contentDescription = stringResource(R.string.back_icon),
@@ -74,6 +78,7 @@ fun AppBar(
                     .padding(start = 8.dp)
                     .size(40.dp)
                     .padding(8.dp)
+                    .clip(RoundedCornerShape(2.dp))
                     .clickable(onClick = onShareButtonClicked),
                 painter = painterResource(R.drawable.share_icon_round),
                 contentDescription = stringResource(R.string.share_icon),
@@ -87,6 +92,7 @@ fun AppBar(
                     .padding(start = 4.dp)
                     .size(40.dp)
                     .padding(8.dp)
+                    .clip(RoundedCornerShape(2.dp))
                     .clickable(onClick = onFavoriteButtonClicked),
                 painter = painterResource(R.drawable.heart_icon_round),
                 contentDescription = stringResource(R.string.favorite_icon),
