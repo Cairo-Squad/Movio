@@ -23,14 +23,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.cairosquad.design_system.R
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
-import com.cairosquad.ui.R
 
 @Composable
 fun MovieCard(
     title: String,
-    rating: String,
+    vote: Float,
     imgRes: Int,
     modifier: Modifier = Modifier
 ) {
@@ -69,7 +69,7 @@ fun MovieCard(
                 )
 
                 Text(
-                    text = rating,
+                    text = vote.toString(),
                     color = Theme.color.system.onWarning,
                     style = Theme.textStyle.label.smallRegular12
                 )
@@ -89,13 +89,14 @@ fun MovieCard(
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
 private fun MovieCardPreview() {
     MovioTheme {
         MovieCard(
             title = "The Dark Knight",
-            rating = "5.0",
+            vote = 5.0f,
             imgRes = R.drawable.movie_card_img
         )
     }
@@ -103,11 +104,11 @@ private fun MovieCardPreview() {
 
 @Preview(name = "MovieCard Light", showBackground = true)
 @Composable
-fun MovieCardPreviewLight() {
+private fun MovieCardPreviewLight() {
     MovioTheme(isDarkTheme = false) {
         MovieCard(
             title = "Our girl",
-            rating = "4.2",
+            vote = 4.2f,
             imgRes = R.drawable.girl
         )
     }
@@ -115,11 +116,11 @@ fun MovieCardPreviewLight() {
 
 @Preview(name = "MovieCard Dark", showBackground = true)
 @Composable
-fun MovieCardPreviewDark() {
+private fun MovieCardPreviewDark() {
     MovioTheme(isDarkTheme = true) {
         MovieCard(
             title = "Spider-Man: Into the Spider-Verse",
-            rating = "4.8",
+            vote = 4.8f,
             imgRes = R.drawable.spider,
             modifier = Modifier.padding(8.dp)
         )
