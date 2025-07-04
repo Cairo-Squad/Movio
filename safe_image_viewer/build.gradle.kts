@@ -32,6 +32,18 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    packaging {
+        resources {
+            excludes += arrayOf(
+                "/META-INF/{AL2.0,LGPL2.1}",
+                "META-INF/LICENSE.md",
+                "META-INF/LICENSE",
+                "META-INF/NOTICE",
+                "META-INF/LICENSE-notice",
+                "META-INF/LICENSE-notice.md"
+            )
+        }
+    }
     buildFeatures {
         compose = true
     }
@@ -51,9 +63,27 @@ dependencies {
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.mockk)
     testImplementation(libs.truth)
+    testImplementation(libs.junit.jupiter)
+    androidTestImplementation(libs.mockk)
+    androidTestImplementation(libs.truth)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.junit.jupiter)
+}
+
+kover {
+    reports {
+        filters {
+            excludes {
+                classes(
+                    "**.alghorithm.**",
+                    "**.loader.**",
+                    "**.modifier.**",
+                    "**.FastBlurAlgorithmKt",
+                )
+            }
+        }
+    }
 }
