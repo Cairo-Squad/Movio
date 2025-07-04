@@ -1,4 +1,4 @@
-package com.cairosquad.design_system.composable
+package com.cairosquad.design_system.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
