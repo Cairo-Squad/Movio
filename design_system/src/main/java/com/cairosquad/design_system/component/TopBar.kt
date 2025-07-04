@@ -1,5 +1,8 @@
 package com.cairosquad.design_system.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -43,7 +46,7 @@ fun TopBar(
              .height(36.dp)
              .padding(horizontal = 16.dp)
              .horizontalScroll(rememberScrollState()),
-         horizontalArrangement = Arrangement.SpaceAround,
+         horizontalArrangement = Arrangement.spacedBy(8.dp),
          verticalAlignment = Alignment.CenterVertically
      ) {
          tabs.forEachIndexed { index, title ->
@@ -74,13 +77,18 @@ fun TopBar(
                          .widthIn(min = 48.dp, max = 100.dp)
                          .onGloballyPositioned { coordinates ->
                              tabWidth = coordinates.size.width
-                         },
+                         }
+                         .then(if (isSelected) Modifier else Modifier.padding(bottom = 8.5.dp)),
                      text = title,
                      color = textColor,
                      textAlign = TextAlign.Center,
                      style = textStyle,
                  )
-                 if (isSelected){
+                 AnimatedVisibility(
+                     isSelected,
+                     enter = fadeIn(),
+                     exit = fadeOut(),
+                 ){
                      Box(
                          modifier = Modifier
                              .height(1.dp)
