@@ -1,6 +1,7 @@
 package com.cairosquad.design_system.color
 
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 data class MovioColors(
@@ -47,9 +48,7 @@ data class System(
 )
 
 data class IndicatorGradiant(
-    val start: Color,
-    val medium: Color,
-    val end: Color
+    val horizontalGradient: Brush
 )
 
 internal val LocalMovioColor = staticCompositionLocalOf { lightThemeColors }

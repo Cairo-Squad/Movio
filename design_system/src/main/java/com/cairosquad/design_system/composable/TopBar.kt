@@ -20,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
@@ -82,15 +81,7 @@ fun TopBar(
                          modifier = Modifier
                              .height(1.dp)
                              .width(with(LocalDensity.current) { tabWidth.toDp() })
-                             .background(
-                                 brush = Brush.horizontalGradient(
-                                     colors = listOf(
-                                         Theme.color.indicatorGradiant.start,
-                                         Theme.color.indicatorGradiant.medium,
-                                         Theme.color.indicatorGradiant.end
-                                     ),
-                                 )
-                             )
+                             .background(brush = Theme.color.indicatorGradiant.horizontalGradient)
                      )
                  }
              }
