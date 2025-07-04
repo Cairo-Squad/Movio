@@ -31,8 +31,8 @@ fun Chip(
         modifier = modifier
             .background(color = backgroundColor, shape = CircleShape)
             .clip(CircleShape)
-            .padding(horizontal = 12.dp, vertical = 7.5.dp)
             .clickable(onClick = onClick)
+            .padding(horizontal = 12.dp, vertical = 7.5.dp)
     ) {
         Text(
             modifier = Modifier.align(Alignment.Center),
