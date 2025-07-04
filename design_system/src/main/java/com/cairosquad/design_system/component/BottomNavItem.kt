@@ -1,4 +1,4 @@
-package com.cairosquad.ui.model
+package com.cairosquad.design_system.component
 
 import androidx.annotation.DrawableRes
 
