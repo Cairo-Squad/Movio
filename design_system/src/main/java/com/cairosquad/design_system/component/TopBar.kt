@@ -2,7 +2,6 @@ package com.cairosquad.design_system.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -68,6 +67,7 @@ fun TopBar(
                      onClick = {onTabSelected(index)}
                  ),
                  horizontalAlignment = Alignment.CenterHorizontally,
+                 verticalArrangement = Arrangement.spacedBy(7.5.dp)
              ) {
                  Text(
                      modifier = Modifier
