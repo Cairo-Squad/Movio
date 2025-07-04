@@ -35,7 +35,7 @@ fun AppBar(
     onShareButtonClicked: (() -> Unit)? = null,
     onFavoriteButtonClicked: (() -> Unit)? = null,
 ) {
-    Box(
+    Row(
         modifier = modifier
             .fillMaxWidth()
             .height(48.dp)
@@ -63,19 +63,23 @@ fun AppBar(
             }
         }
 
-        if (title != null) {
-            Text(
-                modifier = Modifier.align(Alignment.Center),
-                text = title,
-                color = Theme.color.surfaces.onSurface,
-                style = Theme.textStyle.headline.largeBold16,
-            )
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .align(Alignment.CenterVertically)
+        ) {
+            if (title != null) {
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = title,
+                    color = Theme.color.surfaces.onSurface,
+                    style = Theme.textStyle.headline.largeBold16,
+                )
+            }
         }
 
-        Row(
-            modifier = Modifier.align(Alignment.CenterEnd),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(4.dp))
+        {
             if (onShareButtonClicked != null) {
                 Box(
                     modifier = Modifier
