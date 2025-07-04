@@ -44,3 +44,10 @@ private fun ChipPreview1() {
         Chip(title = "All", isSelected = true)
     }
 }
+@Preview
+@Composable
+private fun ChipPreview2() {
+    MovioTheme {
+        Chip(title = "All", isSelected = false)
+    }
+}
