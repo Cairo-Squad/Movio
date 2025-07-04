@@ -5,11 +5,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -25,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -44,7 +45,7 @@ fun InputField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     placeholder: String = "",
-    isError: String = "",
+    error: String = "",
     isSingleLine: Boolean = true,
     isPasswordField: Boolean = false,
     @DrawableRes leadingIcon: Int? = null,
@@ -53,82 +54,97 @@ fun InputField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {
-    var isFocused by remember { mutableStateOf(false) }
+    var hasFocus by remember { mutableStateOf(false) }
+    val hasFocusGradient = if (error.isBlank()) Brush.horizontalGradient(
+        listOf(
+            Theme.color.brand.onPrimary,
+            Theme.color.brand.primary
+        )
+    ) else SolidColor(Theme.color.system.errorContainer)
 
-    BasicTextField(
-        value = value,
-        onValueChange = onValueChange,
+    Column(
         modifier = modifier
-            .clip(RoundedCornerShape(8.dp))
-            .background(Theme.color.surfaces.surfaceContainer)
-            .onFocusChanged { focusState ->
-                isFocused = focusState.isFocused
-            }
-            .then(
-                if (isFocused) {
-                    Modifier.border(
-                        width = 1.dp,
-                        brush = Brush.horizontalGradient(
-                            listOf(
-                                Color(0xFFEBE6FE),
-                                Color(0xFF724CF8)
-                            )
-                        ),
-                        shape = RoundedCornerShape(8.dp)
-                    )
-                } else {
-                    Modifier
+    ) {
+        BasicTextField(
+            value = value,
+            onValueChange = onValueChange,
+            modifier = Modifier
+                .clip(RoundedCornerShape(8.dp))
+                .background(Theme.color.surfaces.surfaceContainer)
+                .onFocusChanged { focusState ->
+                    hasFocus = focusState.isFocused
                 }
-            )
-            .padding(horizontal = 12.dp, vertical = 14.dp),
-        singleLine = isSingleLine,
-        keyboardOptions = keyboardOptions,
-        keyboardActions = keyboardActions,
-        textStyle = Theme.textStyle.label.smallRegular14.copy(
-            color = Theme.color.surfaces.onSurface
-        ),
-        decorationBox = { innerTextField ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TextFieldIcon(
-                    leadingIcon,
-                    isFocused,
-                    modifier = Modifier.padding(end = 8.dp)
-                )
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                ) {
-                    if (value.isEmpty()) {
-                        Text(
-                            text = placeholder,
-                            style = Theme.textStyle.label.smallRegular14.copy(
-                                color = Theme.color.surfaces.onSurfaceContainer
-                            )
+                .then(
+                    if (hasFocus || error.isNotBlank()) {
+                        Modifier.border(
+                            width = 1.dp,
+                            brush = hasFocusGradient,
+                            shape = RoundedCornerShape(8.dp)
                         )
                     } else {
-                        innerTextField()
+                        Modifier
                     }
-                }
-                TextFieldIcon(
-                    trailingIcon,
-                    isFocused,
-                    modifier = Modifier.padding(start = 8.dp),
-                    onTrailingIconClick,
                 )
-            }
-        },
-        cursorBrush = SolidColor(
-            Theme.color.surfaces.onSurface
-        ),
-        visualTransformation = if (isPasswordField) PasswordVisualTransformation() else VisualTransformation.None,
-    )
+                .padding(horizontal = 12.dp, vertical = 14.dp),
+            singleLine = isSingleLine,
+            keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions,
+            textStyle = Theme.textStyle.label.smallRegular14.copy(
+                color = Theme.color.surfaces.onSurface
+            ),
+            decorationBox = { innerTextField ->
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    TextFieldIcon(
+                        leadingIcon,
+                        hasFocus,
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                    ) {
+                        if (value.isEmpty()) {
+                            Text(
+                                text = placeholder,
+                                style = Theme.textStyle.label.smallRegular14.copy(
+                                    color = Theme.color.surfaces.onSurfaceContainer
+                                )
+                            )
+                        } else {
+                            innerTextField()
+                        }
+                    }
+                    TextFieldIcon(
+                        trailingIcon,
+                        hasFocus,
+                        modifier = Modifier.padding(start = 8.dp),
+                        onTrailingIconClick,
+                    )
+                }
+            },
+            cursorBrush = SolidColor(
+                Theme.color.surfaces.onSurface
+            ),
+            visualTransformation = if (isPasswordField) PasswordVisualTransformation() else VisualTransformation.None,
+        )
+
+        if (error.isNotBlank()) {
+            BasicText(
+                text = "* $error",
+                style = Theme.textStyle.label.smallRegular12.copy(
+                    color = Theme.color.system.onErrorContainer
+                ),
+                modifier = Modifier.padding(top = 4.dp)
+            )
+        }
+    }
 }
 
 @Composable
-fun TextFieldIcon(
+private fun TextFieldIcon(
     @DrawableRes icon: Int?,
     isFocused: Boolean,
     modifier: Modifier = Modifier,
@@ -160,9 +176,26 @@ private fun PreviewInputField() {
             value = "",
             onValueChange = {},
             placeholder = stringResource(R.string.search),
-            leadingIcon = com.cairosquad.design_system.R.drawable.search_bottom_nav,
-            trailingIcon = com.cairosquad.design_system.R.drawable.ic_close,
+            leadingIcon = R.drawable.search_bottom_nav,
+            trailingIcon = R.drawable.ic_close,
             isPasswordField = false,
+            modifier = Modifier.padding(16.dp)
+        )
+    }
+}
+
+@MultiThemePreviews
+@Composable
+private fun PreviewInputFieldError() {
+    MovioTheme {
+        InputField(
+            value = "",
+            onValueChange = {},
+            placeholder = stringResource(R.string.search),
+            leadingIcon = R.drawable.search_bottom_nav,
+            trailingIcon = R.drawable.ic_close,
+            isPasswordField = false,
+            error = "Hello",
             modifier = Modifier.padding(16.dp)
         )
     }
