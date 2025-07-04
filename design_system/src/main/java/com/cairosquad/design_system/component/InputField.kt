@@ -44,10 +44,9 @@ fun InputField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     placeholder: String = "",
-    error: String = "",
-    enabled: Boolean = true,
-    singleLine: Boolean = true,
-    isPassword: Boolean = false,
+    isError: String = "",
+    isSingleLine: Boolean = true,
+    isPasswordField: Boolean = false,
     @DrawableRes leadingIcon: Int? = null,
     @DrawableRes trailingIcon: Int? = null,
     onTrailingIconClick: () -> Unit = {},
@@ -82,7 +81,7 @@ fun InputField(
                 }
             )
             .padding(horizontal = 12.dp, vertical = 14.dp),
-        singleLine = singleLine,
+        singleLine = isSingleLine,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
         textStyle = Theme.textStyle.label.smallRegular14.copy(
@@ -124,7 +123,7 @@ fun InputField(
         cursorBrush = SolidColor(
             Theme.color.surfaces.onSurface
         ),
-        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
+        visualTransformation = if (isPasswordField) PasswordVisualTransformation() else VisualTransformation.None,
     )
 }
 
@@ -163,7 +162,7 @@ private fun PreviewInputField() {
             placeholder = stringResource(R.string.search),
             leadingIcon = com.cairosquad.design_system.R.drawable.search_bottom_nav,
             trailingIcon = com.cairosquad.design_system.R.drawable.ic_close,
-            isPassword = false,
+            isPasswordField = false,
             modifier = Modifier.padding(16.dp)
         )
     }
