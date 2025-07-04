@@ -47,20 +47,16 @@ fun AppBar(
             .padding(vertical = 4.dp, horizontal = 16.dp)
     ) {
         if (onBackButtonClicked != null) {
-            Box(
+            Icon(
                 modifier = Modifier
                     .clip(CircleShape)
                     .clickable(onClick = onBackButtonClicked)
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .padding(8.dp),
-                    painter = painterResource(R.drawable.arrow_left_icon_round),
-                    contentDescription = stringResource(R.string.back_icon),
-                    tint = Theme.color.surfaces.onSurface,
-                )
-            }
+                    .size(40.dp)
+                    .padding(8.dp),
+                painter = painterResource(R.drawable.arrow_left_icon_round),
+                contentDescription = stringResource(R.string.back_icon),
+                tint = Theme.color.surfaces.onSurface,
+            )
         }
 
         Box(
@@ -81,37 +77,29 @@ fun AppBar(
         Row(horizontalArrangement = Arrangement.spacedBy(4.dp))
         {
             if (onShareButtonClicked != null) {
-                Box(
+                Icon(
                     modifier = Modifier
                         .clip(CircleShape)
                         .clickable(onClick = onShareButtonClicked)
-                ) {
-                    Icon(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .padding(8.dp),
-                        painter = painterResource(R.drawable.share_icon_round),
-                        contentDescription = stringResource(R.string.share_icon),
-                        tint = Theme.color.surfaces.onSurface,
-                    )
-                }
+                        .size(40.dp)
+                        .padding(8.dp),
+                    painter = painterResource(R.drawable.share_icon_round),
+                    contentDescription = stringResource(R.string.share_icon),
+                    tint = Theme.color.surfaces.onSurface,
+                )
             }
 
             if (onFavoriteButtonClicked != null) {
-                Box(
+                Icon(
                     modifier = Modifier
                         .clip(CircleShape)
                         .clickable(onClick = onFavoriteButtonClicked)
-                ) {
-                    Icon(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .padding(8.dp),
-                        painter = painterResource(R.drawable.heart_icon_round),
-                        contentDescription = stringResource(R.string.favorite_icon),
-                        tint = Theme.color.surfaces.onSurface,
-                    )
-                }
+                        .size(40.dp)
+                        .padding(8.dp),
+                    painter = painterResource(R.drawable.heart_icon_round),
+                    contentDescription = stringResource(R.string.favorite_icon),
+                    tint = Theme.color.surfaces.onSurface,
+                )
             }
         }
     }
