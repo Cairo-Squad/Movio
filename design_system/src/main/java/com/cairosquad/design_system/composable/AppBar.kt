@@ -3,7 +3,6 @@ package com.cairosquad.design_system.composable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -34,7 +33,7 @@ fun AppBar(
     onShareButtonClicked: (() -> Unit)? = null,
     onFavoriteButtonClicked: (() -> Unit)? = null,
 ) {
-    Row(
+    Box(
         modifier = modifier
             .fillMaxWidth()
             .height(48.dp)
@@ -48,7 +47,7 @@ fun AppBar(
         if (onBackButtonClicked != null){
             Icon(
                 modifier = Modifier
-                    .padding(end = 8.dp)
+                    .align(Alignment.CenterStart)
                     .size(40.dp)
                     .padding(8.dp)
                     .clip(RoundedCornerShape(2.dp))
@@ -59,23 +58,20 @@ fun AppBar(
             )
         }
 
-        Box(modifier = Modifier
-            .weight(1f)
-            .align(Alignment.CenterVertically)) {
-            if (title != null){
-                Text(
-                    modifier = Modifier.align(Alignment.Center),
-                    text = title,
-                    color = Theme.color.surfaces.onSurface,
-                    style = Theme.textStyle.headline.largeBold16,
-                )
-            }
+        if (title != null){
+            Text(
+                modifier = Modifier.align(Alignment.Center),
+                text = title,
+                color = Theme.color.surfaces.onSurface,
+                style = Theme.textStyle.headline.largeBold16,
+            )
         }
 
         if (onShareButtonClicked != null){
             Icon(
                 modifier = Modifier
-                    .padding(start = 8.dp)
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 44.dp)
                     .size(40.dp)
                     .padding(8.dp)
                     .clip(RoundedCornerShape(2.dp))
@@ -89,7 +85,7 @@ fun AppBar(
         if (onFavoriteButtonClicked != null){
             Icon(
                 modifier = Modifier
-                    .padding(start = 4.dp)
+                    .align(Alignment.CenterEnd)
                     .size(40.dp)
                     .padding(8.dp)
                     .clip(RoundedCornerShape(2.dp))
@@ -108,7 +104,7 @@ private fun MovioAppBarPreview() {
     MovioTheme {
         Box(Modifier.background(Theme.color.surfaces.surface))
         {
-            AppBar(onBackButtonClicked = {}, onShareButtonClicked = {}, onFavoriteButtonClicked = {})
+            AppBar(title = "nour", onBackButtonClicked = {}, onShareButtonClicked = {}, onFavoriteButtonClicked = {})
         }
     }
 }
