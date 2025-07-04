@@ -1,5 +1,6 @@
 package com.cairosquad.design_system.component
 
+import android.R.attr.name
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,9 +25,9 @@ import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 
 @Composable
-fun ArtistCard(name: String, imgRes: Int) {
+fun ArtistCard(name: String, imgRes: Int, modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .widthIn(max = 102.dp)
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
