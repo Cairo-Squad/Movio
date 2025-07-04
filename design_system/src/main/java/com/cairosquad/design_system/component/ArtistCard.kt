@@ -1,6 +1,5 @@
 package com.cairosquad.design_system.component
 
-import android.R.attr.name
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
