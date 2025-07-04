@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="no_results_found">No results found</string>
+    <string name="no_results_found_description">We couldn’t find anything matching your search. Try checking the spelling or explore something else!</string>
+    <string name="internet_is_not_available">Internet is not available</string>
+    <string name="internet_is_not_available_description">Please make sure you are connected to the internet and try again.</string>
+    <string name="log_in_to_unlock_your_personal_library">Log in to unlock your personal library</string>
+    <string name="access_your_watch_history_favorites_and_watchlist_all_in_one_place">Access your watch history, favorites, and watchlist  all in one place.</string>
+    <string name="watch_later_empty">Your Watch Later list is empty</string>
+    <string name="watch_later_empty_description">Save the movies and shows you want to watch, and they’ll appear here when you’re ready.</string>
+    <string name="favorites_list_empty">Your favorites list is empty!</string>
+    <string name="favorite_list_empty_description">Start adding the movies and shows you love — keep them all in one place for easy access.</string>
+    <string name="state_message_image">State Message Image</string>
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="library">Library</string>
+    <string name="more">More</string>
+    <string name="icon">icon</string>
     <string name="back_icon">back icon</string>
     <string name="share_icon">share icon</string>
     <string name="favorite_icon">favorite icon</string>

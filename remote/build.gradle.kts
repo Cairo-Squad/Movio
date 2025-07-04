@@ -1,7 +1,7 @@
 plugins {
     id("java-library")
     alias(libs.plugins.jetbrains.kotlin.jvm)
-}
+    alias(libs.plugins.kover)}
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
@@ -13,4 +13,6 @@ kotlin {
 }
 dependencies {
     implementation(project(":repository"))
+    testImplementation(kotlin("test"))
+    testImplementation(libs.junit.jupiter)
 }
