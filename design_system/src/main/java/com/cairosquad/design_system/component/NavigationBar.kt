@@ -3,7 +3,7 @@ package com.cairosquad.design_system.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,19 +30,20 @@ import com.cairosquad.design_system.R
 
 
 @Composable
-fun MovioNavigationBar(
+fun NavigationBar(
     navigationItems: List<BottomNavItem>,
     onItemSelected: (Int) -> Unit,
     modifier: Modifier = Modifier,
     selectedItemIndex: Int = 0,
 ) {
-    Box(
+    Column(
         modifier = modifier
             .background(color = Theme.color.surfaces.surface)
             .windowInsetsPadding(WindowInsets.navigationBars)
+            .padding(horizontal = 20.dp)
             .fillMaxWidth()
             .height(74.dp)
-            .padding(horizontal = 20.dp, vertical = 15.5.dp)
+
     ) {
         Row(
             modifier = Modifier.fillMaxSize(),
@@ -52,25 +53,25 @@ fun MovioNavigationBar(
             navigationItems.forEachIndexed { index, item ->
                 val iconResId =
                     if (selectedItemIndex == index) item.coloredIcon else item.unColoredIcon
-                Box(
+                val labelColor =
+                    if (selectedItemIndex == index) Theme.color.brand.primary else Theme.color.surfaces.onSurfaceVariant
+                Column(
                     modifier = Modifier
                         .size(43.dp)
                         .clickable { onItemSelected(index) },
-                    contentAlignment = Alignment.Center
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Icon(
                         modifier = Modifier
-                            .align(Alignment.TopCenter)
-                            .size(24.dp)
-                            .padding(bottom = 4.dp),
+                            .padding(bottom = 4.dp)
+                            .size(24.dp),
                         imageVector = ImageVector.vectorResource(id = iconResId),
                         contentDescription = "${item.label} icon",
                         tint = Color.Unspecified
                     )
                     Text(
-                        modifier = Modifier.align(Alignment.BottomCenter),
                         text = item.label,
-                        color = Theme.color.surfaces.onSurfaceVariant,
+                        color = labelColor,
                         style = Theme.textStyle.label.smallRegular12
                     )
                 }
@@ -167,7 +168,7 @@ private fun PreviewMovioNavigationBar(isDarkTheme: Boolean, selectedIndex: Int) 
                 stringResource(R.string.more)
             )
         )
-        MovioNavigationBar(
+        NavigationBar(
             navigationItems = navigationItems,
             onItemSelected = {},
             selectedItemIndex = selectedIndex
