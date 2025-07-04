@@ -47,8 +47,8 @@ fun ArtistCard(name: String, imgRes: Int) {
             text = name,
             textAlign = TextAlign.Center,
             style = Theme.textStyle.title.mediumMedium14,
-            overflow = TextOverflow.Ellipsis
-
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1
         )
     }
 }
