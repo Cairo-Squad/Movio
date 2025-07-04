@@ -41,76 +41,76 @@ fun TopBar(
     onTabSelected: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-     Row(
-         modifier = modifier
-             .fillMaxWidth()
-             .height(36.dp)
-             .padding(horizontal = 16.dp)
-             .horizontalScroll(rememberScrollState()),
-         horizontalArrangement = Arrangement.spacedBy(8.dp),
-         verticalAlignment = Alignment.CenterVertically
-     ) {
-         tabs.forEachIndexed { index, title ->
-             val isSelected = selectedTabIndex == index
-             val textColor by animateColorAsState(
-                 targetValue = if (isSelected) Theme.color.brand.onPrimaryContainer else Theme.color.surfaces.onSurfaceVariant,
-                 animationSpec = tween(durationMillis = 300)
-             )
-             val textStyle = if (isSelected)
-                 Theme.textStyle.title.mediumMedium16
-             else
-                 Theme.textStyle.body.smallRegular16
-             var tabWidth by remember { mutableIntStateOf(0) }
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(36.dp)
+            .padding(horizontal = 16.dp)
+            .horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        tabs.forEachIndexed { index, title ->
+            val isSelected = selectedTabIndex == index
+            val textColor by animateColorAsState(
+                targetValue = if (isSelected) Theme.color.brand.onPrimaryContainer else Theme.color.surfaces.onSurfaceVariant,
+                animationSpec = tween(durationMillis = 300)
+            )
+            val textStyle = if (isSelected)
+                Theme.textStyle.title.mediumMedium16
+            else
+                Theme.textStyle.body.smallRegular16
+            var tabWidth by remember { mutableIntStateOf(0) }
 
-             Column(
-                 modifier = Modifier
-                     .clickable(
-                     indication = null,
-                     interactionSource = remember { MutableInteractionSource() },
-                     onClick = {onTabSelected(index)}
-                 ),
-                 horizontalAlignment = Alignment.CenterHorizontally,
-                 verticalArrangement = Arrangement.spacedBy(7.5.dp)
-             ) {
-                 Text(
-                     modifier = Modifier
-                         .widthIn(min = 48.dp, max = 100.dp)
-                         .onGloballyPositioned { coordinates ->
-                             tabWidth = coordinates.size.width
-                         },
-                     text = title,
-                     color = textColor,
-                     textAlign = TextAlign.Center,
-                     style = textStyle,
-                 )
-                 val alpha by animateFloatAsState(
-                     targetValue = if (isSelected) 1f else 0f,
-                     animationSpec = tween(durationMillis = 300)
-                 )
-                 Box(
-                     modifier = Modifier
-                         .height(1.dp)
-                         .width(with(LocalDensity.current) { tabWidth.toDp() })
-                         .alpha(alpha)
-                         .background(brush = Theme.color.indicatorGradiant.horizontalGradient)
-                 )
-             }
+            Column(
+                modifier = Modifier
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = { onTabSelected(index) }
+                    ),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(7.5.dp)
+            ) {
+                Text(
+                    modifier = Modifier
+                        .widthIn(min = 48.dp, max = 100.dp)
+                        .onGloballyPositioned { coordinates ->
+                            tabWidth = coordinates.size.width
+                        },
+                    text = title,
+                    color = textColor,
+                    textAlign = TextAlign.Center,
+                    style = textStyle,
+                )
+                val alpha by animateFloatAsState(
+                    targetValue = if (isSelected) 1f else 0f,
+                    animationSpec = tween(durationMillis = 300)
+                )
+                Box(
+                    modifier = Modifier
+                        .height(1.dp)
+                        .width(with(LocalDensity.current) { tabWidth.toDp() })
+                        .alpha(alpha)
+                        .background(brush = Theme.color.indicatorGradiant.horizontalGradient)
+                )
+            }
 
-         }
-     }
+        }
+    }
 }
 
 @Preview
 @Composable
-private fun TopBarPreview(){
+private fun TopBarPreview() {
     MovioTheme {
         val tabs = listOf("All", "Movies", "TV Shows", "Categories")
         var selectedTabIndex by remember { mutableIntStateOf(0) }
-        Box(Modifier.background(Theme.color.surfaces.surface)){
+        Box(Modifier.background(Theme.color.surfaces.surface)) {
             TopBar(
                 tabs = tabs,
                 selectedTabIndex = selectedTabIndex,
-                onTabSelected = {selectedTabIndex = it}
+                onTabSelected = { selectedTabIndex = it }
             )
         }
     }
