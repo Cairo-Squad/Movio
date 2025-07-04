@@ -27,12 +27,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.preview.MultiThemePreviews
@@ -55,12 +58,24 @@ fun InputField(
     keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {
     var hasFocus by remember { mutableStateOf(false) }
-    val hasFocusGradient = if (error.isBlank()) Brush.horizontalGradient(
-        listOf(
-            Theme.color.brand.onPrimary,
-            Theme.color.brand.primary
-        )
-    ) else SolidColor(Theme.color.system.errorContainer)
+    val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
+    val hasFocusGradient = listOf(
+        Theme.color.brand.onPrimary,
+        Theme.color.brand.primary
+    )
+    val borderColor = if (error.isBlank())
+        if (hasFocus) {
+            Brush.horizontalGradient(
+                if (isRtl) {
+                    hasFocusGradient.reversed()
+                } else {
+                    hasFocusGradient
+                }
+            )
+        } else {
+            SolidColor(Color.Transparent)
+        }
+    else SolidColor(Theme.color.system.errorContainer)
 
     Column(
         modifier = modifier
@@ -78,7 +93,7 @@ fun InputField(
                     if (hasFocus || error.isNotBlank()) {
                         Modifier.border(
                             width = 1.dp,
-                            brush = hasFocusGradient,
+                            brush = borderColor,
                             shape = RoundedCornerShape(8.dp)
                         )
                     } else {
