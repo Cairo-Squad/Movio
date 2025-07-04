@@ -2,12 +2,14 @@ package com.cairosquad.design_system.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,21 +46,24 @@ fun AppBar(
             )
             .padding(vertical = 4.dp, horizontal = 16.dp)
     ) {
-        if (onBackButtonClicked != null){
-            Icon(
+        if (onBackButtonClicked != null) {
+            Box(
                 modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .size(40.dp)
-                    .padding(8.dp)
-                    .clip(RoundedCornerShape(2.dp))
-                    .clickable(onClick = onBackButtonClicked),
-                painter = painterResource(R.drawable.arrow_left_icon_round),
-                contentDescription = stringResource(R.string.back_icon),
-                tint = Theme.color.surfaces.onSurface,
-            )
+                    .clip(CircleShape)
+                    .clickable(onClick = onBackButtonClicked)
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .padding(8.dp),
+                    painter = painterResource(R.drawable.arrow_left_icon_round),
+                    contentDescription = stringResource(R.string.back_icon),
+                    tint = Theme.color.surfaces.onSurface,
+                )
+            }
         }
 
-        if (title != null){
+        if (title != null) {
             Text(
                 modifier = Modifier.align(Alignment.Center),
                 text = title,
@@ -67,33 +72,43 @@ fun AppBar(
             )
         }
 
-        if (onShareButtonClicked != null){
-            Icon(
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .padding(end = 44.dp)
-                    .size(40.dp)
-                    .padding(8.dp)
-                    .clip(RoundedCornerShape(2.dp))
-                    .clickable(onClick = onShareButtonClicked),
-                painter = painterResource(R.drawable.share_icon_round),
-                contentDescription = stringResource(R.string.share_icon),
-                tint = Theme.color.surfaces.onSurface,
-            )
-        }
+        Row(
+            modifier = Modifier.align(Alignment.CenterEnd),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            if (onShareButtonClicked != null) {
+                Box(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .clickable(onClick = onShareButtonClicked)
+                ) {
+                    Icon(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .padding(8.dp),
+                        painter = painterResource(R.drawable.share_icon_round),
+                        contentDescription = stringResource(R.string.share_icon),
+                        tint = Theme.color.surfaces.onSurface,
+                    )
+                }
+            }
 
-        if (onFavoriteButtonClicked != null){
-            Icon(
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .size(40.dp)
-                    .padding(8.dp)
-                    .clip(RoundedCornerShape(2.dp))
-                    .clickable(onClick = onFavoriteButtonClicked),
-                painter = painterResource(R.drawable.heart_icon_round),
-                contentDescription = stringResource(R.string.favorite_icon),
-                tint = Theme.color.surfaces.onSurface,
-            )
+            if (onFavoriteButtonClicked != null) {
+                Box(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .clickable(onClick = onFavoriteButtonClicked)
+                ) {
+                    Icon(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .padding(8.dp),
+                        painter = painterResource(R.drawable.heart_icon_round),
+                        contentDescription = stringResource(R.string.favorite_icon),
+                        tint = Theme.color.surfaces.onSurface,
+                    )
+                }
+            }
         }
     }
 }
@@ -104,7 +119,11 @@ private fun MovioAppBarPreview() {
     MovioTheme {
         Box(Modifier.background(Theme.color.surfaces.surface))
         {
-            AppBar(title = "nour", onBackButtonClicked = {}, onShareButtonClicked = {}, onFavoriteButtonClicked = {})
+            AppBar(
+                title = "nour",
+                onBackButtonClicked = {},
+                onShareButtonClicked = {},
+                onFavoriteButtonClicked = {})
         }
     }
 }
