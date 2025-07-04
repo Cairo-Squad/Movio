@@ -71,7 +71,7 @@ fun TopBar(
              ) {
                  Text(
                      modifier = Modifier
-                         .widthIn(min = 56.dp, max = 100.dp)
+                         .widthIn(min = 48.dp, max = 100.dp)
                          .onGloballyPositioned { coordinates ->
                              tabWidth = coordinates.size.width
                          },
