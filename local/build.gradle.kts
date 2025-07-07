@@ -1,11 +1,10 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kover)
 }
 
 android {
-    namespace = "com.cairosquad.viewmodel"
+    namespace = "com.cairosquad.local"
     compileSdk = 35
 
     defaultConfig {
@@ -34,11 +33,11 @@ android {
 }
 
 dependencies {
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation(project(":domain"))
 }
