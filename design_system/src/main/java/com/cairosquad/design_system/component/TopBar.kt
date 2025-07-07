@@ -62,6 +62,11 @@ fun TopBar(
                 Theme.textStyle.body.smallRegular16
             var tabWidth by remember { mutableIntStateOf(0) }
 
+            val alpha by animateFloatAsState(
+                targetValue = if (isSelected) 1f else 0f,
+                animationSpec = tween(durationMillis = 300)
+            )
+
             Column(
                 modifier = Modifier
                     .clickable(
@@ -83,10 +88,6 @@ fun TopBar(
                     textAlign = TextAlign.Center,
                     style = textStyle,
                 )
-                val alpha by animateFloatAsState(
-                    targetValue = if (isSelected) 1f else 0f,
-                    animationSpec = tween(durationMillis = 300)
-                )
                 Box(
                     modifier = Modifier
                         .height(1.dp)
@@ -95,7 +96,6 @@ fun TopBar(
                         .background(brush = Theme.color.indicatorGradiant.horizontalGradient)
                 )
             }
-
         }
     }
 }
