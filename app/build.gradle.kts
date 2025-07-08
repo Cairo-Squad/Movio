@@ -63,4 +63,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(project(":design_system"))
+    implementation(project(":domain"))
+    implementation(project(":entity"))
+    implementation(project(":local"))
+    implementation(project(":remote"))
+    implementation(project(":repository"))
+    implementation(project(":ui"))
+    implementation(project(":viewmodel"))
 }
