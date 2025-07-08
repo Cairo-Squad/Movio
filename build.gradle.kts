@@ -40,7 +40,7 @@ kover {
 
 dependencies {
     kover(project(":remote"))
-    kover(project(":usecase"))
+    "kover"(project(":domain"))
     kover(project(":repository"))
     kover(project(":viewmodel"))
 }
