@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back_icon">رمز الرجوع للخلف</string>
+    <string name="share_icon">رمز المشاركة</string>
+    <string name="favorite_icon">رمز المفضل</string>
+</resources>
