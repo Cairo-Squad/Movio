@@ -24,6 +24,9 @@ googleFirebasePerf = "1.4.2"
 material3Android = "1.3.2"
 junitJupiter = "5.8.1"
 junitJunit = "4.12"
+ksp = "2.1.0-1.0.29"
+koin = "4.0.3"
+koin-annotations = "2.0.0-Beta2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -51,6 +54,12 @@ androidx-foundation-layout-android = { group = "androidx.compose.foundation", na
 androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
 junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
+#koin
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
+koin-test = { module = "io.insert-koin:koin-test-junit4", version.ref = "koin" }
+koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koin-annotations" }
+koin-ksp = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koin-annotations" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -64,4 +73,6 @@ google-firebase-appdistribution = { id = "com.google.firebase.appdistribution", 
 google-firebase-perf = { id = "com.google.firebase.firebase-perf", version.ref = "googleFirebasePerf" }
 kover = { id = "org.jetbrains.kotlinx.kover", version = "0.9.1" }
 
+#ksp
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
