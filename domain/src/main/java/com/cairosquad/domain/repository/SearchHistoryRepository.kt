@@ -1,13 +1,12 @@
 package com.cairosquad.domain.repository
 
-import com.cairosquad.entity.SearchHistoryItem
 
 interface SearchHistoryRepository {
-    suspend fun getSearchHistory(query: String): List<SearchHistoryItem>
+    suspend fun getAll(query: String): List<String>
 
-    suspend fun clearAllSearchHistory()
+    suspend fun clearAll()
 
-    suspend fun clearSearchHistoryById(id: Long)
+    suspend fun removeQuery(query: String)
 
-    suspend fun addSearchHistoryItem(item: SearchHistoryItem)
+    suspend fun addQuery(query: String)
 }

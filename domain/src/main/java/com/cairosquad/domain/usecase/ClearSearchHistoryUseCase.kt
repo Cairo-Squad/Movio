@@ -5,7 +5,7 @@ class ClearSearchHistoryUseCase {
         TODO()
     }
 
-    suspend fun clearById(id: Long) {
+    suspend fun removeQuery(query: String) {
         TODO()
     }
 }
