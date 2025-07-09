@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.google.firebase.perf) apply false
     alias(libs.plugins.google.firebase.appdistribution) apply false
     alias(libs.plugins.kover)
+    alias(libs.plugins.kotlin.serialization) apply false
 }
 
 kover {
