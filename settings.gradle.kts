@@ -29,3 +29,5 @@ include(":entity")
 include(":repository")
 include(":remote")
 include(":local")
+
+include(":safe_image_viewer")
