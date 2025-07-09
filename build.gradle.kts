@@ -25,7 +25,10 @@ kover {
                     "**.ui.**",
                     "**.design_system.**",
                     "**.entity.**",
-                    "**.safe_image_viewer.**"
+                    "**.safe_image_viewer.modifier.**",
+                    "**.safe_image_viewer.alghorithm.**",
+                    "**.safe_image_viewer.safeImageViewer.**",
+                    "**.safe_image_viewer.loader.**",
                 )
             }
         }
