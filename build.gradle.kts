@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.google.firebase.perf) apply false
     alias(libs.plugins.google.firebase.appdistribution) apply false
     alias(libs.plugins.kover)
+    alias(libs.plugins.ksp) apply false
 }
 
 kover {
@@ -40,7 +41,7 @@ kover {
 
 dependencies {
     kover(project(":remote"))
-    kover(project(":usecase"))
+    "kover"(project(":domain"))
     kover(project(":repository"))
     kover(project(":viewmodel"))
     kover(project(":safe_image_viewer"))

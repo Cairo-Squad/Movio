@@ -34,7 +34,9 @@ coilCompose = "2.4.0"
 junitKtx = "1.2.1"
 junitJupiter = "5.8.1"
 truth = "1.4.2"
-
+ksp = "2.1.0-1.0.29"
+koin = "4.0.3"
+koin-annotations = "2.0.0-Beta2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -74,6 +76,13 @@ junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.r
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 
 
+#koin
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
+koin-test = { module = "io.insert-koin:koin-test-junit4", version.ref = "koin" }
+koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koin-annotations" }
+koin-ksp = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koin-annotations" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
@@ -84,4 +93,10 @@ google-gms-google-services = { id = "com.google.gms.google-services", version.re
 google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "googleFirebaseCrashlytics" }
 google-firebase-appdistribution = { id = "com.google.firebase.appdistribution", version.ref = "googleFirebaseAppdistribution" }
 google-firebase-perf = { id = "com.google.firebase.firebase-perf", version.ref = "googleFirebasePerf" }
+
 kover = { id = "org.jetbrains.kotlinx.kover", version = "0.9.1" }
+
+#ksp
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+
+
