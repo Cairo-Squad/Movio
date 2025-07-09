@@ -17,4 +17,7 @@
     <string name="more">More</string>
     <string name="icon">icon</string>
     <string name="movie_poster">movie poster</string>
+    <string name="back_icon">back icon</string>
+    <string name="share_icon">share icon</string>
+    <string name="favorite_icon">favorite icon</string>
 </resources>
