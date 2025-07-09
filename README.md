@@ -15,7 +15,7 @@ Each part of the app (e.g., networking, UI components, image loader) is separate
 Examples:
 - `core_networking`
 - `core_ui`
-- `core_image_viewer`
+- `safe_image_viewer`
 - `feature_home`
 
 ---
@@ -54,7 +54,7 @@ We integrated the following Firebase tools into the app:
 
 ## ⭐ Extra Work: Custom Image Viewer
 
-We created a new module: `core_image_viewer`
+We created a new module: `safe_image_viewer`
 
 - Built on top of **Coil**
 - Exposes a single `Image` composable
