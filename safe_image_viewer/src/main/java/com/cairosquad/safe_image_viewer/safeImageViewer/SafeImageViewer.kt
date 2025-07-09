@@ -1,4 +1,4 @@
-package com.cairosquad.safe_image_viewer
+package com.cairosquad.safe_image_viewer.safeImageViewer
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.clickable
@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.cairosquad.safe_image_viewer.R
 import com.cairosquad.safe_image_viewer.classifier.SafeImageClassifier
 import com.cairosquad.safe_image_viewer.loader.CoilImageLoader
 import com.cairosquad.safe_image_viewer.modifier.imageBlur
