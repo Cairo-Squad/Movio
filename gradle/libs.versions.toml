@@ -23,7 +23,6 @@ foundationLayoutAndroid = "1.8.3"
 googleFirebaseAppdistribution = "5.1.1"
 googleFirebasePerf = "1.4.2"
 material3Android = "1.3.2"
-navigationCompose = "2.9.1"
 uiToolingPreviewAndroid = "1.8.3"
 coil = "3.2.0"
 junitJupiter = "5.8.1"
@@ -40,11 +39,11 @@ truth = "1.4.2"
 ksp = "2.1.0-1.0.29"
 koin = "4.0.3"
 koin-annotations = "2.0.0-Beta2"
+navigation = "2.8.0-alpha08"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
-androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-perf = { module = "com.google.firebase:firebase-perf" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -81,6 +80,8 @@ tensorflow-lite-gpu = { group = "org.tensorflow", name = "tensorflow-lite-gpu", 
 androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 
+#navigation
+navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
 
 #koin
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
