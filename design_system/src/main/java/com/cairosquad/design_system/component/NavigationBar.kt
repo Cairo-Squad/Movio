@@ -25,7 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,25 +42,24 @@ fun NavigationBar(
     modifier: Modifier = Modifier,
 ) {
     val selectedNavigationIndex = rememberSaveable { mutableIntStateOf(0) }
-    val context = LocalContext.current
     val navigationItems = remember {
         listOf(
             BottomNavItem(
                 R.drawable.home_bottom_nav, R.drawable.home_bottom_nav_colored,
-                context.getString(R.string.home)
+                R.string.home
             ),
             BottomNavItem(
                 R.drawable.search_bottom_nav, R.drawable.search_bottom_nav_colored,
-                context.getString(R.string.search)
+                R.string.search
             ),
             BottomNavItem(
                 R.drawable.library_bottom_nav,
                 R.drawable.library_bottom_nav_colored,
-                context.getString(R.string.library)
+                R.string.library
             ),
             BottomNavItem(
                 R.drawable.more_bottom_nav, R.drawable.more_bottom_nav_colored,
-                context.getString(R.string.more)
+                R.string.more
             )
         )
     }
@@ -94,11 +93,11 @@ fun NavigationBar(
                         .padding(bottom = 4.dp)
                         .size(24.dp),
                     imageVector = ImageVector.vectorResource(id = iconResId),
-                    contentDescription = "${item.label} icon",
+                    contentDescription = "${stringResource(item.labelId)} ${stringResource(R.string.icon)}",
                     tint = Color.Unspecified
                 )
                 Text(
-                    text = item.label,
+                    text = stringResource(item.labelId),
                     color = labelColor,
                     style = Theme.textStyle.label.smallRegular12
                 )
@@ -111,7 +110,7 @@ fun NavigationBar(
 data class BottomNavItem(
     @DrawableRes val unColoredIcon: Int,
     @DrawableRes val coloredIcon: Int,
-    @StringRes val label: String
+    @StringRes val labelId: Int
 )
 
 @Preview
