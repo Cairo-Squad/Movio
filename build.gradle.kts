@@ -25,6 +25,7 @@ kover {
                     "**.ui.**",
                     "**.design_system.**",
                     "**.entity.**",
+                    "**.safe_image_viewer.**"
                 )
             }
         }
