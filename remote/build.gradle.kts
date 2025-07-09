@@ -25,6 +25,7 @@ android {
     buildTypes {
         release {
             buildConfigField("String", "API_KEY", properties.getProperty("API_KEY"))
+            buildConfigField("String", "BASE_URL", "\"https://api.themoviedb.org/3/\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -33,6 +34,7 @@ android {
         }
         debug {
             buildConfigField("String", "API_KEY", properties.getProperty("API_KEY"))
+            buildConfigField("String", "BASE_URL", "\"https://api.themoviedb.org/3/\"")
         }
     }
     compileOptions {

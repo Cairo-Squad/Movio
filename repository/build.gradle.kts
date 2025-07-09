@@ -14,6 +14,7 @@ kotlin {
 
 dependencies {
     implementation(project(":domain"))
+    implementation(libs.kotlinx.serialization.json)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.junit)
     testImplementation(libs.junit.jupiter)
@@ -23,4 +24,5 @@ dependencies {
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.jupiter)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
 }

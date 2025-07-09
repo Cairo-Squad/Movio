@@ -2,7 +2,7 @@ package com.cairosquad.remote.common.utils
 
 import io.ktor.client.statement.HttpResponse
 
-suspend inline fun <reified T> safeCall(
+suspend inline fun <reified T> callApi(
     execute: () -> HttpResponse
 ): T {
     val response = try {
