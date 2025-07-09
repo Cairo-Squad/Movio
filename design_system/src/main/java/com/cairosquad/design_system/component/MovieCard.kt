@@ -35,12 +35,9 @@ fun MovieCard(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier
-            .widthIn(max = 101.33.dp)
+        modifier = modifier.widthIn(max = 101.33.dp)
     ) {
-        Box(
-            modifier = Modifier
-        ) {
+        Box {
             AsyncImage(
                 model = imgRes,
                 contentDescription = stringResource(R.string.movie_poster),
@@ -126,4 +123,3 @@ private fun MovieCardPreviewDark() {
         )
     }
 }
-
