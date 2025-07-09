@@ -51,12 +51,3 @@ fun ArtistCard(name: String, imgUrl: String, modifier: Modifier = Modifier) {
         )
     }
 }
-
-
-@Preview
-@Composable
-private fun ArtistCardPreview() {
-    MovioTheme {
-        ArtistCard(name = "Ana de Armas", imgUrl = "Image/url")
-    }
-}
