@@ -38,10 +38,10 @@ truth = "1.4.2"
 ksp = "2.1.0-1.0.29"
 koin = "4.0.3"
 koin-annotations = "2.0.0-Beta2"
-ktorVersion = "2.3.6"
-serialization = "1.7.1"
-loggingInterceptor = "5.0.0-alpha.14"
-datastorePreferences = "1.1.4"
+ktorVersion = "3.2.1"
+serialization = "1.9.0"
+loggingInterceptor = "5.0.0"
+datastorePreferences = "1.1.7"
 
 
 [libraries]
