@@ -19,6 +19,8 @@ dependencies {
     // Ktor
     implementation(libs.bundles.ktor)
     implementation(libs.logging.interceptor)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.logging.interceptor)
     // Data Store
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.datastore)

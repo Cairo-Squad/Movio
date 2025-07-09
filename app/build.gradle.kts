@@ -73,7 +73,10 @@ dependencies {
     implementation(libs.koin.test)
     implementation(libs.koin.annotations)
     ksp(libs.koin.ksp)
-
+    implementation(libs.bundles.ktor)
+    implementation(libs.logging.interceptor)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.logging.interceptor)
     implementation(project(":design_system"))
     implementation(project(":domain"))
     implementation(project(":entity"))
