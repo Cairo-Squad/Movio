@@ -41,4 +41,6 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(project(":domain"))
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.1")
+
 }
