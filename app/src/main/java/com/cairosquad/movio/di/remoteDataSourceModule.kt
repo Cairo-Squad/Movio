@@ -1,22 +1,19 @@
 package com.cairosquad.movio.di
 
 import com.cairosquad.remote.common.HttpClientFactory
-import io.ktor.client.engine.okhttp.OkHttp
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
+import com.cairosquad.remote.common.HttpEngine
+import com.cairosquad.remote.search.RemoteSearchDataSourceImpl
+import com.cairosquad.repository.search.dataSource.remote.search.RemoteSearchDataSource
 import org.koin.dsl.module
 
 val remoteDataSourceModule = module {
     single {
         HttpClientFactory.create(
-            OkHttp.create {
-                preconfigured = OkHttpClient.Builder()
-                    .addInterceptor(HttpLoggingInterceptor().apply {
-                        level = HttpLoggingInterceptor.Level.BODY
-                    }
-                    )
-                    .build()
-            }
+            engine = HttpEngine.provide()
         )
+    }
+
+    single<RemoteSearchDataSource> {
+        RemoteSearchDataSourceImpl(get())
     }
 }
