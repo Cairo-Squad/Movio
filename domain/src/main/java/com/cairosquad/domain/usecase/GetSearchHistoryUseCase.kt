@@ -6,6 +6,6 @@ class GetSearchHistoryUseCase(
     private val searchHistoryRepository: SearchHistoryRepository
 ) {
     suspend fun getAll(query: String): List<String> {
-        TODO()
+        return searchHistoryRepository.getAll(query)
     }
 }

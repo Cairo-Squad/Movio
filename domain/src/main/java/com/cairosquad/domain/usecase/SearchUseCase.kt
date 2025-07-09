@@ -1,19 +1,30 @@
 package com.cairosquad.domain.usecase
 
+import com.cairosquad.domain.repository.SearchHistoryRepository
+import com.cairosquad.domain.repository.SearchRepository
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 
-class SearchUseCase {
+class SearchUseCase(
+    private val searchRepository: SearchRepository,
+    private val searchHistoryRepository: SearchHistoryRepository
+) {
     suspend fun searchSeries(query: String): List<Series> {
-        TODO()
+        val result = searchRepository.searchSeries(query)
+        searchHistoryRepository.addQuery(query)
+        return result
     }
 
     suspend fun searchMovies(query: String): List<Movie> {
-        TODO()
+        val result = searchRepository.searchMovies(query)
+        searchHistoryRepository.addQuery(query)
+        return result
     }
 
     suspend fun searchArtists(query: String): List<Artist> {
-        TODO()
+        val result = searchRepository.searchArtists(query)
+        searchHistoryRepository.addQuery(query)
+        return result
     }
 }
