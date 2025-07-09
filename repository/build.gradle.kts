@@ -13,7 +13,7 @@ kotlin {
 }
 
 dependencies {
-    implementation(project(":usecase"))
+    implementation(project(":domain"))
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.junit)
     testImplementation(libs.junit.jupiter)
