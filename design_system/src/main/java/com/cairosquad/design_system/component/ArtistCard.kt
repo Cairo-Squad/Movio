@@ -37,7 +37,6 @@ fun ArtistCard(name: String, imgUrl: String, modifier: Modifier = Modifier) {
                 .size(88.dp)
                 .clip(CircleShape),
             contentDescription = stringResource(R.string.artist_image),
-            contentScale = ContentScale.Crop,
         )
         Text(
             modifier = Modifier
