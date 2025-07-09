@@ -33,7 +33,7 @@ fun ArtistCard(name: String, imgRes: Int, modifier: Modifier = Modifier) {
     ) {
         Image(
             modifier = Modifier
-                .padding(horizontal = 6.dp)
+                .padding(horizontal = 6.67.dp)
                 .size(88.dp)
                 .clip(CircleShape),
             painter = painterResource(id = imgRes),
