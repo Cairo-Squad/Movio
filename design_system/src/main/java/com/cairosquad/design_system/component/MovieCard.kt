@@ -3,11 +3,10 @@ package com.cairosquad.design_system.component
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -15,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -35,17 +33,17 @@ fun MovieCard(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.widthIn(max = 101.33.dp)
+        modifier = modifier.width(101.33.dp)
     ) {
         Box {
             SafeImageViewer(
                 model = imgUrl,
                 contentDescription = stringResource(R.string.movie_poster),
                 modifier = Modifier
-                    .heightIn(max = 136.dp)
-                    .widthIn(max = 101.33.dp)
-                    .fillMaxWidth()
+                    .height(136.dp)
+                    .width(101.33.dp)
                     .clip(RoundedCornerShape(5.dp)),
+                enableLog = true
             )
 
             Row(
