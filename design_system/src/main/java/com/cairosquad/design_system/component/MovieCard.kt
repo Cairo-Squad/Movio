@@ -22,32 +22,30 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
+import com.cairosquad.safe_image_viewer.SafeImageViewer
 
 @Composable
 fun MovieCard(
     title: String,
     vote: Float,
-    imgRes: Int,
+    imgUrl: String,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.widthIn(max = 101.33.dp)
     ) {
         Box {
-            AsyncImage(
-                model = imgRes,
+            SafeImageViewer(
+                model = imgUrl,
                 contentDescription = stringResource(R.string.movie_poster),
                 modifier = Modifier
                     .heightIn(max = 136.dp)
                     .widthIn(max = 101.33.dp)
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(5.dp)),
-                contentScale = ContentScale.Crop,
-                error = painterResource(id = R.drawable.movie_card_img)
             )
 
             Row(
@@ -94,32 +92,7 @@ private fun MovieCardPreview() {
         MovieCard(
             title = "The Dark Knight",
             vote = 5.0f,
-            imgRes = R.drawable.movie_card_img
-        )
-    }
-}
-
-@Preview(name = "MovieCard Light", showBackground = true)
-@Composable
-private fun MovieCardPreviewLight() {
-    MovioTheme(isDarkTheme = false) {
-        MovieCard(
-            title = "Our girl",
-            vote = 4.2f,
-            imgRes = R.drawable.girl
-        )
-    }
-}
-
-@Preview(name = "MovieCard Dark", showBackground = true)
-@Composable
-private fun MovieCardPreviewDark() {
-    MovioTheme(isDarkTheme = true) {
-        MovieCard(
-            title = "Spider-Man: Into the Spider-Verse",
-            vote = 4.8f,
-            imgRes = R.drawable.spider,
-            modifier = Modifier.padding(8.dp)
+            imgUrl = "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_QL75_UX380_CR0,0,380,562_.jpg"
         )
     }
 }
