@@ -26,8 +26,8 @@ abstract class BaseViewModel<T, E>(
 
     protected fun sendEvent(
         event: E,
-        onStart: () -> Unit = {},
-        onEnd: () -> Unit = {}
+        onStart: suspend () -> Unit = {},
+        onEnd: suspend () -> Unit = {}
     ) {
         viewModelScope.launch {
             onStart()
@@ -36,16 +36,16 @@ abstract class BaseViewModel<T, E>(
         }
     }
 
-    protected fun <R> launchWithResult(
-        action: suspend () -> R,
+    protected fun <R> tryToCall(
+        block: suspend () -> R,
         onSuccess: (R) -> Unit,
         onError: (Throwable) -> Unit,
-        onStart: () -> Unit = {},
-        onEnd: () -> Unit = {}
+        onStart: suspend () -> Unit = {},
+        onEnd: suspend () -> Unit = {}
     ) {
         viewModelScope.launch {
             onStart()
-            runCatching { action() }
+            runCatching { block() }
                 .onSuccess(onSuccess)
                 .onFailure(onError)
             onEnd()
