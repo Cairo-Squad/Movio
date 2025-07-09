@@ -1,5 +1,6 @@
 package com.cairosquad.design_system.color
 
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 val darkThemeColors = MovioColors(
@@ -33,5 +34,14 @@ val darkThemeColors = MovioColors(
         onSuccess = Color(0xFFF6FFF6),
         successContainer = Color(0xFFE7FFE6),
         onSuccessContainer = Color(0xFF136912)
+    ),
+    IndicatorGradiant(
+        Brush.horizontalGradient(
+            colors = listOf(
+                Color(0x33EBE6FE),
+                Color(0xFFF5F3FF),
+                Color(0x33FFFFFF)
+            )
+        )
     )
 )

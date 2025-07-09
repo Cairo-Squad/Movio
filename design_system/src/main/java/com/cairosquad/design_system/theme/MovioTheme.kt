@@ -18,6 +18,7 @@ fun MovioTheme(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
+    UpdateStatusBarIconsForTheme(isDarkTheme)
     val theme = if (isDarkTheme) darkThemeColors else lightThemeColors
     CompositionLocalProvider(
         LocalMovioColor provides theme,
