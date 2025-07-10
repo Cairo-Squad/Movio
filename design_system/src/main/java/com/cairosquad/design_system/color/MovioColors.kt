@@ -1,12 +1,14 @@
 package com.cairosquad.design_system.color
 
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 data class MovioColors(
     val brand: Brand,
     val surfaces: Surfaces,
-    val system: System
+    val system: System,
+    val indicatorGradiant: IndicatorGradiant
 )
 
 data class Surfaces(
@@ -43,6 +45,10 @@ data class System(
     val onSuccess: Color,
     val successContainer: Color,
     val onSuccessContainer: Color,
+)
+
+data class IndicatorGradiant(
+    val horizontalGradient: Brush
 )
 
 internal val LocalMovioColor = staticCompositionLocalOf { lightThemeColors }
