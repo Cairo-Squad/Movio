@@ -2,8 +2,10 @@ package com.cairosquad.movio.di
 
 import com.cairosquad.remote.common.HttpClientFactory
 import com.cairosquad.remote.common.HttpEngine
+import com.cairosquad.remote.search.RemoteRecommendationDataSourceImpl
 import com.cairosquad.remote.search.RemoteSearchDataSourceImpl
-import com.cairosquad.repository.search.dataSource.remote.search.RemoteSearchDataSource
+import com.cairosquad.repository.search.dataSource.remote.RemoteRecommendationDataSource
+import com.cairosquad.repository.search.dataSource.remote.RemoteSearchDataSource
 import org.koin.dsl.module
 
 val remoteDataSourceModule = module {
@@ -15,5 +17,9 @@ val remoteDataSourceModule = module {
 
     single<RemoteSearchDataSource> {
         RemoteSearchDataSourceImpl(get())
+    }
+
+    single<RemoteRecommendationDataSource> {
+        RemoteRecommendationDataSourceImpl(get())
     }
 }

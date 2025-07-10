@@ -1,8 +1,8 @@
-package com.cairosquad.domain.usecase
+package com.cairosquad.domain.search.usecase
 
-import com.cairosquad.domain.search.repository.MovieRepository
+import com.cairosquad.domain.search.repository.RecommendationRepository
 import com.cairosquad.entity.Movie
 
-class GetForYouUseCase(  private val movieRepository: MovieRepository,) {
-    suspend fun getForYouMovies(): List<Movie> =movieRepository .getForYouMovies()
+class GetForYouUseCase(private val recommendationRepository: RecommendationRepository) {
+    suspend fun getForYouMovies(): List<Movie> = recommendationRepository.getForYouMovies()
 }
