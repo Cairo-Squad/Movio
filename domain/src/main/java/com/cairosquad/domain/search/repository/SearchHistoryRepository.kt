@@ -1,4 +1,4 @@
-package com.cairosquad.domain.repository
+package com.cairosquad.domain.search.repository
 
 
 interface SearchHistoryRepository {

@@ -17,4 +17,5 @@ local.properties
 /.idea
 .idea
 .idea/
+/secret.properties
 /.kotlin/errors/errors-1752000289599.log

@@ -1,4 +1,4 @@
-package com.cairosquad.domain.repository
+package com.cairosquad.domain.search.repository
 
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
