@@ -13,23 +13,24 @@ lifecycleRuntimeKtx = "2.7.0"
 activityCompose = "1.10.1"
 composeBom = "2024.09.00"
 appcompat = "1.6.1"
+lifecycleViewmodelKtx = "2.7.0"
 material = "1.10.0"
 jetbrainsKotlinJvm = "2.1.0"
 googleGmsGoogleServices = "4.4.3"
 firebaseAnalytics = "22.5.0"
 firebaseCrashlytics = "19.4.4"
 googleFirebaseCrashlytics = "3.0.4"
-material3 = "1.2.1"
 foundationLayoutAndroid = "1.8.3"
 googleFirebaseAppdistribution = "5.1.1"
 googleFirebasePerf = "1.4.2"
-material3Android = "1.3.2"
 mockkVersion = "1.13.7"
+truthVersion = "1.4.4"
 uiTestJunit4 = "1.8.3"
 uiToolingPreviewAndroid = "1.8.3"
 coil = "3.2.0"
 junitJupiter = "5.8.1"
 junitJunit = "4.12"
+lifecycleViewmodelCompose = "2.7.0"
 mockk = "1.14.0"
 tensorflowLite = "2.13.0"
 tensorflowLiteSupport = "0.3.1"
@@ -42,12 +43,14 @@ truth = "1.4.2"
 ksp = "2.1.0-1.0.29"
 koin = "4.0.3"
 koin-annotations = "2.0.0-Beta2"
+coreTesting = "2.2.0"
 navigation = "2.8.0-alpha08"
 roomRuntime = "2.7.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
+androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-perf = { module = "com.google.firebase:firebase-perf" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -70,10 +73,10 @@ material = { group = "com.google.android.material", name = "material", version.r
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics", version.ref = "firebaseAnalytics" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics", version.ref = "firebaseCrashlytics" }
 androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "foundationLayoutAndroid" }
-androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
 androidx-ui-tooling-preview-android = { group = "androidx.compose.ui", name = "ui-tooling-preview-android", version.ref = "uiToolingPreviewAndroid" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
 junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
@@ -85,6 +88,8 @@ tensorflow-lite-metadata = { group = "org.tensorflow", name = "tensorflow-lite-m
 tensorflow-lite-gpu = { group = "org.tensorflow", name = "tensorflow-lite-gpu", version.ref = "tensorflowLiteGpu" }
 androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
+androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
+
 
 #navigation
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
@@ -96,6 +101,7 @@ koin-test = { module = "io.insert-koin:koin-test-junit4", version.ref = "koin" }
 koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koin-annotations" }
 koin-ksp = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koin-annotations" }
 
+truth-v144 = { module = "com.google.truth:truth", version.ref = "truthVersion" }
 ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "uiTestJunit4" }
 #room
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
