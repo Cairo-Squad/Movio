@@ -2,10 +2,10 @@ package searchviewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.cairosquad.domain.search.usecase.ClearSearchHistoryUseCase
+import com.cairosquad.domain.search.usecase.ClearRecentSearchUseCase
 import com.cairosquad.domain.search.usecase.GetExploreMoreUseCase
 import com.cairosquad.domain.search.usecase.GetForYouUseCase
-import com.cairosquad.domain.search.usecase.GetSearchHistoryUseCase
+import com.cairosquad.domain.search.usecase.GetRecentSearchUseCase
 import com.cairosquad.domain.search.usecase.SearchUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
@@ -21,8 +21,8 @@ import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val searchUseCase: SearchUseCase,
-    private val getSearchHistoryUseCase: GetSearchHistoryUseCase,
-    private val clearSearchHistoryUseCase: ClearSearchHistoryUseCase,
+    private val getRecentSearchUseCase: GetRecentSearchUseCase,
+    private val clearRecentSearchUseCase: ClearRecentSearchUseCase,
     private val getExploreMoreUseCase: GetExploreMoreUseCase,
     private val getForYouUseCase: GetForYouUseCase,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
@@ -56,7 +56,7 @@ class SearchViewModel(
     /* ---------- Typing / Suggestions ---------- */
     override fun onQueryTextChanged(query: String) {
         viewModelScope.launch(dispatcher) {
-            val suggestions = getSearchHistoryUseCase.getByQuery(query)
+            val suggestions = getRecentSearchUseCase.getByQuery(query)
             _uiState.update {
                 it.copy(
                     isIdle = false,
@@ -111,15 +111,15 @@ class SearchViewModel(
 
     override fun onClearHistory() {
         viewModelScope.launch(dispatcher) {
-            clearSearchHistoryUseCase.clearAll()
+            clearRecentSearchUseCase.clearAll()
             _uiState.update { it.copy(searchSuggestions = emptyList()) }
         }
     }
 
     override fun onRemoveHistoryItem(query: String) {
         viewModelScope.launch(dispatcher) {
-            clearSearchHistoryUseCase.removeQuery(query)
-            val suggestions = getSearchHistoryUseCase.getAll()
+            clearRecentSearchUseCase.removeQuery(query)
+            val suggestions = getRecentSearchUseCase.getAll()
             _uiState.update { it.copy(searchSuggestions = suggestions) }
         }
     }

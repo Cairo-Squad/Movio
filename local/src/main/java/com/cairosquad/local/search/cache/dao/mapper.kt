@@ -1,8 +1,8 @@
-package com.cairosquad.local.cacheSearch
+package com.cairosquad.local.search.cache.dao
 
-import com.cairosquad.local.cacheSearch.entity.ArtistCacheEntity
-import com.cairosquad.local.cacheSearch.entity.MovieCacheEntity
-import com.cairosquad.local.cacheSearch.entity.SeriesCacheEntity
+import com.cairosquad.local.search.cache.entity.ArtistCacheEntity
+import com.cairosquad.local.search.cache.entity.MovieCacheEntity
+import com.cairosquad.local.search.cache.entity.SeriesCacheEntity
 import com.cairosquad.repository.search.dataSource.local.Dto.ArtistCacheDto
 import com.cairosquad.repository.search.dataSource.local.Dto.MovieCacheDto
 import com.cairosquad.repository.search.dataSource.local.Dto.SeriesCacheDto

@@ -1,12 +1,12 @@
-package com.cairosquad.local.cacheSearch
+package com.cairosquad.local.search.cache.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.cairosquad.local.cacheSearch.entity.ArtistCacheEntity
-import com.cairosquad.local.cacheSearch.entity.MovieCacheEntity
-import com.cairosquad.local.cacheSearch.entity.SeriesCacheEntity
+import com.cairosquad.local.search.cache.entity.ArtistCacheEntity
+import com.cairosquad.local.search.cache.entity.MovieCacheEntity
+import com.cairosquad.local.search.cache.entity.SeriesCacheEntity
 
 @Dao
 interface CacheDao {

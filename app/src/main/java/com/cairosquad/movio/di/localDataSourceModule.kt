@@ -1,13 +1,13 @@
 package com.cairosquad.movio.di
 
-import SearchHistoryDao
 import androidx.room.Room
-import com.cairosquad.local.MovioDataBase
-import com.cairosquad.local.cacheSearch.CacheDao
-import com.cairosquad.local.cacheSearch.SearchCacheDataSourceImpl
+import com.cairosquad.local.common.MovioDataBase
+import com.cairosquad.local.search.cache.SearchCacheDataSourceImpl
+import com.cairosquad.local.search.cache.dao.CacheDao
+import com.cairosquad.local.search.recent.SearchHistoryDataSourceImpl
+import com.cairosquad.local.search.recent.dao.RecentSearchDao
 import com.cairosquad.repository.dataSource.local.SearchHistoryDataSource
 import com.cairosquad.repository.search.dataSource.local.SearchCacheDataSource
-import datasource.SearchHistoryDataSourceImpl
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -20,7 +20,7 @@ val localDataSourceModule = module {
         get<MovioDataBase>().cacheDao()
     }
 
-    single<SearchHistoryDao> {
+    single<RecentSearchDao> {
         get<MovioDataBase>().searchHistoryDao()
     }
 

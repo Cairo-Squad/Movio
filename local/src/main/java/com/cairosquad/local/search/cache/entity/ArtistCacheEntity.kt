@@ -1,4 +1,4 @@
-package com.cairosquad.local.cacheSearch.entity
+package com.cairosquad.local.search.cache.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

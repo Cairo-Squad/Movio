@@ -1,12 +1,12 @@
-package datasource
+package com.cairosquad.local.search.recent
 
-import SearchHistoryDao
-import com.cairosquad.local.roomentity.SearchHistoryEntity
+import com.cairosquad.local.search.recent.dao.RecentSearchDao
+import com.cairosquad.local.search.recent.entity.RecentSearchEntity
 import com.cairosquad.repository.dataSource.local.SearchHistoryDataSource
 
 class SearchHistoryDataSourceImpl(
-    private val dao: SearchHistoryDao
-) : SearchHistoryDataSource{
+    private val dao: RecentSearchDao
+) : SearchHistoryDataSource {
 
     override suspend fun getByQuery(query: String): List<String> {
         return dao.getAll(query).map { it.query }
@@ -21,7 +21,7 @@ class SearchHistoryDataSourceImpl(
     }
 
     override suspend fun addQuery(query: String) {
-        dao.insertQuery(SearchHistoryEntity(query))
+        dao.insertQuery(RecentSearchEntity(query))
     }
 
     override suspend fun getAll(): List<String> {
