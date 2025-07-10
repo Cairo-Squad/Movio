@@ -15,6 +15,7 @@ plugins {
 }
 
 kover {
+
     reports {
         filters {
             excludes {
