@@ -93,7 +93,7 @@ fun TopBar(
                         .height(1.dp)
                         .width(with(LocalDensity.current) { tabWidth.toDp() })
                         .alpha(alpha)
-                        .background(brush = Theme.color.indicatorGradiant.horizontalGradient)
+                        .background(brush = Theme.color.gradiant.horizontalGradient)
                 )
             }
         }
