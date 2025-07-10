@@ -10,8 +10,4 @@ interface SearchRepository {
     suspend fun searchMovies(query: String): List<Movie>
 
     suspend fun searchArtists(query: String): List<Artist>
-
-    suspend fun getForYouMovies(): List<Movie>
-
-    suspend fun getExploreMoreMovies(): List<Movie>
 }
