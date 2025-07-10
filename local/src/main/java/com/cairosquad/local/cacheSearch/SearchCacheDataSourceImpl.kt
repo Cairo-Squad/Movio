@@ -12,7 +12,9 @@ class SearchCacheDataSourceImpl(
 
     override suspend fun getCachedMovies(query: String): List<MovieCacheDto> {
         clearExpiredCache()
-        return cacheDao.getCachedMovies(query).toDto()
+        return cacheDao.getCachedMovies(query).map { movieCacheEntity ->
+            movieCacheEntity.toDto()
+        }
     }
 
     override suspend fun cacheMovies(
@@ -20,13 +22,17 @@ class SearchCacheDataSourceImpl(
         results: List<MovieCacheDto>
     ) {
         cacheDao.cacheMovies(
-            results.toEntity(query, timestamp = Instant.now().toEpochMilli())
+            results.map { movieCacheDto ->
+                movieCacheDto.toEntity(query, timestamp = Instant.now().toEpochMilli())
+            }
         )
     }
 
     override suspend fun getCachedSeries(query: String): List<SeriesCacheDto> {
         clearExpiredCache()
-        return cacheDao.getCachedSeries(query).toDto()
+        return cacheDao.getCachedSeries(query).map { movieCacheEntity ->
+            movieCacheEntity.toDto()
+        }
     }
 
     override suspend fun cacheSeries(
@@ -34,13 +40,17 @@ class SearchCacheDataSourceImpl(
         results: List<SeriesCacheDto>
     ) {
         cacheDao.cacheSeries(
-            results.toEntity(query, timestamp = Instant.now().toEpochMilli())
+            results.map { movieCacheDto ->
+                movieCacheDto.toEntity(query, timestamp = Instant.now().toEpochMilli())
+            }
         )
     }
 
     override suspend fun getCachedArtist(query: String): List<ArtistCacheDto> {
         clearExpiredCache()
-        return cacheDao.getCachedArtist(query).toDto()
+        return cacheDao.getCachedArtist(query).map { movieCacheEntity ->
+            movieCacheEntity.toDto()
+        }
     }
 
     override suspend fun cacheArtist(
@@ -48,7 +58,9 @@ class SearchCacheDataSourceImpl(
         results: List<ArtistCacheDto>
     ) {
         cacheDao.cacheArtist(
-            results.toEntity(query, timestamp = Instant.now().toEpochMilli())
+            results.map { movieCacheDto ->
+                movieCacheDto.toEntity(query, timestamp = Instant.now().toEpochMilli())
+            }
         )
     }
 

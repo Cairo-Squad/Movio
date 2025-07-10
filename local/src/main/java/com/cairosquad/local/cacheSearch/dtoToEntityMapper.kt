@@ -21,15 +21,6 @@ fun MovieCacheDto.toEntity(
     )
 }
 
-fun List<MovieCacheDto>.toEntity(
-    query: String,
-    timestamp: Long
-): List<MovieCacheEntity> {
-    return this.map { movieCacheDto ->
-        movieCacheDto.toEntity(query, timestamp)
-    }
-}
-
 fun MovieCacheEntity.toDto(): MovieCacheDto {
     return MovieCacheDto(
         id = this.id,
@@ -37,12 +28,6 @@ fun MovieCacheEntity.toDto(): MovieCacheDto {
         title = this.title,
         voteAverage = this.voteAverage,
     )
-}
-
-fun List<MovieCacheEntity>.toDto(): List<MovieCacheDto> {
-    return this.map { movieCacheEntity ->
-        movieCacheEntity.toDto()
-    }
 }
 
 fun SeriesCacheDto.toEntity(
@@ -59,15 +44,6 @@ fun SeriesCacheDto.toEntity(
     )
 }
 
-fun List<SeriesCacheDto>.toEntity(
-    query: String,
-    timestamp: Long
-): List<SeriesCacheEntity> {
-    return this.map { movieCacheDto ->
-        movieCacheDto.toEntity(query, timestamp)
-    }
-}
-
 fun SeriesCacheEntity.toDto(): SeriesCacheDto {
     return SeriesCacheDto(
         id = this.id,
@@ -75,12 +51,6 @@ fun SeriesCacheEntity.toDto(): SeriesCacheDto {
         name = this.name,
         voteAverage = this.voteAverage,
     )
-}
-
-fun List<SeriesCacheEntity>.toDto(): List<SeriesCacheDto> {
-    return this.map { movieCacheEntity ->
-        movieCacheEntity.toDto()
-    }
 }
 
 fun ArtistCacheDto.toEntity(
@@ -96,25 +66,10 @@ fun ArtistCacheDto.toEntity(
     )
 }
 
-fun List<ArtistCacheDto>.toEntity(
-    query: String,
-    timestamp: Long
-): List<ArtistCacheEntity> {
-    return this.map { movieCacheDto ->
-        movieCacheDto.toEntity(query, timestamp)
-    }
-}
-
 fun ArtistCacheEntity.toDto(): ArtistCacheDto {
     return ArtistCacheDto(
         id = this.id,
         photoPath = this.photoPath,
         name = this.name,
     )
-}
-
-fun List<ArtistCacheEntity>.toDto(): List<ArtistCacheDto> {
-    return this.map { movieCacheEntity ->
-        movieCacheEntity.toDto()
-    }
 }
