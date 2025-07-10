@@ -3,6 +3,8 @@ package searchviewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.usecase.ClearSearchHistoryUseCase
+import com.cairosquad.domain.usecase.GetExploreMoreUseCase
+import com.cairosquad.domain.usecase.GetForYouUseCase
 import com.cairosquad.domain.usecase.GetSearchHistoryUseCase
 import com.cairosquad.domain.usecase.SearchUseCase
 import kotlinx.coroutines.CoroutineDispatcher
@@ -17,6 +19,8 @@ class SearchViewModel(
     private val searchUseCase: SearchUseCase,
     private val getSearchHistoryUseCase: GetSearchHistoryUseCase,
     private val clearSearchHistoryUseCase: ClearSearchHistoryUseCase,
+    private val getExploreMoreUseCase: GetExploreMoreUseCase,
+    private val getForYouUseCase: GetForYouUseCase,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel(), SearchInteractionListener {
 
@@ -30,7 +34,7 @@ class SearchViewModel(
 
     override fun onQueryTextChanged(query: String) {
         viewModelScope.launch(dispatcher) {
-            _history.value = getSearchHistoryUseCase.getAll(query)
+            _history.value = getSearchHistoryUseCase.getByQuery(query)
         }
     }
 
@@ -70,7 +74,20 @@ class SearchViewModel(
     override fun onRemoveHistoryItem(query: String) {
         viewModelScope.launch(dispatcher) {
             clearSearchHistoryUseCase.removeQuery(query)
-            _history.value = getSearchHistoryUseCase.getAll("")//remove query
+            _history.value = getSearchHistoryUseCase.getAll()//remove query
         }
     }
+
+    fun loadDiscoverMovies() {
+        viewModelScope.launch(dispatcher) {
+            try {
+                val forYou = getForYouUseCase.getForYouMovies()
+                val exploreMore = getExploreMoreUseCase.getExploreMoreMovies()
+                _uiState.value = SearchUiState.Discover(forYou, exploreMore)
+            } catch (e: Exception) {
+                _uiState.value = SearchUiState.Error("Failed to load discover content.")
+            }
+        }
+    }
+
 }
