@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
@@ -48,6 +49,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation)
     implementation(platform(libs.androidx.compose.bom))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -60,6 +62,27 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
 
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.foundation)
+    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    debugImplementation(libs.androidx.ui.tooling)
+    // Koin
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.android)
+    implementation(libs.koin.test)
+    implementation(libs.koin.annotations)
+    ksp(libs.koin.ksp)
+
     implementation(project(":design_system"))
     implementation(project(":viewmodel"))
+    implementation(project(":domain"))
 }
