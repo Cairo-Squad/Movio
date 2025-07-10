@@ -35,13 +35,18 @@ val darkThemeColors = MovioColors(
         successContainer = Color(0xFFE7FFE6),
         onSuccessContainer = Color(0xFF136912)
     ),
-    IndicatorGradiant(
+    Gradiant(
         Brush.horizontalGradient(
             colors = listOf(
                 Color(0x33EBE6FE),
                 Color(0xFFF5F3FF),
                 Color(0x33FFFFFF)
             )
+        ),
+        shimmerGradientColors = listOf(
+            Color.Transparent,
+            Color(0xFF080D24),
+            Color.Transparent,
         )
     )
 )

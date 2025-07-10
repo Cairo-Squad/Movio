@@ -24,21 +24,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.cairosquad.design_system.R
 import com.cairosquad.design_system.preview.MultiThemePreviews
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 
 @Composable
 fun LoadingArtistCard(modifier: Modifier = Modifier) {
-    val shimmerColors = listOf(
-        Color.Transparent,
-        Theme.color.surfaces.surface,
-        Color.Transparent
-    )
-
-    val infiniteTransition = rememberInfiniteTransition(label = "Loading Animation")
+    val infiniteTransition = rememberInfiniteTransition(label = stringResource(R.string.loading_animation))
 
     val shimmerEffectAnimation by infiniteTransition.animateFloat(
         initialValue = -200f,
@@ -48,20 +43,19 @@ fun LoadingArtistCard(modifier: Modifier = Modifier) {
             repeatMode = RepeatMode.Restart
         )
     )
-
     val brush = Brush.linearGradient(
-        colors = shimmerColors,
+        colors = Theme.color.gradiant.shimmerGradientColors,
         start = Offset(shimmerEffectAnimation, shimmerEffectAnimation),
         end = Offset(shimmerEffectAnimation + 190f, shimmerEffectAnimation + 190f)
     )
 
     Box(modifier = modifier) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .background(Theme.color.surfaces.surface)
-                .width(101.33.dp)
+                .width(101.33.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(
                 modifier = Modifier
@@ -89,7 +83,7 @@ fun LoadingArtistCard(modifier: Modifier = Modifier) {
 
 @MultiThemePreviews
 @Composable
-fun LoadingArtistCardPreview() {
+private fun LoadingArtistCardPreview() {
     MovioTheme {
         LazyVerticalGrid(
             modifier = Modifier.background(Theme.color.surfaces.surface),
