@@ -60,13 +60,9 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
 
-//    testImplementation ("junit:junit:4.13.2")
-//    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
-//    testImplementation ("androidx.arch.core:core-testing:2.2.0")
-
     // test
     androidTestImplementation(libs.androidx.core.testing)
-    implementation(libs.androidx.junit.ktx)
+    androidTestImplementation(libs.androidx.junit.ktx)
 
     testImplementation(libs.mockk.v1137)
     testImplementation(libs.truth.v144)
