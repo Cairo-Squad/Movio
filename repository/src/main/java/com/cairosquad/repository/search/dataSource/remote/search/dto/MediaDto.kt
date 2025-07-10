@@ -7,33 +7,33 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MediaDto(
     @SerialName("adult")
-    val adult: Boolean?,
+    val adult: Boolean? = null,
     @SerialName("backdrop_path")
-    val backdropPath: String?,
+    val backdropPath: String? = null,
     @SerialName("id")
-    val id: Int?,
+    val id: Int? = null,
     @SerialName("title")
-    val title: String?,
+    val title: String? = null,
     @SerialName("original_title")
-    val originalTitle: String?,
+    val originalTitle: String? = null,
     @SerialName("overview")
-    val overview: String?,
+    val overview: String? = null,
     @SerialName("poster_path")
-    val posterPath: String?,
+    val posterPath: String? = null,
     @SerialName("media_type")
-    val mediaType: String?,
+    val mediaType: String? = null,
     @SerialName("original_language")
-    val originalLanguage: String?,
+    val originalLanguage: String? = null,
     @SerialName("genre_ids")
-    val genreIds: List<Int?>?,
+    val genreIds: List<Int?>? = null,
     @SerialName("popularity")
-    val popularity: Double?,
+    val popularity: Double? = null,
     @SerialName("release_date")
-    val releaseDate: String?,
+    val releaseDate: String? = null,
     @SerialName("video")
-    val video: Boolean?,
+    val video: Boolean? = null,
     @SerialName("vote_average")
-    val voteAverage: Double?,
+    val voteAverage: Double? = null,
     @SerialName("vote_count")
-    val voteCount: Int?
+    val voteCount: Int? = null
 )
