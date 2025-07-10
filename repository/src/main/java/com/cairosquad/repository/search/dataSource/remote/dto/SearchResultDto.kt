@@ -1,4 +1,4 @@
-package com.cairosquad.repository.search.dataSource.remote.search.dto
+package com.cairosquad.repository.search.dataSource.remote.dto
 
 
 import kotlinx.serialization.SerialName

@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.search.usecase.ClearSearchHistoryUseCase
 import com.cairosquad.domain.search.usecase.GetExploreMoreUseCase
+import com.cairosquad.domain.search.usecase.GetForYouUseCase
 import com.cairosquad.domain.search.usecase.GetSearchHistoryUseCase
-import com.cairosquad.domain.usecase.GetForYouUseCase
-import com.cairosquad.domain.usecase.SearchUseCase
+import com.cairosquad.domain.search.usecase.SearchUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series

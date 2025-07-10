@@ -1,4 +1,4 @@
-package roomentity
+package com.cairosquad.local.roomentity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

@@ -1,5 +1,5 @@
-package com.cairosquad.repository.search.dataSource.local
-
-interface SearchHistoryDataSource {
-    
-}
+//package com.cairosquad.repository.search.dataSource.local
+//
+//interface SearchHistoryDataSource {
+//
+//}

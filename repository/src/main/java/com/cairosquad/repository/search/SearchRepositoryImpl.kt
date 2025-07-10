@@ -5,7 +5,7 @@ import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import com.cairosquad.repository.search.dataSource.local.SearchCacheDataSource
-import com.cairosquad.repository.search.dataSource.remote.search.RemoteSearchDataSource
+import com.cairosquad.repository.search.dataSource.remote.RemoteSearchDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
