@@ -1,4 +1,4 @@
-*.iml
+    *.iml
 .gradle/
 *.gradle
 /local.properties
@@ -17,3 +17,4 @@ local.properties
 /.idea
 .idea
 .idea/
+/.kotlin/errors/errors-1752000289599.log
