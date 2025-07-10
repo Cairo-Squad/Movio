@@ -11,8 +11,17 @@ kotlin {
         jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
     }
 }
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
 dependencies {
     testImplementation(kotlin("test"))
     api(project(":entity"))
+    testImplementation(libs.junit)
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk)
+    testImplementation(libs.truth)
+    testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.jupiter)
 }
