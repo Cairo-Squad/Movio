@@ -1,9 +1,9 @@
 package com.cairosquad.local.cacheSearch
 
-import com.cairosquad.repository.dataSource.local.Dto.ArtistCacheDto
-import com.cairosquad.repository.dataSource.local.Dto.MovieCacheDto
-import com.cairosquad.repository.dataSource.local.Dto.SeriesCacheDto
-import com.cairosquad.repository.dataSource.local.SearchCacheDataSource
+import com.cairosquad.repository.search.dataSource.local.Dto.ArtistCacheDto
+import com.cairosquad.repository.search.dataSource.local.Dto.MovieCacheDto
+import com.cairosquad.repository.search.dataSource.local.Dto.SeriesCacheDto
+import com.cairosquad.repository.search.dataSource.local.SearchCacheDataSource
 import java.time.Instant
 
 class SearchCacheDataSourceImpl(

@@ -3,9 +3,9 @@ package com.cairosquad.local.cacheSearch
 import com.cairosquad.local.cacheSearch.entity.ArtistCacheEntity
 import com.cairosquad.local.cacheSearch.entity.MovieCacheEntity
 import com.cairosquad.local.cacheSearch.entity.SeriesCacheEntity
-import com.cairosquad.repository.dataSource.local.Dto.ArtistCacheDto
-import com.cairosquad.repository.dataSource.local.Dto.MovieCacheDto
-import com.cairosquad.repository.dataSource.local.Dto.SeriesCacheDto
+import com.cairosquad.repository.search.dataSource.local.Dto.ArtistCacheDto
+import com.cairosquad.repository.search.dataSource.local.Dto.MovieCacheDto
+import com.cairosquad.repository.search.dataSource.local.Dto.SeriesCacheDto
 
 fun MovieCacheDto.toEntity(
     query: String,
