@@ -6,7 +6,6 @@ import com.cairosquad.entity.Series
 data class SearchUiState(
     val isIdle: Boolean = true,
     val isLoading: Boolean = false,
-    val isEmpty: Boolean = false,
     val errorMessage: String? = null,
 
     val searchSuggestions: List<String>? = null,
