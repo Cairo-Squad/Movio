@@ -1,4 +1,4 @@
-package com.cairosquad.domain.usecase
+package com.cairosquad.domain.search.usecase
 
 import com.cairosquad.domain.repository.SearchHistoryRepository
 
