@@ -11,11 +11,10 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.component.BottomNavItem
 import com.cairosquad.design_system.component.NavigationBar
 import com.cairosquad.design_system.component.Scaffold
-import ui.home.HomeScreen
-import ui.library.LibraryScreen
-import ui.more.MoreScreen
-import ui.searchscreen.SearchScreen
-
+import com.cairosquad.ui.home.HomeScreen
+import com.cairosquad.ui.library.LibraryScreen
+import com.cairosquad.ui.more.MoreScreen
+import com.cairosquad.ui.search.SearchScreen
 @Composable
 fun AppScreen(modifier: Modifier = Modifier) {
     val navigationItems = listOf(
