@@ -1,8 +1,8 @@
 package com.cairosquad.domain.usecase
 
-import com.cairosquad.domain.search.repository.SearchRepository
+import com.cairosquad.domain.search.repository.ExploreMoreRepository
 import com.cairosquad.entity.Movie
 
-class GetExploreMoreUseCase(  private val searchRepository: SearchRepository,) {
-    suspend fun getExploreMoreMovies(): List<Movie> = searchRepository.getExploreMoreMovies()
+class GetExploreMoreUseCase(  private val exploremoreRepository: ExploreMoreRepository,) {
+    suspend fun getExploreMoreMovies(): List<Movie> = exploremoreRepository.getExploreMoreMovies()
 }
