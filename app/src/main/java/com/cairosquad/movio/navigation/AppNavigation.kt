@@ -14,10 +14,14 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = AppRoute
+        startDestination = SplashRoute
     ) {
         composable<SplashRoute> {
-            SplashScreen()
+            SplashScreen(
+                onNavigateNext = {
+                    navController.navigate(AppRoute)
+                }
+            )
         }
         composable<AppRoute> {
             AppScreen()
