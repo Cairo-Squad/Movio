@@ -1,5 +1,6 @@
 package com.cairosquad.movio.di
 
+import Dao.SearchHistoryDao
 import androidx.room.Room
 import com.cairosquad.local.MovioDataBase
 import com.cairosquad.local.cacheSearch.CacheDao
@@ -15,6 +16,10 @@ val localDataSourceModule = module {
     }
     single<CacheDao> {
         get<MovioDataBase>().cacheDao()
+    }
+
+    single<SearchHistoryDao> {
+        get<MovioDataBase>().searchHistoryDao()
     }
 
     single<SearchCacheDataSource> {

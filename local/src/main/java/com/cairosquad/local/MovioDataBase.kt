@@ -1,5 +1,6 @@
 package com.cairosquad.local
 
+import Dao.SearchHistoryDao
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.cairosquad.local.cacheSearch.CacheDao
@@ -15,5 +16,7 @@ import com.cairosquad.local.cacheSearch.entity.SeriesCacheEntity
 abstract class MovioDataBase : RoomDatabase() {
 
     abstract fun cacheDao(): CacheDao
+
+    abstract fun searchHistoryDao(): SearchHistoryDao
 
 }
