@@ -15,7 +15,6 @@ plugins {
 }
 
 kover {
-
     reports {
         filters {
             excludes {
@@ -34,7 +33,6 @@ kover {
                 )
             }
         }
-
         total {
             verify {
                 rule {

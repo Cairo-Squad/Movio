@@ -57,7 +57,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+    implementation(libs.androidx.constraintlayout.compose)
     implementation(project(":safe_image_viewer"))
-
-
 }
