@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.google.firebase.perf)
     alias(libs.plugins.google.firebase.appdistribution)
     alias(libs.plugins.ksp)
+    id("androidx.room") version "2.7.1"
 }
 
 android {
@@ -44,6 +45,9 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.8"
+    }
+    room {
+        schemaDirectory("schemas")
     }
 }
 
@@ -86,7 +90,13 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":entity"))
     implementation(project(":remote"))
+    implementation(project(":local"))
     implementation(project(":repository"))
     implementation(project(":ui"))
     implementation(project(":viewmodel"))
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
 }
