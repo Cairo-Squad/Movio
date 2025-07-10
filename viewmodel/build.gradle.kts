@@ -31,6 +31,18 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    packaging {
+        resources {
+            excludes += arrayOf(
+                "/META-INF/{AL2.0,LGPL2.1}",
+                "META-INF/LICENSE.md",
+                "META-INF/LICENSE",
+                "META-INF/NOTICE",
+                "META-INF/LICENSE-notice",
+                "META-INF/LICENSE-notice.md"
+            )
+        }
+    }
 }
 
 dependencies {
@@ -40,5 +52,29 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+
+    testImplementation(libs.junit.jupiter)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+
+    // test
+    androidTestImplementation(libs.androidx.core.testing)
+    androidTestImplementation(libs.androidx.junit.ktx)
+
+    testImplementation(libs.mockk.v1137)
+    testImplementation(libs.truth.v144)
+    testImplementation(libs.kotlinx.coroutines.test.v1102)
+
+    // google truth
+    testImplementation(libs.truth)
+    androidTestImplementation(libs.truth)
+
+    // mockk
+    testImplementation(libs.mockk)
+    androidTestImplementation(libs.mockk)
+
     implementation(project(":domain"))
 }

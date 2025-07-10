@@ -86,6 +86,18 @@ dependencies {
     implementation(libs.koin.test)
     implementation(libs.koin.annotations)
     ksp(libs.koin.ksp)
+
+    // ktor
+    implementation(libs.bundles.ktor)
+    implementation(libs.logging.interceptor)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.logging.interceptor)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+
     implementation(project(":design_system"))
     implementation(project(":domain"))
     implementation(project(":entity"))
@@ -94,9 +106,4 @@ dependencies {
     implementation(project(":repository"))
     implementation(project(":ui"))
     implementation(project(":viewmodel"))
-
-    // Room
-    implementation(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.ktx)
 }
