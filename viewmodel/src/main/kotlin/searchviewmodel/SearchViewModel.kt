@@ -2,10 +2,10 @@ package searchviewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.cairosquad.domain.usecase.ClearSearchHistoryUseCase
-import com.cairosquad.domain.usecase.GetExploreMoreUseCase
+import com.cairosquad.domain.search.usecase.ClearSearchHistoryUseCase
+import com.cairosquad.domain.search.usecase.GetExploreMoreUseCase
+import com.cairosquad.domain.search.usecase.GetSearchHistoryUseCase
 import com.cairosquad.domain.usecase.GetForYouUseCase
-import com.cairosquad.domain.usecase.GetSearchHistoryUseCase
 import com.cairosquad.domain.usecase.SearchUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

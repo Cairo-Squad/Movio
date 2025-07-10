@@ -1,7 +1,7 @@
 package com.cairosquad.domain.usecase
 
-import com.cairosquad.domain.repository.SearchHistoryRepository
-import com.cairosquad.domain.repository.SearchRepository
+import com.cairosquad.domain.search.repository.SearchHistoryRepository
+import com.cairosquad.domain.search.repository.SearchRepository
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
