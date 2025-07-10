@@ -2,7 +2,7 @@ package com.cairosquad.repository.search
 
 import com.cairosquad.domain.search.repository.RecommendationRepository
 import com.cairosquad.entity.Movie
-import com.cairosquad.repository.search.dataSource.remote.RemoteRecommendationDataSource
+import com.cairosquad.repository.search.data_source.remote.RemoteRecommendationDataSource
 
 class RecommendationRepositoryImpl(
     private val remoteRecommendationDataSource: RemoteRecommendationDataSource

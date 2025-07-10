@@ -3,11 +3,11 @@ package com.cairosquad.remote.search
 import com.cairosquad.remote.BuildConfig
 import com.cairosquad.remote.common.utils.callApi
 import com.cairosquad.remote.common.utils.constructUrl
-import com.cairosquad.repository.search.dataSource.remote.RemoteSearchDataSource
-import com.cairosquad.repository.search.dataSource.remote.dto.ArtistDto
-import com.cairosquad.repository.search.dataSource.remote.dto.MovieDto
-import com.cairosquad.repository.search.dataSource.remote.dto.SearchResultDto
-import com.cairosquad.repository.search.dataSource.remote.dto.SeriesDto
+import com.cairosquad.repository.search.data_source.remote.RemoteSearchDataSource
+import com.cairosquad.repository.search.data_source.remote.dto.ArtistDto
+import com.cairosquad.repository.search.data_source.remote.dto.MovieDto
+import com.cairosquad.repository.search.data_source.remote.dto.SearchResultDto
+import com.cairosquad.repository.search.data_source.remote.dto.SeriesDto
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter

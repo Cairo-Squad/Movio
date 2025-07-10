@@ -3,9 +3,9 @@ package com.cairosquad.repository.search
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
-import com.cairosquad.repository.search.dataSource.local.Dto.ArtistCacheDto
-import com.cairosquad.repository.search.dataSource.local.Dto.MovieCacheDto
-import com.cairosquad.repository.search.dataSource.local.Dto.SeriesCacheDto
+import com.cairosquad.repository.search.data_source.local.Dto.ArtistCacheDto
+import com.cairosquad.repository.search.data_source.local.Dto.MovieCacheDto
+import com.cairosquad.repository.search.data_source.local.Dto.SeriesCacheDto
 
 fun Series.toSeriesCacheDto(): SeriesCacheDto {
     return SeriesCacheDto(

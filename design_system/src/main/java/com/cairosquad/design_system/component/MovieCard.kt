@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
-import com.cairosquad.safe_image_viewer.safeImageViewer.SafeImageViewer
+import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 
 @Composable
 fun MovieCard(
