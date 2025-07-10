@@ -23,4 +23,10 @@ dependencies {
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.mockk.v1137)
+    testImplementation(libs.kotlinx.coroutines.test.v1102)
+    testImplementation(libs.junit)
+    testImplementation(libs.junit.jupiter)
 }
