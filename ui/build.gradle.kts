@@ -62,8 +62,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
 
-    implementation(project(":design_system"))
-    implementation(project(":viewmodel"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -83,4 +81,8 @@ dependencies {
     implementation(libs.koin.test)
     implementation(libs.koin.annotations)
     ksp(libs.koin.ksp)
+
+    implementation(project(":design_system"))
+    implementation(project(":viewmodel"))
+    implementation(project(":domain"))
 }
