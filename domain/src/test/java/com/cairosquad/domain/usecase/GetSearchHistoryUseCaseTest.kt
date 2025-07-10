@@ -1,7 +1,7 @@
 package com.cairosquad.domain.usecase
 
-import com.cairosquad.domain.search.repository.SearchHistoryRepository
-import com.cairosquad.domain.search.usecase.GetSearchHistoryUseCase
+import com.cairosquad.domain.search.repository.RecentSearchRepository
+import com.cairosquad.domain.search.usecase.GetRecentSearchUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -12,13 +12,13 @@ import kotlin.test.assertEquals
 
 class GetSearchHistoryUseCaseTest {
 
-    private lateinit var searchHistoryUseCase: GetSearchHistoryUseCase
-    private lateinit var searchHistoryRepository: SearchHistoryRepository
+    private lateinit var searchHistoryUseCase: GetRecentSearchUseCase
+    private lateinit var recentSearchRepository: RecentSearchRepository
 
     @Before
     fun setUp() {
-        searchHistoryRepository = mockk(relaxed = true)
-        searchHistoryUseCase = GetSearchHistoryUseCase(searchHistoryRepository)
+        recentSearchRepository = mockk(relaxed = true)
+        searchHistoryUseCase = GetRecentSearchUseCase(recentSearchRepository)
     }
 
     @Test
@@ -30,7 +30,7 @@ class GetSearchHistoryUseCaseTest {
         searchHistoryUseCase.getByQuery(searchQuery)
 
         // Then
-        coVerify(exactly = 1) { searchHistoryRepository.getByQuery(searchQuery) }
+        coVerify(exactly = 1) { recentSearchRepository.getByQuery(searchQuery) }
     }
 
     @Test
@@ -38,27 +38,27 @@ class GetSearchHistoryUseCaseTest {
         //Given
         val searchQuery = searchQueyWhenReturnMatches
         val expectedResults = expectedResultsForMatchingSearchQuery
-        coEvery { searchHistoryRepository.getByQuery(searchQuery) } returns expectedResults
+        coEvery { recentSearchRepository.getByQuery(searchQuery) } returns expectedResults
 
         //When
         val result = searchHistoryUseCase.getByQuery(searchQuery)
 
         //Then
         assertEquals(expectedResults, result)
-        coVerify(exactly = 1) { searchHistoryRepository.getByQuery(searchQuery) }
+        coVerify(exactly = 1) { recentSearchRepository.getByQuery(searchQuery) }
     }
 
     @Test
     fun `getAll should return all results of search history`() = runTest {
         val expectedResults = expectedResultforGetAll
-        coEvery { searchHistoryRepository.getAll() } returns expectedResults
+        coEvery { recentSearchRepository.getAll() } returns expectedResults
 
         //When
         val result = searchHistoryUseCase.getAll()
 
         //Then
         assertEquals(expectedResults, result)
-        coVerify(exactly = 1) { searchHistoryRepository.getAll() }
+        coVerify(exactly = 1) { recentSearchRepository.getAll() }
     }
 
     companion object {

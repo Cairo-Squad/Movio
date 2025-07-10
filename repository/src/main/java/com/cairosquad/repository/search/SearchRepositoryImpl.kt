@@ -4,8 +4,8 @@ import com.cairosquad.domain.search.repository.SearchRepository
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
-import com.cairosquad.repository.search.dataSource.local.SearchCacheDataSource
-import com.cairosquad.repository.search.dataSource.remote.RemoteSearchDataSource
+import com.cairosquad.repository.search.data_source.local.SearchCacheDataSource
+import com.cairosquad.repository.search.data_source.remote.RemoteSearchDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

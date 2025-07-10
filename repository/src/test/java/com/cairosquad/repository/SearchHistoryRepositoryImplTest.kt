@@ -1,24 +1,24 @@
 package com.cairosquad.repository
 
-import com.cairosquad.repository.dataSource.SearchHistoryRepositoryImpl
-import com.cairosquad.repository.dataSource.local.SearchHistoryDataSource
+import com.cairosquad.repository.search.RecentSearchRepositoryImpl
+import com.cairosquad.repository.search.data_source.local.RecentSearchDataSource
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import org.junit.Assert.*
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import kotlin.test.Test
-import kotlinx.coroutines.test.runTest
 
 
 class SearchHistoryRepositoryImplTest {
-    private lateinit var localDataSource: SearchHistoryDataSource
-    private lateinit var repository: SearchHistoryRepositoryImpl
+    private lateinit var localDataSource: RecentSearchDataSource
+    private lateinit var repository: RecentSearchRepositoryImpl
 
     @Before
     fun setup() {
         localDataSource = mockk()
-        repository = SearchHistoryRepositoryImpl(localDataSource)
+        repository = RecentSearchRepositoryImpl(localDataSource)
     }
 
     @Test

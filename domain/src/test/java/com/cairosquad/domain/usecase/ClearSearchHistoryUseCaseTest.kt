@@ -1,7 +1,7 @@
 package com.cairosquad.domain.usecase
 
-import com.cairosquad.domain.search.repository.SearchHistoryRepository
-import com.cairosquad.domain.search.usecase.ClearSearchHistoryUseCase
+import com.cairosquad.domain.search.repository.RecentSearchRepository
+import com.cairosquad.domain.search.usecase.ClearRecentSearchUseCase
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -10,25 +10,25 @@ import org.junit.Test
 
 class ClearSearchHistoryUseCaseTest {
 
-    private lateinit var searchHistoryRepository: SearchHistoryRepository
-    private lateinit var clearSearchHistoryUseCase: ClearSearchHistoryUseCase
+    private lateinit var recentSearchRepository: RecentSearchRepository
+    private lateinit var clearRecentSearchUseCase: ClearRecentSearchUseCase
 
     @Before
     fun setUp() {
-        searchHistoryRepository = mockk(relaxed = true)
-        clearSearchHistoryUseCase = ClearSearchHistoryUseCase(searchHistoryRepository)
+        recentSearchRepository = mockk(relaxed = true)
+        clearRecentSearchUseCase = ClearRecentSearchUseCase(recentSearchRepository)
     }
 
     @Test
     fun `clearAll should call repository's clearAll`() = runTest {
-        clearSearchHistoryUseCase.clearAll()
-        coVerify(exactly = 1) { searchHistoryRepository.clearAll() }
+        clearRecentSearchUseCase.clearAll()
+        coVerify(exactly = 1) { recentSearchRepository.clearAll() }
     }
 
     @Test
     fun `removeQuery should call repository's removeQuery with correct argument`() = runTest {
         val testQuery = "Movie"
-        clearSearchHistoryUseCase.removeQuery(testQuery)
-        coVerify(exactly = 1) { searchHistoryRepository.removeQuery(testQuery) }
+        clearRecentSearchUseCase.removeQuery(testQuery)
+        coVerify(exactly = 1) { recentSearchRepository.removeQuery(testQuery) }
     }
 }

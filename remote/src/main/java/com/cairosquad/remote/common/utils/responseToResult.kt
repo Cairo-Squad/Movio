@@ -1,11 +1,11 @@
 package com.cairosquad.remote.common.utils
 
 import com.cairosquad.remote.common.dto.ErrorDto
-import com.cairosquad.remote.common.exceptions.RequestTimeoutException
-import com.cairosquad.remote.common.exceptions.ServerException
-import com.cairosquad.remote.common.exceptions.TooManyRequestsException
-import com.cairosquad.remote.common.exceptions.UnauthorizedException
-import com.cairosquad.remote.common.exceptions.UnknownException
+import com.cairosquad.repository.common.exceptions.RequestTimeoutException
+import com.cairosquad.repository.common.exceptions.ServerException
+import com.cairosquad.repository.common.exceptions.TooManyRequestsException
+import com.cairosquad.repository.common.exceptions.UnauthorizedException
+import com.cairosquad.repository.common.exceptions.UnknownException
 import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
