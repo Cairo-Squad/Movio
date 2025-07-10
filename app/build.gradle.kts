@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.google.firebase.perf)
     alias(libs.plugins.google.firebase.appdistribution)
     alias(libs.plugins.ksp)
+    id("androidx.room") version "2.7.1"
 }
 
 android {
@@ -41,6 +42,12 @@ android {
     }
     buildFeatures {
         compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.8"
+    }
+    room {
+        schemaDirectory("schemas")
     }
 }
 
@@ -79,14 +86,23 @@ dependencies {
     implementation(libs.koin.test)
     implementation(libs.koin.annotations)
     ksp(libs.koin.ksp)
+
+    // ktor
     implementation(libs.bundles.ktor)
     implementation(libs.logging.interceptor)
     implementation(libs.ktor.client.okhttp)
     implementation(libs.logging.interceptor)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+
     implementation(project(":design_system"))
     implementation(project(":domain"))
     implementation(project(":entity"))
     implementation(project(":remote"))
+    implementation(project(":local"))
     implementation(project(":repository"))
     implementation(project(":ui"))
     implementation(project(":viewmodel"))
