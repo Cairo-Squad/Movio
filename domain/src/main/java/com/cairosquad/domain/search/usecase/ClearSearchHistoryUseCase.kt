@@ -1,6 +1,6 @@
 package com.cairosquad.domain.search.usecase
 
-import com.cairosquad.domain.repository.SearchHistoryRepository
+import com.cairosquad.domain.search.repository.SearchHistoryRepository
 
 class ClearSearchHistoryUseCase(
     private val searchHistoryRepository: SearchHistoryRepository
