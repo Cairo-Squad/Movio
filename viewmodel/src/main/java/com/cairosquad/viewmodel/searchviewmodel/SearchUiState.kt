@@ -1,17 +1,12 @@
 package com.cairosquad.viewmodel.searchviewmodel
 
 data class SearchUiState(
-    val isIdle: Boolean = true,
-    val isSearchFocused: Boolean = false,
-    val isLoading: Boolean = false,
+    val query: String = "",
+    val screenStatus: ScreenStatus = ScreenStatus.LOADING,
     val errorMessage: String? = null,
-
-    val searchSuggestions: List<String>? = null,
-
-    val forYou: List<MovieUiState>? = null,
-    val exploreMore: List<MovieUiState>? = null,
-
-    val topResult: MovieUiState? = null,
+    val recentSearch: List<String> = emptyList(),
+    val forYou: List<MovieUiState> = emptyList(),
+    val exploreMore: List<MovieUiState> = emptyList(),
     val movies: List<MovieUiState> = emptyList(),
     val series: List<SeriesUiState> = emptyList(),
     val artists: List<ArtistUiState> = emptyList(),
@@ -35,4 +30,12 @@ data class SearchUiState(
         val rating: Float,
         val posterPath: String
     )
+
+    enum class ScreenStatus {
+        EXPLORE,
+        SEARCH,
+        RESULT,
+        LOADING,
+        FAILED
+    }
 }

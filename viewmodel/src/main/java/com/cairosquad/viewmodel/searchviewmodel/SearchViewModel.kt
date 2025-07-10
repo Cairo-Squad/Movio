@@ -30,6 +30,10 @@ class SearchViewModel(
 
     private var searchJob: Job? = null
 
+    init {
+        loadDiscoverMovies()
+    }
+
     fun loadDiscoverMovies() = viewModelScope.launch(dispatcher) {
         try {
             val forYou = getForYouUseCase.getForYouMovies().map { it.toUiState() }
@@ -37,9 +41,7 @@ class SearchViewModel(
 
             _uiState.update {
                 it.copy(
-                    isIdle = false,
-                    isLoading = false,
-                    errorMessage = null,
+                    screenStatus = SearchUiState.ScreenStatus.EXPLORE,
                     forYou = forYou,
                     exploreMore = exploreMore
                 )
@@ -47,7 +49,7 @@ class SearchViewModel(
         } catch (e: Exception) {
             _uiState.update {
                 it.copy(
-                    isLoading = false,
+                    screenStatus = SearchUiState.ScreenStatus.FAILED,
                     errorMessage = "Failed to load discover content."
                 )
             }
@@ -59,24 +61,31 @@ class SearchViewModel(
             val suggestions = getRecentSearchUseCase.getByQuery(query)
             _uiState.update {
                 it.copy(
-                    isIdle = false,
-                    isLoading = false,
-                    errorMessage = null,
-                    searchSuggestions = suggestions
+                    screenStatus = SearchUiState.ScreenStatus.SEARCH,
+                    recentSearch = suggestions
                 )
             }
         }
     }
 
+    override fun onCancelSearch() {
+        _uiState.update {
+            it.copy(
+                screenStatus = SearchUiState.ScreenStatus.EXPLORE,
+                query = "",
+            )
+        }
+    }
+
 
     override fun onSearch(query: String) {
-        if (query.isBlank()) {
-            _uiState.update { SearchUiState(isIdle = true) }
-            return
-        }
-
         searchJob?.cancel()
-        _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+        _uiState.update {
+            it.copy(
+                screenStatus = SearchUiState.ScreenStatus.LOADING,
+                query = query,
+            )
+        }
 
         searchJob = viewModelScope.launch(dispatcher) {
             try {
@@ -84,25 +93,19 @@ class SearchViewModel(
                 val series = searchUseCase.searchSeries(query).map { it.toUiState() }
                 val artists = searchUseCase.searchArtists(query).map { it.toUiState() }
 
-                val topResult = movies.firstOrNull()
-
-                if (movies.isEmpty() && series.isEmpty() && artists.isEmpty()) {
-                    _uiState.update { it.copy(isLoading = false) }
-                } else {
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            topResult = topResult,
-                            movies = movies,
-                            series = series,
-                            artists = artists
-                        )
-                    }
+                _uiState.update {
+                    it.copy(
+                        screenStatus = SearchUiState.ScreenStatus.RESULT,
+                        movies = movies,
+                        series = series,
+                        artists = artists
+                    )
                 }
+
             } catch (ex: Exception) {
                 _uiState.update {
                     it.copy(
-                        isLoading = false,
+                        screenStatus = SearchUiState.ScreenStatus.FAILED,
                         errorMessage = ex.localizedMessage ?: "Unknown error"
                     )
                 }
@@ -110,12 +113,12 @@ class SearchViewModel(
         }
     }
 
-    override fun onHistoryItemClicked(query: String) = onSearch(query)
+    override fun onRecentSearchItemClicked(query: String) = onSearch(query)
 
     override fun onClearHistory() {
         viewModelScope.launch(dispatcher) {
             clearRecentSearchUseCase.clearAll()
-            _uiState.update { it.copy(searchSuggestions = emptyList()) }
+            _uiState.update { it.copy(recentSearch = emptyList()) }
         }
     }
 
@@ -123,7 +126,24 @@ class SearchViewModel(
         viewModelScope.launch(dispatcher) {
             clearRecentSearchUseCase.removeQuery(query)
             val suggestions = getRecentSearchUseCase.getAll()
-            _uiState.update { it.copy(searchSuggestions = suggestions) }
+            _uiState.update { it.copy(recentSearch = suggestions) }
+        }
+    }
+
+    override fun onBackClicked() {
+        _uiState.update {
+            if (it.screenStatus == SearchUiState.ScreenStatus.SEARCH) {
+                it.copy(
+                    screenStatus = SearchUiState.ScreenStatus.EXPLORE,
+                    query = ""
+                )
+            } else if (it.screenStatus == SearchUiState.ScreenStatus.RESULT) {
+                it.copy(
+                    screenStatus = SearchUiState.ScreenStatus.SEARCH,
+                )
+            } else {
+                it
+            }
         }
     }
 
