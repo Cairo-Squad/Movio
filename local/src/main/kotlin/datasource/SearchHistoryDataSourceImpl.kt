@@ -1,8 +1,8 @@
 package datasource
 
-import Dao.SearchHistoryDao
+import SearchHistoryDao
+import com.cairosquad.local.roomentity.SearchHistoryEntity
 import com.cairosquad.repository.dataSource.local.SearchHistoryDataSource
-import roomentity.SearchHistoryEntity
 
 class SearchHistoryDataSourceImpl(
     private val dao: SearchHistoryDao
