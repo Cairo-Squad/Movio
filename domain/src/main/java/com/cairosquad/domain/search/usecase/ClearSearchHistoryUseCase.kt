@@ -1,11 +1,15 @@
 package com.cairosquad.domain.search.usecase
 
-class ClearSearchHistoryUseCase {
+import com.cairosquad.domain.search.repository.SearchHistoryRepository
+
+class ClearSearchHistoryUseCase(
+    private val searchHistoryRepository: SearchHistoryRepository
+) {
     suspend fun clearAll() {
-        TODO()
+        searchHistoryRepository.clearAll()
     }
 
     suspend fun removeQuery(query: String) {
-        TODO()
+        searchHistoryRepository.removeQuery(query)
     }
 }
