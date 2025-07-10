@@ -23,5 +23,4 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.truth)
     testImplementation(libs.junit.jupiter)
-    testImplementation(libs.junit.jupiter)
 }

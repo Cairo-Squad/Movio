@@ -14,18 +14,17 @@ kotlin {
         jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
     }
 }
-
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
 dependencies {
     implementation(project(":domain"))
     implementation(libs.kotlinx.serialization.json)
-    testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.junit)
-    testImplementation(libs.junit.jupiter)
     testImplementation(kotlin("test"))
     testImplementation(libs.junit.jupiter)
-    testImplementation(libs.junit.jupiter)
-    testImplementation(libs.junit.jupiter)
-    testImplementation(libs.junit.jupiter)
-    testImplementation(libs.junit.jupiter)
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
+    implementation(libs.kotlinx.coroutines.core)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk)
+    testImplementation(libs.truth)
 }
