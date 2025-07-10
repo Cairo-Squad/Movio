@@ -16,6 +16,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
@@ -32,74 +33,86 @@ class SearchViewModel(
 
     private var searchJob: Job? = null
 
-    fun loadDiscoverMovies() {
-        viewModelScope.launch(dispatcher) {
-            try {
-                val forYou = getForYouUseCase.getForYouMovies().map { it.toUiState() }
-                val exploreMore = getExploreMoreUseCase.getExploreMoreMovies().map { it.toUiState() }
+    /* ---------- Discover ---------- */
+    fun loadDiscoverMovies() = viewModelScope.launch(dispatcher) {
+        try {
+            val forYou = getForYouUseCase.getForYouMovies().map { it.toUiState() }
+            val exploreMore = getExploreMoreUseCase.getExploreMoreMovies().map { it.toUiState() }
 
-                _uiState.value = SearchUiState(
+            _uiState.update {
+                it.copy(
                     isIdle = false,
+                    isLoading = false,
+                    errorMessage = null,
                     forYou = forYou,
                     exploreMore = exploreMore
                 )
-            } catch (e: Exception) {
-                _uiState.value = SearchUiState(errorMessage = "Failed to load discover content.")
+            }
+        } catch (e: Exception) {
+            _uiState.update { it.copy(isLoading = false, errorMessage = "Failed to load discover content.") }
+        }
+    }
+
+    /* ---------- Typing / Suggestions ---------- */
+    override fun onQueryTextChanged(query: String) {
+        viewModelScope.launch(dispatcher) {
+            val suggestions = getSearchHistoryUseCase.getByQuery(query)
+            _uiState.update {
+                it.copy(
+                    isIdle = false,
+                    isLoading = false,
+                    errorMessage = null,
+                    searchSuggestions = suggestions
+                )
             }
         }
     }
 
-    override fun onQueryTextChanged(query: String) {
-        viewModelScope.launch(dispatcher) {
-            val suggestions = getSearchHistoryUseCase.getByQuery(query)
-            _uiState.value = SearchUiState(
-                isIdle = false,
-                searchSuggestions = suggestions
-            )
-        }
-    }
 
+    /* ---------- Search ---------- */
     override fun onSearch(query: String) {
         if (query.isBlank()) {
-            _uiState.value = SearchUiState(isIdle = true)
+            _uiState.update { SearchUiState(isIdle = true) }
             return
         }
 
         searchJob?.cancel()
-        _uiState.value = SearchUiState(isLoading = true)
+        _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
         searchJob = viewModelScope.launch(dispatcher) {
             try {
-                val movies = searchUseCase.searchMovies(query)
-                val series = searchUseCase.searchSeries(query)
-                val artists = searchUseCase.searchArtists(query)
+                val movies  = searchUseCase.searchMovies(query).map  { it.toUiState() }
+                val series  = searchUseCase.searchSeries(query).map  { it.toUiState() }
+                val artists = searchUseCase.searchArtists(query).map { it.toUiState() }
 
-                val topResult = movies.firstOrNull()?.toUiState()
+                val topResult = movies.firstOrNull()
 
                 if (movies.isEmpty() && series.isEmpty() && artists.isEmpty()) {
-                    _uiState.value = SearchUiState(isEmpty = true)
+                    _uiState.update { it.copy(isLoading = false) }
                 } else {
-                    _uiState.value = SearchUiState(
-                        topResult = topResult,
-                        movies = movies.map { it.toUiState() },
-                        series = series.map { it.toUiState() },
-                        artists = artists.map { it.toUiState() }
-                    )
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            topResult = topResult,
+                            movies  = movies,
+                            series  = series,
+                            artists = artists
+                        )
+                    }
                 }
             } catch (ex: Exception) {
-                _uiState.value = SearchUiState(errorMessage = ex.localizedMessage ?: "Unknown error")
+                _uiState.update { it.copy(isLoading = false, errorMessage = ex.localizedMessage ?: "Unknown error") }
             }
         }
     }
 
-    override fun onHistoryItemClicked(query: String) {
-        onSearch(query)
-    }
+    /* ---------- History actions ---------- */
+    override fun onHistoryItemClicked(query: String) = onSearch(query)
 
     override fun onClearHistory() {
         viewModelScope.launch(dispatcher) {
             clearSearchHistoryUseCase.clearAll()
-            _uiState.value = SearchUiState(searchSuggestions = emptyList())
+            _uiState.update { it.copy(searchSuggestions = emptyList()) }
         }
     }
 
@@ -107,10 +120,12 @@ class SearchViewModel(
         viewModelScope.launch(dispatcher) {
             clearSearchHistoryUseCase.removeQuery(query)
             val suggestions = getSearchHistoryUseCase.getAll()
-            _uiState.value = SearchUiState(searchSuggestions = suggestions)
+            _uiState.update { it.copy(searchSuggestions = suggestions) }
         }
     }
+
 }
+
 
 
 /* ---------- MAPPERS ---------- */
