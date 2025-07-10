@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.component.MovieCard
 import com.cairosquad.design_system.component.MovieCardSize
 import com.cairosquad.design_system.component.SectionHeader
-import com.cairosquad.viewmodel.searchviewmodel.MovieUiState
+import com.cairosquad.viewmodel.searchviewmodel.SearchUiState.MovieUiState
 
 @Composable
 fun IdleSearchScreenContent(

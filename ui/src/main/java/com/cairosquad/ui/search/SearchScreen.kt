@@ -21,7 +21,8 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.component.InputField
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.domain.search.usecase.SearchUseCase
-import com.cairosquad.viewmodel.searchviewmodel.MovieUiState
+import com.cairosquad.viewmodel.searchviewmodel.SearchUiState.MovieUiState
+
 import org.koin.compose.getKoin
 
 @Composable

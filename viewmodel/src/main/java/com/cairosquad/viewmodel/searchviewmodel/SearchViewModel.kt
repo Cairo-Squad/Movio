@@ -7,9 +7,6 @@ import com.cairosquad.domain.search.usecase.GetExploreMoreUseCase
 import com.cairosquad.domain.search.usecase.GetForYouUseCase
 import com.cairosquad.domain.search.usecase.GetRecentSearchUseCase
 import com.cairosquad.domain.search.usecase.SearchUseCase
-import com.cairosquad.entity.Artist
-import com.cairosquad.entity.Movie
-import com.cairosquad.entity.Series
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -33,7 +30,6 @@ class SearchViewModel(
 
     private var searchJob: Job? = null
 
-    /* ---------- Discover ---------- */
     fun loadDiscoverMovies() = viewModelScope.launch(dispatcher) {
         try {
             val forYou = getForYouUseCase.getForYouMovies().map { it.toUiState() }
@@ -49,11 +45,15 @@ class SearchViewModel(
                 )
             }
         } catch (e: Exception) {
-            _uiState.update { it.copy(isLoading = false, errorMessage = "Failed to load discover content.") }
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    errorMessage = "Failed to load discover content."
+                )
+            }
         }
     }
 
-    /* ---------- Typing / Suggestions ---------- */
     override fun onQueryTextChanged(query: String) {
         viewModelScope.launch(dispatcher) {
             val suggestions = getRecentSearchUseCase.getByQuery(query)
@@ -69,7 +69,6 @@ class SearchViewModel(
     }
 
 
-    /* ---------- Search ---------- */
     override fun onSearch(query: String) {
         if (query.isBlank()) {
             _uiState.update { SearchUiState(isIdle = true) }
@@ -81,8 +80,8 @@ class SearchViewModel(
 
         searchJob = viewModelScope.launch(dispatcher) {
             try {
-                val movies  = searchUseCase.searchMovies(query).map  { it.toUiState() }
-                val series  = searchUseCase.searchSeries(query).map  { it.toUiState() }
+                val movies = searchUseCase.searchMovies(query).map { it.toUiState() }
+                val series = searchUseCase.searchSeries(query).map { it.toUiState() }
                 val artists = searchUseCase.searchArtists(query).map { it.toUiState() }
 
                 val topResult = movies.firstOrNull()
@@ -94,19 +93,23 @@ class SearchViewModel(
                         it.copy(
                             isLoading = false,
                             topResult = topResult,
-                            movies  = movies,
-                            series  = series,
+                            movies = movies,
+                            series = series,
                             artists = artists
                         )
                     }
                 }
             } catch (ex: Exception) {
-                _uiState.update { it.copy(isLoading = false, errorMessage = ex.localizedMessage ?: "Unknown error") }
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        errorMessage = ex.localizedMessage ?: "Unknown error"
+                    )
+                }
             }
         }
     }
 
-    /* ---------- History actions ---------- */
     override fun onHistoryItemClicked(query: String) = onSearch(query)
 
     override fun onClearHistory() {
@@ -125,26 +128,3 @@ class SearchViewModel(
     }
 
 }
-
-
-
-/* ---------- MAPPERS ---------- */
-fun Movie.toUiState() = MovieUiState(
-    id = id,
-    title = title,
-    rating = rating,
-    posterPath = posterPath
-)
-
-fun Artist.toUiState() = ArtistUiState(
-    id = id,
-    name = name,
-    photoPath = photoPath
-)
-
-fun Series.toUiState() = SeriesUiState(
-    id = id,
-    title = title,
-    rating = rating,
-    posterPath = posterPath
-)

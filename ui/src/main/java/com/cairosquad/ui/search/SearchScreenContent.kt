@@ -26,14 +26,15 @@ import com.cairosquad.design_system.component.MovieCardSize
 import com.cairosquad.design_system.component.StateMessage
 import com.cairosquad.design_system.component.TopBar
 import com.cairosquad.design_system.text_style.defaultTextStyle
+import com.cairosquad.viewmodel.searchviewmodel.SearchUiState
 
 @Composable
 fun SearchScreenContent(
     modifier: Modifier = Modifier,
-    topResults: List<MovieUiState> = emptyList(),
-    movies: List<MovieUiState> = emptyList(),
-    series: List<SeriesUiState> = emptyList(),
-    artists: List<ArtistUiState> = emptyList()
+    topResults: List<SearchUiState.MovieUiState> = emptyList(),
+    movies: List<SearchUiState.MovieUiState> = emptyList(),
+    series: List<SearchUiState.SeriesUiState> = emptyList(),
+    artists: List<SearchUiState.ArtistUiState> = emptyList()
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
 
@@ -80,7 +81,7 @@ fun SearchScreenContent(
 }
 
 @Composable
-private fun AllResultsTabContent(topResults: List<MovieUiState>) {
+private fun AllResultsTabContent(topResults: List<SearchUiState.MovieUiState>) {
     if (topResults.isEmpty()) {
         StateMessage(
             imageDrawable = R.drawable.no_result,
@@ -107,7 +108,7 @@ private fun AllResultsTabContent(topResults: List<MovieUiState>) {
 }
 
 @Composable
-private fun MoviesTabContent(movies: List<MovieUiState>) {
+private fun MoviesTabContent(movies: List<SearchUiState.MovieUiState>) {
     if (movies.isEmpty()) {
         StateMessage(
             imageDrawable = R.drawable.no_result,
@@ -134,7 +135,7 @@ private fun MoviesTabContent(movies: List<MovieUiState>) {
 }
 
 @Composable
-private fun SeriesTabContent(series: List<SeriesUiState>) {
+private fun SeriesTabContent(series: List<SearchUiState.SeriesUiState>) {
     if (series.isEmpty()) {
         StateMessage(
             imageDrawable = R.drawable.no_result,
@@ -161,7 +162,7 @@ private fun SeriesTabContent(series: List<SeriesUiState>) {
 }
 
 @Composable
-private fun ArtistsTabContent(artists: List<ArtistUiState>) {
+private fun ArtistsTabContent(artists: List<SearchUiState.ArtistUiState>) {
     if (artists.isEmpty()) {
         StateMessage(
             imageDrawable = R.drawable.no_result,
@@ -198,20 +199,3 @@ fun SearchResultText(noOfResults: Int) {
         )
     }
 }
-
-data class MovieUiState(
-    val title: String,
-    val rating: Float,
-    val posterPath: String
-)
-
-data class ArtistUiState(
-    val name: String,
-    val photoPath: String
-)
-
-data class SeriesUiState(
-    val title: String,
-    val rating: Float,
-    val posterPath: String
-)
