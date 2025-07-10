@@ -13,6 +13,12 @@
     <string name="state_message_image">صورة رسالة الحالة</string>
     <string name="home">الرئيسية</string>
     <string name="search">بحث</string>
+    <string name="search_result">نتيجة البحث</string>
+    <string name="number_of_items">(%d عناصر)</string>
+    <string name="top_Results">أفضل النتائج</string>
+    <string name="movies">أفلام</string>
+    <string name="series">مسلسلات</string>
+    <string name="artists">فنانون</string>
     <string name="library">المكتبة</string>
     <string name="more">المزيد</string>
     <string name="icon">ايقونة</string>
