@@ -7,9 +7,14 @@ class SearchHistoryRepositoryImpl(
     private val dataSource: SearchHistoryDataSource
 ) : SearchHistoryRepository {
 
-    override suspend fun getAll(query: String): List<String> {
-        return dataSource.getAll(query)
+    override suspend fun getAll(): List<String> {
+        return  dataSource.getAll()
     }
+
+    override suspend fun getByQuery(query: String): List<String> {
+        return dataSource.getByQuery(query)
+    }
+
 
     override suspend fun clearAll() {
         dataSource.clearAll()
