@@ -1,8 +1,5 @@
 package com.cairosquad.viewmodel.base
 
-
-//import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-//import androidx.test.ext.junit.runners.AndroidJUnit4
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
