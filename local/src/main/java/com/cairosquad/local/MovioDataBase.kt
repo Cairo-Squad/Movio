@@ -7,9 +7,10 @@ import com.cairosquad.local.cacheSearch.CacheDao
 import com.cairosquad.local.cacheSearch.entity.ArtistCacheEntity
 import com.cairosquad.local.cacheSearch.entity.MovieCacheEntity
 import com.cairosquad.local.cacheSearch.entity.SeriesCacheEntity
+import roomentity.SearchHistoryEntity
 
 @Database(
-    entities = [MovieCacheEntity::class, SeriesCacheEntity::class, ArtistCacheEntity::class],
+    entities = [MovieCacheEntity::class, SeriesCacheEntity::class, ArtistCacheEntity::class, SearchHistoryEntity::class],
     version = 1,
     exportSchema = true,
 )

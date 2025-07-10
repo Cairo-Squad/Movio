@@ -1,6 +1,5 @@
 package ui.searchscreen
 
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,7 +13,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -23,9 +22,10 @@ import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.component.ArtistCard
 import com.cairosquad.design_system.component.MovieCard
+import com.cairosquad.design_system.component.MovieCardSize
+import com.cairosquad.design_system.component.StateMessage
 import com.cairosquad.design_system.component.TopBar
 import com.cairosquad.design_system.text_style.defaultTextStyle
-
 
 @Composable
 fun SearchScreenContent(
@@ -35,7 +35,7 @@ fun SearchScreenContent(
     series: List<SeriesUiState> = emptyList(),
     artists: List<ArtistUiState> = emptyList()
 ) {
-    var selectedTabIndex by remember { mutableStateOf(0) }
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
 
     Column(modifier = modifier) {
         TopBar(
@@ -57,16 +57,19 @@ fun SearchScreenContent(
                 Spacer(modifier = Modifier.height(16.dp))
                 AllResultsTabContent(topResults = topResults)
             }
+
             1 -> {
                 SearchResultText(noOfResults = movies.size)
                 Spacer(modifier = Modifier.height(16.dp))
                 MoviesTabContent(movies = movies)
             }
+
             2 -> {
                 SearchResultText(noOfResults = series.size)
                 Spacer(modifier = Modifier.height(16.dp))
                 SeriesTabContent(series = series)
             }
+
             3 -> {
                 SearchResultText(noOfResults = artists.size)
                 Spacer(modifier = Modifier.height(16.dp))
@@ -75,10 +78,15 @@ fun SearchScreenContent(
         }
     }
 }
+
 @Composable
 private fun AllResultsTabContent(topResults: List<MovieUiState>) {
     if (topResults.isEmpty()) {
-        // EmptyState()
+        StateMessage(
+            imageDrawable = R.drawable.no_result,
+            titleId = R.string.no_results_found,
+            descriptionId = R.string.no_results_found_description
+        )
     } else {
         LazyVerticalGrid(
             columns = GridCells.Fixed(3),
@@ -90,7 +98,8 @@ private fun AllResultsTabContent(topResults: List<MovieUiState>) {
                     title = result.title,
                     vote = result.rating,
                     imgUrl = result.posterPath,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 16.dp),
+                    cardSize = MovieCardSize.Small
                 )
             }
         }
@@ -100,7 +109,11 @@ private fun AllResultsTabContent(topResults: List<MovieUiState>) {
 @Composable
 private fun MoviesTabContent(movies: List<MovieUiState>) {
     if (movies.isEmpty()) {
-        // EmptyState()
+        StateMessage(
+            imageDrawable = R.drawable.no_result,
+            titleId = R.string.no_results_found,
+            descriptionId = R.string.no_results_found_description
+        )
     } else {
         LazyVerticalGrid(
             columns = GridCells.Fixed(3),
@@ -112,16 +125,22 @@ private fun MoviesTabContent(movies: List<MovieUiState>) {
                     title = movie.title,
                     vote = movie.rating,
                     imgUrl = movie.posterPath,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 16.dp),
+                    cardSize = MovieCardSize.Small
                 )
             }
         }
     }
 }
+
 @Composable
 private fun SeriesTabContent(series: List<SeriesUiState>) {
     if (series.isEmpty()) {
-        // EmptyState()
+        StateMessage(
+            imageDrawable = R.drawable.no_result,
+            titleId = R.string.no_results_found,
+            descriptionId = R.string.no_results_found_description
+        )
     } else {
         LazyVerticalGrid(
             columns = GridCells.Fixed(3),
@@ -133,16 +152,22 @@ private fun SeriesTabContent(series: List<SeriesUiState>) {
                     title = series.title,
                     vote = series.rating,
                     imgUrl = series.posterPath,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 16.dp),
+                    cardSize = MovieCardSize.Small
                 )
             }
         }
     }
 }
+
 @Composable
 private fun ArtistsTabContent(artists: List<ArtistUiState>) {
     if (artists.isEmpty()) {
-        // EmptyState()
+        StateMessage(
+            imageDrawable = R.drawable.no_result,
+            titleId = R.string.no_results_found,
+            descriptionId = R.string.no_results_found_description
+        )
     } else {
         LazyVerticalGrid(
             columns = GridCells.Fixed(3),
@@ -160,7 +185,7 @@ private fun ArtistsTabContent(artists: List<ArtistUiState>) {
 }
 
 @Composable
-fun SearchResultText(noOfResults : Int){
+fun SearchResultText(noOfResults: Int) {
     Row {
         BasicText(
             text = stringResource(R.string.search_result),
@@ -184,6 +209,7 @@ data class ArtistUiState(
     val name: String,
     val photoPath: String
 )
+
 data class SeriesUiState(
     val title: String,
     val rating: Float,
