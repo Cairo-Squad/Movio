@@ -1,20 +1,22 @@
 package searchviewmodel
 
-import com.cairosquad.entity.Movie
+import com.cairosquad.entity.Artist
+import com.cairosquad.entity.Series
 
-sealed class SearchUiState {
-    object Idle : SearchUiState()          // Initial state
-    object Loading : SearchUiState()       // Loading progress
-    data class Success(val results: List<Movie>) : SearchUiState()  // Results loaded
-    data class Error(val message: String) : SearchUiState()  // Error occurred
-    object Empty : SearchUiState()        // No results found
-    data class Discover(val forYou: List<Movie>, val exploreMore: List<Movie>) : SearchUiState()
-}
-
-data class UiState(
+data class SearchUiState(
+    val isIdle: Boolean = true,
     val isLoading: Boolean = false,
-    val isIdle: Boolean=false,
-    val data: List<String>? = null,
     val errorMessage: String? = null,
-    val Empty : Boolean =false,
+
+    val searchSuggestions: List<String>? = null,
+
+    val forYou: List<MovieUiState>? = null,
+    val exploreMore: List<MovieUiState>? = null,
+
+    val topResult: MovieUiState? = null,
+    val movies: List<MovieUiState>? = null,
+    val series: List<SeriesUiState> = emptyList(),
+    val artists: List<ArtistUiState> = emptyList(),
 )
+
+
