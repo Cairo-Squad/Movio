@@ -200,6 +200,6 @@ fun StartSwipeButton(
 
 @Preview(device = "id:pixel_5")
 @Composable
-fun Preview() {
+private fun Preview() {
     StartSwipeButton { }
 }
