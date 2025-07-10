@@ -18,8 +18,8 @@ class RemoteSearchDataSourceImpl(
     override suspend fun searchMovies(query: String): List<MovieDto> {
         return callApi<SearchResultDto<MovieDto>> {
             httpClient.get(constructUrl("search/movie")) {
-                parameter("query", query)
-                parameter("api_key", BuildConfig.API_KEY)
+                parameter(QUERY, query)
+                parameter(API_KEY, BuildConfig.API_KEY)
             }
         }.results?.filterNotNull() ?: emptyList()
     }
@@ -27,8 +27,8 @@ class RemoteSearchDataSourceImpl(
     override suspend fun searchSeries(query: String): List<SeriesDto> {
         return callApi<SearchResultDto<SeriesDto>> {
             httpClient.get(constructUrl("search/tv")) {
-                parameter("query", query)
-                parameter("api_key", BuildConfig.API_KEY)
+                parameter(QUERY, query)
+                parameter(API_KEY, BuildConfig.API_KEY)
             }
         }.results?.filterNotNull() ?: emptyList()
     }
@@ -36,10 +36,15 @@ class RemoteSearchDataSourceImpl(
     override suspend fun searchArtists(query: String): List<ArtistDto> {
         return callApi<SearchResultDto<ArtistDto>> {
             httpClient.get(constructUrl("search/person")) {
-                parameter("query", query)
-                parameter("api_key", BuildConfig.API_KEY)
+                parameter(QUERY, query)
+                parameter(API_KEY, BuildConfig.API_KEY)
             }
         }.results?.filterNotNull() ?: emptyList()
+    }
+
+    companion object {
+        private const val QUERY = "query"
+        private const val API_KEY = "api_key"
     }
 
 }
