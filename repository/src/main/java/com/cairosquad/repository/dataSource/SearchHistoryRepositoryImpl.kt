@@ -8,11 +8,15 @@ class SearchHistoryRepositoryImpl(
 ) : SearchHistoryRepository {
 
     override suspend fun getAll(): List<String> {
-        return  dataSource.getAll()
+        return dataSource.getAll()
     }
 
     override suspend fun getByQuery(query: String): List<String> {
-        return dataSource.getByQuery(query)
+        return if (query.isBlank()) {
+            dataSource.getAll()
+        } else {
+            dataSource.getByQuery(query)
+        }
     }
 
 

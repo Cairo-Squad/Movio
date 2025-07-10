@@ -1,6 +1,7 @@
 package com.cairosquad.domain.usecase
 
-import com.cairosquad.domain.repository.SearchHistoryRepository
+import com.cairosquad.domain.search.repository.SearchHistoryRepository
+import com.cairosquad.domain.search.usecase.ClearSearchHistoryUseCase
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
