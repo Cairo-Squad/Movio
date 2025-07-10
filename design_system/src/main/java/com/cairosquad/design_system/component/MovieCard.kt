@@ -77,6 +77,7 @@ fun MovieCard(
             modifier = Modifier
                 .padding(top = 8.dp),
             style = Theme.textStyle.title.mediumMedium14,
+            color = Theme.color.surfaces.onSurface,
             textAlign = TextAlign.Start,
             maxLines = 2,
             minLines = 2,

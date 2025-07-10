@@ -7,6 +7,7 @@ import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.cairosquad.design_system.theme.Theme
 
 @Composable
 fun LibraryScreen() {
@@ -14,7 +15,10 @@ fun LibraryScreen() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally) {
         BasicText(
-            "Library Screen"
+            "Library Screen",
+            style = Theme.textStyle.title.mediumMedium16.copy(
+                color = Theme.color.surfaces.onSurface
+            ),
         )
     }
 }

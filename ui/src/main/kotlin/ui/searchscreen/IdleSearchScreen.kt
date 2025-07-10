@@ -16,7 +16,10 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import com.cairosquad.design_system.R
 import com.cairosquad.design_system.component.MovieCard
 import com.cairosquad.design_system.component.MovieCardSize
 import com.cairosquad.design_system.component.SectionHeader
@@ -30,7 +33,11 @@ fun IdleSearchScreenContent(
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
 
-        SectionHeader(title = "For you", actionText = "See all")
+        SectionHeader(
+            title = "For you",
+            actionText = "See all",
+            actionIcon = ImageVector.vectorResource(R.drawable.arrow)
+        )
 
         LazyRow(
             contentPadding = PaddingValues(horizontal = 16.dp),
@@ -51,7 +58,10 @@ fun IdleSearchScreenContent(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        SectionHeader(title = "Explore more", actionText = "See all")
+        SectionHeader(
+            title = "Explore more", actionText = "See all",
+            actionIcon = ImageVector.vectorResource(R.drawable.arrow)
+        )
 
         LazyVerticalGrid(
             modifier = Modifier

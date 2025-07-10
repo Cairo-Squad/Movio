@@ -150,7 +150,7 @@ fun StartSwipeButton(
             ) {
                 repeat(3) {
                     Icon(
-                        painter = painterResource(id = R.drawable.arrow1),
+                        painter = painterResource(id = R.drawable.arrow),
                         contentDescription = null,
                         tint = Theme.color.surfaces.onSurface.copy(
                             alpha = (progress - 0.3f + it * 0.2f).coerceIn(0f, 1f)

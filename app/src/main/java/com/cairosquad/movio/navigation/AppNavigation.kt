@@ -4,10 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import ui.home.HomeScreen
-import ui.library.LibraryScreen
-import ui.more.MoreScreen
-import ui.searchscreen.SearchScreen
+import ui.AppScreen
 import ui.splash.SplashScreen
 
 @Composable
@@ -17,22 +14,13 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = SearchRoute
+        startDestination = AppRoute
     ) {
         composable<SplashRoute> {
             SplashScreen()
         }
-        composable<HomeRoute> {
-            HomeScreen()
-        }
-        composable<SearchRoute> {
-            SearchScreen()
-        }
-        composable<LibraryRoute> {
-            LibraryScreen()
-        }
-        composable<MoreRoute> {
-            MoreScreen()
+        composable<AppRoute> {
+            AppScreen()
         }
     }
 }
