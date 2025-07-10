@@ -18,4 +18,5 @@
     <string name="icon">ايقونة</string>
     <string name="movie_poster">بوستر العرض</string>
     <string name="artist_image">صورة الفنان</string>
+    <string name="loading_animation">صورة التحميل المتحركة</string>
 </resources>
