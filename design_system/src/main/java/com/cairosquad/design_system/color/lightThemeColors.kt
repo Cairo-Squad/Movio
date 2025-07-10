@@ -1,5 +1,6 @@
 package com.cairosquad.design_system.color
 
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 val lightThemeColors = MovioColors(
@@ -33,5 +34,14 @@ val lightThemeColors = MovioColors(
         onSuccess = Color(0xFFF6FFF6),
         successContainer = Color(0xFFE7FFE6),
         onSuccessContainer = Color(0xFF136912),
+    ),
+    IndicatorGradiant(
+        Brush.horizontalGradient(
+            colors = listOf(
+                Color(0x3349378A),
+                Color(0xFF49378A),
+                Color(0x3349378A)
+            )
+        )
     )
 )

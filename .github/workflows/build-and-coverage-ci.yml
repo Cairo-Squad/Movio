@@ -125,7 +125,7 @@ jobs:
       - name: Publish Results as PR Comment
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
-          files: test-results/TEST-*.xml
+          files: test-results/**/*.xml
 
   confirm-coverage:
     name: Confirm Coverage Upload
