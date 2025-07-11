@@ -47,7 +47,7 @@ fun TopBar(
             .height(36.dp)
             .padding(horizontal = 16.dp)
             .horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         tabs.forEachIndexed { index, title ->
@@ -69,6 +69,7 @@ fun TopBar(
 
             Column(
                 modifier = Modifier
+
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },
@@ -79,7 +80,7 @@ fun TopBar(
             ) {
                 Text(
                     modifier = Modifier
-                        .widthIn(min = 48.dp, max = 100.dp)
+                        .widthIn(min = 48.dp)
                         .onGloballyPositioned { coordinates ->
                             tabWidth = coordinates.size.width
                         },
@@ -104,7 +105,7 @@ fun TopBar(
 @Composable
 private fun TopBarPreview() {
     MovioTheme {
-        val tabs = listOf("All", "Movies", "TV Shows", "Categories")
+        val tabs = listOf("Top Results", "Movies", "Series", "Artists")
         var selectedTabIndex by remember { mutableIntStateOf(0) }
         Box(Modifier.background(Theme.color.surfaces.surface)) {
             TopBar(
