@@ -4,9 +4,11 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -60,6 +62,7 @@ fun SearchResultContent(
 
     Column(
         modifier = modifier
+            .fillMaxSize()
             .padding(16.dp)
     ) {
 
@@ -122,11 +125,17 @@ fun SearchResultContent(
 @Composable
 private fun AllResultsTabContent(topResults: List<SearchUiState.MovieUiState>) {
     if (topResults.isEmpty()) {
-        StateMessage(
-            imageDrawable = R.drawable.no_result,
-            titleId = R.string.no_results_found,
-            descriptionId = R.string.no_results_found_description
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ){
+            StateMessage(
+                imageDrawable = R.drawable.no_result,
+                titleId = R.string.no_results_found,
+                descriptionId = R.string.no_results_found_description
+            )
+        }
     } else {
         LazyVerticalGrid(
             columns = GridCells.Fixed(3),

@@ -7,7 +7,7 @@ import com.cairosquad.entity.Series
 fun Movie.toUiState() = SearchUiState.MovieUiState(
     id = id,
     title = title,
-    rating = rating,
+    rating = rating / 2,
     posterPath = posterPath
 )
 
@@ -20,6 +20,6 @@ fun Artist.toUiState() = SearchUiState.ArtistUiState(
 fun Series.toUiState() = SearchUiState.SeriesUiState(
     id = id,
     title = title,
-    rating = rating,
+    rating = rating / 2,
     posterPath = posterPath
 )

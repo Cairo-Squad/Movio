@@ -25,7 +25,6 @@ import com.cairosquad.ui.search.SearchScreen
 @Composable
 fun AppScreen(
     modifier: Modifier = Modifier,
-    onNavigateBack: () -> Unit = {}
 ) {
     val navigationItems = remember {
         listOf(

@@ -27,6 +27,7 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
+import java.util.Locale
 
 @Composable
 fun MovieCard(
@@ -83,7 +84,7 @@ fun MovieCard(
                 )
 
                 Text(
-                    text = vote.toString(),
+                    text = String.format(Locale.getDefault(), "%.1f", vote),
                     color = Theme.color.system.onWarning,
                     style = Theme.textStyle.label.smallRegular12
                 )

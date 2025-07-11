@@ -30,7 +30,7 @@ fun AppNavigation() {
             )
         }
         composable<AppRoute> {
-            AppScreen(onNavigateBack = { navController.popBackStack() })
+            AppScreen()
         }
     }
 }
