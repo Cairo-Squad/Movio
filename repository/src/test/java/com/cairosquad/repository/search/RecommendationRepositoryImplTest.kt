@@ -1,12 +1,11 @@
 package com.cairosquad.repository.search
 
-import com.cairosquad.entity.Movie
 import com.cairosquad.repository.search.data_source.remote.RemoteRecommendationDataSource
 import com.cairosquad.repository.search.data_source.remote.dto.MovieDto
+import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import kotlin.test.Test
 
@@ -29,14 +28,12 @@ class RecommendationRepositoryImplTest {
                     id = 1,
                     title = "Movie 1",
                     posterPath = null,
-                    releaseDate = null,
                     voteAverage = null
                 ),
                 MovieDto(
                     id = 2,
                     title = "Movie 2",
                     posterPath = null,
-                    releaseDate = null,
                     voteAverage = null
                 )
             )
@@ -73,7 +70,6 @@ class RecommendationRepositoryImplTest {
                     id = 3,
                     title = "Movie 3",
                     posterPath = "some_path",
-                    releaseDate = "2023-01-01",
                     voteAverage = 4.2
                 )
             )

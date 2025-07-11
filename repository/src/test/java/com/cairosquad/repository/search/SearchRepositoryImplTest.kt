@@ -79,9 +79,6 @@ class SearchRepositoryImplTest {
             name = "Lost",
             posterPath = "/lost.jpg",
             voteAverage = 8.3,
-            firstAirDate = "2004‑09‑22",
-            overview = "Plane crash survivors",
-            popularity = 50.0
         )
         coEvery { remoteDS.getSeries(query) } returns listOf(remoteDto)
         coEvery { cacheDS.cacheSeries(query, any()) } just runs
