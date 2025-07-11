@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.base
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -36,12 +37,14 @@ class BaseViewModelTest {
         fun sendTestEvent(
             event: TestEvent,
             onStart: suspend () -> Unit = {},
-            onEnd: suspend () -> Unit = {}
+            onEnd: suspend () -> Unit = {},
+            dispatcher: CoroutineDispatcher = Dispatchers.Main
         ) {
             sendEvent(
                 event,
                 onStart,
-                onEnd
+                onEnd,
+                dispatcher = dispatcher
             )
         }
 
@@ -50,14 +53,16 @@ class BaseViewModelTest {
             onSuccess: (Int) -> Unit,
             onError: (Throwable) -> Unit,
             onStart: suspend () -> Unit = {},
-            onEnd: suspend () -> Unit = {}
+            onEnd: suspend () -> Unit = {},
+            dispatcher: CoroutineDispatcher = Dispatchers.Main
         ) {
             tryToCall(
                 block = block,
                 onSuccess = onSuccess,
                 onError = onError,
                 onStart = onStart,
-                onEnd = onEnd
+                onEnd = onEnd,
+                dispatcher = dispatcher
             )
         }
     }
@@ -105,7 +110,8 @@ class BaseViewModelTest {
         viewModel.testTryToCall(
             block = { newStateValue },
             onSuccess = { result -> viewModel.updateStateValue({ it.copy(value = newStateValue) }) },
-            onError = { viewModel.updateStateValue({ it.copy(error = newStateValue) }) }
+            onError = { viewModel.updateStateValue({ it.copy(error = newStateValue) }) },
+            dispatcher = testDispatcher
         )
 
         val state = viewModel.uiState.first()
@@ -121,6 +127,7 @@ class BaseViewModelTest {
             block = { throw Exception("test") },
             onSuccess = { result -> viewModel.updateStateValue({ it.copy(value = newStateValue) }) },
             onError = { viewModel.updateStateValue({ it.copy(error = newStateValue) }) },
+            dispatcher = testDispatcher
         )
 
         val state = viewModel.uiState.first()
@@ -137,7 +144,8 @@ class BaseViewModelTest {
         viewModel.sendTestEvent(
             event = event,
             onStart = { onStartCalled = true },
-            onEnd = { onEndCalled = true }
+            onEnd = { onEndCalled = true },
+            dispatcher = testDispatcher
         )
 
         assertTrue(onStartCalled)
@@ -156,7 +164,8 @@ class BaseViewModelTest {
             onSuccess = { result -> viewModel.updateStateValue({ it.copy(value = newStateValue) }) },
             onError = { viewModel.updateStateValue({ it.copy(error = newStateValue) }) },
             onStart = { onStartCalled = true },
-            onEnd = { onEndCalled = true }
+            onEnd = { onEndCalled = true },
+            dispatcher = testDispatcher
         )
 
         assertTrue(onStartCalled)
@@ -175,7 +184,8 @@ class BaseViewModelTest {
             onSuccess = { result -> viewModel.updateStateValue({ it.copy(value = newStateValue) }) },
             onError = { viewModel.updateStateValue({ it.copy(error = newStateValue) }) },
             onStart = { onStartCalled = true },
-            onEnd = { onEndCalled = true }
+            onEnd = { onEndCalled = true },
+            dispatcher = testDispatcher
         )
 
         assertTrue(onStartCalled)

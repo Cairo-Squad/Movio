@@ -22,6 +22,7 @@ kover {
                     "**.model.**",
                     "**.di.**",
                     "**.exception.**",
+                    "**.exceptions.**",
                     "**.mapper.**",
                     "**.ui.**",
                     "**.design_system.**",

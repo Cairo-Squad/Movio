@@ -28,7 +28,7 @@ class RemoteRecommendationDataSourceImplTest {
     fun setup() {
         mockEngine = MockEngine { request ->
             when (request.url.encodedPath) {
-                "/movie/top_rated" -> {
+                "/3/movie/top_rated" -> {
                     respond(
                         content = json.encodeToString(
                             SearchResultDto(
@@ -58,7 +58,7 @@ class RemoteRecommendationDataSourceImplTest {
                     )
                 }
 
-                "/movie/now_playing" -> {
+                "/3/movie/now_playing" -> {
                     respond(
                         content = json.encodeToString(
                             SearchResultDto(
@@ -99,8 +99,10 @@ class RemoteRecommendationDataSourceImplTest {
                 json(json)
             }
         }
+
         remoteDataSource = RemoteRecommendationDataSourceImpl(httpClient)
     }
+
 
 
     @Test
@@ -117,7 +119,7 @@ class RemoteRecommendationDataSourceImplTest {
     fun `getForYouMovies returns empty list on empty results`() = runTest {
         mockEngine = MockEngine { request ->
             when (request.url.encodedPath) {
-                "/movie/top_rated" -> {
+                "/3/movie/top_rated" -> {
                     respond(
                         content = json.encodeToString(
                             SearchResultDto<MovieDto>(
@@ -148,7 +150,7 @@ class RemoteRecommendationDataSourceImplTest {
     fun `getForYouMovies filters out null movies or movies with null ID`() = runTest {
         mockEngine = MockEngine { request ->
             when (request.url.encodedPath) {
-                "/movie/top_rated" -> {
+                "/3/movie/top_rated" -> {
                     respond(
                         content = json.encodeToString(
                             SearchResultDto(
@@ -196,7 +198,7 @@ class RemoteRecommendationDataSourceImplTest {
     fun `getForYouMovies throws exception on API error`() = runTest {
         mockEngine = MockEngine { request ->
             when (request.url.encodedPath) {
-                "/movie/top_rated" -> {
+                "/3/movie/top_rated"-> {
                     respond(
                         content = "{}",
                         status = HttpStatusCode.InternalServerError,
@@ -236,7 +238,7 @@ class RemoteRecommendationDataSourceImplTest {
     fun `getExploreMoreMovies returns empty list on empty results`() = runTest {
         mockEngine = MockEngine { request ->
             when (request.url.encodedPath) {
-                "/movie/now_playing" -> {
+                "/3/movie/now_playing" -> {
                     respond(
                         content = json.encodeToString(
                             SearchResultDto<MovieDto>(
