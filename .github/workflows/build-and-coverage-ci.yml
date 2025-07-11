@@ -110,7 +110,7 @@ jobs:
           path: build/reports/kover/html/
 
   comment-on-pr:
-    name: Comment on PR with Test Results
+    name: Test Results
     needs: test
     runs-on: ubuntu-latest
     if: ${{ always() && github.event_name == 'pull_request' }}
@@ -128,7 +128,7 @@ jobs:
           files: test-results/**/*.xml
 
   confirm-coverage:
-    name: Test Results
+    name: Confirm Coverage Upload
     needs: test
     runs-on: ubuntu-latest
     if: always()
