@@ -77,4 +77,5 @@ dependencies {
     androidTestImplementation(libs.mockk)
 
     implementation(project(":domain"))
+    testImplementation(kotlin("test"))
 }

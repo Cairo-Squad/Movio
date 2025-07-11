@@ -38,14 +38,12 @@ class RemoteRecommendationDataSourceImplTest {
                                         id = 1,
                                         title = "Movie 1",
                                         posterPath = null,
-                                        releaseDate = null,
                                         voteAverage = null
                                     ),
                                     MovieDto(
                                         id = 2,
                                         title = "Movie 2",
                                         posterPath = null,
-                                        releaseDate = null,
                                         voteAverage = null
                                     )
                                 ),
@@ -68,14 +66,12 @@ class RemoteRecommendationDataSourceImplTest {
                                         id = 3,
                                         title = "Movie 3",
                                         posterPath = null,
-                                        releaseDate = null,
                                         voteAverage = null
                                     ),
                                     MovieDto(
                                         id = 4,
                                         title = "Movie 4",
                                         posterPath = null,
-                                        releaseDate = null,
                                         voteAverage = null
                                     )
                                 ),
@@ -160,7 +156,6 @@ class RemoteRecommendationDataSourceImplTest {
                                         id = 10,
                                         title = "Valid Movie",
                                         posterPath = null,
-                                        releaseDate = null,
                                         voteAverage = null
                                     ),
                                     null,
@@ -168,7 +163,6 @@ class RemoteRecommendationDataSourceImplTest {
                                         id = null,
                                         title = "Null ID Movie",
                                         posterPath = null,
-                                        releaseDate = null,
                                         voteAverage = null
                                     )
                                 ),

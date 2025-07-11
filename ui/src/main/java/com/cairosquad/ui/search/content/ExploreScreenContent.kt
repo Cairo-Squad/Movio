@@ -113,8 +113,7 @@ fun ExploreScreenContent(
         }
         item {
             SectionHeader(
-                title = "Explore more", actionText = "See all",
-                actionIcon = ImageVector.vectorResource(R.drawable.arrow),
+                title = "Explore more",
                 onActionClick = {}
             )
 

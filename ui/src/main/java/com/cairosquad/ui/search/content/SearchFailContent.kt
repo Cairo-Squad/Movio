@@ -1,9 +1,12 @@
 package com.cairosquad.ui.search.content
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -39,6 +42,10 @@ fun SearchFailContent(
             readOnly = true
         )
 
+       Box(
+            Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ){
         StateMessage(
             imageDrawable = when (state.errorStatus) {
                 ErrorStatus.NO_INTERNET -> R.drawable.no_internet
@@ -59,5 +66,6 @@ fun SearchFailContent(
                 null -> R.string.an_unexpected_error_occurred_description
             }
         )
+       }
     }
 }
