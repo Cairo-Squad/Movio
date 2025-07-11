@@ -67,7 +67,7 @@ fun MovieCard(
                         .height(cardSize.size)
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(5.dp)),
-                    painter = painterResource(com.cairosquad.safe_image_viewer.R.drawable.error),
+                    painter = painterResource(com.cairosquad.safe_image_viewer.R.drawable.empty_movie_name),
                     contentDescription = stringResource(R.string.error_loading_image)
                 )
             }

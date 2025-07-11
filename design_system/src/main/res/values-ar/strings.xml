@@ -30,4 +30,7 @@
     <string name="error_loading_image">خطئ في تحميل الصورة</string>
     <string name="recent_item_icon">ايكونة العنصر الحديث</string>
     <string name="clear_search_result">مسح نتائج البحث</string>
+    <string name="for_you">من أجلك</string>
+    <string name="see_all">عرض الكل</string>
+    <string name="explore_more">اكتشف المزيد</string>
 </resources>
