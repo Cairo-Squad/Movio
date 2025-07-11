@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -67,7 +68,11 @@ fun SearchResultContent(
             onValueChange = listener::onQueryTextChanged,
             placeholder = stringResource(R.string.search),
             leadingIcon = R.drawable.search_bottom_nav,
-            onFocusChanged = { if (it) { listener.onClickSearchTextField() } },
+            onFocusChanged = {
+                if (it) {
+                    listener.onClickSearchTextField()
+                }
+            },
             readOnly = true
         )
 
@@ -219,15 +224,19 @@ private fun ArtistsTabContent(artists: List<SearchUiState.ArtistUiState>) {
 
 @Composable
 fun SearchResultText(noOfResults: Int) {
-    Row {
+    Row(verticalAlignment = Alignment.CenterVertically) {
         BasicText(
             text = stringResource(R.string.search_result),
-            style = defaultTextStyle.title.mediumMedium16
+            style = defaultTextStyle.title.mediumMedium16.copy(
+                Theme.color.surfaces.onSurfaceVariant
+            )
         )
         Spacer(modifier = Modifier.size(4.dp))
         BasicText(
-            text = stringResource(R.string.number_of_items, noOfResults),
-            style = defaultTextStyle.title.mediumMedium14
+            text = "(${stringResource(R.string.number_of_items, noOfResults)})",
+            style = defaultTextStyle.label.smallRegular14.copy(
+                Theme.color.surfaces.onSurfaceVariant
+            )
         )
     }
 }

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="recent_item_icon">ايكونة العنصر الحديث</string>
+    <string name="clear_search_result">مسح نتائج البحث</string>
+</resources>

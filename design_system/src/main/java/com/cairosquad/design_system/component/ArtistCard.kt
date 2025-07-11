@@ -55,6 +55,7 @@ fun ArtistCard(name: String, imgUrl: String?, modifier: Modifier = Modifier) {
             text = name,
             textAlign = TextAlign.Center,
             style = Theme.textStyle.title.mediumMedium14,
+            color = Theme.color.surfaces.onSurface,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1
         )
