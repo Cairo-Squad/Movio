@@ -93,6 +93,9 @@ fun InputField(
                 .onFocusChanged { focusState ->
                     onFocusChanged(focusState.isFocused)
                     hasFocus = focusState.isFocused
+                    if (focusState.isFocused) {
+                        onValueChange(value)
+                    }
                 }
                 .then(
                     if (hasFocus || error.isNotBlank()) {
