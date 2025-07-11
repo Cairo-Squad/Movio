@@ -128,7 +128,7 @@ jobs:
           files: test-results/**/*.xml
 
   confirm-coverage:
-    name: Confirm Coverage Upload
+    name: Test Results
     needs: test
     runs-on: ubuntu-latest
     if: always()
