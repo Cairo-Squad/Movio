@@ -74,4 +74,6 @@ dependencies {
     testImplementation(libs.truth.v144)
     testImplementation(libs.koin.test)
 
+    implementation(libs.logging.interceptor)
+
 }
