@@ -14,7 +14,7 @@
     <string name="home">الرئيسية</string>
     <string name="search">بحث</string>
     <string name="search_result">نتيجة البحث</string>
-    <string name="number_of_items">(%d عناصر)</string>
+    <string name="number_of_items">%d عناصر</string>
     <string name="top_Results">أفضل النتائج</string>
     <string name="movies">أفلام</string>
     <string name="series">مسلسلات</string>
@@ -37,4 +37,6 @@
     <string name="see_all">عرض الكل</string>
     <string name="explore_more">اكتشف المزيد</string>
     <string name="default_image_icon">الصورة الافتراضية</string>
+    <string name="recent_search">اخر بحث</string>
+    <string name="clear_all">حذف الكل</string>
 </resources>
