@@ -144,7 +144,7 @@ private fun AllResultsTabContent(
     } else {
         LazyVerticalGrid(
             modifier = modifier,
-            columns = GridCells.Fixed(3),
+            columns = GridCells.Adaptive(minSize = 100.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -153,7 +153,6 @@ private fun AllResultsTabContent(
                     title = result.title,
                     vote = result.rating,
                     imgUrl = result.posterPath,
-                    modifier = Modifier.padding(bottom = 16.dp),
                     cardSize = MovieCardSize.Small
                 )
             }
@@ -176,7 +175,7 @@ private fun MoviesTabContent(
     } else {
         LazyVerticalGrid(
             modifier = modifier,
-            columns = GridCells.Fixed(3),
+            columns = GridCells.Adaptive(minSize = 100.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -185,7 +184,6 @@ private fun MoviesTabContent(
                     title = movie.title,
                     vote = movie.rating,
                     imgUrl = movie.posterPath,
-                    modifier = Modifier.padding(bottom = 16.dp),
                     cardSize = MovieCardSize.Small
                 )
             }
@@ -208,7 +206,7 @@ private fun SeriesTabContent(
     } else {
         LazyVerticalGrid(
             modifier = modifier,
-            columns = GridCells.Fixed(3),
+            columns = GridCells.Adaptive(minSize = 100.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -217,7 +215,6 @@ private fun SeriesTabContent(
                     title = series.title,
                     vote = series.rating,
                     imgUrl = series.posterPath,
-                    modifier = Modifier.padding(bottom = 16.dp),
                     cardSize = MovieCardSize.Small
                 )
             }
@@ -240,7 +237,7 @@ private fun ArtistsTabContent(
     } else {
         LazyVerticalGrid(
             modifier = modifier,
-            columns = GridCells.Fixed(3),
+            columns = GridCells.Adaptive(minSize = 100.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
