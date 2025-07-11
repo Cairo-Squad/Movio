@@ -58,12 +58,15 @@ fun SearchResultContent(
 
     var selectedTabIndex by remember { mutableIntStateOf(0) }
 
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier
+            .padding(16.dp)
+    ) {
 
         InputField(
             modifier = Modifier
                 .background(Theme.color.surfaces.surface)
-                .padding(16.dp),
+                .padding(bottom = 12.dp),
             value = state.query,
             onValueChange = listener::onQueryTextChanged,
             placeholder = stringResource(R.string.search),
@@ -77,6 +80,7 @@ fun SearchResultContent(
         )
 
         TopBar(
+            modifier = Modifier.padding(bottom = 12.dp),
             tabs = listOf(
                 stringResource(R.string.top_Results),
                 stringResource(R.string.movies),
@@ -86,8 +90,6 @@ fun SearchResultContent(
             selectedTabIndex = selectedTabIndex,
             onTabSelected = { selectedTabIndex = it }
         )
-
-        Spacer(modifier = Modifier.height(12.dp))
 
         when (selectedTabIndex) {
             0 -> {

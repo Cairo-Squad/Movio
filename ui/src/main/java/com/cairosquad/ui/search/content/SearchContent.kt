@@ -78,9 +78,7 @@ fun SearchContent(
             placeholder = stringResource(R.string.search),
             leadingIcon = R.drawable.search_bottom_nav,
             trailingIcon = R.drawable.ic_close,
-            onTrailingIconClick = {
-
-            },
+            onTrailingIconClick = { listener.onBackClicked() },
             keyboardActions = KeyboardActions(
                 onDone = {
                     listener.onSearch(state.query)

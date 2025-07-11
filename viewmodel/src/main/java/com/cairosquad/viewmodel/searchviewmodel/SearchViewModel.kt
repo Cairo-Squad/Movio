@@ -75,7 +75,7 @@ class SearchViewModel(
                     )
                 }
             },
-            onError = {  },
+            onError = { },
             dispatcher = Dispatchers.IO
         )
     }
@@ -194,6 +194,16 @@ class SearchViewModel(
     }
 
     override fun onClickSearchTextField() {
+        tryToCall(
+            block = {
+                getRecentSearchUseCase.getAll()
+            },
+            onSuccess = { suggestions ->
+                updateState { it.copy(recentSearch = suggestions, errorMessage = null) }
+            },
+            onError = { }
+        )
+
         searchJob?.cancel()
         updateState {
             it.copy(
