@@ -33,4 +33,5 @@
     <string name="for_you">من أجلك</string>
     <string name="see_all">عرض الكل</string>
     <string name="explore_more">اكتشف المزيد</string>
+    <string name="default_image_icon">الصورة الافتراضية</string>
 </resources>

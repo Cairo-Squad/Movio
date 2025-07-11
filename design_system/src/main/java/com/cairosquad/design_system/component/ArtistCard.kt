@@ -58,7 +58,7 @@ fun ArtistCard(
                 Icon(
                     modifier = Modifier.size(24.dp),
                     imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
-                    contentDescription = "image icon",
+                    contentDescription = stringResource(R.string.default_image_icon),
                     tint = Color(0xFFEFF1F5)
                 )
             }
