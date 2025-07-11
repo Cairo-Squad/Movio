@@ -52,18 +52,26 @@ android {
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(project(":repository"))
-    testImplementation(kotlin("test"))
-    testImplementation(libs.junit.jupiter)
-    // Ktor
+
     implementation(libs.bundles.ktor)
-    implementation(libs.logging.interceptor)
-    implementation(libs.ktor.client.okhttp)
-    implementation(libs.logging.interceptor)
-    // Data Store
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.datastore)
-    // Serialization
+
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.runtime)
+
+
+    testImplementation(kotlin("test"))
+
+    testImplementation(libs.ktor.client.mock)
+
+    testImplementation(libs.kotlinx.coroutines.test.v1102)
+
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.junit)
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${libs.versions.junitJupiter.get()}")
+    testImplementation(libs.truth.v144)
+
+    testImplementation(libs.koin.test)
 
 }

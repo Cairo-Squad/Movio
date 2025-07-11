@@ -45,7 +45,7 @@ fun TopBar(
             .fillMaxWidth()
             .height(36.dp)
             .horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically
     ) {
         tabs.forEachIndexed { index, title ->
