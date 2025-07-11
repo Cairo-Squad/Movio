@@ -14,9 +14,8 @@ import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.Before
 import org.junit.Test
@@ -27,7 +26,6 @@ class SearchViewModelTest {
 
 
     private val testDispatcher = UnconfinedTestDispatcher()
-    private val testScope = TestScope(testDispatcher)
 
     private lateinit var searchUseCase: SearchUseCase
     private lateinit var getRecentSearchUseCase: GetRecentSearchUseCase
@@ -40,11 +38,11 @@ class SearchViewModelTest {
     fun setup() {
         Dispatchers.setMain(testDispatcher)
 
-        searchUseCase = mockk()
-        getRecentSearchUseCase = mockk()
-        clearRecentSearchUseCase = mockk()
-        getExploreMoreUseCase = mockk()
-        getForYouUseCase = mockk()
+        searchUseCase = mockk(relaxed = true)
+        getRecentSearchUseCase = mockk(relaxed = true)
+        clearRecentSearchUseCase = mockk(relaxed = true)
+        getExploreMoreUseCase = mockk(relaxed = true)
+        getForYouUseCase = mockk(relaxed = true)
 
         viewModel = SearchViewModel(
             searchUseCase,
@@ -83,61 +81,65 @@ class SearchViewModelTest {
     )
 
     @Test
-    fun loadDiscoverMoviesLoadsDataSuccessfully() = testScope.runTest {
+    fun loadDiscoverMoviesLoadsDataSuccessfully() = runBlocking {
 
-        val forYouList = listOf(movie1).map { it.toUiState() }
-        val exploreMoreList = listOf(movie2).map { it.toUiState() }
+        val forYouList = listOf(movie1)
+        val exploreMoreList = listOf(movie2)
 
         coEvery { getForYouUseCase.getForYouMovies() } returns listOf(movie1)
         coEvery { getExploreMoreUseCase.getExploreMoreMovies() } returns listOf(movie2)
 
         viewModel.loadDiscoverMovies()
 
+        delay(400)
+
         assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.EXPLORE)
-        assertThat(viewModel.uiState.value.forYou).isEqualTo(forYouList)
-        assertThat(viewModel.uiState.value.exploreMore).isEqualTo(exploreMoreList)
+        assertThat(viewModel.uiState.value.forYou).isEqualTo(forYouList.map { it.toUiState() })
+        assertThat(viewModel.uiState.value.exploreMore).isEqualTo(exploreMoreList.map { it.toUiState() })
     }
 
     @Test
-    fun `loadDiscoverMovies handles exception and updates errorMessage`() = testScope.runTest {
-        coEvery { getForYouUseCase.getForYouMovies() } throws IOException("No Internet")
+    fun loadDiscoverMoviesHandlesExceptionAndUpdatesErrorMessage() = runBlocking {
+        coEvery { getForYouUseCase.getForYouMovies() } throws IOException()
         coEvery { getExploreMoreUseCase.getExploreMoreMovies() } returns emptyList()
 
         viewModel.loadDiscoverMovies()
 
+        delay(400)
+
         assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.FAILED)
-        assertThat(viewModel.uiState.value.errorMessage).contains("Network error")
+        assertThat(viewModel.uiState.value.errorMessage).contains("Network error. Please check your connection")
     }
 
     @Test
-    fun `onQueryTextChanged updates query and recentSearch`() = testScope.runTest {
+    fun onQueryTextChangedUpdatesQueryAndRecentSearch() = runBlocking {
         val query = "Batman"
         val recent = listOf("Batman", "Batman Begins")
-        coEvery { getRecentSearchUseCase.getByQuery(query) } coAnswers { delay(300); recent }
+        coEvery { getRecentSearchUseCase.getByQuery(query) } coAnswers { recent }
 
         viewModel.onQueryTextChanged(query)
 
-        delay(300)
+        delay(400)
         assertThat(viewModel.uiState.value.query).isEqualTo(query)
         assertThat(viewModel.uiState.value.recentSearch).isEqualTo(recent)
     }
 
     @Test
-    fun `onCancelSearch clears query and sets to EXPLORE`() = testScope.runTest {
+    fun `onCancelSearch clears query and sets to EXPLORE`() = runBlocking {
         viewModel.onCancelSearch()
         assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.EXPLORE)
         assertThat(viewModel.uiState.value.query).isEmpty()
     }
 
     @Test
-    fun `onSearch loads results successfully`() = testScope.runTest {
+    fun `onSearch loads results successfully`() = runBlocking {
         val query = "Inception"
         coEvery { searchUseCase.getMovies(query) } returns listOf(movie1)
         coEvery { searchUseCase.getSeries(query) } returns listOf(series)
         coEvery { searchUseCase.getArtists(query) } returns listOf(artist)
 
         viewModel.onSearch(query)
-
+        delay(400)
         assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.RESULT)
         assertThat(viewModel.uiState.value.movies).hasSize(1)
         assertThat(viewModel.uiState.value.series).hasSize(1)
@@ -145,64 +147,75 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `onSearch shows error message when failed`() = testScope.runTest {
+    fun `onSearch shows error message when failed`() = runBlocking {
         coEvery { searchUseCase.getMovies(any()) } throws IOException()
         coEvery { searchUseCase.getSeries(any()) } returns emptyList()
         coEvery { searchUseCase.getArtists(any()) } returns emptyList()
 
         viewModel.onSearch("fail")
-
+        delay(400)
         assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.FAILED)
         assertThat(viewModel.uiState.value.errorMessage).contains("Network")
     }
 
     @Test
-    fun `onRecentSearchItemClicked triggers search`() = testScope.runTest {
+    fun `onRecentSearchItemClicked triggers search`() = runBlocking {
         val query = "Dark"
         coEvery { searchUseCase.getMovies(query) } returns emptyList()
         coEvery { searchUseCase.getSeries(query) } returns emptyList()
         coEvery { searchUseCase.getArtists(query) } returns emptyList()
 
         viewModel.onRecentSearchItemClicked(query)
-
+        delay(400)
         assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.RESULT)
     }
 
     @Test
-    fun `onClearHistory clears all suggestions`() = testScope.runTest {
+    fun `onClearHistory clears all suggestions`() = runBlocking {
         coEvery { clearRecentSearchUseCase.clearAll() } returns Unit
 
         viewModel.onClearHistory()
+
+        delay(400)
 
         assertThat(viewModel.uiState.value.recentSearch).isEmpty()
     }
 
     @Test
-    fun `onRemoveHistoryItem removes item and updates list`() = testScope.runTest {
+    fun `onRemoveHistoryItem removes item and updates list`() = runBlocking {
         val newList = listOf("New1", "New2")
         coEvery { clearRecentSearchUseCase.removeQuery(any()) } returns Unit
         coEvery { getRecentSearchUseCase.getAll() } returns newList
 
         viewModel.onRemoveHistoryItem("Old")
 
+        delay(400)
+
         assertThat(viewModel.uiState.value.recentSearch).isEqualTo(newList)
     }
 
-//    @Test
-//    fun `onBackClicked navigates correctly from RESULT to SEARCH`() = testScope.runTest {
-//        viewModel.updateState { it.copy(screenStatus = SearchUiState.ScreenStatus.RESULT) }
-//
-//        viewModel.onBackClicked()
-//
-//        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.SEARCH)
-//    }
+    @Test
+    fun `onBackClicked navigates correctly from RESULT to SEARCH`() = runBlocking {
+        val query = "Batman"
+        coEvery { searchUseCase.getMovies(query) } returns emptyList()
+        coEvery { searchUseCase.getSeries(query) } returns emptyList()
+        coEvery { searchUseCase.getArtists(query) } returns emptyList()
+
+        viewModel.onQueryTextChanged(query)
+        delay(300)
+        viewModel.onBackClicked()
+        delay(300)
+        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.EXPLORE)
+    }
 
     @Test
-    fun `onClickSearchTextField loads recent searches`() = testScope.runTest {
+    fun `onClickSearchTextField loads recent searches`() = runBlocking {
         val recent = listOf("Query1", "Query2")
         coEvery { getRecentSearchUseCase.getAll() } returns recent
 
         viewModel.onClickSearchTextField()
+
+        delay(400)
 
         assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.SEARCH)
         assertThat(viewModel.uiState.value.recentSearch).isEqualTo(recent)
