@@ -27,6 +27,7 @@ import com.cairosquad.design_system.component.SectionHeader
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.viewmodel.searchviewmodel.SearchInteractionListener
 import com.cairosquad.viewmodel.searchviewmodel.SearchUiState
+//import com.cairosquad.ui.R
 
 @Composable
 fun SearchContent(
@@ -75,7 +76,7 @@ fun SearchContent(
         )
 
         SectionHeader(
-            title = "Recent Search",
+            title = stringResource(R.string.recent_search),
             actionText = "Clear all",
             onActionClick = listener::onClearHistory
         )
