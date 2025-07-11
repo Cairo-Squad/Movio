@@ -2,6 +2,8 @@ package com.cairosquad.viewmodel.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,9 +44,10 @@ abstract class BaseViewModel<T, E>(
         onSuccess: (R) -> Unit,
         onError: (Throwable) -> Unit,
         onStart: suspend () -> Unit = {},
-        onEnd: suspend () -> Unit = {}
+        onEnd: suspend () -> Unit = {},
+        dispatcher: CoroutineDispatcher = Dispatchers.IO
     ): Job {
-        return viewModelScope.launch {
+        return viewModelScope.launch(dispatcher) {
             onStart()
             runCatching { block() }
                 .onSuccess(onSuccess)

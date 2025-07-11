@@ -1,17 +1,14 @@
 package com.cairosquad.viewmodel.searchviewmodel
 
-import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.search.usecase.ClearRecentSearchUseCase
 import com.cairosquad.domain.search.usecase.GetExploreMoreUseCase
 import com.cairosquad.domain.search.usecase.GetForYouUseCase
 import com.cairosquad.domain.search.usecase.GetRecentSearchUseCase
 import com.cairosquad.domain.search.usecase.SearchUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.io.IOException
 
 class SearchViewModel(
@@ -20,7 +17,6 @@ class SearchViewModel(
     private val clearRecentSearchUseCase: ClearRecentSearchUseCase,
     private val getExploreMoreUseCase: GetExploreMoreUseCase,
     private val getForYouUseCase: GetForYouUseCase,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : BaseViewModel<SearchUiState, SearchUiEvent>(initialState = SearchUiState()),
     SearchInteractionListener {
 
@@ -55,23 +51,34 @@ class SearchViewModel(
                 )
             }
             sendEvent(SearchUiEvent.ShowToast(message))
-        }
+        },
+        dispatcher = Dispatchers.IO
     )
 
     override fun onQueryTextChanged(query: String) {
-        searchJob?.cancel()
-        searchJob = viewModelScope.launch(dispatcher) {
-            delay(300)
-            val suggestions = getRecentSearchUseCase.getByQuery(query)
-            updateState {
-                it.copy(
-                    screenStatus = SearchUiState.ScreenStatus.SEARCH,
-                    recentSearch = suggestions,
-                    query = query,
-                    errorMessage = null
-                )
-            }
+        updateState {
+            it.copy(
+                screenStatus = SearchUiState.ScreenStatus.SEARCH
+            )
         }
+        searchJob?.cancel()
+        searchJob = tryToCall(
+            block = {
+                delay(300)
+                getRecentSearchUseCase.getByQuery(query)
+            },
+            onSuccess = { suggestions ->
+                updateState {
+                    it.copy(
+                        recentSearch = suggestions,
+                        query = query,
+                        errorMessage = null
+                    )
+                }
+            },
+            onError = {  },
+            dispatcher = Dispatchers.IO
+        )
     }
 
     override fun onCancelSearch() {
@@ -123,7 +130,8 @@ class SearchViewModel(
                     )
                 }
                 sendEvent(SearchUiEvent.ShowToast(message))
-            }
+            },
+            dispatcher = Dispatchers.IO
         )
     }
 
@@ -142,7 +150,8 @@ class SearchViewModel(
                 val message = mapExceptionToMessage(e)
                 updateState { it.copy(errorMessage = message) }
                 sendEvent(SearchUiEvent.ShowToast(message))
-            }
+            },
+            dispatcher = Dispatchers.IO
         )
     }
 
@@ -159,7 +168,8 @@ class SearchViewModel(
                 val message = mapExceptionToMessage(e)
                 updateState { it.copy(errorMessage = mapExceptionToMessage(e)) }
                 sendEvent(SearchUiEvent.ShowToast(message))
-            }
+            },
+            dispatcher = Dispatchers.IO
         )
     }
 
@@ -181,6 +191,14 @@ class SearchViewModel(
 
                 else -> it
             }
+        }
+    }
+
+    override fun onClickSearchTextField() {
+        updateState {
+            it.copy(
+                screenStatus = SearchUiState.ScreenStatus.SEARCH,
+            )
         }
     }
 

@@ -1,5 +1,7 @@
-package com.cairosquad.ui.search
+package com.cairosquad.ui.search.content
 
+import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,22 +21,43 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
+import com.cairosquad.design_system.component.InputField
 import com.cairosquad.design_system.component.MovieCard
 import com.cairosquad.design_system.component.MovieCardSize
 import com.cairosquad.design_system.component.SectionHeader
-import com.cairosquad.viewmodel.searchviewmodel.SearchUiState.MovieUiState
+import com.cairosquad.design_system.theme.Theme
+import com.cairosquad.viewmodel.searchviewmodel.SearchInteractionListener
+import com.cairosquad.viewmodel.searchviewmodel.SearchUiState
 
 @Composable
 fun ExploreScreenContent(
-    forYouMovies: List<MovieUiState>,
-    exploreMoreMovies: List<MovieUiState>,
-    onMovieClick: (MovieUiState) -> Unit
+    modifier: Modifier = Modifier,
+    state: SearchUiState,
+    listener: SearchInteractionListener
 ) {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-
+    LazyColumn(modifier = modifier.fillMaxSize()) {
+        stickyHeader {
+            InputField(
+                modifier = Modifier
+                    .background(Theme.color.surfaces.surface)
+                    .padding(16.dp),
+                value = state.query,
+                onValueChange = listener::onQueryTextChanged,
+                placeholder = stringResource(R.string.search),
+                leadingIcon = R.drawable.search_bottom_nav,
+                onFocusChanged = {
+                    Log.d("asdasd", "ExploreScreenContent: hiiiiiiiiiiiiiii ${it}")
+                    if (it) {
+                        Log.d("asdasd", "ExploreScreenContent: hellooooooooo ${it}")
+                        listener::onClickSearchTextField
+                    }
+                }
+            )
+        }
         item {
             SectionHeader(
                 title = "For you",
@@ -47,10 +70,10 @@ fun ExploreScreenContent(
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(forYouMovies) { movie ->
+                items(state.forYou) { movie ->
                     MovieCard(
                         modifier = Modifier
-                            .clickable { onMovieClick(movie) }
+                            .clickable { }
                             .width(124.dp),
                         title = movie.title,
                         vote = movie.rating,
@@ -73,17 +96,17 @@ fun ExploreScreenContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .heightIn(max = ((exploreMoreMovies.size / 2 + 1) * 240).dp),
+                    .heightIn(max = ((state.exploreMore.size / 2 + 1) * 240).dp),
                 columns = GridCells.Adaptive(minSize = 158.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 userScrollEnabled = false
             ) {
-                items(exploreMoreMovies) { movie ->
+                items(state.exploreMore) { movie ->
 
                     MovieCard(
                         modifier = Modifier
-                            .clickable { onMovieClick(movie) },
+                            .clickable {  },
                         title = movie.title,
                         vote = movie.rating,
                         imgUrl = movie.posterPath,

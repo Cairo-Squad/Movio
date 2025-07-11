@@ -55,6 +55,7 @@ fun InputField(
     @DrawableRes leadingIcon: Int? = null,
     @DrawableRes trailingIcon: Int? = null,
     onTrailingIconClick: () -> Unit = {},
+    onFocusChanged: (Boolean) -> Unit = {},
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {
@@ -88,6 +89,7 @@ fun InputField(
                 .clip(RoundedCornerShape(8.dp))
                 .background(Theme.color.surfaces.surfaceContainer)
                 .onFocusChanged { focusState ->
+                    onFocusChanged(focusState.isFocused)
                     hasFocus = focusState.isFocused
                 }
                 .then(

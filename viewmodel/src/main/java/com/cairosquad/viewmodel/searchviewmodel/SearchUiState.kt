@@ -18,10 +18,10 @@ data class SearchUiState(
     )
 
     data class MovieUiState(
-        val id: Long = 0,
-        val title: String = "Movie",
-        val rating: Float = 0.0f,
-        val posterPath: String = " ",
+        val id: Long,
+        val title: String,
+        val rating: Float,
+        val posterPath: String,
     )
 
     data class SeriesUiState(

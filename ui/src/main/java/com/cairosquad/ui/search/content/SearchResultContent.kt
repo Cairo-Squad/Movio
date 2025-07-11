@@ -1,4 +1,4 @@
-package com.cairosquad.ui.search
+package com.cairosquad.ui.search.content
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,7 +29,7 @@ import com.cairosquad.design_system.text_style.defaultTextStyle
 import com.cairosquad.viewmodel.searchviewmodel.SearchUiState
 
 @Composable
-fun SearchScreenContent(
+fun SearchResultContent(
     modifier: Modifier = Modifier,
     topResults: List<SearchUiState.MovieUiState> = emptyList(),
     movies: List<SearchUiState.MovieUiState> = emptyList(),

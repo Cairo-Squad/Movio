@@ -7,6 +7,7 @@ val appModule = module {
         remoteDataSourceModule,
         domainModule,
         repositoryModule,
-        localDataSourceModule
+        localDataSourceModule,
+        viewModelModule
     )
 }

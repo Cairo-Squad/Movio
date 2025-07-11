@@ -1,7 +1,5 @@
 package com.cairosquad.viewmodel.searchviewmodel
 
-import kotlinx.coroutines.Job
-
 interface SearchInteractionListener {
     fun onQueryTextChanged(query: String)
     fun onSearch(query: String)
@@ -10,4 +8,5 @@ interface SearchInteractionListener {
     fun onClearHistory()
     fun onRemoveHistoryItem(query: String)
     fun onBackClicked()
+    fun onClickSearchTextField()
 }
