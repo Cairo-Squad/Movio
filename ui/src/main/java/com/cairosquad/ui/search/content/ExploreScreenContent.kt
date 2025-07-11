@@ -56,7 +56,8 @@ fun ExploreScreenContent(
             SectionHeader(
                 title = "For you",
                 actionText = "See all",
-                actionIcon = ImageVector.vectorResource(R.drawable.arrow)
+                actionIcon = ImageVector.vectorResource(R.drawable.arrow),
+                onActionClick = {}
             )
         }
         item {
@@ -81,7 +82,8 @@ fun ExploreScreenContent(
         item {
             SectionHeader(
                 title = "Explore more", actionText = "See all",
-                actionIcon = ImageVector.vectorResource(R.drawable.arrow)
+                actionIcon = ImageVector.vectorResource(R.drawable.arrow),
+                onActionClick = {}
             )
 
         }
@@ -100,7 +102,7 @@ fun ExploreScreenContent(
 
                     MovieCard(
                         modifier = Modifier
-                            .clickable {  },
+                            .clickable { },
                         title = movie.title,
                         vote = movie.rating,
                         imgUrl = movie.posterPath,

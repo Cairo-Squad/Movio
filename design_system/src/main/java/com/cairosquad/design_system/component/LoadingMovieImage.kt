@@ -10,7 +10,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -48,7 +49,7 @@ fun LoadingMovieImage(modifier: Modifier = Modifier) {
     Box(modifier = modifier) {
         Box(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .background(
                     Theme.color.surfaces.surfaceContainer,
                     shape = RoundedCornerShape(8.dp)
@@ -57,7 +58,7 @@ fun LoadingMovieImage(modifier: Modifier = Modifier) {
 
         Box(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .background(brush)
         )
     }
@@ -75,7 +76,9 @@ private fun LoadingCardPreview() {
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
         ) {
             items(20) {
-                LoadingMovieCard()
+                LoadingMovieImage(
+                    modifier = Modifier.height(180.dp)
+                )
             }
         }
     }

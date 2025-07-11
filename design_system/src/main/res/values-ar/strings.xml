@@ -27,5 +27,7 @@
     <string name="loading_animation">صورة التحميل المتحركة</string>
     <string name="start_now">ابدأ الأن</string>
     <string name="movio">موڤيو</string>
-    <string name="error_loading_image">Error Loading Image</string>
+    <string name="error_loading_image">خطئ في تحميل الصورة</string>
+    <string name="recent_item_icon">ايكونة العنصر الحديث</string>
+    <string name="clear_search_result">مسح نتائج البحث</string>
 </resources>

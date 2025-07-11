@@ -1,10 +1,14 @@
 package com.cairosquad.ui.search.content
 
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -13,10 +17,12 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -38,23 +44,46 @@ fun SearchResultContent(
     listener: SearchInteractionListener,
     modifier: Modifier = Modifier
 ) {
+
+    val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+    DisposableEffect(backPressedDispatcher) {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                listener.onBackClicked()
+            }
+        }
+        backPressedDispatcher?.addCallback(callback)
+        onDispose {
+            callback.remove()
+        }
+    }
+
     var selectedTabIndex by remember { mutableIntStateOf(0) }
 
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
 
         InputField(
             modifier = Modifier
                 .background(Theme.color.surfaces.surface)
-                .padding(16.dp),
+                .padding(bottom = 12.dp),
             value = state.query,
             onValueChange = listener::onQueryTextChanged,
             placeholder = stringResource(R.string.search),
             leadingIcon = R.drawable.search_bottom_nav,
-            onFocusChanged = { if (it) { listener.onClickSearchTextField() } },
+            onFocusChanged = {
+                if (it) {
+                    listener.onClickSearchTextField()
+                }
+            },
             readOnly = true
         )
 
         TopBar(
+            modifier = Modifier.padding(bottom = 12.dp),
             tabs = listOf(
                 stringResource(R.string.top_Results),
                 stringResource(R.string.movies),
@@ -64,8 +93,6 @@ fun SearchResultContent(
             selectedTabIndex = selectedTabIndex,
             onTabSelected = { selectedTabIndex = it }
         )
-
-        Spacer(modifier = Modifier.height(12.dp))
 
         when (selectedTabIndex) {
             0 -> {
@@ -98,11 +125,17 @@ fun SearchResultContent(
 @Composable
 private fun AllResultsTabContent(topResults: List<SearchUiState.MovieUiState>) {
     if (topResults.isEmpty()) {
-        StateMessage(
-            imageDrawable = R.drawable.no_result,
-            titleId = R.string.no_results_found,
-            descriptionId = R.string.no_results_found_description
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ){
+            StateMessage(
+                imageDrawable = R.drawable.no_result,
+                titleId = R.string.no_results_found,
+                descriptionId = R.string.no_results_found_description
+            )
+        }
     } else {
         LazyVerticalGrid(
             columns = GridCells.Fixed(3),
@@ -202,15 +235,19 @@ private fun ArtistsTabContent(artists: List<SearchUiState.ArtistUiState>) {
 
 @Composable
 fun SearchResultText(noOfResults: Int) {
-    Row {
+    Row(verticalAlignment = Alignment.CenterVertically) {
         BasicText(
             text = stringResource(R.string.search_result),
-            style = defaultTextStyle.title.mediumMedium16
+            style = defaultTextStyle.title.mediumMedium16.copy(
+                Theme.color.surfaces.onSurfaceVariant
+            )
         )
         Spacer(modifier = Modifier.size(4.dp))
         BasicText(
-            text = stringResource(R.string.number_of_items, noOfResults),
-            style = defaultTextStyle.title.mediumMedium14
+            text = "(${stringResource(R.string.number_of_items, noOfResults)})",
+            style = defaultTextStyle.label.smallRegular14.copy(
+                Theme.color.surfaces.onSurfaceVariant
+            )
         )
     }
 }
