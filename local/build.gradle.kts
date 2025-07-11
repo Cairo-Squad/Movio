@@ -52,4 +52,9 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+
+    testImplementation("io.mockk:mockk:1.13.5")
+    testImplementation("com.google.truth:truth:1.1.5")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+
 }
