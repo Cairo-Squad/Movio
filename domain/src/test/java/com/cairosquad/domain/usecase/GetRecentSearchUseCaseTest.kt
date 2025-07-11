@@ -10,7 +10,7 @@ import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertEquals
 
-class GetSearchHistoryUseCaseTest {
+class GetRecentSearchUseCaseTest {
 
     private lateinit var searchHistoryUseCase: GetRecentSearchUseCase
     private lateinit var recentSearchRepository: RecentSearchRepository
