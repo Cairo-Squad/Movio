@@ -98,8 +98,8 @@ fun SafeImageViewer(
     colorFilter: ColorFilter? = null,
     // NSFW and blur behavior
     blur: Int = 25,
-    nudeThreshold: Double = 0.09,
-    nonNudeThreshold: Double = 0.85,
+    nudeThreshold: Double = 0.2,
+    nonNudeThreshold: Double = 0.75,
     enableLog: Boolean = false,
     // UI-related
     placeholder: Painter = painterResource(R.drawable.placeholder),
