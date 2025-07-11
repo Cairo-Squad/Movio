@@ -7,15 +7,12 @@ import com.cairosquad.repository.search.data_source.local.Dto.ArtistCacheDto
 import com.cairosquad.repository.search.data_source.local.Dto.MovieCacheDto
 import com.cairosquad.repository.search.data_source.local.Dto.SeriesCacheDto
 
-fun MovieCacheDto.toEntity(
-    query: String,
-    timestamp: Long
-): MovieCacheEntity {
+fun MovieCacheDto.toEntity(): MovieCacheEntity {
     return MovieCacheEntity(
-        id = this.id,
-        title = this.title,
-        posterPath = this.posterPath,
-        voteAverage = this.voteAverage,
+        id = id,
+        title = title,
+        posterPath = posterPath,
+        voteAverage = voteAverage,
         query = query,
         timestamp = timestamp
     )
@@ -23,22 +20,21 @@ fun MovieCacheDto.toEntity(
 
 fun MovieCacheEntity.toDto(): MovieCacheDto {
     return MovieCacheDto(
-        id = this.id,
-        posterPath = this.posterPath,
-        title = this.title,
-        voteAverage = this.voteAverage,
+        id = id,
+        posterPath = posterPath,
+        title = title,
+        voteAverage = voteAverage,
+        query = query,
+        timestamp = timestamp
     )
 }
 
-fun SeriesCacheDto.toEntity(
-    query: String,
-    timestamp: Long
-): SeriesCacheEntity {
+fun SeriesCacheDto.toEntity(): SeriesCacheEntity {
     return SeriesCacheEntity(
-        id = this.id,
-        name = this.name,
-        posterPath = this.posterPath,
-        voteAverage = this.voteAverage,
+        id = id,
+        name = name,
+        posterPath = posterPath,
+        voteAverage = voteAverage,
         query = query,
         timestamp = timestamp
     )
@@ -46,21 +42,20 @@ fun SeriesCacheDto.toEntity(
 
 fun SeriesCacheEntity.toDto(): SeriesCacheDto {
     return SeriesCacheDto(
-        id = this.id,
-        posterPath = this.posterPath,
-        name = this.name,
-        voteAverage = this.voteAverage,
+        id = id,
+        posterPath = posterPath,
+        name = name,
+        voteAverage = voteAverage,
+        query = query,
+        timestamp = timestamp
     )
 }
 
-fun ArtistCacheDto.toEntity(
-    query: String,
-    timestamp: Long
-): ArtistCacheEntity {
+fun ArtistCacheDto.toEntity(): ArtistCacheEntity {
     return ArtistCacheEntity(
-        id = this.id,
-        name = this.name,
-        photoPath = this.photoPath,
+        id = id,
+        name = name,
+        photoPath = photoPath,
         query = query,
         timestamp = timestamp
     )
@@ -68,8 +63,10 @@ fun ArtistCacheDto.toEntity(
 
 fun ArtistCacheEntity.toDto(): ArtistCacheDto {
     return ArtistCacheDto(
-        id = this.id,
-        photoPath = this.photoPath,
-        name = this.name,
+        id = id,
+        photoPath = photoPath,
+        name = name,
+        query = query,
+        timestamp = timestamp
     )
 }

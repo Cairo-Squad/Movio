@@ -20,7 +20,7 @@ class SearchRepositoryImpl(
                 return@withContext cachedSeries
             } else {
                 val seriesResults = remoteSearchDataSource.searchSeries(query).map { it.toSeries() }
-                searchCacheDataSource.cacheSeries(query, seriesResults.map { it.toSeriesCacheDto() })
+                searchCacheDataSource.cacheSeries(query, seriesResults.map { it.toSeriesCacheDto(query) })
                 return@withContext seriesResults
             }
         }
@@ -32,7 +32,7 @@ class SearchRepositoryImpl(
                 return@withContext cachedMovies
             } else {
                 val moviesResults = remoteSearchDataSource.searchMovies(query).map { it.toMovie() }
-                searchCacheDataSource.cacheMovies(query, moviesResults.map { it.toMovieCacheDto() })
+                searchCacheDataSource.cacheMovies(query, moviesResults.map { it.toMovieCacheDto(query) })
                 return@withContext moviesResults
             }
 
@@ -45,7 +45,7 @@ class SearchRepositoryImpl(
                 return@withContext cachedArtists
             } else {
                 val artistResults = remoteSearchDataSource.searchArtists(query).map { it.toArtist() }
-                searchCacheDataSource.cacheArtist(query, artistResults.map { it.toArtistCacheDto() })
+                searchCacheDataSource.cacheArtist(query, artistResults.map { it.toArtistCacheDto(query) })
                 return@withContext artistResults
             }
         }
