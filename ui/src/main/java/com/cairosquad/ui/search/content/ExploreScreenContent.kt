@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.component.InputField
 import com.cairosquad.design_system.component.MovieCard
-import com.cairosquad.design_system.component.MovieCardSize
 import com.cairosquad.design_system.component.SectionHeader
 import com.cairosquad.design_system.modifier.dropShadow
 import com.cairosquad.design_system.theme.Theme
@@ -102,7 +101,8 @@ fun ExploreScreenContent(
                         title = movie.title,
                         vote = movie.rating,
                         imgUrl = movie.posterPath,
-                        cardSize = MovieCardSize.Medium
+                        width = 124.dp,
+                        aspectRatio = 0.775f
                     )
                 }
             }
@@ -110,7 +110,8 @@ fun ExploreScreenContent(
         }
         item {
             SectionHeader(
-                title = stringResource(R.string.for_you), actionText = stringResource(R.string.see_all),
+                title = stringResource(R.string.explore_more),
+                actionText = stringResource(R.string.see_all),
                 actionIcon = ImageVector.vectorResource(R.drawable.arrow),
                 onActionClick = {}
             )
@@ -133,7 +134,8 @@ fun ExploreScreenContent(
                         title = movie.title,
                         vote = movie.rating,
                         imgUrl = movie.posterPath,
-                        cardSize = MovieCardSize.Large
+                        width = null,
+                        aspectRatio = 0.877f
                     )
                 }
             }
