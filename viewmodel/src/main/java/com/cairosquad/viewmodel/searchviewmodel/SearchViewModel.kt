@@ -180,12 +180,10 @@ class SearchViewModel(
                     screenStatus = SearchUiState.ScreenStatus.EXPLORE,
                     query = "",
                     recentSearch = emptyList(),
-                    errorMessage = null
                 )
 
                 SearchUiState.ScreenStatus.RESULT -> it.copy(
                     screenStatus = SearchUiState.ScreenStatus.SEARCH,
-                    errorMessage = null
                 )
 
                 else -> it

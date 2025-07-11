@@ -1,5 +1,7 @@
 package com.cairosquad.ui.search.content
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +19,11 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -40,7 +46,22 @@ fun ExploreScreenContent(
     state: SearchUiState,
     listener: SearchInteractionListener
 ) {
-    LazyColumn(modifier = modifier.fillMaxSize()) {
+
+    val lazyColumnState = rememberLazyListState()
+    val scrollOffset by remember {
+        derivedStateOf {
+            lazyColumnState.firstVisibleItemScrollOffset.toFloat()
+        }
+    }
+    val shadowAlpha by animateFloatAsState(
+        targetValue = if (scrollOffset > 0) 0.06f else 0f,
+        animationSpec = tween(durationMillis = 300)
+    )
+
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
+        state = lazyColumnState
+    ) {
         stickyHeader {
             InputField(
                 modifier = Modifier
@@ -51,7 +72,7 @@ fun ExploreScreenContent(
                         offsetY = 1.dp,
                         blur = 12.dp,
                         spread = 0.dp,
-                        alpha = 0.06f
+                        alpha = shadowAlpha
                     )
                     .background(Theme.color.surfaces.surface)
                     .padding(16.dp),
