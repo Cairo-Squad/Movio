@@ -5,7 +5,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.cairosquad.ui.search.content.SearchScreenContent
-import com.cairosquad.viewmodel.searchviewmodel.SearchViewModel
+import com.cairosquad.viewmodel.search.SearchViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

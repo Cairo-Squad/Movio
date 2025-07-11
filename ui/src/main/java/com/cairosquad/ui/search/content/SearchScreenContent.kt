@@ -2,8 +2,8 @@ package com.cairosquad.ui.search.content
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.cairosquad.viewmodel.searchviewmodel.SearchInteractionListener
-import com.cairosquad.viewmodel.searchviewmodel.SearchUiState
+import com.cairosquad.viewmodel.search.SearchInteractionListener
+import com.cairosquad.viewmodel.search.SearchUiState
 
 @Composable
 fun SearchScreenContent(

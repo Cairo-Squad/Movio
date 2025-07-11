@@ -25,8 +25,8 @@ import com.cairosquad.design_system.component.InputField
 import com.cairosquad.design_system.component.RecentSearchItem
 import com.cairosquad.design_system.component.SectionHeader
 import com.cairosquad.design_system.theme.Theme
-import com.cairosquad.viewmodel.searchviewmodel.SearchInteractionListener
-import com.cairosquad.viewmodel.searchviewmodel.SearchUiState
+import com.cairosquad.viewmodel.search.SearchInteractionListener
+import com.cairosquad.viewmodel.search.SearchUiState
 
 @Composable
 fun SearchContent(

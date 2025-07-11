@@ -1,4 +1,4 @@
-package com.cairosquad.viewmodel.searchviewmodel
+package com.cairosquad.viewmodel.search
 
 import com.cairosquad.domain.search.usecase.ClearRecentSearchUseCase
 import com.cairosquad.domain.search.usecase.GetExploreMoreUseCase
