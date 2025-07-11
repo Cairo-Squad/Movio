@@ -8,3 +8,4 @@ sealed class ApiException(override val message: String = "") : DataSourceExcepti
 class RequestTimeoutException(override val message: String = "") : ApiException(message)
 class TooManyRequestsException(override val message: String = "") : ApiException(message)
 class UnauthorizedException(override val message: String = "") : DataSourceException(message)
+class NoInternetException(override val message: String = "") : DataSourceException(message)

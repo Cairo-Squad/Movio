@@ -1,5 +1,6 @@
 package com.cairosquad.repository.common.exception
 
+import com.cairosquad.domain.search.exception.InternetConnectionException
 import com.cairosquad.domain.search.exception.MovioException
 import com.cairosquad.domain.search.exception.NetworkException
 import com.cairosquad.domain.search.exception.UnknownException
@@ -24,5 +25,6 @@ private fun getDomainExceptionFromDataException(exception: DataSourceException):
         is ServerException -> NetworkException(exception.message)
         is UnauthorizedException -> NetworkException(exception.message) // TODO: Handle unauthorized exception when authentication feature is implemented
         is UnknownDataSourceException -> UnknownException(exception.message)
+        is NoInternetException -> InternetConnectionException(exception.message)
     }
 }
