@@ -10,7 +10,7 @@ import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
 
-suspend inline fun <reified T> responseToResult(
+suspend inline fun <reified T> responseToException(
     response: HttpResponse
 ): T {
     when (response.status.value) {
