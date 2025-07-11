@@ -10,20 +10,20 @@ class SearchUseCase(
     private val searchRepository: SearchRepository,
     private val recentSearchRepository: RecentSearchRepository
 ) {
-    suspend fun searchSeries(query: String): List<Series> {
-        val result = searchRepository.searchSeries(query)
+    suspend fun getSeries(query: String): List<Series> {
+        val result = searchRepository.getSeries(query)
         recentSearchRepository.addQuery(query)
         return result
     }
 
-    suspend fun searchMovies(query: String): List<Movie> {
-        val result = searchRepository.searchMovies(query)
+    suspend fun getMovies(query: String): List<Movie> {
+        val result = searchRepository.getMovies(query)
         recentSearchRepository.addQuery(query)
         return result
     }
 
-    suspend fun searchArtists(query: String): List<Artist> {
-        val result = searchRepository.searchArtists(query)
+    suspend fun getArtists(query: String): List<Artist> {
+        val result = searchRepository.getArtists(query)
         recentSearchRepository.addQuery(query)
         return result
     }
