@@ -1,7 +1,6 @@
 package com.cairosquad.design_system.component
 
 import androidx.annotation.Keep
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,8 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,7 +53,7 @@ fun MovieCard(
                     modifier = Modifier
                         .height(cardSize.size)
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(5.dp)),
+                        .clip(RoundedCornerShape(8.dp)),
                     loadingPlaceholder = {
                         LoadingMovieImage(
                             Modifier
@@ -62,14 +63,21 @@ fun MovieCard(
                     }
                 )
             } else {
-                Image(
+                Box(
                     modifier = Modifier
                         .height(cardSize.size)
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(5.dp)),
-                    painter = painterResource(com.cairosquad.safe_image_viewer.R.drawable.empty_movie_name),
-                    contentDescription = stringResource(R.string.error_loading_image)
-                )
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Theme.color.system.defaultImageBackground),
+                    contentAlignment = Alignment.Center
+                ){
+                    Icon(
+                        modifier = Modifier.size(24.dp),
+                        imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
+                        contentDescription = "image icon",
+                        tint = Color(0xFFEFF1F5)
+                    )
+                }
             }
 
             Row(
@@ -77,11 +85,12 @@ fun MovieCard(
                     .align(Alignment.TopEnd)
                     .fillMaxWidth()
                     .height(36.dp)
+                    .clip(RoundedCornerShape(topEnd = 8.dp, topStart = 8.dp))
                     .background(
                         brush = Brush.verticalGradient(
                             colors = listOf(
                                 Color.Black.copy(0.74f),
-                                Color.Transparent
+                                Color.Transparent,
                             )
                         )
                     )
@@ -119,6 +128,7 @@ fun MovieCard(
         )
     }
 }
+
 
 @Keep
 enum class MovieCardSize(val size: Dp) {
