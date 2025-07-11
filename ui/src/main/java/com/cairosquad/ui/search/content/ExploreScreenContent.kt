@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -28,6 +29,7 @@ import com.cairosquad.design_system.component.InputField
 import com.cairosquad.design_system.component.MovieCard
 import com.cairosquad.design_system.component.MovieCardSize
 import com.cairosquad.design_system.component.SectionHeader
+import com.cairosquad.design_system.modifier.dropShadow
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.viewmodel.searchviewmodel.SearchInteractionListener
 import com.cairosquad.viewmodel.searchviewmodel.SearchUiState
@@ -42,6 +44,15 @@ fun ExploreScreenContent(
         stickyHeader {
             InputField(
                 modifier = Modifier
+                    .dropShadow(
+                        shape = RectangleShape,
+                        color = Theme.color.system.dropShadow,
+                        offsetX = 0.dp,
+                        offsetY = 1.dp,
+                        blur = 12.dp,
+                        spread = 0.dp,
+                        alpha = 0.06f
+                    )
                     .background(Theme.color.surfaces.surface)
                     .padding(16.dp),
                 value = state.query,
