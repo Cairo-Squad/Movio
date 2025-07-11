@@ -59,7 +59,7 @@ dependencies {
 
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.runtime)
-    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    implementation(libs.logging.interceptor)
 
     testImplementation(kotlin("test"))
 
@@ -73,5 +73,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${libs.versions.junitJupiter.get()}")
     testImplementation(libs.truth.v144)
     testImplementation(libs.koin.test)
+
+    implementation(libs.logging.interceptor)
 
 }

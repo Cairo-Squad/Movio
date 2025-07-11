@@ -1,17 +1,15 @@
-package com.cairosquad.repository
+package com.cairosquad.repository.search
 
-import com.cairosquad.repository.search.RecentSearchRepositoryImpl
 import com.cairosquad.repository.search.data_source.local.RecentSearchDataSource
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
+import org.junit.Assert
 import org.junit.Before
-import kotlin.test.Test
+import org.junit.Test
 
-
-class SearchHistoryRepositoryImplTest {
+class RecentSearchRepositoryImplTest {
     private lateinit var localDataSource: RecentSearchDataSource
     private lateinit var repository: RecentSearchRepositoryImpl
 
@@ -31,7 +29,7 @@ class SearchHistoryRepositoryImplTest {
         val result = repository.getAll()
 
         //Then
-        assertEquals(expectedQueries, result)
+        Assert.assertEquals(expectedQueries, result)
         coVerify(exactly = 1) { localDataSource.getAll() }
     }
 
@@ -45,7 +43,7 @@ class SearchHistoryRepositoryImplTest {
         val result = repository.getByQuery(blankQuery)
 
         //Then
-        assertEquals(expectedQueries, result)
+        Assert.assertEquals(expectedQueries, result)
         coVerify(exactly = 1) { localDataSource.getAll() }
 
         coVerify(exactly = 0) { localDataSource.getByQuery(any()) }
@@ -62,7 +60,7 @@ class SearchHistoryRepositoryImplTest {
         val result = repository.getByQuery(specificQuery)
 
         // Then
-        assertEquals(expectedFilteredQueries, result)
+        Assert.assertEquals(expectedFilteredQueries, result)
         coVerify(exactly = 1) { localDataSource.getByQuery(specificQuery) }
         coVerify(exactly = 0) { localDataSource.getAll() }
     }

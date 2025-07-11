@@ -1,8 +1,10 @@
 package com.cairosquad.safe_image_viewer.safe_image_viewer
 
 import android.graphics.Bitmap
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -96,8 +98,8 @@ fun SafeImageViewer(
     colorFilter: ColorFilter? = null,
     // NSFW and blur behavior
     blur: Int = 25,
-    nudeThreshold: Double = 0.09,
-    nonNudeThreshold: Double = 0.85,
+    nudeThreshold: Double = 0.2,
+    nonNudeThreshold: Double = 0.75,
     enableLog: Boolean = false,
     // UI-related
     placeholder: Painter = painterResource(R.drawable.placeholder),
@@ -129,42 +131,46 @@ fun SafeImageViewer(
         }
         hasClassificationCompleted = true
     }
-
-    Box(
+    Crossfade(
         modifier = modifier,
-        contentAlignment = Alignment.Center
+        targetState = hasClassificationCompleted
     ) {
-        if (hasClassificationCompleted) {
-            AsyncImage(
-                modifier = Modifier
-                    .matchParentSize()
-                    .imageBlur(
-                        isBlurEnabled = isBlurEnabled,
-                        isImageSafe = isImageSafe,
-                        blur = blur.dp,
-                        bitmap = bitmap!!
-                    ),
-                model = bitmap,
-                contentDescription = contentDescription,
-                contentScale = contentScale,
-                filterQuality = filterQuality,
-                alpha = alpha,
-                alignment = alignment,
-                colorFilter = colorFilter,
-                placeholder = placeholder,
-                error = error,
-            )
-            if (!isImageSafe && onToggleBlur != null) {
-                Box(
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            if (it) {
+                AsyncImage(
                     modifier = Modifier
-                        .align(Alignment.Center)
-                        .clickable { isBlurEnabled = !isBlurEnabled }
-                ) {
-                    onToggleBlur()
+                        .matchParentSize()
+                        .imageBlur(
+                            isBlurEnabled = isBlurEnabled,
+                            isImageSafe = isImageSafe,
+                            blur = blur.dp,
+                            bitmap = bitmap!!
+                        ),
+                    model = bitmap,
+                    contentDescription = contentDescription,
+                    contentScale = contentScale,
+                    filterQuality = filterQuality,
+                    alpha = alpha,
+                    alignment = alignment,
+                    colorFilter = colorFilter,
+                    placeholder = placeholder,
+                    error = error,
+                )
+                if (!isImageSafe && onToggleBlur != null) {
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .clickable { isBlurEnabled = !isBlurEnabled }
+                    ) {
+                        onToggleBlur()
+                    }
                 }
+            } else {
+                loadingPlaceholder()
             }
-        } else {
-            loadingPlaceholder()
         }
     }
 }
