@@ -35,4 +35,7 @@
     <string name="an_unexpected_error_occurred">خطئ غير متوقع حدث</string>
     <string name="an_unexpected_error_occurred_description">هناك خطئ حدث في تنفيث طلبك. قم بتفقد اتصالك وحاول مرة اخرى</string>
 
+    <string name="for_you">من أجلك</string>
+    <string name="see_all">عرض الكل</string>
+    <string name="explore_more">اكتشف المزيد</string>
 </resources>
