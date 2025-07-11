@@ -18,6 +18,6 @@ abstract class MovioDataBase : RoomDatabase() {
 
     abstract fun cacheDao(): CacheDao
 
-    abstract fun searchHistoryDao(): RecentSearchDao
+    abstract fun recentSearchDao(): RecentSearchDao
 
 }
