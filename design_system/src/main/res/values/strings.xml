@@ -29,4 +29,5 @@
     <string name="favorite_icon">favorite icon</string>
     <string name="loading_animation">Loading Animation</string>
     <string name="start_now">Start now</string>
+    <string name="movio">Movio</string>
 </resources>
