@@ -1,15 +1,17 @@
 package com.cairosquad.viewmodel.search
 
+import com.cairosquad.domain.search.exception.MovioException
 import com.cairosquad.domain.search.usecase.ClearRecentSearchUseCase
 import com.cairosquad.domain.search.usecase.GetExploreMoreUseCase
 import com.cairosquad.domain.search.usecase.GetForYouUseCase
 import com.cairosquad.domain.search.usecase.GetRecentSearchUseCase
 import com.cairosquad.domain.search.usecase.SearchUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
+import com.cairosquad.viewmodel.exception.ErrorStatus
+import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import java.io.IOException
 
 class SearchViewModel(
     private val searchUseCase: SearchUseCase,
@@ -38,19 +40,18 @@ class SearchViewModel(
                     screenStatus = SearchUiState.ScreenStatus.EXPLORE,
                     forYou = forYou,
                     exploreMore = exploreMore,
-                    errorMessage = null
+                    errorStatus = null
                 )
             }
         },
         onError = { e ->
-            val message = mapExceptionToMessage(e)
             updateState {
                 it.copy(
                     screenStatus = SearchUiState.ScreenStatus.FAILED,
-                    errorMessage = message
+                    errorStatus = handleSearchException(e)
                 )
             }
-            sendEvent(SearchUiEvent.ShowToast(message))
+            sendEvent(SearchUiEvent.ShowToast(handleSearchException(e)))
         },
         dispatcher = Dispatchers.IO
     )
@@ -87,7 +88,7 @@ class SearchViewModel(
                 screenStatus = SearchUiState.ScreenStatus.EXPLORE,
                 query = "",
                 recentSearch = emptyList(),
-                errorMessage = null
+                errorStatus = null
             )
         }
     }
@@ -98,7 +99,7 @@ class SearchViewModel(
             it.copy(
                 screenStatus = SearchUiState.ScreenStatus.LOADING,
                 query = query,
-                errorMessage = null
+                errorStatus = null
             )
         }
 
@@ -116,19 +117,18 @@ class SearchViewModel(
                         movies = movies,
                         series = series,
                         artists = artists,
-                        errorMessage = null
+                        errorStatus = null
                     )
                 }
             },
             onError = { e ->
-                val message = mapExceptionToMessage(e)
                 updateState {
                     it.copy(
                         screenStatus = SearchUiState.ScreenStatus.FAILED,
-                        errorMessage = message
+                        errorStatus = handleSearchException(e)
                     )
                 }
-                sendEvent(SearchUiEvent.ShowToast(message))
+                sendEvent(SearchUiEvent.ShowToast(handleSearchException(e)))
             },
             dispatcher = Dispatchers.IO
         )
@@ -143,11 +143,11 @@ class SearchViewModel(
                 emptyList<String>()
             },
             onSuccess = { suggestions ->
-                updateState { it.copy(recentSearch = suggestions, errorMessage = null) }
+                updateState { it.copy(recentSearch = suggestions, errorStatus = null) }
             },
             onError = { e ->
-                val message = mapExceptionToMessage(e)
-                updateState { it.copy(errorMessage = message) }
+                val message = handleSearchException(e)
+                updateState { it.copy(errorStatus = message) }
                 sendEvent(SearchUiEvent.ShowToast(message))
             },
             dispatcher = Dispatchers.IO
@@ -161,12 +161,11 @@ class SearchViewModel(
                 getRecentSearchUseCase.getAll()
             },
             onSuccess = { suggestions ->
-                updateState { it.copy(recentSearch = suggestions, errorMessage = null) }
+                updateState { it.copy(recentSearch = suggestions, errorStatus = null) }
             },
             onError = { e ->
-                val message = mapExceptionToMessage(e)
-                updateState { it.copy(errorMessage = mapExceptionToMessage(e)) }
-                sendEvent(SearchUiEvent.ShowToast(message))
+                updateState { it.copy(errorStatus = handleSearchException(e)) }
+                sendEvent(SearchUiEvent.ShowToast(handleSearchException(e)))
             },
             dispatcher = Dispatchers.IO
         )
@@ -197,7 +196,7 @@ class SearchViewModel(
                 getRecentSearchUseCase.getAll()
             },
             onSuccess = { suggestions ->
-                updateState { it.copy(recentSearch = suggestions, errorMessage = null) }
+                updateState { it.copy(recentSearch = suggestions, errorStatus = null) }
             },
             onError = { }
         )
@@ -210,8 +209,13 @@ class SearchViewModel(
         }
     }
 
-    private fun mapExceptionToMessage(e: Throwable): String = when (e) {
-        is IOException -> "Network error. Please check your connection."
-        else -> e.localizedMessage ?: "An unexpected error occurred."
+    private fun handleSearchException(e: Throwable): ErrorStatus {
+        return when (e) {
+            is MovioException -> {
+                exceptionToErrorStatus(e)
+            }
+
+            else -> ErrorStatus.UNKNOWN_ERROR
+        }
     }
 }

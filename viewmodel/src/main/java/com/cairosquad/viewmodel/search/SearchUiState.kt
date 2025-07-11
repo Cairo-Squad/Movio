@@ -1,9 +1,11 @@
 package com.cairosquad.viewmodel.search
 
+import com.cairosquad.viewmodel.exception.ErrorStatus
+
 data class SearchUiState(
     val query: String = "",
     val screenStatus: ScreenStatus = ScreenStatus.LOADING,
-    val errorMessage: String? = null,
+    val errorStatus: ErrorStatus? = null,
     val recentSearch: List<String> = emptyList(),
     val forYou: List<MovieUiState> = emptyList(),
     val exploreMore: List<MovieUiState> = emptyList(),
