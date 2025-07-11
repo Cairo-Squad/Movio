@@ -1,9 +1,12 @@
 package com.cairosquad.ui.search.content
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -38,10 +41,15 @@ fun SearchFailContent(
             readOnly = true
         )
 
-        StateMessage(
-            imageDrawable = R.drawable.no_result,
-            titleId = R.string.no_results_found,
-            descriptionId = R.string.no_results_found_description
-        )
+        Box(
+            Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ){
+            StateMessage(
+                imageDrawable = R.drawable.no_result,
+                titleId = R.string.no_results_found,
+                descriptionId = R.string.no_results_found_description
+            )
+        }
     }
 }
