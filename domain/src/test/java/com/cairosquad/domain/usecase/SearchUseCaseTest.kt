@@ -47,12 +47,12 @@ class SearchUseCaseTest {
             Movie(id = 2, title = "The Dark Knight", rating = 9.0f, posterPath = "/batman2.jpg")
         )
 
-        coEvery { searchRepository.searchMovies(query) } returns movies
+        coEvery { searchRepository.getMovies(query) } returns movies
         coEvery { recentSearchRepository.addQuery(query) } just runs
 
-        val result = useCase.searchMovies(query)
+        val result = useCase.getMovies(query)
 
-        coVerify { searchRepository.searchMovies(query) }
+        coVerify { searchRepository.getMovies(query) }
         coVerify { recentSearchRepository.addQuery(query) }
     }
 
@@ -63,12 +63,12 @@ class SearchUseCaseTest {
             Series(id = 1, title = "Breaking Bad", rating = 9.5f, posterPath = "/bb.jpg")
         )
 
-        coEvery { searchRepository.searchSeries(query) } returns series
+        coEvery { searchRepository.getSeries(query) } returns series
         coEvery { recentSearchRepository.addQuery(query) } just runs
 
-        val result = useCase.searchSeries(query)
+        val result = useCase.getSeries(query)
 
-        coVerify { searchRepository.searchSeries(query) }
+        coVerify { searchRepository.getSeries(query) }
         coVerify { recentSearchRepository.addQuery(query) }
     }
 
@@ -81,12 +81,12 @@ class SearchUseCaseTest {
             )
         )
 
-        coEvery { searchRepository.searchArtists(query) } returns artists
+        coEvery { searchRepository.getArtists(query) } returns artists
         coEvery { recentSearchRepository.addQuery(query) } just runs
 
-        val result = useCase.searchArtists(query)
+        val result = useCase.getArtists(query)
 
-        coVerify { searchRepository.searchArtists(query) }
+        coVerify { searchRepository.getArtists(query) }
         coVerify { recentSearchRepository.addQuery(query) }
     }
 }

@@ -15,7 +15,7 @@ import io.ktor.client.request.parameter
 class RemoteSearchDataSourceImpl(
     private val httpClient: HttpClient
 ) : RemoteSearchDataSource {
-    override suspend fun searchMovies(query: String): List<MovieDto> {
+    override suspend fun getMovies(query: String): List<MovieDto> {
         return callApi<SearchResultDto<MovieDto>> {
             httpClient.get(constructUrl("search/movie")) {
                 parameter(QUERY, query)
@@ -24,7 +24,7 @@ class RemoteSearchDataSourceImpl(
         }.results?.filterNotNull()?.filter { it.id != null } ?: emptyList()
     }
 
-    override suspend fun searchSeries(query: String): List<SeriesDto> {
+    override suspend fun getSeries(query: String): List<SeriesDto> {
         return callApi<SearchResultDto<SeriesDto>> {
             httpClient.get(constructUrl("search/tv")) {
                 parameter(QUERY, query)
@@ -33,7 +33,7 @@ class RemoteSearchDataSourceImpl(
         }.results?.filterNotNull()?.filter { it.id != null } ?: emptyList()
     }
 
-    override suspend fun searchArtists(query: String): List<ArtistDto> {
+    override suspend fun getArtists(query: String): List<ArtistDto> {
         return callApi<SearchResultDto<ArtistDto>> {
             httpClient.get(constructUrl("search/person")) {
                 parameter(QUERY, query)

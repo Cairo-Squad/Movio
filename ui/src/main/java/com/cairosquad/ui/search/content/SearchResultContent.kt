@@ -96,7 +96,9 @@ fun SearchResultContent(
 
         when (selectedTabIndex) {
             0 -> {
-                SearchResultText(noOfResults = state.movies.size)
+                SearchResultText(
+                    noOfResults = state.movies.size
+                )
                 Spacer(modifier = Modifier.height(16.dp))
                 AllResultsTabContent(topResults = state.movies)
             }
@@ -123,10 +125,13 @@ fun SearchResultContent(
 }
 
 @Composable
-private fun AllResultsTabContent(topResults: List<SearchUiState.MovieUiState>) {
+private fun AllResultsTabContent(
+    topResults: List<SearchUiState.MovieUiState>,
+    modifier: Modifier = Modifier
+) {
     if (topResults.isEmpty()) {
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ){
@@ -138,6 +143,7 @@ private fun AllResultsTabContent(topResults: List<SearchUiState.MovieUiState>) {
         }
     } else {
         LazyVerticalGrid(
+            modifier = modifier,
             columns = GridCells.Fixed(3),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -156,15 +162,20 @@ private fun AllResultsTabContent(topResults: List<SearchUiState.MovieUiState>) {
 }
 
 @Composable
-private fun MoviesTabContent(movies: List<SearchUiState.MovieUiState>) {
+private fun MoviesTabContent(
+    movies: List<SearchUiState.MovieUiState>,
+    modifier: Modifier = Modifier
+) {
     if (movies.isEmpty()) {
         StateMessage(
+            modifier = modifier,
             imageDrawable = R.drawable.no_result,
             titleId = R.string.no_results_found,
             descriptionId = R.string.no_results_found_description
         )
     } else {
         LazyVerticalGrid(
+            modifier = modifier,
             columns = GridCells.Fixed(3),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -183,15 +194,20 @@ private fun MoviesTabContent(movies: List<SearchUiState.MovieUiState>) {
 }
 
 @Composable
-private fun SeriesTabContent(series: List<SearchUiState.SeriesUiState>) {
+private fun SeriesTabContent(
+    series: List<SearchUiState.SeriesUiState>,
+    modifier: Modifier = Modifier
+) {
     if (series.isEmpty()) {
         StateMessage(
+            modifier = modifier,
             imageDrawable = R.drawable.no_result,
             titleId = R.string.no_results_found,
             descriptionId = R.string.no_results_found_description
         )
     } else {
         LazyVerticalGrid(
+            modifier = modifier,
             columns = GridCells.Fixed(3),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -210,15 +226,20 @@ private fun SeriesTabContent(series: List<SearchUiState.SeriesUiState>) {
 }
 
 @Composable
-private fun ArtistsTabContent(artists: List<SearchUiState.ArtistUiState>) {
+private fun ArtistsTabContent(
+    artists: List<SearchUiState.ArtistUiState>,
+    modifier: Modifier = Modifier
+) {
     if (artists.isEmpty()) {
         StateMessage(
+            modifier = modifier,
             imageDrawable = R.drawable.no_result,
             titleId = R.string.no_results_found,
             descriptionId = R.string.no_results_found_description
         )
     } else {
         LazyVerticalGrid(
+            modifier = modifier,
             columns = GridCells.Fixed(3),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -234,8 +255,14 @@ private fun ArtistsTabContent(artists: List<SearchUiState.ArtistUiState>) {
 }
 
 @Composable
-fun SearchResultText(noOfResults: Int) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+fun SearchResultText(
+    noOfResults: Int,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         BasicText(
             text = stringResource(R.string.search_result),
             style = defaultTextStyle.title.mediumMedium16.copy(

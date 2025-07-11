@@ -104,9 +104,9 @@ class SearchViewModel(
 
         searchJob = tryToCall(
             block = {
-                val movies = searchUseCase.searchMovies(query).map { it.toUiState() }
-                val series = searchUseCase.searchSeries(query).map { it.toUiState() }
-                val artists = searchUseCase.searchArtists(query).map { it.toUiState() }
+                val movies = searchUseCase.getMovies(query).map { it.toUiState() }
+                val series = searchUseCase.getSeries(query).map { it.toUiState() }
+                val artists = searchUseCase.getArtists(query).map { it.toUiState() }
                 Triple(movies, series, artists)
             },
             onSuccess = { (movies, series, artists) ->
@@ -180,12 +180,10 @@ class SearchViewModel(
                     screenStatus = SearchUiState.ScreenStatus.EXPLORE,
                     query = "",
                     recentSearch = emptyList(),
-                    errorMessage = null
                 )
 
                 SearchUiState.ScreenStatus.RESULT -> it.copy(
                     screenStatus = SearchUiState.ScreenStatus.SEARCH,
-                    errorMessage = null
                 )
 
                 else -> it

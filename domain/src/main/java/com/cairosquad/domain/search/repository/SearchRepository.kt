@@ -5,9 +5,9 @@ import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 
 interface SearchRepository {
-    suspend fun searchSeries(query: String): List<Series>
+    suspend fun getSeries(query: String): List<Series>
 
-    suspend fun searchMovies(query: String): List<Movie>
+    suspend fun getMovies(query: String): List<Movie>
 
-    suspend fun searchArtists(query: String): List<Artist>
+    suspend fun getArtists(query: String): List<Artist>
 }
