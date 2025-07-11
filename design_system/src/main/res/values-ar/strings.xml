@@ -24,6 +24,9 @@
     <string name="icon">ايقونة</string>
     <string name="movie_poster">بوستر العرض</string>
     <string name="artist_image">صورة الفنان</string>
+    <string name="back_icon">ايقونة الخلف</string>
+    <string name="share_icon">ايقونة المشاركة</string>
+    <string name="favorite_icon">ايقونة المفضلة</string>
     <string name="loading_animation">صورة التحميل المتحركة</string>
     <string name="start_now">ابدأ الأن</string>
     <string name="movio">موڤيو</string>
