@@ -51,7 +51,11 @@ fun SearchResultContent(
             onValueChange = listener::onQueryTextChanged,
             placeholder = stringResource(R.string.search),
             leadingIcon = R.drawable.search_bottom_nav,
-            onFocusChanged = { if (it) { listener.onClickSearchTextField() } },
+            onFocusChanged = {
+                if (it) {
+                    listener.onClickSearchTextField()
+                }
+            },
             readOnly = true
         )
 
