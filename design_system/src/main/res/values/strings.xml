@@ -33,4 +33,10 @@
     <string name="error_loading_image">Error Loading Image</string>
     <string name="recent_item_icon">Recent Item Icon</string>
     <string name="clear_search_result">Clear Search result</string>
+    <string name="for_you">For you</string>
+    <string name="see_all">See all</string>
+    <string name="explore_more">Explore more</string>
+
+
+
 </resources>

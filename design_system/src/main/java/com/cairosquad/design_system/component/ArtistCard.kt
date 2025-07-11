@@ -44,7 +44,7 @@ fun ArtistCard(name: String, imgUrl: String?, modifier: Modifier = Modifier) {
                     .padding(horizontal = 6.67.dp)
                     .size(88.dp)
                     .clip(CircleShape),
-                painter = painterResource(com.cairosquad.safe_image_viewer.R.drawable.error),
+                painter = painterResource(com.cairosquad.safe_image_viewer.R.drawable.empty_profile_image),
                 contentDescription = stringResource(R.string.error_loading_image)
             )
         }

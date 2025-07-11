@@ -86,8 +86,8 @@ fun ExploreScreenContent(
         }
         item {
             SectionHeader(
-                title = "For you",
-                actionText = "See all",
+                title = stringResource(R.string.for_you),
+                actionText = stringResource(R.string.see_all),
                 actionIcon = ImageVector.vectorResource(R.drawable.arrow),
                 onActionClick = {}
             )
@@ -113,7 +113,7 @@ fun ExploreScreenContent(
         }
         item {
             SectionHeader(
-                title = "Explore more", actionText = "See all",
+                title = stringResource(R.string.for_you), actionText = stringResource(R.string.see_all),
                 actionIcon = ImageVector.vectorResource(R.drawable.arrow),
                 onActionClick = {}
             )
