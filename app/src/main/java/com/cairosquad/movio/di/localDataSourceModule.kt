@@ -21,7 +21,7 @@ val localDataSourceModule = module {
     }
 
     single<RecentSearchDao> {
-        get<MovioDataBase>().searchHistoryDao()
+        get<MovioDataBase>().recentSearchDao()
     }
 
     single<SearchCacheDataSource> {

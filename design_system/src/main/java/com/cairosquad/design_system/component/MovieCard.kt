@@ -2,6 +2,7 @@ package com.cairosquad.design_system.component
 
 import androidx.annotation.Keep
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -71,6 +74,16 @@ fun MovieCard(
             Row(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
+                    .fillMaxWidth()
+                    .height(36.dp)
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Black.copy(0.74f),
+                                Color.Transparent
+                            )
+                        )
+                    )
                     .padding(top = 8.dp, end = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {

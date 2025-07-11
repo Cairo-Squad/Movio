@@ -16,11 +16,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.theme.MovioTheme
@@ -63,9 +66,11 @@ fun SectionHeader(
                 )
             }
             if (actionIcon != null) {
+                val layoutDirection = LocalConfiguration.current.layoutDirection
                 Image(
                     modifier = Modifier
-                        .size(16.dp),
+                        .size(16.dp)
+                        .scale(if (layoutDirection == LayoutDirection.Rtl.ordinal) -1f else 1f),
                     imageVector = actionIcon,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
