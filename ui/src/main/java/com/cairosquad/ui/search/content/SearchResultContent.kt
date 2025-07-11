@@ -50,7 +50,11 @@ fun SearchResultContent(
             onValueChange = listener::onQueryTextChanged,
             placeholder = stringResource(R.string.search),
             leadingIcon = R.drawable.search_bottom_nav,
-            onFocusChanged = { if (it) { listener.onClickSearchTextField() } },
+            onFocusChanged = {
+                if (it) {
+                    listener.onClickSearchTextField()
+                }
+            },
             readOnly = true
         )
 
@@ -205,12 +209,18 @@ fun SearchResultText(noOfResults: Int) {
     Row {
         BasicText(
             text = stringResource(R.string.search_result),
-            style = defaultTextStyle.title.mediumMedium16
+            style = defaultTextStyle.title.mediumMedium16.copy(
+                color = Theme.color.surfaces.onSurfaceContainer,
+
+                )
         )
         Spacer(modifier = Modifier.size(4.dp))
         BasicText(
             text = stringResource(R.string.number_of_items, noOfResults),
-            style = defaultTextStyle.title.mediumMedium14
+            style = defaultTextStyle.title.mediumMedium14.copy(
+                color = Theme.color.surfaces.onSurfaceVariant
+
+            )
         )
     }
 }
