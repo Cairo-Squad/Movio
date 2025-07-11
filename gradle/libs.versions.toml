@@ -1,5 +1,6 @@
 [versions]
 agp = "8.5.2"
+constraintlayoutCompose = "1.1.1"
 firebaseBom = "33.16.0"
 foundation = "1.8.3"
 kotlin = "2.1.0"
@@ -32,6 +33,7 @@ junitJupiter = "5.8.1"
 junitJunit = "4.12"
 lifecycleViewmodelCompose = "2.7.0"
 mockk = "1.14.0"
+runtime = "1.8.3"
 tensorflowLite = "2.13.0"
 tensorflowLiteSupport = "0.3.1"
 tensorflowLiteTaskVision = "0.4.3"
@@ -45,10 +47,18 @@ koin = "4.0.3"
 koin-annotations = "2.0.0-Beta2"
 coreTesting = "2.2.0"
 navigation = "2.8.0-alpha08"
+roomRuntime = "2.7.1"
+ktorVersion = "3.2.1"
+serialization = "1.9.0"
+loggingInterceptor = "5.0.0"
+datastorePreferences = "1.1.7"
+
 
 [libraries]
+androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
+androidx-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "runtime" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-perf = { module = "com.google.firebase:firebase-perf" }
@@ -90,6 +100,11 @@ truth = { module = "com.google.truth:truth", version.ref = "truth" }
 androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
 
 
+#room
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
+
 #navigation
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
 
@@ -99,9 +114,20 @@ koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", versi
 koin-test = { module = "io.insert-koin:koin-test-junit4", version.ref = "koin" }
 koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koin-annotations" }
 koin-ksp = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koin-annotations" }
-
+androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastorePreferences" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorVersion" }
+ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktorVersion" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktorVersion" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktorVersion" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktorVersion" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorVersion" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 truth-v144 = { module = "com.google.truth:truth", version.ref = "truthVersion" }
 ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "uiTestJunit4" }
+ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktorVersion" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -119,4 +145,10 @@ kover = { id = "org.jetbrains.kotlinx.kover", version = "0.9.1" }
 #ksp
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
+[bundles]
+ktor = [
+    "ktor-client-core", "ktor-client-okhttp", "ktor-client-logging",
+    "ktor-client-content-negotiation", "ktor-serialization-kotlinx-json"
+]

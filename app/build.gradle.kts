@@ -7,6 +7,8 @@ plugins {
     alias(libs.plugins.google.firebase.perf)
     alias(libs.plugins.google.firebase.appdistribution)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
+    id("androidx.room") version "2.7.1"
 }
 
 android {
@@ -45,6 +47,9 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.8"
     }
+    room {
+        schemaDirectory("schemas")
+    }
 }
 
 ksp {
@@ -55,6 +60,8 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
@@ -66,26 +73,35 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.foundation.layout.android)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
     debugImplementation(libs.androidx.ui.tooling)
     androidTestImplementation(libs.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation(libs.androidx.foundation)
+
+    // koin
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.android)
     implementation(libs.koin.test)
     implementation(libs.koin.annotations)
     ksp(libs.koin.ksp)
+
+    // ktor
+    implementation(libs.bundles.ktor)
+    implementation(libs.logging.interceptor)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.logging.interceptor)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+
+    implementation(libs.navigation.compose)
+
     implementation(project(":design_system"))
     implementation(project(":domain"))
     implementation(project(":entity"))
     implementation(project(":remote"))
+    implementation(project(":local"))
     implementation(project(":repository"))
     implementation(project(":ui"))
     implementation(project(":viewmodel"))

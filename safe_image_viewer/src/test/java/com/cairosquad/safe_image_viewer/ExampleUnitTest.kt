@@ -1,8 +1,7 @@
 package com.cairosquad.safe_image_viewer
 
+import org.junit.Assert.assertEquals
 import org.junit.Test
-
-import org.junit.Assert.*
 
 class ExampleUnitTest {
     @Test

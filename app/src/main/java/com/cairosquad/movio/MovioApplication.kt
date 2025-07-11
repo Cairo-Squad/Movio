@@ -5,7 +5,7 @@ import com.cairosquad.movio.di.appModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
-class MovioApplication: Application() {
+class MovioApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()

@@ -10,11 +10,11 @@ plugins {
     alias(libs.plugins.google.firebase.perf) apply false
     alias(libs.plugins.google.firebase.appdistribution) apply false
     alias(libs.plugins.kover)
+    alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.ksp) apply false
 }
 
 kover {
-
     reports {
         filters {
             excludes {
@@ -22,18 +22,18 @@ kover {
                     "**.model.**",
                     "**.di.**",
                     "**.exception.**",
+                    "**.exceptions.**",
                     "**.mapper.**",
                     "**.ui.**",
                     "**.design_system.**",
                     "**.entity.**",
                     "**.safe_image_viewer.modifier.**",
                     "**.safe_image_viewer.alghorithm.**",
-                    "**.safe_image_viewer.safeImageViewer.**",
+                    "**.safe_image_viewer.safe_image_viewer.**",
                     "**.safe_image_viewer.loader.**",
                 )
             }
         }
-
         total {
             verify {
                 rule {
