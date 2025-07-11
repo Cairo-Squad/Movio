@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="no_internet_connection">No internet connection</string>
-    <string name="an_error_occured_while_getting_results">An error occured while getting results</string>
-    <string name="an_unexpected_error_occurred">An unexpected error occurred</string>
+
 </resources>

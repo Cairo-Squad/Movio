@@ -11,6 +11,7 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.component.InputField
 import com.cairosquad.design_system.component.StateMessage
 import com.cairosquad.design_system.theme.Theme
+import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.search.SearchInteractionListener
 import com.cairosquad.viewmodel.search.SearchUiState
 
@@ -39,9 +40,24 @@ fun SearchFailContent(
         )
 
         StateMessage(
-            imageDrawable = R.drawable.no_result,
-            titleId = R.string.no_results_found,
-            descriptionId = R.string.no_results_found_description
+            imageDrawable = when (state.errorStatus) {
+                ErrorStatus.NO_INTERNET -> R.drawable.no_internet
+                ErrorStatus.NETWORK_ERROR -> R.drawable.no_result
+                ErrorStatus.UNKNOWN_ERROR -> R.drawable.no_result
+                null -> R.drawable.no_result
+            },
+            titleId = when (state.errorStatus) {
+                ErrorStatus.NO_INTERNET -> R.string.no_internet_connection
+                ErrorStatus.NETWORK_ERROR -> R.string.an_error_occured_while_getting_results
+                ErrorStatus.UNKNOWN_ERROR -> R.string.an_unexpected_error_occurred
+                null -> R.string.an_unexpected_error_occurred
+            },
+            descriptionId = when (state.errorStatus) {
+                ErrorStatus.NO_INTERNET -> R.string.internet_is_not_available_description
+                ErrorStatus.NETWORK_ERROR -> R.string.internet_is_not_available_description
+                ErrorStatus.UNKNOWN_ERROR -> R.string.an_unexpected_error_occurred_description
+                null -> R.string.an_unexpected_error_occurred_description
+            }
         )
     }
 }
