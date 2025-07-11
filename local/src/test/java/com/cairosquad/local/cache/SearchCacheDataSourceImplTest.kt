@@ -5,7 +5,6 @@ import com.cairosquad.local.search.cache.dao.CacheDao
 import com.cairosquad.local.search.cache.entity.ArtistCacheEntity
 import com.cairosquad.local.search.cache.entity.MovieCacheEntity
 import com.cairosquad.local.search.cache.entity.SeriesCacheEntity
-import com.cairosquad.repository.search.data_source.local.Dto.ArtistCacheDto
 import com.cairosquad.repository.search.data_source.local.Dto.MovieCacheDto
 import com.cairosquad.repository.search.data_source.local.Dto.SeriesCacheDto
 import com.google.common.truth.Truth.assertThat
@@ -18,6 +17,7 @@ import io.mockk.spyk
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
+import java.time.Instant
 
 class SearchCacheDataSourceImplTest {
 
@@ -45,7 +45,11 @@ class SearchCacheDataSourceImplTest {
     @Test
     fun `cacheMovies should map and insert to DAO`() = runTest {
         val query = "batman"
-        val dto = MovieCacheDto(1, "poster", 7.5,posterPath = null)
+        val dto = MovieCacheDto(
+            1, "poster", 7.5, posterPath = null,
+            query = "batman",
+            timestamp = Instant.now().toEpochMilli()
+        )
 
         coEvery { cacheDao.cacheMovies(any()) } just Runs
 
@@ -69,7 +73,9 @@ class SearchCacheDataSourceImplTest {
     @Test
     fun `cacheSeries should map and insert to DAO`() = runTest {
         val query = "friends"
-        val dto = SeriesCacheDto(1, "Friends", posterPath = null)
+        val dto = SeriesCacheDto(1, "Friends", posterPath = null,
+            query = "batman",
+            timestamp = Instant.now().toEpochMilli())
 
         coEvery { cacheDao.cacheSeries(any()) } just Runs
 
