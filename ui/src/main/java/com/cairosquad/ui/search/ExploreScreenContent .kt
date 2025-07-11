@@ -2,13 +2,15 @@ package com.cairosquad.ui.search
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -31,57 +33,63 @@ fun ExploreScreenContent(
     exploreMoreMovies: List<MovieUiState>,
     onMovieClick: (MovieUiState) -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
 
-        SectionHeader(
-            title = "For you",
-            actionText = "See all",
-            actionIcon = ImageVector.vectorResource(R.drawable.arrow)
-        )
-
-        LazyRow(
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(forYouMovies) { movie ->
-                MovieCard(
-                    modifier = Modifier
-                        .clickable { onMovieClick(movie) }
-                        .width(124.dp),
-                    title = movie.title,
-                    vote = movie.rating,
-                    imgUrl = movie.posterPath,
-                    cardSize = MovieCardSize.Medium
-                )
-            }
+        item {
+            SectionHeader(
+                title = "For you",
+                actionText = "See all",
+                actionIcon = ImageVector.vectorResource(R.drawable.arrow)
+            )
         }
+        item {
+            LazyRow(
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(forYouMovies) { movie ->
+                    MovieCard(
+                        modifier = Modifier
+                            .clickable { onMovieClick(movie) }
+                            .width(124.dp),
+                        title = movie.title,
+                        vote = movie.rating,
+                        imgUrl = movie.posterPath,
+                        cardSize = MovieCardSize.Medium
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+        item {
+            SectionHeader(
+                title = "Explore more", actionText = "See all",
+                actionIcon = ImageVector.vectorResource(R.drawable.arrow)
+            )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        }
+        item {
+            LazyVerticalGrid(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .heightIn(max = ((exploreMoreMovies.size / 2 + 1) * 240).dp),
+                columns = GridCells.Adaptive(minSize = 158.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                userScrollEnabled = false
+            ) {
+                items(exploreMoreMovies) { movie ->
 
-        SectionHeader(
-            title = "Explore more", actionText = "See all",
-            actionIcon = ImageVector.vectorResource(R.drawable.arrow)
-        )
-
-        LazyVerticalGrid(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp),
-            columns = GridCells.Adaptive(minSize = 158.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(exploreMoreMovies) { movie ->
-
-                MovieCard(
-                    modifier = Modifier
-                        .weight(1f)
-                        .clickable { onMovieClick(movie) },
-                    title = movie.title,
-                    vote = movie.rating,
-                    imgUrl = movie.posterPath,
-                    cardSize = MovieCardSize.Large
-                )
+                    MovieCard(
+                        modifier = Modifier
+                            .clickable { onMovieClick(movie) },
+                        title = movie.title,
+                        vote = movie.rating,
+                        imgUrl = movie.posterPath,
+                        cardSize = MovieCardSize.Large
+                    )
+                }
             }
         }
     }
