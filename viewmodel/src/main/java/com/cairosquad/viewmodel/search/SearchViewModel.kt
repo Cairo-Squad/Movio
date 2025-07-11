@@ -51,7 +51,7 @@ class SearchViewModel(
                     errorStatus = handleSearchException(e)
                 )
             }
-            sendEvent(SearchUiEvent.ShowToast(handleSearchException(e)))
+            sendEvent(SearchUiEvent.ErrorHappened(handleSearchException(e)))
         },
         dispatcher = Dispatchers.IO
     )
@@ -128,7 +128,7 @@ class SearchViewModel(
                         errorStatus = handleSearchException(e)
                     )
                 }
-                sendEvent(SearchUiEvent.ShowToast(handleSearchException(e)))
+                sendEvent(SearchUiEvent.ErrorHappened(handleSearchException(e)))
             },
             dispatcher = Dispatchers.IO
         )
@@ -148,7 +148,7 @@ class SearchViewModel(
             onError = { e ->
                 val message = handleSearchException(e)
                 updateState { it.copy(errorStatus = message) }
-                sendEvent(SearchUiEvent.ShowToast(message))
+                sendEvent(SearchUiEvent.ErrorHappened(message))
             },
             dispatcher = Dispatchers.IO
         )
@@ -165,7 +165,7 @@ class SearchViewModel(
             },
             onError = { e ->
                 updateState { it.copy(errorStatus = handleSearchException(e)) }
-                sendEvent(SearchUiEvent.ShowToast(handleSearchException(e)))
+                sendEvent(SearchUiEvent.ErrorHappened(handleSearchException(e)))
             },
             dispatcher = Dispatchers.IO
         )
