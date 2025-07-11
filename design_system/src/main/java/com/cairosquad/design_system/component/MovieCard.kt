@@ -1,6 +1,7 @@
 package com.cairosquad.design_system.component
 
 import androidx.annotation.Keep
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,7 +32,7 @@ import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 fun MovieCard(
     title: String,
     vote: Float,
-    imgUrl: String,
+    imgUrl: String?,
     cardSize: MovieCardSize,
     modifier: Modifier = Modifier
 ) {
@@ -39,15 +40,32 @@ fun MovieCard(
         modifier = modifier.fillMaxWidth()
     ) {
         Box {
-            SafeImageViewer(
-                model = imgUrl,
-                contentDescription = stringResource(R.string.movie_poster),
-                modifier = Modifier
-                    .height(cardSize.size)
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(5.dp)),
-                enableLog = true
-            )
+            if (imgUrl?.isNotEmpty() == true) {
+                SafeImageViewer(
+                    model = "https://image.tmdb.org/t/p/original$imgUrl",
+                    contentDescription = stringResource(R.string.movie_poster),
+                    modifier = Modifier
+                        .height(cardSize.size)
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(5.dp)),
+                    loadingPlaceholder = {
+                        LoadingMovieImage(
+                            Modifier
+                                .height(cardSize.size)
+                                .fillMaxWidth()
+                        )
+                    }
+                )
+            } else {
+                Image(
+                    modifier = Modifier
+                        .height(cardSize.size)
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(5.dp)),
+                    painter = painterResource(com.cairosquad.safe_image_viewer.R.drawable.error),
+                    contentDescription = stringResource(R.string.error_loading_image)
+                )
+            }
 
             Row(
                 modifier = Modifier

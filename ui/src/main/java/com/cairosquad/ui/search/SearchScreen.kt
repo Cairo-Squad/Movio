@@ -39,7 +39,7 @@ fun SearchScreen(
             MovieUiState(
                 id = it.id,
                 title = it.title,
-                posterPath = "https://image.tmdb.org/t/p/w500${it.posterPath}",
+                posterPath = it.posterPath,
                 rating = it.rating
             )
         }

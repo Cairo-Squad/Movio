@@ -89,7 +89,7 @@ fun SafeImageViewer(
     contentDescription: String,
     // appearance and layout
     modifier: Modifier = Modifier,
-    contentScale: ContentScale = ContentScale.Crop,
+    contentScale: ContentScale = ContentScale.FillBounds,
     alignment: Alignment = Alignment.Center,
     alpha: Float = DefaultAlpha,
     filterQuality: FilterQuality = DefaultFilterQuality,
