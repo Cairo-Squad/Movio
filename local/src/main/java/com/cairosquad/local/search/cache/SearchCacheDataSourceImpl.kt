@@ -26,7 +26,7 @@ class SearchCacheDataSourceImpl(
     ) {
         cacheDao.cacheMovies(
             results.map { movieCacheDto ->
-                movieCacheDto.toEntity(query, timestamp = Instant.now().toEpochMilli())
+                movieCacheDto.toEntity()
             }
         )
     }
@@ -44,7 +44,7 @@ class SearchCacheDataSourceImpl(
     ) {
         cacheDao.cacheSeries(
             results.map { movieCacheDto ->
-                movieCacheDto.toEntity(query, timestamp = Instant.now().toEpochMilli())
+                movieCacheDto.toEntity()
             }
         )
     }
@@ -62,7 +62,7 @@ class SearchCacheDataSourceImpl(
     ) {
         cacheDao.cacheArtist(
             results.map { movieCacheDto ->
-                movieCacheDto.toEntity(query, timestamp = Instant.now().toEpochMilli())
+                movieCacheDto.toEntity()
             }
         )
     }
