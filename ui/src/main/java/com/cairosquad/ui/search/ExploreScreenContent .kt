@@ -26,7 +26,7 @@ import com.cairosquad.design_system.component.SectionHeader
 import com.cairosquad.viewmodel.searchviewmodel.SearchUiState.MovieUiState
 
 @Composable
-fun IdleSearchScreenContent(
+fun ExploreScreenContent(
     forYouMovies: List<MovieUiState>,
     exploreMoreMovies: List<MovieUiState>,
     onMovieClick: (MovieUiState) -> Unit
