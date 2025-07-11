@@ -42,7 +42,7 @@ fun MovieCard(
         Box {
             if (imgUrl?.isNotEmpty() == true) {
                 SafeImageViewer(
-                    model = "https://image.tmdb.org/t/p/original$imgUrl",
+                    model = "https://image.tmdb.org/t/p/w500$imgUrl",
                     contentDescription = stringResource(R.string.movie_poster),
                     modifier = Modifier
                         .height(cardSize.size)
