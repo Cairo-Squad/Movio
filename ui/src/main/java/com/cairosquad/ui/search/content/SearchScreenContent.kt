@@ -27,6 +27,7 @@ fun SearchScreenContent(
                 listener = listener
             )
         }
+
         SearchUiState.ScreenStatus.RESULT -> {
             SearchResultContent(
                 modifier = modifier,
@@ -34,7 +35,21 @@ fun SearchScreenContent(
                 listener = listener
             )
         }
-        SearchUiState.ScreenStatus.LOADING -> {}
-        SearchUiState.ScreenStatus.FAILED -> {}
+
+        SearchUiState.ScreenStatus.LOADING -> {
+            SearchLoadingContent(
+                modifier = modifier,
+                state = state,
+                listener = listener
+            )
+        }
+
+        SearchUiState.ScreenStatus.FAILED -> {
+            SearchFailContent(
+                modifier = modifier,
+                state = state,
+                listener = listener
+            )
+        }
     }
 }

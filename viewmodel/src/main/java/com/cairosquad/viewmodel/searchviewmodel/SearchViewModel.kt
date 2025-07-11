@@ -194,6 +194,7 @@ class SearchViewModel(
     }
 
     override fun onClickSearchTextField() {
+        searchJob?.cancel()
         updateState {
             it.copy(
                 screenStatus = SearchUiState.ScreenStatus.SEARCH,

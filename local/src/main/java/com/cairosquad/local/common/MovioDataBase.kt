@@ -10,7 +10,12 @@ import com.cairosquad.local.search.recent.dao.RecentSearchDao
 import com.cairosquad.local.search.recent.entity.RecentSearchEntity
 
 @Database(
-    entities = [MovieCacheEntity::class, SeriesCacheEntity::class, ArtistCacheEntity::class, RecentSearchEntity::class],
+    entities = [
+        MovieCacheEntity::class,
+        SeriesCacheEntity::class,
+        ArtistCacheEntity::class,
+        RecentSearchEntity::class
+    ],
     version = 1,
     exportSchema = true,
 )

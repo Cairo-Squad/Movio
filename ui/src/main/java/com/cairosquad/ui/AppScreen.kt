@@ -1,7 +1,10 @@
 package ui
 
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -20,7 +23,10 @@ import com.cairosquad.ui.more.MoreScreen
 import com.cairosquad.ui.search.SearchScreen
 
 @Composable
-fun AppScreen(modifier: Modifier = Modifier) {
+fun AppScreen(
+    modifier: Modifier = Modifier,
+    onNavigateBack: () -> Unit = {}
+) {
     val navigationItems = remember {
         listOf(
             BottomNavItem(
@@ -46,6 +52,21 @@ fun AppScreen(modifier: Modifier = Modifier) {
         )
     }
     var selectedScreenIndex by rememberSaveable { mutableIntStateOf(0) }
+
+    val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+    DisposableEffect(backPressedDispatcher) {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (selectedScreenIndex > 0) selectedScreenIndex--
+                else this.remove()
+            }
+        }
+        backPressedDispatcher?.addCallback(callback)
+        onDispose {
+            callback.remove()
+        }
+    }
+
     Scaffold(
         modifier = modifier
             .background(Theme.color.surfaces.surface),
