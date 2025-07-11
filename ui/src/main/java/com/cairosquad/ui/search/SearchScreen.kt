@@ -61,7 +61,7 @@ fun SearchScreen(
             placeholder = stringResource(R.string.search),
             leadingIcon = R.drawable.search_bottom_nav,
         )
-        IdleSearchScreenContent(
+        ExploreScreenContent(
             movies,
             movies,
         ) {}

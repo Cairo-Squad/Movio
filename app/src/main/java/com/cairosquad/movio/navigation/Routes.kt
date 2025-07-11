@@ -6,13 +6,4 @@ import kotlinx.serialization.Serializable
 data object SplashRoute
 
 @Serializable
-data object SearchRoute
-
-@Serializable
-data object HomeRoute
-
-@Serializable
-data object LibraryRoute
-
-@Serializable
-data object MoreRoute
+data object AppRoute

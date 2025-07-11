@@ -11,5 +11,5 @@ suspend inline fun <reified T> callApi(
         throw e
     }
 
-    return responseToResult(response)
+    return responseToException(response)
 }
