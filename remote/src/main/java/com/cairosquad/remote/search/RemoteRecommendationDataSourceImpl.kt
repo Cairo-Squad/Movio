@@ -15,7 +15,7 @@ class RemoteRecommendationDataSourceImpl(
 ) : RemoteRecommendationDataSource {
     override suspend fun getForYouMovies(): List<MovieDto> {
         return callApi<SearchResultDto<MovieDto>> {
-            httpClient.get(constructUrl("movie/now_playing")) {
+            httpClient.get(constructUrl("movie/top_rated")) {
                 parameter(API_KEY, BuildConfig.API_KEY)
             }
         }.results?.filterNotNull()?.filter { it.id != null } ?: emptyList()

@@ -1,11 +1,21 @@
 package com.cairosquad.remote.common.utils
 
 import com.cairosquad.remote.BuildConfig
+import java.util.Locale
 
 fun constructUrl(url: String): String {
-    return when {
-        url.contains(BuildConfig.BASE_URL) -> url
-        url.startsWith("/") -> BuildConfig.BASE_URL + url.drop(1)
-        else -> BuildConfig.BASE_URL + url
+    val baseUrl = BuildConfig.BASE_URL
+    val deviceLanguage = Locale.getDefault().toLanguageTag()
+
+    val fullUrl = when {
+        url.contains(baseUrl) -> url
+        url.startsWith("/") -> baseUrl + url.drop(1)
+        else -> baseUrl + url
+    }
+
+    return if (fullUrl.contains("?")) {
+        "$fullUrl&language=$deviceLanguage"
+    } else {
+        "$fullUrl?language=$deviceLanguage"
     }
 }
