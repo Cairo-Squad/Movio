@@ -1,7 +1,7 @@
 package com.cairosquad.ui.utils
 
 import androidx.annotation.StringRes
-import com.cairosquad.ui.R
+import com.cairosquad.design_system.R
 import com.cairosquad.viewmodel.exception.ErrorStatus
 
 @StringRes
