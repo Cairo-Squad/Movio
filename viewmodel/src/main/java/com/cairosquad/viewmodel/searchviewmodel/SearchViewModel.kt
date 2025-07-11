@@ -1,20 +1,18 @@
 package com.cairosquad.viewmodel.searchviewmodel
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.search.usecase.ClearRecentSearchUseCase
 import com.cairosquad.domain.search.usecase.GetExploreMoreUseCase
 import com.cairosquad.domain.search.usecase.GetForYouUseCase
 import com.cairosquad.domain.search.usecase.GetRecentSearchUseCase
 import com.cairosquad.domain.search.usecase.SearchUseCase
+import com.cairosquad.viewmodel.base.BaseViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 class SearchViewModel(
     private val searchUseCase: SearchUseCase,
@@ -23,10 +21,8 @@ class SearchViewModel(
     private val getExploreMoreUseCase: GetExploreMoreUseCase,
     private val getForYouUseCase: GetForYouUseCase,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
-) : ViewModel(), SearchInteractionListener {
-
-    private val _uiState = MutableStateFlow(SearchUiState())
-    val uiState: StateFlow<SearchUiState> = _uiState.asStateFlow()
+) : BaseViewModel<SearchUiState, SearchUiEvent>(initialState = SearchUiState()),
+    SearchInteractionListener {
 
     private var searchJob: Job? = null
 
@@ -34,117 +30,162 @@ class SearchViewModel(
         loadDiscoverMovies()
     }
 
-    fun loadDiscoverMovies() = viewModelScope.launch(dispatcher) {
-        try {
+    fun loadDiscoverMovies() = tryToCall(
+        block = {
             val forYou = getForYouUseCase.getForYouMovies().map { it.toUiState() }
             val exploreMore = getExploreMoreUseCase.getExploreMoreMovies().map { it.toUiState() }
-
-            _uiState.update {
+            forYou to exploreMore
+        },
+        onSuccess = { (forYou, exploreMore) ->
+            updateState {
                 it.copy(
                     screenStatus = SearchUiState.ScreenStatus.EXPLORE,
                     forYou = forYou,
-                    exploreMore = exploreMore
+                    exploreMore = exploreMore,
+                    errorMessage = null
                 )
             }
-        } catch (e: Exception) {
-            _uiState.update {
+        },
+        onError = { e ->
+            val message = mapExceptionToMessage(e)
+            updateState {
                 it.copy(
                     screenStatus = SearchUiState.ScreenStatus.FAILED,
-                    errorMessage = "Failed to load discover content."
+                    errorMessage = message
                 )
             }
+            sendEvent(SearchUiEvent.ShowToast(message))
         }
-    }
+    )
 
     override fun onQueryTextChanged(query: String) {
-        viewModelScope.launch(dispatcher) {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch(dispatcher) {
+            delay(300)
             val suggestions = getRecentSearchUseCase.getByQuery(query)
-            _uiState.update {
+            updateState {
                 it.copy(
                     screenStatus = SearchUiState.ScreenStatus.SEARCH,
-                    recentSearch = suggestions
+                    recentSearch = suggestions,
+                    query = query,
+                    errorMessage = null
                 )
             }
         }
     }
 
     override fun onCancelSearch() {
-        _uiState.update {
+        searchJob?.cancel()
+        updateState {
             it.copy(
                 screenStatus = SearchUiState.ScreenStatus.EXPLORE,
                 query = "",
+                recentSearch = emptyList(),
+                errorMessage = null
             )
         }
     }
 
-
     override fun onSearch(query: String) {
         searchJob?.cancel()
-        _uiState.update {
+        updateState {
             it.copy(
                 screenStatus = SearchUiState.ScreenStatus.LOADING,
                 query = query,
+                errorMessage = null
             )
         }
 
-        searchJob = viewModelScope.launch(dispatcher) {
-            try {
+        searchJob = tryToCall(
+            block = {
                 val movies = searchUseCase.searchMovies(query).map { it.toUiState() }
                 val series = searchUseCase.searchSeries(query).map { it.toUiState() }
                 val artists = searchUseCase.searchArtists(query).map { it.toUiState() }
-
-                _uiState.update {
+                Triple(movies, series, artists)
+            },
+            onSuccess = { (movies, series, artists) ->
+                updateState {
                     it.copy(
                         screenStatus = SearchUiState.ScreenStatus.RESULT,
                         movies = movies,
                         series = series,
-                        artists = artists
+                        artists = artists,
+                        errorMessage = null
                     )
                 }
-
-            } catch (ex: Exception) {
-                _uiState.update {
+            },
+            onError = { e ->
+                val message = mapExceptionToMessage(e)
+                updateState {
                     it.copy(
                         screenStatus = SearchUiState.ScreenStatus.FAILED,
-                        errorMessage = ex.localizedMessage ?: "Unknown error"
+                        errorMessage = message
                     )
                 }
+                sendEvent(SearchUiEvent.ShowToast(message))
             }
-        }
+        )
     }
 
     override fun onRecentSearchItemClicked(query: String) = onSearch(query)
 
     override fun onClearHistory() {
-        viewModelScope.launch(dispatcher) {
-            clearRecentSearchUseCase.clearAll()
-            _uiState.update { it.copy(recentSearch = emptyList()) }
-        }
+        tryToCall(
+            block = {
+                clearRecentSearchUseCase.clearAll()
+                emptyList<String>()
+            },
+            onSuccess = { suggestions ->
+                updateState { it.copy(recentSearch = suggestions, errorMessage = null) }
+            },
+            onError = { e ->
+                val message = mapExceptionToMessage(e)
+                updateState { it.copy(errorMessage = message) }
+                sendEvent(SearchUiEvent.ShowToast(message))
+            }
+        )
     }
 
     override fun onRemoveHistoryItem(query: String) {
-        viewModelScope.launch(dispatcher) {
-            clearRecentSearchUseCase.removeQuery(query)
-            val suggestions = getRecentSearchUseCase.getAll()
-            _uiState.update { it.copy(recentSearch = suggestions) }
-        }
+        tryToCall(
+            block = {
+                clearRecentSearchUseCase.removeQuery(query)
+                getRecentSearchUseCase.getAll()
+            },
+            onSuccess = { suggestions ->
+                updateState { it.copy(recentSearch = suggestions, errorMessage = null) }
+            },
+            onError = { e ->
+                val message = mapExceptionToMessage(e)
+                updateState { it.copy(errorMessage = mapExceptionToMessage(e)) }
+                sendEvent(SearchUiEvent.ShowToast(message))
+            }
+        )
     }
 
+
     override fun onBackClicked() {
-        _uiState.update {
-            if (it.screenStatus == SearchUiState.ScreenStatus.SEARCH) {
-                it.copy(
+        updateState {
+            when (it.screenStatus) {
+                SearchUiState.ScreenStatus.SEARCH -> it.copy(
                     screenStatus = SearchUiState.ScreenStatus.EXPLORE,
-                    query = ""
+                    query = "",
+                    recentSearch = emptyList(),
+                    errorMessage = null
                 )
-            } else if (it.screenStatus == SearchUiState.ScreenStatus.RESULT) {
-                it.copy(
+
+                SearchUiState.ScreenStatus.RESULT -> it.copy(
                     screenStatus = SearchUiState.ScreenStatus.SEARCH,
+                    errorMessage = null
                 )
-            } else {
-                it
+
+                else -> it
             }
         }
     }
 
+    private fun mapExceptionToMessage(e: Throwable): String = when (e) {
+        is IOException -> "Network error. Please check your connection."
+        else -> e.localizedMessage ?: "An unexpected error occurred."
+    }
 }
