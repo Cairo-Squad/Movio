@@ -1,15 +1,17 @@
 package com.cairosquad.design_system.component
 
-import androidx.annotation.Keep
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -34,39 +36,50 @@ import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import java.util.Locale
 
+/**
+ * @param width null if fillMaxWidth, specific dp value otherwise
+ */
 @Composable
 fun MovieCard(
     title: String,
     vote: Float,
     imgUrl: String?,
-    cardSize: MovieCardSize,
+    width: Dp?,
+    aspectRatio: Float,
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
     ) {
-        Box {
+        Box(
+            modifier = Modifier
+                .then(
+                    if (width != null) {
+                        Modifier.width(width)
+                    } else {
+                        Modifier.fillMaxWidth()
+                    }
+                )
+                .aspectRatio(aspectRatio)
+        ) {
             if (imgUrl?.isNotEmpty() == true) {
                 SafeImageViewer(
                     model = "https://image.tmdb.org/t/p/w500$imgUrl",
                     contentDescription = stringResource(R.string.movie_poster),
                     modifier = Modifier
-                        .height(cardSize.size)
-                        .fillMaxWidth()
+                        .fillMaxSize()
                         .clip(RoundedCornerShape(8.dp)),
                     loadingPlaceholder = {
                         LoadingMovieImage(
                             Modifier
-                                .height(cardSize.size)
-                                .fillMaxWidth()
+                                .fillMaxSize()
                         )
                     }
                 )
             } else {
                 Box(
                     modifier = Modifier
-                        .height(cardSize.size)
-                        .fillMaxWidth()
+                        .fillMaxSize()
                         .clip(RoundedCornerShape(8.dp))
                         .background(Theme.color.system.defaultImageBackground),
                     contentAlignment = Alignment.Center
@@ -118,6 +131,7 @@ fun MovieCard(
         Text(
             text = title,
             modifier = Modifier
+                .width(width ?: Dp.Unspecified)
                 .padding(top = 8.dp),
             style = Theme.textStyle.title.mediumMedium14,
             color = Theme.color.surfaces.onSurface,
@@ -129,15 +143,6 @@ fun MovieCard(
     }
 }
 
-
-@Keep
-enum class MovieCardSize(val size: Dp) {
-    Small(size = 136.dp),
-    Medium(size = 160.dp),
-    Large(size = 180.dp)
-}
-
-
 @Preview(showBackground = true)
 @Composable
 private fun MovieCardPreview() {
@@ -146,7 +151,9 @@ private fun MovieCardPreview() {
             title = "The Dark Knight",
             vote = 5.0f,
             imgUrl = "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_QL75_UX380_CR0,0,380,562_.jpg",
-            cardSize = MovieCardSize.Large
+            width = 124.dp,
+            aspectRatio = 0.775f,
+            modifier = Modifier
         )
     }
 }

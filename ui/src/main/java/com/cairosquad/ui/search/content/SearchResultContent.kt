@@ -30,7 +30,6 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.component.ArtistCard
 import com.cairosquad.design_system.component.InputField
 import com.cairosquad.design_system.component.MovieCard
-import com.cairosquad.design_system.component.MovieCardSize
 import com.cairosquad.design_system.component.StateMessage
 import com.cairosquad.design_system.component.TopBar
 import com.cairosquad.design_system.text_style.defaultTextStyle
@@ -153,7 +152,8 @@ private fun AllResultsTabContent(
                     title = result.title,
                     vote = result.rating,
                     imgUrl = result.posterPath,
-                    cardSize = MovieCardSize.Small
+                    width = null,
+                    aspectRatio = 0.743f
                 )
             }
         }
@@ -184,7 +184,8 @@ private fun MoviesTabContent(
                     title = movie.title,
                     vote = movie.rating,
                     imgUrl = movie.posterPath,
-                    cardSize = MovieCardSize.Small
+                    width = null,
+                    aspectRatio = 0.743f
                 )
             }
         }
@@ -215,7 +216,8 @@ private fun SeriesTabContent(
                     title = series.title,
                     vote = series.rating,
                     imgUrl = series.posterPath,
-                    cardSize = MovieCardSize.Small
+                    width = null,
+                    aspectRatio = 0.743f
                 )
             }
         }
