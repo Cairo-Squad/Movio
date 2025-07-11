@@ -34,12 +34,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
+import com.cairosquad.design_system.modifier.dropShadow
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 
@@ -54,11 +56,20 @@ fun NavigationBar(
 
     Row(
         modifier = modifier
+            .dropShadow(
+                shape = RectangleShape,
+                color = Theme.color.system.dropShadow,
+                offsetX = 0.dp,
+                offsetY = 1.dp,
+                blur = 12.dp,
+                spread = 0.dp,
+                alpha = 0.06f
+            )
             .background(color = Theme.color.surfaces.surface)
+            .height(74.dp)
             .windowInsetsPadding(WindowInsets.navigationBars)
             .padding(horizontal = 20.dp)
-            .fillMaxWidth()
-            .height(74.dp),
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {

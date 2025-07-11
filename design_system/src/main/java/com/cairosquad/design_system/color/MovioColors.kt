@@ -45,6 +45,7 @@ data class System(
     val onSuccess: Color,
     val successContainer: Color,
     val onSuccessContainer: Color,
+    val dropShadow: Color
 )
 
 data class Gradiant(

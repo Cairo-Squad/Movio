@@ -34,6 +34,7 @@ val lightThemeColors = MovioColors(
         onSuccess = Color(0xFFF6FFF6),
         successContainer = Color(0xFFE7FFE6),
         onSuccessContainer = Color(0xFF136912),
+        dropShadow = Color(0x0F000000)
     ),
     Gradiant(
         horizontalGradient = Brush.horizontalGradient(
