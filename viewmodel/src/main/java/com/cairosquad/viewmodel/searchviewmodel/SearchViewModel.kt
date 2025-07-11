@@ -58,7 +58,8 @@ class SearchViewModel(
     override fun onQueryTextChanged(query: String) {
         updateState {
             it.copy(
-                screenStatus = SearchUiState.ScreenStatus.SEARCH
+                screenStatus = SearchUiState.ScreenStatus.SEARCH,
+                query = query
             )
         }
         searchJob?.cancel()
@@ -70,9 +71,7 @@ class SearchViewModel(
             onSuccess = { suggestions ->
                 updateState {
                     it.copy(
-                        recentSearch = suggestions,
-                        query = query,
-                        errorMessage = null
+                        recentSearch = suggestions
                     )
                 }
             },

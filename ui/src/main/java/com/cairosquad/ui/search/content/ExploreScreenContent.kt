@@ -1,6 +1,5 @@
 package com.cairosquad.ui.search.content
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -49,13 +48,8 @@ fun ExploreScreenContent(
                 onValueChange = listener::onQueryTextChanged,
                 placeholder = stringResource(R.string.search),
                 leadingIcon = R.drawable.search_bottom_nav,
-                onFocusChanged = {
-                    Log.d("asdasd", "ExploreScreenContent: hiiiiiiiiiiiiiii ${it}")
-                    if (it) {
-                        Log.d("asdasd", "ExploreScreenContent: hellooooooooo ${it}")
-                        listener::onClickSearchTextField
-                    }
-                }
+                onFocusChanged = { if (it) { listener.onClickSearchTextField() } },
+                readOnly = true
             )
         }
         item {

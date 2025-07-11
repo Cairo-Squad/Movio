@@ -1,5 +1,6 @@
 package com.cairosquad.ui.search.content
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,24 +22,38 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.component.ArtistCard
+import com.cairosquad.design_system.component.InputField
 import com.cairosquad.design_system.component.MovieCard
 import com.cairosquad.design_system.component.MovieCardSize
 import com.cairosquad.design_system.component.StateMessage
 import com.cairosquad.design_system.component.TopBar
 import com.cairosquad.design_system.text_style.defaultTextStyle
+import com.cairosquad.design_system.theme.Theme
+import com.cairosquad.viewmodel.searchviewmodel.SearchInteractionListener
 import com.cairosquad.viewmodel.searchviewmodel.SearchUiState
 
 @Composable
 fun SearchResultContent(
-    modifier: Modifier = Modifier,
-    topResults: List<SearchUiState.MovieUiState> = emptyList(),
-    movies: List<SearchUiState.MovieUiState> = emptyList(),
-    series: List<SearchUiState.SeriesUiState> = emptyList(),
-    artists: List<SearchUiState.ArtistUiState> = emptyList()
+    state: SearchUiState,
+    listener: SearchInteractionListener,
+    modifier: Modifier = Modifier
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
 
     Column(modifier = modifier) {
+
+        InputField(
+            modifier = Modifier
+                .background(Theme.color.surfaces.surface)
+                .padding(16.dp),
+            value = state.query,
+            onValueChange = listener::onQueryTextChanged,
+            placeholder = stringResource(R.string.search),
+            leadingIcon = R.drawable.search_bottom_nav,
+            onFocusChanged = { if (it) { listener.onClickSearchTextField() } },
+            readOnly = true
+        )
+
         TopBar(
             tabs = listOf(
                 stringResource(R.string.top_Results),
@@ -54,27 +69,27 @@ fun SearchResultContent(
 
         when (selectedTabIndex) {
             0 -> {
-                SearchResultText(noOfResults = topResults.size)
+                SearchResultText(noOfResults = state.movies.size)
                 Spacer(modifier = Modifier.height(16.dp))
-                AllResultsTabContent(topResults = topResults)
+                AllResultsTabContent(topResults = state.movies)
             }
 
             1 -> {
-                SearchResultText(noOfResults = movies.size)
+                SearchResultText(noOfResults = state.movies.size)
                 Spacer(modifier = Modifier.height(16.dp))
-                MoviesTabContent(movies = movies)
+                MoviesTabContent(movies = state.movies)
             }
 
             2 -> {
-                SearchResultText(noOfResults = series.size)
+                SearchResultText(noOfResults = state.series.size)
                 Spacer(modifier = Modifier.height(16.dp))
-                SeriesTabContent(series = series)
+                SeriesTabContent(series = state.series)
             }
 
             3 -> {
-                SearchResultText(noOfResults = artists.size)
+                SearchResultText(noOfResults = state.artists.size)
                 Spacer(modifier = Modifier.height(16.dp))
-                ArtistsTabContent(artists = artists)
+                ArtistsTabContent(artists = state.artists)
             }
         }
     }

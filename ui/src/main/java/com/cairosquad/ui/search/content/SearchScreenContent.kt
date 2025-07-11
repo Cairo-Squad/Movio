@@ -12,11 +12,13 @@ fun SearchScreenContent(
     modifier: Modifier = Modifier,
 ) {
     when (state.screenStatus) {
-        SearchUiState.ScreenStatus.EXPLORE -> ExploreScreenContent(
-            modifier = modifier,
-            state = state,
-            listener = listener
-        )
+        SearchUiState.ScreenStatus.EXPLORE -> {
+            ExploreScreenContent(
+                modifier = modifier,
+                state = state,
+                listener = listener
+            )
+        }
 
         SearchUiState.ScreenStatus.SEARCH -> {
             SearchContent(
@@ -25,7 +27,13 @@ fun SearchScreenContent(
                 listener = listener
             )
         }
-        SearchUiState.ScreenStatus.RESULT -> {}
+        SearchUiState.ScreenStatus.RESULT -> {
+            SearchResultContent(
+                modifier = modifier,
+                state = state,
+                listener = listener
+            )
+        }
         SearchUiState.ScreenStatus.LOADING -> {}
         SearchUiState.ScreenStatus.FAILED -> {}
     }

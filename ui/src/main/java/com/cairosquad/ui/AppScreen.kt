@@ -1,5 +1,6 @@
 package ui
 
+import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -12,6 +13,7 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.component.BottomNavItem
 import com.cairosquad.design_system.component.NavigationBar
 import com.cairosquad.design_system.component.Scaffold
+import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.home.HomeScreen
 import com.cairosquad.ui.library.LibraryScreen
 import com.cairosquad.ui.more.MoreScreen
@@ -45,7 +47,8 @@ fun AppScreen(modifier: Modifier = Modifier) {
     }
     var selectedScreenIndex by rememberSaveable { mutableIntStateOf(0) }
     Scaffold(
-        modifier = modifier,
+        modifier = modifier
+            .background(Theme.color.surfaces.surface),
         topBar = {},
         navBar = {
             NavigationBar(

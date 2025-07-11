@@ -52,6 +52,7 @@ fun InputField(
     error: String = "",
     isSingleLine: Boolean = true,
     isPasswordField: Boolean = false,
+    readOnly: Boolean = false,
     @DrawableRes leadingIcon: Int? = null,
     @DrawableRes trailingIcon: Int? = null,
     onTrailingIconClick: () -> Unit = {},
@@ -84,6 +85,7 @@ fun InputField(
     ) {
         BasicTextField(
             value = value,
+            readOnly = readOnly,
             onValueChange = onValueChange,
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
