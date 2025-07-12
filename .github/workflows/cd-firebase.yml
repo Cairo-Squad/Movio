@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up JDK
         uses: actions/setup-java@v4
@@ -24,25 +26,24 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Decode Keystore
-        run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > app/keystore.jks
-
-      - name: Generate Signed APK
+      - name: Generate APK
         run: ./gradlew assembleRelease
-        env:
-          KEYSTORE_FILE: keystore.jks
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Extract Release Notes
+        id: release_notes
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B | sed 's/"/\\"/g' | tr -d '\n')
+          TRUNCATED_MSG="${COMMIT_MSG:0:500}"
+          echo "$TRUNCATED_MSG" > release_notes.txt
+          echo "notes=$TRUNCATED_MSG" >> $GITHUB_OUTPUT
+          echo "Release notes: $TRUNCATED_MSG"
 
       - name: Upload APK to Firebase App Distribution
         run: |
           npm install -g firebase-tools
           firebase appdistribution:distribute \
-            app/build/outputs/apk/release/app-release.apk \
+            app/build/outputs/apk/release/app-release-unsigned.apk \
             --app ${{ secrets.FIREBASE_APP_ID }} \
             --token ${{ secrets.FIREBASE_AUTH_TOKEN }} \
-            --groups "cairo_squad"
-      - name: Clean up
-        run: rm -f app/keystore.jks
+            --groups "cairo_squad" \
+            --release-notes-file release_notes.txt
