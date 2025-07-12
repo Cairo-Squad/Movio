@@ -26,7 +26,7 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Decode Keystore and Create secrets.properties
+      - name: Decode Keystore and Create secret.properties
         env:
           FIREBASE_KEYSTORE: ${{ secrets.FIREBASE_KEYSTORE }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -36,15 +36,15 @@ jobs:
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
           FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
         run: |
-          rm -f movio-cairo.jks secrets.properties release_notes.txt
+          rm -f movio-cairo.jks secret.properties release_notes.txt
           echo "$FIREBASE_KEYSTORE" | base64 -d > movio-cairo.jks
           ls -l movio-cairo.jks || { echo "Keystore creation failed"; exit 1; }
-          echo "BASE_URL = \"https://api.themoviedb.org/3/\"" >> secrets.properties
-          echo "KEYSTORE_FILE = movio-cairo.jks" >> secrets.properties
-          echo "KEYSTORE_PASSWORD = $KEYSTORE_PASSWORD" >> secrets.properties
-          echo "KEY_ALIAS = $KEY_ALIAS" >> secrets.properties
-          echo "KEY_PASSWORD = $KEY_PASSWORD" >> secrets.properties
-          echo "API_KEY = $MOVIES_API_KEY" >> secrets.properties
+          echo "BASE_URL = \"https://api.themoviedb.org/3/\"" >> secret.properties
+          echo "KEYSTORE_FILE = movio-cairo.jks" >> secret.properties
+          echo "KEYSTORE_PASSWORD = $KEYSTORE_PASSWORD" >> secret.properties
+          echo "KEY_ALIAS = $KEY_ALIAS" >> secret.properties
+          echo "KEY_PASSWORD = $KEY_PASSWORD" >> secret.properties
+          echo "API_KEY = $MOVIES_API_KEY" >> secret.properties
 
       - name: Generate Signed APK
         env:
