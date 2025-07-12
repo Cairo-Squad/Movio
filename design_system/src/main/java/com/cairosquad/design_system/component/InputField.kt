@@ -129,6 +129,7 @@ fun InputField(
                         modifier = Modifier
                             .weight(1f)
                     ) {
+                        innerTextField()
                         if (value.isEmpty()) {
                             Text(
                                 text = placeholder,
@@ -136,8 +137,6 @@ fun InputField(
                                     color = Theme.color.surfaces.onSurfaceContainer
                                 )
                             )
-                        } else {
-                            innerTextField()
                         }
                     }
                     TextFieldIcon(
