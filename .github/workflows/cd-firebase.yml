@@ -42,18 +42,13 @@ jobs:
           MOVIES_API_KEY: ${{ secrets.MOVIES_API_KEY }}
         run: |
           echo "BASE_URL = \"https://api.themoviedb.org/3/\"" >> secret.properties
-          echo "KEYSTORE_FILE=movio-cairo.jks" >> secret.properties
+          echo "KEYSTORE_FILE = movio-cairo.jks" >> secret.properties
           echo "KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD" >> secret.properties
           echo "KEY_ALIAS=$KEY_ALIAS" >> secret.properties
           echo "KEY_PASSWORD=$KEY_PASSWORD" >> secret.properties
           echo "API_KEY=$MOVIES_API_KEY" >> secret.properties
 
       - name: Generate Signed APK
-        env:
-          KEYSTORE_FILE: movio-cairo.jks
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: ./gradlew assembleRelease
 
       - name: Extract Release Notes
