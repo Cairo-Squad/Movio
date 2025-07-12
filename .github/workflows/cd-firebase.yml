@@ -31,7 +31,7 @@ jobs:
           FIREBASE_KEYSTORE: ${{ secrets.FIREBASE_KEYSTORE }}
         run: |
           rm -f movio-cairo.jks secret.properties release_notes.txt
-          echo "$FIREBASE_KEYSTORE" | base64 -d >> movio-cairo.jks
+          echo "$FIREBASE_KEYSTORE" | base64 -di >> movio-cairo.jks
           ls -l movio-cairo.jks  # Verify the file was created
 
       - name: Create secret.properties
