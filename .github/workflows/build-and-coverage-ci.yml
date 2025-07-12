@@ -47,7 +47,11 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build Project
-        run: ./gradlew build -x koverVerify -x test
+        env:
+          MOVIES_API_KEY: ${{ secrets.MOVIES_API_KEY }}
+        run: |
+          echo "API_KEY=$MOVIES_API_KEY" >> secrets.properties
+          ./gradlew build -x koverVerify -x test
 
   test:
 
