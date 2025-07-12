@@ -65,9 +65,6 @@ android {
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.8"
-    }
     room {
         schemaDirectory("schemas")
     }
@@ -78,25 +75,24 @@ ksp {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.foundation.layout.android)
-    implementation(libs.androidx.foundation)
-    implementation(platform(libs.androidx.compose.bom))
+    testImplementation(libs.junit)
     implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.firebase.perf)
+    implementation(libs.androidx.core.ktx)
     implementation(libs.firebase.analytics)
+    implementation(libs.androidx.foundation)
+    implementation(libs.androidx.ui.graphics)
     implementation(libs.firebase.crashlytics)
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.perf)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
     debugImplementation(libs.androidx.ui.tooling)
     androidTestImplementation(libs.ui.test.junit4)
+    implementation(libs.androidx.activity.compose)
+    androidTestImplementation(libs.androidx.junit)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.lifecycle.runtime.ktx)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.androidx.foundation.layout.android)
 
     // koin
     implementation(libs.koin.androidx.compose)

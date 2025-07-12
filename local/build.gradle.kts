@@ -19,7 +19,6 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
-            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -36,26 +35,34 @@ android {
     room {
         schemaDirectory("schemas")
     }
+    packaging {
+        resources {
+            excludes += arrayOf(
+                "/META-INF/{AL2.0,LGPL2.1}",
+                "META-INF/LICENSE.md",
+                "META-INF/LICENSE",
+                "META-INF/NOTICE",
+                "META-INF/LICENSE-notice",
+                "META-INF/LICENSE-notice.md"
+            )
+        }
+    }
 }
 
 dependencies {
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-
-    implementation(project(":repository"))
 
     // Room
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
-    testImplementation("io.mockk:mockk:1.13.5")
-    testImplementation("com.google.truth:truth:1.1.5")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation(libs.mockk)
+    testImplementation(libs.truth)
+    testImplementation(libs.kotlinx.coroutines.test)
 
+    implementation(project(":repository"))
 }

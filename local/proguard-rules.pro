@@ -19,3 +19,42 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+##########################################
+# 🌟 AndroidX Core
+##########################################
+-keep class androidx.core.** { *; }
+-dontwarn androidx.core.**
+
+##########################################
+# 🌟 Room Database
+##########################################
+# Keep Room generated classes (DAOs, Database_Impl, etc.)
+-keep class androidx.room.** { *; }
+-dontwarn androidx.room.**
+
+# Keep @Dao, @Entity, @Database annotated classes
+-keep @androidx.room.* class * {*;}
+-keepclassmembers class * {
+    @androidx.room.* *;
+}
+
+# Keep Kotlin Metadata for Room's reflection
+-keep class kotlin.Metadata { *; }
+-keepclassmembers class ** {
+    @kotlin.Metadata *;
+}
+
+##########################################
+# 🌟 Multi-Module References
+##########################################
+-keep class com.cairosquad.repository.** { *; }
+-dontwarn com.cairosquad.repository.**
+
+##########################################
+# 🚫 Exclude Tests
+##########################################
+-dontwarn io.mockk.**
+-dontwarn com.google.common.truth.**
+-dontwarn org.junit.**
+
+-dontwarn java.lang.invoke.StringConcatFactory

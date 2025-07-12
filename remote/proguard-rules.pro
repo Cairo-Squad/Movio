@@ -20,44 +20,40 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 ##########################################
-# 🌟 Jetpack Compose
+# 🌟 Kotlinx Serialization
 ##########################################
-# Keep Compose compiler-generated classes
--keep class androidx.compose.** { *; }
--dontwarn androidx.compose.**
+# Preserve Serialization generated code
+-keep class kotlinx.serialization.** { *; }
+-dontwarn kotlinx.serialization.**
 
-# Keep Compose @Preview annotations (debug only)
--keep @androidx.compose.ui.tooling.preview.Preview class * {*;}
--keepclassmembers class * {
-    @androidx.compose.ui.tooling.preview.Preview *;
+-keep @kotlinx.serialization.Serializable class * {*;}
+-keepclassmembers class ** {
+    @kotlinx.serialization.Serializable *;
 }
 
-# Keep Compose parameter names for reflection
--keepattributes SourceFile,LineNumberTable,Signature,LocalVariableTable,LocalVariableTypeTable,RuntimeVisibleAnnotations,RuntimeVisibleParameterAnnotations
+##########################################
+# 🌟 AndroidX DataStore
+##########################################
+-keep class androidx.datastore.** { *; }
+-dontwarn androidx.datastore.**
 
 ##########################################
-# 🌟 AndroidX Navigation
+# 🌟 Ktor
 ##########################################
--keep class androidx.navigation.** { *; }
--dontwarn androidx.navigation.**
+# Keep Ktor client classes
+-keep class io.ktor.** { *; }
+-dontwarn io.ktor.**
+
+# Preserve HttpClient engines and serializers
+-keepclassmembers class * {
+    @io.ktor.client.* *;
+}
 
 ##########################################
-# 🌟 AndroidX Material3
+# 🌟 OkHttp Logging Interceptor
 ##########################################
--keep class androidx.compose.material3.** { *; }
--dontwarn androidx.compose.material3.**
-
-##########################################
-# 🌟 AndroidX ConstraintLayout Compose
-##########################################
--keep class androidx.constraintlayout.compose.** { *; }
--dontwarn androidx.constraintlayout.compose.**
-
-##########################################
-# 🌟 AndroidX Core
-##########################################
--keep class androidx.core.** { *; }
--dontwarn androidx.core.**
+-keep class okhttp3.** { *; }
+-dontwarn okhttp3.**
 
 ##########################################
 # 🌟 Kotlin Metadata
@@ -68,5 +64,17 @@
 }
 
 ##########################################
-# 🌟 Multi-Module Reference
-###########################
+# 🌟 Multi-Module References
+##########################################
+-keep class com.cairosquad.repository.** { *; }
+-dontwarn com.cairosquad.repository.**
+
+##########################################
+# 🚫 Exclude Tests
+##########################################
+-dontwarn org.junit.**
+-dontwarn com.google.common.truth.**
+-dontwarn org.koin.test.**
+-dontwarn io.ktor.client.mock.**
+
+-dontwarn java.lang.invoke.StringConcatFactory

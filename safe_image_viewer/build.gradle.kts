@@ -19,7 +19,6 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
-            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -64,14 +63,11 @@ dependencies {
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.mockk)
     testImplementation(libs.truth)
-    testImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.mockk)
     androidTestImplementation(libs.truth)
     testImplementation(libs.junit)
-    testImplementation(libs.junit.jupiter)
-    testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.junit.jupiter)
+    implementation(libs.coil.network.okhttp)
 }
 
 kover {
