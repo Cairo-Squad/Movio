@@ -69,7 +69,7 @@ jobs:
           echo "KEYSTORE_PASSWORD = $KEYSTORE_PASSWORD" >> secret.properties
           echo "KEY_ALIAS = $KEY_ALIAS" >> secret.properties
           echo "KEY_PASSWORD = $KEYSTORE_PASSWORD" >> secret.properties
-          echo "API_KEY = $MOVIES_API_KEY" >> secret.properties
+          echo "API_KEY = \"$MOVIES_API_KEY\"" >> secret.properties
 
           # Build signed release APK
           ./gradlew assembleRelease
