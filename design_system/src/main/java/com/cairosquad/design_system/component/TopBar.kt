@@ -1,6 +1,7 @@
 package com.cairosquad.design_system.component
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -13,6 +14,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
@@ -26,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,62 +44,74 @@ fun TopBar(
     onTabSelected: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(36.dp)
-            .horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.SpaceAround,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        tabs.forEachIndexed { index, title ->
-            val isSelected = selectedTabIndex == index
-            val textColor by animateColorAsState(
-                targetValue = if (isSelected) Theme.color.brand.onPrimaryContainer else Theme.color.surfaces.onSurfaceVariant,
-                animationSpec = tween(durationMillis = 300)
-            )
-            val textStyle = if (isSelected)
-                Theme.textStyle.title.mediumMedium16
-            else
-                Theme.textStyle.body.smallRegular16
-            var tabWidth by remember { mutableIntStateOf(0) }
+    val tabPositions = remember { mutableMapOf<Int, Pair<Int, Int>>() } // index -> (xPx, widthPx)
+    val indicatorOffsetX by animateDpAsState(
+        targetValue = with(LocalDensity.current) {
+            tabPositions[selectedTabIndex]?.first?.toDp() ?: 0.dp
+        },
+        animationSpec = tween(durationMillis = 200)
+    )
+    val indicatorWidth by animateDpAsState(
+        targetValue = with(LocalDensity.current) {
+            tabPositions[selectedTabIndex]?.second?.toDp() ?: 0.dp
+        },
+        animationSpec = tween(durationMillis = 200)
+    )
+    Box(modifier = modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(36.dp)
+                .horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            tabs.forEachIndexed { index, title ->
+                val isSelected = selectedTabIndex == index
+                val textColor by animateColorAsState(
+                    targetValue = if (isSelected)
+                        Theme.color.brand.onPrimaryContainer
+                    else
+                        Theme.color.surfaces.onSurfaceVariant,
+                    animationSpec = tween(300)
+                )
+                val textStyle = if (isSelected)
+                    Theme.textStyle.title.mediumMedium16
+                else
+                    Theme.textStyle.body.smallRegular16
 
-            val alpha by animateFloatAsState(
-                targetValue = if (isSelected) 1f else 0f,
-                animationSpec = tween(durationMillis = 300)
-            )
-
-            Column(
-                modifier = Modifier
-
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() },
-                        onClick = { onTabSelected(index) }
-                    ),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(7.5.dp)
-            ) {
-                Text(
+                Column(
                     modifier = Modifier
-                        .widthIn(min = 48.dp)
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) { onTabSelected(index) }
+                        .padding(horizontal = 12.dp)
                         .onGloballyPositioned { coordinates ->
-                            tabWidth = coordinates.size.width
+                            tabPositions[index] =
+                                coordinates.positionInParent().x.toInt() to coordinates.size.width
                         },
-                    text = title,
-                    color = textColor,
-                    textAlign = TextAlign.Center,
-                    style = textStyle,
-                )
-                Box(
-                    modifier = Modifier
-                        .height(1.dp)
-                        .width(with(LocalDensity.current) { tabWidth.toDp() })
-                        .alpha(alpha)
-                        .background(brush = Theme.color.gradiant.horizontalGradient)
-                )
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(7.5.dp)
+                ) {
+                    Text(
+                        text = title,
+                        color = textColor,
+                        textAlign = TextAlign.Center,
+                        style = textStyle,
+                    )
+                }
             }
         }
+
+        Box(
+            modifier = Modifier
+                .offset(x = indicatorOffsetX)
+                .height(1.dp)
+                .width(indicatorWidth)
+                .align(Alignment.BottomStart)
+                .background(brush = Theme.color.gradiant.horizontalGradient)
+        )
     }
 }
 
