@@ -57,11 +57,10 @@ jobs:
           FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
         run: |
           # Cleanup existing files
-          rm -f movio-cairo.jks secret.properties release_notes.txt
+          rm -f app/movio-cairo.jks secret.properties release_notes.txt
 
           # Decode keystore and verify
           echo "$FIREBASE_KEYSTORE" | base64 -d > app/movio-cairo.jks
-          ls -l movio-cairo.jks || { echo "Keystore creation failed"; exit 1; }
 
           # Create secret.properties with necessary properties
           echo "BASE_URL = \"https://api.themoviedb.org/3/\"" >> secret.properties
