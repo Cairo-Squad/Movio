@@ -51,7 +51,12 @@ jobs:
           MOVIES_API_KEY: ${{ secrets.MOVIES_API_KEY }}
         run: |
           rm -f movio-cairo.jks secret.properties release_notes.txt
+          echo "$FIREBASE_KEYSTORE" | base64 -d > movio-cairo.jks
           echo "BASE_URL = \"https://api.themoviedb.org/3/\"" >> secret.properties
+          echo "API_KEY=$MOVIES_API_KEY" >> secret.properties
+          echo "KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD" >> secret.properties
+          echo "KEY_ALIAS=$KEY_ALIAS" >> secret.properties
+          echo "KEY_PASSWORD=$KEY_PASSWORD" >> secret.properties
           echo "API_KEY=$MOVIES_API_KEY" >> secret.properties
           ./gradlew build -x koverVerify -x test
 

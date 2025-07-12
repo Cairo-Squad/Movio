@@ -1,40 +1,79 @@
-name: CD Pipeline
+name: Movio CD Pipeline
+
 on:
   push:
     branches:
       - develop
       - master
       - test/test-app-distribution
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '21'
+
       - name: Make gradlew executable
         run: chmod +x ./gradlew
-      - name: Create secrets.properties file
+
+      - name: Decode Keystore
+        env:
+          FIREBASE_KEYSTORE: ${{ secrets.FIREBASE_KEYSTORE }}
         run: |
-          echo "API_KEY=\"${{ secrets.MOVIES_API_KEY }}\"" > secret.properties
-      - name: Decode keystore
+          rm -f movio-cairo.jks secret.properties release_notes.txt
+          echo "$FIREBASE_KEYSTORE" | base64 -d > movio-cairo.jks
+          ls -l movio-cairo.jks
+
+      - name: Create secret.properties
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          MOVIES_API_KEY: ${{ secrets.MOVIES_API_KEY }}
         run: |
-          echo "${{ secrets.FIREBASE_KEYSTORE }}" | base64 --decode > app/keystore.jks
-      - name: Set environment variables for signing
-        run: |
-          echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> $GITHUB_ENV
-          echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> $GITHUB_ENV
-          echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> $GITHUB_ENV
-      - name: Build signed release APK
+          echo "BASE_URL = \"https://api.themoviedb.org/3/\"" >> secret.properties
+          echo "KEYSTORE_FILE=movio-cairo.jks" >> secret.properties
+          echo "KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD" >> secret.properties
+          echo "KEY_ALIAS=$KEY_ALIAS" >> secret.properties
+          echo "KEY_PASSWORD=$KEY_PASSWORD" >> secret.properties
+          echo "API_KEY=$MOVIES_API_KEY" >> secret.properties
+
+      - name: Generate Signed APK
+        env:
+          KEYSTORE_FILE: movio-cairo.jks
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: ./gradlew assembleRelease
+
+      - name: Extract Release Notes
+        id: release_notes
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B | sed 's/"/\\"/g' | tr -d '\n')
+          TRUNCATED_MSG="${COMMIT_MSG:0:500}"
+          echo "$TRUNCATED_MSG" > release_notes.txt
+          echo "notes=$TRUNCATED_MSG" >> $GITHUB_OUTPUT
+          echo "Release notes: $TRUNCATED_MSG"
+
       - name: Upload APK to Firebase App Distribution
+        env:
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+          FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
         run: |
           npm install -g firebase-tools
           firebase appdistribution:distribute \
             app/build/outputs/apk/release/app-release.apk \
-            --app ${{ secrets.FIREBASE_APP_ID }} \
-            --token ${{ secrets.FIREBASE_AUTH_TOKEN }}
+            --app "$FIREBASE_APP_ID" \
+            --token "$FIREBASE_AUTH_TOKEN" \
+            --groups "cairo_squad" \
+            --release-notes-file release_notes.txt

@@ -37,7 +37,7 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file(secrets.getProperty("KEYSTORE_FILE") ?: System.getenv("KEYSTORE_FILE") ?: "movio-cairo.jks")
+            storeFile = file(secrets.getProperty("KEYSTORE_FILE") ?: "")
             storePassword = secrets.getProperty("KEYSTORE_PASSWORD") ?: System.getenv("KEYSTORE_PASSWORD")
             keyAlias = secrets.getProperty("KEY_ALIAS") ?: System.getenv("KEY_ALIAS")
             keyPassword = secrets.getProperty("KEY_PASSWORD") ?: System.getenv("KEY_PASSWORD")
