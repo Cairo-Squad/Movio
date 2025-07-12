@@ -48,7 +48,7 @@ jobs:
 
       - name: Build Project
         env:
-          FIREBASE_KEYSTORE: ${{ secrets.FIREBASE_KEYSTORE }}
+          KEYSTORE: ${{ secrets.KEYSTORE }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
@@ -60,7 +60,7 @@ jobs:
           rm -f app/movio-cairo.jks secret.properties release_notes.txt
 
           # Decode keystore and verify
-          echo "$FIREBASE_KEYSTORE" | base64 -d > app/movio-cairo.jks
+          echo "$KEYSTORE" | base64 -d > app/movio-cairo.jks
 
           # Create secret.properties with necessary properties
           echo "BASE_URL = \"https://api.themoviedb.org/3/\"" >> secret.properties
@@ -115,7 +115,7 @@ jobs:
 
       - name: Run Tests + Generate Kover Report
         env:
-          FIREBASE_KEYSTORE: ${{ secrets.FIREBASE_KEYSTORE }}
+          KEYSTORE: ${{ secrets.KEYSTORE }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
@@ -127,11 +127,10 @@ jobs:
           rm -f app/movio-cairo.jks secret.properties release_notes.txt
 
           # Decode keystore and verify
-          echo "$FIREBASE_KEYSTORE" | base64 -d > app/movio-cairo.jks
+          echo "$KEYSTORE" | base64 -d > app/movio-cairo.jks
 
           # Create secret.properties with necessary properties
           echo "BASE_URL = \"https://api.themoviedb.org/3/\"" >> secret.properties
-          echo "KEYSTORE_FILE = movio-cairo.jks" >> secret.properties
           echo "KEYSTORE_PASSWORD = $KEYSTORE_PASSWORD" >> secret.properties
           echo "KEY_ALIAS = $KEY_ALIAS" >> secret.properties
           echo "KEY_PASSWORD = $KEYSTORE_PASSWORD" >> secret.properties

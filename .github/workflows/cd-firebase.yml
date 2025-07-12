@@ -27,7 +27,7 @@ jobs:
 
       - name: Decode Keystore and Create secret.properties
         env:
-          FIREBASE_KEYSTORE: ${{ secrets.FIREBASE_KEYSTORE }}
+          KEYSTORE: ${{ secrets.KEYSTORE }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
@@ -36,9 +36,8 @@ jobs:
           FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
         run: |
           rm -f app/movio-cairo.jks secret.properties release_notes.txt
-          echo "$FIREBASE_KEYSTORE" | base64 -d > app/movio-cairo.jks
+          echo "$KEYSTORE" | base64 -d > app/movio-cairo.jks
           echo "BASE_URL = \"https://api.themoviedb.org/3/\"" >> secret.properties
-          echo "KEYSTORE_FILE = movio-cairo.jks" >> secret.properties
           echo "KEYSTORE_PASSWORD = $KEYSTORE_PASSWORD" >> secret.properties
           echo "KEY_ALIAS = $KEY_ALIAS" >> secret.properties
           echo "KEY_PASSWORD = $KEY_PASSWORD" >> secret.properties
@@ -46,7 +45,7 @@ jobs:
 
       - name: Generate Signed APK
         env:
-          FIREBASE_KEYSTORE: ${{ secrets.FIREBASE_KEYSTORE }}
+          KEYSTORE: ${{ secrets.KEYSTORE }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
