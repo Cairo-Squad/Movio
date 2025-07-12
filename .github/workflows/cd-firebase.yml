@@ -5,7 +5,7 @@ on:
     branches:
       - develop
       - master
-      - test-app-distribution
+      - test/test-app-distribution
 
 jobs:
   deploy:
