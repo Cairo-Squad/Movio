@@ -53,6 +53,7 @@ jobs:
           rm -f movio-cairo.jks secret.properties release_notes.txt
           echo "$FIREBASE_KEYSTORE" | base64 -d > movio-cairo.jks
           echo "BASE_URL = \"https://api.themoviedb.org/3/\"" >> secret.properties
+          echo "KEYSTORE_FILE = movio-cairo.jks" >> secret.properties
           echo "API_KEY=$MOVIES_API_KEY" >> secret.properties
           echo "KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD" >> secret.properties
           echo "KEY_ALIAS=$KEY_ALIAS" >> secret.properties
