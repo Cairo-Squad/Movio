@@ -26,7 +26,32 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Generate APK
+      - name: Decode Keystore
+        env:
+          FIREBASE_KEYSTORE: ${{ secrets.FIREBASE_KEYSTORE }}
+        run: |
+          echo "$FIREBASE_KEYSTORE" | base64 -d > movio-cairo.jks
+          ls -l movio-cairo.jks  # Verify the file was created
+
+      - name: Create secrets.properties
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          MOVIES_API_KEY: ${{ secrets.MOVIES_API_KEY }}
+        run: |
+          echo "KEYSTORE_FILE=movio-cairo.jks" > secrets.properties
+          echo "KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD" >> secrets.properties
+          echo "KEY_ALIAS=$KEY_ALIAS" >> secrets.properties
+          echo "KEY_PASSWORD=$KEY_PASSWORD" >> secrets.properties
+          echo "API_KEY=$MOVIES_API_KEY" >> secrets.properties
+
+      - name: Generate Signed APK
+        env:
+          KEYSTORE_FILE: movio-cairo.jks
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: ./gradlew assembleRelease
 
       - name: Extract Release Notes
@@ -39,11 +64,14 @@ jobs:
           echo "Release notes: $TRUNCATED_MSG"
 
       - name: Upload APK to Firebase App Distribution
+        env:
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+          FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
         run: |
           npm install -g firebase-tools
           firebase appdistribution:distribute \
-            app/build/outputs/apk/release/app-release-unsigned.apk \
-            --app ${{ secrets.FIREBASE_APP_ID }} \
-            --token ${{ secrets.FIREBASE_AUTH_TOKEN }} \
+            app/build/outputs/apk/release/app-release.apk \
+            --app "$FIREBASE_APP_ID" \
+            --token "$FIREBASE_AUTH_TOKEN" \
             --groups "cairo_squad" \
             --release-notes-file release_notes.txt

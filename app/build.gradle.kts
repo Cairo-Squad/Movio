@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -25,6 +28,22 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    val secretsFile = file("${rootProject.projectDir}/secret.properties")
+    val secrets = Properties().apply {
+        if (secretsFile.exists()) {
+            load(FileInputStream(secretsFile))
+        }
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file(secrets.getProperty("KEYSTORE_FILE") ?: System.getenv("KEYSTORE_FILE") ?: "movio-cairo.jks")
+            storePassword = secrets.getProperty("KEYSTORE_PASSWORD") ?: System.getenv("KEYSTORE_PASSWORD")
+            keyAlias = secrets.getProperty("KEY_ALIAS") ?: System.getenv("KEY_ALIAS")
+            keyPassword = secrets.getProperty("KEY_PASSWORD") ?: System.getenv("KEY_PASSWORD")
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -32,6 +51,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
