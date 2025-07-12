@@ -30,7 +30,8 @@ jobs:
         env:
           FIREBASE_KEYSTORE: ${{ secrets.FIREBASE_KEYSTORE }}
         run: |
-          echo "$FIREBASE_KEYSTORE" | base64 -d > movio-cairo.jks
+          rm -f movio-cairo.jks secrets.properties release_notes.txt
+          echo "$FIREBASE_KEYSTORE" | base64 -d >> movio-cairo.jks
           ls -l movio-cairo.jks  # Verify the file was created
 
       - name: Create secrets.properties
@@ -40,6 +41,7 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           MOVIES_API_KEY: ${{ secrets.MOVIES_API_KEY }}
         run: |
+          echo "BASE_URL = \"https://api.themoviedb.org/3/\"" >> secrets.properties
           echo "KEYSTORE_FILE=movio-cairo.jks" >> secrets.properties
           echo "KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD" >> secrets.properties
           echo "KEY_ALIAS=$KEY_ALIAS" >> secrets.properties
