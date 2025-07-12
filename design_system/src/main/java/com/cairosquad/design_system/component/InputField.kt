@@ -68,7 +68,7 @@ fun InputField(
         mutableStateOf(
             TextFieldValue(
                 text = value,
-                selection = TextRange(value.length) // Set cursor at end
+                selection = TextRange(value.length)
             )
         )
     }
