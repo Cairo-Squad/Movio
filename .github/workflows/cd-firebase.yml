@@ -37,7 +37,7 @@ jobs:
           FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
         run: |
           rm -f movio-cairo.jks secret.properties release_notes.txt
-          echo "$FIREBASE_KEYSTORE" | base64 -d > movio-cairo.jks
+          echo "$FIREBASE_KEYSTORE" | base64 -d > app/movio-cairo.jks
           ls -l movio-cairo.jks || { echo "Keystore creation failed"; exit 1; }
           echo "BASE_URL = \"https://api.themoviedb.org/3/\"" >> secret.properties
           echo "KEYSTORE_FILE = movio-cairo.jks" >> secret.properties
