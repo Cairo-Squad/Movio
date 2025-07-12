@@ -40,7 +40,7 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           MOVIES_API_KEY: ${{ secrets.MOVIES_API_KEY }}
         run: |
-          echo "KEYSTORE_FILE=movio-cairo.jks" > secrets.properties
+          echo "KEYSTORE_FILE=movio-cairo.jks" >> secrets.properties
           echo "KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD" >> secrets.properties
           echo "KEY_ALIAS=$KEY_ALIAS" >> secrets.properties
           echo "KEY_PASSWORD=$KEY_PASSWORD" >> secrets.properties
