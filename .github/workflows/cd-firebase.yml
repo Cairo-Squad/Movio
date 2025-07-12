@@ -44,6 +44,5 @@ jobs:
             --app ${{ secrets.FIREBASE_APP_ID }} \
             --token ${{ secrets.FIREBASE_AUTH_TOKEN }} \
             --groups "cairo_squad"
-
       - name: Clean up
         run: rm -f app/keystore.jks
