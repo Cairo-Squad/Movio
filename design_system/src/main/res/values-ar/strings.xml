@@ -30,13 +30,13 @@
     <string name="loading_animation">صورة التحميل المتحركة</string>
     <string name="start_now">ابدأ الأن</string>
     <string name="movio">موڤيو</string>
-    <string name="error_loading_image">خطئ في تحميل الصورة</string>
-    <string name="recent_item_icon">ايكونة العنصر الحديث</string>
+    <string name="error_loading_image">خطأ في تحميل الصورة</string>
+    <string name="recent_item_icon">ايقونة العنصر الحديث</string>
     <string name="clear_search_result">مسح نتائج البحث</string>
     <string name="no_internet_connection">لا يوجد اتصال بالأنترنت</string>
-    <string name="an_error_occured_while_getting_results">هناك خطئ حدث عند جلب نتائج البحث</string>
-    <string name="an_unexpected_error_occurred">خطئ غير متوقع حدث</string>
-    <string name="an_unexpected_error_occurred_description">هناك خطئ حدث في تنفيث طلبك. قم بتفقد اتصالك وحاول مرة اخرى</string>
+    <string name="an_error_occured_while_getting_results">هناك خطأ حدث عند جلب نتائج البحث</string>
+    <string name="an_unexpected_error_occurred">خطأ غير متوقع حدث</string>
+    <string name="an_unexpected_error_occurred_description">هناك خطأ حدث في تنفيث طلبك. قم بتفقد اتصالك وحاول مرة اخرى</string>
 
     <string name="for_you">من أجلك</string>
     <string name="see_all">عرض الكل</string>
