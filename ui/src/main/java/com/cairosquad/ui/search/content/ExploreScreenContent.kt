@@ -3,7 +3,6 @@ package com.cairosquad.ui.search.content
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -33,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.component.InputField
 import com.cairosquad.design_system.component.MovieCard
-import com.cairosquad.design_system.component.MovieCardSize
 import com.cairosquad.design_system.component.SectionHeader
 import com.cairosquad.design_system.modifier.dropShadow
 import com.cairosquad.design_system.theme.Theme
@@ -99,13 +97,12 @@ fun ExploreScreenContent(
             ) {
                 items(state.forYou) { movie ->
                     MovieCard(
-                        modifier = Modifier
-                            .clickable { }
-                            .width(124.dp),
+                        modifier = Modifier.width(124.dp),
                         title = movie.title,
                         vote = movie.rating,
                         imgUrl = movie.posterPath,
-                        cardSize = MovieCardSize.Medium
+                        width = 124.dp,
+                        aspectRatio = 0.775f
                     )
                 }
             }
@@ -113,7 +110,8 @@ fun ExploreScreenContent(
         }
         item {
             SectionHeader(
-                title = stringResource(R.string.for_you), actionText = stringResource(R.string.see_all),
+                title = stringResource(R.string.explore_more),
+                actionText = stringResource(R.string.see_all),
                 actionIcon = ImageVector.vectorResource(R.drawable.arrow),
                 onActionClick = {}
             )
@@ -133,12 +131,11 @@ fun ExploreScreenContent(
                 items(state.exploreMore) { movie ->
 
                     MovieCard(
-                        modifier = Modifier
-                            .clickable { },
                         title = movie.title,
                         vote = movie.rating,
                         imgUrl = movie.posterPath,
-                        cardSize = MovieCardSize.Large
+                        width = null,
+                        aspectRatio = 0.877f
                     )
                 }
             }

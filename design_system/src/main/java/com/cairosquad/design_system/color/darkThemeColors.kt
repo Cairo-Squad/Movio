@@ -34,7 +34,8 @@ val darkThemeColors = MovioColors(
         onSuccess = Color(0xFFF6FFF6),
         successContainer = Color(0xFFE7FFE6),
         onSuccessContainer = Color(0xFF136912),
-        dropShadow = Color(0x0FFFFFFF)
+        dropShadow = Color(0x0FFFFFFF),
+        defaultImageBackground = Color(0xFF252E3C)
     ),
     Gradiant(
         Brush.horizontalGradient(
