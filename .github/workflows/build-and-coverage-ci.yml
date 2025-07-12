@@ -53,19 +53,27 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           MOVIES_API_KEY: ${{ secrets.MOVIES_API_KEY }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+          FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
         run: |
+          # Cleanup existing files
           rm -f movio-cairo.jks secrets.properties release_notes.txt
 
+          # Decode keystore and verify
           echo "$FIREBASE_KEYSTORE" | base64 -d > movio-cairo.jks
+          ls -l movio-cairo.jks || { echo "Keystore creation failed"; exit 1; }
 
+          # Create secrets.properties with necessary properties
           echo "BASE_URL=\"https://api.themoviedb.org/3/\"" >> secrets.properties
           echo "KEYSTORE_FILE=movio-cairo.jks" >> secrets.properties
           echo "KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD" >> secrets.properties
           echo "KEY_ALIAS=$KEY_ALIAS" >> secrets.properties
-          echo "KEY_PASSWORD=$KEY_PASSWORD" >> secrets.properties
+          echo "KEY_PASSWORD=$KEYSTORE_PASSWORD" >> secrets.properties
           echo "API_KEY=$MOVIES_API_KEY" >> secrets.properties
+          cat secrets.properties  # Verify contents
 
-          ./gradlew build -x koverVerify -x test
+          # Build signed release APK
+          ./gradlew assembleRelease
 
   test:
 

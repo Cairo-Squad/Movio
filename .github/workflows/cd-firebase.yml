@@ -33,21 +33,32 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           MOVIES_API_KEY: ${{ secrets.MOVIES_API_KEY }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+          FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
         run: |
           rm -f movio-cairo.jks secrets.properties release_notes.txt
-
           echo "$FIREBASE_KEYSTORE" | base64 -d > movio-cairo.jks
-          ls -l movio-cairo.jks
-
+          ls -l movio-cairo.jks || { echo "Keystore creation failed"; exit 1; }
           echo "BASE_URL=\"https://api.themoviedb.org/3/\"" >> secrets.properties
           echo "KEYSTORE_FILE=movio-cairo.jks" >> secrets.properties
           echo "KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD" >> secrets.properties
           echo "KEY_ALIAS=$KEY_ALIAS" >> secrets.properties
           echo "KEY_PASSWORD=$KEY_PASSWORD" >> secrets.properties
           echo "API_KEY=$MOVIES_API_KEY" >> secrets.properties
+          cat secrets.properties
 
       - name: Generate Signed APK
-        run: ./gradlew assembleRelease
+        env:
+          FIREBASE_KEYSTORE: ${{ secrets.FIREBASE_KEYSTORE }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          MOVIES_API_KEY: ${{ secrets.MOVIES_API_KEY }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+          FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
+        run: |
+          ./gradlew assembleRelease
+          ls -l app/build/outputs/apk/release/app-release.apk || { echo "APK not generated"; exit 1; }
 
       - name: Extract Release Notes
         id: release_notes
