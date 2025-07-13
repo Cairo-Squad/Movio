@@ -9,7 +9,7 @@ class LocalRecentSearchDataSourceImpl(
 ) : LocalRecentSearchDataSource {
 
     override suspend fun getByQuery(query: String): List<String> {
-        return dao.getAll(query).map { it.query }
+        return dao.getAllQueries(query).map { it.query }
     }
 
     override suspend fun clearAll() {
@@ -25,7 +25,7 @@ class LocalRecentSearchDataSourceImpl(
     }
 
     override suspend fun getAll(): List<String> {
-        return dao.getAll().map { it.query }
+        return dao.getAllQueries().map { it.query }
     }
 
 }
