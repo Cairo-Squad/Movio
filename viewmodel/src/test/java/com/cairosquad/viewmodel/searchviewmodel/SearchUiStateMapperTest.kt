@@ -4,66 +4,69 @@ import com.cairosquad.entity.*
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
-class SearchUiStateMapperTest {
+class UiStateMapperTest {
 
     @Test
-    fun `Movie maps to MovieUiState correctly`() {
-        val movie = Movie(
-            id = 101L,
-            title = "Inception",
-            rating = 8.0f,
-            posterPath = "/inception.jpg"
-        )
-
+    fun `Movie maps to MovieScreenState correctly`() {
         val uiState = movie.toUiState()
 
         assertThat(uiState).isEqualTo(
-            SearchUiState.MovieUiState(
-                id = 101L,
-                title = "Inception",
-                rating = 4.0f,
-                posterPath = "/inception.jpg"
+            SearchScreenState.MovieScreenState(
+                id = movie.id,
+                title = movie.title,
+                rating = movie.rating / 2,
+                posterPath = movie.posterPath
             )
         )
     }
 
     @Test
-    fun `Artist maps to ArtistUiState correctly`() {
-        val artist = Artist(
-            id = 202L,
-            name = "Emma Watson",
-            photoPath = "/emma.jpg"
-        )
-
+    fun `Artist maps to ArtistScreenState correctly`() {
         val uiState = artist.toUiState()
 
         assertThat(uiState).isEqualTo(
-            SearchUiState.ArtistUiState(
-                id = 202L,
-                name = "Emma Watson",
-                photoPath = "/emma.jpg"
+            SearchScreenState.ArtistScreenState(
+                id = artist.id,
+                name = artist.name,
+                photoPath = artist.photoPath
             )
         )
     }
 
     @Test
-    fun `Series maps to SeriesUiState correctly`() {
-        val series = Series(
-            id = 303L,
-            title = "Breaking Bad",
-            rating = 9.0f,
-            posterPath = "/bb.jpg"
-        )
-
+    fun `Series maps to SeriesScreenState correctly`() {
         val uiState = series.toUiState()
 
         assertThat(uiState).isEqualTo(
-            SearchUiState.SeriesUiState(
-                id = 303L,
-                title = "Breaking Bad",
-                rating = 4.5f,
-                posterPath = "/bb.jpg"
+            SearchScreenState.SeriesScreenState(
+                id = series.id,
+                title = series.title,
+                rating = series.rating / 2,
+                posterPath = series.posterPath
             )
         )
     }
+
+    private companion object {
+        val movie = Movie(
+            id = 101L,
+            title = "Inception",
+            posterPath = "/inc.jpg",
+            rating = 8.0f
+        )
+
+        val series = Series(
+            id = 202L,
+            title = "Breaking Bad",
+            posterPath = "/bb.jpg",
+            rating = 9.0f
+        )
+
+        val artist = Artist(
+            id = 303L,
+            name = "Emma Watson",
+            photoPath = "/emma.jpg"
+        )
+    }
 }
+
