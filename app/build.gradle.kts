@@ -58,7 +58,6 @@ android {
             }
         }
         debug {
-            // Use Android Studio’s default debug.keystore
             isMinifyEnabled = false
             isShrinkResources = false
             ndk {
@@ -67,7 +66,7 @@ android {
                     "arm64-v8a",
                     "x86",
                     "x86_64"
-                ) // emulator friendly
+                )
             }
         }
     }
