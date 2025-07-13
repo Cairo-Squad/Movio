@@ -74,7 +74,7 @@ jobs:
           echo "API_KEY = \"$MOVIES_API_KEY\"" >> secret.properties
 
           # Build signed release APK
-         ./gradlew assembleRelease --build-cache
+          ./gradlew assembleRelease  --build-cache
 
   test:
 
@@ -140,7 +140,7 @@ jobs:
           echo "API_KEY = \"$MOVIES_API_KEY\"" >> secret.properties
 
           # Build signed release APK
-          ./gradlew test koverHtmlReport --build-cache
+          ./gradlew test koverHtmlReport
 
       - name: Enforce 80% Coverage
         run: ./gradlew koverVerify
