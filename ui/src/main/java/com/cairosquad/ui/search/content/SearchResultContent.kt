@@ -183,12 +183,16 @@ private fun MoviesTabContent(
         enter = fadeIn(),
         exit = fadeOut()
     ) {
-        StateMessage(
-            modifier = modifier,
-            imageDrawable = R.drawable.no_result,
-            titleId = R.string.no_results_found,
-            descriptionId = R.string.no_results_found_description
-        )
+        Box(
+            modifier = modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            StateMessage(
+                imageDrawable = R.drawable.no_result,
+                titleId = R.string.no_results_found,
+                descriptionId = R.string.no_results_found_description
+            )
+        }
     }
 
     AnimatedVisibility(
@@ -225,12 +229,16 @@ private fun SeriesTabContent(
         enter = fadeIn(),
         exit = fadeOut()
     ) {
-        StateMessage(
-            modifier = modifier,
-            imageDrawable = R.drawable.no_result,
-            titleId = R.string.no_results_found,
-            descriptionId = R.string.no_results_found_description
-        )
+        Box(
+            modifier = modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            StateMessage(
+                imageDrawable = R.drawable.no_result,
+                titleId = R.string.no_results_found,
+                descriptionId = R.string.no_results_found_description
+            )
+        }
     }
 
     AnimatedVisibility(
@@ -267,12 +275,16 @@ private fun ArtistsTabContent(
         enter = fadeIn(),
         exit = fadeOut()
     ) {
-        StateMessage(
-            modifier = modifier,
-            imageDrawable = R.drawable.no_result,
-            titleId = R.string.no_results_found,
-            descriptionId = R.string.no_results_found_description
-        )
+        Box(
+            modifier = modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            StateMessage(
+                imageDrawable = R.drawable.no_result,
+                titleId = R.string.no_results_found,
+                descriptionId = R.string.no_results_found_description
+            )
+        }
     }
 
     AnimatedVisibility(
@@ -295,6 +307,7 @@ private fun ArtistsTabContent(
         }
     }
 }
+
 
 @Composable
 fun SearchResultText(
