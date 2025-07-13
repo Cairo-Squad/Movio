@@ -9,7 +9,7 @@ import androidx.compose.ui.platform.LocalContext
 import com.cairosquad.ui.search.content.SearchScreenContent
 import com.cairosquad.ui.utils.ObserveAsEvent
 import com.cairosquad.ui.utils.errorStatusToMessageResource
-import com.cairosquad.viewmodel.search.SearchUiEvent
+import com.cairosquad.viewmodel.search.SearchEffect
 import com.cairosquad.viewmodel.search.SearchViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -22,12 +22,12 @@ fun SearchScreen(
 
     val state by viewModel.screenState.collectAsState()
 
-    ObserveAsEvent(viewModel.uiEvent) { event ->
+    ObserveAsEvent(viewModel.effect) { event ->
         when (event) {
-            is SearchUiEvent.ErrorHappened -> {
+            is SearchEffect.ErrorHappened -> {
                 Toast.makeText(
                     context,
-                    context.getString(errorStatusToMessageResource(event.errorStatus)),
+                    context.getString(errorStatusToMessageResource(event.message)),
                     Toast.LENGTH_LONG
                 ).show()
             }
