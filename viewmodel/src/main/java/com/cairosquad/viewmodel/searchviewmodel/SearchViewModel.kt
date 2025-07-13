@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.searchviewmodel
 
+import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.search.usecase.ClearRecentSearchUseCase
 import com.cairosquad.domain.search.usecase.GetExploreMoreUseCase
 import com.cairosquad.domain.search.usecase.GetForYouUseCase
@@ -9,6 +10,7 @@ import com.cairosquad.viewmodel.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.IOException
 
 class SearchViewModel(
@@ -207,6 +209,44 @@ class SearchViewModel(
             it.copy(
                 screenStatus = SearchUiState.ScreenStatus.SEARCH,
             )
+        }
+    }
+
+    override fun onRefresh() {
+        viewModelScope.launch {
+            updateState {
+                it.copy(isRefreshing = true)
+            }
+            delay(300L)
+            when (uiState.value.screenStatus) {
+                SearchUiState.ScreenStatus.EXPLORE -> {
+                    updateState {
+                        it.copy(
+                            forYou = emptyList(),
+                            exploreMore = emptyList(),
+                            screenStatus = SearchUiState.ScreenStatus.LOADING
+                        )
+                    }
+                    loadDiscoverMovies()
+                }
+
+                SearchUiState.ScreenStatus.SEARCH -> updateState {
+                    it.copy(
+                        query = ""
+                    )
+                }
+
+                SearchUiState.ScreenStatus.RESULT -> onSearch(uiState.value.query)
+                SearchUiState.ScreenStatus.LOADING -> {}
+                SearchUiState.ScreenStatus.FAILED -> updateState {
+                    it.copy(
+                        screenStatus = SearchUiState.ScreenStatus.EXPLORE,
+                    )
+                }
+            }
+            updateState {
+                it.copy(isRefreshing = false)
+            }
         }
     }
 
