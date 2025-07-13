@@ -24,7 +24,6 @@ import java.io.IOException
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchViewModelTest {
 
-
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private lateinit var searchUseCase: SearchUseCase
@@ -227,6 +226,4 @@ class SearchViewModelTest {
         assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.SEARCH)
         assertThat(viewModel.uiState.value.recentSearch).isEqualTo(recent)
     }
-
-
 }
