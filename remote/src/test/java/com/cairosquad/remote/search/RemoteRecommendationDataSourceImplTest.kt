@@ -100,11 +100,14 @@ class RemoteRecommendationDataSourceImplTest {
     }
 
 
-
     @Test
-    fun `getForYouMovies returns list of movies on success`() = runTest {
+    fun `should return list of Personalized movies when getPersonalizedMovies is successful`() = runTest {
+        // Given
+
+        // When
         val movies = remoteDataSource.getForYouMovies()
 
+        // Then
         assertThat(movies).isNotEmpty()
         assertThat(movies.size).isEqualTo(2)
         assertThat(movies[0].id).isEqualTo(1)
@@ -112,7 +115,8 @@ class RemoteRecommendationDataSourceImplTest {
     }
 
     @Test
-    fun `getForYouMovies returns empty list on empty results`() = runTest {
+    fun `should return empty list when getPersonalizedMovies returns empty results`() = runTest {
+        // Given
         mockEngine = MockEngine { request ->
             when (request.url.encodedPath) {
                 "/3/movie/top_rated" -> {
@@ -138,12 +142,16 @@ class RemoteRecommendationDataSourceImplTest {
         }
         remoteDataSource = RemoteRecommendationDataSourceImpl(httpClient)
 
+        // When
         val movies = remoteDataSource.getForYouMovies()
+
+        // Then
         assertThat(movies).isEmpty()
     }
 
     @Test
-    fun `getForYouMovies filters out null movies or movies with null ID`() = runTest {
+    fun `should filter out null or invalid movies when getPersonalizedMovies is called`() = runTest {
+        // Given
         mockEngine = MockEngine { request ->
             when (request.url.encodedPath) {
                 "/3/movie/top_rated" -> {
@@ -183,16 +191,20 @@ class RemoteRecommendationDataSourceImplTest {
         }
         remoteDataSource = RemoteRecommendationDataSourceImpl(httpClient)
 
+        // When
         val movies = remoteDataSource.getForYouMovies()
+
+        // Then
         assertThat(movies).hasSize(1)
         assertThat(movies[0].id).isEqualTo(10)
     }
 
     @Test
-    fun `getForYouMovies throws exception on API error`() = runTest {
+    fun `should throw exception when getPersonalizedMovies API returns error`() = runTest {
+        // Given
         mockEngine = MockEngine { request ->
             when (request.url.encodedPath) {
-                "/3/movie/top_rated"-> {
+                "/3/movie/top_rated" -> {
                     respond(
                         content = "{}",
                         status = HttpStatusCode.InternalServerError,
@@ -208,20 +220,26 @@ class RemoteRecommendationDataSourceImplTest {
         }
         remoteDataSource = RemoteRecommendationDataSourceImpl(httpClient)
 
+        // When
         var thrownException: Throwable? = null
         try {
             remoteDataSource.getForYouMovies()
         } catch (e: Exception) {
             thrownException = e
         }
+
+        // Then
         assertThat(thrownException).isNotNull()
     }
 
-
     @Test
-    fun `getExploreMoreMovies returns list of movies on success`() = runTest {
+    fun `should return list of movies when getSuggestedMovies is successful`() = runTest {
+        // Given
+
+        // When
         val movies = remoteDataSource.getExploreMoreMovies()
 
+        // Then
         assertThat(movies).isNotEmpty()
         assertThat(movies.size).isEqualTo(2)
         assertThat(movies[0].id).isEqualTo(3)
@@ -229,7 +247,8 @@ class RemoteRecommendationDataSourceImplTest {
     }
 
     @Test
-    fun `getExploreMoreMovies returns empty list on empty results`() = runTest {
+    fun `should return empty list when getSuggestedMovies returns empty results`() = runTest {
+        // Given
         mockEngine = MockEngine { request ->
             when (request.url.encodedPath) {
                 "/3/movie/now_playing" -> {
@@ -255,8 +274,12 @@ class RemoteRecommendationDataSourceImplTest {
         }
         remoteDataSource = RemoteRecommendationDataSourceImpl(httpClient)
 
+        // When
         val movies = remoteDataSource.getExploreMoreMovies()
+
+        // Then
         assertThat(movies).isEmpty()
     }
+
 
 }

@@ -31,67 +31,80 @@ class SearchCacheDataSourceImplTest {
     }
 
     @Test
-    fun `getCachedMovies should return mapped results`() = runTest {
+    fun `should return mapped movie list when getCachedMovies is called`() = runTest {
+        // Given
         val query = "batman"
         val entity = MovieCacheEntity(0, query, 0, "title", "poster", 8.5)
         coEvery { cacheDao.getCachedMovies(query) } returns listOf(entity)
 
+        // When
         val result = dataSource.getCachedMovies(query)
 
+        // Then
         coVerify { cacheDao.deleteExpiredMoviesCache(any()) }
         assertThat(result.first().title).isEqualTo("title")
     }
 
     @Test
-    fun `cacheMovies should map and insert to DAO`() = runTest {
+    fun `should insert mapped movie entities into DAO when cacheMovies is called`() = runTest {
+        // Given
         val query = "batman"
         val dto = MovieCacheDto(
             1, "poster", 7.5, posterPath = null,
             query = "batman",
             timestamp = Instant.now().toEpochMilli()
         )
-
         coEvery { cacheDao.cacheMovies(any()) } just Runs
 
+        // When
         dataSource.cacheMovies(query, listOf(dto))
 
+        // Then
         coVerify { cacheDao.cacheMovies(match { it.first().title == "poster" }) }
     }
 
     @Test
-    fun `getCachedSeries should return mapped results`() = runTest {
+    fun `should return mapped series list when getCachedSeries is called`() = runTest {
+        // Given
         val query = "friends"
         val entity = SeriesCacheEntity(0, query, 0, "poster", "Friends", 9.0)
         coEvery { cacheDao.getCachedSeries(query) } returns listOf(entity)
 
+        // When
         val result = dataSource.getCachedSeries(query)
 
+        // Then
         coVerify { cacheDao.deleteExpiredSeriesCache(any()) }
         assertThat(result.first().name).isEqualTo("Friends")
     }
 
     @Test
-    fun `cacheSeries should map and insert to DAO`() = runTest {
+    fun `should insert mapped series entities into DAO when cacheSeries is called`() = runTest {
+        // Given
         val query = "friends"
         val dto = SeriesCacheDto(1, "Friends", posterPath = null,
             query = "batman",
             timestamp = Instant.now().toEpochMilli())
-
         coEvery { cacheDao.cacheSeries(any()) } just Runs
 
+        // When
         dataSource.cacheSeries(query, listOf(dto))
 
+        // Then
         coVerify { cacheDao.cacheSeries(match { it.first().name == "Friends" }) }
     }
 
     @Test
-    fun `getCachedArtist should return mapped results`() = runTest {
+    fun `should return mapped artist list when getCachedArtist is called`() = runTest {
+        // Given
         val query = "emma"
         val entity = ArtistCacheEntity(0, query, 0, "Emma", "photo.jpg")
         coEvery { cacheDao.getCachedArtist(query) } returns listOf(entity)
 
+        // When
         val result = dataSource.getCachedArtist(query)
 
+        // Then
         coVerify { cacheDao.deleteExpiredArtistCache(any()) }
         assertThat(result.first().name).isEqualTo("Emma")
     }

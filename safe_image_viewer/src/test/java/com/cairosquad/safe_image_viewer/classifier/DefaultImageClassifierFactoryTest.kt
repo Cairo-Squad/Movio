@@ -18,7 +18,7 @@ class DefaultImageClassifierFactoryTest {
     }
 
     @Test
-    fun `create should return ImageClassifier from buffer and options`() {
+    fun `should return ImageClassifier when created from buffer and options`() {
         // given
         val buffer = mockk<ByteBuffer>()
         val options = mockk<ImageClassifier.ImageClassifierOptions>()

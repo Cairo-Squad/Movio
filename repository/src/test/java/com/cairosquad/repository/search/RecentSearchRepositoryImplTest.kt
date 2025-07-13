@@ -20,70 +20,71 @@ class RecentSearchRepositoryImplTest {
     }
 
     @Test
-    fun `getAll should return all queries from local data source`() = runTest {
-        //Given
+    fun `should return all queries when getAll is called`() = runTest {
+        // Given
         val expectedQueries = listOf("query1", "query2", "query3")
         coEvery { localDataSource.getAll() } returns expectedQueries
 
-        //When
+        // When
         val result = repository.getAll()
 
-        //Then
+        // Then
         Assert.assertEquals(expectedQueries, result)
         coVerify(exactly = 1) { localDataSource.getAll() }
     }
 
     @Test
-    fun `getByQuery when query is blank should return all queries`() = runTest {
+    fun `should return all queries when getByQuery is called with blank query`() = runTest {
         // Given
         val expectedQueries = listOf("allQuery1", "allQuery2")
         val blankQuery = ""
         coEvery { localDataSource.getAll() } returns expectedQueries
-        //When
+
+        // When
         val result = repository.getByQuery(blankQuery)
 
-        //Then
+        // Then
         Assert.assertEquals(expectedQueries, result)
         coVerify(exactly = 1) { localDataSource.getAll() }
-
         coVerify(exactly = 0) { localDataSource.getByQuery(any()) }
     }
 
     @Test
-    fun `getByQuery when query is not blank should return filtered queries`() = runTest {
-        //Given
-        val expectedFilteredQueries = listOf("filteredQuery1", "filteredQuery2")
-        val specificQuery = "search term"
-        coEvery { localDataSource.getByQuery(specificQuery) } returns expectedFilteredQueries
+    fun `should return filtered queries when getByQuery is called with non-blank query`() =
+        runTest {
+            // Given
+            val expectedFilteredQueries = listOf("filteredQuery1", "filteredQuery2")
+            val specificQuery = "search term"
+            coEvery { localDataSource.getByQuery(specificQuery) } returns expectedFilteredQueries
 
-        // When
-        val result = repository.getByQuery(specificQuery)
+            // When
+            val result = repository.getByQuery(specificQuery)
 
-        // Then
-        Assert.assertEquals(expectedFilteredQueries, result)
-        coVerify(exactly = 1) { localDataSource.getByQuery(specificQuery) }
-        coVerify(exactly = 0) { localDataSource.getAll() }
-    }
+            // Then
+            Assert.assertEquals(expectedFilteredQueries, result)
+            coVerify(exactly = 1) { localDataSource.getByQuery(specificQuery) }
+            coVerify(exactly = 0) { localDataSource.getAll() }
+        }
 
     @Test
-    fun `clearAll should call clearAll on local data source`() = runTest {
+    fun `should clear all queries when clearAll is called`() = runTest {
         // Given
         coEvery { localDataSource.clearAll() } returns Unit
 
         // When
         repository.clearAll()
 
-        //Then
+        // Then
         coVerify(exactly = 1) { localDataSource.clearAll() }
     }
 
     @Test
-    fun `removeQuery should call removeQuery on local data source`() = runTest {
+    fun `should remove specific query when removeQuery is called`() = runTest {
         // Given
         val queryToRemove = "old query"
         coEvery { localDataSource.removeQuery(queryToRemove) } returns Unit
 
-        //When
+        // When
         repository.removeQuery(queryToRemove)
 
         // Then
@@ -91,15 +92,16 @@ class RecentSearchRepositoryImplTest {
     }
 
     @Test
-    fun `addQuery should call addQuery on local data source`() = runTest {
-        //Given
+    fun `should add query when addQuery is called`() = runTest {
+        // Given
         val queryToAdd = "new query"
         coEvery { localDataSource.addQuery(queryToAdd) } returns Unit
 
-        //When
+        // When
         repository.addQuery(queryToAdd)
 
-        //Then
+        // Then
         coVerify(exactly = 1) { localDataSource.addQuery(queryToAdd) }
     }
+
 }

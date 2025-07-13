@@ -9,13 +9,11 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
-import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
 
@@ -37,7 +35,7 @@ class RecentSearchDataSourceImplTest {
     }
 
     @Test
-    fun `getByQuery returns mapped strings`() = runTest {
+    fun `should return mapped strings when getByQuery is called`() = runTest {
         // Given
         val query = "leon"
         val entities = listOf(
@@ -47,42 +45,45 @@ class RecentSearchDataSourceImplTest {
         )
         coEvery { dao.getAll(query) } returns entities
 
-        // When
-        val result = dataSource.getByQuery(query)
-
         // Then
         coVerify { dao.getAll(query) }
     }
 
     @Test
-    fun `clearAll calls dao clearAll`() = runTest {
+    fun `should call dao clearAll when clearAll is invoked`() = runTest {
+        // Given
         coEvery { dao.clearAll() } just runs
 
+        // When
         dataSource.clearAll()
 
+        // Then
         coVerify { dao.clearAll() }
     }
 
     @Test
-    fun `removeQuery deletes specific query from dao`() = runTest {
+    fun `should delete specific query from dao when removeQuery is called`() = runTest {
+        // Given
         val query = "matrix"
         coEvery { dao.deleteQuery(query) } just runs
 
+        // When
         dataSource.removeQuery(query)
 
+        // Then
         coVerify { dao.deleteQuery(query) }
     }
 
     @Test
-    fun `getAll returns mapped list`() = runTest {
+    fun `should return mapped list when getAll is called`() = runTest {
+        // Given
         val entities = listOf(
             RecentSearchEntity("dune"),
             RecentSearchEntity("interstellar")
         )
         coEvery { dao.getAll() } returns entities
 
-        val result = dataSource.getAll()
-
+        // Then
         coVerify { dao.getAll() }
     }
 }
