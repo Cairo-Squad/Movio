@@ -5,6 +5,7 @@ on:
     branches:
       - develop
       - master
+      - refactor/app-not-distributed-to-firebase
 
 jobs:
   deploy:
@@ -43,7 +44,7 @@ jobs:
           echo "KEY_PASSWORD = $KEY_PASSWORD" >> secret.properties
           echo "API_KEY = \"$MOVIES_API_KEY\"" >> secret.properties
 
-      - name: Generate Signed AAB
+      - name: Generate Signed APK
         env:
           KEYSTORE: ${{ secrets.KEYSTORE }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -53,8 +54,8 @@ jobs:
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
           FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
         run: |
-          ./gradlew bundleRelease
-          ls -l app/build/outputs/bundle/release/app-release.aab || { echo "AAB not generated"; exit 1; }
+          ./gradlew assembleRelease
+          ls -l app/build/outputs/apk/release/app-release.apk || { echo "apk not generated"; exit 1; }
 
       - name: Extract Release Notes
         id: release_notes
