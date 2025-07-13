@@ -14,7 +14,7 @@ fun SearchScreenContent(
     modifier: Modifier = Modifier,
 ) {
     RefreshBox(
-        refreshing = state.isRefreshing,
+        isRefreshing = state.isRefreshing,
         onRefresh = listener::onRefresh,
         modifier = modifier
             .fillMaxSize()

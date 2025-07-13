@@ -9,12 +9,12 @@ import androidx.compose.ui.Modifier
 @Composable
 fun RefreshBox(
     modifier: Modifier = Modifier,
-    refreshing: Boolean,
+    isRefreshing: Boolean,
     onRefresh: () -> Unit,
     content: @Composable () -> Unit,
 ) {
     PullToRefreshBox(
-        isRefreshing = refreshing,
+        isRefreshing = isRefreshing,
         onRefresh = onRefresh,
         modifier = modifier,
     ) {

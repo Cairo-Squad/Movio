@@ -215,9 +215,10 @@ class SearchViewModel(
     override fun onRefresh() {
         viewModelScope.launch {
             updateState {
-                it.copy(isRefreshing = true)
+                it.copy(
+                    isRefreshing = true,
+                )
             }
-            delay(300L)
             when (uiState.value.screenStatus) {
                 SearchUiState.ScreenStatus.EXPLORE -> {
                     updateState {
@@ -230,12 +231,7 @@ class SearchViewModel(
                     loadDiscoverMovies()
                 }
 
-                SearchUiState.ScreenStatus.SEARCH -> updateState {
-                    it.copy(
-                        query = ""
-                    )
-                }
-
+                SearchUiState.ScreenStatus.SEARCH -> {}
                 SearchUiState.ScreenStatus.RESULT -> onSearch(uiState.value.query)
                 SearchUiState.ScreenStatus.LOADING -> {}
                 SearchUiState.ScreenStatus.FAILED -> updateState {
