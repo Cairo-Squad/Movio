@@ -5,8 +5,11 @@ import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,8 +28,8 @@ import com.cairosquad.design_system.component.InputField
 import com.cairosquad.design_system.component.RecentSearchItem
 import com.cairosquad.design_system.component.SectionHeader
 import com.cairosquad.design_system.theme.Theme
-import com.cairosquad.viewmodel.search.SearchInteractionListener
-import com.cairosquad.viewmodel.search.SearchUiState
+import com.cairosquad.viewmodel.searchviewmodel.SearchInteractionListener
+import com.cairosquad.viewmodel.searchviewmodel.SearchUiState
 
 @Composable
 fun SearchContent(
@@ -55,27 +58,30 @@ fun SearchContent(
     }
 
     Column(modifier = modifier.fillMaxSize()) {
+        Row(modifier = Modifier.height(IntrinsicSize.Max)) {
 
-        InputField(
-            modifier = Modifier
-                .background(Theme.color.surfaces.surface)
-                .padding(16.dp)
-                .focusRequester(focusRequester),
-            value = state.query,
-            onValueChange = listener::onQueryTextChanged,
-            placeholder = stringResource(R.string.search),
-            leadingIcon = R.drawable.search_bottom_nav,
-            trailingIcon = R.drawable.ic_close,
-            onTrailingIconClick = { listener.onBackClicked() },
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    listener.onSearch(state.query)
-                }
+
+            InputField(
+                modifier = Modifier
+                    .background(Theme.color.surfaces.surface)
+                    .padding(16.dp)
+                    .focusRequester(focusRequester),
+                value = state.query,
+                onValueChange = listener::onQueryTextChanged,
+                placeholder = stringResource(R.string.search),
+                leadingIcon = R.drawable.search_bottom_nav,
+                trailingIcon = R.drawable.ic_close,
+                onTrailingIconClick = { listener.onBackClicked() },
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        listener.onSearch(state.query)
+                    }
+                )
             )
-        )
+        }
 
         SectionHeader(
-            title = "Recent Search",
+            title = stringResource(R.string.recent_search),
             actionText = "Clear all",
             onActionClick = listener::onClearHistory
         )
