@@ -30,6 +30,11 @@ class SearchViewModel(
 
     fun loadDiscoverMovies() = tryToCall(
         block = {
+            updateState {
+                it.copy(
+                    screenStatus = SearchUiState.ScreenStatus.LOADING,
+                )
+            }
             val forYou = getForYouUseCase.getForYouMovies().map { it.toUiState() }
             val exploreMore = getExploreMoreUseCase.getExploreMoreMovies().map { it.toUiState() }
             forYou to exploreMore
@@ -219,31 +224,18 @@ class SearchViewModel(
                     isRefreshing = true,
                 )
             }
+            delay(500L)
 
-            delay(300L)
-            when (uiState.value.screenStatus) {
-                SearchUiState.ScreenStatus.EXPLORE -> {
-                    updateState {
-                        it.copy(
-                            screenStatus = SearchUiState.ScreenStatus.LOADING
-                        )
-                    }
-                    loadDiscoverMovies()
-                }
-
-                SearchUiState.ScreenStatus.SEARCH -> {}
-                SearchUiState.ScreenStatus.RESULT -> onSearch(uiState.value.query)
-                SearchUiState.ScreenStatus.LOADING -> {}
-                SearchUiState.ScreenStatus.FAILED -> updateState {
-                    it.copy(
-                        screenStatus = SearchUiState.ScreenStatus.EXPLORE,
-                    )
-                }
-            }
             updateState {
                 it.copy(isRefreshing = false)
             }
         }
+        if (uiState.value.query.isBlank()) {
+            loadDiscoverMovies()
+        } else {
+            onSearch(uiState.value.query)
+        }
+
     }
 
     private fun mapExceptionToMessage(e: Throwable): String = when (e) {
