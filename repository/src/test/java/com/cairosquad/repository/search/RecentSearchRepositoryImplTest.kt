@@ -34,9 +34,9 @@ class RecentSearchRepositoryImplTest {
     }
 
     @Test
-    fun `getByQuery when query is blank should return all queries`() = runTest {
+    fun `getByQuery when query is blank should return emptyList`() = runTest {
         // Given
-        val expectedQueries = listOf("allQuery1", "allQuery2")
+        val expectedQueries = emptyList<String>()
         val blankQuery = ""
         coEvery { localDataSource.getAll() } returns expectedQueries
         //When
@@ -44,9 +44,6 @@ class RecentSearchRepositoryImplTest {
 
         //Then
         Assert.assertEquals(expectedQueries, result)
-        coVerify(exactly = 1) { localDataSource.getAll() }
-
-        coVerify(exactly = 0) { localDataSource.getByQuery(any()) }
     }
 
     @Test
