@@ -1,7 +1,6 @@
 package com.cairosquad.viewmodel.searchviewmodel
 
 import com.cairosquad.domain.search.exception.InternetConnectionException
-import com.cairosquad.domain.search.exception.MovioException
 import com.cairosquad.domain.search.exception.NetworkException
 import com.cairosquad.domain.search.exception.UnknownException
 import com.cairosquad.domain.search.usecase.ClearRecentSearchUseCase
@@ -14,7 +13,7 @@ import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
-import com.cairosquad.viewmodel.search.SearchUiState
+import com.cairosquad.viewmodel.search.SearchScreenState
 import com.cairosquad.viewmodel.search.SearchViewModel
 import com.cairosquad.viewmodel.search.toUiState
 import com.google.common.truth.Truth.assertThat
@@ -34,7 +33,6 @@ import java.io.IOException
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchViewModelTest {
-
 
     private val testDispatcher = UnconfinedTestDispatcher()
 
@@ -82,124 +80,148 @@ class SearchViewModelTest {
 
     @Test
     fun loadDiscoverMoviesLoadsDataSuccessfully() = runBlocking {
-        //Given
+
         val forYouList = listOf(movie1)
         val exploreMoreList = listOf(movie2)
         coEvery { getForYouUseCase.getForYouMovies() } returns listOf(movie1)
         coEvery { getExploreMoreUseCase.getExploreMoreMovies() } returns listOf(movie2)
-        //When
+
         viewModel.loadDiscoverMovies()
+
         delay(400)
-        //Then
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.EXPLORE)
+
+        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
         assertThat(viewModel.uiState.value.forYou).isEqualTo(forYouList.map { it.toUiState() })
         assertThat(viewModel.uiState.value.exploreMore).isEqualTo(exploreMoreList.map { it.toUiState() })
     }
 
     @Test
+    fun loadDiscoverMoviesHandlesExceptionAndUpdatesErrorMessage() = runBlocking {
+        coEvery { getForYouUseCase.getForYouMovies() } throws IOException()
+        coEvery { getExploreMoreUseCase.getExploreMoreMovies() } returns emptyList()
+
+        viewModel.loadDiscoverMovies()
+
+        delay(400)
+
+        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
+        assertThat(viewModel.uiState.value.errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
+    }
+
+    @Test
     fun onQueryTextChangedUpdatesQueryAndRecentSearch() = runBlocking {
-        //Given
         val query = "Batman"
         val recent = listOf("Batman", "Batman Begins")
         coEvery { getRecentSearchUseCase.getByQuery(query) } coAnswers { recent }
-        //When
+
         viewModel.onQueryTextChanged(query)
+
         delay(400)
-        //Then
         assertThat(viewModel.uiState.value.query).isEqualTo(query)
         assertThat(viewModel.uiState.value.recentSearch).isEqualTo(recent)
     }
 
     @Test
     fun `onCancelSearch clears query and sets to EXPLORE`() = runBlocking {
-        //Given && When
         viewModel.onCancelSearch()
-        //Then
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.EXPLORE)
+        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
         assertThat(viewModel.uiState.value.query).isEmpty()
     }
 
     @Test
     fun `onSearch loads results successfully`() = runBlocking {
-        //Given
         val query = "Inception"
         coEvery { searchUseCase.getMovies(query) } returns listOf(movie1)
         coEvery { searchUseCase.getSeries(query) } returns listOf(series)
         coEvery { searchUseCase.getArtists(query) } returns listOf(artist)
-        //When
+
         viewModel.onSearch(query)
         delay(400)
-        //Then
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.RESULT)
+        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.RESULT)
         assertThat(viewModel.uiState.value.movies).hasSize(1)
         assertThat(viewModel.uiState.value.series).hasSize(1)
         assertThat(viewModel.uiState.value.artists).hasSize(1)
     }
 
     @Test
+    fun `onSearch shows error message when failed`() = runBlocking {
+        coEvery { searchUseCase.getMovies(any()) } throws IOException()
+        coEvery { searchUseCase.getSeries(any()) } returns emptyList()
+        coEvery { searchUseCase.getArtists(any()) } returns emptyList()
+
+        viewModel.onSearch("fail")
+        delay(400)
+        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
+        assertThat(viewModel.uiState.value.errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
+    }
+
+    @Test
+    fun `onSearch does not go to result screen when query is blank`() = runBlocking {
+        viewModel.onSearch("    ")
+        delay(400)
+        assertThat(viewModel.uiState.value.screenStatus).isNotEqualTo(SearchScreenState.ScreenStatus.RESULT)
+    }
+
+    @Test
     fun `onRecentSearchItemClicked triggers search`() = runBlocking {
-        //Given
         val query = "Dark"
         coEvery { searchUseCase.getMovies(query) } returns emptyList()
         coEvery { searchUseCase.getSeries(query) } returns emptyList()
         coEvery { searchUseCase.getArtists(query) } returns emptyList()
-        //When
+
         viewModel.onRecentSearchItemClicked(query)
         delay(400)
-        //Then
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.RESULT)
+        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.RESULT)
     }
 
     @Test
     fun `onClearHistory clears all suggestions`() = runBlocking {
-        //Given
         coEvery { clearRecentSearchUseCase.clearAll() } returns Unit
-        //When
+
         viewModel.onClearHistory()
+
         delay(400)
-        //Then
+
         assertThat(viewModel.uiState.value.recentSearch).isEmpty()
     }
 
     @Test
     fun `onRemoveHistoryItem removes item and updates list`() = runBlocking {
-        //Given
         val newList = listOf("New1", "New2")
         coEvery { clearRecentSearchUseCase.removeQuery(any()) } returns Unit
         coEvery { getRecentSearchUseCase.getAll() } returns newList
-        //When
+
         viewModel.onRemoveHistoryItem("Old")
+
         delay(400)
-        //Then
+
         assertThat(viewModel.uiState.value.recentSearch).isEqualTo(newList)
     }
 
     @Test
     fun `onBackClicked navigates correctly from RESULT to SEARCH`() = runBlocking {
-        //Given
         val query = "Batman"
         coEvery { searchUseCase.getMovies(query) } returns emptyList()
         coEvery { searchUseCase.getSeries(query) } returns emptyList()
         coEvery { searchUseCase.getArtists(query) } returns emptyList()
-        //When
+
         viewModel.onQueryTextChanged(query)
         delay(300)
         viewModel.onBackClicked()
         delay(300)
-        //Then
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.EXPLORE)
+        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
     }
 
     @Test
     fun `onClickSearchTextField loads recent searches`() = runBlocking {
-        //Given
         val recent = listOf("Query1", "Query2")
         coEvery { getRecentSearchUseCase.getAll() } returns recent
-        //When
+
         viewModel.onClickSearchTextField()
+
         delay(400)
-        //Then
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.SEARCH)
+
+        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
         assertThat(viewModel.uiState.value.recentSearch).isEqualTo(recent)
     }
 
@@ -211,7 +233,7 @@ class SearchViewModelTest {
         delay(50)
         viewModel.onBackClicked()
         //Then
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.EXPLORE)
+        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
     }
 
     @Test
@@ -225,7 +247,7 @@ class SearchViewModelTest {
         delay(50)
         viewModel.onBackClicked()
         //Then
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.SEARCH)
+        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
     }
 
     @Test
@@ -236,7 +258,7 @@ class SearchViewModelTest {
         viewModel.onClickSearchTextField()
         delay(50)
         //Then
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.SEARCH)
+        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
         assertThat(viewModel.uiState.value.recentSearch).isEmpty()
     }
 
@@ -262,7 +284,7 @@ class SearchViewModelTest {
         viewModel.onSearch(query)
         delay(50)
         //Then
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.RESULT)
+        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.RESULT)
         assertThat(viewModel.uiState.value.movies).isEmpty()
         assertThat(viewModel.uiState.value.series).isEmpty()
         assertThat(viewModel.uiState.value.artists).hasSize(1)
@@ -295,7 +317,7 @@ class SearchViewModelTest {
         //Given
         viewModel.updateState {
             it.copy(
-                screenStatus = SearchUiState.ScreenStatus.EXPLORE,
+                screenStatus = SearchScreenState.ScreenStatus.EXPLORE,
                 query = "whatever",
                 recentSearch = listOf("a", "b")
             )
@@ -304,7 +326,7 @@ class SearchViewModelTest {
         viewModel.onBackClicked()
         //Then
         val state = viewModel.uiState.value
-        assertThat(state.screenStatus).isEqualTo(SearchUiState.ScreenStatus.EXPLORE)
+        assertThat(state.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
         assertThat(state.query).isEqualTo("whatever")
         assertThat(state.recentSearch).containsExactly("a", "b")
     }
@@ -324,7 +346,7 @@ class SearchViewModelTest {
         viewModel.onCancelSearch()
         delay(50)
         //Then
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.EXPLORE)
+        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
         val jobAfter = viewModel.run {
             javaClass.getDeclaredField("searchJob").apply { isAccessible = true }.get(this) as Job?
         }
@@ -342,7 +364,7 @@ class SearchViewModelTest {
         viewModel.onCancelSearch()
 
         //Then
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.EXPLORE)
+        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
     }
 
     @Test
@@ -409,7 +431,7 @@ class SearchViewModelTest {
         delay(50)
         //Then
         assertThat(jobBefore.isCancelled || jobBefore.isCompleted).isTrue()
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.SEARCH)
+        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
     }
 
     @Test
@@ -436,7 +458,7 @@ class SearchViewModelTest {
         delay(50)
         //Then
         with(viewModel.uiState.value) {
-            assertThat(screenStatus).isEqualTo(SearchUiState.ScreenStatus.FAILED)
+            assertThat(screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
             assertThat(errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
         }
     }
@@ -451,7 +473,7 @@ class SearchViewModelTest {
         delay(50)
         // Then
         with(viewModel.uiState.value) {
-            assertThat(screenStatus).isEqualTo(SearchUiState.ScreenStatus.FAILED)
+            assertThat(screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
             assertThat(errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
         }
     }
