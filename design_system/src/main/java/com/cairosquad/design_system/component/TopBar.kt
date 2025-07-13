@@ -41,7 +41,7 @@ fun TopBar(
     onTabSelected: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val tabPositions = remember { mutableMapOf<Int, Pair<Int, Int>>() } // index -> (xPx, widthPx)
+    val tabPositions = remember { mutableMapOf<Int, Pair<Int, Int>>() }
     val indicatorOffsetX by animateDpAsState(
         targetValue = with(LocalDensity.current) {
             tabPositions[selectedTabIndex]?.first?.toDp() ?: 0.dp
