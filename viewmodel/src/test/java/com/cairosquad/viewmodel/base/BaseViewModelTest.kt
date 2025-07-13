@@ -86,13 +86,13 @@ class BaseViewModelTest {
 
         viewModel.updateStateValue({ it.copy(value = newStateValue) })
 
-        val state = viewModel.uiState.first()
+        val state = viewModel.screenState.first()
         assertEquals(newStateValue, state.value)
         assertEquals(0, state.error)
     }
 
     @Test
-    fun sendEventShouldEmitEffectCorrectly() = testScope.runTest {
+    fun sendEffectShouldEmitEffectCorrectly() = testScope.runTest {
         val expectedEvent = TestEvent.TestEvent1
         var receivedEvent: TestEvent? = null
         val job = launch { viewModel.effect.collect { receivedEvent = it } }
@@ -114,7 +114,7 @@ class BaseViewModelTest {
             dispatcher = testDispatcher
         )
 
-        val state = viewModel.uiState.first()
+        val state = viewModel.screenState.first()
         assertEquals(newStateValue, state.value)
         assertEquals(0, state.error)
     }
@@ -130,7 +130,7 @@ class BaseViewModelTest {
             dispatcher = testDispatcher
         )
 
-        val state = viewModel.uiState.first()
+        val state = viewModel.screenState.first()
         assertEquals(0, state.value)
         assertEquals(newStateValue, state.error)
     }

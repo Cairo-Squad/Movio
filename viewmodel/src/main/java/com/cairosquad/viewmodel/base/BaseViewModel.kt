@@ -17,14 +17,14 @@ abstract class BaseViewModel<T, E>(
     initialState: T
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(initialState)
-    val uiState: StateFlow<T> = _uiState.asStateFlow()
+    private val _screenState = MutableStateFlow(initialState)
+    val screenState: StateFlow<T> = _screenState.asStateFlow()
 
     private val _effect = MutableSharedFlow<E>()
     val effect = _effect.asSharedFlow()
 
     protected fun updateState(transform: (T) -> T) {
-        _uiState.update { transform(it) }
+        _screenState.update { transform(it) }
     }
 
     protected fun sendEffect(
