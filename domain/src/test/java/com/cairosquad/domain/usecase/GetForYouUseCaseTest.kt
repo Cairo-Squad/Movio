@@ -14,12 +14,12 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import kotlin.test.assertEquals
 
 class GetForYouUseCaseTest {
 
     private val recommendationRepository = mockk<RecommendationRepository>()
     private lateinit var useCase: GetForYouUseCase
-
     private val dispatcher = StandardTestDispatcher()
 
     @Before
@@ -34,7 +34,7 @@ class GetForYouUseCaseTest {
     }
 
     @Test
-    fun `getForYouMovies should return movies from repository`() = runTest {
+    fun `should return a list of Personalized movies from the repository when getPersonalizedMovies is called`() = runTest {
         // Given
         val expectedMovies = listOf(
             Movie(id = 101, title = "Dune", rating = 8.1f, posterPath = "/dune.jpg"),
@@ -46,6 +46,7 @@ class GetForYouUseCaseTest {
         val result = useCase.getForYouMovies()
 
         // Then
-        coVerify { recommendationRepository.getForYouMovies() }
+        coVerify(exactly = 1) { recommendationRepository.getForYouMovies() }
+        assertEquals(expectedMovies, result)
     }
 }

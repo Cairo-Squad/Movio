@@ -20,15 +20,24 @@ class ClearRecentSearchUseCaseTest {
     }
 
     @Test
-    fun `clearAll should call repository's clearAll`() = runTest {
+    fun `should call clearAll on repository when clearAll is invoked`() = runTest {
+        // When
         clearRecentSearchUseCase.clearAll()
+
+        // Then
         coVerify(exactly = 1) { recentSearchRepository.clearAll() }
     }
 
     @Test
-    fun `removeQuery should call repository's removeQuery with correct argument`() = runTest {
+    fun `should call removeQuery on repository with correct argument when removeQuery is invoked`() = runTest {
+        // Given
         val testQuery = "Movie"
+
+        // When
         clearRecentSearchUseCase.removeQuery(testQuery)
+
+        // Then
         coVerify(exactly = 1) { recentSearchRepository.removeQuery(testQuery) }
     }
 }
+
