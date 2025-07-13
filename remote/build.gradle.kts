@@ -48,10 +48,21 @@ android {
         compose = true
         buildConfig = true
     }
+    packaging {
+        resources {
+            excludes += arrayOf(
+                "/META-INF/{AL2.0,LGPL2.1}",
+                "META-INF/LICENSE.md",
+                "META-INF/LICENSE",
+                "META-INF/NOTICE",
+                "META-INF/LICENSE-notice",
+                "META-INF/LICENSE-notice.md"
+            )
+        }
+    }
 }
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
-    implementation(project(":repository"))
 
     implementation(libs.bundles.ktor)
     implementation(libs.androidx.datastore.preferences)
@@ -65,15 +76,15 @@ dependencies {
 
     testImplementation(libs.ktor.client.mock)
 
-    testImplementation(libs.kotlinx.coroutines.test.v1102)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.junit)
-    testImplementation(libs.junit.junit)
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${libs.versions.junitJupiter.get()}")
-    testImplementation(libs.truth.v144)
+    testImplementation(libs.truth)
     testImplementation(libs.koin.test)
 
     implementation(libs.logging.interceptor)
 
+    implementation(project(":repository"))
 }
