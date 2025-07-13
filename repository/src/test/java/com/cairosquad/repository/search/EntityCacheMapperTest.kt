@@ -11,7 +11,7 @@ import org.junit.Test
 import java.time.Instant
 import kotlin.math.absoluteValue
 
-class DomainCacheMapperTest {
+class EntityCacheMapperTest {
     private val tolerance = 180L
 
     @Test
