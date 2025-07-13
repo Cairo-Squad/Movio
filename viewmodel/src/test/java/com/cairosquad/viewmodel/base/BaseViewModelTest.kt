@@ -40,7 +40,7 @@ class BaseViewModelTest {
             onEnd: suspend () -> Unit = {},
             dispatcher: CoroutineDispatcher = Dispatchers.Main
         ) {
-            sendEvent(
+            sendEffect(
                 event,
                 onStart,
                 onEnd,
@@ -92,10 +92,10 @@ class BaseViewModelTest {
     }
 
     @Test
-    fun sendEventShouldEmitEventCorrectly() = testScope.runTest {
+    fun sendEventShouldEmitEffectCorrectly() = testScope.runTest {
         val expectedEvent = TestEvent.TestEvent1
         var receivedEvent: TestEvent? = null
-        val job = launch { viewModel.uiEvent.collect { receivedEvent = it } }
+        val job = launch { viewModel.effect.collect { receivedEvent = it } }
 
         viewModel.sendTestEvent(expectedEvent)
 
@@ -136,7 +136,7 @@ class BaseViewModelTest {
     }
 
     @Test
-    fun sendEventShouldCallOnStartAndOnEndCallbacks() = testScope.runTest {
+    fun sendEffectShouldCallOnStartAndOnEndCallbacks() = testScope.runTest {
         var onStartCalled = false
         var onEndCalled = false
         val event = TestEvent.TestEvent2
