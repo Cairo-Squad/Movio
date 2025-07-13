@@ -26,23 +26,17 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: gradle
+
       - name: Cache Gradle
         uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: gradle-cache-pr-${{ github.event.pull_request.number }}
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
-            gradle-cache-pr-
-      - name: Cache Build Outputs
-        uses: actions/cache@v4
-        with:
-          path: |
-            **/build/
-          key: build-cache-pr-${{ github.event.pull_request.number }}
-          restore-keys: |
-            build-cache-pr-
+            gradle-${{ runner.os }}-
+
       - name: Grant Permission to Gradle
         run: chmod +x ./gradlew
 
@@ -71,7 +65,7 @@ jobs:
           echo "API_KEY = \"$MOVIES_API_KEY\"" >> secret.properties
 
           # Build signed release APK
-          ./gradlew assembleRelease
+          ./gradlew assembleRelease  testClasses  --build-cache
 
   test:
 
@@ -97,18 +91,9 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: gradle-cache-pr-${{ github.event.pull_request.number }}
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
-            gradle-cache-pr-
-
-      - name: Cache Build Outputs
-        uses: actions/cache@v4
-        with:
-          path: |
-            **/build/
-          key: build-cache-pr-${{ github.event.pull_request.number }}
-          restore-keys: |
-            build-cache-pr-
+            gradle-${{ runner.os }}-
 
       - name: Grant Permission to Gradle
         run: chmod +x ./gradlew
@@ -137,10 +122,10 @@ jobs:
           echo "API_KEY = \"$MOVIES_API_KEY\"" >> secret.properties
 
           # Build signed release APK
-          ./gradlew test koverHtmlReport
+          ./gradlew test koverHtmlReport --build-cache
 
       - name: Enforce 80% Coverage
-        run: ./gradlew koverVerify
+        run: ./gradlew koverVerify --build-cache
 
       - name: Upload Test Results (JUnit XML)
         if: always()

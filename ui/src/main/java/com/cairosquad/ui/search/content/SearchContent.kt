@@ -29,11 +29,11 @@ import com.cairosquad.design_system.component.RecentSearchItem
 import com.cairosquad.design_system.component.SectionHeader
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.viewmodel.searchviewmodel.SearchInteractionListener
-import com.cairosquad.viewmodel.searchviewmodel.SearchUiState
+import com.cairosquad.viewmodel.searchviewmodel.SearchScreenState
 
 @Composable
 fun SearchContent(
-    state: SearchUiState,
+    state: SearchScreenState,
     listener: SearchInteractionListener,
     modifier: Modifier = Modifier,
 ) {
