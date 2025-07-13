@@ -1,4 +1,4 @@
-package com.cairosquad.movio.navigation
+package com.cairosquad.ui.navigation
 
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
