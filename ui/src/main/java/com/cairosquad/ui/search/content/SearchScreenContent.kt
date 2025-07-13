@@ -3,16 +3,16 @@ package com.cairosquad.ui.search.content
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.cairosquad.viewmodel.searchviewmodel.SearchInteractionListener
-import com.cairosquad.viewmodel.searchviewmodel.SearchUiState
+import com.cairosquad.viewmodel.searchviewmodel.SearchScreenState
 
 @Composable
 fun SearchScreenContent(
-    state: SearchUiState,
+    state: SearchScreenState,
     listener: SearchInteractionListener,
     modifier: Modifier = Modifier,
 ) {
     when (state.screenStatus) {
-        SearchUiState.ScreenStatus.EXPLORE -> {
+        SearchScreenState.ScreenStatus.EXPLORE -> {
             ExploreScreenContent(
                 modifier = modifier,
                 state = state,
@@ -20,7 +20,7 @@ fun SearchScreenContent(
             )
         }
 
-        SearchUiState.ScreenStatus.SEARCH -> {
+        SearchScreenState.ScreenStatus.SEARCH -> {
             SearchContent(
                 modifier = modifier,
                 state = state,
@@ -28,7 +28,7 @@ fun SearchScreenContent(
             )
         }
 
-        SearchUiState.ScreenStatus.RESULT -> {
+        SearchScreenState.ScreenStatus.RESULT -> {
             SearchResultContent(
                 modifier = modifier,
                 state = state,
@@ -36,7 +36,7 @@ fun SearchScreenContent(
             )
         }
 
-        SearchUiState.ScreenStatus.LOADING -> {
+        SearchScreenState.ScreenStatus.LOADING -> {
             SearchLoadingContent(
                 modifier = modifier,
                 state = state,
@@ -44,7 +44,7 @@ fun SearchScreenContent(
             )
         }
 
-        SearchUiState.ScreenStatus.FAILED -> {
+        SearchScreenState.ScreenStatus.FAILED -> {
             SearchFailContent(
                 modifier = modifier,
                 state = state,
