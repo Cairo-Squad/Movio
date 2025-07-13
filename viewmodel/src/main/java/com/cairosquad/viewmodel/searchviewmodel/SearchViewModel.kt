@@ -102,36 +102,44 @@ class SearchViewModel(
             )
         }
 
-        searchJob = tryToCall(
-            block = {
-                val movies = searchUseCase.getMovies(query).map { it.toUiState() }
-                val series = searchUseCase.getSeries(query).map { it.toUiState() }
-                val artists = searchUseCase.getArtists(query).map { it.toUiState() }
-                Triple(movies, series, artists)
-            },
-            onSuccess = { (movies, series, artists) ->
-                updateState {
-                    it.copy(
-                        screenStatus = SearchUiState.ScreenStatus.RESULT,
-                        movies = movies,
-                        series = series,
-                        artists = artists,
-                        errorMessage = null
-                    )
-                }
-            },
-            onError = { e ->
-                val message = mapExceptionToMessage(e)
-                updateState {
-                    it.copy(
-                        screenStatus = SearchUiState.ScreenStatus.FAILED,
-                        errorMessage = message
-                    )
-                }
-                sendEvent(SearchUiEvent.ShowToast(message))
-            },
-            dispatcher = Dispatchers.IO
-        )
+        if (query.isBlank()) {
+            updateState {
+                it.copy(
+                    screenStatus = SearchUiState.ScreenStatus.SEARCH,
+                )
+            }
+        } else {
+            searchJob = tryToCall(
+                block = {
+                    val movies = searchUseCase.getMovies(query).map { it.toUiState() }
+                    val series = searchUseCase.getSeries(query).map { it.toUiState() }
+                    val artists = searchUseCase.getArtists(query).map { it.toUiState() }
+                    Triple(movies, series, artists)
+                },
+                onSuccess = { (movies, series, artists) ->
+                    updateState {
+                        it.copy(
+                            screenStatus = SearchUiState.ScreenStatus.RESULT,
+                            movies = movies,
+                            series = series,
+                            artists = artists,
+                            errorMessage = null
+                        )
+                    }
+                },
+                onError = { e ->
+                    val message = mapExceptionToMessage(e)
+                    updateState {
+                        it.copy(
+                            screenStatus = SearchUiState.ScreenStatus.FAILED,
+                            errorMessage = message
+                        )
+                    }
+                    sendEvent(SearchUiEvent.ShowToast(message))
+                },
+                dispatcher = Dispatchers.IO
+            )
+        }
     }
 
     override fun onRecentSearchItemClicked(query: String) = onSearch(query)

@@ -58,7 +58,8 @@ fun ExploreScreenContent(
 
     LazyColumn(
         modifier = modifier.fillMaxSize(),
-        state = lazyColumnState
+        state = lazyColumnState,
+        contentPadding = PaddingValues(bottom = 12.dp)
     ) {
         stickyHeader {
             InputField(
