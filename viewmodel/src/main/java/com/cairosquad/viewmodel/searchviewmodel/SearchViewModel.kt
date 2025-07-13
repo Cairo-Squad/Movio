@@ -32,7 +32,7 @@ class SearchViewModel(
         block = {
             updateState {
                 it.copy(
-                    screenStatus = SearchUiState.ScreenStatus.LOADING,
+                    screenStatus = SearchScreenState.ScreenStatus.LOADING,
                 )
             }
             val forYou = getForYouUseCase.getForYouMovies().map { it.toUiState() }
