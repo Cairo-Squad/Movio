@@ -40,7 +40,7 @@ class BaseViewModelTest {
             onEnd: suspend () -> Unit = {},
             dispatcher: CoroutineDispatcher = Dispatchers.Main
         ) {
-            sendEvent(
+            sendEffect(
                 event,
                 onStart,
                 onEnd,
@@ -86,16 +86,16 @@ class BaseViewModelTest {
 
         viewModel.updateStateValue({ it.copy(value = newStateValue) })
 
-        val state = viewModel.uiState.first()
+        val state = viewModel.screenState.first()
         assertEquals(newStateValue, state.value)
         assertEquals(0, state.error)
     }
 
     @Test
-    fun sendEventShouldEmitEventCorrectly() = testScope.runTest {
+    fun sendEffectShouldEmitEffectCorrectly() = testScope.runTest {
         val expectedEvent = TestEvent.TestEvent1
         var receivedEvent: TestEvent? = null
-        val job = launch { viewModel.uiEvent.collect { receivedEvent = it } }
+        val job = launch { viewModel.effect.collect { receivedEvent = it } }
 
         viewModel.sendTestEvent(expectedEvent)
 
@@ -114,7 +114,7 @@ class BaseViewModelTest {
             dispatcher = testDispatcher
         )
 
-        val state = viewModel.uiState.first()
+        val state = viewModel.screenState.first()
         assertEquals(newStateValue, state.value)
         assertEquals(0, state.error)
     }
@@ -130,13 +130,13 @@ class BaseViewModelTest {
             dispatcher = testDispatcher
         )
 
-        val state = viewModel.uiState.first()
+        val state = viewModel.screenState.first()
         assertEquals(0, state.value)
         assertEquals(newStateValue, state.error)
     }
 
     @Test
-    fun sendEventShouldCallOnStartAndOnEndCallbacks() = testScope.runTest {
+    fun sendEffectShouldCallOnStartAndOnEndCallbacks() = testScope.runTest {
         var onStartCalled = false
         var onEndCalled = false
         val event = TestEvent.TestEvent2

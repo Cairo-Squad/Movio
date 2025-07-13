@@ -17,7 +17,7 @@ class SearchViewModel(
     private val clearRecentSearchUseCase: ClearRecentSearchUseCase,
     private val getExploreMoreUseCase: GetExploreMoreUseCase,
     private val getForYouUseCase: GetForYouUseCase,
-) : BaseViewModel<SearchScreenState, SearchUiEvent>(initialState = SearchScreenState()),
+) : BaseViewModel<SearchScreenState, SearchEffect>(initialState = SearchScreenState()),
     SearchInteractionListener {
 
     private var searchJob: Job? = null
@@ -50,7 +50,7 @@ class SearchViewModel(
                     errorMessage = message
                 )
             }
-            sendEvent(SearchUiEvent.ShowToast(message))
+            sendEffect(SearchEffect.ShowToast(message))
         },
         dispatcher = Dispatchers.IO
     )
@@ -135,7 +135,7 @@ class SearchViewModel(
                             errorMessage = message
                         )
                     }
-                    sendEvent(SearchUiEvent.ShowToast(message))
+                    sendEffect(SearchEffect.ShowToast(message))
                 },
                 dispatcher = Dispatchers.IO
             )
@@ -156,7 +156,7 @@ class SearchViewModel(
             onError = { e ->
                 val message = mapExceptionToMessage(e)
                 updateState { it.copy(errorMessage = message) }
-                sendEvent(SearchUiEvent.ShowToast(message))
+                sendEffect(SearchEffect.ShowToast(message))
             },
             dispatcher = Dispatchers.IO
         )
@@ -174,7 +174,7 @@ class SearchViewModel(
             onError = { e ->
                 val message = mapExceptionToMessage(e)
                 updateState { it.copy(errorMessage = mapExceptionToMessage(e)) }
-                sendEvent(SearchUiEvent.ShowToast(message))
+                sendEffect(SearchEffect.ShowToast(message))
             },
             dispatcher = Dispatchers.IO
         )
