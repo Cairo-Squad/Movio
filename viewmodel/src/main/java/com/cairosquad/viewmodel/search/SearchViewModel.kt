@@ -58,7 +58,6 @@ class SearchViewModel(
                     errorStatus = handleSearchException(e)
                 )
             }
-            sendEffect(SearchEffect.ErrorHappened(handleSearchException(e)))
         },
         dispatcher = Dispatchers.IO
     )
@@ -83,7 +82,14 @@ class SearchViewModel(
                     )
                 }
             },
-            onError = { },
+            onError = { e ->
+                updateState {
+                    it.copy(
+                        screenStatus = SearchScreenState.ScreenStatus.FAILED,
+                        errorStatus = handleSearchException(e)
+                    )
+                }
+            },
             dispatcher = Dispatchers.IO
         )
     }
@@ -142,7 +148,6 @@ class SearchViewModel(
                             errorStatus = handleSearchException(e)
                         )
                     }
-                    sendEffect(SearchEffect.ErrorHappened(handleSearchException(e)))
                 },
                 dispatcher = Dispatchers.IO
             )
@@ -161,9 +166,12 @@ class SearchViewModel(
                 updateState { it.copy(recentSearch = suggestions, errorStatus = null) }
             },
             onError = { e ->
-                val message = handleSearchException(e)
-                updateState { it.copy(errorStatus = message) }
-                sendEffect(SearchEffect.ErrorHappened(message))
+                updateState {
+                    it.copy(
+                        screenStatus = SearchScreenState.ScreenStatus.FAILED,
+                        errorStatus = handleSearchException(e)
+                    )
+                }
             },
             dispatcher = Dispatchers.IO
         )
@@ -179,8 +187,12 @@ class SearchViewModel(
                 updateState { it.copy(recentSearch = suggestions, errorStatus = null) }
             },
             onError = { e ->
-                updateState { it.copy(errorStatus = handleSearchException(e)) }
-                sendEffect(SearchEffect.ErrorHappened(handleSearchException(e)))
+                updateState {
+                    it.copy(
+                        screenStatus = SearchScreenState.ScreenStatus.FAILED,
+                        errorStatus = handleSearchException(e)
+                    )
+                }
             },
             dispatcher = Dispatchers.IO
         )
@@ -213,7 +225,14 @@ class SearchViewModel(
             onSuccess = { suggestions ->
                 updateState { it.copy(recentSearch = suggestions, errorStatus = null) }
             },
-            onError = { }
+            onError = { e ->
+                updateState {
+                    it.copy(
+                        screenStatus = SearchScreenState.ScreenStatus.FAILED,
+                        errorStatus = handleSearchException(e)
+                    )
+                }
+            }
         )
 
         searchJob?.cancel()
