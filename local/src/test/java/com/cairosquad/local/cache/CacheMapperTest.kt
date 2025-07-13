@@ -10,9 +10,6 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
 class CacheMapperTest {
-
-    /* ---------- Movie ---------- */
-
     @Test
     fun `Should map MovieCacheDto to MovieCacheEntity correctly`() {
         val input = sampleMovieCacheDto()
@@ -26,9 +23,6 @@ class CacheMapperTest {
         val expected = sampleMovieCacheDto()
         assertThat(input.toDto()).isEqualTo(expected)
     }
-
-    /* ---------- Series ---------- */
-
     @Test
     fun `Should map SeriesCacheDto to SeriesCacheEntity correctly`() {
         val input = sampleSeriesCacheDto()
@@ -43,8 +37,6 @@ class CacheMapperTest {
         assertThat(input.toDto()).isEqualTo(expected)
     }
 
-    /* ---------- Artist ---------- */
-
     @Test
     fun `Should map ArtistCacheDto to ArtistCacheEntity correctly`() {
         val input = sampleArtistCacheDto()
@@ -58,8 +50,6 @@ class CacheMapperTest {
         val expected = sampleArtistCacheDto()
         assertThat(input.toDto()).isEqualTo(expected)
     }
-
-    /* ---------- Private test data helpers ---------- */
 
     private fun sampleMovieCacheDto() = MovieCacheDto(
         id = 1,
