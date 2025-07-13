@@ -11,12 +11,12 @@ import org.junit.Test
 
 class RecentSearchRepositoryImplTest {
     private lateinit var localDataSource: LocalRecentSearchDataSource
-    private lateinit var repository: RecentSearchRepositoryImpl
+    private lateinit var repository: LocalRecentSearchRepositoryImpl
 
     @Before
     fun setup() {
         localDataSource = mockk()
-        repository = RecentSearchRepositoryImpl(localDataSource)
+        repository = LocalRecentSearchRepositoryImpl(localDataSource)
     }
 
     @Test

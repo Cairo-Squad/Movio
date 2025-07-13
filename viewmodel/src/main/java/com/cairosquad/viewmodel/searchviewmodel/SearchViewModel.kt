@@ -13,10 +13,10 @@ import java.io.IOException
 
 class SearchViewModel(
     private val searchUseCase: SearchUseCase,
-    private val getRecentSearchUseCase: GetLocalSearchHistoryUseCase,
+    private val getLocalSearchHistoryUseCase: GetLocalSearchHistoryUseCase,
     private val clearRecentSearchUseCase: ClearSearchHistoryUseCase,
-    private val getExploreMoreUseCase: GetSuggestedMoviesUseCase,
-    private val getForYouUseCase: GetPersonalizedMoviesUseCase,
+    private val getSuggestedMoviesUseCase: GetSuggestedMoviesUseCase,
+    private val getPersonalizedMoviesUseCase: GetPersonalizedMoviesUseCase,
 ) : BaseViewModel<SearchUiState, SearchUiEvent>(initialState = SearchUiState()),
     SearchInteractionListener {
 
@@ -28,8 +28,8 @@ class SearchViewModel(
 
     fun loadDiscoverMovies() = tryToCall(
         block = {
-            val forYou = getForYouUseCase.getPersonalizedMovies().map { it.toUiState() }
-            val exploreMore = getExploreMoreUseCase.getSuggestedMovies().map { it.toUiState() }
+            val forYou = getPersonalizedMoviesUseCase.getPersonalizedMovies().map { it.toUiState() }
+            val exploreMore = getSuggestedMoviesUseCase.getSuggestedMovies().map { it.toUiState() }
             forYou to exploreMore
         },
         onSuccess = { (forYou, exploreMore) ->
@@ -66,7 +66,7 @@ class SearchViewModel(
         searchJob = tryToCall(
             block = {
                 delay(300)
-                getRecentSearchUseCase.getByQuery(query)
+                getLocalSearchHistoryUseCase.getByQuery(query)
             },
             onSuccess = { suggestions ->
                 updateState {
@@ -166,7 +166,7 @@ class SearchViewModel(
         tryToCall(
             block = {
                 clearRecentSearchUseCase.removeQueryFromHistory(query)
-                getRecentSearchUseCase.getAll()
+                getLocalSearchHistoryUseCase.getAll()
             },
             onSuccess = { suggestions ->
                 updateState { it.copy(recentSearch = suggestions, errorMessage = null) }
@@ -202,7 +202,7 @@ class SearchViewModel(
     override fun onClickSearchTextField() {
         tryToCall(
             block = {
-                getRecentSearchUseCase.getAll()
+                getLocalSearchHistoryUseCase.getAll()
             },
             onSuccess = { suggestions ->
                 updateState { it.copy(recentSearch = suggestions, errorMessage = null) }

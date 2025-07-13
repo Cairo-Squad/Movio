@@ -3,7 +3,7 @@ package com.cairosquad.repository.search
 import com.cairosquad.domain.search.repository.SearchHistoryRepository
 import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
 
-class RecentSearchRepositoryImpl(
+class LocalRecentSearchRepositoryImpl(
     private val dataSource: LocalRecentSearchDataSource
 ) : SearchHistoryRepository {
 

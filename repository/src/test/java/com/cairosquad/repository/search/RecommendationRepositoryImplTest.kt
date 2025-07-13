@@ -1,6 +1,6 @@
 package com.cairosquad.repository.search
 
-import com.cairosquad.repository.search.data_source.remote.RemoteRecommendationDataSource
+import com.cairosquad.repository.search.data_source.remote.RemoteMovieDiscoveryDataSource
 import com.cairosquad.repository.search.data_source.remote.dto.MovieDto
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
@@ -10,13 +10,13 @@ import org.junit.Before
 import kotlin.test.Test
 
 class RecommendationRepositoryImplTest {
-    private lateinit var dataSource: RemoteRecommendationDataSource
-    private lateinit var recommendationRepository: RecommendationRepositoryImpl
+    private lateinit var dataSource: RemoteMovieDiscoveryDataSource
+    private lateinit var recommendationRepository: RemoteMovieDiscoveryRepositoryImpl
 
     @Before
     fun setUp() {
         dataSource = mockk()
-        recommendationRepository = RecommendationRepositoryImpl(dataSource)
+        recommendationRepository = RemoteMovieDiscoveryRepositoryImpl(dataSource)
     }
 
     @Test
@@ -37,7 +37,7 @@ class RecommendationRepositoryImplTest {
                     voteAverage = null
                 )
             )
-            coEvery { dataSource.getForYouMovies() } returns remoteMovies
+            coEvery { dataSource.getPersonalizedMovies() } returns remoteMovies
 
             // When
             val result = recommendationRepository.getPersonalizedMovies()
@@ -52,7 +52,7 @@ class RecommendationRepositoryImplTest {
     fun `given empty list from remote when getForYouMovies called then return empty list`() =
         runTest {
             // Given
-            coEvery { dataSource.getForYouMovies() } returns emptyList()
+            coEvery { dataSource.getPersonalizedMovies() } returns emptyList()
 
             // When
             val result = recommendationRepository.getPersonalizedMovies()
@@ -73,7 +73,7 @@ class RecommendationRepositoryImplTest {
                     voteAverage = 4.2
                 )
             )
-            coEvery { dataSource.getExploreMoreMovies() } returns remoteMovieDto
+            coEvery { dataSource.getSuggestedMovies() } returns remoteMovieDto
 
             // When
             val result = recommendationRepository.getSuggestedMovies()
