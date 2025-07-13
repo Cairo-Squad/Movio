@@ -120,13 +120,15 @@ fun SafeImageViewer(
             val classifier = SafeImageClassifier(context)
             bitmap = CoilImageLoader(context).loadBitmap(model)
 
-            withContext(Dispatchers.Unconfined) {
-                isImageSafe = classifier.isInappropriate(
-                    bitmap = bitmap!!,
-                    nsfwThreshold = nudeThreshold,
-                    sfwThreshold = nonNudeThreshold,
-                    isLogEnabled = enableLog
-                )
+            if (bitmap != null) {
+                withContext(Dispatchers.Unconfined) {
+                    isImageSafe = classifier.isInappropriate(
+                        bitmap = bitmap!!,
+                        nsfwThreshold = nudeThreshold,
+                        sfwThreshold = nonNudeThreshold,
+                        isLogEnabled = enableLog
+                    )
+                }
             }
         }
         hasClassificationCompleted = true
@@ -140,35 +142,37 @@ fun SafeImageViewer(
             contentAlignment = Alignment.Center
         ) {
             if (it) {
-                AsyncImage(
-                    modifier = Modifier
-                        .matchParentSize()
-                        .imageBlur(
-                            isBlurEnabled = isBlurEnabled,
-                            isImageSafe = isImageSafe,
-                            blur = blur.dp,
-                            bitmap = bitmap!!
-                        ),
-                    model = bitmap,
-                    contentDescription = contentDescription,
-                    contentScale = contentScale,
-                    filterQuality = filterQuality,
-                    alpha = alpha,
-                    alignment = alignment,
-                    colorFilter = colorFilter,
-                    placeholder = placeholder,
-                    error = error,
-                )
-                if (!isImageSafe && onToggleBlur != null) {
-                    Box(
+                if (bitmap != null) {
+                    AsyncImage(
                         modifier = Modifier
-                            .align(Alignment.Center)
-                            .clickable { isBlurEnabled = !isBlurEnabled }
-                    ) {
-                        onToggleBlur()
+                            .matchParentSize()
+                            .imageBlur(
+                                isBlurEnabled = isBlurEnabled,
+                                isImageSafe = isImageSafe,
+                                blur = blur.dp,
+                                bitmap = bitmap!!
+                            ),
+                        model = bitmap,
+                        contentDescription = contentDescription,
+                        contentScale = contentScale,
+                        filterQuality = filterQuality,
+                        alpha = alpha,
+                        alignment = alignment,
+                        colorFilter = colorFilter,
+                        placeholder = placeholder,
+                        error = error,
+                    )
+                    if (!isImageSafe && onToggleBlur != null) {
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .clickable { isBlurEnabled = !isBlurEnabled }
+                        ) {
+                            onToggleBlur()
+                        }
                     }
                 }
-            } else {
+            }else {
                 loadingPlaceholder()
             }
         }
