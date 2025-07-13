@@ -10,7 +10,6 @@ plugins {
     alias(libs.plugins.google.firebase.perf)
     alias(libs.plugins.google.firebase.appdistribution)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.kotlin.serialization)
     id("androidx.room") version "2.7.1"
 }
 
@@ -126,8 +125,6 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
-
-    implementation(libs.navigation.compose)
 
     implementation(project(":design_system"))
     implementation(project(":domain"))

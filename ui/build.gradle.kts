@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
@@ -57,7 +58,10 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.annotations)
     ksp(libs.koin.ksp)
-
+    // navigation
+    implementation(libs.navigation.compose)
+    // serialization
+    implementation(libs.kotlinx.serialization.json)
     implementation(project(":design_system"))
     implementation(project(":viewmodel"))
     implementation(project(":domain"))
