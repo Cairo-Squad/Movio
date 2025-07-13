@@ -15,8 +15,11 @@
 # 🌟 TensorFlow Lite
 ##########################################
 -keep class org.tensorflow.lite.** { *; }
+
+##########################################
+# 🌟 TensorFlow Lite Support API
+##########################################
 -keep class org.tensorflow.lite.support.** { *; }
--keep class org.tensorflow.lite.task.vision.** { *; }
 
 ##########################################
 # 🌟 Kotlin Metadata

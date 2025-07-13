@@ -11,14 +11,13 @@ android {
 
     defaultConfig {
         minSdk = 26
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -53,11 +52,8 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.coil.compose)
-    implementation(libs.tensorflow.lite.task.vision)
-    implementation(libs.tensorflow.lite.metadata)
-    implementation(libs.tensorflow.lite.gpu)
     implementation(libs.tensorflow.lite)
-    implementation(libs.tensorflow.lite.support)
+    implementation(libs.tensorflow.lite.task.vision)
     implementation(libs.androidx.junit.ktx)
     testImplementation(kotlin("test"))
     testImplementation(libs.junit.jupiter)

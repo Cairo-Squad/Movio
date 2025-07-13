@@ -58,3 +58,8 @@
 -dontwarn org.junit.**
 
 -dontwarn java.lang.invoke.StringConcatFactory
+-dontwarn kotlinx.**
+-dontwarn okhttp3.**
+-dontwarn org.jetbrains.kotlin.**
+-keep class kotlinx.** { *; }
+-keepclassmembers class kotlinx.** { *; }

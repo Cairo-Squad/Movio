@@ -28,14 +28,9 @@
 ##########################################
 # 🌟 Coil
 ##########################################
-# Keep Coil ImageLoader and annotations
 -keep class coil.** { *; }
 -dontwarn coil.**
 
--keep class okhttp3.** { *; }
--dontwarn okhttp3.**
-
-# Keep Coil annotated functions (like @DrawableRes)
 -keepclassmembers class * {
     @coil.annotation.* *;
 }
@@ -43,22 +38,23 @@
 ##########################################
 # 🌟 TensorFlow Lite
 ##########################################
-# Keep TensorFlow Lite API
 -keep class org.tensorflow.lite.** { *; }
 -dontwarn org.tensorflow.lite.**
 
-# Keep TensorFlow Lite metadata and support libraries
+##########################################
+# 🌟 TensorFlow Lite Support API
+##########################################
 -keep class org.tensorflow.lite.support.** { *; }
 -dontwarn org.tensorflow.lite.support.**
 
--keep class org.tensorflow.lite.task.vision.** { *; }
--dontwarn org.tensorflow.lite.task.vision.**
+-keep class org.tensorflow.lite.support.image.** { *; }
+-dontwarn org.tensorflow.lite.support.image.**
 
-# Native libraries (TFLite uses native code – don’t strip)
--keep class org.tensorflow.** { *; }
+-keep class org.tensorflow.lite.support.tensorbuffer.** { *; }
+-dontwarn org.tensorflow.lite.support.tensorbuffer.**
 
 ##########################################
-# 🌟 Kotlin Metadata
+# 🌟 Kotlin Metadata (required for reflection)
 ##########################################
 -keep class kotlin.Metadata { *; }
 -keepclassmembers class ** {
@@ -71,3 +67,4 @@
 -dontwarn io.mockk.**
 -dontwarn com.google.common.truth.**
 -dontwarn org.junit.**
+-dontwarn kotlinx.**

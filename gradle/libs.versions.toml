@@ -1,7 +1,5 @@
 [versions]
-tensorflowLiteMetadata = "0.1.0"
-tensorflowLiteSupport = "0.3.1"
-tensorflowLiteTaskVision = "0.4.3"
+agp = "8.5.2"
 constraintlayoutCompose = "1.1.1"
 datastorePreferences = "1.1.7"
 junitKtx = "1.2.1"
@@ -20,7 +18,6 @@ coreKtx = "1.15.0"
 koin-annotations = "2.0.0"
 kotlin = "2.2.0"
 coreTesting = "2.2.0"
-tensorflowLiteGpu = "2.3.0"
 coilCompose = "2.4.0"
 lifecycleRuntimeKtx = "2.8.0"
 roomRuntime = "2.7.1"
@@ -39,7 +36,6 @@ junitJupiter = "5.8.1"
 firebaseAnalytics = "22.5.0"
 firebaseBom = "33.16.0"
 firebaseCrashlytics = "19.4.4"
-agp = "8.5.2"
 ksp = "2.2.0-2.0.2"
 composeBom = "2024.09.00"
 
@@ -77,10 +73,6 @@ coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 tensorflow-lite = { module = "org.tensorflow:tensorflow-lite", version.ref = "tensorflowLite" }
-tensorflow-lite-support = { module = "org.tensorflow:tensorflow-lite-support", version.ref = "tensorflowLiteSupport" }
-tensorflow-lite-task-vision = { module = "org.tensorflow:tensorflow-lite-task-vision", version.ref = "tensorflowLiteTaskVision" }
-tensorflow-lite-metadata = { group = "org.tensorflow", name = "tensorflow-lite-metadata", version.ref = "tensorflowLiteMetadata" }
-tensorflow-lite-gpu = { group = "org.tensorflow", name = "tensorflow-lite-gpu", version.ref = "tensorflowLiteGpu" }
 androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
