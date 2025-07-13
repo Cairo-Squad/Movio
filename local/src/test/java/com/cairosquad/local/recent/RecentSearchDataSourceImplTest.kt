@@ -43,13 +43,13 @@ class RecentSearchDataSourceImplTest {
             RecentSearchEntity("leon"),
             RecentSearchEntity("leona")
         )
-        coEvery { dao.getAll(query) } returns entities
+        coEvery { dao.getAllQueries(query) } returns entities
 
         // When
         val result = dataSource.getByQuery(query)
 
         // Then
-        coVerify { dao.getAll(query) }
+        coVerify { dao.getAllQueries(query) }
     }
 
     @Test
@@ -77,10 +77,10 @@ class RecentSearchDataSourceImplTest {
             RecentSearchEntity("dune"),
             RecentSearchEntity("interstellar")
         )
-        coEvery { dao.getAll() } returns entities
+        coEvery { dao.getAllQueries() } returns entities
 
         val result = dataSource.getAll()
 
-        coVerify { dao.getAll() }
+        coVerify { dao.getAllQueries() }
     }
 }
