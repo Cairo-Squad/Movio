@@ -10,6 +10,7 @@ data class SearchScreenState(
     val movies: List<MovieUiState> = emptyList(),
     val series: List<SeriesUiState> = emptyList(),
     val artists: List<ArtistUiState> = emptyList(),
+    val isRefreshing: Boolean = false
 ) {
     data class ArtistUiState(
         val id: Long,

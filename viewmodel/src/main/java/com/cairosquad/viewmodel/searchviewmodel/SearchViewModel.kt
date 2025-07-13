@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.searchviewmodel
 
+import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.search.usecase.ClearRecentSearchUseCase
 import com.cairosquad.domain.search.usecase.GetExploreMoreUseCase
 import com.cairosquad.domain.search.usecase.GetForYouUseCase
@@ -9,6 +10,7 @@ import com.cairosquad.viewmodel.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.IOException
 
 class SearchViewModel(
@@ -28,6 +30,11 @@ class SearchViewModel(
 
     fun loadDiscoverMovies() = tryToCall(
         block = {
+            updateState {
+                it.copy(
+                    screenStatus = SearchScreenState.ScreenStatus.LOADING,
+                )
+            }
             val forYou = getForYouUseCase.getForYouMovies().map { it.toUiState() }
             val exploreMore = getExploreMoreUseCase.getExploreMoreMovies().map { it.toUiState() }
             forYou to exploreMore
@@ -216,6 +223,27 @@ class SearchViewModel(
                 screenStatus = SearchScreenState.ScreenStatus.SEARCH,
             )
         }
+    }
+
+    override fun onRefresh() {
+        viewModelScope.launch {
+            updateState {
+                it.copy(
+                    isRefreshing = true,
+                )
+            }
+            delay(500L)
+
+            updateState {
+                it.copy(isRefreshing = false)
+            }
+        }
+        if (screenState.value.query.isBlank()) {
+            loadDiscoverMovies()
+        } else {
+            onSearch(screenState.value.query)
+        }
+
     }
 
     private fun mapExceptionToMessage(e: Throwable): String = when (e) {
