@@ -12,13 +12,10 @@ class LocalRecentSearchRepositoryImpl(
     }
 
     override suspend fun getByQuery(query: String): List<String> {
-        return if (query.isBlank()) {
-            dataSource.getAll()
-        } else {
-            dataSource.getByQuery(query)
-        }
+        return query.takeIf { it.isNotBlank() }
+            ?.let { dataSource.getByQuery(it) }
+            ?: dataSource.getAll()
     }
-
 
     override suspend fun clearAll() {
         dataSource.clearAll()
