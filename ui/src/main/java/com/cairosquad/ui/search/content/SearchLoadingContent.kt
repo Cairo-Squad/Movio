@@ -14,11 +14,11 @@ import com.cairosquad.design_system.component.InputField
 import com.cairosquad.design_system.component.LoadingMovieCard
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.viewmodel.searchviewmodel.SearchInteractionListener
-import com.cairosquad.viewmodel.searchviewmodel.SearchUiState
+import com.cairosquad.viewmodel.searchviewmodel.SearchScreenState
 
 @Composable
 fun SearchLoadingContent(
-    state: SearchUiState,
+    state: SearchScreenState,
     listener: SearchInteractionListener,
     modifier: Modifier = Modifier
 ) {

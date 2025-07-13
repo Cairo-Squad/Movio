@@ -35,11 +35,11 @@ import com.cairosquad.design_system.component.TopBar
 import com.cairosquad.design_system.text_style.defaultTextStyle
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.viewmodel.searchviewmodel.SearchInteractionListener
-import com.cairosquad.viewmodel.searchviewmodel.SearchUiState
+import com.cairosquad.viewmodel.searchviewmodel.SearchScreenState
 
 @Composable
 fun SearchResultContent(
-    state: SearchUiState,
+    state: SearchScreenState,
     listener: SearchInteractionListener,
     modifier: Modifier = Modifier
 ) {
@@ -125,7 +125,7 @@ fun SearchResultContent(
 
 @Composable
 private fun AllResultsTabContent(
-    topResults: List<SearchUiState.MovieUiState>,
+    topResults: List<SearchScreenState.MovieScreenState>,
     modifier: Modifier = Modifier
 ) {
     if (topResults.isEmpty()) {
@@ -162,7 +162,7 @@ private fun AllResultsTabContent(
 
 @Composable
 private fun MoviesTabContent(
-    movies: List<SearchUiState.MovieUiState>,
+    movies: List<SearchScreenState.MovieScreenState>,
     modifier: Modifier = Modifier
 ) {
     if (movies.isEmpty()) {
@@ -194,7 +194,7 @@ private fun MoviesTabContent(
 
 @Composable
 private fun SeriesTabContent(
-    series: List<SearchUiState.SeriesUiState>,
+    series: List<SearchScreenState.SeriesScreenState>,
     modifier: Modifier = Modifier
 ) {
     if (series.isEmpty()) {
@@ -226,7 +226,7 @@ private fun SeriesTabContent(
 
 @Composable
 private fun ArtistsTabContent(
-    artists: List<SearchUiState.ArtistUiState>,
+    artists: List<SearchScreenState.ArtistScreenState>,
     modifier: Modifier = Modifier
 ) {
     if (artists.isEmpty()) {
