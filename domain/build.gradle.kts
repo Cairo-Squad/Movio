@@ -16,9 +16,8 @@ dependencies {
     testImplementation(kotlin("test"))
     api(project(":entity"))
     testImplementation(libs.junit.jupiter)
-    testImplementation(libs.kotlinx.coroutines.test.v1102)
+    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.mockk)
-    testImplementation(libs.kotlinx.coroutines.test.v1102)
 }

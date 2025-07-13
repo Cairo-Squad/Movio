@@ -6,18 +6,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.cairosquad.design_system.component.RefreshBox
 import com.cairosquad.viewmodel.searchviewmodel.SearchInteractionListener
-import com.cairosquad.viewmodel.searchviewmodel.SearchUiState
+import com.cairosquad.viewmodel.searchviewmodel.SearchScreenState
 
 @Composable
 fun SearchScreenContent(
-    state: SearchUiState,
+    state: SearchScreenState,
     listener: SearchInteractionListener,
     modifier: Modifier = Modifier,
 ) {
 
     Crossfade(state.screenStatus) {
         when (it) {
-            SearchUiState.ScreenStatus.EXPLORE -> {
+            SearchScreenState.ScreenStatus.EXPLORE -> {
                 RefreshBox(
                     isRefreshing = state.isRefreshing,
                     onRefresh = listener::onRefresh,
@@ -32,15 +32,15 @@ fun SearchScreenContent(
                 }
             }
 
-            SearchUiState.ScreenStatus.SEARCH -> {
-                SearchContent(
-                    modifier = modifier,
-                    state = state,
-                    listener = listener
-                )
-            }
+        SearchScreenState.ScreenStatus.SEARCH -> {
+            SearchContent(
+                modifier = modifier,
+                state = state,
+                listener = listener
+            )
+        }
 
-            SearchUiState.ScreenStatus.RESULT -> {
+            SearchScreenState.ScreenStatus.RESULT -> {
                 RefreshBox(
                     isRefreshing = state.isRefreshing,
                     onRefresh = listener::onRefresh,
@@ -55,7 +55,7 @@ fun SearchScreenContent(
                 }
             }
 
-            SearchUiState.ScreenStatus.LOADING -> {
+            SearchScreenState.ScreenStatus.LOADING -> {
                 RefreshBox(
                     isRefreshing = state.isRefreshing,
                     onRefresh = listener::onRefresh,
@@ -70,7 +70,7 @@ fun SearchScreenContent(
                 }
             }
 
-            SearchUiState.ScreenStatus.FAILED -> {
+            SearchScreenState.ScreenStatus.FAILED -> {
                 RefreshBox(
                     isRefreshing = state.isRefreshing,
                     onRefresh = listener::onRefresh,

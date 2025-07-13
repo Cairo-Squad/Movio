@@ -13,7 +13,7 @@ class RecentSearchRepositoryImpl(
 
     override suspend fun getByQuery(query: String): List<String> {
         return if (query.isBlank()) {
-            dataSource.getAll()
+            emptyList()
         } else {
             dataSource.getByQuery(query)
         }

@@ -1,25 +1,26 @@
 ##########################################
-# 🌟 AndroidX Core
+# 🌟 Kotlinx Serialization
 ##########################################
--keep class androidx.core.** { *; }
-
-##########################################
-# 🌟 Coil
-##########################################
--keep class coil.** { *; }
--keepclassmembers class * {
-    @coil.annotation.* *;
+-keep class kotlinx.serialization.** { *; }
+-keep @kotlinx.serialization.Serializable class * {*;}
+-keepclassmembers class ** {
+    @kotlinx.serialization.Serializable *;
 }
 
 ##########################################
-# 🌟 TensorFlow Lite
+# 🌟 AndroidX DataStore
 ##########################################
--keep class org.tensorflow.lite.** { *; }
+-keep class androidx.datastore.** { *; }
 
 ##########################################
-# 🌟 TensorFlow Lite Support API
+# 🌟 Ktor
 ##########################################
--keep class org.tensorflow.lite.support.** { *; }
+-keep class io.ktor.** { *; }
+
+##########################################
+# 🌟 OkHttp Logging Interceptor
+##########################################
+-keep class okhttp3.** { *; }
 
 ##########################################
 # 🌟 Kotlin Metadata

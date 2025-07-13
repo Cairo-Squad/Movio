@@ -10,7 +10,6 @@ plugins {
     alias(libs.plugins.google.firebase.perf)
     alias(libs.plugins.google.firebase.appdistribution)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.kotlin.serialization)
     id("androidx.room") version "2.7.1"
 }
 
@@ -46,12 +45,28 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("release")
+            ndk {
+                abiFilters += listOf("armeabi-v7a", "arm64-v8a")
+            }
+        }
+        debug {
+            isMinifyEnabled = false
+            isShrinkResources = false
+            ndk {
+                abiFilters += listOf(
+                    "armeabi-v7a",
+                    "arm64-v8a",
+                    "x86",
+                    "x86_64"
+                )
+            }
         }
     }
     compileOptions {
@@ -64,9 +79,6 @@ android {
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.8"
-    }
     room {
         schemaDirectory("schemas")
     }
@@ -77,25 +89,24 @@ ksp {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.foundation.layout.android)
-    implementation(libs.androidx.foundation)
-    implementation(platform(libs.androidx.compose.bom))
+    testImplementation(libs.junit)
     implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.firebase.perf)
+    implementation(libs.androidx.core.ktx)
     implementation(libs.firebase.analytics)
+    implementation(libs.androidx.foundation)
+    implementation(libs.androidx.ui.graphics)
     implementation(libs.firebase.crashlytics)
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.perf)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
     debugImplementation(libs.androidx.ui.tooling)
     androidTestImplementation(libs.ui.test.junit4)
+    implementation(libs.androidx.activity.compose)
+    androidTestImplementation(libs.androidx.junit)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.lifecycle.runtime.ktx)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.androidx.foundation.layout.android)
 
     // koin
     implementation(libs.koin.androidx.compose)
@@ -114,8 +125,6 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
-
-    implementation(libs.navigation.compose)
 
     implementation(project(":design_system"))
     implementation(project(":domain"))

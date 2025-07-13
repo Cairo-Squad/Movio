@@ -1,6 +1,6 @@
 package com.cairosquad.viewmodel.searchviewmodel
 
-data class SearchUiState(
+data class SearchScreenState(
     val query: String = "",
     val screenStatus: ScreenStatus = ScreenStatus.LOADING,
     val errorMessage: String? = null,
