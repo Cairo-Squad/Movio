@@ -1,8 +1,6 @@
 package com.cairosquad.viewmodel.searchviewmodel
 
-import com.cairosquad.viewmodel.base.BaseInteractionListener
-
-interface SearchInteractionListener : BaseInteractionListener {
+interface SearchInteractionListener {
     fun onQueryTextChanged(query: String)
     fun onSearch(query: String)
     fun onCancelSearch()
@@ -11,5 +9,5 @@ interface SearchInteractionListener : BaseInteractionListener {
     fun onRemoveHistoryItem(query: String)
     fun onBackClicked()
     fun onClickSearchTextField()
-    override fun onRefresh()
+    fun onRefresh()
 }

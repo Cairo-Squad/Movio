@@ -219,12 +219,12 @@ class SearchViewModel(
                     isRefreshing = true,
                 )
             }
+
+            delay(300L)
             when (uiState.value.screenStatus) {
                 SearchUiState.ScreenStatus.EXPLORE -> {
                     updateState {
                         it.copy(
-                            forYou = emptyList(),
-                            exploreMore = emptyList(),
                             screenStatus = SearchUiState.ScreenStatus.LOADING
                         )
                     }

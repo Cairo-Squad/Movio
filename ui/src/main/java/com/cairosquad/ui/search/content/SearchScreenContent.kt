@@ -13,46 +13,61 @@ fun SearchScreenContent(
     listener: SearchInteractionListener,
     modifier: Modifier = Modifier,
 ) {
-    RefreshBox(
-        isRefreshing = state.isRefreshing,
-        onRefresh = listener::onRefresh,
-        modifier = modifier
-            .fillMaxSize()
-    ) {
-        when (state.screenStatus) {
-            SearchUiState.ScreenStatus.EXPLORE -> {
+
+    when (state.screenStatus) {
+        SearchUiState.ScreenStatus.EXPLORE -> {
+            RefreshBox(
+                isRefreshing = state.isRefreshing,
+                onRefresh = listener::onRefresh,
+                modifier = modifier
+                    .fillMaxSize()
+            ) {
                 ExploreScreenContent(
                     modifier = modifier,
                     state = state,
                     listener = listener
                 )
             }
+        }
 
-            SearchUiState.ScreenStatus.SEARCH -> {
-                SearchContent(
-                    modifier = modifier,
-                    state = state,
-                    listener = listener
-                )
-            }
+        SearchUiState.ScreenStatus.SEARCH -> {
+            SearchContent(
+                modifier = modifier,
+                state = state,
+                listener = listener
+            )
+        }
 
-            SearchUiState.ScreenStatus.RESULT -> {
+        SearchUiState.ScreenStatus.RESULT -> {
+            RefreshBox(
+                isRefreshing = state.isRefreshing,
+                onRefresh = listener::onRefresh,
+                modifier = modifier
+                    .fillMaxSize()
+            ) {
                 SearchResultContent(
                     modifier = modifier,
                     state = state,
                     listener = listener
                 )
             }
+        }
 
-            SearchUiState.ScreenStatus.LOADING -> {
-                SearchLoadingContent(
-                    modifier = modifier,
-                    state = state,
-                    listener = listener
-                )
-            }
+        SearchUiState.ScreenStatus.LOADING -> {
+            SearchLoadingContent(
+                modifier = modifier,
+                state = state,
+                listener = listener
+            )
+        }
 
-            SearchUiState.ScreenStatus.FAILED -> {
+        SearchUiState.ScreenStatus.FAILED -> {
+            RefreshBox(
+                isRefreshing = state.isRefreshing,
+                onRefresh = listener::onRefresh,
+                modifier = modifier
+                    .fillMaxSize()
+            ) {
                 SearchFailContent(
                     modifier = modifier,
                     state = state,
