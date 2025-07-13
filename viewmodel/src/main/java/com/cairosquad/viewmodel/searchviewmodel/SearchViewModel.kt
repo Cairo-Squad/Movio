@@ -6,6 +6,7 @@ import com.cairosquad.domain.search.usecase.GetPersonalizedMoviesUseCase
 import com.cairosquad.domain.search.usecase.GetLocalSearchHistoryUseCase
 import com.cairosquad.domain.search.usecase.SearchUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
+import com.cairosquad.viewmodel.searchviewmodel.SearchScreenState.ScreenStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -17,7 +18,7 @@ class SearchViewModel(
     private val clearRecentSearchUseCase: ClearSearchHistoryUseCase,
     private val getSuggestedMoviesUseCase: GetSuggestedMoviesUseCase,
     private val getPersonalizedMoviesUseCase: GetPersonalizedMoviesUseCase,
-) : BaseViewModel<SearchUiState, SearchUiEvent>(initialState = SearchUiState()),
+) : BaseViewModel<SearchScreenState, SearchUiEvent>(initialState = SearchScreenState()),
     SearchInteractionListener {
 
     private var searchJob: Job? = null
@@ -35,7 +36,7 @@ class SearchViewModel(
         onSuccess = { (forYou, exploreMore) ->
             updateState {
                 it.copy(
-                    screenStatus = SearchUiState.ScreenStatus.EXPLORE,
+                    screenStatus = ScreenStatus.EXPLORE,
                     forYou = forYou,
                     exploreMore = exploreMore,
                     errorMessage = null
@@ -46,7 +47,7 @@ class SearchViewModel(
             val message = mapExceptionToMessage(e)
             updateState {
                 it.copy(
-                    screenStatus = SearchUiState.ScreenStatus.FAILED,
+                    screenStatus = ScreenStatus.FAILED,
                     errorMessage = message
                 )
             }
@@ -58,7 +59,7 @@ class SearchViewModel(
     override fun onQueryTextChanged(query: String) {
         updateState {
             it.copy(
-                screenStatus = SearchUiState.ScreenStatus.SEARCH,
+                screenStatus = ScreenStatus.SEARCH,
                 query = query
             )
         }
@@ -84,7 +85,7 @@ class SearchViewModel(
         searchJob?.cancel()
         updateState {
             it.copy(
-                screenStatus = SearchUiState.ScreenStatus.EXPLORE,
+                screenStatus = ScreenStatus.EXPLORE,
                 query = "",
                 recentSearch = emptyList(),
                 errorMessage = null
@@ -96,7 +97,7 @@ class SearchViewModel(
         searchJob?.cancel()
         updateState {
             it.copy(
-                screenStatus = SearchUiState.ScreenStatus.LOADING,
+                screenStatus =ScreenStatus.LOADING,
                 query = query,
                 errorMessage = null
             )
@@ -105,7 +106,7 @@ class SearchViewModel(
         if (query.isBlank()) {
             updateState {
                 it.copy(
-                    screenStatus = SearchUiState.ScreenStatus.SEARCH,
+                    screenStatus = ScreenStatus.SEARCH,
                 )
             }
         } else {
@@ -119,7 +120,7 @@ class SearchViewModel(
                 onSuccess = { (movies, series, artists) ->
                     updateState {
                         it.copy(
-                            screenStatus = SearchUiState.ScreenStatus.RESULT,
+                            screenStatus = ScreenStatus.RESULT,
                             movies = movies,
                             series = series,
                             artists = artists,
@@ -131,7 +132,7 @@ class SearchViewModel(
                     val message = mapExceptionToMessage(e)
                     updateState {
                         it.copy(
-                            screenStatus = SearchUiState.ScreenStatus.FAILED,
+                            screenStatus = ScreenStatus.FAILED,
                             errorMessage = message
                         )
                     }
@@ -184,14 +185,14 @@ class SearchViewModel(
     override fun onBackClicked() {
         updateState {
             when (it.screenStatus) {
-                SearchUiState.ScreenStatus.SEARCH -> it.copy(
-                    screenStatus = SearchUiState.ScreenStatus.EXPLORE,
+                ScreenStatus.SEARCH -> it.copy(
+                    screenStatus = ScreenStatus.EXPLORE,
                     query = "",
                     recentSearch = emptyList(),
                 )
 
-                SearchUiState.ScreenStatus.RESULT -> it.copy(
-                    screenStatus = SearchUiState.ScreenStatus.SEARCH,
+                ScreenStatus.RESULT -> it.copy(
+                    screenStatus = ScreenStatus.SEARCH,
                 )
 
                 else -> it
@@ -213,7 +214,7 @@ class SearchViewModel(
         searchJob?.cancel()
         updateState {
             it.copy(
-                screenStatus = SearchUiState.ScreenStatus.SEARCH,
+                screenStatus = ScreenStatus.SEARCH,
             )
         }
     }
