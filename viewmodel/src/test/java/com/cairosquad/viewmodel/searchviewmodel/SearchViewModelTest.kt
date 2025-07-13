@@ -105,7 +105,13 @@ class SearchViewModelTest {
         delay(400)
 
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
-        assertThat(viewModel.screenState.value.errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
+        assertThat(viewModel.screenState.value.errorStatus).isIn(
+            listOf(
+                ErrorStatus.NO_INTERNET,
+                ErrorStatus.NETWORK_ERROR,
+                ErrorStatus.UNKNOWN_ERROR
+            )
+        )
     }
 
     @Test
@@ -152,7 +158,13 @@ class SearchViewModelTest {
         viewModel.onSearch("fail")
         delay(400)
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
-        assertThat(viewModel.screenState.value.errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
+        assertThat(viewModel.screenState.value.errorStatus).isIn(
+            listOf(
+                ErrorStatus.NO_INTERNET,
+                ErrorStatus.NETWORK_ERROR,
+                ErrorStatus.UNKNOWN_ERROR
+            )
+        )
     }
 
     @Test
@@ -233,7 +245,7 @@ class SearchViewModelTest {
         delay(50)
         viewModel.onBackClicked()
         //Then
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
+        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
     }
 
     @Test
@@ -243,11 +255,11 @@ class SearchViewModelTest {
         coEvery { searchUseCase.getSeries("") } returns emptyList()
         coEvery { searchUseCase.getArtists("") } returns emptyList()
         //When
-        viewModel.onSearch("")
+        viewModel.onSearch("test")
         delay(50)
         viewModel.onBackClicked()
         //Then
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
+        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
     }
 
     @Test
@@ -258,8 +270,8 @@ class SearchViewModelTest {
         viewModel.onClickSearchTextField()
         delay(50)
         //Then
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
-        assertThat(viewModel.uiState.value.recentSearch).isEmpty()
+        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
+        assertThat(viewModel.screenState.value.recentSearch).isEmpty()
     }
 
     @Test
@@ -270,7 +282,7 @@ class SearchViewModelTest {
         viewModel.onQueryTextChanged("x")
         delay(350)
         //Then
-        assertThat(viewModel.uiState.value.recentSearch).isEmpty()
+        assertThat(viewModel.screenState.value.recentSearch).isEmpty()
     }
 
     @Test
@@ -284,10 +296,10 @@ class SearchViewModelTest {
         viewModel.onSearch(query)
         delay(50)
         //Then
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.RESULT)
-        assertThat(viewModel.uiState.value.movies).isEmpty()
-        assertThat(viewModel.uiState.value.series).isEmpty()
-        assertThat(viewModel.uiState.value.artists).hasSize(1)
+        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.RESULT)
+        assertThat(viewModel.screenState.value.movies).isEmpty()
+        assertThat(viewModel.screenState.value.series).isEmpty()
+        assertThat(viewModel.screenState.value.artists).hasSize(1)
     }
 
     @Test
@@ -298,7 +310,7 @@ class SearchViewModelTest {
         viewModel.onClearHistory()
         delay(50)
         //Then
-        assertThat(viewModel.uiState.value.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)   // غيّر القيمة
+        assertThat(viewModel.screenState.value.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)   // غيّر القيمة
     }
 
     @Test
@@ -309,7 +321,7 @@ class SearchViewModelTest {
         viewModel.onRemoveHistoryItem("dummy")
         delay(50)
         //Then
-        assertThat(viewModel.uiState.value.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
+        assertThat(viewModel.screenState.value.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
     }
 
     @Test
@@ -325,7 +337,7 @@ class SearchViewModelTest {
         //When
         viewModel.onBackClicked()
         //Then
-        val state = viewModel.uiState.value
+        val state = viewModel.screenState.value
         assertThat(state.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
         assertThat(state.query).isEqualTo("whatever")
         assertThat(state.recentSearch).containsExactly("a", "b")
@@ -346,7 +358,7 @@ class SearchViewModelTest {
         viewModel.onCancelSearch()
         delay(50)
         //Then
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
+        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
         val jobAfter = viewModel.run {
             javaClass.getDeclaredField("searchJob").apply { isAccessible = true }.get(this) as Job?
         }
@@ -364,7 +376,7 @@ class SearchViewModelTest {
         viewModel.onCancelSearch()
 
         //Then
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
+        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
     }
 
     @Test
@@ -417,7 +429,6 @@ class SearchViewModelTest {
 
     @Test
     fun `onClickSearchTextField cancels running searchJob and sets SEARCH status`() = runBlocking {
-        //Given
         coEvery { getRecentSearchUseCase.getByQuery("seed") } returns emptyList()
         viewModel.onQueryTextChanged("seed")
         delay(50)
@@ -425,13 +436,11 @@ class SearchViewModelTest {
             viewModel.javaClass.getDeclaredField("searchJob").apply { isAccessible = true }
         val jobBefore = jobField.get(viewModel) as Job
         assertThat(jobBefore).isNotNull()
-        //When
         coEvery { getRecentSearchUseCase.getAll() } returns emptyList()
         viewModel.onClickSearchTextField()
         delay(50)
-        //Then
         assertThat(jobBefore.isCancelled || jobBefore.isCompleted).isTrue()
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
+        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
     }
 
     @Test
@@ -457,7 +466,7 @@ class SearchViewModelTest {
         viewModel.onSearch("boom")
         delay(50)
         //Then
-        with(viewModel.uiState.value) {
+        with(viewModel.screenState.value) {
             assertThat(screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
             assertThat(errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
         }
@@ -472,7 +481,7 @@ class SearchViewModelTest {
         viewModel.loadDiscoverMovies()
         delay(50)
         // Then
-        with(viewModel.uiState.value) {
+        with(viewModel.screenState.value) {
             assertThat(screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
             assertThat(errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
         }

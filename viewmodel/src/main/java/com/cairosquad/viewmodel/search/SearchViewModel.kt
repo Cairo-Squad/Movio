@@ -218,29 +218,27 @@ class SearchViewModel(
     }
 
     override fun onClickSearchTextField() {
+        searchJob?.cancel()
         tryToCall(
             block = {
                 getRecentSearchUseCase.getAll()
             },
             onSuccess = { suggestions ->
-                updateState { it.copy(recentSearch = suggestions, errorStatus = null) }
+                updateState {
+                    it.copy(
+                        screenStatus = SearchScreenState.ScreenStatus.SEARCH,
+                    )
+                }
+                updateState { it.copy(recentSearch = suggestions) }
             },
             onError = { e ->
                 updateState {
                     it.copy(
-                        screenStatus = SearchScreenState.ScreenStatus.FAILED,
-                        errorStatus = handleSearchException(e)
+                        screenStatus = SearchScreenState.ScreenStatus.SEARCH,
                     )
                 }
             }
         )
-
-        searchJob?.cancel()
-        updateState {
-            it.copy(
-                screenStatus = SearchScreenState.ScreenStatus.SEARCH,
-            )
-        }
     }
 
     override fun onRefresh() {
