@@ -36,12 +36,12 @@ import com.cairosquad.design_system.component.SectionHeader
 import com.cairosquad.design_system.modifier.dropShadow
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.viewmodel.searchviewmodel.SearchInteractionListener
-import com.cairosquad.viewmodel.searchviewmodel.SearchUiState
+import com.cairosquad.viewmodel.searchviewmodel.SearchScreenState
 
 @Composable
 fun ExploreScreenContent(
     modifier: Modifier = Modifier,
-    state: SearchUiState,
+    state: SearchScreenState,
     listener: SearchInteractionListener
 ) {
 
@@ -58,7 +58,8 @@ fun ExploreScreenContent(
 
     LazyColumn(
         modifier = modifier.fillMaxSize(),
-        state = lazyColumnState
+        state = lazyColumnState,
+        contentPadding = PaddingValues(bottom = 12.dp)
     ) {
         stickyHeader {
             InputField(

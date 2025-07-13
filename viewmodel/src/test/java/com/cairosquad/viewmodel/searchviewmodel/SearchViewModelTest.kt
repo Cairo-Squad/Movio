@@ -24,7 +24,6 @@ import java.io.IOException
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchViewModelTest {
 
-
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private lateinit var searchUseCase: SearchUseCase
@@ -93,7 +92,7 @@ class SearchViewModelTest {
 
         delay(400)
 
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.EXPLORE)
+        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
         assertThat(viewModel.uiState.value.forYou).isEqualTo(forYouList.map { it.toUiState() })
         assertThat(viewModel.uiState.value.exploreMore).isEqualTo(exploreMoreList.map { it.toUiState() })
     }
@@ -107,7 +106,7 @@ class SearchViewModelTest {
 
         delay(400)
 
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.FAILED)
+        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
         assertThat(viewModel.uiState.value.errorMessage).contains("Network error. Please check your connection")
     }
 
@@ -127,7 +126,7 @@ class SearchViewModelTest {
     @Test
     fun `onCancelSearch clears query and sets to EXPLORE`() = runBlocking {
         viewModel.onCancelSearch()
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.EXPLORE)
+        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
         assertThat(viewModel.uiState.value.query).isEmpty()
     }
 
@@ -140,7 +139,7 @@ class SearchViewModelTest {
 
         viewModel.onSearch(query)
         delay(400)
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.RESULT)
+        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.RESULT)
         assertThat(viewModel.uiState.value.movies).hasSize(1)
         assertThat(viewModel.uiState.value.series).hasSize(1)
         assertThat(viewModel.uiState.value.artists).hasSize(1)
@@ -154,8 +153,15 @@ class SearchViewModelTest {
 
         viewModel.onSearch("fail")
         delay(400)
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.FAILED)
+        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
         assertThat(viewModel.uiState.value.errorMessage).contains("Network")
+    }
+
+    @Test
+    fun `onSearch does not go to result screen when query is blank`() = runBlocking {
+        viewModel.onSearch("    ")
+        delay(400)
+        assertThat(viewModel.uiState.value.screenStatus).isNotEqualTo(SearchScreenState.ScreenStatus.RESULT)
     }
 
     @Test
@@ -167,7 +173,7 @@ class SearchViewModelTest {
 
         viewModel.onRecentSearchItemClicked(query)
         delay(400)
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.RESULT)
+        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.RESULT)
     }
 
     @Test
@@ -205,7 +211,7 @@ class SearchViewModelTest {
         delay(300)
         viewModel.onBackClicked()
         delay(300)
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.EXPLORE)
+        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
     }
 
     @Test
@@ -217,8 +223,7 @@ class SearchViewModelTest {
 
         delay(400)
 
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.SEARCH)
+        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
         assertThat(viewModel.uiState.value.recentSearch).isEqualTo(recent)
     }
-
 }
