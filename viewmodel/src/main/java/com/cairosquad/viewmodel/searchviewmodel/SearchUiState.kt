@@ -1,5 +1,7 @@
 package com.cairosquad.viewmodel.searchviewmodel
 
+import com.cairosquad.viewmodel.base.BaseUiState
+
 data class SearchUiState(
     val query: String = "",
     val screenStatus: ScreenStatus = ScreenStatus.LOADING,
@@ -10,7 +12,8 @@ data class SearchUiState(
     val movies: List<MovieUiState> = emptyList(),
     val series: List<SeriesUiState> = emptyList(),
     val artists: List<ArtistUiState> = emptyList(),
-) {
+    override val isRefreshing: Boolean = false
+) : BaseUiState {
     data class ArtistUiState(
         val id: Long,
         val name: String,
