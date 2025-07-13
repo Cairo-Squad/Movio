@@ -1,7 +1,10 @@
 package com.cairosquad.ui.search.content
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.cairosquad.design_system.component.RefreshBox
 import com.cairosquad.viewmodel.search.SearchInteractionListener
 import com.cairosquad.viewmodel.search.SearchScreenState
 
@@ -11,14 +14,23 @@ fun SearchScreenContent(
     listener: SearchInteractionListener,
     modifier: Modifier = Modifier,
 ) {
-    when (state.screenStatus) {
-        SearchScreenState.ScreenStatus.EXPLORE -> {
-            ExploreScreenContent(
-                modifier = modifier,
-                state = state,
-                listener = listener
-            )
-        }
+
+    Crossfade(state.screenStatus) {
+        when (it) {
+            SearchScreenState.ScreenStatus.EXPLORE -> {
+                RefreshBox(
+                    isRefreshing = state.isRefreshing,
+                    onRefresh = listener::onRefresh,
+                    modifier = modifier
+                        .fillMaxSize()
+                ) {
+                    ExploreScreenContent(
+                        modifier = modifier,
+                        state = state,
+                        listener = listener
+                    )
+                }
+            }
 
         SearchScreenState.ScreenStatus.SEARCH -> {
             SearchContent(
@@ -28,28 +40,50 @@ fun SearchScreenContent(
             )
         }
 
-        SearchScreenState.ScreenStatus.RESULT -> {
-            SearchResultContent(
-                modifier = modifier,
-                state = state,
-                listener = listener
-            )
-        }
+            SearchScreenState.ScreenStatus.RESULT -> {
+                RefreshBox(
+                    isRefreshing = state.isRefreshing,
+                    onRefresh = listener::onRefresh,
+                    modifier = modifier
+                        .fillMaxSize()
+                ) {
+                    SearchResultContent(
+                        modifier = modifier,
+                        state = state,
+                        listener = listener
+                    )
+                }
+            }
 
-        SearchScreenState.ScreenStatus.LOADING -> {
-            SearchLoadingContent(
-                modifier = modifier,
-                state = state,
-                listener = listener
-            )
-        }
+            SearchScreenState.ScreenStatus.LOADING -> {
+                RefreshBox(
+                    isRefreshing = state.isRefreshing,
+                    onRefresh = listener::onRefresh,
+                    modifier = modifier
+                        .fillMaxSize()
+                ) {
+                    SearchLoadingContent(
+                        modifier = modifier,
+                        state = state,
+                        listener = listener
+                    )
+                }
+            }
 
-        SearchScreenState.ScreenStatus.FAILED -> {
-            SearchFailContent(
-                modifier = modifier,
-                state = state,
-                listener = listener
-            )
+            SearchScreenState.ScreenStatus.FAILED -> {
+                RefreshBox(
+                    isRefreshing = state.isRefreshing,
+                    onRefresh = listener::onRefresh,
+                    modifier = modifier
+                        .fillMaxSize()
+                ) {
+                    SearchFailContent(
+                        modifier = modifier,
+                        state = state,
+                        listener = listener
+                    )
+                }
+            }
         }
     }
 }

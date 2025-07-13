@@ -90,9 +90,9 @@ class SearchViewModelTest {
 
         delay(400)
 
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
-        assertThat(viewModel.uiState.value.forYou).isEqualTo(forYouList.map { it.toUiState() })
-        assertThat(viewModel.uiState.value.exploreMore).isEqualTo(exploreMoreList.map { it.toUiState() })
+        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
+        assertThat(viewModel.screenState.value.forYou).isEqualTo(forYouList.map { it.toUiState() })
+        assertThat(viewModel.screenState.value.exploreMore).isEqualTo(exploreMoreList.map { it.toUiState() })
     }
 
     @Test
@@ -104,8 +104,8 @@ class SearchViewModelTest {
 
         delay(400)
 
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
-        assertThat(viewModel.uiState.value.errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
+        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
+        assertThat(viewModel.screenState.value.errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
     }
 
     @Test
@@ -117,15 +117,15 @@ class SearchViewModelTest {
         viewModel.onQueryTextChanged(query)
 
         delay(400)
-        assertThat(viewModel.uiState.value.query).isEqualTo(query)
-        assertThat(viewModel.uiState.value.recentSearch).isEqualTo(recent)
+        assertThat(viewModel.screenState.value.query).isEqualTo(query)
+        assertThat(viewModel.screenState.value.recentSearch).isEqualTo(recent)
     }
 
     @Test
     fun `onCancelSearch clears query and sets to EXPLORE`() = runBlocking {
         viewModel.onCancelSearch()
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
-        assertThat(viewModel.uiState.value.query).isEmpty()
+        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
+        assertThat(viewModel.screenState.value.query).isEmpty()
     }
 
     @Test
@@ -137,10 +137,10 @@ class SearchViewModelTest {
 
         viewModel.onSearch(query)
         delay(400)
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.RESULT)
-        assertThat(viewModel.uiState.value.movies).hasSize(1)
-        assertThat(viewModel.uiState.value.series).hasSize(1)
-        assertThat(viewModel.uiState.value.artists).hasSize(1)
+        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.RESULT)
+        assertThat(viewModel.screenState.value.movies).hasSize(1)
+        assertThat(viewModel.screenState.value.series).hasSize(1)
+        assertThat(viewModel.screenState.value.artists).hasSize(1)
     }
 
     @Test
@@ -151,15 +151,15 @@ class SearchViewModelTest {
 
         viewModel.onSearch("fail")
         delay(400)
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
-        assertThat(viewModel.uiState.value.errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
+        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
+        assertThat(viewModel.screenState.value.errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
     }
 
     @Test
     fun `onSearch does not go to result screen when query is blank`() = runBlocking {
         viewModel.onSearch("    ")
         delay(400)
-        assertThat(viewModel.uiState.value.screenStatus).isNotEqualTo(SearchScreenState.ScreenStatus.RESULT)
+        assertThat(viewModel.screenState.value.screenStatus).isNotEqualTo(SearchScreenState.ScreenStatus.RESULT)
     }
 
     @Test
@@ -171,7 +171,7 @@ class SearchViewModelTest {
 
         viewModel.onRecentSearchItemClicked(query)
         delay(400)
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.RESULT)
+        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.RESULT)
     }
 
     @Test
@@ -182,7 +182,7 @@ class SearchViewModelTest {
 
         delay(400)
 
-        assertThat(viewModel.uiState.value.recentSearch).isEmpty()
+        assertThat(viewModel.screenState.value.recentSearch).isEmpty()
     }
 
     @Test
@@ -195,7 +195,7 @@ class SearchViewModelTest {
 
         delay(400)
 
-        assertThat(viewModel.uiState.value.recentSearch).isEqualTo(newList)
+        assertThat(viewModel.screenState.value.recentSearch).isEqualTo(newList)
     }
 
     @Test
@@ -209,7 +209,7 @@ class SearchViewModelTest {
         delay(300)
         viewModel.onBackClicked()
         delay(300)
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
+        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
     }
 
     @Test
@@ -221,8 +221,8 @@ class SearchViewModelTest {
 
         delay(400)
 
-        assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
-        assertThat(viewModel.uiState.value.recentSearch).isEqualTo(recent)
+        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
+        assertThat(viewModel.screenState.value.recentSearch).isEqualTo(recent)
     }
 
 

@@ -9,4 +9,5 @@ interface SearchInteractionListener {
     fun onRemoveHistoryItem(query: String)
     fun onBackClicked()
     fun onClickSearchTextField()
+    fun onRefresh()
 }

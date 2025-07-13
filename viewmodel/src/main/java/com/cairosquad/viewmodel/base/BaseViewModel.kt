@@ -17,17 +17,17 @@ abstract class BaseViewModel<T, E>(
     initialState: T
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(initialState)
-    val uiState: StateFlow<T> = _uiState.asStateFlow()
+    private val _screenState = MutableStateFlow(initialState)
+    val screenState: StateFlow<T> = _screenState.asStateFlow()
 
-    private val _uiEvent = MutableSharedFlow<E>()
-    val uiEvent = _uiEvent.asSharedFlow()
+    private val _effect = MutableSharedFlow<E>()
+    val effect = _effect.asSharedFlow()
 
-    fun updateState(transform: (T) -> T) {
-        _uiState.update { transform(it) }
+    protected fun updateState(transform: (T) -> T) {
+        _screenState.update { transform(it) }
     }
 
-    protected fun sendEvent(
+    protected fun sendEffect(
         event: E,
         onStart: suspend () -> Unit = {},
         onEnd: suspend () -> Unit = {},
@@ -35,7 +35,7 @@ abstract class BaseViewModel<T, E>(
     ) {
         viewModelScope.launch(dispatcher) {
             onStart()
-            _uiEvent.emit(event)
+            _effect.emit(event)
             onEnd()
         }
     }

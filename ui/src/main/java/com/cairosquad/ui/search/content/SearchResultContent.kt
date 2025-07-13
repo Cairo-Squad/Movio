@@ -128,7 +128,7 @@ fun SearchResultContent(
 
 @Composable
 private fun AllResultsTabContent(
-    topResults: List<SearchScreenState.MovieScreenState>,
+    topResults: List<SearchScreenState.MovieUiState>,
     modifier: Modifier = Modifier
 ) {
     AnimatedVisibility(
@@ -175,7 +175,7 @@ private fun AllResultsTabContent(
 
 @Composable
 private fun MoviesTabContent(
-    movies: List<SearchScreenState.MovieScreenState>,
+    movies: List<SearchScreenState.MovieUiState>,
     modifier: Modifier = Modifier
 ) {
     AnimatedVisibility(
@@ -221,7 +221,7 @@ private fun MoviesTabContent(
 
 @Composable
 private fun SeriesTabContent(
-    series: List<SearchScreenState.SeriesScreenState>,
+    series: List<SearchScreenState.SeriesUiState>,
     modifier: Modifier = Modifier
 ) {
     AnimatedVisibility(
@@ -267,7 +267,7 @@ private fun SeriesTabContent(
 
 @Composable
 private fun ArtistsTabContent(
-    artists: List<SearchScreenState.ArtistScreenState>,
+    artists: List<SearchScreenState.ArtistUiState>,
     modifier: Modifier = Modifier
 ) {
     AnimatedVisibility(

@@ -43,9 +43,9 @@ class BaseViewModelTest {
         fun sendTestEvent(
             event: TestEvent,
             onStart: suspend () -> Unit = {},
-            onEnd: suspend () -> Unit = {}
+            onEnd: suspend () -> Unit = {},
         ) {
-            sendEvent(event, onStart, onEnd)
+            sendEffect(event, onStart, onEnd)
         }
 
         fun testTryToCall(
@@ -66,7 +66,6 @@ class BaseViewModelTest {
         }
     }
 
-
     private lateinit var viewModel: TestViewModel
 
     @Before
@@ -86,7 +85,7 @@ class BaseViewModelTest {
 
         viewModel.updateStateValue({ it.copy(value = newStateValue) })
 
-        val state = viewModel.uiState.first()
+        val state = viewModel.screenState.first()
         assertEquals(newStateValue, state.value)
         assertEquals(0, state.error)
     }
@@ -95,7 +94,7 @@ class BaseViewModelTest {
     fun sendEventShouldEmitEventCorrectly() = runTest(testDispatcher) {
         val expectedEvent = TestEvent.TestEvent1
         var receivedEvent: TestEvent? = null
-        val job = launch { viewModel.uiEvent.collect { receivedEvent = it } }
+        val job = launch { viewModel.effect.collect { receivedEvent = it } }
 
         viewModel.sendTestEvent(expectedEvent)
 
@@ -113,7 +112,7 @@ class BaseViewModelTest {
             onError = { viewModel.updateStateValue({ it.copy(error = newStateValue) }) }
         )
 
-        val state = viewModel.uiState.first()
+        val state = viewModel.screenState.first()
         assertEquals(newStateValue, state.value)
         assertEquals(0, state.error)
     }
@@ -129,14 +128,13 @@ class BaseViewModelTest {
         )
 
         advanceUntilIdle()
-        val state = viewModel.uiState.value
+        val state = viewModel.screenState.value
         assertEquals(0, state.value)
         assertEquals(newStateValue, state.error)
     }
 
-
     @Test
-    fun sendEventShouldCallOnStartAndOnEndCallbacks() =runTest(testDispatcher) {
+    fun sendEffectShouldCallOnStartAndOnEndCallbacks() =runTest(testDispatcher) {
         var onStartCalled = false
         var onEndCalled = false
         val event = TestEvent.TestEvent2
@@ -187,5 +185,4 @@ class BaseViewModelTest {
         assertTrue(onStartCalled)
         assertTrue(onEndCalled)
     }
-
 }

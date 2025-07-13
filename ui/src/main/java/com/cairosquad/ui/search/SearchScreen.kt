@@ -20,7 +20,7 @@ fun SearchScreen(
 ) {
     val context = LocalContext.current
 
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.screenState.collectAsState()
 
     ObserveAsEvent(viewModel.uiEvent) { event ->
         when (event) {
