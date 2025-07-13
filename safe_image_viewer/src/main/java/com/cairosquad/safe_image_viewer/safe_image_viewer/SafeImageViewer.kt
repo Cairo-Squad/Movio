@@ -172,7 +172,7 @@ fun SafeImageViewer(
                         }
                     }
                 }
-            }else {
+            } else {
                 loadingPlaceholder()
             }
         }

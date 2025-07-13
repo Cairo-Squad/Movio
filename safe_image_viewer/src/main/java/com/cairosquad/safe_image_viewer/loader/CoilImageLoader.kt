@@ -9,23 +9,19 @@ import coil.request.ImageRequest
 
 @Immutable
 internal class CoilImageLoader(private val context: Context) {
-    suspend fun loadBitmap(url: String): Bitmap?{
+    suspend fun loadBitmap(url: String): Bitmap? {
         try {
             val loader = ImageLoader(context)
             val request = ImageRequest.Builder(context)
                 .data(url)
                 .allowHardware(false)
                 .build()
-            val drawableResult=loader.execute(request).drawable
-
+            val drawableResult = loader.execute(request).drawable
             return (drawableResult as? BitmapDrawable)?.bitmap
-        }
-        catch(e:Exception){
+        } catch (e: Exception) {
             //handel exception here
             // i return null to use it at ui
             return null
-
-
         }
     }
 }
