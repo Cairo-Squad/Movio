@@ -16,35 +16,35 @@ class DomainCacheMapperTest {
 
     @Test
     fun `Should Series maps to SeriesCacheDto correctly`() {
-        val entity = Series(
-            id = 100L,
-            title = "Breaking Bad",
-            posterPath = "/bb.jpg",
-            rating = 9.5f
+        val seriesEntity = Series(
+            id = SERIES_ID,
+            title = SERIES_TITLE,
+            posterPath = SERIES_POSTER,
+            rating = SERIES_RATING
         )
-        val query = "crime series"
+        val query = SERIES_QUERY
         val before = Instant.now().toEpochMilli()
 
-        val dto = entity.toSeriesCacheDto(query)
+        val seriesDto = seriesEntity.toSeriesCacheDto(query)
 
-        assertThat(dto).isEqualTo(
+        assertThat(seriesDto).isEqualTo(
             SeriesCacheDto(
-                id = 100,
-                name = "Breaking Bad",
-                posterPath = "/bb.jpg",
-                voteAverage = 9.5,
+                id = SERIES_ID.toInt(),
+                name = SERIES_TITLE,
+                posterPath = SERIES_POSTER,
+                voteAverage = SERIES_RATING.toDouble(),
                 query = query,
-                timestamp = dto.timestamp
+                timestamp = seriesDto.timestamp
             )
         )
-        val delta = (Instant.now().toEpochMilli() - dto.timestamp).absoluteValue
-        assertThat(dto.timestamp).isAtLeast(before)
+        val delta = (Instant.now().toEpochMilli() - seriesDto.timestamp).absoluteValue
+        assertThat(seriesDto.timestamp).isAtLeast(before)
         assertThat(delta).isAtMost(tolerance)
     }
 
     @Test
     fun `Should SeriesCacheDto maps to Series correctly`() {
-        val dto = SeriesCacheDto(
+        val seriesDto = SeriesCacheDto(
             id = 7,
             name = null,
             posterPath = null,
@@ -53,7 +53,7 @@ class DomainCacheMapperTest {
             timestamp = 1L
         )
 
-        val series = dto.toSeries()
+        val series = seriesDto.toSeries()
 
         assertThat(series).isEqualTo(
             Series(
@@ -68,36 +68,32 @@ class DomainCacheMapperTest {
     @Test
     fun `Should Movie maps to MovieCacheDto correctly`() {
         val movie = Movie(
-            id = 40L,
-            title = "Inception",
-            posterPath = "/inc.jpg",
-            rating = 8.8f
+            id = MOVIE_ID,
+            title = MOVIE_TITLE,
+            posterPath = MOVIE_POSTER,
+            rating = MOVIE_RATING
         )
-        val query = "dream"
+        val query = MOVIE_QUERY
         val before = Instant.now().toEpochMilli()
 
-        val dto = movie.toMovieCacheDto(query)
+        val movieDto = movie.toMovieCacheDto(query)
 
-        assertThat(dto.id).isEqualTo(40)
-        assertThat(dto.title).isEqualTo("Inception")
-        assertThat(dto.posterPath).isEqualTo("/inc.jpg")
-
-        assertThat(dto.voteAverage).isNotNull()
-        assertThat(dto.voteAverage!!).isWithin(0.001).of(8.8)
-
-        assertThat(dto.query).isEqualTo(query)
+        assertThat(movieDto.id).isEqualTo(MOVIE_ID.toInt())
+        assertThat(movieDto.title).isEqualTo(MOVIE_TITLE)
+        assertThat(movieDto.posterPath).isEqualTo(MOVIE_POSTER)
+        assertThat(movieDto.voteAverage).isNotNull()
+        assertThat(movieDto.voteAverage!!).isWithin(0.001).of(MOVIE_RATING.toDouble())
+        assertThat(movieDto.query).isEqualTo(query)
 
         val now = Instant.now().toEpochMilli()
-        val delta = (now - dto.timestamp).absoluteValue
-
-        assertThat(dto.timestamp).isAtLeast(before)
+        val delta = (now - movieDto.timestamp).absoluteValue
+        assertThat(movieDto.timestamp).isAtLeast(before)
         assertThat(delta).isAtMost(150)
     }
 
-
     @Test
     fun `Should MovieCacheDto maps to Movie correctly`() {
-        val dto = MovieCacheDto(
+        val movieDto = MovieCacheDto(
             id = 0,
             title = null,
             voteAverage = null,
@@ -106,7 +102,7 @@ class DomainCacheMapperTest {
             timestamp = 0L
         )
 
-        val movie = dto.toMovie()
+        val movie = movieDto.toMovie()
 
         assertThat(movie).isEqualTo(
             Movie(
@@ -121,32 +117,32 @@ class DomainCacheMapperTest {
     @Test
     fun `Should Artist maps to ArtistCacheDto correctly`() {
         val artist = Artist(
-            id = 3L,
-            name = "Emma Watson",
-            photoPath = "/emma.jpg"
+            id = ARTIST_ID,
+            name = ARTIST_NAME,
+            photoPath = ARTIST_PHOTO
         )
-        val query = "emma"
+        val query = ARTIST_QUERY
         val before = Instant.now().toEpochMilli()
 
-        val dto = artist.toArtistCacheDto(query)
+        val artistDto = artist.toArtistCacheDto(query)
 
-        assertThat(dto).isEqualTo(
+        assertThat(artistDto).isEqualTo(
             ArtistCacheDto(
-                id = 3,
-                name = "Emma Watson",
-                photoPath = "/emma.jpg",
+                id = ARTIST_ID.toInt(),
+                name = ARTIST_NAME,
+                photoPath = ARTIST_PHOTO,
                 query = query,
-                timestamp = dto.timestamp
+                timestamp = artistDto.timestamp
             )
         )
-        val delta = (Instant.now().toEpochMilli() - dto.timestamp).absoluteValue
-        assertThat(dto.timestamp).isAtLeast(before)
+        val delta = (Instant.now().toEpochMilli() - artistDto.timestamp).absoluteValue
+        assertThat(artistDto.timestamp).isAtLeast(before)
         assertThat(delta).isAtMost(tolerance)
     }
 
     @Test
     fun `Should ArtistCacheDto maps to Artist correctly`() {
-        val dto = ArtistCacheDto(
+        val artistDto = ArtistCacheDto(
             id = 5,
             name = null,
             photoPath = null,
@@ -154,7 +150,7 @@ class DomainCacheMapperTest {
             timestamp = 123L
         )
 
-        val artist = dto.toArtist()
+        val artist = artistDto.toArtist()
 
         assertThat(artist).isEqualTo(
             Artist(
@@ -173,9 +169,9 @@ class DomainCacheMapperTest {
             posterPath = " ",
             rating = 9.0f
         )
-        val dto = movie.toMovieCacheDto("test")
+        val movieDto = movie.toMovieCacheDto("test")
 
-        assertThat(dto.voteAverage).isWithin(0.001).of(9.0)
+        assertThat(movieDto.voteAverage).isWithin(0.001).of(9.0)
     }
 
     @Test
@@ -186,11 +182,25 @@ class DomainCacheMapperTest {
             posterPath = "/max.jpg",
             rating = Float.MAX_VALUE
         )
-        val dto = movie.toMovieCacheDto("max")
+        val movieDto = movie.toMovieCacheDto("max")
 
-        assertThat(dto.voteAverage).isWithin(0.001).of(Float.MAX_VALUE.toDouble())
+        assertThat(movieDto.voteAverage).isWithin(0.001).of(Float.MAX_VALUE.toDouble())
+    }
+
+    companion object {
+        private const val MOVIE_ID = 40L
+        private const val MOVIE_TITLE = "Inception"
+        private const val MOVIE_POSTER = "/inc.jpg"
+        private const val MOVIE_QUERY = "dream"
+        private const val MOVIE_RATING = 8.8f
+        private const val SERIES_ID = 100L
+        private const val SERIES_TITLE = "Breaking Bad"
+        private const val SERIES_POSTER = "/bb.jpg"
+        private const val SERIES_QUERY = "crime series"
+        private const val SERIES_RATING = 9.5f
+        private const val ARTIST_ID = 3L
+        private const val ARTIST_NAME = "Emma Watson"
+        private const val ARTIST_PHOTO = "/emma.jpg"
+        private const val ARTIST_QUERY = "emma"
     }
 }
-
-
-
