@@ -24,7 +24,6 @@ import java.io.IOException
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchViewModelTest {
 
-
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private lateinit var searchUseCase: SearchUseCase
@@ -159,6 +158,13 @@ class SearchViewModelTest {
     }
 
     @Test
+    fun `onSearch does not go to result screen when query is blank`() = runBlocking {
+        viewModel.onSearch("    ")
+        delay(400)
+        assertThat(viewModel.uiState.value.screenStatus).isNotEqualTo(SearchUiState.ScreenStatus.RESULT)
+    }
+
+    @Test
     fun `onRecentSearchItemClicked triggers search`() = runBlocking {
         val query = "Dark"
         coEvery { searchUseCase.getMovies(query) } returns emptyList()
@@ -220,5 +226,4 @@ class SearchViewModelTest {
         assertThat(viewModel.uiState.value.screenStatus).isEqualTo(SearchUiState.ScreenStatus.SEARCH)
         assertThat(viewModel.uiState.value.recentSearch).isEqualTo(recent)
     }
-
 }
