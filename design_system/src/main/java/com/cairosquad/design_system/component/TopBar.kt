@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -41,19 +42,21 @@ fun TopBar(
     onTabSelected: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val tabPositions = remember { mutableMapOf<Int, Pair<Int, Int>>() }
+    val tabPositions = remember { mutableStateMapOf<Int, Pair<Int, Int>>() }
+
     val indicatorOffsetX by animateDpAsState(
         targetValue = with(LocalDensity.current) {
             tabPositions[selectedTabIndex]?.first?.toDp() ?: 0.dp
         },
-        animationSpec = tween(durationMillis = 200)
+        animationSpec = tween(200)
     )
     val indicatorWidth by animateDpAsState(
         targetValue = with(LocalDensity.current) {
             tabPositions[selectedTabIndex]?.second?.toDp() ?: 0.dp
         },
-        animationSpec = tween(durationMillis = 200)
+        animationSpec = tween(200)
     )
+
     Box(modifier = modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
@@ -86,29 +89,27 @@ fun TopBar(
                         .padding(horizontal = 12.dp)
                         .onGloballyPositioned { coordinates ->
                             tabPositions[index] =
-                                coordinates.positionInParent().x.toInt() to coordinates.size.width
+                                coordinates.positionInParent().x.toInt() to
+                                        coordinates.size.width
                         },
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(7.5.dp)
                 ) {
-                    Text(
-                        text = title,
-                        color = textColor,
-                        textAlign = TextAlign.Center,
-                        style = textStyle,
-                    )
+                    Text(title, color = textColor, textAlign = TextAlign.Center, style = textStyle)
                 }
             }
         }
 
-        Box(
-            modifier = Modifier
-                .offset(x = indicatorOffsetX)
-                .height(1.dp)
-                .width(indicatorWidth)
-                .align(Alignment.BottomStart)
-                .background(brush = Theme.color.gradiant.horizontalGradient)
-        )
+        if (tabPositions.containsKey(selectedTabIndex)) {
+            Box(
+                modifier = Modifier
+                    .offset(x = indicatorOffsetX)
+                    .height(1.dp)
+                    .width(indicatorWidth)
+                    .align(Alignment.BottomStart)
+                    .background(brush = Theme.color.gradiant.horizontalGradient)
+            )
+        }
     }
 }
 
