@@ -61,7 +61,7 @@ fun AppBar(
             Icon(
                 modifier = Modifier
                     .clip(CircleShape)
-                    .clickable(onClick = onBackButtonClicked ?: {})
+                    .clickable(onClick = onBackButtonClicked!!)
                     .size(40.dp)
                     .padding(8.dp),
                 painter = painterResource(R.drawable.arrow_left_icon_round),
@@ -88,7 +88,7 @@ fun AppBar(
                 modifier = Modifier
                     .align(Alignment.Center)
                     .padding(horizontal = titleHorizontalPadding.dp),
-                text = title ?: "",
+                text = title!!,
                 color = Theme.color.surfaces.onSurface,
                 style = Theme.textStyle.headline.largeBold16,
                 maxLines = 1,
