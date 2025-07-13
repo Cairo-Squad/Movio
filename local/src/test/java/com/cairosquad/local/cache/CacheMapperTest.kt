@@ -11,137 +11,105 @@ import org.junit.Test
 
 class CacheMapperTest {
 
+    /* ---------- Movie ---------- */
+
     @Test
-    fun `MovieCacheDto maps correctly to MovieCacheEntity`() {
-        val dto = MovieCacheDto(
-            id = 1,
-            title = "Inception",
-            voteAverage = 8.8,
-            posterPath = "/inception.jpg",
-            query = "sci-fi",
-            timestamp = 123456789L
-        )
-
-        val expectedEntity = MovieCacheEntity(
-            id = 1,
-            title = "Inception",
-            posterPath = "/inception.jpg",
-            voteAverage = 8.8,
-            query = "sci-fi",
-            timestamp = 123456789L
-        )
-
-        assertThat(dto.toEntity()).isEqualTo(expectedEntity)
+    fun `Should map MovieCacheDto to MovieCacheEntity correctly`() {
+        val input = sampleMovieCacheDto()
+        val expected = sampleMovieCacheEntity()
+        assertThat(input.toEntity()).isEqualTo(expected)
     }
 
     @Test
-    fun `MovieCacheEntity maps correctly to MovieCacheDto`() {
-        val entity = MovieCacheEntity(
-            id = 1,
-            title = "Inception",
-            posterPath = "/inception.jpg",
-            voteAverage = 8.8,
-            query = "sci-fi",
-            timestamp = 123456789L
-        )
+    fun `Should map MovieCacheEntity to MovieCacheDto correctly`() {
+        val input = sampleMovieCacheEntity()
+        val expected = sampleMovieCacheDto()
+        assertThat(input.toDto()).isEqualTo(expected)
+    }
 
-        val expectedDto = MovieCacheDto(
-            id = 1,
-            title = "Inception",
-            voteAverage = 8.8,
-            posterPath = "/inception.jpg",
-            query = "sci-fi",
-            timestamp = 123456789L
-        )
+    /* ---------- Series ---------- */
 
-        assertThat(entity.toDto()).isEqualTo(expectedDto)
+    @Test
+    fun `Should map SeriesCacheDto to SeriesCacheEntity correctly`() {
+        val input = sampleSeriesCacheDto()
+        val expected = sampleSeriesCacheEntity()
+        assertThat(input.toEntity()).isEqualTo(expected)
     }
 
     @Test
-    fun `SeriesCacheDto maps correctly to SeriesCacheEntity`() {
-        val dto = SeriesCacheDto(
-            id = 2,
-            name = "Breaking Bad",
-            posterPath = "/breakingbad.jpg",
-            voteAverage = 9.5,
-            query = "drama",
-            timestamp = 987654321L
-        )
+    fun `Should map SeriesCacheEntity to SeriesCacheDto correctly`() {
+        val input = sampleSeriesCacheEntity()
+        val expected = sampleSeriesCacheDto()
+        assertThat(input.toDto()).isEqualTo(expected)
+    }
 
-        val expectedEntity = SeriesCacheEntity(
-            id = 2,
-            name = "Breaking Bad",
-            posterPath = "/breakingbad.jpg",
-            voteAverage = 9.5,
-            query = "drama",
-            timestamp = 987654321L
-        )
+    /* ---------- Artist ---------- */
 
-        assertThat(dto.toEntity()).isEqualTo(expectedEntity)
+    @Test
+    fun `Should map ArtistCacheDto to ArtistCacheEntity correctly`() {
+        val input = sampleArtistCacheDto()
+        val expected = sampleArtistCacheEntity()
+        assertThat(input.toEntity()).isEqualTo(expected)
     }
 
     @Test
-    fun `SeriesCacheEntity maps correctly to SeriesCacheDto`() {
-        val entity = SeriesCacheEntity(
-            id = 2,
-            name = "Breaking Bad",
-            posterPath = "/breakingbad.jpg",
-            voteAverage = 9.5,
-            query = "drama",
-            timestamp = 987654321L
-        )
-
-        val expectedDto = SeriesCacheDto(
-            id = 2,
-            name = "Breaking Bad",
-            posterPath = "/breakingbad.jpg",
-            voteAverage = 9.5,
-            query = "drama",
-            timestamp = 987654321L
-        )
-
-        assertThat(entity.toDto()).isEqualTo(expectedDto)
+    fun `Should map ArtistCacheEntity to ArtistCacheDto correctly`() {
+        val input = sampleArtistCacheEntity()
+        val expected = sampleArtistCacheDto()
+        assertThat(input.toDto()).isEqualTo(expected)
     }
 
-    @Test
-    fun `ArtistCacheDto maps correctly to ArtistCacheEntity`() {
-        val dto = ArtistCacheDto(
-            id = 3,
-            name = "Emma Watson",
-            photoPath = "/emma.jpg",
-            query = "emma",
-            timestamp = 1122334455L
-        )
+    /* ---------- Private test data helpers ---------- */
 
-        val expectedEntity = ArtistCacheEntity(
-            id = 3,
-            name = "Emma Watson",
-            photoPath = "/emma.jpg",
-            query = "emma",
-            timestamp = 1122334455L
-        )
+    private fun sampleMovieCacheDto() = MovieCacheDto(
+        id = 1,
+        title = "Inception",
+        voteAverage = 8.8,
+        posterPath = "/inception.jpg",
+        query = "sci-fi",
+        timestamp = 123456789L
+    )
 
-        assertThat(dto.toEntity()).isEqualTo(expectedEntity)
-    }
+    private fun sampleMovieCacheEntity() = MovieCacheEntity(
+        id = 1,
+        title = "Inception",
+        posterPath = "/inception.jpg",
+        voteAverage = 8.8,
+        query = "sci-fi",
+        timestamp = 123456789L
+    )
 
-    @Test
-    fun `ArtistCacheEntity maps correctly to ArtistCacheDto`() {
-        val entity = ArtistCacheEntity(
-            id = 3,
-            name = "Emma Watson",
-            photoPath = "/emma.jpg",
-            query = "emma",
-            timestamp = 1122334455L
-        )
+    private fun sampleSeriesCacheDto() = SeriesCacheDto(
+        id = 2,
+        name = "Breaking Bad",
+        posterPath = "/breakingbad.jpg",
+        voteAverage = 9.5,
+        query = "drama",
+        timestamp = 987654321L
+    )
 
-        val expectedDto = ArtistCacheDto(
-            id = 3,
-            name = "Emma Watson",
-            photoPath = "/emma.jpg",
-            query = "emma",
-            timestamp = 1122334455L
-        )
+    private fun sampleSeriesCacheEntity() = SeriesCacheEntity(
+        id = 2,
+        name = "Breaking Bad",
+        posterPath = "/breakingbad.jpg",
+        voteAverage = 9.5,
+        query = "drama",
+        timestamp = 987654321L
+    )
 
-        assertThat(entity.toDto()).isEqualTo(expectedDto)
-    }
+    private fun sampleArtistCacheDto() = ArtistCacheDto(
+        id = 3,
+        name = "Emma Watson",
+        photoPath = "/emma.jpg",
+        query = "emma",
+        timestamp = 1122334455L
+    )
+
+    private fun sampleArtistCacheEntity() = ArtistCacheEntity(
+        id = 3,
+        name = "Emma Watson",
+        photoPath = "/emma.jpg",
+        query = "emma",
+        timestamp = 1122334455L
+    )
 }
