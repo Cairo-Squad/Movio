@@ -37,15 +37,6 @@ jobs:
           restore-keys: |
             gradle-${{ runner.os }}-
 
-      - name: Cache Android build cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.android/build-cache
-          key: android-build-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: |
-            android-build-${{ runner.os }}-
-
       - name: Grant Permission to Gradle
         run: chmod +x ./gradlew
 
@@ -104,15 +95,6 @@ jobs:
           restore-keys: |
             gradle-${{ runner.os }}-
 
-      - name: Cache Android build cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.android/build-cache
-          key: android-build-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: |
-            android-build-${{ runner.os }}-
-
       - name: Grant Permission to Gradle
         run: chmod +x ./gradlew
 
@@ -140,10 +122,10 @@ jobs:
           echo "API_KEY = \"$MOVIES_API_KEY\"" >> secret.properties
 
           # Build signed release APK
-          ./gradlew test koverHtmlReport
+          ./gradlew test koverHtmlReport --build-cache
 
       - name: Enforce 80% Coverage
-        run: ./gradlew koverVerify
+        run: ./gradlew koverVerify --build-cache
 
       - name: Upload Test Results (JUnit XML)
         if: always()
