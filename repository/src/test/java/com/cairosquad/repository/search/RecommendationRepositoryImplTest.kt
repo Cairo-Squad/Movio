@@ -40,7 +40,7 @@ class RecommendationRepositoryImplTest {
             coEvery { dataSource.getForYouMovies() } returns remoteMovies
 
             // When
-            val result = recommendationRepository.getForYouMovies()
+            val result = recommendationRepository.getPersonalizedMovies()
 
             // Then
             assertThat(result).hasSize(2)
@@ -55,7 +55,7 @@ class RecommendationRepositoryImplTest {
             coEvery { dataSource.getForYouMovies() } returns emptyList()
 
             // When
-            val result = recommendationRepository.getForYouMovies()
+            val result = recommendationRepository.getPersonalizedMovies()
 
             // Then
             assertThat(result).isEmpty()
@@ -76,7 +76,7 @@ class RecommendationRepositoryImplTest {
             coEvery { dataSource.getExploreMoreMovies() } returns remoteMovieDto
 
             // When
-            val result = recommendationRepository.getExploreMoreMovies()
+            val result = recommendationRepository.getSuggestedMovies()
 
             // Then
             assertThat(result.size).isEqualTo(1)

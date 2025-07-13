@@ -1,7 +1,7 @@
 package com.cairosquad.domain.usecase
 
-import com.cairosquad.domain.search.repository.RecentSearchRepository
-import com.cairosquad.domain.search.usecase.GetRecentSearchUseCase
+import com.cairosquad.domain.search.repository.SearchHistoryRepository
+import com.cairosquad.domain.search.usecase.GetLocalSearchHistoryUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -12,13 +12,13 @@ import kotlin.test.assertEquals
 
 class GetRecentSearchUseCaseTest {
 
-    private lateinit var searchHistoryUseCase: GetRecentSearchUseCase
-    private lateinit var recentSearchRepository: RecentSearchRepository
+    private lateinit var searchHistoryUseCase: GetLocalSearchHistoryUseCase
+    private lateinit var recentSearchRepository: SearchHistoryRepository
 
     @Before
     fun setUp() {
         recentSearchRepository = mockk(relaxed = true)
-        searchHistoryUseCase = GetRecentSearchUseCase(recentSearchRepository)
+        searchHistoryUseCase = GetLocalSearchHistoryUseCase(recentSearchRepository)
     }
 
     @Test

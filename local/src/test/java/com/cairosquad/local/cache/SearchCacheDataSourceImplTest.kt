@@ -1,6 +1,6 @@
 package com.cairosquad.local.cache
 
-import com.cairosquad.local.search.cache.SearchCacheDataSourceImpl
+import com.cairosquad.local.search.cache.LocalSearchCacheDataSourceImpl
 import com.cairosquad.local.search.cache.dao.CacheDao
 import com.cairosquad.local.search.cache.entity.ArtistCacheEntity
 import com.cairosquad.local.search.cache.entity.MovieCacheEntity
@@ -22,12 +22,12 @@ import java.time.Instant
 class SearchCacheDataSourceImplTest {
 
     private lateinit var cacheDao: CacheDao
-    private lateinit var dataSource: SearchCacheDataSourceImpl
+    private lateinit var dataSource: LocalSearchCacheDataSourceImpl
 
     @Before
     fun setup() {
         cacheDao = mockk(relaxed = true)
-        dataSource = spyk(SearchCacheDataSourceImpl(cacheDao))
+        dataSource = spyk(LocalSearchCacheDataSourceImpl(cacheDao))
     }
 
     @Test

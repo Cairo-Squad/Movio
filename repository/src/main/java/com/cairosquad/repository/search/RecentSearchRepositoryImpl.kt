@@ -1,11 +1,11 @@
 package com.cairosquad.repository.search
 
-import com.cairosquad.domain.search.repository.RecentSearchRepository
-import com.cairosquad.repository.search.data_source.local.RecentSearchDataSource
+import com.cairosquad.domain.search.repository.SearchHistoryRepository
+import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
 
 class RecentSearchRepositoryImpl(
-    private val dataSource: RecentSearchDataSource
-) : RecentSearchRepository {
+    private val dataSource: LocalRecentSearchDataSource
+) : SearchHistoryRepository {
 
     override suspend fun getAll(): List<String> {
         return dataSource.getAll()

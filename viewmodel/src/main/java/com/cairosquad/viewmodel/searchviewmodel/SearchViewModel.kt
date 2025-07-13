@@ -1,9 +1,9 @@
 package com.cairosquad.viewmodel.searchviewmodel
 
-import com.cairosquad.domain.search.usecase.ClearRecentSearchUseCase
-import com.cairosquad.domain.search.usecase.GetExploreMoreUseCase
-import com.cairosquad.domain.search.usecase.GetForYouUseCase
-import com.cairosquad.domain.search.usecase.GetRecentSearchUseCase
+import com.cairosquad.domain.search.usecase.ClearSearchHistoryUseCase
+import com.cairosquad.domain.search.usecase.GetSuggestedMoviesUseCase
+import com.cairosquad.domain.search.usecase.GetPersonalizedMoviesUseCase
+import com.cairosquad.domain.search.usecase.GetLocalSearchHistoryUseCase
 import com.cairosquad.domain.search.usecase.SearchUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
@@ -13,10 +13,10 @@ import java.io.IOException
 
 class SearchViewModel(
     private val searchUseCase: SearchUseCase,
-    private val getRecentSearchUseCase: GetRecentSearchUseCase,
-    private val clearRecentSearchUseCase: ClearRecentSearchUseCase,
-    private val getExploreMoreUseCase: GetExploreMoreUseCase,
-    private val getForYouUseCase: GetForYouUseCase,
+    private val getRecentSearchUseCase: GetLocalSearchHistoryUseCase,
+    private val clearRecentSearchUseCase: ClearSearchHistoryUseCase,
+    private val getExploreMoreUseCase: GetSuggestedMoviesUseCase,
+    private val getForYouUseCase: GetPersonalizedMoviesUseCase,
 ) : BaseViewModel<SearchUiState, SearchUiEvent>(initialState = SearchUiState()),
     SearchInteractionListener {
 
@@ -28,8 +28,8 @@ class SearchViewModel(
 
     fun loadDiscoverMovies() = tryToCall(
         block = {
-            val forYou = getForYouUseCase.getForYouMovies().map { it.toUiState() }
-            val exploreMore = getExploreMoreUseCase.getExploreMoreMovies().map { it.toUiState() }
+            val forYou = getForYouUseCase.getPersonalizedMovies().map { it.toUiState() }
+            val exploreMore = getExploreMoreUseCase.getSuggestedMovies().map { it.toUiState() }
             forYou to exploreMore
         },
         onSuccess = { (forYou, exploreMore) ->
@@ -147,7 +147,7 @@ class SearchViewModel(
     override fun onClearHistory() {
         tryToCall(
             block = {
-                clearRecentSearchUseCase.clearAll()
+                clearRecentSearchUseCase.clearAllHistory()
                 emptyList<String>()
             },
             onSuccess = { suggestions ->
@@ -165,7 +165,7 @@ class SearchViewModel(
     override fun onRemoveHistoryItem(query: String) {
         tryToCall(
             block = {
-                clearRecentSearchUseCase.removeQuery(query)
+                clearRecentSearchUseCase.removeQueryFromHistory(query)
                 getRecentSearchUseCase.getAll()
             },
             onSuccess = { suggestions ->

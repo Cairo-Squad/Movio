@@ -1,7 +1,7 @@
 package com.cairosquad.local.recent
 
-import com.cairosquad.local.search.recent.RecentSearchDataSourceImpl
-import com.cairosquad.local.search.recent.dao.RecentSearchDao
+import com.cairosquad.local.search.recent.LocalRecentSearchDataSourceImpl
+import com.cairosquad.local.search.recent.dao.LocalRecentSearchDao
 import com.cairosquad.local.search.recent.entity.RecentSearchEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -9,26 +9,24 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
-import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
 
 class RecentSearchDataSourceImplTest {
 
-    private val dao = mockk<RecentSearchDao>()
-    private lateinit var dataSource: RecentSearchDataSourceImpl
+    private val dao = mockk<LocalRecentSearchDao>()
+    private lateinit var dataSource: LocalRecentSearchDataSourceImpl
     private val dispatcher = StandardTestDispatcher()
 
     @Before
     fun setUp() {
         Dispatchers.setMain(dispatcher)
-        dataSource = RecentSearchDataSourceImpl(dao)
+        dataSource = LocalRecentSearchDataSourceImpl(dao)
     }
 
     @After

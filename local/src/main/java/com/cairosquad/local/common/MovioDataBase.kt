@@ -6,7 +6,7 @@ import com.cairosquad.local.search.cache.dao.CacheDao
 import com.cairosquad.local.search.cache.entity.ArtistCacheEntity
 import com.cairosquad.local.search.cache.entity.MovieCacheEntity
 import com.cairosquad.local.search.cache.entity.SeriesCacheEntity
-import com.cairosquad.local.search.recent.dao.RecentSearchDao
+import com.cairosquad.local.search.recent.dao.LocalRecentSearchDao
 import com.cairosquad.local.search.recent.entity.RecentSearchEntity
 
 @Database(
@@ -23,6 +23,6 @@ abstract class MovioDataBase : RoomDatabase() {
 
     abstract fun cacheDao(): CacheDao
 
-    abstract fun recentSearchDao(): RecentSearchDao
+    abstract fun recentSearchDao(): LocalRecentSearchDao
 
 }

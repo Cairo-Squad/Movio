@@ -7,7 +7,7 @@ import androidx.room.Query
 import com.cairosquad.local.search.recent.entity.RecentSearchEntity
 
 @Dao
-interface RecentSearchDao {
+interface LocalRecentSearchDao {
 
     @Query("SELECT * FROM recent_search WHERE query_column LIKE '%' || :query || '%' ORDER BY timestamp DESC")
     suspend fun getAll(query: String): List<RecentSearchEntity>

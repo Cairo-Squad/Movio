@@ -4,14 +4,14 @@ import com.cairosquad.domain.search.repository.SearchRepository
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
-import com.cairosquad.repository.search.data_source.local.SearchCacheDataSource
+import com.cairosquad.repository.search.data_source.local.LocalSearchCacheDataSource
 import com.cairosquad.repository.search.data_source.remote.RemoteSearchDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class SearchRepositoryImpl(
     private val remoteSearchDataSource: RemoteSearchDataSource,
-    private val searchCacheDataSource: SearchCacheDataSource
+    private val searchCacheDataSource: LocalSearchCacheDataSource
 ) : SearchRepository {
     override suspend fun getSeries(query: String): List<Series> =
         withContext(Dispatchers.IO) {

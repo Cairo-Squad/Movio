@@ -1,6 +1,6 @@
 package com.cairosquad.repository.search
 
-import com.cairosquad.repository.search.data_source.local.RecentSearchDataSource
+import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -10,7 +10,7 @@ import org.junit.Before
 import org.junit.Test
 
 class RecentSearchRepositoryImplTest {
-    private lateinit var localDataSource: RecentSearchDataSource
+    private lateinit var localDataSource: LocalRecentSearchDataSource
     private lateinit var repository: RecentSearchRepositoryImpl
 
     @Before

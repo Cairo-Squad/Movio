@@ -1,9 +1,9 @@
 package com.cairosquad.viewmodel.searchviewmodel
 
-import com.cairosquad.domain.search.usecase.ClearRecentSearchUseCase
-import com.cairosquad.domain.search.usecase.GetExploreMoreUseCase
-import com.cairosquad.domain.search.usecase.GetForYouUseCase
-import com.cairosquad.domain.search.usecase.GetRecentSearchUseCase
+import com.cairosquad.domain.search.usecase.ClearSearchHistoryUseCase
+import com.cairosquad.domain.search.usecase.GetSuggestedMoviesUseCase
+import com.cairosquad.domain.search.usecase.GetPersonalizedMoviesUseCase
+import com.cairosquad.domain.search.usecase.GetLocalSearchHistoryUseCase
 import com.cairosquad.domain.search.usecase.SearchUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
@@ -27,10 +27,10 @@ class SearchViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private lateinit var searchUseCase: SearchUseCase
-    private lateinit var getRecentSearchUseCase: GetRecentSearchUseCase
-    private lateinit var clearRecentSearchUseCase: ClearRecentSearchUseCase
-    private lateinit var getExploreMoreUseCase: GetExploreMoreUseCase
-    private lateinit var getForYouUseCase: GetForYouUseCase
+    private lateinit var getRecentSearchUseCase: GetLocalSearchHistoryUseCase
+    private lateinit var clearRecentSearchUseCase: ClearSearchHistoryUseCase
+    private lateinit var getExploreMoreUseCase: GetSuggestedMoviesUseCase
+    private lateinit var getForYouUseCase: GetPersonalizedMoviesUseCase
     private lateinit var viewModel: SearchViewModel
 
     @Before
@@ -85,8 +85,8 @@ class SearchViewModelTest {
         val forYouList = listOf(movie1)
         val exploreMoreList = listOf(movie2)
 
-        coEvery { getForYouUseCase.getForYouMovies() } returns listOf(movie1)
-        coEvery { getExploreMoreUseCase.getExploreMoreMovies() } returns listOf(movie2)
+        coEvery { getForYouUseCase.getPersonalizedMovies() } returns listOf(movie1)
+        coEvery { getExploreMoreUseCase.getSuggestedMovies() } returns listOf(movie2)
 
         viewModel.loadDiscoverMovies()
 
@@ -99,8 +99,8 @@ class SearchViewModelTest {
 
     @Test
     fun loadDiscoverMoviesHandlesExceptionAndUpdatesErrorMessage() = runBlocking {
-        coEvery { getForYouUseCase.getForYouMovies() } throws IOException()
-        coEvery { getExploreMoreUseCase.getExploreMoreMovies() } returns emptyList()
+        coEvery { getForYouUseCase.getPersonalizedMovies() } throws IOException()
+        coEvery { getExploreMoreUseCase.getSuggestedMovies() } returns emptyList()
 
         viewModel.loadDiscoverMovies()
 
@@ -178,7 +178,7 @@ class SearchViewModelTest {
 
     @Test
     fun `onClearHistory clears all suggestions`() = runBlocking {
-        coEvery { clearRecentSearchUseCase.clearAll() } returns Unit
+        coEvery { clearRecentSearchUseCase.clearAllHistory() } returns Unit
 
         viewModel.onClearHistory()
 
@@ -190,7 +190,7 @@ class SearchViewModelTest {
     @Test
     fun `onRemoveHistoryItem removes item and updates list`() = runBlocking {
         val newList = listOf("New1", "New2")
-        coEvery { clearRecentSearchUseCase.removeQuery(any()) } returns Unit
+        coEvery { clearRecentSearchUseCase.removeQueryFromHistory(any()) } returns Unit
         coEvery { getRecentSearchUseCase.getAll() } returns newList
 
         viewModel.onRemoveHistoryItem("Old")
