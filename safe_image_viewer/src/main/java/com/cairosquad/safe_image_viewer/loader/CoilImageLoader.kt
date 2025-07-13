@@ -21,7 +21,7 @@ internal class CoilImageLoader(private val context: Context) {
             return (drawableResult as? BitmapDrawable)?.bitmap
         }
         catch(e:Exception){
-            TODO("handel exception here")
+          //  TODO("handel exception here")
             // i return null to use it at ui
             return null
 
