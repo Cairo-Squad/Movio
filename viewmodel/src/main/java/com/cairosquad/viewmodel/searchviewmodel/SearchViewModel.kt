@@ -238,10 +238,10 @@ class SearchViewModel(
                 it.copy(isRefreshing = false)
             }
         }
-        if (uiState.value.query.isBlank()) {
+        if (screenState.value.query.isBlank()) {
             loadDiscoverMovies()
         } else {
-            onSearch(uiState.value.query)
+            onSearch(screenState.value.query)
         }
 
     }
