@@ -65,7 +65,7 @@ jobs:
           echo "API_KEY = \"$MOVIES_API_KEY\"" >> secret.properties
 
           # Build signed release APK
-          ./gradlew assembleRelease  --build-cache
+          ./gradlew assembleRelease  testClasses  --build-cache
 
   test:
 
