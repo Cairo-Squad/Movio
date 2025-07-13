@@ -1,5 +1,6 @@
 [versions]
 agp = "8.5.2"
+tensorflowLiteTaskVision = "0.4.3"
 constraintlayoutCompose = "1.1.1"
 datastorePreferences = "1.1.7"
 junitKtx = "1.2.1"
@@ -73,6 +74,7 @@ coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 tensorflow-lite = { module = "org.tensorflow:tensorflow-lite", version.ref = "tensorflowLite" }
+tensorflow-lite-task-vision = { module = "org.tensorflow:tensorflow-lite-task-vision", version.ref = "tensorflowLiteTaskVision" }
 androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }

@@ -57,6 +57,19 @@ android {
                 abiFilters += listOf("armeabi-v7a", "arm64-v8a")
             }
         }
+        debug {
+            // Use Android Studio’s default debug.keystore
+            isMinifyEnabled = false
+            isShrinkResources = false
+            ndk {
+                abiFilters += listOf(
+                    "armeabi-v7a",
+                    "arm64-v8a",
+                    "x86",
+                    "x86_64"
+                ) // emulator friendly
+            }
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
