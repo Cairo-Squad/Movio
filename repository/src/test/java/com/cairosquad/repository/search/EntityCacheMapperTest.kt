@@ -12,11 +12,10 @@ import java.time.Instant
 import kotlin.math.absoluteValue
 
 class DomainCacheMapperTest {
-
     private val tolerance = 180L
 
     @Test
-    fun `Series maps to SeriesCacheDto correctly`() {
+    fun `Should Series maps to SeriesCacheDto correctly`() {
         val entity = Series(
             id = 100L,
             title = "Breaking Bad",
@@ -44,7 +43,7 @@ class DomainCacheMapperTest {
     }
 
     @Test
-    fun `SeriesCacheDto maps to Series correctly`() {
+    fun `Should SeriesCacheDto maps to Series correctly`() {
         val dto = SeriesCacheDto(
             id = 7,
             name = null,
@@ -67,7 +66,7 @@ class DomainCacheMapperTest {
     }
 
     @Test
-    fun `Movie maps to MovieCacheDto correctly`() {
+    fun `Should Movie maps to MovieCacheDto correctly`() {
         val movie = Movie(
             id = 40L,
             title = "Inception",
@@ -97,7 +96,7 @@ class DomainCacheMapperTest {
 
 
     @Test
-    fun `MovieCacheDto maps to Movie correctly`() {
+    fun `Should MovieCacheDto maps to Movie correctly`() {
         val dto = MovieCacheDto(
             id = 0,
             title = null,
@@ -120,7 +119,7 @@ class DomainCacheMapperTest {
     }
 
     @Test
-    fun `Artist maps to ArtistCacheDto correctly`() {
+    fun `Should Artist maps to ArtistCacheDto correctly`() {
         val artist = Artist(
             id = 3L,
             name = "Emma Watson",
@@ -146,7 +145,7 @@ class DomainCacheMapperTest {
     }
 
     @Test
-    fun `ArtistCacheDto maps to Artist correctly`() {
+    fun `Should ArtistCacheDto maps to Artist correctly`() {
         val dto = ArtistCacheDto(
             id = 5,
             name = null,
@@ -167,7 +166,7 @@ class DomainCacheMapperTest {
     }
 
     @Test
-    fun `Movie with exact float maps correctly to MovieCacheDto`() {
+    fun `Should Movie with exact float maps correctly to MovieCacheDto`() {
         val movie = Movie(
             id = 1L,
             title = "Test",
@@ -180,7 +179,7 @@ class DomainCacheMapperTest {
     }
 
     @Test
-    fun `Movie with max float rating maps correctly`() {
+    fun `Should Movie with max float rating maps correctly`() {
         val movie = Movie(
             id = 1000L,
             title = "Max Float",
