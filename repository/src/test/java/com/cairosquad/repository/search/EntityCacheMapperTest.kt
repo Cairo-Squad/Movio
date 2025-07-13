@@ -54,9 +54,9 @@ class DomainCacheMapperTest {
             timestamp = 1L
         )
 
-        val domain = dto.toSeries()
+        val series = dto.toSeries()
 
-        assertThat(domain).isEqualTo(
+        assertThat(series).isEqualTo(
             Series(
                 id = 7L,
                 title = "",
