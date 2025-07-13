@@ -43,7 +43,7 @@ jobs:
           echo "KEY_PASSWORD = $KEY_PASSWORD" >> secret.properties
           echo "API_KEY = \"$MOVIES_API_KEY\"" >> secret.properties
 
-      - name: Generate Signed APK
+      - name: Generate Signed AAB
         env:
           KEYSTORE: ${{ secrets.KEYSTORE }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -53,7 +53,7 @@ jobs:
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
           FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
         run: |
-          ./gradlew assembleRelease
+          ./gradlew bundleRelease
           ls -l app/build/outputs/bundle/release/app-release.aab || { echo "AAB not generated"; exit 1; }
 
       - name: Extract Release Notes
