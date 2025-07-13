@@ -30,7 +30,6 @@ fun Chip(
         targetValue = if (isSelected) Theme.color.brand.onPrimary else Theme.color.surfaces.onSurfaceVariant,
         label = "textColor"
     )
-
     Text(
         modifier = modifier
             .background(color = backgroundColor, shape = CircleShape)

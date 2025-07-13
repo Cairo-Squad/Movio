@@ -56,7 +56,6 @@ fun ArtistCard(
                 contentDescription = stringResource(R.string.artist_image),
             )
         }
-
         AnimatedVisibility(
             visible = imgUrl?.isNotEmpty() != true,
             enter = fadeIn() + scaleIn(),
@@ -69,7 +68,7 @@ fun ArtistCard(
                     .clip(CircleShape)
                     .background(Theme.color.system.defaultImageBackground),
                 contentAlignment = Alignment.Center
-            ){
+            ) {
                 Icon(
                     modifier = Modifier.size(24.dp),
                     imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
@@ -78,7 +77,6 @@ fun ArtistCard(
                 )
             }
         }
-
         Text(
             modifier = Modifier
                 .fillMaxWidth()
