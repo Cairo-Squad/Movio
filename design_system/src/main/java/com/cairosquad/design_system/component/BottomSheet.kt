@@ -1,5 +1,10 @@
 package com.cairosquad.design_system.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -48,7 +53,11 @@ fun BottomSheet(
         }
     }
 
-    if (modifiedIsVisible) {
+    AnimatedVisibility(
+        visible = modifiedIsVisible,
+        enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
+        exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
+    ) {
         ModalBottomSheet(
             onDismissRequest = onDismiss,
             modifier = modifier,
@@ -62,19 +71,18 @@ fun BottomSheet(
 
 @Preview
 @Composable
-private fun BottomSheetLightPreview(){
+private fun BottomSheetLightPreview() {
     BottomSheetPreview(isDarkTheme = false)
 }
 
 @Preview
 @Composable
-private fun BottomSheetDarkPreview(){
+private fun BottomSheetDarkPreview() {
     BottomSheetPreview(isDarkTheme = true)
 }
 
 @Composable
 private fun BottomSheetPreview(isDarkTheme: Boolean = false) {
-
     var isVisible = remember { mutableStateOf(false) }
 
     MovioTheme(

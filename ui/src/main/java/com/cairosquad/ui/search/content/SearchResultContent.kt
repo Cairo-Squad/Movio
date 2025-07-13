@@ -2,6 +2,9 @@ package com.cairosquad.ui.search.content
 
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -128,7 +131,11 @@ private fun AllResultsTabContent(
     topResults: List<SearchUiState.MovieUiState>,
     modifier: Modifier = Modifier
 ) {
-    if (topResults.isEmpty()) {
+    AnimatedVisibility(
+        visible = topResults.isEmpty(),
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
         Box(
             modifier = modifier
                 .fillMaxSize(),
@@ -140,7 +147,13 @@ private fun AllResultsTabContent(
                 descriptionId = R.string.no_results_found_description
             )
         }
-    } else {
+    }
+
+    AnimatedVisibility(
+        visible = topResults.isNotEmpty(),
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
         LazyVerticalGrid(
             modifier = modifier,
             columns = GridCells.Adaptive(minSize = 100.dp),
@@ -165,14 +178,24 @@ private fun MoviesTabContent(
     movies: List<SearchUiState.MovieUiState>,
     modifier: Modifier = Modifier
 ) {
-    if (movies.isEmpty()) {
+    AnimatedVisibility(
+        visible = movies.isEmpty(),
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
         StateMessage(
             modifier = modifier,
             imageDrawable = R.drawable.no_result,
             titleId = R.string.no_results_found,
             descriptionId = R.string.no_results_found_description
         )
-    } else {
+    }
+
+    AnimatedVisibility(
+        visible = movies.isNotEmpty(),
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
         LazyVerticalGrid(
             modifier = modifier,
             columns = GridCells.Adaptive(minSize = 100.dp),
@@ -197,14 +220,24 @@ private fun SeriesTabContent(
     series: List<SearchUiState.SeriesUiState>,
     modifier: Modifier = Modifier
 ) {
-    if (series.isEmpty()) {
+    AnimatedVisibility(
+        visible = series.isEmpty(),
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
         StateMessage(
             modifier = modifier,
             imageDrawable = R.drawable.no_result,
             titleId = R.string.no_results_found,
             descriptionId = R.string.no_results_found_description
         )
-    } else {
+    }
+
+    AnimatedVisibility(
+        visible = series.isNotEmpty(),
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
         LazyVerticalGrid(
             modifier = modifier,
             columns = GridCells.Adaptive(minSize = 100.dp),
@@ -229,14 +262,24 @@ private fun ArtistsTabContent(
     artists: List<SearchUiState.ArtistUiState>,
     modifier: Modifier = Modifier
 ) {
-    if (artists.isEmpty()) {
+    AnimatedVisibility(
+        visible = artists.isEmpty(),
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
         StateMessage(
             modifier = modifier,
             imageDrawable = R.drawable.no_result,
             titleId = R.string.no_results_found,
             descriptionId = R.string.no_results_found_description
         )
-    } else {
+    }
+
+    AnimatedVisibility(
+        visible = artists.isNotEmpty(),
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
         LazyVerticalGrid(
             modifier = modifier,
             columns = GridCells.Adaptive(minSize = 100.dp),

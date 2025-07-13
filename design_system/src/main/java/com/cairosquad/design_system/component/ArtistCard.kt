@@ -1,5 +1,10 @@
 package com.cairosquad.design_system.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,7 +42,11 @@ fun ArtistCard(
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (imgUrl?.isNotEmpty() == true) {
+        AnimatedVisibility(
+            visible = imgUrl?.isNotEmpty() == true,
+            enter = fadeIn() + scaleIn(),
+            exit = fadeOut() + scaleOut()
+        ) {
             SafeImageViewer(
                 model = "https://image.tmdb.org/t/p/w500$imgUrl",
                 modifier = Modifier
@@ -46,7 +55,13 @@ fun ArtistCard(
                     .clip(CircleShape),
                 contentDescription = stringResource(R.string.artist_image),
             )
-        } else {
+        }
+
+        AnimatedVisibility(
+            visible = imgUrl?.isNotEmpty() != true,
+            enter = fadeIn() + scaleIn(),
+            exit = fadeOut() + scaleOut()
+        ) {
             Box(
                 modifier = Modifier
                     .padding(horizontal = 6.67.dp)
@@ -63,6 +78,7 @@ fun ArtistCard(
                 )
             }
         }
+
         Text(
             modifier = Modifier
                 .fillMaxWidth()

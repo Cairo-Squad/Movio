@@ -1,5 +1,10 @@
 package com.cairosquad.design_system.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -48,11 +53,15 @@ fun AppBar(
             )
             .padding(vertical = 4.dp, horizontal = 16.dp)
     ) {
-        if (onBackButtonClicked != null) {
+        AnimatedVisibility(
+            visible = onBackButtonClicked != null,
+            enter = fadeIn() + scaleIn(),
+            exit = fadeOut() + scaleOut()
+        ) {
             Icon(
                 modifier = Modifier
                     .clip(CircleShape)
-                    .clickable(onClick = onBackButtonClicked)
+                    .clickable(onClick = onBackButtonClicked ?: {})
                     .size(40.dp)
                     .padding(8.dp),
                 painter = painterResource(R.drawable.arrow_left_icon_round),
@@ -70,12 +79,16 @@ fun AppBar(
             ) 40
             else 0
 
-        if (title != null) {
+        AnimatedVisibility(
+            visible = title != null,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
             Text(
                 modifier = Modifier
                     .align(Alignment.Center)
                     .padding(horizontal = titleHorizontalPadding.dp),
-                text = title,
+                text = title ?: "",
                 color = Theme.color.surfaces.onSurface,
                 style = Theme.textStyle.headline.largeBold16,
                 maxLines = 1,
@@ -89,11 +102,15 @@ fun AppBar(
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         )
         {
-            if (onShareButtonClicked != null) {
+            AnimatedVisibility(
+                visible = onShareButtonClicked != null,
+                enter = fadeIn() + scaleIn(),
+                exit = fadeOut() + scaleOut()
+            ) {
                 Icon(
                     modifier = Modifier
                         .clip(CircleShape)
-                        .clickable(onClick = onShareButtonClicked)
+                        .clickable(onClick = onShareButtonClicked ?: {})
                         .size(40.dp)
                         .padding(8.dp),
                     painter = painterResource(R.drawable.share_icon_round),
@@ -102,11 +119,15 @@ fun AppBar(
                 )
             }
 
-            if (onFavoriteButtonClicked != null) {
+            AnimatedVisibility(
+                visible = onFavoriteButtonClicked != null,
+                enter = fadeIn() + scaleIn(),
+                exit = fadeOut() + scaleOut()
+            ) {
                 Icon(
                     modifier = Modifier
                         .clip(CircleShape)
-                        .clickable(onClick = onFavoriteButtonClicked)
+                        .clickable(onClick = onFavoriteButtonClicked ?: {})
                         .size(40.dp)
                         .padding(8.dp),
                     painter = painterResource(R.drawable.heart_icon_round),
