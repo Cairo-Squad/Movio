@@ -6,5 +6,6 @@ import com.cairosquad.entity.Movie
 class GetPersonalizedMoviesUseCase(
     private val movieDiscoveryRepository: MovieDiscoveryRepository
 ) {
-    suspend fun getPersonalizedMovies(): List<Movie> = movieDiscoveryRepository.getPersonalizedMovies()
+    suspend fun getPersonalizedMovies(): List<Movie> =
+        movieDiscoveryRepository.getPersonalizedMovies()
 }
