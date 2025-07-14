@@ -11,6 +11,7 @@ import com.cairosquad.repository.search.data_source.remote.RemoteSearchDataSourc
 import com.cairosquad.repository.search.data_source.remote.dto.ApiArtistDto
 import com.cairosquad.repository.search.data_source.remote.dto.ApiMovieDto
 import com.cairosquad.repository.search.data_source.remote.dto.ApiSeriesDto
+import com.cairosquad.repository.search.data_source.remote.dto.toEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -32,7 +33,6 @@ import java.time.Instant
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchRepositoryImplTest {
-
 
     private val remoteDS = mockk<RemoteSearchDataSource>()
     private val cacheDS = mockk<SearchCacheDataSource>()
@@ -61,6 +61,7 @@ class SearchRepositoryImplTest {
             timestamp = Instant.now().toEpochMilli()
         )
         coEvery { cacheDS.getCachedSeries(query) } returns listOf(cacheDto)
+        coEvery { cacheDS.clearExpiredCache() } returns Unit
         //When
         val result = repo.getSeries(query)
         //Then
@@ -81,13 +82,14 @@ class SearchRepositoryImplTest {
             voteAverage = 8.3,
         )
         coEvery { remoteDS.getSeries(query) } returns listOf(remoteDto)
-        coEvery { cacheDS.cacheSeries(query, any()) } just runs
+        coEvery { cacheDS.cacheSeries(any()) } just runs
+        coEvery { cacheDS.clearExpiredCache() } returns Unit
         //When
         val result = repo.getSeries(query)
         //Then
         assertEquals(listOf(Series(7, "Lost", 8.3f, "/lost.jpg")), result)
         coVerify { remoteDS.getSeries(query) }
-        coVerify { cacheDS.cacheSeries(query, any()) }
+        coVerify { cacheDS.cacheSeries(any()) }
     }
 
 
@@ -104,6 +106,7 @@ class SearchRepositoryImplTest {
             timestamp = Instant.now().toEpochMilli()
         )
         coEvery { cacheDS.getCachedMovies(query) } returns listOf(cacheDto)
+        coEvery { cacheDS.clearExpiredCache() } returns Unit
         //When
         val result = repo.getMovies(query)
         //Then
@@ -116,18 +119,21 @@ class SearchRepositoryImplTest {
         //Given
         val query = "matrix"
         coEvery { cacheDS.getCachedMovies(query) } returns emptyList()
-        val remoteDto = mockk<ApiMovieDto>(relaxed = true) {
-            every { toEntity() } returns Movie(99, "Matrix", 8.7f, "/mx.jpg")
-
-        }
+        val remoteDto = ApiMovieDto(
+            id = 99,
+            title = "Matrix",
+            posterPath = "/mx.jpg",
+            voteAverage = 8.7,
+        )
         coEvery { remoteDS.getMovies(query) } returns listOf(remoteDto)
-        coEvery { cacheDS.cacheMovies(query, any()) } just runs
+        coEvery { cacheDS.cacheMovies(any()) } just runs
+        coEvery { cacheDS.clearExpiredCache() } returns Unit
         //When
         val result = repo.getMovies(query)
         //Then
-        assertEquals(listOf(Movie(99, "Matrix", 8.7f, "/mx.jpg")), result)
+        assertEquals(listOf(Movie(99, "Matrix", rating = 8.7f, "/mx.jpg")), result)
         coVerify { remoteDS.getMovies(query) }
-        coVerify { cacheDS.cacheMovies(query, any()) }
+        coVerify { cacheDS.cacheMovies(any()) }
     }
 
     @Test
@@ -142,6 +148,7 @@ class SearchRepositoryImplTest {
             timestamp = Instant.now().toEpochMilli()
         )
         coEvery { cacheDS.getCachedArtists(query) } returns listOf(cacheDto)
+        coEvery { cacheDS.clearExpiredCache() } returns Unit
         //When
         val result = repo.getArtists(query)
         //Then
@@ -154,17 +161,19 @@ class SearchRepositoryImplTest {
         //Given
         val query = "adele"
         coEvery { cacheDS.getCachedArtists(query) } returns emptyList()
-        val remoteDto = mockk<ApiArtistDto>(relaxed = true) {
-            every { toEntity() } returns Artist(8, "Adele", "/a.jpg")
-
-        }
+        val remoteDto = ApiArtistDto(
+            id = 8,
+            name = "Adele",
+            profilePath = "/a.jpg",
+        )
         coEvery { remoteDS.getArtists(query) } returns listOf(remoteDto)
-        coEvery { cacheDS.cacheArtist(query, any()) } just runs
+        coEvery { cacheDS.cacheArtist(any()) } just runs
+        coEvery { cacheDS.clearExpiredCache() } returns Unit
         //When
         val result = repo.getArtists(query)
         //Then
         assertEquals(listOf(Artist(8, "Adele", "/a.jpg")), result)
         coVerify { remoteDS.getArtists(query) }
-        coVerify { cacheDS.cacheArtist(query, any()) }
+        coVerify { cacheDS.cacheArtist(any()) }
     }
 }

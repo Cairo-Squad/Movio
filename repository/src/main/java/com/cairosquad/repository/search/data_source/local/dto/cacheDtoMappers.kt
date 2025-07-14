@@ -16,6 +16,11 @@ fun Series.toCacheDto(query: String): CachedSeriesDto {
     )
 }
 
+@JvmName("toCacheSeriesDto")
+fun List<Series>.toCacheDto(query: String): List<CachedSeriesDto> {
+    return map { it.toCacheDto(query) }
+}
+
 fun CachedSeriesDto.toEntity(): Series {
     return Series(
         id = id.toLong(),
@@ -23,6 +28,11 @@ fun CachedSeriesDto.toEntity(): Series {
         posterPath = posterPath ?: "",
         rating = voteAverage?.toFloat() ?: 0f,
     )
+}
+
+@JvmName("toEntitySeries")
+fun List<CachedSeriesDto>.toEntity(): List<Series> {
+    return map { it.toEntity() }
 }
 
 fun Movie.toCacheDto(query: String): CachedMovieDto {
@@ -36,6 +46,11 @@ fun Movie.toCacheDto(query: String): CachedMovieDto {
     )
 }
 
+@JvmName("toCacheMovieDto")
+fun List<Movie>.toCacheDto(query: String): List<CachedMovieDto> {
+    return map { it.toCacheDto(query) }
+}
+
 fun CachedMovieDto.toEntity(): Movie {
     return Movie(
         id = id.toLong(),
@@ -43,6 +58,11 @@ fun CachedMovieDto.toEntity(): Movie {
         posterPath = posterPath ?: "",
         rating = voteAverage?.toFloat() ?: 0f
     )
+}
+
+@JvmName("toEntityMovie")
+fun List<CachedMovieDto>.toEntity(): List<Movie> {
+    return map { it.toEntity() }
 }
 
 fun Artist.toCacheDto(query: String): CachedArtistDto {
@@ -55,10 +75,20 @@ fun Artist.toCacheDto(query: String): CachedArtistDto {
     )
 }
 
+@JvmName("toCacheArtistDto")
+fun List<Artist>.toCacheDto(query: String): List<CachedArtistDto> {
+    return map { it.toCacheDto(query) }
+}
+
 fun CachedArtistDto.toEntity(): Artist {
     return Artist(
         id = id.toLong(),
         name = name ?: "",
         photoPath = photoPath ?: "",
     )
+}
+
+@JvmName("toEntityArtist")
+fun List<CachedArtistDto>.toEntity(): List<Artist> {
+    return map { it.toEntity() }
 }

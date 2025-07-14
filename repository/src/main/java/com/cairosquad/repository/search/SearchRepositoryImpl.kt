@@ -19,31 +19,29 @@ class SearchRepositoryImpl(
         return tryToCall {
             searchCacheDataSource.clearExpiredCache()
             searchCacheDataSource.getCachedSeries(query)
-                .takeIf { it.isNotEmpty() }?.map { it.toEntity() }
-                ?: remoteSearchDataSource.getSeries(query).map { it.toEntity() }
-                    .also { result -> searchCacheDataSource.cacheSeries(result.map { it.toCacheDto(query) }) }
+                .takeIf { it.isNotEmpty() }?.toEntity()
+                ?: remoteSearchDataSource.getSeries(query).toEntity()
+                    .also { result -> searchCacheDataSource.cacheSeries(result.toCacheDto(query)) }
         }
     }
-
 
     override suspend fun getMovies(query: String): List<Movie> {
         return tryToCall {
             searchCacheDataSource.clearExpiredCache()
             searchCacheDataSource.getCachedMovies(query)
-                .takeIf { it.isNotEmpty() }?.map { it.toEntity() }
-                ?: remoteSearchDataSource.getMovies(query).map { it.toEntity() }
-                    .also { result -> searchCacheDataSource.cacheMovies(result.map { it.toCacheDto(query) }) }
+                .takeIf { it.isNotEmpty() }?.toEntity()
+                ?: remoteSearchDataSource.getMovies(query).toEntity()
+                    .also { result -> searchCacheDataSource.cacheMovies(result.toCacheDto(query)) }
         }
     }
-
 
     override suspend fun getArtists(query: String): List<Artist> {
         return tryToCall {
             searchCacheDataSource.clearExpiredCache()
             searchCacheDataSource.getCachedArtists(query)
-                .takeIf { it.isNotEmpty() }?.map { it.toEntity() }
-                ?: remoteSearchDataSource.getArtists(query).map { it.toEntity() }
-                    .also { result -> searchCacheDataSource.cacheArtist(result.map { it.toCacheDto(query) }) }
+                .takeIf { it.isNotEmpty() }?.toEntity()
+                ?: remoteSearchDataSource.getArtists(query).toEntity()
+                    .also { result -> searchCacheDataSource.cacheArtist(result.toCacheDto(query)) }
         }
     }
 }
