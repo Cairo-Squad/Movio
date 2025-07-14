@@ -1,12 +1,10 @@
 package com.cairosquad.repository.search.data_source.remote.dto
 
-
-import com.cairosquad.entity.Series
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SeriesDto(
+data class SeriesRemoteDto(
     @SerialName("id")
     val id: Long? = null,
     @SerialName("poster_path")
@@ -15,13 +13,4 @@ data class SeriesDto(
     val name: String? = null,
     @SerialName("vote_average")
     val voteAverage: Double? = null,
-) {
-    fun toEntity(): Series {
-        return Series(
-            id = id ?: 0L,
-            title = name ?: "",
-            rating = voteAverage?.toFloat() ?: 0f,
-            posterPath = posterPath ?: "",
-        )
-    }
-}
+)

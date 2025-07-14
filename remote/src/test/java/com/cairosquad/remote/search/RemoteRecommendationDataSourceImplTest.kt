@@ -1,6 +1,6 @@
 package com.cairosquad.remote.search
 
-import com.cairosquad.repository.search.data_source.remote.dto.MovieDto
+import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.SearchResultResponse
 import com.google.common.truth.Truth.assertThat
 import io.ktor.client.HttpClient
@@ -34,13 +34,13 @@ class RemoteRecommendationDataSourceImplTest {
                             SearchResultResponse(
                                 page = 1,
                                 results = listOf(
-                                    MovieDto(
+                                    MovieRemoteDto(
                                         id = 1,
                                         title = "Movie 1",
                                         posterPath = null,
                                         voteAverage = null
                                     ),
-                                    MovieDto(
+                                    MovieRemoteDto(
                                         id = 2,
                                         title = "Movie 2",
                                         posterPath = null,
@@ -62,13 +62,13 @@ class RemoteRecommendationDataSourceImplTest {
                             SearchResultResponse(
                                 page = 1,
                                 results = listOf(
-                                    MovieDto(
+                                    MovieRemoteDto(
                                         id = 3,
                                         title = "Movie 3",
                                         posterPath = null,
                                         voteAverage = null
                                     ),
-                                    MovieDto(
+                                    MovieRemoteDto(
                                         id = 4,
                                         title = "Movie 4",
                                         posterPath = null,
@@ -118,7 +118,7 @@ class RemoteRecommendationDataSourceImplTest {
                 "/3/movie/top_rated" -> {
                     respond(
                         content = json.encodeToString(
-                            SearchResultResponse<MovieDto>(
+                            SearchResultResponse<MovieRemoteDto>(
                                 page = 1,
                                 results = emptyList(),
                                 totalPages = 0,
@@ -152,14 +152,14 @@ class RemoteRecommendationDataSourceImplTest {
                             SearchResultResponse(
                                 page = 1,
                                 results = listOf(
-                                    MovieDto(
+                                    MovieRemoteDto(
                                         id = 10,
                                         title = "Valid Movie",
                                         posterPath = null,
                                         voteAverage = null
                                     ),
                                     null,
-                                    MovieDto(
+                                    MovieRemoteDto(
                                         id = null,
                                         title = "Null ID Movie",
                                         posterPath = null,
@@ -235,7 +235,7 @@ class RemoteRecommendationDataSourceImplTest {
                 "/3/movie/now_playing" -> {
                     respond(
                         content = json.encodeToString(
-                            SearchResultResponse<MovieDto>(
+                            SearchResultResponse<MovieRemoteDto>(
                                 page = 1,
                                 results = emptyList(),
                                 totalPages = 0,

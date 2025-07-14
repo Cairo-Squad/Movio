@@ -6,59 +6,42 @@ import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import com.cairosquad.repository.common.exception.tryToCall
 import com.cairosquad.repository.search.data_source.local.LocalSearchCacheDataSource
+import com.cairosquad.repository.search.data_source.local.dto.toCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.toEntity
 import com.cairosquad.repository.search.data_source.remote.RemoteSearchDataSource
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.cairosquad.repository.search.data_source.remote.dto.toEntity
 
 class SearchRepositoryImpl(
     private val remoteSearchDataSource: RemoteSearchDataSource,
     private val localSearchCacheDataSource: LocalSearchCacheDataSource
 ) : SearchRepository {
-    override suspend fun getSeries(query: String): List<Series> = withContext(Dispatchers.IO) {
-        tryToCall {
+    override suspend fun getSeries(query: String): List<Series> {
+        return tryToCall {
+            localSearchCacheDataSource.clearExpiredCache()
             localSearchCacheDataSource.getCachedSeries(query)
-                .map { it.toEntity() }
-                .takeIf { it.isNotEmpty() }
-                ?: remoteSearchDataSource.getSeries(query)
-                    .map { it.toEntity() }
-                    .also { freshSeries ->
-                        localSearchCacheDataSource.cacheSeries(
-                            query,
-                            freshSeries.map { it.toSeriesCacheDto(query) }
-                        )
-                    }
+                .takeIf { it.isNotEmpty() }?.toEntity()
+                ?: remoteSearchDataSource.getSeries(query).toEntity()
+                    .also { result -> localSearchCacheDataSource.cacheSeries(result.toCacheDto(query)) }
         }
     }
 
-    override suspend fun getMovies(query: String): List<Movie> = withContext(Dispatchers.IO) {
-        tryToCall {
+    override suspend fun getMovies(query: String): List<Movie> {
+        return tryToCall {
+            localSearchCacheDataSource.clearExpiredCache()
             localSearchCacheDataSource.getCachedMovies(query)
-                .map { it.toEntity() }
-                .takeIf { it.isNotEmpty() }
-                ?: remoteSearchDataSource.getMovies(query)
-                    .map { it.toEntity() }
-                    .also { freshMovies ->
-                        localSearchCacheDataSource.cacheMovies(
-                            query,
-                            freshMovies.map { it.toMovieCacheDto(query) }
-                        )
-                    }
+                .takeIf { it.isNotEmpty() }?.toEntity()
+                ?: remoteSearchDataSource.getMovies(query).toEntity()
+                    .also { result -> localSearchCacheDataSource.cacheMovies(result.toCacheDto(query)) }
         }
     }
 
-    override suspend fun getArtists(query: String): List<Artist> = withContext(Dispatchers.IO) {
-        tryToCall {
-            localSearchCacheDataSource.getCachedArtist(query)
-                .map { it.toEntity() }
-                .takeIf { it.isNotEmpty() }
-                ?: remoteSearchDataSource.getArtists(query)
-                    .map { it.toEntity() }
-                    .also { freshArtists ->
-                        localSearchCacheDataSource.cacheArtist(
-                            query,
-                            freshArtists.map { it.toArtistCacheDto(query) }
-                        )
-                    }
+    override suspend fun getArtists(query: String): List<Artist> {
+        return tryToCall {
+            localSearchCacheDataSource.clearExpiredCache()
+            localSearchCacheDataSource.getCachedArtists(query)
+                .takeIf { it.isNotEmpty() }?.toEntity()
+                ?: remoteSearchDataSource.getArtists(query).toEntity()
+                    .also { result -> localSearchCacheDataSource.cacheArtist(result.toCacheDto(query)) }
         }
     }
 }
