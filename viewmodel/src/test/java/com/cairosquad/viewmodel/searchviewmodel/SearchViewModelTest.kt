@@ -52,33 +52,6 @@ class SearchViewModelTest {
         )
     }
 
-    val movie1 = Movie(
-        id = 1,
-        title = "The dark knight",
-        rating = 4.0f,
-        posterPath = "/img.jpg"
-    )
-
-    val movie2 = Movie(
-        id = 2,
-        title = "Girl",
-        rating = 4.5f,
-        posterPath = "/img.jpg"
-    )
-
-    val series = Series(
-        id = 1,
-        title = "Series",
-        rating = 3.5f,
-        posterPath = "/img.jpg"
-    )
-
-    val artist = Artist(
-        id = 1,
-        name = "Artist",
-        photoPath = "/img.jpg"
-    )
-
     @Test
     fun loadDiscoverMoviesLoadsDataSuccessfully() = runBlocking {
 
@@ -225,5 +198,35 @@ class SearchViewModelTest {
 
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
         assertThat(viewModel.screenState.value.recentSearch).isEqualTo(recent)
+    }
+
+    private companion object {
+
+        val movie1 = Movie(
+            id = 1,
+            title = "The dark knight",
+            rating = 4.0f,
+            posterPath = "/img.jpg"
+        )
+
+        val movie2 = Movie(
+            id = 2,
+            title = "Girl",
+            rating = 4.5f,
+            posterPath = "/img.jpg"
+        )
+
+        val series = Series(
+            id = 1,
+            title = "Series",
+            rating = 3.5f,
+            posterPath = "/img.jpg"
+        )
+
+        val artist = Artist(
+            id = 1,
+            name = "Artist",
+            photoPath = "/img.jpg"
+        )
     }
 }
