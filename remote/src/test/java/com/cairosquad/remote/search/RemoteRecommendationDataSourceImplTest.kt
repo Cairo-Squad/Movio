@@ -1,7 +1,7 @@
 package com.cairosquad.remote.search
 
-import com.cairosquad.repository.search.data_source.remote.dto.MovieDto
-import com.cairosquad.repository.search.data_source.remote.dto.SearchResultDto
+import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
+import com.cairosquad.repository.search.data_source.remote.dto.SearchResultResponse
 import com.google.common.truth.Truth.assertThat
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
@@ -20,7 +20,7 @@ class RemoteRecommendationDataSourceImplTest {
 
     private lateinit var mockEngine: MockEngine
     private lateinit var httpClient: HttpClient
-    private lateinit var remoteDataSource: RemoteRecommendationDataSourceImpl
+    private lateinit var remoteDataSource: RemoteMovieDiscoveryDataSourceImpl
 
     private val json = Json { ignoreUnknownKeys = true; isLenient = true }
 
@@ -31,16 +31,16 @@ class RemoteRecommendationDataSourceImplTest {
                 "/3/movie/top_rated" -> {
                     respond(
                         content = json.encodeToString(
-                            SearchResultDto(
+                            SearchResultResponse(
                                 page = 1,
                                 results = listOf(
-                                    MovieDto(
+                                    MovieRemoteDto(
                                         id = 1,
                                         title = "Movie 1",
                                         posterPath = null,
                                         voteAverage = null
                                     ),
-                                    MovieDto(
+                                    MovieRemoteDto(
                                         id = 2,
                                         title = "Movie 2",
                                         posterPath = null,
@@ -59,16 +59,16 @@ class RemoteRecommendationDataSourceImplTest {
                 "/3/movie/now_playing" -> {
                     respond(
                         content = json.encodeToString(
-                            SearchResultDto(
+                            SearchResultResponse(
                                 page = 1,
                                 results = listOf(
-                                    MovieDto(
+                                    MovieRemoteDto(
                                         id = 3,
                                         title = "Movie 3",
                                         posterPath = null,
                                         voteAverage = null
                                     ),
-                                    MovieDto(
+                                    MovieRemoteDto(
                                         id = 4,
                                         title = "Movie 4",
                                         posterPath = null,
@@ -96,16 +96,14 @@ class RemoteRecommendationDataSourceImplTest {
             }
         }
 
-        remoteDataSource = RemoteRecommendationDataSourceImpl(httpClient)
+        remoteDataSource = RemoteMovieDiscoveryDataSourceImpl(httpClient)
     }
 
 
     @Test
     fun `should return list of Personalized movies when getPersonalizedMovies is successful`() = runTest {
-        // Given
-
         // When
-        val movies = remoteDataSource.getForYouMovies()
+        val movies = remoteDataSource.getPersonalizedMovies()
 
         // Then
         assertThat(movies).isNotEmpty()
@@ -122,7 +120,7 @@ class RemoteRecommendationDataSourceImplTest {
                 "/3/movie/top_rated" -> {
                     respond(
                         content = json.encodeToString(
-                            SearchResultDto<MovieDto>(
+                            SearchResultResponse<MovieRemoteDto>(
                                 page = 1,
                                 results = emptyList(),
                                 totalPages = 0,
@@ -140,12 +138,9 @@ class RemoteRecommendationDataSourceImplTest {
         httpClient = HttpClient(mockEngine) {
             install(ContentNegotiation) { json(json) }
         }
-        remoteDataSource = RemoteRecommendationDataSourceImpl(httpClient)
+        remoteDataSource = RemoteMovieDiscoveryDataSourceImpl(httpClient)
 
-        // When
-        val movies = remoteDataSource.getForYouMovies()
-
-        // Then
+        val movies = remoteDataSource.getPersonalizedMovies()
         assertThat(movies).isEmpty()
     }
 
@@ -157,17 +152,17 @@ class RemoteRecommendationDataSourceImplTest {
                 "/3/movie/top_rated" -> {
                     respond(
                         content = json.encodeToString(
-                            SearchResultDto(
+                            SearchResultResponse(
                                 page = 1,
                                 results = listOf(
-                                    MovieDto(
+                                    MovieRemoteDto(
                                         id = 10,
                                         title = "Valid Movie",
                                         posterPath = null,
                                         voteAverage = null
                                     ),
                                     null,
-                                    MovieDto(
+                                    MovieRemoteDto(
                                         id = null,
                                         title = "Null ID Movie",
                                         posterPath = null,
@@ -189,12 +184,9 @@ class RemoteRecommendationDataSourceImplTest {
         httpClient = HttpClient(mockEngine) {
             install(ContentNegotiation) { json(json) }
         }
-        remoteDataSource = RemoteRecommendationDataSourceImpl(httpClient)
+        remoteDataSource = RemoteMovieDiscoveryDataSourceImpl(httpClient)
 
-        // When
-        val movies = remoteDataSource.getForYouMovies()
-
-        // Then
+        val movies = remoteDataSource.getPersonalizedMovies()
         assertThat(movies).hasSize(1)
         assertThat(movies[0].id).isEqualTo(10)
     }
@@ -218,12 +210,12 @@ class RemoteRecommendationDataSourceImplTest {
         httpClient = HttpClient(mockEngine) {
             install(ContentNegotiation) { json(json) }
         }
-        remoteDataSource = RemoteRecommendationDataSourceImpl(httpClient)
+        remoteDataSource = RemoteMovieDiscoveryDataSourceImpl(httpClient)
 
         // When
         var thrownException: Throwable? = null
         try {
-            remoteDataSource.getForYouMovies()
+            remoteDataSource.getPersonalizedMovies()
         } catch (e: Exception) {
             thrownException = e
         }
@@ -233,11 +225,8 @@ class RemoteRecommendationDataSourceImplTest {
     }
 
     @Test
-    fun `should return list of movies when getSuggestedMovies is successful`() = runTest {
-        // Given
-
-        // When
-        val movies = remoteDataSource.getExploreMoreMovies()
+    fun `getExploreMoreMovies returns list of movies on success`() = runTest {
+        val movies = remoteDataSource.getSuggestedMovies()
 
         // Then
         assertThat(movies).isNotEmpty()
@@ -254,7 +243,7 @@ class RemoteRecommendationDataSourceImplTest {
                 "/3/movie/now_playing" -> {
                     respond(
                         content = json.encodeToString(
-                            SearchResultDto<MovieDto>(
+                            SearchResultResponse<MovieRemoteDto>(
                                 page = 1,
                                 results = emptyList(),
                                 totalPages = 0,
@@ -272,12 +261,9 @@ class RemoteRecommendationDataSourceImplTest {
         httpClient = HttpClient(mockEngine) {
             install(ContentNegotiation) { json(json) }
         }
-        remoteDataSource = RemoteRecommendationDataSourceImpl(httpClient)
+        remoteDataSource = RemoteMovieDiscoveryDataSourceImpl(httpClient)
 
-        // When
-        val movies = remoteDataSource.getExploreMoreMovies()
-
-        // Then
+        val movies = remoteDataSource.getSuggestedMovies()
         assertThat(movies).isEmpty()
     }
 

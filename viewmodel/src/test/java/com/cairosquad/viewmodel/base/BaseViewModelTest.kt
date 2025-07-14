@@ -29,8 +29,11 @@ class BaseViewModelTest {
         object TestEvent2 : TestEvent()
     }
 
-    private class TestViewModel(initialState: TestState) :
-        BaseViewModel<TestState, TestEvent>(initialState) {
+    private class TestViewModel(
+        initialState: TestState,
+        private val dispatcher: CoroutineDispatcher
+    ) : BaseViewModel<TestState, TestEvent>(initialState) {
+
         fun updateStateValue(transform: (TestState) -> TestState) {
             updateState(transform)
         }
@@ -39,14 +42,8 @@ class BaseViewModelTest {
             event: TestEvent,
             onStart: suspend () -> Unit = {},
             onEnd: suspend () -> Unit = {},
-            dispatcher: CoroutineDispatcher = Dispatchers.Main
         ) {
-            sendEvent(
-                event,
-                onStart,
-                onEnd,
-                dispatcher = dispatcher
-            )
+            sendEffect(event, onStart, onEnd)
         }
 
         fun testTryToCall(
@@ -54,8 +51,7 @@ class BaseViewModelTest {
             onSuccess: (Int) -> Unit,
             onError: (Throwable) -> Unit,
             onStart: suspend () -> Unit = {},
-            onEnd: suspend () -> Unit = {},
-            dispatcher: CoroutineDispatcher = Dispatchers.Main
+            onEnd: suspend () -> Unit = {}
         ) {
             tryToCall(
                 block = block,
@@ -73,7 +69,7 @@ class BaseViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = TestViewModel(TestState())
+        viewModel = TestViewModel(TestState(), testDispatcher)
     }
 
     @After
@@ -89,8 +85,7 @@ class BaseViewModelTest {
         // When
         viewModel.updateStateValue { it.copy(value = newStateValue) }
 
-        // Then
-        val state = viewModel.uiState.first()
+        val state = viewModel.screenState.first()
         assertEquals(newStateValue, state.value)
         assertEquals(0, state.error)
     }
@@ -100,7 +95,7 @@ class BaseViewModelTest {
         // Given
         val expectedEvent = TestEvent.TestEvent1
         var receivedEvent: TestEvent? = null
-        val job = launch { viewModel.uiEvent.collect { receivedEvent = it } }
+        val job = launch { viewModel.effect.collect { receivedEvent = it } }
 
         // When
         viewModel.sendTestEvent(expectedEvent)
@@ -118,9 +113,8 @@ class BaseViewModelTest {
         // When
         viewModel.testTryToCall(
             block = { newStateValue },
-            onSuccess = { viewModel.updateStateValue { it.copy(value = newStateValue) } },
-            onError = { viewModel.updateStateValue { it.copy(error = newStateValue) } },
-            dispatcher = testDispatcher
+            onSuccess = { result -> viewModel.updateStateValue({ it.copy(value = newStateValue) }) },
+            onError = { viewModel.updateStateValue({ it.copy(error = newStateValue) }) }
         )
 
         // Then
@@ -138,12 +132,11 @@ class BaseViewModelTest {
         viewModel.testTryToCall(
             block = { throw Exception("test") },
             onSuccess = { viewModel.updateStateValue { it.copy(value = newStateValue) } },
-            onError = { viewModel.updateStateValue { it.copy(error = newStateValue) } },
-            dispatcher = testDispatcher
+            onError  = { viewModel.updateStateValue { it.copy(error = newStateValue) } },
         )
 
-        // Then
-        val state = viewModel.uiState.first()
+        advanceUntilIdle()
+        val state = viewModel.screenState.value
         assertEquals(0, state.value)
         assertEquals(newStateValue, state.error)
     }
@@ -159,8 +152,7 @@ class BaseViewModelTest {
         viewModel.sendTestEvent(
             event = event,
             onStart = { onStartCalled = true },
-            onEnd = { onEndCalled = true },
-            dispatcher = testDispatcher
+            onEnd = { onEndCalled = true }
         )
 
         // Then
@@ -173,17 +165,18 @@ class BaseViewModelTest {
         // Given
         var onStartCalled = false
         var onEndCalled = false
+
         val newStateValue = 42
 
         // When
         viewModel.testTryToCall(
             block = { newStateValue },
-            onSuccess = { viewModel.updateStateValue { it.copy(value = newStateValue) } },
-            onError = { viewModel.updateStateValue { it.copy(error = newStateValue) } },
+            onSuccess = { result -> viewModel.updateStateValue({ it.copy(value = newStateValue) }) },
+            onError = { viewModel.updateStateValue({ it.copy(error = newStateValue) }) },
             onStart = { onStartCalled = true },
-            onEnd = { onEndCalled = true },
-            dispatcher = testDispatcher
+            onEnd = { onEndCalled = true }
         )
+        advanceUntilIdle()
 
         // Then
         assertTrue(onStartCalled)
@@ -199,17 +192,16 @@ class BaseViewModelTest {
 
         // When
         viewModel.testTryToCall(
-            block = { throw Exception("test") },
-            onSuccess = { viewModel.updateStateValue { it.copy(value = newStateValue) } },
-            onError = { viewModel.updateStateValue { it.copy(error = newStateValue) } },
-            onStart = { onStartCalled = true },
-            onEnd = { onEndCalled = true },
-            dispatcher = testDispatcher
-        )
+            block     = { throw Exception("test") },
+            onSuccess = {  },
+            onError   = {  },
+            onStart   = { onStartCalled = true },
+            onEnd     = { onEndCalled = true }
 
+        )
+        advanceUntilIdle()
         // Then
         assertTrue(onStartCalled)
         assertTrue(onEndCalled)
     }
-
 }

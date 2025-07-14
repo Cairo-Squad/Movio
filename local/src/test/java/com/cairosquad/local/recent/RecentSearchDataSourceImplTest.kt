@@ -1,7 +1,7 @@
 package com.cairosquad.local.recent
 
-import com.cairosquad.local.search.recent.RecentSearchDataSourceImpl
-import com.cairosquad.local.search.recent.dao.RecentSearchDao
+import com.cairosquad.local.search.recent.LocalRecentSearchDataSourceImpl
+import com.cairosquad.local.search.recent.dao.LocalRecentSearchDao
 import com.cairosquad.local.search.recent.entity.RecentSearchEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -19,14 +19,14 @@ import org.junit.Test
 
 class RecentSearchDataSourceImplTest {
 
-    private val dao = mockk<RecentSearchDao>()
-    private lateinit var dataSource: RecentSearchDataSourceImpl
+    private val dao = mockk<LocalRecentSearchDao>()
+    private lateinit var dataSource: LocalRecentSearchDataSourceImpl
     private val dispatcher = StandardTestDispatcher()
 
     @Before
     fun setUp() {
         Dispatchers.setMain(dispatcher)
-        dataSource = RecentSearchDataSourceImpl(dao)
+        dataSource = LocalRecentSearchDataSourceImpl(dao)
     }
 
     @After
@@ -43,35 +43,45 @@ class RecentSearchDataSourceImplTest {
             RecentSearchEntity("leon"),
             RecentSearchEntity("leona")
         )
-        coEvery { dao.getAll(query) } returns entities
-
+        coEvery { dao.getAllQueries(query) } returns entities
+        // When
+        val result = dataSource.getByQuery(query)
         // Then
-        coVerify { dao.getAll(query) }
+        coVerify { dao.getAllQueries(query) }
     }
 
     @Test
-    fun `should call dao clearAll when clearAll is invoked`() = runTest {
+    fun `clearAll calls dao clearAll`() = runTest {
         // Given
         coEvery { dao.clearAll() } just runs
-
         // When
         dataSource.clearAll()
-
         // Then
         coVerify { dao.clearAll() }
     }
 
     @Test
-    fun `should delete specific query from dao when removeQuery is called`() = runTest {
+    fun `removeQuery deletes specific query from dao`() = runTest {
         // Given
         val query = "matrix"
         coEvery { dao.deleteQuery(query) } just runs
-
         // When
         dataSource.removeQuery(query)
-
         // Then
         coVerify { dao.deleteQuery(query) }
+    }
+
+    @Test
+    fun `addQuery inserts entity into dao`() = runTest {
+        // Given
+        val query = "inception"
+        coEvery { dao.insertQuery(any()) } just runs
+        // When
+        dataSource.addQuery(query)
+        // Then
+        coVerify {
+            dao.insertQuery(match { it is RecentSearchEntity && it.query == query })
+        }
     }
 
     @Test
@@ -81,9 +91,10 @@ class RecentSearchDataSourceImplTest {
             RecentSearchEntity("dune"),
             RecentSearchEntity("interstellar")
         )
-        coEvery { dao.getAll() } returns entities
-
+        coEvery { dao.getAllQueries() } returns entities
+        // When
+        val result = dataSource.getAll()
         // Then
-        coVerify { dao.getAll() }
+        coVerify { dao.getAllQueries() }
     }
 }

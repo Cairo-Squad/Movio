@@ -11,7 +11,6 @@ android {
 
     defaultConfig {
         minSdk = 26
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -53,24 +52,18 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.coil.compose)
-    implementation(libs.tensorflow.lite.task.vision)
-    implementation(libs.tensorflow.lite.metadata)
-    implementation(libs.tensorflow.lite.gpu)
     implementation(libs.tensorflow.lite)
-    implementation(libs.tensorflow.lite.support)
+    implementation(libs.tensorflow.lite.task.vision)
     implementation(libs.androidx.junit.ktx)
     testImplementation(kotlin("test"))
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.mockk)
     testImplementation(libs.truth)
-    testImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.mockk)
     androidTestImplementation(libs.truth)
     testImplementation(libs.junit)
-    testImplementation(libs.junit.jupiter)
-    testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.junit.jupiter)
+    implementation(libs.coil.network.okhttp)
 }
 
 kover {

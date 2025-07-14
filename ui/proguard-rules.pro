@@ -19,3 +19,63 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+##########################################
+# 🌟 Jetpack Compose
+##########################################
+# Keep Compose compiler-generated classes
+-keep class androidx.compose.** { *; }
+-dontwarn androidx.compose.**
+
+# Keep Compose @Preview annotations (debug only)
+-keep @androidx.compose.ui.tooling.preview.Preview class * {*;}
+-keepclassmembers class * {
+    @androidx.compose.ui.tooling.preview.Preview *;
+}
+
+# Keep Compose parameter names (needed for reflection in tooling)
+-keepattributes SourceFile,LineNumberTable,Signature,LocalVariableTable,LocalVariableTypeTable,RuntimeVisibleAnnotations,RuntimeVisibleParameterAnnotations
+
+##########################################
+# 🌟 AndroidX Lifecycle
+##########################################
+-keep class androidx.lifecycle.** { *; }
+-dontwarn androidx.lifecycle.**
+
+-keepclassmembers class * extends androidx.lifecycle.ViewModel {
+    <init>(...);
+}
+
+##########################################
+# 🌟 Kotlin Metadata
+##########################################
+-keep class kotlin.Metadata { *; }
+-keepclassmembers class ** {
+    @kotlin.Metadata *;
+}
+
+##########################################
+# 🌟 Koin (Reflection heavy)
+##########################################
+# Keep Koin generated modules
+-keep class org.koin.** { *; }
+-dontwarn org.koin.**
+
+# Keep your DI modules if annotated with @Module or @Single
+-keep @org.koin.core.annotation.* class * {*;}
+-keepclassmembers class * {
+    @org.koin.core.annotation.* *;
+}
+
+##########################################
+# 🌟 Multi-module dependencies
+##########################################
+-keep class com.cairosquad.design_system.** { *; }
+-keep class com.cairosquad.viewmodel.** { *; }
+-keep class com.cairosquad.domain.** { *; }
+-dontwarn com.cairosquad.**
+
+-dontwarn kotlinx.**
+-dontwarn okhttp3.**
+-dontwarn org.jetbrains.kotlin.**
+-keep class kotlinx.** { *; }
+-keepclassmembers class kotlinx.** { *; }

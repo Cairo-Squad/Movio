@@ -1,17 +1,41 @@
 plugins {
-    id("java-library")
-    alias(libs.plugins.jetbrains.kotlin.jvm)
-    alias(libs.plugins.kover)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
+    id("androidx.room") version "2.7.1"
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kover)
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-}
-kotlin {
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
+android {
+    namespace = "com.cairosquad.repository"
+    compileSdk = 35
+
+    defaultConfig {
+        minSdk = 26
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+    room {
+        schemaDirectory("schemas")
     }
 }
 
@@ -19,17 +43,17 @@ dependencies {
     implementation(project(":domain"))
     implementation(libs.kotlinx.serialization.json)
     testImplementation(kotlin("test"))
-    testImplementation(libs.junit.jupiter)
-    testImplementation(libs.kotlinx.coroutines.test.v1102)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
-    testImplementation("io.mockk:mockk:1.14.0")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-    testImplementation(libs.junit.junit)
-    testImplementation(libs.junit.junit)
-    testImplementation(libs.junit.junit)
-    testImplementation(libs.junit.junit)
-    testImplementation(libs.truth.v144)
+
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+    implementation(libs.kotlinx.coroutines.core)
+    testImplementation(libs.truth)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
 
 }

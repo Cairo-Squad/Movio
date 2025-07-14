@@ -1,7 +1,7 @@
 package com.cairosquad.repository.search
 
-import com.cairosquad.repository.search.data_source.remote.RemoteRecommendationDataSource
-import com.cairosquad.repository.search.data_source.remote.dto.MovieDto
+import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
+import com.cairosquad.repository.search.data_source.remote.RemoteMovieDiscoveryDataSource
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -10,13 +10,13 @@ import org.junit.Before
 import kotlin.test.Test
 
 class RecommendationRepositoryImplTest {
-    private lateinit var dataSource: RemoteRecommendationDataSource
-    private lateinit var recommendationRepository: RecommendationRepositoryImpl
+    private lateinit var dataSource: RemoteMovieDiscoveryDataSource
+    private lateinit var recommendationRepository: RemoteMovieDiscoveryRepositoryImpl
 
     @Before
     fun setUp() {
         dataSource = mockk()
-        recommendationRepository = RecommendationRepositoryImpl(dataSource)
+        recommendationRepository = RemoteMovieDiscoveryRepositoryImpl(dataSource)
     }
 
     @Test
@@ -24,13 +24,23 @@ class RecommendationRepositoryImplTest {
         runTest {
             // Given
             val remoteMovies = listOf(
-                MovieDto(id = 1, title = "Movie 1", posterPath = null, voteAverage = null),
-                MovieDto(id = 2, title = "Movie 2", posterPath = null, voteAverage = null)
+                MovieRemoteDto(
+                    id = 1,
+                    title = "Movie 1",
+                    posterPath = null,
+                    voteAverage = null
+                ),
+                MovieRemoteDto(
+                    id = 2,
+                    title = "Movie 2",
+                    posterPath = null,
+                    voteAverage = null
+                )
             )
-            coEvery { dataSource.getForYouMovies() } returns remoteMovies
+            coEvery { dataSource.getPersonalizedMovies() } returns remoteMovies
 
             // When
-            val result = recommendationRepository.getForYouMovies()
+            val result = recommendationRepository.getPersonalizedMovies()
 
             // Then
             assertThat(result).hasSize(2)
@@ -42,10 +52,10 @@ class RecommendationRepositoryImplTest {
     fun `should return empty list when getForYouMovies is called with empty remote data`() =
         runTest {
             // Given
-            coEvery { dataSource.getForYouMovies() } returns emptyList()
+            coEvery { dataSource.getPersonalizedMovies() } returns emptyList()
 
             // When
-            val result = recommendationRepository.getForYouMovies()
+            val result = recommendationRepository.getPersonalizedMovies()
 
             // Then
             assertThat(result).isEmpty()
@@ -55,13 +65,18 @@ class RecommendationRepositoryImplTest {
     fun `should return mapped movie list when getExploreMoreMovies is called with remote movies`() =
         runTest {
             // Given
-            val remoteMovieDto = listOf(
-                MovieDto(id = 3, title = "Movie 3", posterPath = "some_path", voteAverage = 4.2)
+            val movieRemoteDto = listOf(
+                MovieRemoteDto(
+                    id = 3,
+                    title = "Movie 3",
+                    posterPath = "some_path",
+                    voteAverage = 4.2
+                )
             )
-            coEvery { dataSource.getExploreMoreMovies() } returns remoteMovieDto
+            coEvery { dataSource.getSuggestedMovies() } returns movieRemoteDto
 
             // When
-            val result = recommendationRepository.getExploreMoreMovies()
+            val result = recommendationRepository.getSuggestedMovies()
 
             // Then
             assertThat(result.size).isEqualTo(1)

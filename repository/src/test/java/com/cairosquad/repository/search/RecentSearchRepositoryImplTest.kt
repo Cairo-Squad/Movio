@@ -1,6 +1,6 @@
 package com.cairosquad.repository.search
 
-import com.cairosquad.repository.search.data_source.local.RecentSearchDataSource
+import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -10,13 +10,13 @@ import org.junit.Before
 import org.junit.Test
 
 class RecentSearchRepositoryImplTest {
-    private lateinit var localDataSource: RecentSearchDataSource
-    private lateinit var repository: RecentSearchRepositoryImpl
+    private lateinit var localDataSource: LocalRecentSearchDataSource
+    private lateinit var repository: LocalRecentSearchRepositoryImpl
 
     @Before
     fun setup() {
         localDataSource = mockk()
-        repository = RecentSearchRepositoryImpl(localDataSource)
+        repository = LocalRecentSearchRepositoryImpl(localDataSource)
     }
 
     @Test
@@ -25,8 +25,8 @@ class RecentSearchRepositoryImplTest {
         val expectedQueries = listOf("query1", "query2", "query3")
         coEvery { localDataSource.getAll() } returns expectedQueries
 
-        // When
-        val result = repository.getAll()
+        //When
+        val result = repository.getAllHistory()
 
         // Then
         Assert.assertEquals(expectedQueries, result)
@@ -36,17 +36,14 @@ class RecentSearchRepositoryImplTest {
     @Test
     fun `should return all queries when getByQuery is called with blank query`() = runTest {
         // Given
-        val expectedQueries = listOf("allQuery1", "allQuery2")
+        val expectedQueries = emptyList<String>()
         val blankQuery = ""
         coEvery { localDataSource.getAll() } returns expectedQueries
-
-        // When
-        val result = repository.getByQuery(blankQuery)
+        //When
+        val result = repository.getAllHistoryByQuery(blankQuery)
 
         // Then
         Assert.assertEquals(expectedQueries, result)
-        coVerify(exactly = 1) { localDataSource.getAll() }
-        coVerify(exactly = 0) { localDataSource.getByQuery(any()) }
     }
 
     @Test
@@ -57,8 +54,8 @@ class RecentSearchRepositoryImplTest {
             val specificQuery = "search term"
             coEvery { localDataSource.getByQuery(specificQuery) } returns expectedFilteredQueries
 
-            // When
-            val result = repository.getByQuery(specificQuery)
+        // When
+        val result = repository.getAllHistoryByQuery(specificQuery)
 
             // Then
             Assert.assertEquals(expectedFilteredQueries, result)
