@@ -59,7 +59,6 @@ fun SearchContent(
     }
 
     Column(modifier = modifier.fillMaxSize()) {
-        Row(modifier = Modifier.height(IntrinsicSize.Max)) {
 
 
             InputField(
@@ -79,7 +78,7 @@ fun SearchContent(
                     }
                 )
             )
-        }
+
 
         SectionHeader(
             title = stringResource(R.string.recent_search),
