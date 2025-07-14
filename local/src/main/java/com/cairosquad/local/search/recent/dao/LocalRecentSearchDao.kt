@@ -7,10 +7,10 @@ import androidx.room.Query
 import com.cairosquad.local.search.recent.entity.RecentSearchEntity
 
 @Dao
-interface RecentSearchDao {
+interface LocalRecentSearchDao {
 
     @Query("SELECT * FROM recent_search WHERE query_column LIKE '%' || :query || '%' ORDER BY timestamp DESC")
-    suspend fun getAll(query: String): List<RecentSearchEntity>
+    suspend fun getAllQueries(query: String): List<RecentSearchEntity>
 
     @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertQuery(entity: RecentSearchEntity)
@@ -22,5 +22,5 @@ interface RecentSearchDao {
     suspend fun deleteQuery(query: String)
 
     @Query("SELECT * FROM recent_search ORDER BY timestamp DESC")
-    suspend fun getAll(): List<RecentSearchEntity>
+    suspend fun getAllQueries(): List<RecentSearchEntity>
 }

@@ -6,7 +6,7 @@ import com.cairosquad.entity.Series
 import com.cairosquad.repository.search.data_source.local.dto.CachedArtistDto
 import com.cairosquad.repository.search.data_source.local.dto.CachedMovieDto
 import com.cairosquad.repository.search.data_source.local.dto.CachedSeriesDto
-import com.cairosquad.repository.search.data_source.local.SearchCacheDataSource
+import com.cairosquad.repository.search.data_source.local.LocalSearchCacheDataSource
 import com.cairosquad.repository.search.data_source.remote.RemoteSearchDataSource
 import com.cairosquad.repository.search.data_source.remote.dto.ApiArtistDto
 import com.cairosquad.repository.search.data_source.remote.dto.ApiMovieDto
@@ -35,7 +35,7 @@ import java.time.Instant
 class SearchRepositoryImplTest {
 
     private val remoteDS = mockk<RemoteSearchDataSource>()
-    private val cacheDS = mockk<SearchCacheDataSource>()
+    private val cacheDS = mockk<LocalSearchCacheDataSource>()
     private lateinit var repo: SearchRepositoryImpl
     private val dispatcher = StandardTestDispatcher()
 

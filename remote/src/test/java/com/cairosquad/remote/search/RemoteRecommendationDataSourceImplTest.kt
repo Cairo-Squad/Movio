@@ -20,7 +20,7 @@ class RemoteRecommendationDataSourceImplTest {
 
     private lateinit var mockEngine: MockEngine
     private lateinit var httpClient: HttpClient
-    private lateinit var remoteDataSource: RemoteRecommendationDataSourceImpl
+    private lateinit var remoteDataSource: RemoteMovieDiscoveryDataSourceImpl
 
     private val json = Json { ignoreUnknownKeys = true; isLenient = true }
 
@@ -96,14 +96,14 @@ class RemoteRecommendationDataSourceImplTest {
             }
         }
 
-        remoteDataSource = RemoteRecommendationDataSourceImpl(httpClient)
+        remoteDataSource = RemoteMovieDiscoveryDataSourceImpl(httpClient)
     }
 
 
 
     @Test
     fun `getForYouMovies returns list of movies on success`() = runTest {
-        val movies = remoteDataSource.getForYouMovies()
+        val movies = remoteDataSource.getPersonalizedMovies()
 
         assertThat(movies).isNotEmpty()
         assertThat(movies.size).isEqualTo(2)
@@ -136,9 +136,9 @@ class RemoteRecommendationDataSourceImplTest {
         httpClient = HttpClient(mockEngine) {
             install(ContentNegotiation) { json(json) }
         }
-        remoteDataSource = RemoteRecommendationDataSourceImpl(httpClient)
+        remoteDataSource = RemoteMovieDiscoveryDataSourceImpl(httpClient)
 
-        val movies = remoteDataSource.getForYouMovies()
+        val movies = remoteDataSource.getPersonalizedMovies()
         assertThat(movies).isEmpty()
     }
 
@@ -181,9 +181,9 @@ class RemoteRecommendationDataSourceImplTest {
         httpClient = HttpClient(mockEngine) {
             install(ContentNegotiation) { json(json) }
         }
-        remoteDataSource = RemoteRecommendationDataSourceImpl(httpClient)
+        remoteDataSource = RemoteMovieDiscoveryDataSourceImpl(httpClient)
 
-        val movies = remoteDataSource.getForYouMovies()
+        val movies = remoteDataSource.getPersonalizedMovies()
         assertThat(movies).hasSize(1)
         assertThat(movies[0].id).isEqualTo(10)
     }
@@ -206,11 +206,11 @@ class RemoteRecommendationDataSourceImplTest {
         httpClient = HttpClient(mockEngine) {
             install(ContentNegotiation) { json(json) }
         }
-        remoteDataSource = RemoteRecommendationDataSourceImpl(httpClient)
+        remoteDataSource = RemoteMovieDiscoveryDataSourceImpl(httpClient)
 
         var thrownException: Throwable? = null
         try {
-            remoteDataSource.getForYouMovies()
+            remoteDataSource.getPersonalizedMovies()
         } catch (e: Exception) {
             thrownException = e
         }
@@ -220,7 +220,7 @@ class RemoteRecommendationDataSourceImplTest {
 
     @Test
     fun `getExploreMoreMovies returns list of movies on success`() = runTest {
-        val movies = remoteDataSource.getExploreMoreMovies()
+        val movies = remoteDataSource.getSuggestedMovies()
 
         assertThat(movies).isNotEmpty()
         assertThat(movies.size).isEqualTo(2)
@@ -253,9 +253,9 @@ class RemoteRecommendationDataSourceImplTest {
         httpClient = HttpClient(mockEngine) {
             install(ContentNegotiation) { json(json) }
         }
-        remoteDataSource = RemoteRecommendationDataSourceImpl(httpClient)
+        remoteDataSource = RemoteMovieDiscoveryDataSourceImpl(httpClient)
 
-        val movies = remoteDataSource.getExploreMoreMovies()
+        val movies = remoteDataSource.getSuggestedMovies()
         assertThat(movies).isEmpty()
     }
 

@@ -4,12 +4,12 @@ import com.cairosquad.local.search.cache.dao.CacheDao
 import com.cairosquad.repository.search.data_source.local.dto.CachedArtistDto
 import com.cairosquad.repository.search.data_source.local.dto.CachedMovieDto
 import com.cairosquad.repository.search.data_source.local.dto.CachedSeriesDto
-import com.cairosquad.repository.search.data_source.local.SearchCacheDataSource
+import com.cairosquad.repository.search.data_source.local.LocalSearchCacheDataSource
 import java.time.Instant
 
-class SearchCacheDataSourceImpl(
+class LocalSearchCacheDataSourceImpl(
     private val cacheDao: CacheDao
-): SearchCacheDataSource {
+): LocalSearchCacheDataSource {
 
     override suspend fun getCachedMovies(query: String): List<CachedMovieDto> {
         return cacheDao.getCachedMovies(query)

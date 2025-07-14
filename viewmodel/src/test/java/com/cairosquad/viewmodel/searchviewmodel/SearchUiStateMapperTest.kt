@@ -8,7 +8,7 @@ import com.cairosquad.viewmodel.search.toUiState
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
-class UiStateMapperTest {
+class SearchUiStateMapperTest {
 
     @Test
     fun `Movie maps to MovieScreenState correctly`() {
