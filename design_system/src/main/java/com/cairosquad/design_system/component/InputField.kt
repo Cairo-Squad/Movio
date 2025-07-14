@@ -63,13 +63,8 @@ fun InputField(
     keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {
     var hasFocus by rememberSaveable { mutableStateOf(false) }
-    var textFieldValue by remember(value) {
-        mutableStateOf(
-            TextFieldValue(
-                text = value,
-                selection = TextRange(value.length)
-            )
-        )
+    var textFieldValue by rememberSaveable(stateSaver = TextFieldValue.Saver) {
+        mutableStateOf(TextFieldValue(text = value))
     }
 
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
