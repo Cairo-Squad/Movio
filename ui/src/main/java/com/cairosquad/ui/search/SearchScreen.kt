@@ -14,7 +14,7 @@ fun SearchScreen(
     viewModel: SearchViewModel = koinViewModel(),
 ) {
 
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.screenState.collectAsState()
 
     SearchScreenContent(
         state = state,

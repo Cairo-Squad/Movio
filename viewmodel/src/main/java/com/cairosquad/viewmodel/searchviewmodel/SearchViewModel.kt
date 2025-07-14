@@ -1,24 +1,25 @@
 package com.cairosquad.viewmodel.searchviewmodel
 
-import com.cairosquad.domain.search.usecase.ClearSearchHistoryUseCase
-import com.cairosquad.domain.search.usecase.GetSuggestedMoviesUseCase
-import com.cairosquad.domain.search.usecase.GetPersonalizedMoviesUseCase
-import com.cairosquad.domain.search.usecase.GetLocalSearchHistoryUseCase
+import androidx.lifecycle.viewModelScope
+import com.cairosquad.domain.search.usecase.ClearRecentSearchUseCase
+import com.cairosquad.domain.search.usecase.GetExploreMoreUseCase
+import com.cairosquad.domain.search.usecase.GetForYouUseCase
+import com.cairosquad.domain.search.usecase.GetRecentSearchUseCase
 import com.cairosquad.domain.search.usecase.SearchUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
-import com.cairosquad.viewmodel.searchviewmodel.SearchScreenState.ScreenStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.IOException
 
 class SearchViewModel(
     private val searchUseCase: SearchUseCase,
-    private val getLocalSearchHistoryUseCase: GetLocalSearchHistoryUseCase,
-    private val clearRecentSearchUseCase: ClearSearchHistoryUseCase,
-    private val getSuggestedMoviesUseCase: GetSuggestedMoviesUseCase,
-    private val getPersonalizedMoviesUseCase: GetPersonalizedMoviesUseCase,
-) : BaseViewModel<SearchScreenState, SearchUiEvent>(initialState = SearchScreenState()),
+    private val getRecentSearchUseCase: GetRecentSearchUseCase,
+    private val clearRecentSearchUseCase: ClearRecentSearchUseCase,
+    private val getExploreMoreUseCase: GetExploreMoreUseCase,
+    private val getForYouUseCase: GetForYouUseCase,
+) : BaseViewModel<SearchScreenState, SearchEffect>(initialState = SearchScreenState()),
     SearchInteractionListener {
 
     private var searchJob: Job? = null
@@ -29,14 +30,19 @@ class SearchViewModel(
 
     fun loadDiscoverMovies() = tryToCall(
         block = {
-            val forYou = getPersonalizedMoviesUseCase.getPersonalizedMovies().map { it.toUiState() }
-            val exploreMore = getSuggestedMoviesUseCase.getSuggestedMovies().map { it.toUiState() }
+            updateState {
+                it.copy(
+                    screenStatus = SearchScreenState.ScreenStatus.LOADING,
+                )
+            }
+            val forYou = getForYouUseCase.getForYouMovies().map { it.toUiState() }
+            val exploreMore = getExploreMoreUseCase.getExploreMoreMovies().map { it.toUiState() }
             forYou to exploreMore
         },
         onSuccess = { (forYou, exploreMore) ->
             updateState {
                 it.copy(
-                    screenStatus = ScreenStatus.EXPLORE,
+                    screenStatus = SearchScreenState.ScreenStatus.EXPLORE,
                     forYou = forYou,
                     exploreMore = exploreMore,
                     errorMessage = null
@@ -47,11 +53,11 @@ class SearchViewModel(
             val message = mapExceptionToMessage(e)
             updateState {
                 it.copy(
-                    screenStatus = ScreenStatus.FAILED,
+                    screenStatus = SearchScreenState.ScreenStatus.FAILED,
                     errorMessage = message
                 )
             }
-            sendEvent(SearchUiEvent.ShowToast(message))
+            sendEffect(SearchEffect.ShowToast(message))
         },
         dispatcher = Dispatchers.IO
     )
@@ -59,7 +65,7 @@ class SearchViewModel(
     override fun onQueryTextChanged(query: String) {
         updateState {
             it.copy(
-                screenStatus = ScreenStatus.SEARCH,
+                screenStatus = SearchScreenState.ScreenStatus.SEARCH,
                 query = query
             )
         }
@@ -67,7 +73,7 @@ class SearchViewModel(
         searchJob = tryToCall(
             block = {
                 delay(300)
-                getLocalSearchHistoryUseCase.getByQuery(query)
+                getRecentSearchUseCase.getByQuery(query)
             },
             onSuccess = { suggestions ->
                 updateState {
@@ -85,7 +91,7 @@ class SearchViewModel(
         searchJob?.cancel()
         updateState {
             it.copy(
-                screenStatus = ScreenStatus.EXPLORE,
+                screenStatus = SearchScreenState.ScreenStatus.EXPLORE,
                 query = "",
                 recentSearch = emptyList(),
                 errorMessage = null
@@ -97,7 +103,7 @@ class SearchViewModel(
         searchJob?.cancel()
         updateState {
             it.copy(
-                screenStatus =ScreenStatus.LOADING,
+                screenStatus = SearchScreenState.ScreenStatus.LOADING,
                 query = query,
                 errorMessage = null
             )
@@ -106,7 +112,7 @@ class SearchViewModel(
         if (query.isBlank()) {
             updateState {
                 it.copy(
-                    screenStatus = ScreenStatus.SEARCH,
+                    screenStatus = SearchScreenState.ScreenStatus.SEARCH,
                 )
             }
         } else {
@@ -120,7 +126,7 @@ class SearchViewModel(
                 onSuccess = { (movies, series, artists) ->
                     updateState {
                         it.copy(
-                            screenStatus = ScreenStatus.RESULT,
+                            screenStatus = SearchScreenState.ScreenStatus.RESULT,
                             movies = movies,
                             series = series,
                             artists = artists,
@@ -132,11 +138,11 @@ class SearchViewModel(
                     val message = mapExceptionToMessage(e)
                     updateState {
                         it.copy(
-                            screenStatus = ScreenStatus.FAILED,
+                            screenStatus = SearchScreenState.ScreenStatus.FAILED,
                             errorMessage = message
                         )
                     }
-                    sendEvent(SearchUiEvent.ShowToast(message))
+                    sendEffect(SearchEffect.ShowToast(message))
                 },
                 dispatcher = Dispatchers.IO
             )
@@ -148,7 +154,7 @@ class SearchViewModel(
     override fun onClearHistory() {
         tryToCall(
             block = {
-                clearRecentSearchUseCase.clearAllHistory()
+                clearRecentSearchUseCase.clearAll()
                 emptyList<String>()
             },
             onSuccess = { suggestions ->
@@ -157,7 +163,7 @@ class SearchViewModel(
             onError = { e ->
                 val message = mapExceptionToMessage(e)
                 updateState { it.copy(errorMessage = message) }
-                sendEvent(SearchUiEvent.ShowToast(message))
+                sendEffect(SearchEffect.ShowToast(message))
             },
             dispatcher = Dispatchers.IO
         )
@@ -166,8 +172,8 @@ class SearchViewModel(
     override fun onRemoveHistoryItem(query: String) {
         tryToCall(
             block = {
-                clearRecentSearchUseCase.removeQueryFromHistory(query)
-                getLocalSearchHistoryUseCase.getAll()
+                clearRecentSearchUseCase.removeQuery(query)
+                getRecentSearchUseCase.getAll()
             },
             onSuccess = { suggestions ->
                 updateState { it.copy(recentSearch = suggestions, errorMessage = null) }
@@ -175,7 +181,7 @@ class SearchViewModel(
             onError = { e ->
                 val message = mapExceptionToMessage(e)
                 updateState { it.copy(errorMessage = mapExceptionToMessage(e)) }
-                sendEvent(SearchUiEvent.ShowToast(message))
+                sendEffect(SearchEffect.ShowToast(message))
             },
             dispatcher = Dispatchers.IO
         )
@@ -185,14 +191,14 @@ class SearchViewModel(
     override fun onBackClicked() {
         updateState {
             when (it.screenStatus) {
-                ScreenStatus.SEARCH -> it.copy(
-                    screenStatus = ScreenStatus.EXPLORE,
+                SearchScreenState.ScreenStatus.SEARCH -> it.copy(
+                    screenStatus = SearchScreenState.ScreenStatus.EXPLORE,
                     query = "",
                     recentSearch = emptyList(),
                 )
 
-                ScreenStatus.RESULT -> it.copy(
-                    screenStatus = ScreenStatus.SEARCH,
+                SearchScreenState.ScreenStatus.RESULT -> it.copy(
+                    screenStatus = SearchScreenState.ScreenStatus.SEARCH,
                 )
 
                 else -> it
@@ -203,7 +209,7 @@ class SearchViewModel(
     override fun onClickSearchTextField() {
         tryToCall(
             block = {
-                getLocalSearchHistoryUseCase.getAll()
+                getRecentSearchUseCase.getAll()
             },
             onSuccess = { suggestions ->
                 updateState { it.copy(recentSearch = suggestions, errorMessage = null) }
@@ -214,9 +220,30 @@ class SearchViewModel(
         searchJob?.cancel()
         updateState {
             it.copy(
-                screenStatus = ScreenStatus.SEARCH,
+                screenStatus = SearchScreenState.ScreenStatus.SEARCH,
             )
         }
+    }
+
+    override fun onRefresh() {
+        viewModelScope.launch {
+            updateState {
+                it.copy(
+                    isRefreshing = true,
+                )
+            }
+            delay(500L)
+
+            updateState {
+                it.copy(isRefreshing = false)
+            }
+        }
+        if (screenState.value.query.isBlank()) {
+            loadDiscoverMovies()
+        } else {
+            onSearch(screenState.value.query)
+        }
+
     }
 
     private fun mapExceptionToMessage(e: Throwable): String = when (e) {

@@ -19,3 +19,52 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+##########################################
+# 🌟 AndroidX Core
+##########################################
+-keep class androidx.core.** { *; }
+-dontwarn androidx.core.**
+
+##########################################
+# 🌟 Coil
+##########################################
+-keep class coil.** { *; }
+-dontwarn coil.**
+
+-keepclassmembers class * {
+    @coil.annotation.* *;
+}
+
+##########################################
+# 🌟 TensorFlow Lite
+##########################################
+-keep class org.tensorflow.lite.** { *; }
+-dontwarn org.tensorflow.lite.**
+
+##########################################
+# 🌟 TensorFlow Lite Support API
+##########################################
+-keep class org.tensorflow.lite.support.** { *; }
+-dontwarn org.tensorflow.lite.support.**
+
+-keep class org.tensorflow.lite.support.image.** { *; }
+-dontwarn org.tensorflow.lite.support.image.**
+
+-keep class org.tensorflow.lite.support.tensorbuffer.** { *; }
+-dontwarn org.tensorflow.lite.support.tensorbuffer.**
+
+##########################################
+# 🌟 Kotlin Metadata (required for reflection)
+##########################################
+-keep class kotlin.Metadata { *; }
+-keepclassmembers class ** {
+    @kotlin.Metadata *;
+}
+
+##########################################
+# 🚫 Exclude Tests (MockK, Truth, JUnit)
+##########################################
+-dontwarn io.mockk.**
+-dontwarn com.google.common.truth.**
+-dontwarn org.junit.**
+-dontwarn kotlinx.**

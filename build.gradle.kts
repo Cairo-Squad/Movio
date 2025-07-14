@@ -51,3 +51,11 @@ dependencies {
     kover(project(":viewmodel"))
     kover(project(":safe_image_viewer"))
 }
+configurations.all {
+    resolutionStrategy {
+        force("androidx.lifecycle:lifecycle-runtime-ktx:2.8.0")
+        force("androidx.lifecycle:lifecycle-runtime:2.8.0")
+        force("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.0")
+        force("androidx.lifecycle:lifecycle-runtime-compose:2.8.0")
+    }
+}
