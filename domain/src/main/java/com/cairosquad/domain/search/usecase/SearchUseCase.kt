@@ -10,19 +10,19 @@ class SearchUseCase(
     private val searchRepository: SearchRepository,
     private val recentSearchRepository: SearchHistoryRepository
 ) {
-    suspend fun getSeries(query: String): List<Series> {
+    suspend fun getSeries(query: String, page: Int): List<Series> {
         return searchRepository.getSeries(query).also {
             recentSearchRepository.addQuery(query)
         }
     }
 
-    suspend fun getMovies(query: String): List<Movie> {
+    suspend fun getMovies(query: String, page: Int): List<Movie> {
         return searchRepository.getMovies(query).also {
             recentSearchRepository.addQuery(query)
         }
     }
 
-    suspend fun getArtists(query: String): List<Artist> {
+    suspend fun getArtists(query: String, page: Int): List<Artist> {
         return searchRepository.getArtists(query).also {
             recentSearchRepository.addQuery(query)
         }

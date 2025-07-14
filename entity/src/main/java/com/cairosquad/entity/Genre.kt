@@ -1,7 +1,6 @@
 package com.cairosquad.entity
 
-data class Artist(
+data class Genre(
     val id: Long,
     val name: String,
-    val photoPath: String,
 )
