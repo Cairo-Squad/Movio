@@ -10,7 +10,7 @@ class RemoteMovieDiscoveryRepositoryImpl(
     private val remoteRecommendationDataSource: RemoteMovieDiscoveryDataSource
 ) : MovieDiscoveryRepository {
     override suspend fun getPersonalizedMovies(): List<Movie> {
-        return return tryToCall {
+        return tryToCall {
             remoteRecommendationDataSource.getPersonalizedMovies().toEntity()
         }
     }
