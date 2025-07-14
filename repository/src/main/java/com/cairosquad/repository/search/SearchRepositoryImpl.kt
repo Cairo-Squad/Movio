@@ -19,7 +19,7 @@ class SearchRepositoryImpl(
             if (cachedSeries.isNotEmpty()) {
                 return@withContext cachedSeries
             } else {
-                val seriesResults = remoteSearchDataSource.getSeries(query).map { it.toSeries() }
+                val seriesResults = remoteSearchDataSource.getSeries(query).map { it.toEntity() }
                 searchCacheDataSource.cacheSeries(query, seriesResults.map { it.toSeriesCacheDto(query) })
                 return@withContext seriesResults
             }
@@ -31,7 +31,7 @@ class SearchRepositoryImpl(
             if (cachedMovies.isNotEmpty()) {
                 return@withContext cachedMovies
             } else {
-                val moviesResults = remoteSearchDataSource.getMovies(query).map { it.toMovie() }
+                val moviesResults = remoteSearchDataSource.getMovies(query).map { it.toEntity() }
                 searchCacheDataSource.cacheMovies(query, moviesResults.map { it.toMovieCacheDto(query) })
                 return@withContext moviesResults
             }
@@ -44,7 +44,7 @@ class SearchRepositoryImpl(
             if (cachedArtists.isNotEmpty()) {
                 return@withContext cachedArtists
             } else {
-                val artistResults = remoteSearchDataSource.getArtists(query).map { it.toArtist() }
+                val artistResults = remoteSearchDataSource.getArtists(query).map { it.toEntity() }
                 searchCacheDataSource.cacheArtist(query, artistResults.map { it.toArtistCacheDto(query) })
                 return@withContext artistResults
             }

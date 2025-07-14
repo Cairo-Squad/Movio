@@ -14,7 +14,7 @@ data class ArtistDto(
     @SerialName("profile_path")
     val profilePath: String? = null,
 ) {
-    fun toArtist(): Artist {
+    fun toEntity(): Artist {
         return Artist(
             id = id?.toLong() ?: 0L,
             name = name ?: "",

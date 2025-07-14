@@ -16,7 +16,7 @@ data class MovieDto(
     @SerialName("vote_average")
     val voteAverage: Double? = null,
 ) {
-    fun toMovie(): Movie {
+    fun toEntity(): Movie {
         return Movie(
             id = id?.toLong() ?: 0L,
             title = title ?: "",

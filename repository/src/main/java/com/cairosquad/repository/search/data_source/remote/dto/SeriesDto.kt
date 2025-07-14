@@ -16,7 +16,7 @@ data class SeriesDto(
     @SerialName("vote_average")
     val voteAverage: Double? = null,
 ) {
-    fun toSeries(): Series {
+    fun toEntity(): Series {
         return Series(
             id = id ?: 0L,
             title = name ?: "",
