@@ -35,7 +35,7 @@ fun SectionHeader(
     modifier: Modifier = Modifier,
     actionText: String? = null,
     actionIcon: ImageVector? = null,
-    onActionClick: () -> Unit
+    onActionClick: () -> Unit = {}
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
