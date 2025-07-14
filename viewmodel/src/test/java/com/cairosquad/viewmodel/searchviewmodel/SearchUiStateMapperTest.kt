@@ -11,9 +11,11 @@ import org.junit.Test
 class SearchUiStateMapperTest {
 
     @Test
-    fun `Movie maps to MovieScreenState correctly`() {
+    fun `should map Movie to MovieUiState when toUiState is called`() {
+        // When
         val uiState = movie.toUiState()
 
+        // Then
         assertThat(uiState).isEqualTo(
             SearchScreenState.MovieUiState(
                 id = movie.id,
@@ -25,9 +27,11 @@ class SearchUiStateMapperTest {
     }
 
     @Test
-    fun `Artist maps to ArtistScreenState correctly`() {
+    fun `should map Artist to ArtistUiState when toUiState is called`() {
+        // When
         val uiState = artist.toUiState()
 
+        // Then
         assertThat(uiState).isEqualTo(
             SearchScreenState.ArtistUiState(
                 id = artist.id,
@@ -38,9 +42,11 @@ class SearchUiStateMapperTest {
     }
 
     @Test
-    fun `Series maps to SeriesScreenState correctly`() {
+    fun `should map Series to SeriesUiState when toUiState is called`() {
+        // When
         val uiState = series.toUiState()
 
+        // Then
         assertThat(uiState).isEqualTo(
             SearchScreenState.SeriesUiState(
                 id = series.id,
@@ -73,4 +79,3 @@ class SearchUiStateMapperTest {
         )
     }
 }
-

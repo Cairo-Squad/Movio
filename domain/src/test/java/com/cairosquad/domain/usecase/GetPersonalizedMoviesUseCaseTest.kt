@@ -15,7 +15,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-class GetForYouUseCaseTest {
+class GetPersonalizedMoviesUseCaseTest {
 
     private val recommendationRepository = mockk<MovieDiscoveryRepository>()
     private lateinit var useCase: GetPersonalizedMoviesUseCase

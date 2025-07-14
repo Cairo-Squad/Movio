@@ -17,7 +17,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-class RecentSearchDataSourceImplTest {
+class LocalRecentSearchDataSourceImplTest {
 
     private val dao = mockk<LocalRecentSearchDao>()
     private lateinit var dataSource: LocalRecentSearchDataSourceImpl

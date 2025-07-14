@@ -17,7 +17,7 @@ import org.junit.Before
 import org.junit.Test
 import java.time.Instant
 
-class SearchCacheDataSourceImplTest {
+class LocalSearchCacheDataSourceImplTest {
 
     private lateinit var cacheDao: CacheDao
     private lateinit var dataSource: LocalSearchCacheDataSourceImpl

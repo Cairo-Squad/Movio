@@ -15,7 +15,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-class GetExploreMoreUseCaseTest {
+class GetSuggestedMoviesUseCaseTest {
 
     private val recommendationRepository = mockk<MovieDiscoveryRepository>()
     private lateinit var useCase: GetSuggestedMoviesUseCase
@@ -34,7 +34,7 @@ class GetExploreMoreUseCaseTest {
     }
 
     @Test
-    fun `getExploreMoreMovies should return list of movies from repository`() = runTest {
+    fun `should return list of movies from repository when getSuggestedMovies is called`() = runTest {
         // Given
         val expectedMovies = listOf(
             Movie(id = 1, title = "Interstellar", rating = 8.6f, posterPath = "/interstellar.jpg"),

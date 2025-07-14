@@ -8,7 +8,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
-class ClearRecentSearchUseCaseTest {
+class ClearSearchHistoryUseCaseTest {
 
     private lateinit var recentSearchRepository: SearchHistoryRepository
     private lateinit var clearRecentSearchUseCase: ClearSearchHistoryUseCase
