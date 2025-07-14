@@ -20,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -44,7 +43,6 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.preview.MultiThemePreviews
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
-import androidx.compose.runtime.LaunchedEffect
 
 @Composable
 fun InputField(
