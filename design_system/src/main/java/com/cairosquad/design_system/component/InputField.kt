@@ -67,11 +67,7 @@ fun InputField(
     var textFieldValue by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue(text = value, selection = TextRange(value.length)))
     }
-    LaunchedEffect(value) {
-        if (value != textFieldValue.text) {
-            textFieldValue = textFieldValue.copy(text = value)
-        }
-    }
+
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     val hasFocusGradient = listOf(
         Theme.color.brand.onPrimary,
