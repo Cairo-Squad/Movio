@@ -19,7 +19,7 @@ fun Series.toSeriesCacheDto(query: String): SeriesCacheDto {
     )
 }
 
-fun SeriesCacheDto.toSeries(): Series {
+fun SeriesCacheDto.toEntity(): Series {
     return Series(
         id = id.toLong(),
         title = name ?: "",
@@ -40,7 +40,7 @@ fun Movie.toMovieCacheDto(query: String): MovieCacheDto {
 }
 
 
-fun MovieCacheDto.toMovie(): Movie {
+fun MovieCacheDto.toEntity(): Movie {
     return Movie(
         id = id.toLong(),
         title = title ?: "",
@@ -59,7 +59,7 @@ fun Artist.toArtistCacheDto(query: String): ArtistCacheDto {
     )
 }
 
-fun ArtistCacheDto.toArtist(): Artist {
+fun ArtistCacheDto.toEntity(): Artist {
     return Artist(
         id = id.toLong(),
         name = name ?: "",

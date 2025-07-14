@@ -9,12 +9,12 @@ class RecommendationRepositoryImpl(
     private val remoteRecommendationDataSource: RemoteRecommendationDataSource
 ) : RecommendationRepository {
     override suspend fun getForYouMovies(): List<Movie> {
-        return tryToCall { remoteRecommendationDataSource.getForYouMovies().map { it.toMovie() } }
+        return tryToCall { remoteRecommendationDataSource.getForYouMovies().map { it.toEntity() } }
     }
 
     override suspend fun getExploreMoreMovies(): List<Movie> {
         return tryToCall {
-            remoteRecommendationDataSource.getExploreMoreMovies().map { it.toMovie() }
+            remoteRecommendationDataSource.getExploreMoreMovies().map { it.toEntity() }
         }
     }
 }
