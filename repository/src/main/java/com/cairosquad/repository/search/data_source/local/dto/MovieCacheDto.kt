@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = CACHED_MOVIES_TABLE_NAME)
-data class CachedMovieDto(
+data class MovieCacheDto(
     @ColumnInfo(name = CACHED_MOVIES_ID_COLUMN_NAME)
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,

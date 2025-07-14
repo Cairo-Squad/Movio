@@ -3,9 +3,9 @@ package com.cairosquad.repository.search
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
-import com.cairosquad.repository.search.data_source.local.dto.CachedArtistDto
-import com.cairosquad.repository.search.data_source.local.dto.CachedMovieDto
-import com.cairosquad.repository.search.data_source.local.dto.CachedSeriesDto
+import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.SeriesCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.toCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.toEntity
 import com.google.common.truth.Truth.assertThat
@@ -25,7 +25,7 @@ class EntityCacheMapperTest {
         val cache = series.toCacheDto(query)
 
         assertThat(cache).isEqualTo(
-            CachedSeriesDto(
+            SeriesCacheDto(
                 id = series.id.toInt(),
                 name = series.title,
                 posterPath = series.posterPath,
@@ -78,7 +78,7 @@ class EntityCacheMapperTest {
         val cache = artist.toCacheDto(query)
 
         assertThat(cache).isEqualTo(
-            CachedArtistDto(
+            ArtistCacheDto(
                 id = artist.id.toInt(),
                 name = artist.name,
                 photoPath = artist.photoPath,
@@ -135,7 +135,7 @@ class EntityCacheMapperTest {
             photoPath = "/emma.jpg"
         )
 
-        val movieCacheWithNulls = CachedMovieDto(
+        val movieCacheWithNulls = MovieCacheDto(
             id = 0,
             title = null,
             voteAverage = null,
@@ -144,7 +144,7 @@ class EntityCacheMapperTest {
             timestamp = 0L
         )
 
-        val seriesCacheWithNulls = CachedSeriesDto(
+        val seriesCacheWithNulls = SeriesCacheDto(
             id = 7,
             name = null,
             posterPath = null,
@@ -153,7 +153,7 @@ class EntityCacheMapperTest {
             timestamp = 1L
         )
 
-        val artistCacheWithNulls = CachedArtistDto(
+        val artistCacheWithNulls = ArtistCacheDto(
             id = 5,
             name = null,
             photoPath = null,

@@ -5,7 +5,7 @@ import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 
 
-fun ApiArtistDto.toEntity(): Artist {
+fun ArtistRemoteDto.toEntity(): Artist {
     return Artist(
         id = id?.toLong() ?: 0L,
         name = name ?: "",
@@ -14,11 +14,11 @@ fun ApiArtistDto.toEntity(): Artist {
 }
 
 @JvmName("toEntityArtist")
-fun List<ApiArtistDto>.toEntity(): List<Artist> {
+fun List<ArtistRemoteDto>.toEntity(): List<Artist> {
     return map { it.toEntity() }
 }
 
-fun ApiMovieDto.toEntity(): Movie {
+fun MovieRemoteDto.toEntity(): Movie {
     return Movie(
         id = id?.toLong() ?: 0L,
         title = title ?: "",
@@ -28,11 +28,11 @@ fun ApiMovieDto.toEntity(): Movie {
 }
 
 @JvmName("toEntityMovie")
-fun List<ApiMovieDto>.toEntity(): List<Movie> {
+fun List<MovieRemoteDto>.toEntity(): List<Movie> {
     return map { it.toEntity() }
 }
 
-fun ApiSeriesDto.toEntity(): Series {
+fun SeriesRemoteDto.toEntity(): Series {
     return Series(
         id = id ?: 0L,
         title = name ?: "",
@@ -42,6 +42,6 @@ fun ApiSeriesDto.toEntity(): Series {
 }
 
 @JvmName("toEntitySeries")
-fun List<ApiSeriesDto>.toEntity(): List<Series> {
+fun List<SeriesRemoteDto>.toEntity(): List<Series> {
     return map { it.toEntity() }
 }

@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = CACHED_ARTIST_TABLE_NAME)
-data class CachedArtistDto(
+data class ArtistCacheDto(
     @ColumnInfo(name = CACHED_ARTIST_ID_COLUMN_NAME)
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,

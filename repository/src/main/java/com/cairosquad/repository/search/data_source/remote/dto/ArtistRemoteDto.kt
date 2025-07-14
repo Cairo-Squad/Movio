@@ -4,13 +4,11 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ApiSeriesDto(
+data class ArtistRemoteDto(
     @SerialName("id")
-    val id: Long? = null,
-    @SerialName("poster_path")
-    val posterPath: String? = null,
+    val id: Int? = null,
     @SerialName("name")
     val name: String? = null,
-    @SerialName("vote_average")
-    val voteAverage: Double? = null,
+    @SerialName("profile_path")
+    val profilePath: String? = null,
 )

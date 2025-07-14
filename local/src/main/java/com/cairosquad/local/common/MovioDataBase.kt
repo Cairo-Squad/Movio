@@ -5,15 +5,15 @@ import androidx.room.RoomDatabase
 import com.cairosquad.local.search.cache.dao.CacheDao
 import com.cairosquad.local.search.recent.dao.LocalRecentSearchDao
 import com.cairosquad.local.search.recent.entity.RecentSearchEntity
-import com.cairosquad.repository.search.data_source.local.dto.CachedSeriesDto
-import com.cairosquad.repository.search.data_source.local.dto.CachedArtistDto
-import com.cairosquad.repository.search.data_source.local.dto.CachedMovieDto
+import com.cairosquad.repository.search.data_source.local.dto.SeriesCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
 
 @Database(
     entities = [
-        CachedMovieDto::class,
-        CachedSeriesDto::class,
-        CachedArtistDto::class,
+        MovieCacheDto::class,
+        SeriesCacheDto::class,
+        ArtistCacheDto::class,
         RecentSearchEntity::class
     ],
     version = 1,

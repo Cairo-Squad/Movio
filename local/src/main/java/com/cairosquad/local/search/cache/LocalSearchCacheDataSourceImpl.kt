@@ -1,9 +1,9 @@
 package com.cairosquad.local.search.cache
 
 import com.cairosquad.local.search.cache.dao.CacheDao
-import com.cairosquad.repository.search.data_source.local.dto.CachedArtistDto
-import com.cairosquad.repository.search.data_source.local.dto.CachedMovieDto
-import com.cairosquad.repository.search.data_source.local.dto.CachedSeriesDto
+import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.SeriesCacheDto
 import com.cairosquad.repository.search.data_source.local.LocalSearchCacheDataSource
 import java.time.Instant
 
@@ -11,25 +11,25 @@ class LocalSearchCacheDataSourceImpl(
     private val cacheDao: CacheDao
 ): LocalSearchCacheDataSource {
 
-    override suspend fun getCachedMovies(query: String): List<CachedMovieDto> {
+    override suspend fun getCachedMovies(query: String): List<MovieCacheDto> {
         return cacheDao.getCachedMovies(query)
     }
 
-    override suspend fun cacheMovies(results: List<CachedMovieDto>) = cacheDao.cacheMovies(results)
+    override suspend fun cacheMovies(results: List<MovieCacheDto>) = cacheDao.cacheMovies(results)
 
 
-    override suspend fun getCachedSeries(query: String): List<CachedSeriesDto> {
+    override suspend fun getCachedSeries(query: String): List<SeriesCacheDto> {
         return cacheDao.getCachedSeries(query)
     }
 
-    override suspend fun cacheSeries(results: List<CachedSeriesDto>) = cacheDao.cacheSeries(results)
+    override suspend fun cacheSeries(results: List<SeriesCacheDto>) = cacheDao.cacheSeries(results)
 
 
-    override suspend fun getCachedArtists(query: String): List<CachedArtistDto> {
+    override suspend fun getCachedArtists(query: String): List<ArtistCacheDto> {
         return cacheDao.getCachedArtist(query)
     }
 
-    override suspend fun cacheArtist(results: List<CachedArtistDto>) = cacheDao.cacheArtist(results)
+    override suspend fun cacheArtist(results: List<ArtistCacheDto>) = cacheDao.cacheArtist(results)
 
 
     override suspend fun clearExpiredCache() {

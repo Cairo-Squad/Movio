@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = CACHED_SERIES_TABLE_NAME)
-data class CachedSeriesDto(
+data class SeriesCacheDto(
     @ColumnInfo(name = CACHED_SERIES_ID_COLUMN_NAME)
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,

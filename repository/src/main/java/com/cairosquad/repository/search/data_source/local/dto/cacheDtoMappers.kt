@@ -5,8 +5,8 @@ import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import java.time.Instant
 
-fun Series.toCacheDto(query: String): CachedSeriesDto {
-    return CachedSeriesDto(
+fun Series.toCacheDto(query: String): SeriesCacheDto {
+    return SeriesCacheDto(
         id = id.toInt(),
         name = title,
         posterPath = posterPath,
@@ -17,11 +17,11 @@ fun Series.toCacheDto(query: String): CachedSeriesDto {
 }
 
 @JvmName("toCacheSeriesDto")
-fun List<Series>.toCacheDto(query: String): List<CachedSeriesDto> {
+fun List<Series>.toCacheDto(query: String): List<SeriesCacheDto> {
     return map { it.toCacheDto(query) }
 }
 
-fun CachedSeriesDto.toEntity(): Series {
+fun SeriesCacheDto.toEntity(): Series {
     return Series(
         id = id.toLong(),
         title = name ?: "",
@@ -31,12 +31,12 @@ fun CachedSeriesDto.toEntity(): Series {
 }
 
 @JvmName("toEntitySeries")
-fun List<CachedSeriesDto>.toEntity(): List<Series> {
+fun List<SeriesCacheDto>.toEntity(): List<Series> {
     return map { it.toEntity() }
 }
 
-fun Movie.toCacheDto(query: String): CachedMovieDto {
-    return CachedMovieDto(
+fun Movie.toCacheDto(query: String): MovieCacheDto {
+    return MovieCacheDto(
         id = id.toInt(),
         title = title,
         posterPath = posterPath,
@@ -47,11 +47,11 @@ fun Movie.toCacheDto(query: String): CachedMovieDto {
 }
 
 @JvmName("toCacheMovieDto")
-fun List<Movie>.toCacheDto(query: String): List<CachedMovieDto> {
+fun List<Movie>.toCacheDto(query: String): List<MovieCacheDto> {
     return map { it.toCacheDto(query) }
 }
 
-fun CachedMovieDto.toEntity(): Movie {
+fun MovieCacheDto.toEntity(): Movie {
     return Movie(
         id = id.toLong(),
         title = title ?: "",
@@ -61,12 +61,12 @@ fun CachedMovieDto.toEntity(): Movie {
 }
 
 @JvmName("toEntityMovie")
-fun List<CachedMovieDto>.toEntity(): List<Movie> {
+fun List<MovieCacheDto>.toEntity(): List<Movie> {
     return map { it.toEntity() }
 }
 
-fun Artist.toCacheDto(query: String): CachedArtistDto {
-    return CachedArtistDto(
+fun Artist.toCacheDto(query: String): ArtistCacheDto {
+    return ArtistCacheDto(
         id = id.toInt(),
         name = name,
         photoPath = photoPath,
@@ -76,11 +76,11 @@ fun Artist.toCacheDto(query: String): CachedArtistDto {
 }
 
 @JvmName("toCacheArtistDto")
-fun List<Artist>.toCacheDto(query: String): List<CachedArtistDto> {
+fun List<Artist>.toCacheDto(query: String): List<ArtistCacheDto> {
     return map { it.toCacheDto(query) }
 }
 
-fun CachedArtistDto.toEntity(): Artist {
+fun ArtistCacheDto.toEntity(): Artist {
     return Artist(
         id = id.toLong(),
         name = name ?: "",
@@ -89,6 +89,6 @@ fun CachedArtistDto.toEntity(): Artist {
 }
 
 @JvmName("toEntityArtist")
-fun List<CachedArtistDto>.toEntity(): List<Artist> {
+fun List<ArtistCacheDto>.toEntity(): List<Artist> {
     return map { it.toEntity() }
 }

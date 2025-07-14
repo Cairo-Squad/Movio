@@ -8,42 +8,42 @@ import com.cairosquad.repository.search.data_source.local.dto.CACHED_ARTIST_QUER
 import com.cairosquad.repository.search.data_source.local.dto.CACHED_ARTIST_TABLE_NAME
 import com.cairosquad.repository.search.data_source.local.dto.CACHED_ARTIST_TIMESTAMP_COLUMN_NAME
 import com.cairosquad.repository.search.data_source.local.dto.CACHED_MOVIES_QUERY_COLUMN_NAME
-import com.cairosquad.repository.search.data_source.local.dto.CachedArtistDto
+import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.CACHED_MOVIES_TABLE_NAME
 import com.cairosquad.repository.search.data_source.local.dto.CACHED_MOVIES_TIMESTAMP_COLUMN_NAME
 import com.cairosquad.repository.search.data_source.local.dto.CACHED_SERIES_QUERY_COLUMN_NAME
 import com.cairosquad.repository.search.data_source.local.dto.CACHED_SERIES_TABLE_NAME
 import com.cairosquad.repository.search.data_source.local.dto.CACHED_SERIES_TIMESTAMP_COLUMN_NAME
-import com.cairosquad.repository.search.data_source.local.dto.CachedMovieDto
-import com.cairosquad.repository.search.data_source.local.dto.CachedSeriesDto
+import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.SeriesCacheDto
 
 @Dao
 interface CacheDao {
     @Query("SELECT * FROM $CACHED_MOVIES_TABLE_NAME where $CACHED_MOVIES_QUERY_COLUMN_NAME = :query")
-    suspend fun getCachedMovies(query: String): List<CachedMovieDto>
+    suspend fun getCachedMovies(query: String): List<MovieCacheDto>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun cacheMovies(results: List<CachedMovieDto>)
+    suspend fun cacheMovies(results: List<MovieCacheDto>)
 
     @Query("DELETE FROM $CACHED_MOVIES_TABLE_NAME WHERE $CACHED_MOVIES_TIMESTAMP_COLUMN_NAME < :expirationTime")
     suspend fun deleteExpiredMoviesCache(expirationTime: Long)
 
 
     @Query("SELECT * FROM $CACHED_SERIES_TABLE_NAME where $CACHED_SERIES_QUERY_COLUMN_NAME = :query")
-    suspend fun getCachedSeries(query: String): List<CachedSeriesDto>
+    suspend fun getCachedSeries(query: String): List<SeriesCacheDto>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun cacheSeries(results: List<CachedSeriesDto>)
+    suspend fun cacheSeries(results: List<SeriesCacheDto>)
 
     @Query("DELETE FROM $CACHED_SERIES_TABLE_NAME WHERE $CACHED_SERIES_TIMESTAMP_COLUMN_NAME < :expirationTime")
     suspend fun deleteExpiredSeriesCache(expirationTime: Long)
 
 
     @Query("SELECT * FROM $CACHED_ARTIST_TABLE_NAME where $CACHED_ARTIST_QUERY_COLUMN_NAME = :query")
-    suspend fun getCachedArtist(query: String): List<CachedArtistDto>
+    suspend fun getCachedArtist(query: String): List<ArtistCacheDto>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun cacheArtist(results: List<CachedArtistDto>)
+    suspend fun cacheArtist(results: List<ArtistCacheDto>)
 
     @Query("DELETE FROM $CACHED_ARTIST_TABLE_NAME WHERE $CACHED_ARTIST_TIMESTAMP_COLUMN_NAME < :expirationTime")
     suspend fun deleteExpiredArtistCache(expirationTime: Long)
