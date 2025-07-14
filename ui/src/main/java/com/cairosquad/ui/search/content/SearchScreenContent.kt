@@ -32,13 +32,13 @@ fun SearchScreenContent(
                 }
             }
 
-        SearchScreenState.ScreenStatus.SEARCH -> {
-            SearchContent(
-                modifier = modifier,
-                state = state,
-                listener = listener
-            )
-        }
+            SearchScreenState.ScreenStatus.SEARCH -> {
+                SearchContent(
+                    modifier = modifier,
+                    state = state,
+                    listener = listener
+                )
+            }
 
             SearchScreenState.ScreenStatus.RESULT -> {
                 RefreshBox(

@@ -255,6 +255,22 @@ class SearchViewModel(
 
     }
 
+    override fun onMovieClicked(movieId: Long) {
+        sendEffect(SearchEffect.NavigateToMovieDetails(movieId))
+    }
+
+    override fun onSeriesClicked(seriesId: Long) {
+        sendEffect(SearchEffect.NavigateToSeriesDetails(seriesId))
+    }
+
+    override fun onArtistClicked(artistId: Long) {
+        sendEffect(SearchEffect.NavigateToArtistDetails(artistId))
+    }
+
+    override fun onSeeAllForYouClicked() {
+        sendEffect(SearchEffect.NavigateToSeeAllForYouScreen)
+    }
+
     private fun handleSearchException(e: Throwable): ErrorStatus {
         return when (e) {
             is MovioException -> {

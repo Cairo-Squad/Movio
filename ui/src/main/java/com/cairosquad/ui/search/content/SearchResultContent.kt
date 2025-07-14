@@ -6,6 +6,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -98,25 +99,23 @@ fun SearchResultContent(
 
         when (selectedTabIndex) {
             0 -> {
-                SearchResultText(
-                    noOfResults = state.movies.size
-                )
-                AllResultsTabContent(topResults = state.movies)
+                SearchResultText(noOfResults = state.movies.size)
+                AllResultsTabContent(state = state, listener = listener)
             }
 
             1 -> {
                 SearchResultText(noOfResults = state.movies.size)
-                MoviesTabContent(movies = state.movies)
+                MoviesTabContent(state = state, listener = listener)
             }
 
             2 -> {
                 SearchResultText(noOfResults = state.series.size)
-                SeriesTabContent(series = state.series)
+                SeriesTabContent(state = state, listener = listener)
             }
 
             3 -> {
                 SearchResultText(noOfResults = state.artists.size)
-                ArtistsTabContent(artists = state.artists)
+                ArtistsTabContent(state = state, listener = listener)
             }
         }
     }
@@ -124,11 +123,12 @@ fun SearchResultContent(
 
 @Composable
 private fun AllResultsTabContent(
-    topResults: List<SearchScreenState.MovieUiState>,
+    state: SearchScreenState,
+    listener: SearchInteractionListener,
     modifier: Modifier = Modifier
 ) {
     AnimatedVisibility(
-        visible = topResults.isEmpty(),
+        visible = state.movies.isEmpty(),
         enter = fadeIn(),
         exit = fadeOut()
     ) {
@@ -146,7 +146,7 @@ private fun AllResultsTabContent(
     }
 
     AnimatedVisibility(
-        visible = topResults.isNotEmpty(),
+        visible = state.movies.isNotEmpty(),
         enter = fadeIn(),
         exit = fadeOut()
     ) {
@@ -157,8 +157,10 @@ private fun AllResultsTabContent(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
-            items(topResults) { result ->
+            items(state.movies) { result ->
                 MovieCard(
+                    modifier = Modifier
+                        .clickable(onClick = { listener.onMovieClicked(result.id) }),
                     title = result.title,
                     vote = result.rating,
                     imgUrl = result.posterPath,
@@ -172,11 +174,12 @@ private fun AllResultsTabContent(
 
 @Composable
 private fun MoviesTabContent(
-    movies: List<SearchScreenState.MovieUiState>,
+    state: SearchScreenState,
+    listener: SearchInteractionListener,
     modifier: Modifier = Modifier
 ) {
     AnimatedVisibility(
-        visible = movies.isEmpty(),
+        visible = state.movies.isEmpty(),
         enter = fadeIn(),
         exit = fadeOut()
     ) {
@@ -193,7 +196,7 @@ private fun MoviesTabContent(
     }
 
     AnimatedVisibility(
-        visible = movies.isNotEmpty(),
+        visible = state.movies.isNotEmpty(),
         enter = fadeIn(),
         exit = fadeOut()
     ) {
@@ -204,8 +207,10 @@ private fun MoviesTabContent(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
-            items(movies) { movie ->
+            items(state.movies) { movie ->
                 MovieCard(
+                    modifier = Modifier
+                        .clickable(onClick = { listener.onMovieClicked(movie.id) }),
                     title = movie.title,
                     vote = movie.rating,
                     imgUrl = movie.posterPath,
@@ -219,11 +224,12 @@ private fun MoviesTabContent(
 
 @Composable
 private fun SeriesTabContent(
-    series: List<SearchScreenState.SeriesUiState>,
+    state: SearchScreenState,
+    listener: SearchInteractionListener,
     modifier: Modifier = Modifier
 ) {
     AnimatedVisibility(
-        visible = series.isEmpty(),
+        visible = state.series.isEmpty(),
         enter = fadeIn(),
         exit = fadeOut()
     ) {
@@ -240,7 +246,7 @@ private fun SeriesTabContent(
     }
 
     AnimatedVisibility(
-        visible = series.isNotEmpty(),
+        visible = state.series.isNotEmpty(),
         enter = fadeIn(),
         exit = fadeOut()
     ) {
@@ -251,8 +257,10 @@ private fun SeriesTabContent(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
-            items(series) { series ->
+            items(state.series) { series ->
                 MovieCard(
+                    modifier = Modifier
+                        .clickable(onClick = { listener.onSeriesClicked(series.id) }),
                     title = series.title,
                     vote = series.rating,
                     imgUrl = series.posterPath,
@@ -266,11 +274,12 @@ private fun SeriesTabContent(
 
 @Composable
 private fun ArtistsTabContent(
-    artists: List<SearchScreenState.ArtistUiState>,
+    state: SearchScreenState,
+    listener: SearchInteractionListener,
     modifier: Modifier = Modifier
 ) {
     AnimatedVisibility(
-        visible = artists.isEmpty(),
+        visible = state.artists.isEmpty(),
         enter = fadeIn(),
         exit = fadeOut()
     ) {
@@ -287,7 +296,7 @@ private fun ArtistsTabContent(
     }
 
     AnimatedVisibility(
-        visible = artists.isNotEmpty(),
+        visible = state.artists.isNotEmpty(),
         enter = fadeIn(),
         exit = fadeOut()
     ) {
@@ -298,8 +307,10 @@ private fun ArtistsTabContent(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
-            items(artists) { artist ->
+            items(state.artists) { artist ->
                 ArtistCard(
+                    modifier = Modifier
+                        .clickable(onClick = { listener.onArtistClicked(artist.id) }),
                     name = artist.name,
                     imgUrl = artist.photoPath,
                 )

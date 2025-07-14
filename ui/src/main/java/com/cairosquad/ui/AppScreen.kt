@@ -1,4 +1,4 @@
-package ui
+package com.cairosquad.ui
 
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
@@ -9,8 +9,8 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.BottomNavItem
 import com.cairosquad.design_system.basic_component.NavigationBar
@@ -21,9 +21,7 @@ import com.cairosquad.ui.more.MoreScreen
 import com.cairosquad.ui.search.SearchScreen
 
 @Composable
-fun AppScreen(
-    modifier: Modifier = Modifier,
-) {
+fun AppScreen() {
     val navigationItems = remember {
         listOf(
             BottomNavItem(
@@ -89,5 +87,5 @@ fun AppScreen(
 @Preview
 @Composable
 fun AppScreenPreview() {
-    AppScreen()
+//    AppScreen()
 }
