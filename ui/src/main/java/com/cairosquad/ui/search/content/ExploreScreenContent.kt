@@ -79,7 +79,11 @@ fun ExploreScreenContent(
                 onValueChange = listener::onQueryTextChanged,
                 placeholder = stringResource(R.string.search),
                 leadingIcon = R.drawable.search_bottom_nav,
-                onFocusChanged = { if (it) { listener.onClickSearchTextField() } },
+                onFocusChanged = {
+                    if (it) {
+                        listener.onClickSearchTextField()
+                    }
+                },
                 readOnly = true
             )
         }
@@ -112,9 +116,6 @@ fun ExploreScreenContent(
         item {
             SectionHeader(
                 title = stringResource(R.string.explore_more),
-                actionText = stringResource(R.string.see_all),
-                actionIcon = ImageVector.vectorResource(R.drawable.arrow),
-                onActionClick = {}
             )
 
         }
@@ -123,7 +124,7 @@ fun ExploreScreenContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .heightIn(max = ((state.exploreMore.size / 2 + 1) * 240).dp),
+                    .heightIn(max = (state.exploreMore.size * 2 * 240).dp),
                 columns = GridCells.Adaptive(minSize = 158.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
