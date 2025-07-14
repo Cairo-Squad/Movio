@@ -1,4 +1,4 @@
-package com.cairosquad.design_system.component
+package com.cairosquad.ui.movio_component
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
