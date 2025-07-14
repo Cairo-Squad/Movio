@@ -11,7 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.component.InputField
-import com.cairosquad.design_system.component.LoadingMovieCard
+import com.cairosquad.ui.movio_component.LoadingMovieCard
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.viewmodel.search.SearchInteractionListener
 import com.cairosquad.viewmodel.search.SearchScreenState

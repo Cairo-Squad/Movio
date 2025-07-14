@@ -1,4 +1,4 @@
-package com.cairosquad.design_system.component
+package com.cairosquad.ui.movio_component
 
 import androidx.compose.animation.core.EaseInOut
 import androidx.compose.animation.core.RepeatMode
@@ -9,17 +9,14 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -31,8 +28,9 @@ import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 
 @Composable
-fun LoadingArtistCard(modifier: Modifier = Modifier) {
-    val infiniteTransition = rememberInfiniteTransition(label = stringResource(R.string.loading_animation))
+fun LoadingMovieImage(modifier: Modifier = Modifier) {
+    val infiniteTransition =
+        rememberInfiniteTransition(label = stringResource(R.string.loading_animation))
 
     val shimmerEffectAnimation by infiniteTransition.animateFloat(
         initialValue = -200f,
@@ -49,32 +47,18 @@ fun LoadingArtistCard(modifier: Modifier = Modifier) {
     )
 
     Box(modifier = modifier) {
-        Column(
-            modifier = Modifier
-                .background(Theme.color.surfaces.surface)
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(88.dp)
-                    .background(
-                        Theme.color.surfaces.surfaceContainer,
-                        shape = CircleShape
-                    )
-            )
-            Box(
-                modifier = Modifier
-                    .height(15.dp)
-                    .fillMaxWidth()
-                    .background(Theme.color.surfaces.surfaceContainer, shape = CircleShape)
-            )
-        }
         Box(
             modifier = Modifier
-                .height(111.dp)
-                .fillMaxWidth()
+                .fillMaxSize()
+                .background(
+                    Theme.color.surfaces.surfaceContainer,
+                    shape = RoundedCornerShape(8.dp)
+                )
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
                 .background(brush)
         )
     }
@@ -82,7 +66,7 @@ fun LoadingArtistCard(modifier: Modifier = Modifier) {
 
 @MultiThemePreviews
 @Composable
-private fun LoadingArtistCardPreview() {
+private fun LoadingCardPreview() {
     MovioTheme {
         LazyVerticalGrid(
             modifier = Modifier.background(Theme.color.surfaces.surface),
@@ -91,8 +75,10 @@ private fun LoadingArtistCardPreview() {
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
         ) {
-            items(21) {
-                LoadingArtistCard()
+            items(20) {
+                LoadingMovieImage(
+                    modifier = Modifier.height(180.dp)
+                )
             }
         }
     }
