@@ -12,9 +12,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.cairosquad.design_system.R
-import com.cairosquad.design_system.component.BottomNavItem
-import com.cairosquad.design_system.component.NavigationBar
-import com.cairosquad.design_system.component.Scaffold
+import com.cairosquad.design_system.basic_component.BottomNavItem
+import com.cairosquad.design_system.basic_component.NavigationBar
+import com.cairosquad.design_system.basic_component.Scaffold
 import com.cairosquad.ui.home.HomeScreen
 import com.cairosquad.ui.library.LibraryScreen
 import com.cairosquad.ui.more.MoreScreen
