@@ -30,11 +30,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
-import com.cairosquad.design_system.component.InputField
-import com.cairosquad.design_system.component.MovieCard
-import com.cairosquad.design_system.component.SectionHeader
+import com.cairosquad.design_system.basic_component.InputField
 import com.cairosquad.design_system.modifier.dropShadow
 import com.cairosquad.design_system.theme.Theme
+import com.cairosquad.ui.movio_component.MovieCard
+import com.cairosquad.ui.movio_component.SectionHeader
 import com.cairosquad.viewmodel.search.SearchInteractionListener
 import com.cairosquad.viewmodel.search.SearchScreenState
 
