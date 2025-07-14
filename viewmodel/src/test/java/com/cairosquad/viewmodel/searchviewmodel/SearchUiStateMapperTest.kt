@@ -11,7 +11,7 @@ class UiStateMapperTest {
         val uiState = movie.toUiState()
 
         assertThat(uiState).isEqualTo(
-            SearchScreenState.MovieScreenState(
+            SearchScreenState.MovieUiState(
                 id = movie.id,
                 title = movie.title,
                 rating = movie.rating / 2,
@@ -25,7 +25,7 @@ class UiStateMapperTest {
         val uiState = artist.toUiState()
 
         assertThat(uiState).isEqualTo(
-            SearchScreenState.ArtistScreenState(
+            SearchScreenState.ArtistUiState(
                 id = artist.id,
                 name = artist.name,
                 photoPath = artist.photoPath
@@ -38,7 +38,7 @@ class UiStateMapperTest {
         val uiState = series.toUiState()
 
         assertThat(uiState).isEqualTo(
-            SearchScreenState.SeriesScreenState(
+            SearchScreenState.SeriesUiState(
                 id = series.id,
                 title = series.title,
                 rating = series.rating / 2,
