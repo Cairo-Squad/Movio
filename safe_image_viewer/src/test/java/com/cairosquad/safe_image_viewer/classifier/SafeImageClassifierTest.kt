@@ -37,7 +37,8 @@ class SafeImageClassifierTest {
     }
 
     @Test
-    fun `returns true for safe image`() {
+    fun `should return true when image is safe based on thresholds`() {
+        // Given
         val tensorImage = mockk<TensorImage>()
         mockkStatic(TensorImage::class)
         every { TensorImage.fromBitmap(any()) } returns tensorImage
@@ -51,6 +52,7 @@ class SafeImageClassifierTest {
         every { classification.categories } returns listOf(categoryNonNude, categoryNude)
         every { mockClassifier.classify(tensorImage) } returns listOf(classification)
 
+        // When
         val result = classifier.isInappropriate(
             mockk(relaxed = true),
             nsfwThreshold = 0.5,
@@ -58,11 +60,13 @@ class SafeImageClassifierTest {
             isLogEnabled = false
         )
 
+        // Then
         assertThat(result).isTrue()
     }
 
     @Test
-    fun `returns false for inappropriate image`() {
+    fun `should return false when image is inappropriate based on thresholds`() {
+        // Given
         val tensorImage = mockk<TensorImage>()
         mockkStatic(TensorImage::class)
         every { TensorImage.fromBitmap(any()) } returns tensorImage
@@ -76,37 +80,43 @@ class SafeImageClassifierTest {
         every { classification.categories } returns listOf(categoryNonNude, categoryNude)
         every { mockClassifier.classify(tensorImage) } returns listOf(classification)
 
+        // When
         val result = classifier.isInappropriate(
             mockk(relaxed = true), nsfwThreshold = 0.6, sfwThreshold = 0.85, isLogEnabled = false
         )
 
+        // Then
         assertThat(result).isFalse()
     }
 
     @Test
-    fun `returns false when nonNudeScore is below threshold but nudeScore is safe`() {
+    fun `should return false when nonNudeScore and nudeScore are both below their thresholds`() {
+        // Given
         val tensorImage = mockk<TensorImage>()
         mockkStatic(TensorImage::class)
         every { TensorImage.fromBitmap(any()) } returns tensorImage
 
         val categoryNonNude = mockk<Category>()
         val categoryNude = mockk<Category>()
-        every { categoryNonNude.score } returns 0.6f   // < sfwThreshold
-        every { categoryNude.score } returns 0.3f     // < nsfwThreshold
+        every { categoryNonNude.score } returns 0.6f
+        every { categoryNude.score } returns 0.3f
 
         val classification = mockk<Classifications>()
         every { classification.categories } returns listOf(categoryNonNude, categoryNude)
         every { mockClassifier.classify(tensorImage) } returns listOf(classification)
 
+        // When
         val result = classifier.isInappropriate(
             mockk(relaxed = true), nsfwThreshold = 0.5, sfwThreshold = 0.9, isLogEnabled = false
         )
 
+        // Then
         assertThat(result).isFalse()
     }
 
     @Test
-    fun `returns false when nonNudeScore is high but nudeScore is too high`() {
+    fun `should return false when nonNudeScore is high but nudeScore exceeds threshold`() {
+        // Given
         val tensorImage = mockk<TensorImage>()
         mockkStatic(TensorImage::class)
         every { TensorImage.fromBitmap(any()) } returns tensorImage
@@ -120,15 +130,18 @@ class SafeImageClassifierTest {
         every { classification.categories } returns listOf(categoryNonNude, categoryNude)
         every { mockClassifier.classify(tensorImage) } returns listOf(classification)
 
+        // When
         val result = classifier.isInappropriate(
             mockk(relaxed = true), nsfwThreshold = 0.6, sfwThreshold = 0.9, isLogEnabled = false
         )
 
+        // Then
         assertThat(result).isFalse()
     }
 
     @Test
-    fun `logs scores when isLogEnabled is true`() {
+    fun `should log classification scores when isLogEnabled is true`() {
+        // Given
         val tensorImage = mockk<TensorImage>()
         mockkStatic(TensorImage::class)
         every { TensorImage.fromBitmap(any()) } returns tensorImage
@@ -145,12 +158,15 @@ class SafeImageClassifierTest {
         mockkStatic(Log::class)
         every { Log.d(any(), any()) } returns 0
 
+        // When
         classifier.isInappropriate(
             mockk(relaxed = true), nsfwThreshold = 0.5, sfwThreshold = 0.7, isLogEnabled = true
         )
 
+        // Then
         verify {
             Log.d("Safe Image Viewer", match { it.contains("nude image score") })
         }
     }
+
 }

@@ -20,7 +20,7 @@ class RecommendationRepositoryImplTest {
     }
 
     @Test
-    fun `given movies from remote when getForYouMovies called then return mapped movie list`() =
+    fun `should return mapped movie list when getForYouMovies is called with remote movies`() =
         runTest {
             // Given
             val remoteMovies = listOf(
@@ -49,7 +49,7 @@ class RecommendationRepositoryImplTest {
         }
 
     @Test
-    fun `given empty list from remote when getForYouMovies called then return empty list`() =
+    fun `should return empty list when getForYouMovies is called with empty remote data`() =
         runTest {
             // Given
             coEvery { dataSource.getPersonalizedMovies() } returns emptyList()
@@ -62,7 +62,7 @@ class RecommendationRepositoryImplTest {
         }
 
     @Test
-    fun `given movies from remote when getExploreMoreMovies called then return mapped movie list`() =
+    fun `should return mapped movie list when getExploreMoreMovies is called with remote movies`() =
         runTest {
             // Given
             val movieRemoteDto = listOf(
@@ -84,4 +84,5 @@ class RecommendationRepositoryImplTest {
             assertThat(result[0].title).isEqualTo("Movie 3")
             assertThat(result[0].rating).isEqualTo(4.2f)
         }
+
 }

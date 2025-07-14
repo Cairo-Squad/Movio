@@ -1,11 +1,11 @@
 package com.cairosquad.domain.usecase
 
 import com.cairosquad.domain.search.repository.MovieDiscoveryRepository
-import com.cairosquad.domain.search.usecase.GetSuggestedMoviesUseCase
+import com.cairosquad.domain.search.usecase.GetPersonalizedMoviesUseCase
 import com.cairosquad.entity.Movie
 import io.mockk.coEvery
-import io.mockk.mockk
 import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -15,17 +15,17 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-class GetExploreMoreUseCaseTest {
+class GetPersonalizedMoviesUseCaseTest {
 
     private val recommendationRepository = mockk<MovieDiscoveryRepository>()
-    private lateinit var useCase: GetSuggestedMoviesUseCase
+    private lateinit var useCase: GetPersonalizedMoviesUseCase
 
     private val dispatcher = StandardTestDispatcher()
 
     @Before
     fun setUp() {
         Dispatchers.setMain(dispatcher)
-        useCase = GetSuggestedMoviesUseCase(recommendationRepository)
+        useCase = GetPersonalizedMoviesUseCase(recommendationRepository)
     }
 
     @After
@@ -34,18 +34,18 @@ class GetExploreMoreUseCaseTest {
     }
 
     @Test
-    fun `getExploreMoreMovies should return list of movies from repository`() = runTest {
+    fun `should return a list of Personalized movies from the repository when getPersonalizedMovies is called`() = runTest {
         // Given
         val expectedMovies = listOf(
-            Movie(id = 1, title = "Interstellar", rating = 8.6f, posterPath = "/interstellar.jpg"),
-            Movie(id = 2, title = "Inception", rating = 8.8f, posterPath = "/inception.jpg")
+            Movie(id = 101, title = "Dune", rating = 8.1f, posterPath = "/dune.jpg"),
+            Movie(id = 102, title = "Blade Runner", rating = 8.0f, posterPath = "/blade.jpg")
         )
-        coEvery { recommendationRepository.getSuggestedMovies() } returns expectedMovies
+        coEvery { recommendationRepository.getPersonalizedMovies() } returns expectedMovies
 
         // When
-        val result = useCase.getSuggestedMovies()
+        val result = useCase.getPersonalizedMovies()
 
         // Then
-        coVerify { recommendationRepository.getSuggestedMovies() }
+        coVerify { recommendationRepository.getPersonalizedMovies() }
     }
 }

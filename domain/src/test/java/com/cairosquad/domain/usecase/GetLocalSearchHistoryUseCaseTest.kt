@@ -10,7 +10,7 @@ import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertEquals
 
-class GetRecentSearchUseCaseTest {
+class GetLocalSearchHistoryUseCaseTest {
 
     private lateinit var searchHistoryUseCase: GetLocalSearchHistoryUseCase
     private lateinit var recentSearchRepository: SearchHistoryRepository
@@ -22,7 +22,7 @@ class GetRecentSearchUseCaseTest {
     }
 
     @Test
-    fun `searchHistoryUseCase should call repository and get Search History`() = runTest {
+    fun `should call repository getByQuery when getByQuery is invoked`() = runTest {
         // Given
         val searchQuery = "A"
 
@@ -34,7 +34,7 @@ class GetRecentSearchUseCaseTest {
     }
 
     @Test
-    fun `getByQuery should return results that match the search query`() = runTest {
+    fun `should return matching results when query is provided`() = runTest {
         //Given
         val searchQuery = searchQueyWhenReturnMatches
         val expectedResults = expectedResultsForMatchingSearchQuery

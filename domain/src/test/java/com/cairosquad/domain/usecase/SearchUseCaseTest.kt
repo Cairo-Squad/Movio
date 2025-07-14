@@ -40,7 +40,8 @@ class SearchUseCaseTest {
     }
 
     @Test
-    fun `searchMovies returns result and adds query to recent search`() = runTest {
+    fun `should return movies and save query when getMovies is called`() = runTest {
+        // Given
         val query = "Batman"
         val movies = listOf(
             Movie(id = 1, title = "Batman Begins", rating = 8.2f, posterPath = "/batman1.jpg"),
@@ -57,7 +58,8 @@ class SearchUseCaseTest {
     }
 
     @Test
-    fun `searchSeries returns result and adds query to recent search`() = runTest {
+    fun `should return series and save query when getSeries is called`() = runTest {
+        // Given
         val query = "Breaking Bad"
         val series = listOf(
             Series(id = 1, title = "Breaking Bad", rating = 9.5f, posterPath = "/bb.jpg")
@@ -73,7 +75,8 @@ class SearchUseCaseTest {
     }
 
     @Test
-    fun `searchArtists returns result and adds query to recent search`() = runTest {
+    fun `should return artists and save query when getArtists is called`() = runTest {
+        // Given
         val query = "Leonardo"
         val artists = listOf(
             Artist(
