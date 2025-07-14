@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SearchResultDto<T>(
+data class SearchResultResponse<T>(
     @SerialName("page")
     val page: Int? = null,
     @SerialName("results")

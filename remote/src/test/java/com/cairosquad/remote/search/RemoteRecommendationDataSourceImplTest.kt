@@ -1,7 +1,7 @@
 package com.cairosquad.remote.search
 
 import com.cairosquad.repository.search.data_source.remote.dto.MovieDto
-import com.cairosquad.repository.search.data_source.remote.dto.SearchResultDto
+import com.cairosquad.repository.search.data_source.remote.dto.SearchResultResponse
 import com.google.common.truth.Truth.assertThat
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
@@ -31,7 +31,7 @@ class RemoteRecommendationDataSourceImplTest {
                 "/3/movie/top_rated" -> {
                     respond(
                         content = json.encodeToString(
-                            SearchResultDto(
+                            SearchResultResponse(
                                 page = 1,
                                 results = listOf(
                                     MovieDto(
@@ -59,7 +59,7 @@ class RemoteRecommendationDataSourceImplTest {
                 "/3/movie/now_playing" -> {
                     respond(
                         content = json.encodeToString(
-                            SearchResultDto(
+                            SearchResultResponse(
                                 page = 1,
                                 results = listOf(
                                     MovieDto(
@@ -118,7 +118,7 @@ class RemoteRecommendationDataSourceImplTest {
                 "/3/movie/top_rated" -> {
                     respond(
                         content = json.encodeToString(
-                            SearchResultDto<MovieDto>(
+                            SearchResultResponse<MovieDto>(
                                 page = 1,
                                 results = emptyList(),
                                 totalPages = 0,
@@ -149,7 +149,7 @@ class RemoteRecommendationDataSourceImplTest {
                 "/3/movie/top_rated" -> {
                     respond(
                         content = json.encodeToString(
-                            SearchResultDto(
+                            SearchResultResponse(
                                 page = 1,
                                 results = listOf(
                                     MovieDto(
@@ -235,7 +235,7 @@ class RemoteRecommendationDataSourceImplTest {
                 "/3/movie/now_playing" -> {
                     respond(
                         content = json.encodeToString(
-                            SearchResultDto<MovieDto>(
+                            SearchResultResponse<MovieDto>(
                                 page = 1,
                                 results = emptyList(),
                                 totalPages = 0,
