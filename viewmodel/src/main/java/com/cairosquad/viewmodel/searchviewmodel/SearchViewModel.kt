@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.searchviewmodel
 
+import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.search.usecase.ClearRecentSearchUseCase
 import com.cairosquad.domain.search.usecase.GetExploreMoreUseCase
 import com.cairosquad.domain.search.usecase.GetForYouUseCase
@@ -9,6 +10,7 @@ import com.cairosquad.viewmodel.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.IOException
 
 class SearchViewModel(
@@ -17,7 +19,7 @@ class SearchViewModel(
     private val clearRecentSearchUseCase: ClearRecentSearchUseCase,
     private val getExploreMoreUseCase: GetExploreMoreUseCase,
     private val getForYouUseCase: GetForYouUseCase,
-) : BaseViewModel<SearchScreenState, SearchUiEvent>(initialState = SearchScreenState()),
+) : BaseViewModel<SearchScreenState, SearchEffect>(initialState = SearchScreenState()),
     SearchInteractionListener {
 
     private var searchJob: Job? = null
@@ -28,6 +30,11 @@ class SearchViewModel(
 
     fun loadDiscoverMovies() = tryToCall(
         block = {
+            updateState {
+                it.copy(
+                    screenStatus = SearchScreenState.ScreenStatus.LOADING,
+                )
+            }
             val forYou = getForYouUseCase.getForYouMovies().map { it.toUiState() }
             val exploreMore = getExploreMoreUseCase.getExploreMoreMovies().map { it.toUiState() }
             forYou to exploreMore
@@ -50,7 +57,7 @@ class SearchViewModel(
                     errorMessage = message
                 )
             }
-            sendEvent(SearchUiEvent.ShowToast(message))
+            sendEffect(SearchEffect.ShowToast(message))
         },
         dispatcher = Dispatchers.IO
     )
@@ -135,7 +142,7 @@ class SearchViewModel(
                             errorMessage = message
                         )
                     }
-                    sendEvent(SearchUiEvent.ShowToast(message))
+                    sendEffect(SearchEffect.ShowToast(message))
                 },
                 dispatcher = Dispatchers.IO
             )
@@ -156,7 +163,7 @@ class SearchViewModel(
             onError = { e ->
                 val message = mapExceptionToMessage(e)
                 updateState { it.copy(errorMessage = message) }
-                sendEvent(SearchUiEvent.ShowToast(message))
+                sendEffect(SearchEffect.ShowToast(message))
             },
             dispatcher = Dispatchers.IO
         )
@@ -174,7 +181,7 @@ class SearchViewModel(
             onError = { e ->
                 val message = mapExceptionToMessage(e)
                 updateState { it.copy(errorMessage = mapExceptionToMessage(e)) }
-                sendEvent(SearchUiEvent.ShowToast(message))
+                sendEffect(SearchEffect.ShowToast(message))
             },
             dispatcher = Dispatchers.IO
         )
@@ -216,6 +223,27 @@ class SearchViewModel(
                 screenStatus = SearchScreenState.ScreenStatus.SEARCH,
             )
         }
+    }
+
+    override fun onRefresh() {
+        viewModelScope.launch {
+            updateState {
+                it.copy(
+                    isRefreshing = true,
+                )
+            }
+            delay(500L)
+
+            updateState {
+                it.copy(isRefreshing = false)
+            }
+        }
+        if (screenState.value.query.isBlank()) {
+            loadDiscoverMovies()
+        } else {
+            onSearch(screenState.value.query)
+        }
+
     }
 
     private fun mapExceptionToMessage(e: Throwable): String = when (e) {

@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -29,12 +30,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
-
 @Composable
 fun TopBar(
     tabs: List<String>,
@@ -42,27 +44,42 @@ fun TopBar(
     onTabSelected: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+
     val tabPositions = remember { mutableStateMapOf<Int, Pair<Int, Int>>() }
 
+    var rowWidthPx by remember { mutableStateOf(0) }
+
+    val layoutDirection = LocalLayoutDirection.current
+    val density = LocalDensity.current
+
     val indicatorOffsetX by animateDpAsState(
-        targetValue = with(LocalDensity.current) {
-            tabPositions[selectedTabIndex]?.first?.toDp() ?: 0.dp
+        targetValue = with(density) {
+            tabPositions[selectedTabIndex]?.let { (xPx, widthPx) ->
+                if (layoutDirection == LayoutDirection.Rtl) {
+                    (rowWidthPx - xPx - widthPx).toDp()
+                } else {
+                    xPx.toDp()
+                }
+            } ?: 0.dp
         },
         animationSpec = tween(200)
     )
+
     val indicatorWidth by animateDpAsState(
-        targetValue = with(LocalDensity.current) {
+        targetValue = with(density) {
             tabPositions[selectedTabIndex]?.second?.toDp() ?: 0.dp
         },
         animationSpec = tween(200)
     )
 
     Box(modifier = modifier.fillMaxWidth()) {
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(36.dp)
-                .horizontalScroll(rememberScrollState()),
+                .horizontalScroll(rememberScrollState())
+                .onGloballyPositioned { rowWidthPx = it.size.width },
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -87,15 +104,19 @@ fun TopBar(
                             interactionSource = remember { MutableInteractionSource() }
                         ) { onTabSelected(index) }
                         .padding(horizontal = 12.dp)
-                        .onGloballyPositioned { coordinates ->
+                        .onGloballyPositioned { coords ->
                             tabPositions[index] =
-                                coordinates.positionInParent().x.toInt() to
-                                        coordinates.size.width
+                                coords.positionInParent().x.toInt() to coords.size.width
                         },
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(7.5.dp)
                 ) {
-                    Text(title, color = textColor, textAlign = TextAlign.Center, style = textStyle)
+                    Text(
+                        text = title,
+                        color = textColor,
+                        textAlign = TextAlign.Center,
+                        style = textStyle
+                    )
                 }
             }
         }

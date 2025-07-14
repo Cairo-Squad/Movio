@@ -1,21 +1,57 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+##########################################
+# 🌟 Jetpack Compose
+##########################################
+# Keep Compose compiler-generated classes
+-keep class androidx.compose.** { *; }
+-dontwarn androidx.compose.**
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# Keep Compose @Preview annotations (debug only)
+-keep @androidx.compose.ui.tooling.preview.Preview class * {*;}
+-keepclassmembers class * {
+    @androidx.compose.ui.tooling.preview.Preview *;
+}
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Keep Compose parameter names for reflection
+-keepattributes SourceFile,LineNumberTable,Signature,LocalVariableTable,LocalVariableTypeTable,RuntimeVisibleAnnotations,RuntimeVisibleParameterAnnotations
+
+##########################################
+# 🌟 AndroidX Navigation
+##########################################
+-keep class androidx.navigation.** { *; }
+-dontwarn androidx.navigation.**
+
+##########################################
+# 🌟 AndroidX Material3
+##########################################
+-keep class androidx.compose.material3.** { *; }
+-dontwarn androidx.compose.material3.**
+
+##########################################
+# 🌟 AndroidX ConstraintLayout Compose
+##########################################
+-keep class androidx.constraintlayout.compose.** { *; }
+-dontwarn androidx.constraintlayout.compose.**
+
+##########################################
+# 🌟 AndroidX Core
+##########################################
+-keep class androidx.core.** { *; }
+-dontwarn androidx.core.**
+
+##########################################
+# 🌟 Kotlin Metadata
+##########################################
+-keep class kotlin.Metadata { *; }
+-keepclassmembers class ** {
+    @kotlin.Metadata *;
+}
+
+##########################################
+# 🌟 Multi-Module Reference
+###########################
+-dontwarn kotlinx.**
+-dontwarn okhttp3.**
+-dontwarn org.jetbrains.kotlin.**
+-keep class kotlinx.** { *; }
+-keepclassmembers class kotlinx.** { *; }

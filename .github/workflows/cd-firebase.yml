@@ -5,6 +5,7 @@ on:
     branches:
       - develop
       - master
+      - refactor/app-not-distributed-to-firebase
 
 jobs:
   deploy:
@@ -54,7 +55,7 @@ jobs:
           FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
         run: |
           ./gradlew assembleRelease
-          ls -l app/build/outputs/apk/release/app-release.apk || { echo "APK not generated"; exit 1; }
+          ls -l app/build/outputs/apk/release/app-release.apk || { echo "apk not generated"; exit 1; }
 
       - name: Extract Release Notes
         id: release_notes

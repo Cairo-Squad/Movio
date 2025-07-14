@@ -1,4 +1,4 @@
-package com.cairosquad.movio.navigation
+package com.cairosquad.ui.navigation
 
 import kotlinx.serialization.Serializable
 
