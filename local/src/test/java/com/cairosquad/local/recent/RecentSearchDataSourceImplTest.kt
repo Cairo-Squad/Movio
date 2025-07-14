@@ -77,7 +77,7 @@ class RecentSearchDataSourceImplTest {
     fun `addQuery inserts entity into dao`() = runTest {
         // Given
         val query = "inception"
-        coEvery { dao.insertQuery(any()) } just runs   // تهيئة stub
+        coEvery { dao.insertQuery(any()) } just runs
         // When
         dataSource.addQuery(query)
         // Then
