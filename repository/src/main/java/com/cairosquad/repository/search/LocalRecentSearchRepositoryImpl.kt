@@ -1,6 +1,7 @@
 package com.cairosquad.repository.search
 
 import com.cairosquad.domain.search.repository.SearchHistoryRepository
+import com.cairosquad.repository.common.exception.tryToCall
 import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
 
 class LocalRecentSearchRepositoryImpl(
@@ -8,24 +9,26 @@ class LocalRecentSearchRepositoryImpl(
 ) : SearchHistoryRepository {
 
     override suspend fun getAllHistory(): List<String> {
-        return dataSource.getAll()
+        return tryToCall { dataSource.getAll() }
     }
 
     override suspend fun getAllHistoryByQuery(query: String): List<String> {
-        return query.takeIf { it.isNotBlank() }
-            ?.let { dataSource.getByQuery(it) }
-            ?: dataSource.getAll()
+        return tryToCall {
+            query.takeIf { it.isNotBlank() }
+                ?.let { dataSource.getByQuery(it) }
+                ?: dataSource.getAll()
+        }
     }
 
     override suspend fun clearAll() {
-        dataSource.clearAll()
+        tryToCall { dataSource.clearAll() }
     }
 
     override suspend fun removeQuery(query: String) {
-        dataSource.removeQuery(query)
+        tryToCall {dataSource.removeQuery(query)}
     }
 
     override suspend fun addQuery(query: String) {
-        dataSource.addQuery(query)
+        tryToCall { dataSource.addQuery(query) }
     }
 }
