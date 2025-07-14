@@ -82,14 +82,7 @@ class SearchViewModel(
                     )
                 }
             },
-            onError = { e ->
-                updateState {
-                    it.copy(
-                        screenStatus = SearchScreenState.ScreenStatus.FAILED,
-                        errorStatus = handleSearchException(e)
-                    )
-                }
-            },
+            onError = {},
             dispatcher = Dispatchers.IO
         )
     }
