@@ -4,9 +4,9 @@ import com.cairosquad.domain.search.exception.InternetConnectionException
 import com.cairosquad.domain.search.exception.NetworkException
 import com.cairosquad.domain.search.exception.UnknownException
 import com.cairosquad.domain.search.usecase.ClearSearchHistoryUseCase
-import com.cairosquad.domain.search.usecase.GetSuggestedMoviesUseCase
-import com.cairosquad.domain.search.usecase.GetPersonalizedMoviesUseCase
 import com.cairosquad.domain.search.usecase.GetLocalSearchHistoryUseCase
+import com.cairosquad.domain.search.usecase.GetPersonalizedMoviesUseCase
+import com.cairosquad.domain.search.usecase.GetSuggestedMoviesUseCase
 import com.cairosquad.domain.search.usecase.SearchUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
@@ -18,13 +18,20 @@ import com.cairosquad.viewmodel.search.SearchViewModel
 import com.cairosquad.viewmodel.search.toUiState
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.Before
@@ -39,8 +46,8 @@ class SearchViewModelTest {
     private lateinit var searchUseCase: SearchUseCase
     private lateinit var getRecentSearchUseCase: GetLocalSearchHistoryUseCase
     private lateinit var clearRecentSearchUseCase: ClearSearchHistoryUseCase
-    private lateinit var getExploreMoreUseCase: GetSuggestedMoviesUseCase
-    private lateinit var getForYouUseCase: GetPersonalizedMoviesUseCase
+    private lateinit var getSuggestedMoviesUseCase: GetSuggestedMoviesUseCase
+    private lateinit var getPersonalizedMoviesUseCase: GetPersonalizedMoviesUseCase
     private lateinit var viewModel: SearchViewModel
 
     @Before
@@ -50,41 +57,25 @@ class SearchViewModelTest {
         searchUseCase = mockk(relaxed = true)
         getRecentSearchUseCase = mockk(relaxed = true)
         clearRecentSearchUseCase = mockk(relaxed = true)
-        getExploreMoreUseCase = mockk(relaxed = true)
-        getForYouUseCase = mockk(relaxed = true)
+        getSuggestedMoviesUseCase = mockk(relaxed = true)
+        getPersonalizedMoviesUseCase = mockk(relaxed = true)
 
         viewModel = SearchViewModel(
             searchUseCase,
             getRecentSearchUseCase,
             clearRecentSearchUseCase,
-            getExploreMoreUseCase,
-            getForYouUseCase
+            getSuggestedMoviesUseCase,
+            getPersonalizedMoviesUseCase
         )
     }
-
-    val movie1 = Movie(
-        id = 1, title = "The dark knight", rating = 4.0f, posterPath = "/img.jpg"
-    )
-
-    val movie2 = Movie(
-        id = 2, title = "Girl", rating = 4.5f, posterPath = "/img.jpg"
-    )
-
-    val series = Series(
-        id = 1, title = "Series", rating = 3.5f, posterPath = "/img.jpg"
-    )
-
-    val artist = Artist(
-        id = 1, name = "Artist", photoPath = "/img.jpg"
-    )
 
     @Test
     fun `should load discover movies when loadDiscoverMovies is called`() = runBlocking {
         val forYouList = listOf(movie1)
         val exploreMoreList = listOf(movie2)
 
-        coEvery { getForYouUseCase.getPersonalizedMovies() } returns listOf(movie1)
-        coEvery { getExploreMoreUseCase.getSuggestedMovies() } returns listOf(movie2)
+        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies() } returns listOf(movie1)
+        coEvery { getSuggestedMoviesUseCase.getSuggestedMovies() } returns listOf(movie2)
 
         viewModel.loadDiscoverMovies()
 
@@ -97,8 +88,8 @@ class SearchViewModelTest {
 
     @Test
     fun `should set error status when discover movies loading fails`() = runBlocking {
-        coEvery { getForYouUseCase.getPersonalizedMovies() } throws IOException()
-        coEvery { getExploreMoreUseCase.getSuggestedMovies() } returns emptyList()
+        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies() } throws IOException()
+        coEvery { getSuggestedMoviesUseCase.getSuggestedMovies() } returns emptyList()
 
         viewModel.loadDiscoverMovies()
 
@@ -390,20 +381,21 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `should cancel search job and set SEARCH status when search field is clicked`() = runBlocking {
-        coEvery { getRecentSearchUseCase.getByQuery("seed") } returns emptyList()
-        viewModel.onQueryTextChanged("seed")
-        delay(50)
-        val jobField =
-            viewModel.javaClass.getDeclaredField("searchJob").apply { isAccessible = true }
-        val jobBefore = jobField.get(viewModel) as Job
-        assertThat(jobBefore).isNotNull()
-        coEvery { getRecentSearchUseCase.getAll() } returns emptyList()
-        viewModel.onClickSearchTextField()
-        delay(50)
-        assertThat(jobBefore.isCancelled || jobBefore.isCompleted).isTrue()
-        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
-    }
+    fun `should cancel search job and set SEARCH status when search field is clicked`() =
+        runBlocking {
+            coEvery { getRecentSearchUseCase.getByQuery("seed") } returns emptyList()
+            viewModel.onQueryTextChanged("seed")
+            delay(50)
+            val jobField =
+                viewModel.javaClass.getDeclaredField("searchJob").apply { isAccessible = true }
+            val jobBefore = jobField.get(viewModel) as Job
+            assertThat(jobBefore).isNotNull()
+            coEvery { getRecentSearchUseCase.getAll() } returns emptyList()
+            viewModel.onClickSearchTextField()
+            delay(50)
+            assertThat(jobBefore.isCancelled || jobBefore.isCompleted).isTrue()
+            assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
+        }
 
     @Test
     fun `should map MovioException to correct error status when handling search exception`() {
@@ -429,16 +421,17 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `should set FAILED and NETWORK_ERROR when discover movies loading fails with NetworkException`() = runBlocking {
-        coEvery { getForYouUseCase.getPersonalizedMovies() } throws NetworkException()
-        coEvery { getExploreMoreUseCase.getSuggestedMovies() } returns emptyList()
-        viewModel.loadDiscoverMovies()
-        delay(50)
-        with(viewModel.screenState.value) {
-            assertThat(screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
-            assertThat(errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
+    fun `should set FAILED and NETWORK_ERROR when discover movies loading fails with NetworkException`() =
+        runBlocking {
+            coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies() } throws NetworkException()
+            coEvery { getSuggestedMoviesUseCase.getSuggestedMovies() } returns emptyList()
+            viewModel.loadDiscoverMovies()
+            delay(50)
+            with(viewModel.screenState.value) {
+                assertThat(screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
+                assertThat(errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
+            }
         }
-    }
 
     @Test
     fun `should map generic exception to UNKNOWN_ERROR when handling search exception`() {
@@ -466,6 +459,118 @@ class SearchViewModelTest {
     fun `should map InternetConnectionException to NO_INTERNET when converting exception`() {
         val status = exceptionToErrorStatus(InternetConnectionException())
         assertThat(status).isEqualTo(ErrorStatus.NO_INTERNET)
+    }
+
+    @Test
+    fun `should show loading then result when performing search`() = runTest {
+        val query = "Inception"
+        coEvery { searchUseCase.getMovies(query) } returns listOf(movie1)
+        coEvery { searchUseCase.getSeries(query) } returns listOf(series)
+        coEvery { searchUseCase.getArtists(query) } returns listOf(artist)
+
+        val testDispatcher = StandardTestDispatcher(testScheduler)
+        Dispatchers.setMain(testDispatcher)
+        mockkStatic(Dispatchers::class)
+        every { Dispatchers.IO } returns testDispatcher
+
+        viewModel.onSearch(query)
+
+        advanceUntilIdle()
+
+        assertThat(viewModel.screenState.value.screenStatus)
+            .isEqualTo(SearchScreenState.ScreenStatus.RESULT)
+
+        unmockkStatic(Dispatchers::class)
+        Dispatchers.resetMain()
+    }
+
+    @Test
+    fun `should not crash if suggestions use case throws inside debounce`() = runTest {
+        val query = "Error"
+        coEvery { getRecentSearchUseCase.getByQuery(query) } throws RuntimeException()
+
+        viewModel.onQueryTextChanged(query)
+        advanceUntilIdle()
+
+        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
+    }
+
+    @Test
+    fun `should keep previous results when refresh fails`() = runTest {
+        val query = "Error"
+        val previousMovies = listOf(movie1.toUiState())
+
+        val testDispatcher = StandardTestDispatcher(testScheduler)
+        Dispatchers.setMain(testDispatcher)
+        mockkStatic(Dispatchers::class)
+        every { Dispatchers.IO } returns testDispatcher
+
+        viewModel.updateState {
+            it.copy(
+                screenStatus = SearchScreenState.ScreenStatus.RESULT,
+                query = query,
+                movies = previousMovies
+            )
+        }
+
+        coEvery { searchUseCase.getMovies(query) } throws IOException()
+        coEvery { searchUseCase.getSeries(query) } returns emptyList()
+        coEvery { searchUseCase.getArtists(query) } returns emptyList()
+
+        viewModel.onRefresh()
+
+        advanceTimeBy(600)
+        advanceUntilIdle()
+
+        with(viewModel.screenState.value) {
+            println(">>> current status = $screenStatus")
+            assertThat(screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
+            assertThat(movies).isEqualTo(previousMovies)
+        }
+
+        unmockkStatic(Dispatchers::class)
+        Dispatchers.resetMain()
+    }
+
+    @Test
+    fun `should not clear recentSearch when onClickSearchTextField fails`() = runTest {
+        val previous = listOf("a", "b")
+        viewModel.updateState { it.copy(recentSearch = previous) }
+
+        coEvery { getRecentSearchUseCase.getAll() } throws IOException()
+
+        viewModel.onClickSearchTextField()
+        advanceUntilIdle()
+
+        assertThat(viewModel.screenState.value.recentSearch).isEqualTo(previous)
+        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
+    }
+
+    @Test
+    fun `should refresh and call loadDiscoverMovies when query is blank`() = runTest {
+        val testDispatcher = StandardTestDispatcher(testScheduler)
+        Dispatchers.setMain(testDispatcher)
+        mockkStatic(Dispatchers::class)
+        every { Dispatchers.IO } returns testDispatcher
+
+        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies() } returns listOf(movie1)
+        coEvery { getSuggestedMoviesUseCase.getSuggestedMovies() } returns listOf(movie2)
+
+        viewModel.updateState { it.copy(query = "") }
+
+        viewModel.onRefresh()
+
+        advanceTimeBy(500)
+        advanceUntilIdle()
+
+        val state = viewModel.screenState.value
+        assertThat(state.isRefreshing).isFalse()
+        assertThat(state.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
+        assertThat(state.forYou).isNotEmpty()
+        assertThat(state.exploreMore).isNotEmpty()
+
+        unmockkStatic(Dispatchers::class)
+        Dispatchers.resetMain()
     }
 
     private companion object {
