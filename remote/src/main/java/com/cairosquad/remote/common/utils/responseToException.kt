@@ -1,11 +1,11 @@
 package com.cairosquad.remote.common.utils
 
 import com.cairosquad.remote.common.dto.ErrorDto
-import com.cairosquad.repository.common.exceptions.RequestTimeoutException
-import com.cairosquad.repository.common.exceptions.ServerException
-import com.cairosquad.repository.common.exceptions.TooManyRequestsException
-import com.cairosquad.repository.common.exceptions.UnauthorizedException
-import com.cairosquad.repository.common.exceptions.UnknownException
+import com.cairosquad.repository.common.exception.RequestTimeoutException
+import com.cairosquad.repository.common.exception.ServerException
+import com.cairosquad.repository.common.exception.TooManyRequestsException
+import com.cairosquad.repository.common.exception.UnauthorizedException
+import com.cairosquad.repository.common.exception.UnknownDataSourceException
 import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
@@ -26,6 +26,6 @@ suspend inline fun <reified T> responseToException(
         408 -> throw RequestTimeoutException(response.body<ErrorDto>().statusMessage ?: "")
         429 -> throw TooManyRequestsException(response.body<ErrorDto>().statusMessage ?: "")
         in 500..599 -> throw ServerException(response.body<ErrorDto>().statusMessage ?: "")
-        else -> throw UnknownException(response.body<ErrorDto>().statusMessage ?: "")
+        else -> throw UnknownDataSourceException(response.body<ErrorDto>().statusMessage ?: "")
     }
 }

@@ -4,6 +4,7 @@ import com.cairosquad.domain.search.repository.SearchRepository
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
+import com.cairosquad.repository.common.exception.tryToCall
 import com.cairosquad.repository.search.data_source.local.SearchCacheDataSource
 import com.cairosquad.repository.search.data_source.remote.RemoteSearchDataSource
 import kotlinx.coroutines.Dispatchers
@@ -15,38 +16,54 @@ class SearchRepositoryImpl(
 ) : SearchRepository {
     override suspend fun getSeries(query: String): List<Series> =
         withContext(Dispatchers.IO) {
-            val cachedSeries = searchCacheDataSource.getCachedSeries(query).map { it.toEntity() }
-            if (cachedSeries.isNotEmpty()) {
-                return@withContext cachedSeries
-            } else {
-                val seriesResults = remoteSearchDataSource.getSeries(query).map { it.toEntity() }
-                searchCacheDataSource.cacheSeries(query, seriesResults.map { it.toSeriesCacheDto(query) })
-                return@withContext seriesResults
+            tryToCall {
+                val cachedSeries =
+                    searchCacheDataSource.getCachedSeries(query).map { it.toEntity() }
+                if (cachedSeries.isNotEmpty()) {
+                    return@tryToCall cachedSeries
+                } else {
+                    val seriesResults =
+                        remoteSearchDataSource.getSeries(query).map { it.toEntity() }
+                    searchCacheDataSource.cacheSeries(
+                        query,
+                        seriesResults.map { it.toSeriesCacheDto(query) })
+                    return@tryToCall seriesResults
+                }
             }
         }
 
     override suspend fun getMovies(query: String): List<Movie> =
         withContext(Dispatchers.IO) {
-            val cachedMovies = searchCacheDataSource.getCachedMovies(query).map { it.toEntity() }
-            if (cachedMovies.isNotEmpty()) {
-                return@withContext cachedMovies
-            } else {
-                val moviesResults = remoteSearchDataSource.getMovies(query).map { it.toEntity() }
-                searchCacheDataSource.cacheMovies(query, moviesResults.map { it.toMovieCacheDto(query) })
-                return@withContext moviesResults
+            tryToCall {
+                val cachedMovies = searchCacheDataSource.getCachedMovies(query).map { it.toEntity() }
+                if (cachedMovies.isNotEmpty()) {
+                    return@tryToCall cachedMovies
+                } else {
+                    val moviesResults = remoteSearchDataSource.getMovies(query).map { it.toEntity() }
+                    searchCacheDataSource.cacheMovies(
+                        query,
+                        moviesResults.map { it.toMovieCacheDto(query) })
+                    return@tryToCall moviesResults
+                }
             }
 
         }
 
     override suspend fun getArtists(query: String): List<Artist> =
         withContext(Dispatchers.IO) {
-            val cachedArtists = searchCacheDataSource.getCachedArtist(query).map { it.toEntity() }
-            if (cachedArtists.isNotEmpty()) {
-                return@withContext cachedArtists
-            } else {
-                val artistResults = remoteSearchDataSource.getArtists(query).map { it.toEntity() }
-                searchCacheDataSource.cacheArtist(query, artistResults.map { it.toArtistCacheDto(query) })
-                return@withContext artistResults
+            tryToCall {
+                val cachedArtists =
+                    searchCacheDataSource.getCachedArtist(query).map { it.toEntity() }
+                if (cachedArtists.isNotEmpty()) {
+                    return@tryToCall cachedArtists
+                } else {
+                    val artistResults =
+                        remoteSearchDataSource.getArtists(query).map { it.toEntity() }
+                    searchCacheDataSource.cacheArtist(
+                        query,
+                        artistResults.map { it.toArtistCacheDto(query) })
+                    return@tryToCall artistResults
+                }
             }
         }
 }

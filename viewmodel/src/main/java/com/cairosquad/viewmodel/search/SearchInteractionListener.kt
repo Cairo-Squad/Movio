@@ -1,4 +1,4 @@
-package com.cairosquad.viewmodel.searchviewmodel
+package com.cairosquad.viewmodel.search
 
 interface SearchInteractionListener {
     fun onQueryTextChanged(query: String)

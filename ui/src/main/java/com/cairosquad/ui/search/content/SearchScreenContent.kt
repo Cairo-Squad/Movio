@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.cairosquad.design_system.component.RefreshBox
-import com.cairosquad.viewmodel.searchviewmodel.SearchInteractionListener
-import com.cairosquad.viewmodel.searchviewmodel.SearchScreenState
+import com.cairosquad.viewmodel.search.SearchInteractionListener
+import com.cairosquad.viewmodel.search.SearchScreenState
 
 @Composable
 fun SearchScreenContent(

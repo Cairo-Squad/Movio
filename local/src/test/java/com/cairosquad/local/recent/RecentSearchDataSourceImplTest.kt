@@ -46,43 +46,57 @@ class RecentSearchDataSourceImplTest {
             RecentSearchEntity("leona")
         )
         coEvery { dao.getAll(query) } returns entities
-
         // When
         val result = dataSource.getByQuery(query)
-
         // Then
         coVerify { dao.getAll(query) }
     }
 
     @Test
     fun `clearAll calls dao clearAll`() = runTest {
+        // Given
         coEvery { dao.clearAll() } just runs
-
+        // When
         dataSource.clearAll()
-
+        // Then
         coVerify { dao.clearAll() }
     }
 
     @Test
     fun `removeQuery deletes specific query from dao`() = runTest {
+        // Given
         val query = "matrix"
         coEvery { dao.deleteQuery(query) } just runs
-
+        // When
         dataSource.removeQuery(query)
-
+        // Then
         coVerify { dao.deleteQuery(query) }
     }
 
     @Test
+    fun `addQuery inserts entity into dao`() = runTest {
+        // Given
+        val query = "inception"
+        coEvery { dao.insertQuery(any()) } just runs
+        // When
+        dataSource.addQuery(query)
+        // Then
+        coVerify {
+            dao.insertQuery(match { it is RecentSearchEntity && it.query == query })
+        }
+    }
+
+    @Test
     fun `getAll returns mapped list`() = runTest {
+        // Given
         val entities = listOf(
             RecentSearchEntity("dune"),
             RecentSearchEntity("interstellar")
         )
         coEvery { dao.getAll() } returns entities
-
+        // When
         val result = dataSource.getAll()
-
+        // Then
         coVerify { dao.getAll() }
     }
 }
