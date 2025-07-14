@@ -41,7 +41,7 @@ class EntityCacheMapperTest {
     @Test
     fun `Should SeriesCacheDto maps to Series correctly`() {
         val expected = Series(id = 7, title = "", posterPath = "", rating = 0f)
-        assertThat(seriesCacheWithNulls.toSeries()).isEqualTo(expected)
+        assertThat(seriesCacheWithNulls.toEntity()).isEqualTo(expected)
     }
 
     @Test
@@ -65,7 +65,7 @@ class EntityCacheMapperTest {
     @Test
     fun `Should MovieCacheDto maps to Movie correctly`() {
         val expected = Movie(id = 0L, title = "", posterPath = "", rating = 0f)
-        assertThat(movieCacheWithNulls.toMovie()).isEqualTo(expected)
+        assertThat(movieCacheWithNulls.toEntity()).isEqualTo(expected)
     }
 
     @Test
@@ -93,7 +93,7 @@ class EntityCacheMapperTest {
     @Test
     fun `Should ArtistCacheDto maps to Artist correctly`() {
         val expected = Artist(id = 5L, name = "", photoPath = "")
-        assertThat(artistCacheWithNulls.toArtist()).isEqualTo(expected)
+        assertThat(artistCacheWithNulls.toEntity()).isEqualTo(expected)
     }
 
     @Test

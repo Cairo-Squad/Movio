@@ -15,7 +15,7 @@ class SearchRepositoryImpl(
 ) : SearchRepository {
     override suspend fun getSeries(query: String): List<Series> =
         withContext(Dispatchers.IO) {
-            val cachedSeries = searchCacheDataSource.getCachedSeries(query).map { it.toSeries() }
+            val cachedSeries = searchCacheDataSource.getCachedSeries(query).map { it.toEntity() }
             if (cachedSeries.isNotEmpty()) {
                 return@withContext cachedSeries
             } else {
@@ -27,7 +27,7 @@ class SearchRepositoryImpl(
 
     override suspend fun getMovies(query: String): List<Movie> =
         withContext(Dispatchers.IO) {
-            val cachedMovies = searchCacheDataSource.getCachedMovies(query).map { it.toMovie() }
+            val cachedMovies = searchCacheDataSource.getCachedMovies(query).map { it.toEntity() }
             if (cachedMovies.isNotEmpty()) {
                 return@withContext cachedMovies
             } else {
@@ -40,7 +40,7 @@ class SearchRepositoryImpl(
 
     override suspend fun getArtists(query: String): List<Artist> =
         withContext(Dispatchers.IO) {
-            val cachedArtists = searchCacheDataSource.getCachedArtist(query).map { it.toArtist() }
+            val cachedArtists = searchCacheDataSource.getCachedArtist(query).map { it.toEntity() }
             if (cachedArtists.isNotEmpty()) {
                 return@withContext cachedArtists
             } else {
