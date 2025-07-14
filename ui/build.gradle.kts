@@ -52,6 +52,7 @@ dependencies {
     testImplementation(libs.junit)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.material3)
 
     // Koin
     implementation(libs.koin.androidx.compose)
@@ -65,4 +66,5 @@ dependencies {
     implementation(project(":design_system"))
     implementation(project(":viewmodel"))
     implementation(project(":domain"))
+    implementation(project(":safe_image_viewer"))
 }
