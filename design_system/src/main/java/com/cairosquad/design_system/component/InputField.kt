@@ -44,6 +44,7 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.preview.MultiThemePreviews
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
+import androidx.compose.runtime.LaunchedEffect
 
 @Composable
 fun InputField(
@@ -64,9 +65,13 @@ fun InputField(
 ) {
     var hasFocus by rememberSaveable { mutableStateOf(false) }
     var textFieldValue by rememberSaveable(stateSaver = TextFieldValue.Saver) {
-        mutableStateOf(TextFieldValue(text = value))
+        mutableStateOf(TextFieldValue(text = value, selection = TextRange(value.length)))
     }
-
+    LaunchedEffect(value) {
+        if (value != textFieldValue.text) {
+            textFieldValue = textFieldValue.copy(text = value)
+        }
+    }
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     val hasFocusGradient = listOf(
         Theme.color.brand.onPrimary,
