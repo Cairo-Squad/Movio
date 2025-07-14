@@ -26,7 +26,7 @@ class RecentSearchRepositoryImplTest {
         coEvery { localDataSource.getAll() } returns expectedQueries
 
         //When
-        val result = repository.getAll()
+        val result = repository.getAllHistory()
 
         //Then
         Assert.assertEquals(expectedQueries, result)
@@ -40,7 +40,7 @@ class RecentSearchRepositoryImplTest {
         val blankQuery = ""
         coEvery { localDataSource.getAll() } returns expectedQueries
         //When
-        val result = repository.getByQuery(blankQuery)
+        val result = repository.getAllHistoryByQuery(blankQuery)
 
         //Then
         Assert.assertEquals(expectedQueries, result)
@@ -54,7 +54,7 @@ class RecentSearchRepositoryImplTest {
         coEvery { localDataSource.getByQuery(specificQuery) } returns expectedFilteredQueries
 
         // When
-        val result = repository.getByQuery(specificQuery)
+        val result = repository.getAllHistoryByQuery(specificQuery)
 
         // Then
         Assert.assertEquals(expectedFilteredQueries, result)

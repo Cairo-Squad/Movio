@@ -7,11 +7,11 @@ class LocalRecentSearchRepositoryImpl(
     private val dataSource: LocalRecentSearchDataSource
 ) : SearchHistoryRepository {
 
-    override suspend fun getAll(): List<String> {
+    override suspend fun getAllHistory(): List<String> {
         return dataSource.getAll()
     }
 
-    override suspend fun getByQuery(query: String): List<String> {
+    override suspend fun getAllHistoryByQuery(query: String): List<String> {
         return query.takeIf { it.isNotBlank() }
             ?.let { dataSource.getByQuery(it) }
             ?: dataSource.getAll()

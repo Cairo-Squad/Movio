@@ -2,9 +2,9 @@ package com.cairosquad.domain.search.repository
 
 
 interface SearchHistoryRepository {
-    suspend fun getAll(): List<String>
+    suspend fun getAllHistory(): List<String>
 
-    suspend fun getByQuery(query: String): List<String>
+    suspend fun getAllHistoryByQuery(query: String): List<String>
 
     suspend fun clearAll()
 
