@@ -117,7 +117,7 @@ class SearchRepositoryImplTest {
         val query = "matrix"
         coEvery { cacheDS.getCachedMovies(query) } returns emptyList()
         val remoteDto = mockk<MovieDto>(relaxed = true) {
-            every { toMovie() } returns Movie(99, "Matrix", 8.7f, "/mx.jpg")
+            every { toEntity() } returns Movie(99, "Matrix", 8.7f, "/mx.jpg")
 
         }
         coEvery { remoteDS.getMovies(query) } returns listOf(remoteDto)
@@ -155,7 +155,7 @@ class SearchRepositoryImplTest {
         val query = "adele"
         coEvery { cacheDS.getCachedArtist(query) } returns emptyList()
         val remoteDto = mockk<ArtistDto>(relaxed = true) {
-            every { toArtist() } returns Artist(8, "Adele", "/a.jpg")
+            every { toEntity() } returns Artist(8, "Adele", "/a.jpg")
 
         }
         coEvery { remoteDS.getArtists(query) } returns listOf(remoteDto)

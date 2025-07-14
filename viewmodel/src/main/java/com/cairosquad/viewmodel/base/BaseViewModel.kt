@@ -23,7 +23,7 @@ abstract class BaseViewModel<T, E>(
     private val _effect = MutableSharedFlow<E>()
     val effect = _effect.asSharedFlow()
 
-    protected fun updateState(transform: (T) -> T) {
+    fun updateState(transform: (T) -> T) {
         _screenState.update { transform(it) }
     }
 

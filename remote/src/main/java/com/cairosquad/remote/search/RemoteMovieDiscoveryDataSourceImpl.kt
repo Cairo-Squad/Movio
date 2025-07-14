@@ -5,7 +5,7 @@ import com.cairosquad.remote.common.utils.callApi
 import com.cairosquad.remote.common.utils.constructUrl
 import com.cairosquad.repository.search.data_source.remote.RemoteMovieDiscoveryDataSource
 import com.cairosquad.repository.search.data_source.remote.dto.MovieDto
-import com.cairosquad.repository.search.data_source.remote.dto.SearchResultDto
+import com.cairosquad.repository.search.data_source.remote.dto.SearchResultResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter

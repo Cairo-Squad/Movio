@@ -6,7 +6,7 @@ import com.cairosquad.remote.common.utils.constructUrl
 import com.cairosquad.repository.search.data_source.remote.RemoteSearchDataSource
 import com.cairosquad.repository.search.data_source.remote.dto.ArtistDto
 import com.cairosquad.repository.search.data_source.remote.dto.MovieDto
-import com.cairosquad.repository.search.data_source.remote.dto.SearchResultDto
+import com.cairosquad.repository.search.data_source.remote.dto.SearchResultResponse
 import com.cairosquad.repository.search.data_source.remote.dto.SeriesDto
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
@@ -16,7 +16,7 @@ class RemoteSearchDataSourceImpl(
     private val httpClient: HttpClient
 ) : RemoteSearchDataSource {
     override suspend fun getMovies(query: String): List<MovieDto> {
-        return callApi<SearchResultDto<MovieDto>> {
+        return callApi<SearchResultResponse<MovieDto>> {
             httpClient.get(constructUrl("search/movie")) {
                 parameter(QUERY, query)
                 parameter(API_KEY, BuildConfig.API_KEY)
@@ -25,7 +25,7 @@ class RemoteSearchDataSourceImpl(
     }
 
     override suspend fun getSeries(query: String): List<SeriesDto> {
-        return callApi<SearchResultDto<SeriesDto>> {
+        return callApi<SearchResultResponse<SeriesDto>> {
             httpClient.get(constructUrl("search/tv")) {
                 parameter(QUERY, query)
                 parameter(API_KEY, BuildConfig.API_KEY)
@@ -34,7 +34,7 @@ class RemoteSearchDataSourceImpl(
     }
 
     override suspend fun getArtists(query: String): List<ArtistDto> {
-        return callApi<SearchResultDto<ArtistDto>> {
+        return callApi<SearchResultResponse<ArtistDto>> {
             httpClient.get(constructUrl("search/person")) {
                 parameter(QUERY, query)
                 parameter(API_KEY, BuildConfig.API_KEY)

@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -15,6 +16,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class BaseViewModelTest {
@@ -29,7 +31,11 @@ class BaseViewModelTest {
         object TestEvent2 : TestEvent()
     }
 
-    private class TestViewModel(initialState: TestState) : BaseViewModel<TestState, TestEvent>(initialState) {
+    private class TestViewModel(
+        initialState: TestState,
+        private val dispatcher: CoroutineDispatcher
+    ) : BaseViewModel<TestState, TestEvent>(initialState) {
+
         fun updateStateValue(transform: (TestState) -> TestState) {
             updateState(transform)
         }
@@ -38,14 +44,8 @@ class BaseViewModelTest {
             event: TestEvent,
             onStart: suspend () -> Unit = {},
             onEnd: suspend () -> Unit = {},
-            dispatcher: CoroutineDispatcher = Dispatchers.Main
         ) {
-            sendEffect(
-                event,
-                onStart,
-                onEnd,
-                dispatcher = dispatcher
-            )
+            sendEffect(event, onStart, onEnd)
         }
 
         fun testTryToCall(
@@ -53,8 +53,7 @@ class BaseViewModelTest {
             onSuccess: (Int) -> Unit,
             onError: (Throwable) -> Unit,
             onStart: suspend () -> Unit = {},
-            onEnd: suspend () -> Unit = {},
-            dispatcher: CoroutineDispatcher = Dispatchers.Main
+            onEnd: suspend () -> Unit = {}
         ) {
             tryToCall(
                 block = block,
@@ -72,7 +71,7 @@ class BaseViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = TestViewModel(TestState())
+        viewModel = TestViewModel(TestState(), testDispatcher)
     }
 
     @After
@@ -81,7 +80,7 @@ class BaseViewModelTest {
     }
 
     @Test
-    fun updateStateShouldUpdateUiStateCorrectly() = testScope.runTest {
+    fun updateStateShouldUpdateUiStateCorrectly() = runTest(testDispatcher) {
         val newStateValue = 42
 
         viewModel.updateStateValue({ it.copy(value = newStateValue) })
@@ -92,7 +91,7 @@ class BaseViewModelTest {
     }
 
     @Test
-    fun sendEffectShouldEmitEffectCorrectly() = testScope.runTest {
+    fun sendEventShouldEmitEventCorrectly() = runTest(testDispatcher) {
         val expectedEvent = TestEvent.TestEvent1
         var receivedEvent: TestEvent? = null
         val job = launch { viewModel.effect.collect { receivedEvent = it } }
@@ -104,14 +103,13 @@ class BaseViewModelTest {
     }
 
     @Test
-    fun tryToCallShouldUpdateStateOnSuccess() = testScope.runTest {
+    fun tryToCallShouldUpdateStateOnSuccess() = runTest(testDispatcher) {
         val newStateValue = 42
 
         viewModel.testTryToCall(
             block = { newStateValue },
             onSuccess = { result -> viewModel.updateStateValue({ it.copy(value = newStateValue) }) },
-            onError = { viewModel.updateStateValue({ it.copy(error = newStateValue) }) },
-            dispatcher = testDispatcher
+            onError = { viewModel.updateStateValue({ it.copy(error = newStateValue) }) }
         )
 
         val state = viewModel.screenState.first()
@@ -120,23 +118,23 @@ class BaseViewModelTest {
     }
 
     @Test
-    fun tryToCallShouldUpdateStateOnFailure() = testScope.runTest {
+    fun tryToCallShouldUpdateStateOnFailure() =runTest(testDispatcher) {
         val newStateValue = 42
 
         viewModel.testTryToCall(
             block = { throw Exception("test") },
-            onSuccess = { result -> viewModel.updateStateValue({ it.copy(value = newStateValue) }) },
-            onError = { viewModel.updateStateValue({ it.copy(error = newStateValue) }) },
-            dispatcher = testDispatcher
+            onSuccess = { viewModel.updateStateValue { it.copy(value = newStateValue) } },
+            onError  = { viewModel.updateStateValue { it.copy(error = newStateValue) } },
         )
 
-        val state = viewModel.screenState.first()
+        advanceUntilIdle()
+        val state = viewModel.screenState.value
         assertEquals(0, state.value)
         assertEquals(newStateValue, state.error)
     }
 
     @Test
-    fun sendEffectShouldCallOnStartAndOnEndCallbacks() = testScope.runTest {
+    fun sendEffectShouldCallOnStartAndOnEndCallbacks() =runTest(testDispatcher) {
         var onStartCalled = false
         var onEndCalled = false
         val event = TestEvent.TestEvent2
@@ -144,8 +142,7 @@ class BaseViewModelTest {
         viewModel.sendTestEvent(
             event = event,
             onStart = { onStartCalled = true },
-            onEnd = { onEndCalled = true },
-            dispatcher = testDispatcher
+            onEnd = { onEndCalled = true }
         )
 
         assertTrue(onStartCalled)
@@ -153,7 +150,7 @@ class BaseViewModelTest {
     }
 
     @Test
-    fun tryToCallShouldCallOnStartAndOnEndCallbacksWithOnSuccess() = testScope.runTest {
+    fun tryToCallShouldCallOnStartAndOnEndCallbacksWithOnSuccess() = runTest(testDispatcher) {
         var onStartCalled = false
         var onEndCalled = false
 
@@ -164,30 +161,27 @@ class BaseViewModelTest {
             onSuccess = { result -> viewModel.updateStateValue({ it.copy(value = newStateValue) }) },
             onError = { viewModel.updateStateValue({ it.copy(error = newStateValue) }) },
             onStart = { onStartCalled = true },
-            onEnd = { onEndCalled = true },
-            dispatcher = testDispatcher
+            onEnd = { onEndCalled = true }
         )
-
+        advanceUntilIdle()
         assertTrue(onStartCalled)
         assertTrue(onEndCalled)
     }
 
     @Test
-    fun tryToCallShouldCallOnStartAndOnEndCallbacksWithOnError() = testScope.runTest {
+    fun tryToCallShouldCallOnStartAndOnEndCallbacksWithOnError() = runTest(testDispatcher) {
         var onStartCalled = false
         var onEndCalled = false
 
-        val newStateValue = 42
-
         viewModel.testTryToCall(
-            block = { throw Exception("test") },
-            onSuccess = { result -> viewModel.updateStateValue({ it.copy(value = newStateValue) }) },
-            onError = { viewModel.updateStateValue({ it.copy(error = newStateValue) }) },
-            onStart = { onStartCalled = true },
-            onEnd = { onEndCalled = true },
-            dispatcher = testDispatcher
-        )
+            block     = { throw Exception("test") },
+            onSuccess = {  },
+            onError   = {  },
+            onStart   = { onStartCalled = true },
+            onEnd     = { onEndCalled = true }
 
+        )
+        advanceUntilIdle()
         assertTrue(onStartCalled)
         assertTrue(onEndCalled)
     }

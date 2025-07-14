@@ -1,6 +1,10 @@
 package com.cairosquad.viewmodel.searchviewmodel
 
-import com.cairosquad.entity.*
+import com.cairosquad.entity.Artist
+import com.cairosquad.entity.Movie
+import com.cairosquad.entity.Series
+import com.cairosquad.viewmodel.search.SearchScreenState
+import com.cairosquad.viewmodel.search.toUiState
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
