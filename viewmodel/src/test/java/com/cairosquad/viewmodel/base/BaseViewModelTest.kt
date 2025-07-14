@@ -80,53 +80,66 @@ class BaseViewModelTest {
     }
 
     @Test
-    fun updateStateShouldUpdateUiStateCorrectly() = runTest(testDispatcher) {
+    fun `should update uiState when updateStateValue is called`() = runTest(testDispatcher) {
+        // Given
         val newStateValue = 42
 
+        // When
         viewModel.updateStateValue({ it.copy(value = newStateValue) })
 
+        // Then
         val state = viewModel.screenState.first()
         assertEquals(newStateValue, state.value)
         assertEquals(0, state.error)
     }
 
     @Test
-    fun sendEventShouldEmitEventCorrectly() = runTest(testDispatcher) {
+    fun `should emit uiEvent when sendEvent is called`() = runTest(testDispatcher) {
+        // Given
         val expectedEvent = TestEvent.TestEvent1
         var receivedEvent: TestEvent? = null
         val job = launch { viewModel.effect.collect { receivedEvent = it } }
 
+        // When
         viewModel.sendTestEvent(expectedEvent)
 
+        // Then
         assertEquals(expectedEvent, receivedEvent)
         job.cancel()
     }
 
     @Test
-    fun tryToCallShouldUpdateStateOnSuccess() = runTest(testDispatcher) {
-        val newStateValue = 42
+    fun `should update state with success value when tryToCall succeeds`() =
+        runTest(testDispatcher) {
+            // Given
+            val newStateValue = 42
 
-        viewModel.testTryToCall(
-            block = { newStateValue },
-            onSuccess = { result -> viewModel.updateStateValue({ it.copy(value = newStateValue) }) },
-            onError = { viewModel.updateStateValue({ it.copy(error = newStateValue) }) }
-        )
+            // When
+            viewModel.testTryToCall(
+                block = { newStateValue },
+                onSuccess = { result -> viewModel.updateStateValue({ it.copy(value = newStateValue) }) },
+                onError = { viewModel.updateStateValue({ it.copy(error = newStateValue) }) }
+            )
 
-        val state = viewModel.screenState.first()
-        assertEquals(newStateValue, state.value)
-        assertEquals(0, state.error)
-    }
+            // Then
+            val state = viewModel.screenState.first()
+            assertEquals(newStateValue, state.value)
+            assertEquals(0, state.error)
+        }
 
     @Test
-    fun tryToCallShouldUpdateStateOnFailure() =runTest(testDispatcher) {
+    fun `should update state with error value when tryToCall throws`() = runTest(testDispatcher) {
+        // Given
         val newStateValue = 42
 
+        // When
         viewModel.testTryToCall(
             block = { throw Exception("test") },
             onSuccess = { viewModel.updateStateValue { it.copy(value = newStateValue) } },
-            onError  = { viewModel.updateStateValue { it.copy(error = newStateValue) } },
+            onError = { viewModel.updateStateValue { it.copy(error = newStateValue) } },
         )
 
+        // Then
         advanceUntilIdle()
         val state = viewModel.screenState.value
         assertEquals(0, state.value)
@@ -134,23 +147,26 @@ class BaseViewModelTest {
     }
 
     @Test
-    fun sendEffectShouldCallOnStartAndOnEndCallbacks() =runTest(testDispatcher) {
+    fun `should call onStart and onEnd when sendEvent is executed`() = runTest(testDispatcher) {
+        // Given
         var onStartCalled = false
         var onEndCalled = false
         val event = TestEvent.TestEvent2
 
+        // When
         viewModel.sendTestEvent(
             event = event,
             onStart = { onStartCalled = true },
             onEnd = { onEndCalled = true }
         )
 
+        // Then
         assertTrue(onStartCalled)
         assertTrue(onEndCalled)
     }
 
     @Test
-    fun tryToCallShouldCallOnStartAndOnEndCallbacksWithOnSuccess() = runTest(testDispatcher) {
+    fun `should call onStart and onEnd when tryToCall succeeds`() = runTest(testDispatcher) {
         var onStartCalled = false
         var onEndCalled = false
 
@@ -169,18 +185,21 @@ class BaseViewModelTest {
     }
 
     @Test
-    fun tryToCallShouldCallOnStartAndOnEndCallbacksWithOnError() = runTest(testDispatcher) {
+    fun `should call onStart and onEnd when tryToCall fails`() = runTest(testDispatcher) {
+        // Given
         var onStartCalled = false
         var onEndCalled = false
 
+        // When
         viewModel.testTryToCall(
-            block     = { throw Exception("test") },
-            onSuccess = {  },
-            onError   = {  },
-            onStart   = { onStartCalled = true },
-            onEnd     = { onEndCalled = true }
+            block = { throw Exception("test") },
+            onSuccess = { },
+            onError = { },
+            onStart = { onStartCalled = true },
+            onEnd = { onEndCalled = true }
 
         )
+        // Then
         advanceUntilIdle()
         assertTrue(onStartCalled)
         assertTrue(onEndCalled)

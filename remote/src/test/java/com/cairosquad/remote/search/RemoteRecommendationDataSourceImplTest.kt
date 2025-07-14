@@ -1,6 +1,6 @@
 package com.cairosquad.remote.search
 
-import com.cairosquad.repository.search.data_source.remote.dto.MovieDto
+import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.SearchResultResponse
 import com.google.common.truth.Truth.assertThat
 import io.ktor.client.HttpClient
@@ -34,13 +34,13 @@ class RemoteRecommendationDataSourceImplTest {
                             SearchResultResponse(
                                 page = 1,
                                 results = listOf(
-                                    MovieDto(
+                                    MovieRemoteDto(
                                         id = 1,
                                         title = "Movie 1",
                                         posterPath = null,
                                         voteAverage = null
                                     ),
-                                    MovieDto(
+                                    MovieRemoteDto(
                                         id = 2,
                                         title = "Movie 2",
                                         posterPath = null,
@@ -62,13 +62,13 @@ class RemoteRecommendationDataSourceImplTest {
                             SearchResultResponse(
                                 page = 1,
                                 results = listOf(
-                                    MovieDto(
+                                    MovieRemoteDto(
                                         id = 3,
                                         title = "Movie 3",
                                         posterPath = null,
                                         voteAverage = null
                                     ),
-                                    MovieDto(
+                                    MovieRemoteDto(
                                         id = 4,
                                         title = "Movie 4",
                                         posterPath = null,
@@ -100,11 +100,12 @@ class RemoteRecommendationDataSourceImplTest {
     }
 
 
-
     @Test
-    fun `getForYouMovies returns list of movies on success`() = runTest {
+    fun `should return list of Personalized movies when getPersonalizedMovies is successful`() = runTest {
+        // When
         val movies = remoteDataSource.getPersonalizedMovies()
 
+        // Then
         assertThat(movies).isNotEmpty()
         assertThat(movies.size).isEqualTo(2)
         assertThat(movies[0].id).isEqualTo(1)
@@ -112,13 +113,14 @@ class RemoteRecommendationDataSourceImplTest {
     }
 
     @Test
-    fun `getForYouMovies returns empty list on empty results`() = runTest {
+    fun `should return empty list when getPersonalizedMovies returns empty results`() = runTest {
+        // Given
         mockEngine = MockEngine { request ->
             when (request.url.encodedPath) {
                 "/3/movie/top_rated" -> {
                     respond(
                         content = json.encodeToString(
-                            SearchResultResponse<MovieDto>(
+                            SearchResultResponse<MovieRemoteDto>(
                                 page = 1,
                                 results = emptyList(),
                                 totalPages = 0,
@@ -143,7 +145,8 @@ class RemoteRecommendationDataSourceImplTest {
     }
 
     @Test
-    fun `getForYouMovies filters out null movies or movies with null ID`() = runTest {
+    fun `should filter out null or invalid movies when getPersonalizedMovies is called`() = runTest {
+        // Given
         mockEngine = MockEngine { request ->
             when (request.url.encodedPath) {
                 "/3/movie/top_rated" -> {
@@ -152,14 +155,14 @@ class RemoteRecommendationDataSourceImplTest {
                             SearchResultResponse(
                                 page = 1,
                                 results = listOf(
-                                    MovieDto(
+                                    MovieRemoteDto(
                                         id = 10,
                                         title = "Valid Movie",
                                         posterPath = null,
                                         voteAverage = null
                                     ),
                                     null,
-                                    MovieDto(
+                                    MovieRemoteDto(
                                         id = null,
                                         title = "Null ID Movie",
                                         posterPath = null,
@@ -189,10 +192,11 @@ class RemoteRecommendationDataSourceImplTest {
     }
 
     @Test
-    fun `getForYouMovies throws exception on API error`() = runTest {
+    fun `should throw exception when getPersonalizedMovies API returns error`() = runTest {
+        // Given
         mockEngine = MockEngine { request ->
             when (request.url.encodedPath) {
-                "/3/movie/top_rated"-> {
+                "/3/movie/top_rated" -> {
                     respond(
                         content = "{}",
                         status = HttpStatusCode.InternalServerError,
@@ -208,20 +212,23 @@ class RemoteRecommendationDataSourceImplTest {
         }
         remoteDataSource = RemoteMovieDiscoveryDataSourceImpl(httpClient)
 
+        // When
         var thrownException: Throwable? = null
         try {
             remoteDataSource.getPersonalizedMovies()
         } catch (e: Exception) {
             thrownException = e
         }
+
+        // Then
         assertThat(thrownException).isNotNull()
     }
-
 
     @Test
     fun `getExploreMoreMovies returns list of movies on success`() = runTest {
         val movies = remoteDataSource.getSuggestedMovies()
 
+        // Then
         assertThat(movies).isNotEmpty()
         assertThat(movies.size).isEqualTo(2)
         assertThat(movies[0].id).isEqualTo(3)
@@ -229,13 +236,14 @@ class RemoteRecommendationDataSourceImplTest {
     }
 
     @Test
-    fun `getExploreMoreMovies returns empty list on empty results`() = runTest {
+    fun `should return empty list when getSuggestedMovies returns empty results`() = runTest {
+        // Given
         mockEngine = MockEngine { request ->
             when (request.url.encodedPath) {
                 "/3/movie/now_playing" -> {
                     respond(
                         content = json.encodeToString(
-                            SearchResultResponse<MovieDto>(
+                            SearchResultResponse<MovieRemoteDto>(
                                 page = 1,
                                 results = emptyList(),
                                 totalPages = 0,
@@ -258,5 +266,6 @@ class RemoteRecommendationDataSourceImplTest {
         val movies = remoteDataSource.getSuggestedMovies()
         assertThat(movies).isEmpty()
     }
+
 
 }

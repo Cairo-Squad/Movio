@@ -8,7 +8,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
-class ClearRecentSearchUseCaseTest {
+class ClearSearchHistoryUseCaseTest {
 
     private lateinit var recentSearchRepository: SearchHistoryRepository
     private lateinit var clearRecentSearchUseCase: ClearSearchHistoryUseCase
@@ -20,13 +20,14 @@ class ClearRecentSearchUseCaseTest {
     }
 
     @Test
-    fun `clearAll should call repository's clearAll`() = runTest {
+    fun `should call clearAll on repository when clearAll is invoked`() = runTest {
         clearRecentSearchUseCase.clearAllHistory()
         coVerify(exactly = 1) { recentSearchRepository.clearAll() }
     }
 
     @Test
-    fun `removeQuery should call repository's removeQuery with correct argument`() = runTest {
+    fun `should call removeQuery on repository with correct argument when removeQuery is invoked`() = runTest {
+        // Given
         val testQuery = "Movie"
         clearRecentSearchUseCase.removeQueryFromHistory(testQuery)
         coVerify(exactly = 1) { recentSearchRepository.removeQuery(testQuery) }

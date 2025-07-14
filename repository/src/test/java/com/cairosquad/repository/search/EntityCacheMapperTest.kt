@@ -3,9 +3,11 @@ package com.cairosquad.repository.search
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
-import com.cairosquad.repository.search.data_source.local.Dto.ArtistCacheDto
-import com.cairosquad.repository.search.data_source.local.Dto.MovieCacheDto
-import com.cairosquad.repository.search.data_source.local.Dto.SeriesCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.SeriesCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.toCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.toEntity
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import java.time.Instant
@@ -20,7 +22,7 @@ class EntityCacheMapperTest {
         val query = "crime series"
         val before = Instant.now().toEpochMilli()
 
-        val cache = series.toSeriesCacheDto(query)
+        val cache = series.toCacheDto(query)
 
         assertThat(cache).isEqualTo(
             SeriesCacheDto(
@@ -49,7 +51,7 @@ class EntityCacheMapperTest {
         val query = "dream"
         val before = Instant.now().toEpochMilli()
 
-        val cache = movie.toMovieCacheDto(query)
+        val cache = movie.toCacheDto(query)
 
         assertThat(cache.id).isEqualTo(movie.id.toInt())
         assertThat(cache.title).isEqualTo(movie.title)
@@ -73,7 +75,7 @@ class EntityCacheMapperTest {
         val query = "emma"
         val before = Instant.now().toEpochMilli()
 
-        val cache = artist.toArtistCacheDto(query)
+        val cache = artist.toCacheDto(query)
 
         assertThat(cache).isEqualTo(
             ArtistCacheDto(
@@ -99,7 +101,7 @@ class EntityCacheMapperTest {
     @Test
     fun `Should Movie with exact float maps correctly to MovieCacheDto`() {
         val result = Movie(id = 1L, title = "Test", posterPath = " ", rating = 9.0f)
-            .toMovieCacheDto("test")
+            .toCacheDto("test")
 
         assertThat(result.voteAverage).isWithin(0.001).of(9.0)
     }
@@ -107,7 +109,7 @@ class EntityCacheMapperTest {
     @Test
     fun `Should Movie with max float rating maps correctly`() {
         val result = Movie(id = 1000L, title = "Max Float", posterPath = "/max.jpg", rating = Float.MAX_VALUE)
-            .toMovieCacheDto("max")
+            .toCacheDto("max")
 
         assertThat(result.voteAverage).isWithin(0.001).of(Float.MAX_VALUE.toDouble())
     }

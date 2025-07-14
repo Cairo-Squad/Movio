@@ -17,7 +17,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-class RecentSearchDataSourceImplTest {
+class LocalRecentSearchDataSourceImplTest {
 
     private val dao = mockk<LocalRecentSearchDao>()
     private lateinit var dataSource: LocalRecentSearchDataSourceImpl
@@ -35,7 +35,7 @@ class RecentSearchDataSourceImplTest {
     }
 
     @Test
-    fun `getByQuery returns mapped strings`() = runTest {
+    fun `should return mapped strings when getByQuery is called`() = runTest {
         // Given
         val query = "leon"
         val entities = listOf(
@@ -85,7 +85,7 @@ class RecentSearchDataSourceImplTest {
     }
 
     @Test
-    fun `getAll returns mapped list`() = runTest {
+    fun `should return mapped list when getAll is called`() = runTest {
         // Given
         val entities = listOf(
             RecentSearchEntity("dune"),
