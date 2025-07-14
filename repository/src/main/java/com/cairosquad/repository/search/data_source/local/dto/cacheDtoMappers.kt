@@ -1,15 +1,12 @@
-package com.cairosquad.repository.search
+package com.cairosquad.repository.search.data_source.local.dto
 
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
-import com.cairosquad.repository.search.data_source.local.Dto.ArtistCacheDto
-import com.cairosquad.repository.search.data_source.local.Dto.MovieCacheDto
-import com.cairosquad.repository.search.data_source.local.Dto.SeriesCacheDto
 import java.time.Instant
 
-fun Series.toSeriesCacheDto(query: String): SeriesCacheDto {
-    return SeriesCacheDto(
+fun Series.toCacheDto(query: String): CachedSeriesDto {
+    return CachedSeriesDto(
         id = id.toInt(),
         name = title,
         posterPath = posterPath,
@@ -19,7 +16,7 @@ fun Series.toSeriesCacheDto(query: String): SeriesCacheDto {
     )
 }
 
-fun SeriesCacheDto.toEntity(): Series {
+fun CachedSeriesDto.toEntity(): Series {
     return Series(
         id = id.toLong(),
         title = name ?: "",
@@ -28,8 +25,8 @@ fun SeriesCacheDto.toEntity(): Series {
     )
 }
 
-fun Movie.toMovieCacheDto(query: String): MovieCacheDto {
-    return MovieCacheDto(
+fun Movie.toCacheDto(query: String): CachedMovieDto {
+    return CachedMovieDto(
         id = id.toInt(),
         title = title,
         posterPath = posterPath,
@@ -39,8 +36,7 @@ fun Movie.toMovieCacheDto(query: String): MovieCacheDto {
     )
 }
 
-
-fun MovieCacheDto.toEntity(): Movie {
+fun CachedMovieDto.toEntity(): Movie {
     return Movie(
         id = id.toLong(),
         title = title ?: "",
@@ -49,8 +45,8 @@ fun MovieCacheDto.toEntity(): Movie {
     )
 }
 
-fun Artist.toArtistCacheDto(query: String): ArtistCacheDto {
-    return ArtistCacheDto(
+fun Artist.toCacheDto(query: String): CachedArtistDto {
+    return CachedArtistDto(
         id = id.toInt(),
         name = name,
         photoPath = photoPath,
@@ -59,7 +55,7 @@ fun Artist.toArtistCacheDto(query: String): ArtistCacheDto {
     )
 }
 
-fun ArtistCacheDto.toEntity(): Artist {
+fun CachedArtistDto.toEntity(): Artist {
     return Artist(
         id = id.toLong(),
         name = name ?: "",

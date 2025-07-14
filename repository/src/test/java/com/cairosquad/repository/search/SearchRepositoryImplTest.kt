@@ -3,14 +3,14 @@ package com.cairosquad.repository.search
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
-import com.cairosquad.repository.search.data_source.local.Dto.ArtistCacheDto
-import com.cairosquad.repository.search.data_source.local.Dto.MovieCacheDto
-import com.cairosquad.repository.search.data_source.local.Dto.SeriesCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.CachedArtistDto
+import com.cairosquad.repository.search.data_source.local.dto.CachedMovieDto
+import com.cairosquad.repository.search.data_source.local.dto.CachedSeriesDto
 import com.cairosquad.repository.search.data_source.local.SearchCacheDataSource
 import com.cairosquad.repository.search.data_source.remote.RemoteSearchDataSource
-import com.cairosquad.repository.search.data_source.remote.dto.ArtistDto
-import com.cairosquad.repository.search.data_source.remote.dto.MovieDto
-import com.cairosquad.repository.search.data_source.remote.dto.SeriesDto
+import com.cairosquad.repository.search.data_source.remote.dto.ApiArtistDto
+import com.cairosquad.repository.search.data_source.remote.dto.ApiMovieDto
+import com.cairosquad.repository.search.data_source.remote.dto.ApiSeriesDto
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -52,7 +52,7 @@ class SearchRepositoryImplTest {
     fun `getSeries returns cached list when present`() = runTest {
         //Given
         val query = "dark"
-        val cacheDto = SeriesCacheDto(
+        val cacheDto = CachedSeriesDto(
             id = 42,
             name = "Dark",
             posterPath = "/dark.jpg",
@@ -74,7 +74,7 @@ class SearchRepositoryImplTest {
         //Given
         val query = "lost"
         coEvery { cacheDS.getCachedSeries(query) } returns emptyList()
-        val remoteDto = SeriesDto(
+        val remoteDto = ApiSeriesDto(
             id = 7,
             name = "Lost",
             posterPath = "/lost.jpg",
@@ -95,7 +95,7 @@ class SearchRepositoryImplTest {
     fun `getMovies returns cached list when present`() = runTest {
         //Given
         val query = "inception"
-        val cacheDto = MovieCacheDto(
+        val cacheDto = CachedMovieDto(
             id = 1,
             title = "Inception",
             posterPath = "/inc.jpg",
@@ -116,7 +116,7 @@ class SearchRepositoryImplTest {
         //Given
         val query = "matrix"
         coEvery { cacheDS.getCachedMovies(query) } returns emptyList()
-        val remoteDto = mockk<MovieDto>(relaxed = true) {
+        val remoteDto = mockk<ApiMovieDto>(relaxed = true) {
             every { toEntity() } returns Movie(99, "Matrix", 8.7f, "/mx.jpg")
 
         }
@@ -134,14 +134,14 @@ class SearchRepositoryImplTest {
     fun `getArtists returns cached list when present`() = runTest {
         //Given
         val query = "weeknd"
-        val cacheDto = ArtistCacheDto(
+        val cacheDto = CachedArtistDto(
             id = 5,
             name = "The Weeknd",
             photoPath = "/w.jpg",
             query = query,
             timestamp = Instant.now().toEpochMilli()
         )
-        coEvery { cacheDS.getCachedArtist(query) } returns listOf(cacheDto)
+        coEvery { cacheDS.getCachedArtists(query) } returns listOf(cacheDto)
         //When
         val result = repo.getArtists(query)
         //Then
@@ -153,8 +153,8 @@ class SearchRepositoryImplTest {
     fun `getArtists fetches remote and caches when cache empty`() = runTest {
         //Given
         val query = "adele"
-        coEvery { cacheDS.getCachedArtist(query) } returns emptyList()
-        val remoteDto = mockk<ArtistDto>(relaxed = true) {
+        coEvery { cacheDS.getCachedArtists(query) } returns emptyList()
+        val remoteDto = mockk<ApiArtistDto>(relaxed = true) {
             every { toEntity() } returns Artist(8, "Adele", "/a.jpg")
 
         }

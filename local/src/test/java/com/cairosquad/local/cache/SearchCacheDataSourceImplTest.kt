@@ -2,12 +2,10 @@ package com.cairosquad.local.cache
 
 import com.cairosquad.local.search.cache.SearchCacheDataSourceImpl
 import com.cairosquad.local.search.cache.dao.CacheDao
-import com.cairosquad.local.search.cache.entity.ArtistCacheEntity
-import com.cairosquad.local.search.cache.entity.MovieCacheEntity
 import com.cairosquad.local.search.cache.entity.SeriesCacheEntity
-import com.cairosquad.repository.search.data_source.local.Dto.ArtistCacheDto
-import com.cairosquad.repository.search.data_source.local.Dto.MovieCacheDto
-import com.cairosquad.repository.search.data_source.local.Dto.SeriesCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.CachedArtistDto
+import com.cairosquad.repository.search.data_source.local.dto.CachedMovieDto
+import com.cairosquad.repository.search.data_source.local.dto.CachedSeriesDto
 import com.google.common.truth.Truth.assertThat
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -48,7 +46,7 @@ class SearchCacheDataSourceImplTest {
     fun `cacheMovies should map and insert to DAO`() = runTest {
         //Given
         val query = "batman"
-        val dto = MovieCacheDto(
+        val dto = CachedMovieDto(
             1, "poster", 7.5, posterPath = null,
             query = "batman",
             timestamp = Instant.now().toEpochMilli()
@@ -77,7 +75,7 @@ class SearchCacheDataSourceImplTest {
     fun `cacheSeries should map and insert to DAO`() = runTest {
         //Given
         val query = "friends"
-        val dto = SeriesCacheDto(
+        val dto = CachedSeriesDto(
             1, "Friends", posterPath = null,
             query = "batman",
             timestamp = Instant.now().toEpochMilli()
@@ -93,7 +91,7 @@ class SearchCacheDataSourceImplTest {
     fun `cacheArtist should map and insert to DAO`() = runTest {
         // Given
         val query = "emma"
-        val dto = ArtistCacheDto(
+        val dto = CachedArtistDto(
             id = 3,
             name = "Emma",
             photoPath = null,
@@ -115,10 +113,10 @@ class SearchCacheDataSourceImplTest {
     fun `getCachedArtist should return mapped results`() = runTest {
         //Given
         val query = "emma"
-        val entity = ArtistCacheEntity(0, query, 0, "Emma", "photo.jpg")
+        val entity = CachedArtistDto(0, query, 0, "Emma", "photo.jpg")
         coEvery { cacheDao.getCachedArtist(query) } returns listOf(entity)
         //When
-        val result = dataSource.getCachedArtist(query)
+        val result = dataSource.getCachedArtists(query)
         //Then
         coVerify { cacheDao.deleteExpiredArtistCache(any()) }
         assertThat(result.first().name).isEqualTo("Emma")

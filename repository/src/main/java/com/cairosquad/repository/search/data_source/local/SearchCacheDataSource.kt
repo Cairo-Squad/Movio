@@ -1,16 +1,18 @@
 package com.cairosquad.repository.search.data_source.local
 
-import com.cairosquad.repository.search.data_source.local.Dto.ArtistCacheDto
-import com.cairosquad.repository.search.data_source.local.Dto.MovieCacheDto
-import com.cairosquad.repository.search.data_source.local.Dto.SeriesCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.CachedArtistDto
+import com.cairosquad.repository.search.data_source.local.dto.CachedMovieDto
+import com.cairosquad.repository.search.data_source.local.dto.CachedSeriesDto
 
 interface SearchCacheDataSource {
-    suspend fun getCachedMovies(query: String): List<MovieCacheDto>
-    suspend fun cacheMovies(query: String, results: List<MovieCacheDto>)
+    suspend fun getCachedMovies(query: String): List<CachedMovieDto>
+    suspend fun cacheMovies(results: List<CachedMovieDto>)
 
-    suspend fun getCachedSeries(query: String): List<SeriesCacheDto>
-    suspend fun cacheSeries(query: String, results: List<SeriesCacheDto>)
+    suspend fun getCachedSeries(query: String): List<CachedSeriesDto>
+    suspend fun cacheSeries(results: List<CachedSeriesDto>)
 
-    suspend fun getCachedArtist(query: String): List<ArtistCacheDto>
-    suspend fun cacheArtist(query: String, results: List<ArtistCacheDto>)
+    suspend fun getCachedArtists(query: String): List<CachedArtistDto>
+    suspend fun cacheArtist(results: List<CachedArtistDto>)
+
+    suspend fun clearExpiredCache()
 }

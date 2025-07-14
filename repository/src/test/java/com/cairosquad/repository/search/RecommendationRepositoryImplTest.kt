@@ -1,7 +1,7 @@
 package com.cairosquad.repository.search
 
 import com.cairosquad.repository.search.data_source.remote.RemoteRecommendationDataSource
-import com.cairosquad.repository.search.data_source.remote.dto.MovieDto
+import com.cairosquad.repository.search.data_source.remote.dto.ApiMovieDto
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -24,13 +24,13 @@ class RecommendationRepositoryImplTest {
         runTest {
             // Given
             val remoteMovies = listOf(
-                MovieDto(
+                ApiMovieDto(
                     id = 1,
                     title = "Movie 1",
                     posterPath = null,
                     voteAverage = null
                 ),
-                MovieDto(
+                ApiMovieDto(
                     id = 2,
                     title = "Movie 2",
                     posterPath = null,
@@ -65,15 +65,15 @@ class RecommendationRepositoryImplTest {
     fun `given movies from remote when getExploreMoreMovies called then return mapped movie list`() =
         runTest {
             // Given
-            val remoteMovieDto = listOf(
-                MovieDto(
+            val remoteApiMovieDto = listOf(
+                ApiMovieDto(
                     id = 3,
                     title = "Movie 3",
                     posterPath = "some_path",
                     voteAverage = 4.2
                 )
             )
-            coEvery { dataSource.getExploreMoreMovies() } returns remoteMovieDto
+            coEvery { dataSource.getExploreMoreMovies() } returns remoteApiMovieDto
 
             // When
             val result = recommendationRepository.getExploreMoreMovies()

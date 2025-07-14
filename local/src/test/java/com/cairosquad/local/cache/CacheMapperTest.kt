@@ -2,6 +2,9 @@ package com.cairosquad.local.search.cache.dao
 
 import com.cairosquad.local.search.cache.entity.*
 import com.cairosquad.repository.search.data_source.local.Dto.*
+import com.cairosquad.repository.search.data_source.local.dto.CachedArtistDto
+import com.cairosquad.repository.search.data_source.local.dto.CachedMovieDto
+import com.cairosquad.repository.search.data_source.local.dto.CachedSeriesDto
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
@@ -9,12 +12,12 @@ class CacheMapperTest {
 
     @Test
     fun `Should MovieCacheDto correctly map to MovieCacheEntity`() {
-        assertThat(movieDto.toEntity()).isEqualTo(movieEntity)
+        assertThat(movieDto).isEqualTo(movieEntity)
     }
 
     @Test
     fun `Should MovieCacheEntity correctly map to MovieCacheDto`() {
-        assertThat(movieEntity.toDto()).isEqualTo(movieDto)
+        assertThat(movieEntity).isEqualTo(movieDto)
     }
 
     @Test
@@ -29,16 +32,16 @@ class CacheMapperTest {
 
     @Test
     fun `Should ArtistCacheDto map correctly to ArtistCacheEntity`() {
-        assertThat(artistDto.toEntity()).isEqualTo(artistEntity)
+        assertThat(artistDto).isEqualTo(artistEntity)
     }
 
     @Test
     fun `Should ArtistCacheEntity map correctly to ArtistCacheDto`() {
-        assertThat(artistEntity.toDto()).isEqualTo(artistDto)
+        assertThat(artistEntity).isEqualTo(artistDto)
     }
 
     private companion object {
-        val movieDto = MovieCacheDto(
+        val movieDto = CachedMovieDto(
             id = 1,
             title = "Inception",
             voteAverage = 8.8,
@@ -47,7 +50,7 @@ class CacheMapperTest {
             timestamp = 123_456_789L
         )
 
-        val movieEntity = MovieCacheEntity(
+        val movieEntity = CachedMovieDto(
             id = 1,
             title = "Inception",
             posterPath = "/inception.jpg",
@@ -56,7 +59,7 @@ class CacheMapperTest {
             timestamp = 123_456_789L
         )
 
-        val seriesDto = SeriesCacheDto(
+        val seriesDto = CachedSeriesDto(
             id = 2,
             name = "Breaking Bad",
             posterPath = "/breakingbad.jpg",
@@ -74,7 +77,7 @@ class CacheMapperTest {
             timestamp = 987_654_321L
         )
 
-        val artistDto = ArtistCacheDto(
+        val artistDto = CachedArtistDto(
             id = 3,
             name = "Emma Watson",
             photoPath = "/emma.jpg",
@@ -82,7 +85,7 @@ class CacheMapperTest {
             timestamp = 1_122_334_455L
         )
 
-        val artistEntity = ArtistCacheEntity(
+        val artistEntity = CachedArtistDto(
             id = 3,
             name = "Emma Watson",
             photoPath = "/emma.jpg",

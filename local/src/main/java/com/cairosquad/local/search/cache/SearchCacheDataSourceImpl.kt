@@ -1,11 +1,9 @@
 package com.cairosquad.local.search.cache
 
 import com.cairosquad.local.search.cache.dao.CacheDao
-import com.cairosquad.local.search.cache.dao.toDto
-import com.cairosquad.local.search.cache.dao.toEntity
-import com.cairosquad.repository.search.data_source.local.Dto.ArtistCacheDto
-import com.cairosquad.repository.search.data_source.local.Dto.MovieCacheDto
-import com.cairosquad.repository.search.data_source.local.Dto.SeriesCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.CachedArtistDto
+import com.cairosquad.repository.search.data_source.local.dto.CachedMovieDto
+import com.cairosquad.repository.search.data_source.local.dto.CachedSeriesDto
 import com.cairosquad.repository.search.data_source.local.SearchCacheDataSource
 import java.time.Instant
 
@@ -13,61 +11,28 @@ class SearchCacheDataSourceImpl(
     private val cacheDao: CacheDao
 ): SearchCacheDataSource {
 
-    override suspend fun getCachedMovies(query: String): List<MovieCacheDto> {
-        clearExpiredCache()
-        return cacheDao.getCachedMovies(query).map { movieCacheEntity ->
-            movieCacheEntity.toDto()
-        }
+    override suspend fun getCachedMovies(query: String): List<CachedMovieDto> {
+        return cacheDao.getCachedMovies(query)
     }
 
-    override suspend fun cacheMovies(
-        query: String,
-        results: List<MovieCacheDto>
-    ) {
-        cacheDao.cacheMovies(
-            results.map { movieCacheDto ->
-                movieCacheDto.toEntity()
-            }
-        )
+    override suspend fun cacheMovies(results: List<CachedMovieDto>) = cacheDao.cacheMovies(results)
+
+
+    override suspend fun getCachedSeries(query: String): List<CachedSeriesDto> {
+        return cacheDao.getCachedSeries(query)
     }
 
-    override suspend fun getCachedSeries(query: String): List<SeriesCacheDto> {
-        clearExpiredCache()
-        return cacheDao.getCachedSeries(query).map { movieCacheEntity ->
-            movieCacheEntity.toDto()
-        }
+    override suspend fun cacheSeries(results: List<CachedSeriesDto>) = cacheDao.cacheSeries(results)
+
+
+    override suspend fun getCachedArtists(query: String): List<CachedArtistDto> {
+        return cacheDao.getCachedArtist(query)
     }
 
-    override suspend fun cacheSeries(
-        query: String,
-        results: List<SeriesCacheDto>
-    ) {
-        cacheDao.cacheSeries(
-            results.map { movieCacheDto ->
-                movieCacheDto.toEntity()
-            }
-        )
-    }
+    override suspend fun cacheArtist(results: List<CachedArtistDto>) = cacheDao.cacheArtist(results)
 
-    override suspend fun getCachedArtist(query: String): List<ArtistCacheDto> {
-        clearExpiredCache()
-        return cacheDao.getCachedArtist(query).map { movieCacheEntity ->
-            movieCacheEntity.toDto()
-        }
-    }
 
-    override suspend fun cacheArtist(
-        query: String,
-        results: List<ArtistCacheDto>
-    ) {
-        cacheDao.cacheArtist(
-            results.map { movieCacheDto ->
-                movieCacheDto.toEntity()
-            }
-        )
-    }
-
-    private suspend fun clearExpiredCache() {
+    override suspend fun clearExpiredCache() {
         val expirationTime = Instant.now().toEpochMilli() - CACHE_EXPIRATION_MILLIS
         cacheDao.deleteExpiredMoviesCache(expirationTime)
         cacheDao.deleteExpiredSeriesCache(expirationTime)

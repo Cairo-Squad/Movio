@@ -6,7 +6,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MovieDto(
+data class ApiMovieDto(
     @SerialName("id")
     val id: Int? = null,
     @SerialName("poster_path")
@@ -15,14 +15,4 @@ data class MovieDto(
     val title: String? = null,
     @SerialName("vote_average")
     val voteAverage: Double? = null,
-) {
-    fun toEntity(): Movie {
-        return Movie(
-            id = id?.toLong() ?: 0L,
-            title = title ?: "",
-            rating = voteAverage?.toFloat() ?: 0f,
-            posterPath = posterPath ?: "",
-        )
-
-    }
-}
+)
