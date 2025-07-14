@@ -1,15 +1,15 @@
 package com.cairosquad.local.search.recent
 
-import com.cairosquad.local.search.recent.dao.RecentSearchDao
+import com.cairosquad.local.search.recent.dao.LocalRecentSearchDao
 import com.cairosquad.local.search.recent.entity.RecentSearchEntity
-import com.cairosquad.repository.search.data_source.local.RecentSearchDataSource
+import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
 
-class RecentSearchDataSourceImpl(
-    private val dao: RecentSearchDao
-) : RecentSearchDataSource {
+class LocalRecentSearchDataSourceImpl(
+    private val dao: LocalRecentSearchDao
+) : LocalRecentSearchDataSource {
 
     override suspend fun getByQuery(query: String): List<String> {
-        return dao.getAll(query).map { it.query }
+        return dao.getAllQueries(query).map { it.query }
     }
 
     override suspend fun clearAll() {
@@ -25,7 +25,7 @@ class RecentSearchDataSourceImpl(
     }
 
     override suspend fun getAll(): List<String> {
-        return dao.getAll().map { it.query }
+        return dao.getAllQueries().map { it.query }
     }
 
 }

@@ -6,12 +6,12 @@ import com.cairosquad.local.search.cache.dao.toEntity
 import com.cairosquad.repository.search.data_source.local.Dto.ArtistCacheDto
 import com.cairosquad.repository.search.data_source.local.Dto.MovieCacheDto
 import com.cairosquad.repository.search.data_source.local.Dto.SeriesCacheDto
-import com.cairosquad.repository.search.data_source.local.SearchCacheDataSource
+import com.cairosquad.repository.search.data_source.local.LocalSearchCacheDataSource
 import java.time.Instant
 
-class SearchCacheDataSourceImpl(
+class LocalSearchCacheDataSourceImpl(
     private val cacheDao: CacheDao
-): SearchCacheDataSource {
+): LocalSearchCacheDataSource {
 
     override suspend fun getCachedMovies(query: String): List<MovieCacheDto> {
         clearExpiredCache()

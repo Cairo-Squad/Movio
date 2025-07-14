@@ -1,6 +1,6 @@
 package com.cairosquad.domain.usecase
 
-import com.cairosquad.domain.search.repository.RecentSearchRepository
+import com.cairosquad.domain.search.repository.SearchHistoryRepository
 import com.cairosquad.domain.search.repository.SearchRepository
 import com.cairosquad.domain.search.usecase.SearchUseCase
 import com.cairosquad.entity.Artist
@@ -23,7 +23,7 @@ import org.junit.Test
 class SearchUseCaseTest {
 
     private val searchRepository = mockk<SearchRepository>()
-    private val recentSearchRepository = mockk<RecentSearchRepository>(relaxed = true)
+    private val recentSearchRepository = mockk<SearchHistoryRepository>(relaxed = true)
     private lateinit var useCase: SearchUseCase
 
     private val dispatcher = StandardTestDispatcher()
