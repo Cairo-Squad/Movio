@@ -306,7 +306,7 @@ class SearchViewModelTest {
     @Test
     fun `onClearHistory sets UNKNOWN_ERROR on failure`() = runBlocking {
         //Given
-        coEvery { clearRecentSearchUseCase.clearAll() } throws IOException()
+        coEvery { clearRecentSearchUseCase.clearAllHistory() } throws IOException()
         //When
         viewModel.onClearHistory()
         delay(50)
@@ -317,7 +317,7 @@ class SearchViewModelTest {
     @Test
     fun `onRemoveHistoryItem sets UNKNOWN_ERROR when dao fails`() = runBlocking {
         //Given
-        coEvery { clearRecentSearchUseCase.removeQuery(any()) } throws IllegalStateException()
+        coEvery { clearRecentSearchUseCase.removeQueryFromHistory(any()) } throws IllegalStateException()
         //When
         viewModel.onRemoveHistoryItem("dummy")
         delay(50)
@@ -476,8 +476,8 @@ class SearchViewModelTest {
     @Test
     fun `loadDiscoverMovies failure sets FAILED and NETWORK_ERROR`() = runBlocking {
         // Given
-        coEvery { getForYouUseCase.getForYouMovies() } throws NetworkException()
-        coEvery { getExploreMoreUseCase.getExploreMoreMovies() } returns emptyList()
+        coEvery { getForYouUseCase.getPersonalizedMovies() } throws NetworkException()
+        coEvery { getExploreMoreUseCase.getSuggestedMovies() } returns emptyList()
         // When
         viewModel.loadDiscoverMovies()
         delay(50)
