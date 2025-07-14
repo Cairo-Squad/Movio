@@ -1,5 +1,6 @@
 package com.cairosquad.remote.search
 
+import com.cairosquad.remote.BuildConfig
 import com.cairosquad.remote.common.utils.callApi
 import com.cairosquad.remote.common.utils.constructUrl
 import com.cairosquad.repository.search.data_source.remote.RemoteMovieDiscoveryDataSource
