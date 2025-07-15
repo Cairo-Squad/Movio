@@ -11,27 +11,27 @@ class GetSeriesDetailsUseCase(
     private val seriesDetailsRepository: SeriesDetailsRepository
 ) {
 
-    suspend fun getSeriesById(seriesId: Long): Series {
-        return seriesDetailsRepository.getSeriesById(seriesId)
+    suspend fun getSeries(seriesId: Long): Series {
+        return seriesDetailsRepository.getSeries(seriesId)
     }
 
-    suspend fun getReviewsBySeriesId(seriesId: Long): List<Review> {
-        return seriesDetailsRepository.getReviewsBySeriesId(seriesId)
+    suspend fun getSeriesReviews(seriesId: Long): List<Review> {
+        return seriesDetailsRepository.getSeriesReviews(seriesId)
     }
 
-    suspend fun getSeriesSeasonsBySeriesId(seriesId: Long): List<Season> {
-        return seriesDetailsRepository.getSeriesSeasonsBySeriesId(seriesId)
+    suspend fun getSeriesSeasons(seriesId: Long): List<Season> {
+        return seriesDetailsRepository.getSeriesSeasons(seriesId)
     }
 
-    suspend fun getEpisodesBySeriesIdAndSeasonNumber(seriesId: Long, seasonNumber: Int): List<Episode> {
-        return seriesDetailsRepository.getEpisodesBySeriesIdAndSeasonNumber(seriesId, seasonNumber)
+    suspend fun getEpisodes(seriesId: Long, seasonNumber: Int): List<Episode> {
+        return seriesDetailsRepository.getEpisodes(seriesId, seasonNumber)
     }
 
     suspend fun getSimilarSeries(seriesId: Long): List<Series> {
         return seriesDetailsRepository.getSimilarSeries(seriesId)
     }
 
-    suspend fun getTopCastBySeriesId(seriesId: Long): List<Artist> {
-        return seriesDetailsRepository.getTopCastBySeriesId(seriesId)
+    suspend fun getSeriesTopCast(seriesId: Long): List<Artist> {
+        return seriesDetailsRepository.getSeriesTopCast(seriesId)
     }
 }

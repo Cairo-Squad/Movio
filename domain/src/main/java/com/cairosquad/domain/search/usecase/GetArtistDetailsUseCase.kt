@@ -8,15 +8,15 @@ import com.cairosquad.entity.Series
 class GetArtistDetailsUseCase(
     private val artistDetailsRepository: ArtistDetailsRepository
 ) {
-    suspend fun getArtistById(artistId: Long): Artist {
-        return artistDetailsRepository.getArtistById(artistId)
+    suspend fun getArtist(artistId: Long): Artist {
+        return artistDetailsRepository.getArtist(artistId)
     }
 
-    suspend fun getMoviesThatArtistIsKnownFor(artistId: Long): List<Movie> {
-        return artistDetailsRepository.getMoviesThatArtistIsKnownFor(artistId)
+    suspend fun getMoviesOfArtist(artistId: Long): List<Movie> {
+        return artistDetailsRepository.getMoviesOfArtist(artistId)
     }
 
-    suspend fun getSeriesThatArtistIsKnownFor(artistId: Long): List<Series> {
-        return artistDetailsRepository.getSeriesThatArtistIsKnownFor(artistId)
+    suspend fun getSeriesOfArtist(artistId: Long): List<Series> {
+        return artistDetailsRepository.getSeriesOfArtist(artistId)
     }
 }

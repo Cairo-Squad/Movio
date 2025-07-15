@@ -9,19 +9,19 @@ class GetMoviesDetailsUseCase(
     private val moviesDetailsRepository: MoviesDetailsRepository
 ) {
 
-    suspend fun getMovieById(movieId: Long): Movie {
-        return moviesDetailsRepository.getMovieById(movieId)
+    suspend fun getMovie(movieId: Long): Movie {
+        return moviesDetailsRepository.getMovie(movieId)
     }
 
-    suspend fun getReviewsByMovieId(movieId: Long): List<Review> {
-        return moviesDetailsRepository.getReviewsByMovieId(movieId)
+    suspend fun getMovieReviews(movieId: Long): List<Review> {
+        return moviesDetailsRepository.getMovieReviews(movieId)
     }
 
     suspend fun getSimilarMovies(movieId: Long): List<Movie> {
         return moviesDetailsRepository.getSimilarMovies(movieId)
     }
 
-    suspend fun getTopCastByMovieId(movieId: Long): List<Artist> {
-        return moviesDetailsRepository.getTopCastByMovieId(movieId)
+    suspend fun getMovieTopCast(movieId: Long): List<Artist> {
+        return moviesDetailsRepository.getMovieTopCast(movieId)
     }
 }

@@ -7,15 +7,15 @@ import com.cairosquad.entity.Season
 import com.cairosquad.entity.Series
 
 interface SeriesDetailsRepository {
-    suspend fun getSeriesById(seriesId: Long): Series
+    suspend fun getSeries(seriesId: Long): Series
 
-    suspend fun getReviewsBySeriesId(seriesId: Long): List<Review>
+    suspend fun getSeriesReviews(seriesId: Long): List<Review>
 
-    suspend fun getSeriesSeasonsBySeriesId(seriesId: Long): List<Season>
+    suspend fun getSeriesSeasons(seriesId: Long): List<Season>
 
-    suspend fun getEpisodesBySeriesIdAndSeasonNumber(seriesId: Long, seasonNumber: Int): List<Episode>
+    suspend fun getEpisodes(seriesId: Long, seasonNumber: Int): List<Episode>
 
     suspend fun getSimilarSeries(seriesId: Long): List<Series>
 
-    suspend fun getTopCastBySeriesId(seriesId: Long): List<Artist>
+    suspend fun getSeriesTopCast(seriesId: Long): List<Artist>
 }
