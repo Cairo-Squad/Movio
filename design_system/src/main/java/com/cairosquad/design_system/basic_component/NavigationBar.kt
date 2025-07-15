@@ -66,8 +66,8 @@ fun NavigationBar(
                 alpha = 0.06f
             )
             .background(color = Theme.color.surfaces.surface)
-            .height(74.dp)
             .windowInsetsPadding(WindowInsets.navigationBars)
+            .height(74.dp)
             .padding(horizontal = 20.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
