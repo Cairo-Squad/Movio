@@ -56,4 +56,3 @@ fun SearchScreen(
         modifier = modifier.windowInsetsPadding(WindowInsets.statusBars)
     )
 }
-
