@@ -75,7 +75,7 @@ fun SearchContent(
 
         SectionHeader(
             title = stringResource(R.string.recent_search),
-            actionText = "Clear all",
+            actionText = stringResource(R.string.clear_all),
             onActionClick = listener::onClearHistory
         )
 
