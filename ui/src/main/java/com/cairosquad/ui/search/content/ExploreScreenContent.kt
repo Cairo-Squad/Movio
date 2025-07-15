@@ -3,6 +3,7 @@ package com.cairosquad.ui.search.content
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -92,7 +93,7 @@ fun ExploreScreenContent(
                 title = stringResource(R.string.for_you),
                 actionText = stringResource(R.string.see_all),
                 actionIcon = ImageVector.vectorResource(R.drawable.arrow),
-                onActionClick = {}
+                onActionClick = { listener.onSeeAllForYouClicked() }
             )
         }
         item {
@@ -102,7 +103,9 @@ fun ExploreScreenContent(
             ) {
                 items(state.forYou) { movie ->
                     MovieCard(
-                        modifier = Modifier.width(124.dp),
+                        modifier = Modifier
+                            .width(124.dp)
+                            .clickable(onClick = { listener.onMovieClicked(movie.id) }),
                         title = movie.title,
                         vote = movie.rating,
                         imgUrl = movie.posterPath,
@@ -133,6 +136,8 @@ fun ExploreScreenContent(
                 items(state.exploreMore) { movie ->
 
                     MovieCard(
+                        modifier = Modifier
+                            .clickable(onClick = { listener.onMovieClicked(movie.id) }),
                         title = movie.title,
                         vote = movie.rating,
                         imgUrl = movie.posterPath,
