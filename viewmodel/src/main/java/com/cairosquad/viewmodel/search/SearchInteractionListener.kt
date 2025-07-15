@@ -2,7 +2,7 @@ package com.cairosquad.viewmodel.search
 
 interface SearchInteractionListener {
     fun onQueryTextChanged(query: String)
-    fun onSearch(query: String)
+    fun onSearch()
     fun onCancelSearch()
     fun onRecentSearchItemClicked(query: String)
     fun onClearHistory()

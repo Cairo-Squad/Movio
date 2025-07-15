@@ -1,6 +1,6 @@
 package com.cairosquad.domain.usecase
 
-import com.cairosquad.domain.search.repository.MovieDiscoveryRepository
+import com.cairosquad.domain.search.repository.DiscoveryRepository
 import com.cairosquad.domain.search.usecase.GetSuggestedMoviesUseCase
 import com.cairosquad.entity.Movie
 import io.mockk.coEvery
@@ -17,7 +17,7 @@ import org.junit.Test
 
 class GetSuggestedMoviesUseCaseTest {
 
-    private val recommendationRepository = mockk<MovieDiscoveryRepository>()
+    private val recommendationRepository = mockk<DiscoveryRepository>()
     private lateinit var useCase: GetSuggestedMoviesUseCase
 
     private val dispatcher = StandardTestDispatcher()

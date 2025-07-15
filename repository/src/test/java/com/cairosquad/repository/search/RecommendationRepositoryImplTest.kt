@@ -11,12 +11,12 @@ import kotlin.test.Test
 
 class RecommendationRepositoryImplTest {
     private lateinit var dataSource: RemoteMovieDiscoveryDataSource
-    private lateinit var recommendationRepository: RemoteMovieDiscoveryRepositoryImpl
+    private lateinit var recommendationRepository: DiscoveryRepositoryImpl
 
     @Before
     fun setUp() {
         dataSource = mockk()
-        recommendationRepository = RemoteMovieDiscoveryRepositoryImpl(dataSource)
+        recommendationRepository = DiscoveryRepositoryImpl(dataSource)
     }
 
     @Test
