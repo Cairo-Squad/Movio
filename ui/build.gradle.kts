@@ -65,6 +65,5 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(project(":design_system"))
     implementation(project(":viewmodel"))
-    implementation(project(":domain"))
     implementation(project(":safe_image_viewer"))
 }
