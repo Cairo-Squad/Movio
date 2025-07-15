@@ -8,7 +8,8 @@ data class MovioColors(
     val brand: Brand,
     val surfaces: Surfaces,
     val system: System,
-    val gradiant: Gradiant
+    val gradiant: Gradiant,
+    val primaryGradient: Brush
 )
 
 data class Surfaces(

@@ -50,5 +50,8 @@ val lightThemeColors = MovioColors(
             Color(0xFFFFFFFF),
             Color.Transparent,
         )
+    ),
+    primaryGradient = Brush.horizontalGradient(
+        colors = listOf(Color(0xFFB7A4FB), Color(0xFF663EF6))
     )
 )

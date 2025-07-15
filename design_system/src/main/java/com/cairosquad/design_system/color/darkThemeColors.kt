@@ -50,5 +50,8 @@ val darkThemeColors = MovioColors(
             Color(0xFF080D24),
             Color.Transparent,
         )
+    ),
+    primaryGradient = Brush.horizontalGradient(
+        colors = listOf(Color(0xFFB7A4FB), Color(0xFF724CF8))
     )
 )
