@@ -26,8 +26,6 @@ import com.cairosquad.ui.R
 
 @Composable
 fun ActionBar() {
-    val layoutDirection = LocalLayoutDirection.current
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -64,12 +62,7 @@ fun ActionBar() {
                     brush = Theme.color.gradiant.primaryGradient,
                     shape = CircleShape
                 )
-                .padding(
-                    start = if (layoutDirection == LayoutDirection.Rtl) 14.24.dp else 16.57.dp,
-                    top = 14.9.dp,
-                    end = if (layoutDirection == LayoutDirection.Rtl) 16.57.dp else 14.24.dp,
-                    bottom = 14.9.dp
-                ),
+                .padding(14.9.dp),
             imageVector = ImageVector.vectorResource(id = R.drawable.outline_play),
             contentDescription = stringResource(R.string.play),
             tint = Theme.color.brand.onPrimary,
