@@ -27,16 +27,15 @@ fun ActionBar() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 16.dp),
+            .padding(horizontal = 12.dp, vertical = 4.67.dp),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(
                 imageVector = ImageVector.vectorResource(id = R.drawable.outline_star),
-                contentDescription = "Rate it",
+                contentDescription = stringResource(R.string.rate),
                 tint = Color.Unspecified,
-                modifier = Modifier.size(24.dp)
             )
 
             Text(
@@ -51,6 +50,7 @@ fun ActionBar() {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
+                .padding(horizontal = 8.67.dp)
                 .size(46.67.dp)
                 .background(
                     brush = Brush.horizontalGradient(
@@ -61,7 +61,7 @@ fun ActionBar() {
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(id = R.drawable.outline_play),
-                contentDescription = "Play",
+                contentDescription = stringResource(R.string.play),
                 tint = Color.Unspecified,
             )
         }
@@ -69,7 +69,7 @@ fun ActionBar() {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(
                 imageVector = ImageVector.vectorResource(id = R.drawable.outline_bookmark),
-                contentDescription = "Add to list",
+                contentDescription = stringResource(R.string.add_to_list),
                 tint = Color.Unspecified,
                 modifier = Modifier.size(24.dp)
             )
@@ -85,6 +85,6 @@ fun ActionBar() {
 
 @Preview
 @Composable
-fun lol() {
+fun ActionBarPreview() {
     ActionBar()
 }
