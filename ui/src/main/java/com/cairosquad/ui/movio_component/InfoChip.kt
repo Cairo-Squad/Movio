@@ -2,7 +2,6 @@ package com.cairosquad.ui.movio_component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,7 +27,6 @@ fun InfoChip(
     text: String,
     imgRes: Int,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
 ) {
     Row(
         modifier = modifier
@@ -37,23 +35,21 @@ fun InfoChip(
                 color = Theme.color.surfaces.surfaceContainer,
             )
             .border(
-                width = 1.dp, color = Theme.color.surfaces.onSurfaceAt3,
+                width = 1.dp,
+                color = Theme.color.surfaces.onSurfaceAt3,
                 shape = CircleShape
             )
-            .clickable(onClick = onClick)
             .padding(horizontal = 12.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            modifier = Modifier
-                .padding(end = 4.dp),
+            modifier = Modifier.padding(end = 4.dp),
             imageVector = ImageVector.vectorResource(id = imgRes),
             contentDescription = stringResource(com.cairosquad.ui.R.string.icon),
             tint = Color.Unspecified
         )
         Text(
-            modifier = Modifier
-                .padding(bottom = 1.dp),
+            modifier = Modifier.padding(bottom = 1.dp),
             text = text,
             color = Theme.color.surfaces.onSurfaceContainer,
             style = Theme.textStyle.label.smallRegular12,
