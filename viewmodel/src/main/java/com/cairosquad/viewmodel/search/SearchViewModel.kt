@@ -216,7 +216,11 @@ class SearchViewModel(
     override fun onClickSearchTextField() {
         tryToCall(
             block = {
-                getLocalSearchHistoryUseCase.getAll()
+                if (screenState.value.query.isBlank()) {
+                    getLocalSearchHistoryUseCase.getAll()
+                } else {
+                    getLocalSearchHistoryUseCase.getByQuery(screenState.value.query)
+                }
             },
             onSuccess = { suggestions ->
                 updateState {
