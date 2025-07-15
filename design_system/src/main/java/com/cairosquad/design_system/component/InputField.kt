@@ -20,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -63,13 +62,8 @@ fun InputField(
     keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {
     var hasFocus by rememberSaveable { mutableStateOf(false) }
-    var textFieldValue by remember(value) {
-        mutableStateOf(
-            TextFieldValue(
-                text = value,
-                selection = TextRange(value.length)
-            )
-        )
+    var textFieldValue by rememberSaveable(stateSaver = TextFieldValue.Saver) {
+        mutableStateOf(TextFieldValue(text = value, selection = TextRange(value.length)))
     }
 
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
