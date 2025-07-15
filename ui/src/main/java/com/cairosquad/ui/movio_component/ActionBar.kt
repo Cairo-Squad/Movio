@@ -1,3 +1,5 @@
+package com.cairosquad.ui.movio_component
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,7 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -27,23 +28,25 @@ fun ActionBar() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 4.67.dp),
+            .padding(horizontal = 12.dp),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = Modifier.padding(vertical = 6.5.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
             Icon(
                 imageVector = ImageVector.vectorResource(id = R.drawable.outline_star),
                 contentDescription = stringResource(R.string.rate),
                 tint = Color.Unspecified,
-                modifier = Modifier.padding(top = 1.83.dp)
             )
 
             Text(
                 text = stringResource(R.string.rate),
                 color = Theme.color.surfaces.onSurfaceContainer,
                 style = Theme.textStyle.label.smallRegular12,
-                modifier = Modifier.padding(top = 4.dp, bottom = 1.83.dp)
 
             )
         }
@@ -54,31 +57,31 @@ fun ActionBar() {
                 .padding(horizontal = 8.67.dp)
                 .size(46.67.dp)
                 .background(
-                    brush = Brush.horizontalGradient(
-                        colors = listOf(Color(0xFFB7A4FB), Color(0xFF663EF6))
-                    ),
+                    brush = Theme.color.primaryGradient,
                     shape = CircleShape
                 )
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(id = R.drawable.outline_play),
                 contentDescription = stringResource(R.string.play),
-                tint = Color.Unspecified,
+                tint = Theme.color.brand.onPrimary,
             )
         }
 
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = Modifier.padding(vertical = 6.5.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
             Icon(
                 imageVector = ImageVector.vectorResource(id = R.drawable.outline_bookmark),
                 contentDescription = stringResource(R.string.add_to_list),
                 tint = Color.Unspecified,
-                modifier = Modifier.padding(top = 1.83.dp)
             )
             Text(
                 text = stringResource(R.string.add_to_list),
                 color = Theme.color.surfaces.onSurfaceContainer,
                 style = Theme.textStyle.label.smallRegular12,
-                modifier = Modifier.padding(top = 4.dp, bottom = 1.83.dp)
             )
         }
     }
@@ -86,6 +89,6 @@ fun ActionBar() {
 
 @Preview
 @Composable
-fun ActionBarPreview() {
+private fun ActionBarPreview() {
     ActionBar()
 }
