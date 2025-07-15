@@ -71,7 +71,6 @@ fun ActionBar() {
                 imageVector = ImageVector.vectorResource(id = R.drawable.outline_bookmark),
                 contentDescription = stringResource(R.string.add_to_list),
                 tint = Color.Unspecified,
-                modifier = Modifier.size(24.dp)
             )
             Text(
                 text = stringResource(R.string.add_to_list),
