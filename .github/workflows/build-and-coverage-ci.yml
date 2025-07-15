@@ -3,7 +3,9 @@ name: Ci For Build and Coverage Check
 on:
   pull_request:
     types: [ opened, edited, synchronize, reopened ]
-    branches: [ develop ]
+    branches:
+    - develop
+    - feature/details/main
 
 permissions:
   contents: read
