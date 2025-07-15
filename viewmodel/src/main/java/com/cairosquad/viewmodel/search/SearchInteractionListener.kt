@@ -10,4 +10,8 @@ interface SearchInteractionListener {
     fun onBackClicked()
     fun onClickSearchTextField()
     fun onRefresh()
+    fun onMovieClicked(movieId: Long)
+    fun onSeriesClicked(seriesId: Long)
+    fun onArtistClicked(artistId: Long)
+    fun onSeeAllForYouClicked()
 }

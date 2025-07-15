@@ -45,6 +45,8 @@ fun ArtistCard(
                     .size(88.dp)
                     .clip(CircleShape),
                 contentDescription = stringResource(R.string.artist_image),
+                nudeThreshold = 0.0,
+                nonNudeThreshold = 0.0
             )
         } else {
             Box(
