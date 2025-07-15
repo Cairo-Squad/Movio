@@ -36,13 +36,14 @@ fun ActionBar() {
                 imageVector = ImageVector.vectorResource(id = R.drawable.outline_star),
                 contentDescription = stringResource(R.string.rate),
                 tint = Color.Unspecified,
+                modifier = Modifier.padding(top = 1.83.dp)
             )
 
             Text(
                 text = stringResource(R.string.rate),
                 color = Theme.color.surfaces.onSurfaceContainer,
                 style = Theme.textStyle.label.smallRegular12,
-                modifier = Modifier.padding(top = 4.dp)
+                modifier = Modifier.padding(top = 4.dp, bottom = 1.83.dp)
 
             )
         }
@@ -71,12 +72,13 @@ fun ActionBar() {
                 imageVector = ImageVector.vectorResource(id = R.drawable.outline_bookmark),
                 contentDescription = stringResource(R.string.add_to_list),
                 tint = Color.Unspecified,
+                modifier = Modifier.padding(top = 1.83.dp)
             )
             Text(
                 text = stringResource(R.string.add_to_list),
                 color = Theme.color.surfaces.onSurfaceContainer,
                 style = Theme.textStyle.label.smallRegular12,
-                modifier = Modifier.padding(top = 4.dp)
+                modifier = Modifier.padding(top = 4.dp, bottom = 1.83.dp)
             )
         }
     }
