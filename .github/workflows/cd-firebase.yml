@@ -22,8 +22,26 @@ jobs:
           distribution: 'zulu'
           java-version: '21'
 
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
       - name: Make gradlew executable
         run: chmod +x ./gradlew
+
+      - name: Create google-services.json
+        env:
+          GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}
+        run: |
+          mkdir -p app/ # Ensure the directory exists
+          echo "$GOOGLE_SERVICES_JSON_BASE64" | base64 --decode > app/google-services.json
+        shell: bash
 
       - name: Decode Keystore and Create secret.properties
         env:
@@ -53,7 +71,7 @@ jobs:
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
           FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
         run: |
-          ./gradlew assembleRelease
+          ./gradlew assembleRelease --build-cache
           ls -l app/build/outputs/apk/release/app-release.apk || { echo "apk not generated"; exit 1; }
 
       - name: Extract Release Notes
