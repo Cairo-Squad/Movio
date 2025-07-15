@@ -2,7 +2,6 @@ package com.cairosquad.ui.movio_component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,11 +28,14 @@ fun ActionBar() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly,
+        horizontalArrangement = Arrangement.spacedBy(
+            4.dp,
+            alignment = Alignment.CenterHorizontally
+        ),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(
-            modifier = Modifier.padding(vertical = 6.5.dp),
+            modifier = Modifier.weight(1f),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
@@ -48,28 +50,26 @@ fun ActionBar() {
                 color = Theme.color.surfaces.onSurfaceContainer,
                 style = Theme.textStyle.label.smallRegular12,
 
-            )
+                )
         }
 
-        Box(
-            contentAlignment = Alignment.Center,
+        Icon(
             modifier = Modifier
-                .padding(horizontal = 8.67.dp)
-                .size(46.67.dp)
+                .size(56.dp)
+                .padding(4.67.dp)
                 .background(
                     brush = Theme.color.gradiant.primaryGradient,
                     shape = CircleShape
                 )
-        ) {
-            Icon(
-                imageVector = ImageVector.vectorResource(id = R.drawable.outline_play),
-                contentDescription = stringResource(R.string.play),
-                tint = Theme.color.brand.onPrimary,
-            )
-        }
+                .padding(start = 16.57.dp, top = 14.9.dp, end = 14.24.dp, bottom = 14.9.dp),
+            imageVector = ImageVector.vectorResource(id = R.drawable.outline_play),
+            contentDescription = stringResource(R.string.play),
+            tint = Theme.color.brand.onPrimary,
+        )
+
 
         Column(
-            modifier = Modifier.padding(vertical = 6.5.dp),
+            modifier = Modifier.weight(1f),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
