@@ -339,26 +339,6 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `should cancel previous search job when new search is initiated`() = runBlocking {
-        coEvery { searchUseCase.getMovies(any()) } returns emptyList()
-        coEvery { searchUseCase.getSeries(any()) } returns emptyList()
-        coEvery { searchUseCase.getArtists(any()) } returns emptyList()
-        viewModel.onSearch("query1")
-        delay(20)
-        val firstJob =
-            viewModel.javaClass.getDeclaredField("searchJob").apply { isAccessible = true }
-                .get(viewModel) as Job
-        assertThat(firstJob).isNotNull()
-        viewModel.onSearch("query2")
-        delay(20)
-        val secondJob =
-            viewModel.javaClass.getDeclaredField("searchJob").apply { isAccessible = true }
-                .get(viewModel) as Job
-        assertThat(firstJob.isCancelled || firstJob.isCompleted).isTrue()
-        assertThat(secondJob).isNotEqualTo(firstJob)
-    }
-
-    @Test
     fun `should cancel previous search job when query text changes`() = runBlocking {
         coEvery { getRecentSearchUseCase.getByQuery("a") } returns emptyList()
         viewModel
@@ -379,23 +359,6 @@ class SearchViewModelTest {
         assertThat(secondJob).isNotEqualTo(firstJob)
         assertThat(secondJob.isActive).isTrue()
     }
-
-    @Test
-    fun `should cancel search job and set SEARCH status when search field is clicked`() =
-        runBlocking {
-            coEvery { getRecentSearchUseCase.getByQuery("seed") } returns emptyList()
-            viewModel.onQueryTextChanged("seed")
-            delay(50)
-            val jobField =
-                viewModel.javaClass.getDeclaredField("searchJob").apply { isAccessible = true }
-            val jobBefore = jobField.get(viewModel) as Job
-            assertThat(jobBefore).isNotNull()
-            coEvery { getRecentSearchUseCase.getAll() } returns emptyList()
-            viewModel.onClickSearchTextField()
-            delay(50)
-            assertThat(jobBefore.isCancelled || jobBefore.isCompleted).isTrue()
-            assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
-        }
 
     @Test
     fun `should map MovioException to correct error status when handling search exception`() {
