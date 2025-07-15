@@ -66,12 +66,11 @@ fun NavigationBar(
                 alpha = 0.06f
             )
             .background(color = Theme.color.surfaces.surface)
-            .height(74.dp)
             .windowInsetsPadding(WindowInsets.navigationBars)
-            .padding(horizontal = 20.dp)
+            .padding(horizontal = 20.dp, vertical = 15.5.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         navigationItems.forEachIndexed { index, item ->
             val iconResId = if (selectedMenu == index) item.coloredIcon else item.unColoredIcon
@@ -86,10 +85,11 @@ fun NavigationBar(
             )
             Column(
                 modifier = Modifier
-                    .size(height = 43.dp, width = 74.dp)
+                    .weight(1f)
                     .clip(RoundedCornerShape(8.dp))
                     .clickable { onMenuClick(index) },
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 AnimatedContent(
                     targetState = iconResId,

@@ -1,6 +1,9 @@
 package com.cairosquad.ui.search
 
 import android.widget.Toast
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -50,7 +53,6 @@ fun SearchScreen(
     SearchScreenContent(
         state = state,
         listener = viewModel,
-        modifier = modifier
+        modifier = modifier.windowInsetsPadding(WindowInsets.statusBars)
     )
 }
-

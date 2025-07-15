@@ -10,7 +10,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavHostController
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.BottomNavItem
 import com.cairosquad.design_system.basic_component.NavigationBar
