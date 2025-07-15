@@ -2,4 +2,6 @@
 <resources>
     <string name="explore_more">Explore more</string>
     <string name="icon">Icon</string>
+    <string name="reviewer_image">Reviewer Image</string>
+    <string name="rating_star">Rating Star</string>
 </resources>

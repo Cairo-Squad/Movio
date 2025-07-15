@@ -100,7 +100,6 @@ class SearchViewModel(
     }
 
     override fun onSearch(query: String) {
-        searchJob?.cancel()
         updateState {
             it.copy(
                 screenStatus = SearchScreenState.ScreenStatus.LOADING,
@@ -116,7 +115,7 @@ class SearchViewModel(
                 )
             }
         } else {
-            searchJob = tryToCall(
+            tryToCall(
                 block = {
                     val movies = searchUseCase.getMovies(query).map { it.toUiState() }
                     val series = searchUseCase.getSeries(query).map { it.toUiState() }
@@ -211,7 +210,6 @@ class SearchViewModel(
     }
 
     override fun onClickSearchTextField() {
-        searchJob?.cancel()
         tryToCall(
             block = {
                 getLocalSearchHistoryUseCase.getAll()
@@ -236,23 +234,28 @@ class SearchViewModel(
 
     override fun onRefresh() {
         viewModelScope.launch {
-            updateState {
-                it.copy(
-                    isRefreshing = true,
-                )
-            }
+            updateState { it.copy(isRefreshing = true,) }
             delay(500L)
-
-            updateState {
-                it.copy(isRefreshing = false)
-            }
+            updateState { it.copy(isRefreshing = false) }
         }
-        if (screenState.value.query.isBlank()) {
-            loadDiscoverMovies()
-        } else {
-            onSearch(screenState.value.query)
-        }
+        if (screenState.value.query.isBlank()) loadDiscoverMovies()
+        else onSearch(screenState.value.query)
+    }
 
+    override fun onMovieClicked(movieId: Long) {
+        sendEffect(SearchEffect.NavigateToMovieDetails(movieId))
+    }
+
+    override fun onSeriesClicked(seriesId: Long) {
+        sendEffect(SearchEffect.NavigateToSeriesDetails(seriesId))
+    }
+
+    override fun onArtistClicked(artistId: Long) {
+        sendEffect(SearchEffect.NavigateToArtistDetails(artistId))
+    }
+
+    override fun onSeeAllForYouClicked() {
+        sendEffect(SearchEffect.NavigateToSeeAllForYouScreen)
     }
 
     private fun handleSearchException(e: Throwable): ErrorStatus {
