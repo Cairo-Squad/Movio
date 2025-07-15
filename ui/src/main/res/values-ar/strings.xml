@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <string name="reviewer_image">صورة المراجع</string>
+    <string name="rating_star">نجمة التقييم</string>
     <string name="rate">قّيم</string>
     <string name="add_to_list">أضف إلى القائمة</string>
     <string name="play">تشغيل</string>

@@ -20,9 +20,11 @@ fun MovioTheme(
 ) {
     UpdateStatusBarIconsForTheme(isDarkTheme)
     val theme = if (isDarkTheme) darkThemeColors else lightThemeColors
+
     CompositionLocalProvider(
         LocalMovioColor provides theme,
-        LocalMovioTextStyle provides defaultTextStyle
+        LocalMovioTextStyle provides defaultTextStyle,
+
     ) {
         content()
     }
