@@ -13,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -42,7 +41,7 @@ fun ActionBar() {
             Icon(
                 imageVector = ImageVector.vectorResource(id = R.drawable.outline_star),
                 contentDescription = stringResource(R.string.rate),
-                tint = Color.Unspecified,
+                tint = Theme.color.surfaces.onSurfaceContainer,
             )
 
             Text(
@@ -76,7 +75,7 @@ fun ActionBar() {
             Icon(
                 imageVector = ImageVector.vectorResource(id = R.drawable.outline_bookmark),
                 contentDescription = stringResource(R.string.add_to_list),
-                tint = Color.Unspecified,
+                tint = Theme.color.surfaces.onSurfaceContainer,
             )
             Text(
                 text = stringResource(R.string.add_to_list),
