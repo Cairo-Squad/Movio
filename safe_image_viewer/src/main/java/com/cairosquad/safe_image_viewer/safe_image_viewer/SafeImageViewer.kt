@@ -1,6 +1,7 @@
 package com.cairosquad.safe_image_viewer.safe_image_viewer
 
 import android.graphics.Bitmap
+import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -98,8 +99,8 @@ fun SafeImageViewer(
     colorFilter: ColorFilter? = null,
     // NSFW and blur behavior
     blur: Int = 25,
-    nudeThreshold: Double = 0.2,
-    nonNudeThreshold: Double = 0.75,
+    nudeThreshold: Double = 0.16,
+    nonNudeThreshold: Double = 0.79,
     enableLog: Boolean = false,
     // UI-related
     placeholder: Painter = painterResource(R.drawable.placeholder),
@@ -120,7 +121,7 @@ fun SafeImageViewer(
             val classifier = SafeImageClassifier(context)
             bitmap = CoilImageLoader(context).loadBitmap(model)
 
-            if (bitmap != null) {
+            if (bitmap != null && nudeThreshold != 0.0 && nonNudeThreshold != 0.0) {
                 withContext(Dispatchers.Unconfined) {
                     isImageSafe = classifier.isInappropriate(
                         bitmap = bitmap!!,
