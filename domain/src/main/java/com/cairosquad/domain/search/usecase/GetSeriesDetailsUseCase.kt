@@ -1,47 +1,37 @@
 package com.cairosquad.domain.search.usecase
 
+import com.cairosquad.domain.search.repository.SeriesDetailsRepository
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Episode
 import com.cairosquad.entity.Review
 import com.cairosquad.entity.Series
 import com.cairosquad.entity.Season
 
-class GetSeriesDetailsUseCase {
+class GetSeriesDetailsUseCase(
+    private val seriesDetailsRepository: SeriesDetailsRepository
+) {
 
     suspend fun getSeriesById(seriesId: Long): Series {
-        return fakeSeries
+        return seriesDetailsRepository.getSeriesById(seriesId)
     }
 
     suspend fun getReviewsBySeriesId(seriesId: Long): List<Review> {
-        return listOf(fakeReview)
+        return seriesDetailsRepository.getReviewsBySeriesId(seriesId)
     }
 
     suspend fun getSeriesSeasonsBySeriesId(seriesId: Long): List<Season> {
-        return listOf(fakeSeason)
+        return seriesDetailsRepository.getSeriesSeasonsBySeriesId(seriesId)
     }
 
     suspend fun getEpisodesBySeriesIdAndSeasonNumber(seriesId: Long, seasonNumber: Int): List<Episode> {
-        return listOf(fakeEpisode)
+        return seriesDetailsRepository.getEpisodesBySeriesIdAndSeasonNumber(seriesId, seasonNumber)
     }
 
     suspend fun getSimilarSeries(seriesId: Long): List<Series> {
-        return listOf(fakeSeries)
+        return seriesDetailsRepository.getSimilarSeries(seriesId)
     }
 
     suspend fun getTopCastBySeriesId(seriesId: Long): List<Artist> {
-        return listOf(fakeArtist)
-    }
-
-    private companion object {
-
-        val fakeSeries = Series(id = 1, title = "", rating = 0f, posterPath = "", genres = emptyList())
-
-        val fakeArtist = Artist(id = 1, name = "", photoPath = "")
-
-        val fakeReview = Review(id = 1, author = "", authorPhotoPath = "", rating = "", date = 0, description = "")
-
-        val fakeSeason = Season(seasonNumber = 1, seasonName = "", seriesId = 1, episodesCount = 0, rating = 0f, posterPath = "", overview = "", airDate = 0)
-
-        val fakeEpisode = Episode(id = 1, episodeNumber = 1, photoPath = "", episodeName = "", runtimeMinutes = 0, rating = 0f, seasonNumber = 1, seriesId = 1)
+        return seriesDetailsRepository.getTopCastBySeriesId(seriesId)
     }
 }

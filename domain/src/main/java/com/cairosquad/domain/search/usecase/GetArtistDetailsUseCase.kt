@@ -1,29 +1,22 @@
 package com.cairosquad.domain.search.usecase
 
+import com.cairosquad.domain.search.repository.ArtistDetailsRepository
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 
-class GetArtistDetailsUseCase {
-
+class GetArtistDetailsUseCase(
+    private val artistDetailsRepository: ArtistDetailsRepository
+) {
     suspend fun getArtistById(artistId: Long): Artist {
-        return fakeArtist
+        return artistDetailsRepository.getArtistById(artistId)
     }
 
     suspend fun getMoviesThatArtistIsKnownFor(artistId: Long): List<Movie> {
-        return listOf(fakeMovie)
+        return artistDetailsRepository.getMoviesThatArtistIsKnownFor(artistId)
     }
 
     suspend fun getSeriesThatArtistIsKnownFor(artistId: Long): List<Series> {
-        return listOf(fakeSeries)
-    }
-
-    private companion object {
-
-        val fakeMovie = Movie(id = 1, title = "Ballerina", rating = 0f, posterPath = "", genres = emptyList())
-
-        val fakeArtist = Artist(id = 1, name = "", photoPath = "")
-
-        val fakeSeries = Series(id = 1, title = "", rating = 0f, posterPath = "", genres = emptyList())
+        return artistDetailsRepository.getSeriesThatArtistIsKnownFor(artistId)
     }
 }
