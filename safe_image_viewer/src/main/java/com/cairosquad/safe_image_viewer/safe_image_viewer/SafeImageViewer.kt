@@ -144,7 +144,6 @@ fun SafeImageViewer(
         ) {
             if (it) {
                 if (bitmap != null) {
-                    Log.d("Moive URL", "SafeImageViewer: $model")
                     AsyncImage(
                         modifier = Modifier
                             .matchParentSize()
