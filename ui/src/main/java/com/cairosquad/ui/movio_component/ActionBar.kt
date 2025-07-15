@@ -57,7 +57,7 @@ fun ActionBar() {
                 .padding(horizontal = 8.67.dp)
                 .size(46.67.dp)
                 .background(
-                    brush = Theme.color.primaryGradient,
+                    brush = Theme.color.gradiant.primaryGradient,
                     shape = CircleShape
                 )
         ) {
