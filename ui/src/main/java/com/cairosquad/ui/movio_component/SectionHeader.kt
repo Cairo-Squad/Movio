@@ -1,4 +1,4 @@
-package com.cairosquad.design_system.component
+package com.cairosquad.ui.movio_component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -35,7 +35,7 @@ fun SectionHeader(
     modifier: Modifier = Modifier,
     actionText: String? = null,
     actionIcon: ImageVector? = null,
-    onActionClick: () -> Unit
+    onActionClick: () -> Unit = {}
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,

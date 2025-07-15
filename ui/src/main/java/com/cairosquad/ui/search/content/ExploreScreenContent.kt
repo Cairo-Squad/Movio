@@ -30,11 +30,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
-import com.cairosquad.design_system.component.InputField
-import com.cairosquad.design_system.component.MovieCard
-import com.cairosquad.design_system.component.SectionHeader
+import com.cairosquad.design_system.basic_component.InputField
 import com.cairosquad.design_system.modifier.dropShadow
 import com.cairosquad.design_system.theme.Theme
+import com.cairosquad.ui.movio_component.MovieCard
+import com.cairosquad.ui.movio_component.SectionHeader
 import com.cairosquad.viewmodel.search.SearchInteractionListener
 import com.cairosquad.viewmodel.search.SearchScreenState
 
@@ -79,7 +79,11 @@ fun ExploreScreenContent(
                 onValueChange = listener::onQueryTextChanged,
                 placeholder = stringResource(R.string.search),
                 leadingIcon = R.drawable.search_bottom_nav,
-                onFocusChanged = { if (it) { listener.onClickSearchTextField() } },
+                onFocusChanged = {
+                    if (it) {
+                        listener.onClickSearchTextField()
+                    }
+                },
                 readOnly = true
             )
         }
@@ -112,9 +116,6 @@ fun ExploreScreenContent(
         item {
             SectionHeader(
                 title = stringResource(R.string.explore_more),
-                actionText = stringResource(R.string.see_all),
-                actionIcon = ImageVector.vectorResource(R.drawable.arrow),
-                onActionClick = {}
             )
 
         }
@@ -123,7 +124,7 @@ fun ExploreScreenContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .heightIn(max = ((state.exploreMore.size / 2 + 1) * 240).dp),
+                    .heightIn(max = (state.exploreMore.size * 2 * 240).dp),
                 columns = GridCells.Adaptive(minSize = 158.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),

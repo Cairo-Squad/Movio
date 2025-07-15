@@ -17,7 +17,7 @@ import org.junit.Before
 import org.junit.Test
 import java.time.Instant
 
-class SearchCacheDataSourceImplTest {
+class LocalSearchCacheDataSourceImplTest {
 
     private lateinit var cacheDao: CacheDao
     private lateinit var dataSource: LocalSearchCacheDataSourceImpl
@@ -29,8 +29,8 @@ class SearchCacheDataSourceImplTest {
     }
 
     @Test
-    fun `getCachedMovies should return mapped results`() = runTest {
-        //Given
+    fun `should return mapped movie list when getCachedMovies is called`() = runTest {
+        // Given
         val query = "batman"
         val entity = MovieCacheDto(
             id = 0,
@@ -48,8 +48,8 @@ class SearchCacheDataSourceImplTest {
     }
 
     @Test
-    fun `cacheMovies should map and insert to DAO`() = runTest {
-        //Given
+    fun `should insert mapped movie entities into DAO when cacheMovies is called`() = runTest {
+        // Given
         val query = "batman"
         val dto = MovieCacheDto(
             id = 1,
@@ -67,8 +67,8 @@ class SearchCacheDataSourceImplTest {
     }
 
     @Test
-    fun `getCachedSeries should return mapped results`() = runTest {
-        //Given
+    fun `should return mapped series list when getCachedSeries is called`() = runTest {
+        // Given
         val query = "friends"
         val entity = SeriesCacheDto(
             id = 0,
@@ -86,8 +86,8 @@ class SearchCacheDataSourceImplTest {
     }
 
     @Test
-    fun `cacheSeries should map and insert to DAO`() = runTest {
-        //Given
+    fun `should insert mapped series entities into DAO when cacheSeries is called`() = runTest {
+        // Given
         val query = "friends"
         val dto = SeriesCacheDto(
             id = 1,
@@ -126,8 +126,8 @@ class SearchCacheDataSourceImplTest {
     }
 
     @Test
-    fun `getCachedArtist should return mapped results`() = runTest {
-        //Given
+    fun `should return mapped artist list when getCachedArtist is called`() = runTest {
+        // Given
         val query = "emma"
         val entity = ArtistCacheDto(
             id = 0,

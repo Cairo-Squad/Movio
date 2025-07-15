@@ -1,4 +1,4 @@
-package com.cairosquad.design_system.component
+package com.cairosquad.ui.movio_component
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes

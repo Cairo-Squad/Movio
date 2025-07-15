@@ -5,6 +5,7 @@ on:
     branches:
       - develop
       - master
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -31,6 +32,8 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           MOVIES_API_KEY: ${{ secrets.MOVIES_API_KEY }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+          FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
         run: |
           rm -f app/movio-cairo.jks secret.properties release_notes.txt
           echo "$KEYSTORE" | base64 -d > app/movio-cairo.jks
@@ -40,15 +43,15 @@ jobs:
           echo "KEY_PASSWORD = $KEY_PASSWORD" >> secret.properties
           echo "API_KEY = \"$MOVIES_API_KEY\"" >> secret.properties
 
-      - name: Create google-services.json
-        env:
-          GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}
-        run: |
-          mkdir -p app/ # Ensure the directory exists
-          echo "$GOOGLE_SERVICES_JSON_BASE64" | base64 --decode > app/google-services.json
-        shell: bash
-
       - name: Generate Signed APK
+        env:
+          KEYSTORE: ${{ secrets.KEYSTORE }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          MOVIES_API_KEY: ${{ secrets.MOVIES_API_KEY }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+          FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
         run: |
           ./gradlew assembleRelease
           ls -l app/build/outputs/apk/release/app-release.apk || { echo "apk not generated"; exit 1; }

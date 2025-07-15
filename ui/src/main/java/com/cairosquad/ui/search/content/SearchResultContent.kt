@@ -9,10 +9,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -30,13 +30,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
-import com.cairosquad.design_system.component.ArtistCard
-import com.cairosquad.design_system.component.InputField
-import com.cairosquad.design_system.component.MovieCard
-import com.cairosquad.design_system.component.StateMessage
-import com.cairosquad.design_system.component.TopBar
+import com.cairosquad.design_system.basic_component.InputField
+import com.cairosquad.design_system.basic_component.TopBar
 import com.cairosquad.design_system.text_style.defaultTextStyle
 import com.cairosquad.design_system.theme.Theme
+import com.cairosquad.ui.movio_component.ArtistCard
+import com.cairosquad.ui.movio_component.MovieCard
+import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.viewmodel.search.SearchInteractionListener
 import com.cairosquad.viewmodel.search.SearchScreenState
 
@@ -65,7 +65,7 @@ fun SearchResultContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(horizontal = 16.dp)
     ) {
 
         InputField(
@@ -101,25 +101,21 @@ fun SearchResultContent(
                 SearchResultText(
                     noOfResults = state.movies.size
                 )
-                Spacer(modifier = Modifier.height(16.dp))
                 AllResultsTabContent(topResults = state.movies)
             }
 
             1 -> {
                 SearchResultText(noOfResults = state.movies.size)
-                Spacer(modifier = Modifier.height(16.dp))
                 MoviesTabContent(movies = state.movies)
             }
 
             2 -> {
                 SearchResultText(noOfResults = state.series.size)
-                Spacer(modifier = Modifier.height(16.dp))
                 SeriesTabContent(series = state.series)
             }
 
             3 -> {
                 SearchResultText(noOfResults = state.artists.size)
-                Spacer(modifier = Modifier.height(16.dp))
                 ArtistsTabContent(artists = state.artists)
             }
         }
@@ -140,7 +136,7 @@ private fun AllResultsTabContent(
             modifier = modifier
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
-        ){
+        ) {
             StateMessage(
                 imageDrawable = R.drawable.no_result,
                 titleId = R.string.no_results_found,
@@ -156,9 +152,10 @@ private fun AllResultsTabContent(
     ) {
         LazyVerticalGrid(
             modifier = modifier,
-            columns = GridCells.Adaptive(minSize = 100.dp),
+            columns = GridCells.Adaptive(minSize = 101.33.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(bottom = 16.dp)
         ) {
             items(topResults) { result ->
                 MovieCard(
@@ -202,9 +199,10 @@ private fun MoviesTabContent(
     ) {
         LazyVerticalGrid(
             modifier = modifier,
-            columns = GridCells.Adaptive(minSize = 100.dp),
+            columns = GridCells.Adaptive(minSize = 101.33.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(bottom = 16.dp)
         ) {
             items(movies) { movie ->
                 MovieCard(
@@ -248,9 +246,10 @@ private fun SeriesTabContent(
     ) {
         LazyVerticalGrid(
             modifier = modifier,
-            columns = GridCells.Adaptive(minSize = 100.dp),
+            columns = GridCells.Adaptive(minSize = 101.33.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(bottom = 16.dp)
         ) {
             items(series) { series ->
                 MovieCard(
@@ -294,9 +293,10 @@ private fun ArtistsTabContent(
     ) {
         LazyVerticalGrid(
             modifier = modifier,
-            columns = GridCells.Adaptive(minSize = 100.dp),
+            columns = GridCells.Adaptive(minSize = 101.33.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(bottom = 16.dp)
         ) {
             items(artists) { artist ->
                 ArtistCard(
@@ -314,7 +314,7 @@ fun SearchResultText(
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier,
+        modifier = modifier.padding(bottom = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         BasicText(

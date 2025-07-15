@@ -103,39 +103,46 @@ class RemoteSearchDataSourceImplTest {
         remoteSearchDataSource = RemoteSearchDataSourceImpl(httpClient)
     }
 
-
     @Test
-    fun `getMovies returns movie list on success`() = runTest {
-        //When
-        val result = remoteSearchDataSource.getMovies("batman")
+    fun `should return movie list when getMovies is called with valid query`() = runTest {
+        // Given
+        val query = "batman"
 
-        //Then
+        // When
+        val result = remoteSearchDataSource.getMovies(query)
+
+        // Then
         assertThat(result).isNotEmpty()
         assertThat(result[0].id).isEqualTo(123)
         assertThat(result[0].title).isEqualTo("Batman Begins")
     }
 
     @Test
-    fun `getSeries returns series list on success`() = runTest {
-        //When
-        val result = remoteSearchDataSource.getSeries("batman")
+    fun `should return series list when getSeries is called with valid query`() = runTest {
+        // Given
+        val query = "batman"
 
-        //Then
+        // When
+        val result = remoteSearchDataSource.getSeries(query)
+
+        // Then
         assertThat(result).isNotEmpty()
         assertThat(result[0].id).isEqualTo(456)
         assertThat(result[0].name).isEqualTo("Batman Series")
     }
 
     @Test
-    fun `getArtists returns artist list on success`() = runTest {
-        //When
-        val result = remoteSearchDataSource.getArtists("christian")
+    fun `should return artist list when getArtists is called with valid query`() = runTest {
+        // Given
+        val query = "christian"
 
-        //Then
+        // When
+        val result = remoteSearchDataSource.getArtists(query)
+
+        // Then
         assertThat(result).isNotEmpty()
         assertThat(result[0].id).isEqualTo(789)
         assertThat(result[0].name).isEqualTo("Christian Bale")
     }
-
 
 }

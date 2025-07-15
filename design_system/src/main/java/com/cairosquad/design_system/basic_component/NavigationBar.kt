@@ -1,4 +1,4 @@
-package com.cairosquad.design_system.component
+package com.cairosquad.design_system.basic_component
 
 import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
