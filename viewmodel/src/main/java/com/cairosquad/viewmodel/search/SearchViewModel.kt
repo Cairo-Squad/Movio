@@ -154,10 +154,9 @@ class SearchViewModel(
         tryToCall(
             block = {
                 clearSearchHistoryUseCase.clearAllHistory()
-                emptyList<String>()
             },
             onSuccess = { suggestions ->
-                updateState { it.copy(recentSearch = suggestions, errorStatus = null) }
+                updateState { it.copy(recentSearch = emptyList(), errorStatus = null) }
             },
             onError = { e ->
                 updateState {
@@ -261,7 +260,6 @@ class SearchViewModel(
     }
 
     private fun handleSearchException(e: Throwable): ErrorStatus {
-        Log.d("TAG test", "handleSearchException: $e")
         return when (e) {
             is MovioException -> {
                 exceptionToErrorStatus(e)

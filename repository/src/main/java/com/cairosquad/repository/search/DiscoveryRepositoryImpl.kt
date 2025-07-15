@@ -11,7 +11,7 @@ import com.cairosquad.repository.search.data_source.remote.dto.toEntity
 import java.util.Date
 
 class DiscoveryRepositoryImpl(
-    private val remoteRecommendationDataSource: RemoteMovieDiscoveryDataSource,
+    private val remoteMovieDiscoveryDataSource: RemoteMovieDiscoveryDataSource,
     private val discoveryDataSource: DiscoveryDataSource
 ) : DiscoveryRepository {
     override suspend fun getPersonalizedMovies(): List<Movie> {
@@ -19,7 +19,7 @@ class DiscoveryRepositoryImpl(
             discoveryDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
             discoveryDataSource.getPersonalizedMovies()
                 .takeIf { it.size >= PAGE_SIZE }?.toEntity()
-                ?: remoteRecommendationDataSource.getPersonalizedMovies().toEntity()
+                ?: remoteMovieDiscoveryDataSource.getPersonalizedMovies().toEntity()
                     .also { result -> discoveryDataSource.cachePersonalizedMovies(result.toCacheDto()) }
         }
     }
@@ -29,7 +29,7 @@ class DiscoveryRepositoryImpl(
             discoveryDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
             discoveryDataSource.getSuggestedMovies()
                 .takeIf { it.size >= PAGE_SIZE }?.toEntity()
-                ?: remoteRecommendationDataSource.getSuggestedMovies().toEntity()
+                ?: remoteMovieDiscoveryDataSource.getSuggestedMovies().toEntity()
                     .also { result -> discoveryDataSource.cacheSuggestedMovies(result.toCacheDto()) }
         }
     }

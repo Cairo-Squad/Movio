@@ -31,74 +31,37 @@ class LocalSearchCacheDataSourceImplTest {
     @Test
     fun `should return mapped movie list when getCachedMovies is called`() = runTest {
         // Given
-        val query = "batman"
-        val entity = MovieCacheDto(
-            id = 0,
-            query = query,
-            timestamp = 0,
-            title = "title",
-            posterPath = "poster",
-            voteAverage = 8.5
-        )
-        coEvery { cacheDao.getCachedMovies(query) } returns listOf(entity)
+        coEvery { cacheDao.getCachedMovies(query1) } returns listOf(entity1)
         //When
-        val result = dataSource.getCachedMovies(query)
+        val result = dataSource.getCachedMovies(query1)
         //Then
         assertThat(result.first().title).isEqualTo("title")
     }
 
     @Test
     fun `should insert mapped movie entities into DAO when cacheMovies is called`() = runTest {
-        // Given
-        val query = "batman"
-        val dto = MovieCacheDto(
-            id = 1,
-            title = "poster",
-            voteAverage = 7.5,
-            posterPath = null,
-            query = "batman",
-            timestamp = Instant.now().toEpochMilli()
-        )
         //When
         coEvery { cacheDao.cacheMovies(any()) } just Runs
         //Then
-        dataSource.cacheMovies(listOf(dto))
+        dataSource.cacheMovies(listOf(dto2))
         coVerify { cacheDao.cacheMovies(match { it.first().title == "poster" }) }
     }
 
     @Test
     fun `should return mapped series list when getCachedSeries is called`() = runTest {
         // Given
-        val query = "friends"
-        val entity = SeriesCacheDto(
-            id = 0,
-            query = query,
-            timestamp = 0,
-            posterPath = "poster",
-            name = "Friends",
-            voteAverage = 9.0
-        )
-        coEvery { cacheDao.getCachedSeries(query) } returns listOf(entity)
+        coEvery { cacheDao.getCachedSeries(query3) } returns listOf(entity3)
         //When
-        val result = dataSource.getCachedSeries(query)
+        val result = dataSource.getCachedSeries(query3)
         //Then
         assertThat(result.first().name).isEqualTo("Friends")
     }
 
     @Test
     fun `should insert mapped series entities into DAO when cacheSeries is called`() = runTest {
-        // Given
-        val query = "friends"
-        val dto = SeriesCacheDto(
-            id = 1,
-            "Friends", posterPath = null,
-            query = "batman",
-            timestamp = Instant.now().toEpochMilli(),
-            voteAverage = 9.0
-        )
         //When
         coEvery { cacheDao.cacheSeries(any()) } just Runs
-        dataSource.cacheSeries(listOf(dto))
+        dataSource.cacheSeries(listOf(dto4))
         //Then
         coVerify { cacheDao.cacheSeries(match { it.first().name == "Friends" }) }
     }
@@ -106,17 +69,9 @@ class LocalSearchCacheDataSourceImplTest {
     @Test
     fun `cacheArtist should map and insert to DAO`() = runTest {
         // Given
-        val query = "emma"
-        val dto = ArtistCacheDto(
-            id = 3,
-            name = "Emma",
-            photoPath = null,
-            query = query,
-            timestamp = Instant.now().toEpochMilli()
-        )
         coEvery { cacheDao.cacheArtist(any()) } just Runs
         // When
-        dataSource.cacheArtist(listOf(dto))
+        dataSource.cacheArtist(listOf(dto5))
         // Then
         coVerify {
             cacheDao.cacheArtist(
@@ -131,7 +86,6 @@ class LocalSearchCacheDataSourceImplTest {
         val query = "emma"
         val entity = ArtistCacheDto(
             id = 0,
-            query = query,
             timestamp = 0,
             name = "Emma",
             photoPath = "photo.jpg"
@@ -141,6 +95,48 @@ class LocalSearchCacheDataSourceImplTest {
         val result = dataSource.getCachedArtists(query)
         //Then
         assertThat(result.first().name).isEqualTo("Emma")
+    }
+
+    private companion object {
+        val query1 = "batman"
+        val entity1 = MovieCacheDto(
+            id = 0,
+            timestamp = 0,
+            title = "title",
+            posterPath = "poster",
+            voteAverage = 8.5
+        )
+
+        val dto2 = MovieCacheDto(
+            id = 1,
+            title = "poster",
+            voteAverage = 7.5,
+            posterPath = null,
+            timestamp = Instant.now().toEpochMilli()
+        )
+
+        val query3 = "friends"
+        val entity3 = SeriesCacheDto(
+            id = 0,
+            timestamp = 0,
+            posterPath = "poster",
+            name = "Friends",
+            voteAverage = 9.0
+        )
+
+        val dto4 = SeriesCacheDto(
+            id = 1,
+            "Friends", posterPath = null,
+            timestamp = Instant.now().toEpochMilli(),
+            voteAverage = 9.0
+        )
+
+        val dto5 = ArtistCacheDto(
+            id = 3,
+            name = "Emma",
+            photoPath = null,
+            timestamp = Instant.now().toEpochMilli()
+        )
     }
 }
 
