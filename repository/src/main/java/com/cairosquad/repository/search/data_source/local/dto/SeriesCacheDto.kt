@@ -9,6 +9,8 @@ data class SeriesCacheDto(
     @ColumnInfo(name = CACHED_SERIES_ID_COLUMN_NAME)
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+    @ColumnInfo(name = CACHED_SERIES_PAGE_COLUMN_NAME)
+    val page: Int,
     @ColumnInfo(name = CACHED_SERIES_NAME_COLUMN_NAME)
     val name: String?,
     @ColumnInfo(name = CACHED_SERIES_POSTER_PATH_COLUMN_NAME)

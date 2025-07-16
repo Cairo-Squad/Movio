@@ -29,6 +29,7 @@ class RemoteSearchDataSourceImpl(
         return callApi<SearchResultResponse<SeriesRemoteDto>> {
             httpClient.get(constructUrl("search/tv")) {
                 parameter(QUERY, query)
+                parameter(PAGE_NUMBER, page)
                 parameter(API_KEY, BuildConfig.API_KEY)
             }
         }.results?.filterNotNull()?.filter { it.id != null } ?: emptyList()
@@ -38,6 +39,7 @@ class RemoteSearchDataSourceImpl(
         return callApi<SearchResultResponse<ArtistRemoteDto>> {
             httpClient.get(constructUrl("search/person")) {
                 parameter(QUERY, query)
+                parameter(PAGE_NUMBER, page)
                 parameter(API_KEY, BuildConfig.API_KEY)
             }
         }.results?.filterNotNull()?.filter { it.id != null } ?: emptyList()

@@ -8,10 +8,10 @@ interface LocalSearchCacheDataSource {
     suspend fun getCachedMovies(query: String,page:Int): List<MovieCacheDto>
     suspend fun cacheMovies(results: List<MovieCacheDto>)
 
-    suspend fun getCachedSeries(query: String): List<SeriesCacheDto>
+    suspend fun getCachedSeries(query: String,page:Int): List<SeriesCacheDto>
     suspend fun cacheSeries(results: List<SeriesCacheDto>)
 
-    suspend fun getCachedArtists(query: String): List<ArtistCacheDto>
+    suspend fun getCachedArtists(query: String,page:Int): List<ArtistCacheDto>
     suspend fun cacheArtist(results: List<ArtistCacheDto>)
 
     suspend fun clearExpiredCache()

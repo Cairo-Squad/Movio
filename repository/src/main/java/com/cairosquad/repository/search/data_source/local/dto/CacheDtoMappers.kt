@@ -5,9 +5,10 @@ import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import java.time.Instant
 
-fun Series.toCacheDto(query: String): SeriesCacheDto {
+fun Series.toCacheDto(query: String,page: Int): SeriesCacheDto {
     return SeriesCacheDto(
         id = id.toInt(),
+        page = page,
         name = title,
         posterPath = posterPath,
         voteAverage = rating.toDouble(),
@@ -17,8 +18,8 @@ fun Series.toCacheDto(query: String): SeriesCacheDto {
 }
 
 @JvmName("toCacheSeriesDto")
-fun List<Series>.toCacheDto(query: String): List<SeriesCacheDto> {
-    return map { it.toCacheDto(query) }
+fun List<Series>.toCacheDto(query: String,page: Int): List<SeriesCacheDto> {
+    return map { it.toCacheDto(query,page) }
 }
 
 fun SeriesCacheDto.toEntity(): Series {
@@ -66,9 +67,10 @@ fun List<MovieCacheDto>.toEntity(): List<Movie> {
     return map { it.toEntity() }
 }
 
-fun Artist.toCacheDto(query: String): ArtistCacheDto {
+fun Artist.toCacheDto(query: String,page: Int): ArtistCacheDto {
     return ArtistCacheDto(
         id = id.toInt(),
+        page =page ,
         name = name,
         photoPath = photoPath,
         query = query,
@@ -77,8 +79,8 @@ fun Artist.toCacheDto(query: String): ArtistCacheDto {
 }
 
 @JvmName("toCacheArtistDto")
-fun List<Artist>.toCacheDto(query: String): List<ArtistCacheDto> {
-    return map { it.toCacheDto(query) }
+fun List<Artist>.toCacheDto(query: String,page: Int): List<ArtistCacheDto> {
+    return map { it.toCacheDto(query,page) }
 }
 
 fun ArtistCacheDto.toEntity(): Artist {

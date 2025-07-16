@@ -9,6 +9,8 @@ data class ArtistCacheDto(
     @ColumnInfo(name = CACHED_ARTIST_ID_COLUMN_NAME)
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+    @ColumnInfo(name = CACHED_ARTIST_PAGE_COLUMN_NAME)
+    val page: Int,
     @ColumnInfo(name = CACHED_ARTIST_NAME_COLUMN_NAME)
     val name: String?,
     @ColumnInfo(name = CACHED_ARTIST_PHOTO_PATH_COLUMN_NAME)

@@ -18,15 +18,15 @@ class LocalSearchCacheDataSourceImpl(
     override suspend fun cacheMovies(results: List<MovieCacheDto>) = cacheDao.cacheMovies(results)
 
 
-    override suspend fun getCachedSeries(query: String): List<SeriesCacheDto> {
-        return cacheDao.getCachedSeries(query)
+    override suspend fun getCachedSeries(query: String,page: Int): List<SeriesCacheDto> {
+        return cacheDao.getCachedSeries(query,page)
     }
 
     override suspend fun cacheSeries(results: List<SeriesCacheDto>) = cacheDao.cacheSeries(results)
 
 
-    override suspend fun getCachedArtists(query: String): List<ArtistCacheDto> {
-        return cacheDao.getCachedArtist(query)
+    override suspend fun getCachedArtists(query: String,page: Int): List<ArtistCacheDto> {
+        return cacheDao.getCachedArtist(query,page)
     }
 
     override suspend fun cacheArtist(results: List<ArtistCacheDto>) = cacheDao.cacheArtist(results)
