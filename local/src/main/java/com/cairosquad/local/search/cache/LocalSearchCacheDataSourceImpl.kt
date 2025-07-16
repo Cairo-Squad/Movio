@@ -11,8 +11,8 @@ class LocalSearchCacheDataSourceImpl(
     private val cacheDao: CacheDao
 ): LocalSearchCacheDataSource {
 
-    override suspend fun getCachedMovies(query: String): List<MovieCacheDto> {
-        return cacheDao.getCachedMovies(query)
+    override suspend fun getCachedMovies(query: String,page:Int): List<MovieCacheDto> {
+        return cacheDao.getCachedMovies(query,page)
     }
 
     override suspend fun cacheMovies(results: List<MovieCacheDto>) = cacheDao.cacheMovies(results)

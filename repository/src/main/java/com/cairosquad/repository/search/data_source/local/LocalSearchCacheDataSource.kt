@@ -5,7 +5,7 @@ import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.SeriesCacheDto
 
 interface LocalSearchCacheDataSource {
-    suspend fun getCachedMovies(query: String): List<MovieCacheDto>
+    suspend fun getCachedMovies(query: String,page:Int): List<MovieCacheDto>
     suspend fun cacheMovies(results: List<MovieCacheDto>)
 
     suspend fun getCachedSeries(query: String): List<SeriesCacheDto>
