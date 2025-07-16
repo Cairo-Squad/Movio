@@ -174,10 +174,14 @@ class SearchViewModel(
         tryToCall(
             block = {
                 clearSearchHistoryUseCase.removeQueryFromHistory(query)
-                getLocalSearchHistoryUseCase.getAll()
             },
-            onSuccess = { suggestions ->
-                updateState { it.copy(recentSearch = suggestions, errorStatus = null) }
+            onSuccess = {
+                updateState {
+                    it.copy(
+                        recentSearch = it.recentSearch.filterNot { q -> q == query },
+                        errorStatus = null
+                    )
+                }
             },
             onError = { e ->
                 updateState {
@@ -213,7 +217,11 @@ class SearchViewModel(
     override fun onClickSearchTextField() {
         tryToCall(
             block = {
-                getLocalSearchHistoryUseCase.getAll()
+                if (screenState.value.query.isBlank()) {
+                    getLocalSearchHistoryUseCase.getAll()
+                } else {
+                    getLocalSearchHistoryUseCase.getByQuery(screenState.value.query)
+                }
             },
             onSuccess = { suggestions ->
                 updateState {

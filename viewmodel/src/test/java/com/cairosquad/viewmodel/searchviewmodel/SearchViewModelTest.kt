@@ -199,6 +199,7 @@ class SearchViewModelTest {
         coEvery { clearSearchHistoryUseCase.removeQueryFromHistory(any()) } returns Unit
         coEvery { getLocalSearchHistoryUseCase.getAll() } returns newList
 
+        viewModel.onClickSearchTextField()
         viewModel.onRemoveHistoryItem("Old")
 
         delay(400)

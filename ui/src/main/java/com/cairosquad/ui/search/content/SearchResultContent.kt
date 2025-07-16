@@ -151,7 +151,8 @@ private fun AllResultsTabContent(
         exit = fadeOut()
     ) {
         LazyVerticalGrid(
-            modifier = modifier,
+            modifier = modifier
+                .fillMaxSize(),
             columns = GridCells.Adaptive(minSize = 101.33.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -201,7 +202,8 @@ private fun MoviesTabContent(
         exit = fadeOut()
     ) {
         LazyVerticalGrid(
-            modifier = modifier,
+            modifier = modifier
+                .fillMaxSize(),
             columns = GridCells.Adaptive(minSize = 101.33.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -251,7 +253,8 @@ private fun SeriesTabContent(
         exit = fadeOut()
     ) {
         LazyVerticalGrid(
-            modifier = modifier,
+            modifier = modifier
+                .fillMaxSize(),
             columns = GridCells.Adaptive(minSize = 101.33.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -301,7 +304,8 @@ private fun ArtistsTabContent(
         exit = fadeOut()
     ) {
         LazyVerticalGrid(
-            modifier = modifier,
+            modifier = modifier
+                .fillMaxSize(),
             columns = GridCells.Adaptive(minSize = 101.33.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
