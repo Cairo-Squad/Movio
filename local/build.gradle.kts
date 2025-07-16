@@ -60,10 +60,30 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+    // Room testing
+    androidTestImplementation (libs.androidx.room.testing)
 
     testImplementation(libs.mockk)
     testImplementation(libs.truth)
     testImplementation(libs.kotlinx.coroutines.test)
+
+    // AndroidX Test
+    androidTestImplementation (libs.androidx.junit.v115)
+    androidTestImplementation (libs.androidx.runner)
+    androidTestImplementation (libs.androidx.rules)
+
+    // For ApplicationProvider
+    androidTestImplementation (libs.androidx.core)
+
+    // Truth for assertions
+    androidTestImplementation (libs.truth.v114)
+
+    // Architecture Components testing (for InstantTaskExecutorRule)
+    androidTestImplementation(libs.androidx.core.testing)
+
+    // Coroutines testing (for runTest)
+    androidTestImplementation(libs.kotlinx.coroutines.test.v1102)
+
 
     implementation(project(":repository"))
 }
