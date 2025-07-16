@@ -32,7 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.InputField
-import com.cairosquad.design_system.basic_component.TopBar
+import com.cairosquad.design_system.basic_component.TabRow
 import com.cairosquad.design_system.text_style.defaultTextStyle
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.ArtistCard
@@ -66,7 +66,7 @@ fun SearchResultContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(start = 16.dp, top = 16.dp,  end = 16.dp)
+            .padding(start = 16.dp, top = 16.dp, end = 16.dp)
     ) {
 
         InputField(
@@ -85,7 +85,7 @@ fun SearchResultContent(
             readOnly = true
         )
 
-        TopBar(
+        TabRow(
             modifier = Modifier.padding(bottom = 12.dp),
             tabs = listOf(
                 stringResource(R.string.top_Results),

@@ -21,8 +21,8 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import com.cairosquad.design_system.R
 import com.cairosquad.design_system.theme.Theme
-import com.cairosquad.ui.R
 
 @Composable
 fun ActionBar() {
@@ -43,12 +43,12 @@ fun ActionBar() {
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(id = R.drawable.outline_star),
-                contentDescription = stringResource(R.string.rate),
+                contentDescription = stringResource(R.string.Rate_it),
                 tint = Theme.color.surfaces.onSurfaceContainer,
             )
 
             Text(
-                text = stringResource(R.string.rate),
+                text = stringResource(R.string.Rate_it),
                 color = Theme.color.surfaces.onSurfaceContainer,
                 style = Theme.textStyle.label.smallRegular12,
             )

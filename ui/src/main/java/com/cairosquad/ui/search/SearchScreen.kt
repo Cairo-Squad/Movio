@@ -32,20 +32,27 @@ fun SearchScreen(
 
     val state by viewModel.screenState.collectAsState()
 
-    ObserveAsEffect(viewModel.effect) { event ->
-        when (event) {
+    ObserveAsEffect(viewModel.effect) { effect ->
+        when (effect) {
             is SearchEffect.ErrorHappened -> {
                 Toast.makeText(
                     context,
-                    context.getString(errorStatusToMessageResource(event.message)),
+                    context.getString(errorStatusToMessageResource(effect.message)),
                     Toast.LENGTH_LONG
                 ).show()
             }
 
-            is SearchEffect.NavigateToArtistDetails -> { navController.navigate(ArtistRoute(event.artistId)) }
-            is SearchEffect.NavigateToMovieDetails -> { navController.navigate(MovieRoute(event.movieId)) }
+            is SearchEffect.NavigateToArtistDetails -> {
+                navController.navigate(ArtistRoute(effect.artistId))
+            }
+
+            is SearchEffect.NavigateToMovieDetails -> {
+                navController.navigate(MovieRoute(effect.movieId))
+            }
             SearchEffect.NavigateToSeeAllForYouScreen -> { navController.navigate(ForYouRoute) }
-            is SearchEffect.NavigateToSeriesDetails -> { navController.navigate(SeriesRoute(event.seriesId)) }
+            is SearchEffect.NavigateToSeriesDetails -> {
+                navController.navigate(SeriesRoute(effect.seriesId))
+            }
         }
     }
 
