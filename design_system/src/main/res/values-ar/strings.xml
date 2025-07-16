@@ -43,4 +43,5 @@
     <string name="default_image_icon">الصورة الافتراضية</string>
     <string name="recent_search">اخر بحث</string>
     <string name="clear_all">حذف الكل</string>
+    <string name="rating">التقييم</string>
 </resources>
