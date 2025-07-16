@@ -114,7 +114,7 @@ fun MovieCard(
                     modifier = Modifier
                         .padding(end = 4.dp),
                     imageVector = ImageVector.vectorResource(id = R.drawable.star),
-                    contentDescription = stringResource(R.string.rating),
+                    contentDescription = stringResource(R.string.rating_star),
                     tint = Color.Unspecified,
                 )
 
