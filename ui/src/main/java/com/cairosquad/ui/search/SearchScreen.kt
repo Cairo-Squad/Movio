@@ -9,14 +9,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavHostController
 import com.cairosquad.ui.navigation.ArtistRoute
 import com.cairosquad.ui.navigation.ForYouRoute
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.MovieRoute
 import com.cairosquad.ui.navigation.SeriesRoute
 import com.cairosquad.ui.search.content.SearchScreenContent
-import com.cairosquad.ui.utils.ObserveAsEvent
+import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.ui.utils.errorStatusToMessageResource
 import com.cairosquad.viewmodel.search.SearchEffect
 import com.cairosquad.viewmodel.search.SearchViewModel
@@ -33,7 +32,7 @@ fun SearchScreen(
 
     val state by viewModel.screenState.collectAsState()
 
-    ObserveAsEvent(viewModel.effect) { event ->
+    ObserveAsEffect(viewModel.effect) { event ->
         when (event) {
             is SearchEffect.ErrorHappened -> {
                 Toast.makeText(
