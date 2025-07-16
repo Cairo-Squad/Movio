@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 @Composable
-fun TabsBar(
+fun TabRow(
     tabs: List<String>,
     selectedTabIndex: Int,
     onTabSelected: (Int) -> Unit,
@@ -136,12 +136,12 @@ fun TabsBar(
 
 @Preview
 @Composable
-private fun TabsBarPreview() {
+private fun TabRowPreview() {
     MovioTheme {
         val tabs = listOf("Top Results", "Movies", "Series", "Artists")
         var selectedTabIndex by remember { mutableIntStateOf(0) }
         Box(Modifier.background(Theme.color.surfaces.surface)) {
-            TabsBar(
+            TabRow(
                 tabs = tabs,
                 selectedTabIndex = selectedTabIndex,
                 onTabSelected = { selectedTabIndex = it }
