@@ -1,4 +1,4 @@
-package com.cairosquad.domain.search.repository
+package com.cairosquad.domain.repository
 
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
@@ -10,4 +10,14 @@ interface SearchRepository {
     suspend fun getMovies(query: String): List<Movie>
 
     suspend fun getArtists(query: String): List<Artist>
+
+    suspend fun getAllHistory(): List<String>
+
+    suspend fun getAllHistoryByQuery(query: String): List<String>
+
+    suspend fun clearAll()
+
+    suspend fun removeQuery(query: String)
+
+    suspend fun addQuery(query: String)
 }

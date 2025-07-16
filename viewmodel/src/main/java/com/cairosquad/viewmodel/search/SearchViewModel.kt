@@ -1,13 +1,12 @@
 package com.cairosquad.viewmodel.search
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.cairosquad.domain.search.exception.MovioException
-import com.cairosquad.domain.search.usecase.ClearSearchHistoryUseCase
-import com.cairosquad.domain.search.usecase.GetLocalSearchHistoryUseCase
-import com.cairosquad.domain.search.usecase.GetPersonalizedMoviesUseCase
-import com.cairosquad.domain.search.usecase.GetSuggestedMoviesUseCase
-import com.cairosquad.domain.search.usecase.SearchUseCase
+import com.cairosquad.domain.exception.MovioException
+import com.cairosquad.domain.usecase.search.ClearSearchHistoryUseCase
+import com.cairosquad.domain.usecase.search.GetLocalSearchHistoryUseCase
+import com.cairosquad.domain.usecase.movies.GetPersonalizedMoviesUseCase
+import com.cairosquad.domain.usecase.movies.GetSuggestedMoviesUseCase
+import com.cairosquad.domain.usecase.search.SearchUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus

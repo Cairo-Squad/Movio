@@ -1,13 +1,13 @@
 package com.cairosquad.viewmodel.searchviewmodel
 
-import com.cairosquad.domain.search.exception.InternetConnectionException
-import com.cairosquad.domain.search.exception.NetworkException
-import com.cairosquad.domain.search.exception.UnknownException
-import com.cairosquad.domain.search.usecase.ClearSearchHistoryUseCase
-import com.cairosquad.domain.search.usecase.GetLocalSearchHistoryUseCase
-import com.cairosquad.domain.search.usecase.GetPersonalizedMoviesUseCase
-import com.cairosquad.domain.search.usecase.GetSuggestedMoviesUseCase
-import com.cairosquad.domain.search.usecase.SearchUseCase
+import com.cairosquad.domain.exception.InternetConnectionException
+import com.cairosquad.domain.exception.NetworkException
+import com.cairosquad.domain.exception.UnknownException
+import com.cairosquad.domain.usecase.search.ClearSearchHistoryUseCase
+import com.cairosquad.domain.usecase.search.GetLocalSearchHistoryUseCase
+import com.cairosquad.domain.usecase.movies.GetPersonalizedMoviesUseCase
+import com.cairosquad.domain.usecase.movies.GetSuggestedMoviesUseCase
+import com.cairosquad.domain.usecase.search.SearchUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
