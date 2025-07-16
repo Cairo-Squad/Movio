@@ -11,7 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.cairosquad.design_system.theme.Theme
-import com.cairosquad.ui.details.ArtistScreen
+import com.cairosquad.ui.details.artist.ArtistScreen
 import com.cairosquad.ui.details.MovieScreen
 import com.cairosquad.ui.details.ReviewsScreen
 import com.cairosquad.ui.details.SeasonScreen

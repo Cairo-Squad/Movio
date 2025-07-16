@@ -1,4 +1,4 @@
-package com.cairosquad.ui.details
+package com.cairosquad.ui.details.artist
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
