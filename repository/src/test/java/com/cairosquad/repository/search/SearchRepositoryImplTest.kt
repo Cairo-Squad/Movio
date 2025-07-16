@@ -34,7 +34,7 @@ import java.time.Instant
 class SearchRepositoryImplTest {
 
     private val remoteDS = mockk<RemoteSearchDataSource>()
-    private lateinit var localDataSource: LocalRecentSearchDataSource
+    private val localDataSource = mockk<LocalRecentSearchDataSource>(relaxed = true)
     private val cacheDS = mockk<CacheDataSource>()
     private lateinit var repository: SearchRepositoryImpl
     private val dispatcher = StandardTestDispatcher()
