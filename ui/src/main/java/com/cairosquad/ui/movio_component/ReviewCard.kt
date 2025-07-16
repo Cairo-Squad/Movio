@@ -49,8 +49,7 @@ fun ReviewCard(
             .background(Theme.color.surfaces.surfaceContainer)
             .padding(12.dp)
     ) {
-        Row(
-        ) {
+        Row {
             if (imgUrl?.isNotEmpty() == true) {
                 SafeImageViewer(
                     model = "https://image.tmdb.org/t/p/w500$imgUrl",
@@ -59,6 +58,8 @@ fun ReviewCard(
                         .clip(CircleShape)
                         .align(Alignment.CenterVertically),
                     contentDescription = stringResource(R.string.reviewer_image),
+                    nudeThreshold = 0.0,
+                    nonNudeThreshold = 0.0
                 )
             } else {
                 Box(
@@ -116,6 +117,5 @@ fun ReviewCard(
             maxLines = 4,
             overflow = TextOverflow.Ellipsis
         )
-
     }
 }
