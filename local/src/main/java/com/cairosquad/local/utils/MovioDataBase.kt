@@ -1,4 +1,4 @@
-package com.cairosquad.local.database
+package com.cairosquad.local.utils
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
