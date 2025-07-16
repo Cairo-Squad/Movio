@@ -1,22 +1,22 @@
 package com.cairosquad.domain.search.usecase
 
-import com.cairosquad.domain.search.repository.ArtistDetailsRepository
+import com.cairosquad.domain.search.repository.ArtistRepository
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 
 class GetArtistDetailsUseCase(
-    private val artistDetailsRepository: ArtistDetailsRepository
+    private val artistRepository: ArtistRepository
 ) {
     suspend fun getArtist(artistId: Long): Artist {
-        return artistDetailsRepository.getArtist(artistId)
+        return artistRepository.getArtist(artistId)
     }
 
     suspend fun getMoviesOfArtist(artistId: Long): List<Movie> {
-        return artistDetailsRepository.getMoviesOfArtist(artistId)
+        return artistRepository.getMoviesOfArtist(artistId)
     }
 
     suspend fun getSeriesOfArtist(artistId: Long): List<Series> {
-        return artistDetailsRepository.getSeriesOfArtist(artistId)
+        return artistRepository.getSeriesOfArtist(artistId)
     }
 }

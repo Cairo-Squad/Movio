@@ -4,7 +4,7 @@ import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Review
 
-interface MoviesDetailsRepository {
+interface MoviesRepository {
     suspend fun getMovie(movieId: Long): Movie
 
     suspend fun getMovieReviews(movieId: Long): List<Review>
