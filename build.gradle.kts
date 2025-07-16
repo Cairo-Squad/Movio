@@ -46,7 +46,7 @@ kover {
 
 dependencies {
     kover(project(":remote"))
-    "kover"(project(":domain"))
+    kover(project(":domain"))
     kover(project(":repository"))
     kover(project(":viewmodel"))
     kover(project(":safe_image_viewer"))

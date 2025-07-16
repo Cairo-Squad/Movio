@@ -1,5 +1,6 @@
 package com.cairosquad.repository.search
 
+import com.cairosquad.repository.search.data_source.local.DiscoveryDataSource
 import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.search.data_source.remote.RemoteMovieDiscoveryDataSource
 import com.google.common.truth.Truth.assertThat
@@ -10,34 +11,25 @@ import org.junit.Before
 import kotlin.test.Test
 
 class RecommendationRepositoryImplTest {
-    private lateinit var dataSource: RemoteMovieDiscoveryDataSource
-    private lateinit var recommendationRepository: RemoteMovieDiscoveryRepositoryImpl
+    private lateinit var remoteMovieDiscoveryDataSource: RemoteMovieDiscoveryDataSource
+    private lateinit var discoveryDataSource: DiscoveryDataSource
+    private lateinit var recommendationRepository: DiscoveryRepositoryImpl
 
     @Before
     fun setUp() {
-        dataSource = mockk()
-        recommendationRepository = RemoteMovieDiscoveryRepositoryImpl(dataSource)
+        discoveryDataSource = mockk(relaxed = true)
+        remoteMovieDiscoveryDataSource = mockk(relaxed = true)
+        recommendationRepository = DiscoveryRepositoryImpl(
+            remoteMovieDiscoveryDataSource = remoteMovieDiscoveryDataSource,
+            discoveryDataSource = discoveryDataSource
+        )
     }
 
     @Test
     fun `should return mapped movie list when getForYouMovies is called with remote movies`() =
         runTest {
             // Given
-            val remoteMovies = listOf(
-                MovieRemoteDto(
-                    id = 1,
-                    title = "Movie 1",
-                    posterPath = null,
-                    voteAverage = null
-                ),
-                MovieRemoteDto(
-                    id = 2,
-                    title = "Movie 2",
-                    posterPath = null,
-                    voteAverage = null
-                )
-            )
-            coEvery { dataSource.getPersonalizedMovies() } returns remoteMovies
+            coEvery { remoteMovieDiscoveryDataSource.getPersonalizedMovies() } returns remoteMovies
 
             // When
             val result = recommendationRepository.getPersonalizedMovies()
@@ -52,7 +44,7 @@ class RecommendationRepositoryImplTest {
     fun `should return empty list when getForYouMovies is called with empty remote data`() =
         runTest {
             // Given
-            coEvery { dataSource.getPersonalizedMovies() } returns emptyList()
+            coEvery { remoteMovieDiscoveryDataSource.getPersonalizedMovies() } returns emptyList()
 
             // When
             val result = recommendationRepository.getPersonalizedMovies()
@@ -65,15 +57,9 @@ class RecommendationRepositoryImplTest {
     fun `should return mapped movie list when getExploreMoreMovies is called with remote movies`() =
         runTest {
             // Given
-            val movieRemoteDto = listOf(
-                MovieRemoteDto(
-                    id = 3,
-                    title = "Movie 3",
-                    posterPath = "some_path",
-                    voteAverage = 4.2
-                )
-            )
-            coEvery { dataSource.getSuggestedMovies() } returns movieRemoteDto
+            coEvery { remoteMovieDiscoveryDataSource.getSuggestedMovies() } returns movieRemoteDto
+            coEvery { discoveryDataSource.clearExpiredCache(any()) } returns Unit
+            coEvery { discoveryDataSource.getSuggestedMovies() } returns emptyList()
 
             // When
             val result = recommendationRepository.getSuggestedMovies()
@@ -85,4 +71,29 @@ class RecommendationRepositoryImplTest {
             assertThat(result[0].rating).isEqualTo(4.2f)
         }
 
+    private companion object {
+        val remoteMovies = listOf(
+            MovieRemoteDto(
+                id = 1,
+                title = "Movie 1",
+                posterPath = null,
+                voteAverage = null
+            ),
+            MovieRemoteDto(
+                id = 2,
+                title = "Movie 2",
+                posterPath = null,
+                voteAverage = null
+            )
+        )
+
+        val movieRemoteDto = listOf(
+            MovieRemoteDto(
+                id = 3,
+                title = "Movie 3",
+                posterPath = "some_path",
+                voteAverage = 4.2
+            )
+        )
+    }
 }

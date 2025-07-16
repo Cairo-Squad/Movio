@@ -11,12 +11,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.R
@@ -48,8 +51,7 @@ fun ActionBar() {
                 text = stringResource(R.string.rate),
                 color = Theme.color.surfaces.onSurfaceContainer,
                 style = Theme.textStyle.label.smallRegular12,
-
-                )
+            )
         }
 
         Icon(
@@ -60,12 +62,11 @@ fun ActionBar() {
                     brush = Theme.color.gradiant.primaryGradient,
                     shape = CircleShape
                 )
-                .padding(start = 16.57.dp, top = 14.9.dp, end = 14.24.dp, bottom = 14.9.dp),
+                .padding(14.9.dp),
             imageVector = ImageVector.vectorResource(id = R.drawable.outline_play),
             contentDescription = stringResource(R.string.play),
             tint = Theme.color.brand.onPrimary,
         )
-
 
         Column(
             modifier = Modifier.weight(1f),
@@ -89,5 +90,15 @@ fun ActionBar() {
 @Preview
 @Composable
 private fun ActionBarPreview() {
-    ActionBar()
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+        ActionBar()
+    }
+}
+
+@Preview(name = "ActionBar RTL", locale = "ar")
+@Composable
+private fun ActionBarRtlPreview() {
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+        ActionBar()
+    }
 }

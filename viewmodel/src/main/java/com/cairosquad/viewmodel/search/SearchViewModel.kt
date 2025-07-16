@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.search
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.search.exception.MovioException
 import com.cairosquad.domain.search.usecase.ClearSearchHistoryUseCase
@@ -99,63 +100,63 @@ class SearchViewModel(
         }
     }
 
-    override fun onSearch(query: String) {
+    override fun onSearch() {
+
+        val query = screenState.value.query
+
+        if (query.isBlank()) return
+
         updateState {
             it.copy(
                 screenStatus = SearchScreenState.ScreenStatus.LOADING,
-                query = query,
                 errorStatus = null
             )
         }
 
-        if (query.isBlank()) {
-            updateState {
-                it.copy(
-                    screenStatus = SearchScreenState.ScreenStatus.SEARCH,
-                )
-            }
-        } else {
-            tryToCall(
-                block = {
-                    val movies = searchUseCase.getMovies(query).map { it.toUiState() }
-                    val series = searchUseCase.getSeries(query).map { it.toUiState() }
-                    val artists = searchUseCase.getArtists(query).map { it.toUiState() }
-                    Triple(movies, series, artists)
-                },
-                onSuccess = { (movies, series, artists) ->
-                    updateState {
-                        it.copy(
-                            screenStatus = SearchScreenState.ScreenStatus.RESULT,
-                            movies = movies,
-                            series = series,
-                            artists = artists,
-                            errorStatus = null
-                        )
-                    }
-                },
-                onError = { e ->
-                    updateState {
-                        it.copy(
-                            screenStatus = SearchScreenState.ScreenStatus.FAILED,
-                            errorStatus = handleSearchException(e)
-                        )
-                    }
-                },
-                dispatcher = Dispatchers.IO
-            )
-        }
+
+        tryToCall(
+            block = {
+                val movies = searchUseCase.getMovies(query).map { it.toUiState() }
+                val series = searchUseCase.getSeries(query).map { it.toUiState() }
+                val artists = searchUseCase.getArtists(query).map { it.toUiState() }
+                Triple(movies, series, artists)
+            },
+            onSuccess = { (movies, series, artists) ->
+                updateState {
+                    it.copy(
+                        screenStatus = SearchScreenState.ScreenStatus.RESULT,
+                        movies = movies,
+                        series = series,
+                        artists = artists,
+                        errorStatus = null
+                    )
+                }
+            },
+            onError = { e ->
+                updateState {
+                    it.copy(
+                        screenStatus = SearchScreenState.ScreenStatus.FAILED,
+                        errorStatus = handleSearchException(e)
+                    )
+                }
+            },
+            dispatcher = Dispatchers.IO
+        )
+
     }
 
-    override fun onRecentSearchItemClicked(query: String) = onSearch(query)
+    override fun onRecentSearchItemClicked(query: String) {
+        updateState { it.copy(query = query) }
+        onSearch()
+    }
 
     override fun onClearHistory() {
         tryToCall(
             block = {
                 clearSearchHistoryUseCase.clearAllHistory()
-                emptyList<String>()
             },
             onSuccess = { suggestions ->
-                updateState { it.copy(recentSearch = suggestions, errorStatus = null) }
+                updateState { it.copy(recentSearch = emptyList(), errorStatus = null) }
             },
             onError = { e ->
                 updateState {
@@ -173,10 +174,14 @@ class SearchViewModel(
         tryToCall(
             block = {
                 clearSearchHistoryUseCase.removeQueryFromHistory(query)
-                getLocalSearchHistoryUseCase.getAll()
             },
-            onSuccess = { suggestions ->
-                updateState { it.copy(recentSearch = suggestions, errorStatus = null) }
+            onSuccess = {
+                updateState {
+                    it.copy(
+                        recentSearch = it.recentSearch.filterNot { q -> q == query },
+                        errorStatus = null
+                    )
+                }
             },
             onError = { e ->
                 updateState {
@@ -212,7 +217,11 @@ class SearchViewModel(
     override fun onClickSearchTextField() {
         tryToCall(
             block = {
-                getLocalSearchHistoryUseCase.getAll()
+                if (screenState.value.query.isBlank()) {
+                    getLocalSearchHistoryUseCase.getAll()
+                } else {
+                    getLocalSearchHistoryUseCase.getByQuery(screenState.value.query)
+                }
             },
             onSuccess = { suggestions ->
                 updateState {
@@ -234,12 +243,12 @@ class SearchViewModel(
 
     override fun onRefresh() {
         viewModelScope.launch {
-            updateState { it.copy(isRefreshing = true,) }
+            updateState { it.copy(isRefreshing = true) }
             delay(500L)
             updateState { it.copy(isRefreshing = false) }
         }
         if (screenState.value.query.isBlank()) loadDiscoverMovies()
-        else onSearch(screenState.value.query)
+        else onSearch()
     }
 
     override fun onMovieClicked(movieId: Long) {
