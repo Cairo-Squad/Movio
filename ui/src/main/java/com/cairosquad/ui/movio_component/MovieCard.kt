@@ -99,7 +99,7 @@ fun MovieCard(
                     .height(36.dp)
                     .clip(RoundedCornerShape(topEnd = 8.dp, topStart = 8.dp))
                     .background(
-                        brush = Brush.verticalGradient(
+                        brush = Brush.linearGradient(
                             colors = listOf(
                                 Color.Black.copy(0.74f),
                                 Color.Transparent,
