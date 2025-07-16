@@ -8,13 +8,10 @@ import com.cairosquad.domain.search.usecase.ClearSearchHistoryUseCase
 import com.cairosquad.domain.search.usecase.GetLocalSearchHistoryUseCase
 import com.cairosquad.domain.search.usecase.GetPersonalizedMoviesUseCase
 import com.cairosquad.domain.search.usecase.GetSuggestedMoviesUseCase
-import com.cairosquad.domain.search.usecase.SearchUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
-import com.cairosquad.viewmodel.search.paging.ArtistPager
-import com.cairosquad.viewmodel.search.paging.MoviePager
-import com.cairosquad.viewmodel.search.paging.SeriesPager
+import com.cairosquad.viewmodel.search.paging.SearchPager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -22,10 +19,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
-    private val moviePager: MoviePager ,
-    private val artistPager: ArtistPager ,
-    private val seriesPager: SeriesPager ,
-    private val searchUseCase: SearchUseCase,
+    private val searchPager: SearchPager,
     private val getLocalSearchHistoryUseCase: GetLocalSearchHistoryUseCase,
     private val clearSearchHistoryUseCase: ClearSearchHistoryUseCase,
     private val getSuggestedMoviesUseCase: GetSuggestedMoviesUseCase,
@@ -126,17 +120,15 @@ class SearchViewModel(
         } else {
             tryToCall(
                 block = {
-                    val movies = moviePager.searchMovies(query)
+                    val movies =searchPager.movies(query)
                         .map { it.map { movie -> movie.toUiState() } }
                         .cachedIn(viewModelScope)
-                    val series = seriesPager.searchMovies(query)
-                        .map { it.map { movie -> movie.toUiState() } }
+                    val series = searchPager.series(query)
+                        .map { it.map { series -> series.toUiState() } }
                         .cachedIn(viewModelScope)
-                    val artists = artistPager.searchMovies(query)
-                        .map { it.map { movie -> movie.toUiState() } }
+                    val artists = searchPager.artists(query)
+                        .map { it.map { artists -> artists.toUiState() } }
                         .cachedIn(viewModelScope)
-                 //   val series = searchUseCase.getSeries(query,1).map { it.toUiState() }
-                  //  val artists = searchUseCase.getArtists(query,1).map { it.toUiState() }
                     Triple(movies, series, artists)
                 },
                 onSuccess = { (movies, series, artists) ->
