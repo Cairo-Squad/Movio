@@ -1,4 +1,4 @@
-package com.cairosquad.domain.search.exception
+package com.cairosquad.domain.exception
 
 sealed class MovioException(message: String = "") : RuntimeException(message)
 

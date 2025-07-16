@@ -1,10 +1,10 @@
 package com.cairosquad.movio.di
 
-import com.cairosquad.domain.search.usecase.ClearSearchHistoryUseCase
-import com.cairosquad.domain.search.usecase.GetSuggestedMoviesUseCase
-import com.cairosquad.domain.search.usecase.GetPersonalizedMoviesUseCase
-import com.cairosquad.domain.search.usecase.GetLocalSearchHistoryUseCase
-import com.cairosquad.domain.search.usecase.SearchUseCase
+import com.cairosquad.domain.usecase.search.ClearSearchHistoryUseCase
+import com.cairosquad.domain.usecase.movies.GetSuggestedMoviesUseCase
+import com.cairosquad.domain.usecase.movies.GetPersonalizedMoviesUseCase
+import com.cairosquad.domain.usecase.search.GetLocalSearchHistoryUseCase
+import com.cairosquad.domain.usecase.search.SearchUseCase
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
