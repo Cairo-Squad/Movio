@@ -1,7 +1,9 @@
 package com.cairosquad.repository.search
 
-import com.cairosquad.domain.search.repository.DiscoveryRepository
+import com.cairosquad.domain.repository.MoviesRepository
+import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
+import com.cairosquad.entity.Review
 import com.cairosquad.repository.common.exception.tryToCall
 import com.cairosquad.repository.search.data_source.local.DiscoveryDataSource
 import com.cairosquad.repository.search.data_source.local.dto.toCacheDto
@@ -10,10 +12,26 @@ import com.cairosquad.repository.search.data_source.remote.RemoteMovieDiscoveryD
 import com.cairosquad.repository.search.data_source.remote.dto.toEntity
 import java.util.Date
 
-class DiscoveryRepositoryImpl(
+class MoviesRepositoryImpl(
     private val remoteMovieDiscoveryDataSource: RemoteMovieDiscoveryDataSource,
     private val discoveryDataSource: DiscoveryDataSource
-) : DiscoveryRepository {
+) : MoviesRepository {
+    override suspend fun getMovie(movieId: Long): Movie {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getMovieReviews(movieId: Long): List<Review> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getSimilarMovies(movieId: Long): List<Movie> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getMovieTopCast(movieId: Long): List<Artist> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getPersonalizedMovies(): List<Movie> {
         return tryToCall {
             discoveryDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)

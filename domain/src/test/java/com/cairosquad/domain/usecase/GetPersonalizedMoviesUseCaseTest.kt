@@ -1,7 +1,7 @@
 package com.cairosquad.domain.usecase
 
-import com.cairosquad.domain.search.repository.DiscoveryRepository
-import com.cairosquad.domain.search.usecase.GetPersonalizedMoviesUseCase
+import com.cairosquad.domain.repository.MoviesRepository
+import com.cairosquad.domain.usecase.movies.GetPersonalizedMoviesUseCase
 import com.cairosquad.entity.Movie
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -17,7 +17,7 @@ import org.junit.Test
 
 class GetPersonalizedMoviesUseCaseTest {
 
-    private val recommendationRepository = mockk<DiscoveryRepository>()
+    private val moviesRepository = mockk<MoviesRepository>()
     private lateinit var useCase: GetPersonalizedMoviesUseCase
 
     private val dispatcher = StandardTestDispatcher()
@@ -25,7 +25,7 @@ class GetPersonalizedMoviesUseCaseTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(dispatcher)
-        useCase = GetPersonalizedMoviesUseCase(recommendationRepository)
+        useCase = GetPersonalizedMoviesUseCase(moviesRepository)
     }
 
     @After
@@ -40,12 +40,12 @@ class GetPersonalizedMoviesUseCaseTest {
             Movie(id = 101, title = "Dune", rating = 8.1f, posterPath = "/dune.jpg"),
             Movie(id = 102, title = "Blade Runner", rating = 8.0f, posterPath = "/blade.jpg")
         )
-        coEvery { recommendationRepository.getPersonalizedMovies() } returns expectedMovies
+        coEvery { moviesRepository.getPersonalizedMovies() } returns expectedMovies
 
         // When
         val result = useCase.getPersonalizedMovies()
 
         // Then
-        coVerify { recommendationRepository.getPersonalizedMovies() }
+        coVerify { moviesRepository.getPersonalizedMovies() }
     }
 }
