@@ -13,13 +13,13 @@ import kotlin.test.Test
 class RecommendationRepositoryImplTest {
     private lateinit var remoteMovieDiscoveryDataSource: RemoteMovieDiscoveryDataSource
     private lateinit var discoveryDataSource: DiscoveryDataSource
-    private lateinit var recommendationRepository: DiscoveryRepositoryImpl
+    private lateinit var recommendationRepository: MoviesRepositoryImpl
 
     @Before
     fun setUp() {
         discoveryDataSource = mockk(relaxed = true)
         remoteMovieDiscoveryDataSource = mockk(relaxed = true)
-        recommendationRepository = DiscoveryRepositoryImpl(
+        recommendationRepository = MoviesRepositoryImpl(
             remoteMovieDiscoveryDataSource = remoteMovieDiscoveryDataSource,
             discoveryDataSource = discoveryDataSource
         )
