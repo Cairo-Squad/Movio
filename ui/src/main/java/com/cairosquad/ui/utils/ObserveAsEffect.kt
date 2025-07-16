@@ -11,7 +11,7 @@ import kotlinx.coroutines.withContext
 
 @Composable
 fun <T> ObserveAsEffect(
-    events: Flow<T>,
+    effects: Flow<T>,
     onEvent: (T) -> Unit,
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -19,7 +19,7 @@ fun <T> ObserveAsEffect(
     LaunchedEffect(key1 = lifecycleOwner.lifecycle) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             withContext(Dispatchers.Main.immediate) {
-                events.collect(onEvent)
+                effects.collect(onEvent)
             }
         }
     }
