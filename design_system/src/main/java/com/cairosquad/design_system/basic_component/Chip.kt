@@ -1,4 +1,4 @@
-package com.cairosquad.ui.movio_component
+package com.cairosquad.design_system.basic_component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

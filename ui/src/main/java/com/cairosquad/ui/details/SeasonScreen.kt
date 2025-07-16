@@ -12,8 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.cairosquad.design_system.basic_component.Chip
 import com.cairosquad.design_system.theme.Theme
-import com.cairosquad.ui.movio_component.Chip
 import com.cairosquad.ui.navigation.LocalNavController
 
 @Composable

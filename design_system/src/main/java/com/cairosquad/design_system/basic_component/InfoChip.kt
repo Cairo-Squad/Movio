@@ -1,4 +1,4 @@
-package com.cairosquad.ui.movio_component
+package com.cairosquad.design_system.basic_component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -45,7 +45,7 @@ fun InfoChip(
         Icon(
             modifier = Modifier.padding(end = 4.dp),
             imageVector = ImageVector.vectorResource(id = imgRes),
-            contentDescription = stringResource(com.cairosquad.ui.R.string.icon),
+            contentDescription = stringResource(R.string.icon),
             tint = Color.Unspecified
         )
         Text(
