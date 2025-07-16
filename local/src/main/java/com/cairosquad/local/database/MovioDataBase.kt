@@ -1,4 +1,4 @@
-package com.cairosquad.local.common
+package com.cairosquad.local.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
@@ -8,9 +8,9 @@ import com.cairosquad.local.search.discovery.dto.PersonalizedMoviesIdsDto
 import com.cairosquad.local.search.discovery.dto.SuggestedMoviesIdsDto
 import com.cairosquad.local.search.recent.dao.LocalRecentSearchDao
 import com.cairosquad.local.search.recent.entity.RecentSearchEntity
-import com.cairosquad.repository.search.data_source.local.dto.SeriesCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.SeriesCacheDto
 
 @Database(
     entities = [
