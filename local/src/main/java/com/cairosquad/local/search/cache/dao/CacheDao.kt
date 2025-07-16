@@ -9,6 +9,7 @@ import com.cairosquad.repository.search.data_source.local.dto.CACHED_ARTIST_TABL
 import com.cairosquad.repository.search.data_source.local.dto.CACHED_ARTIST_TIMESTAMP_COLUMN_NAME
 import com.cairosquad.repository.search.data_source.local.dto.CACHED_MOVIES_QUERY_COLUMN_NAME
 import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.CACHED_MOVIES_PAGE_COLUMN_NAME
 import com.cairosquad.repository.search.data_source.local.dto.CACHED_MOVIES_TABLE_NAME
 import com.cairosquad.repository.search.data_source.local.dto.CACHED_MOVIES_TIMESTAMP_COLUMN_NAME
 import com.cairosquad.repository.search.data_source.local.dto.CACHED_SERIES_QUERY_COLUMN_NAME
@@ -19,8 +20,8 @@ import com.cairosquad.repository.search.data_source.local.dto.SeriesCacheDto
 
 @Dao
 interface CacheDao {
-    @Query("SELECT * FROM $CACHED_MOVIES_TABLE_NAME where $CACHED_MOVIES_QUERY_COLUMN_NAME = :query")
-    suspend fun getCachedMovies(query: String): List<MovieCacheDto>
+    @Query("SELECT * FROM $CACHED_MOVIES_TABLE_NAME WHERE $CACHED_MOVIES_QUERY_COLUMN_NAME = :query AND $CACHED_MOVIES_PAGE_COLUMN_NAME  = :page ORDER BY id")
+    suspend fun getCachedMovies(query: String,page: Int): List<MovieCacheDto>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun cacheMovies(results: List<MovieCacheDto>)
