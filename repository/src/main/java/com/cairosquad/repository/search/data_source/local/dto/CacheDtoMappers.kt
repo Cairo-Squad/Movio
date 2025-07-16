@@ -35,9 +35,10 @@ fun List<SeriesCacheDto>.toEntity(): List<Series> {
     return map { it.toEntity() }
 }
 
-fun Movie.toCacheDto(query: String): MovieCacheDto {
+fun Movie.toCacheDto(query: String,page:Int): MovieCacheDto {
     return MovieCacheDto(
         id = id.toInt(),
+        page = page,
         title = title,
         posterPath = posterPath,
         voteAverage = rating.toDouble(),
@@ -47,8 +48,8 @@ fun Movie.toCacheDto(query: String): MovieCacheDto {
 }
 
 @JvmName("toCacheMovieDto")
-fun List<Movie>.toCacheDto(query: String): List<MovieCacheDto> {
-    return map { it.toCacheDto(query) }
+fun List<Movie>.toCacheDto(query: String,page: Int): List<MovieCacheDto> {
+    return map { it.toCacheDto(query,page) }
 }
 
 fun MovieCacheDto.toEntity(): Movie {

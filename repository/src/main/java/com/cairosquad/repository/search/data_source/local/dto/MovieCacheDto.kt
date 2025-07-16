@@ -9,6 +9,8 @@ data class MovieCacheDto(
     @ColumnInfo(name = CACHED_MOVIES_ID_COLUMN_NAME)
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+    @ColumnInfo(name = CACHED_MOVIES_PAGE_COLUMN_NAME)
+    val page: Int,
     @ColumnInfo(name = CACHED_MOVIES_TITLE_COLUMN_NAME)
     val title: String?,
     @ColumnInfo(name = CACHED_MOVIES_POSTER_PATH_COLUMN_NAME)
