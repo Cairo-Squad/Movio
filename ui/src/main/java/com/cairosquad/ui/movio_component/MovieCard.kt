@@ -22,7 +22,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
@@ -83,7 +82,7 @@ fun MovieCard(
                         .clip(RoundedCornerShape(8.dp))
                         .background(Theme.color.system.defaultImageBackground),
                     contentAlignment = Alignment.Center
-                ){
+                ) {
                     Icon(
                         modifier = Modifier.size(24.dp),
                         imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
@@ -113,11 +112,10 @@ fun MovieCard(
             ) {
                 Icon(
                     modifier = Modifier
-                        .padding(end = 4.dp)
-                        .size(16.dp),
-                    painter = painterResource(id = R.drawable.star),
-                    contentDescription = "Rating Star",
-                    tint = Theme.color.system.warning,
+                        .padding(end = 4.dp),
+                    imageVector = ImageVector.vectorResource(id = R.drawable.star),
+                    contentDescription = stringResource(R.string.rating_star),
+                    tint = Color.Unspecified,
                 )
 
                 Text(
