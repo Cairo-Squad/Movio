@@ -6,6 +6,7 @@ import com.cairosquad.domain.search.repository.SearchRepository
 import com.cairosquad.repository.search.LocalRecentSearchRepositoryImpl
 import com.cairosquad.repository.search.RemoteMovieDiscoveryRepositoryImpl
 import com.cairosquad.repository.search.SearchRepositoryImpl
+import com.cairosquad.viewmodel.search.paging.SearchPager
 import org.koin.dsl.module
 
 val repositoryModule = module {
@@ -20,5 +21,4 @@ val repositoryModule = module {
     single<SearchHistoryRepository> {
         LocalRecentSearchRepositoryImpl(get())
     }
-
 }
