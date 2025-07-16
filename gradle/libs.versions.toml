@@ -1,5 +1,10 @@
 [versions]
 agp = "8.5.2"
+junitVersion = "1.1.5"
+kotlinxCoroutinesTestVersion = "1.10.2"
+roomTesting = "2.7.2"
+rules = "1.6.1"
+runner = "1.6.2"
 tensorflowLiteTaskVision = "0.4.3"
 constraintlayoutCompose = "1.1.1"
 datastorePreferences = "1.1.7"
@@ -10,6 +15,7 @@ appcompat = "1.6.1"
 kotlinxCoroutinesTest = "1.7.3"
 runtime = "1.8.3"
 foundation = "1.8.3"
+truthVersion = "1.1.4"
 uiTestJunit4 = "1.8.3"
 serialization = "1.9.0"
 activityCompose = "1.10.1"
@@ -43,8 +49,13 @@ composeBom = "2024.09.00"
 
 [libraries]
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
+androidx-core = { module = "androidx.test:core", version.ref = "rules" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
+androidx-junit-v115 = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
+androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "roomTesting" }
+androidx-rules = { module = "androidx.test:rules", version.ref = "rules" }
+androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
 androidx-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "runtime" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleRuntimeKtx" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
@@ -72,6 +83,7 @@ junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+kotlinx-coroutines-test-v1102 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTestVersion" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 tensorflow-lite = { module = "org.tensorflow:tensorflow-lite", version.ref = "tensorflowLite" }
 tensorflow-lite-task-vision = { module = "org.tensorflow:tensorflow-lite-task-vision", version.ref = "tensorflowLiteTaskVision" }
@@ -104,6 +116,7 @@ ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "k
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktorVersion" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorVersion" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+truth-v114 = { module = "com.google.truth:truth", version.ref = "truthVersion" }
 ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "uiTestJunit4" }
 ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktorVersion" }
 
