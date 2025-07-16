@@ -68,7 +68,6 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
 
     // AndroidX Test
-    androidTestImplementation (libs.androidx.junit.v115)
     androidTestImplementation (libs.androidx.runner)
     androidTestImplementation (libs.androidx.rules)
 
@@ -76,13 +75,13 @@ dependencies {
     androidTestImplementation (libs.androidx.core)
 
     // Truth for assertions
-    androidTestImplementation (libs.truth.v114)
+    androidTestImplementation (libs.truth)
 
     // Architecture Components testing (for InstantTaskExecutorRule)
     androidTestImplementation(libs.androidx.core.testing)
 
     // Coroutines testing (for runTest)
-    androidTestImplementation(libs.kotlinx.coroutines.test.v1102)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
 
 
     implementation(project(":repository"))
