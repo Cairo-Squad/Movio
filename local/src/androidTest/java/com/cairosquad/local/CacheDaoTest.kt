@@ -65,7 +65,7 @@ class CacheDaoTest {
     @Test
     fun deleteExpiredMoviesCache_removesExpiredEntries() = runTest {
         cacheDao.cacheMovies(listOf(MOVIE_EXPIRED, MOVIE_VALID))
-        cacheDao.deleteExpiredMoviesCache(TIMESTAMP - 3000000)
+        cacheDao.deleteExpiredMoviesCache(TIMESTAMP - EXPIRATION_WINDOW_MILLIS)
         val result = cacheDao.getCachedMovies()
         assertThat(result).hasSize(1)
     }
@@ -87,7 +87,7 @@ class CacheDaoTest {
     @Test
     fun deleteExpiredSeriesCache_removesExpiredEntries() = runTest {
         cacheDao.cacheSeries(listOf(SERIES_EXPIRED, SERIES_VALID))
-        cacheDao.deleteExpiredSeriesCache(TIMESTAMP - 3000000)
+        cacheDao.deleteExpiredSeriesCache(TIMESTAMP - EXPIRATION_WINDOW_MILLIS)
         val result = cacheDao.getCachedSeries("valid")
         assertThat(result).hasSize(1)
     }
@@ -102,7 +102,7 @@ class CacheDaoTest {
     @Test
     fun deleteExpiredArtistCache_removesExpiredEntries() = runTest {
         cacheDao.cacheArtist(listOf(ARTIST_EXPIRED, ARTIST_VALID))
-        cacheDao.deleteExpiredArtistCache(TIMESTAMP - 3000000)
+        cacheDao.deleteExpiredArtistCache(TIMESTAMP - EXPIRATION_WINDOW_MILLIS)
         val result = cacheDao.getCachedArtist("valid")
         assertThat(result).hasSize(1)
     }
@@ -147,10 +147,12 @@ class CacheDaoTest {
         assertThat(result).containsExactly(MOVIE_1, MOVIE_2)
     }
 
-
     companion object {
+        private const val ONE_HOUR_MILLIS = 60 * 60 * 1000
+        private const val EXPIRATION_WINDOW_MILLIS = 3_000_000
+
         val TIMESTAMP = System.currentTimeMillis()
-        val TIMESTAMP_OLD = TIMESTAMP - 3600000
+        val TIMESTAMP_OLD = TIMESTAMP - ONE_HOUR_MILLIS
 
         val MOVIE_1 = MovieCacheDto(1, "Avengers: Endgame", "/path1.jpg", 8.4, TIMESTAMP)
         val MOVIE_2 = MovieCacheDto(2, "Avengers: Infinity War", "/path2.jpg", 8.3, TIMESTAMP)
@@ -168,4 +170,5 @@ class CacheDaoTest {
         val ARTIST_VALID = ArtistCacheDto(4, "Valid Artist", "valid", TIMESTAMP)
     }
 }
+
 

@@ -70,7 +70,7 @@ class DiscoveryDaoTest {
         )
 
         // When
-        discoveryDao.deleteExpiredPersonalizedMoviesId(TIMESTAMP - 3000000)
+        discoveryDao.deleteExpiredPersonalizedMoviesId(TIMESTAMP - EXPIRATION_WINDOW_MILLIS)
 
         // Then
         val result = discoveryDao.getPersonalizedMoviesIds()
@@ -104,7 +104,7 @@ class DiscoveryDaoTest {
         )
 
         // When
-        discoveryDao.deleteExpiredSuggestedMoviesId(TIMESTAMP - 3000000)
+        discoveryDao.deleteExpiredSuggestedMoviesId(TIMESTAMP - EXPIRATION_WINDOW_MILLIS)
 
         // Then
         val result = discoveryDao.getSuggestedMovies()
@@ -113,8 +113,11 @@ class DiscoveryDaoTest {
     }
 
     companion object {
+        private const val ONE_HOUR_MILLIS = 60 * 60 * 1000
+        private const val EXPIRATION_WINDOW_MILLIS = 3_000_000
+
         val TIMESTAMP = System.currentTimeMillis()
-        val OLD_TIMESTAMP = TIMESTAMP - 3600000
+        val OLD_TIMESTAMP = TIMESTAMP - ONE_HOUR_MILLIS
 
         val MOVIE_1 = MovieCacheDto(1, "Movie One", "/poster1.jpg", 7.5, TIMESTAMP)
         val MOVIE_2 = MovieCacheDto(2, "Movie Two", "/poster2.jpg", 8.0, TIMESTAMP)
