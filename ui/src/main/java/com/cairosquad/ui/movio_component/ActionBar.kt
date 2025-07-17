@@ -1,6 +1,7 @@
 package com.cairosquad.ui.movio_component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,12 +9,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
@@ -25,7 +28,11 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.theme.Theme
 
 @Composable
-fun ActionBar() {
+fun ActionBar(
+    onPlayClicked: () -> Unit,
+    onRateClicked: () -> Unit,
+    onAddToListClicked: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -37,7 +44,10 @@ fun ActionBar() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .clip(RoundedCornerShape(8.dp))
+                .clickable(onClick = onRateClicked),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
@@ -58,9 +68,10 @@ fun ActionBar() {
             modifier = Modifier
                 .size(56.dp)
                 .padding(4.67.dp)
+                .clip(CircleShape)
+                .clickable(onClick = onPlayClicked)
                 .background(
-                    brush = Theme.color.gradiant.primaryGradient,
-                    shape = CircleShape
+                    brush = Theme.color.gradiant.primaryGradient
                 )
                 .padding(14.9.dp),
             imageVector = ImageVector.vectorResource(id = R.drawable.outline_play),
@@ -69,7 +80,10 @@ fun ActionBar() {
         )
 
         Column(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .clip(RoundedCornerShape(8.dp))
+                .clickable(onClick = onAddToListClicked),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
@@ -91,7 +105,10 @@ fun ActionBar() {
 @Composable
 private fun ActionBarPreview() {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-        ActionBar()
+        ActionBar(
+            onPlayClicked = {},
+            onRateClicked = {},
+            onAddToListClicked = {})
     }
 }
 
@@ -99,6 +116,10 @@ private fun ActionBarPreview() {
 @Composable
 private fun ActionBarRtlPreview() {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-        ActionBar()
+        ActionBar(
+            onPlayClicked = {},
+            onRateClicked = {},
+            onAddToListClicked = {}
+        )
     }
 }
