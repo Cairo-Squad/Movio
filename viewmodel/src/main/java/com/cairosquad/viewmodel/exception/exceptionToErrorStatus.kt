@@ -1,9 +1,9 @@
 package com.cairosquad.viewmodel.exception
 
-import com.cairosquad.domain.search.exception.InternetConnectionException
-import com.cairosquad.domain.search.exception.MovioException
-import com.cairosquad.domain.search.exception.NetworkException
-import com.cairosquad.domain.search.exception.UnknownException
+import com.cairosquad.domain.exception.InternetConnectionException
+import com.cairosquad.domain.exception.MovioException
+import com.cairosquad.domain.exception.NetworkException
+import com.cairosquad.domain.exception.UnknownException
 
 fun exceptionToErrorStatus(e: MovioException): ErrorStatus {
     return when (e) {
