@@ -2,10 +2,11 @@ package com.cairosquad.ui.movio_component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -14,6 +15,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,10 +26,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
-import com.cairosquad.design_system.theme.Theme
+import com.cairosquad.design_system.theme.Theme.color
+import com.cairosquad.design_system.theme.Theme.textStyle
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 
 @Composable
@@ -36,17 +41,20 @@ fun ReviewCard(
     reviewText: String,
     modifier: Modifier = Modifier
 ) {
+    var isExpanded by remember { mutableStateOf(false) }
+    var isOverflowing by remember { mutableStateOf(false) }
+
     Column(
         modifier = modifier
             .border(
                 width = 1.dp,
-                color = Theme.color.surfaces.onSurfaceAt3,
+                color = color.surfaces.onSurfaceAt3,
                 shape = RoundedCornerShape(8.dp)
             )
             .clip(RoundedCornerShape(8.dp))
-            .height(137.dp)
+            .heightIn(min = 137.dp)
             .width(258.dp)
-            .background(Theme.color.surfaces.surfaceContainer)
+            .background(color.surfaces.surfaceContainer)
             .padding(12.dp)
     ) {
         Row {
@@ -65,7 +73,7 @@ fun ReviewCard(
                         .size(32.dp)
                         .clip(CircleShape)
                         .align(Alignment.CenterVertically)
-                        .background(Theme.color.system.defaultImageBackground),
+                        .background(color.system.defaultImageBackground),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -82,14 +90,14 @@ fun ReviewCard(
             ) {
                 Text(
                     text = reviewerName,
-                    color = Theme.color.surfaces.onSurface,
-                    style = Theme.textStyle.title.mediumMedium14
+                    color = color.surfaces.onSurface,
+                    style = textStyle.title.mediumMedium14
                 )
                 Text(
                     modifier = Modifier.padding(top = 4.dp),
                     text = reviewDate,
-                    color = Theme.color.surfaces.onSurfaceContainer,
-                    style = Theme.textStyle.body.smallRegular10
+                    color = color.surfaces.onSurfaceContainer,
+                    style = textStyle.body.smallRegular10
                 )
 
             }
@@ -102,19 +110,33 @@ fun ReviewCard(
                 Text(
                     modifier = Modifier.padding(start = 4.dp),
                     text = rating,
-                    color = Theme.color.system.onWarning,
-                    style = Theme.textStyle.label.smallRegular12
+                    color = color.system.onWarning,
+                    style = textStyle.label.smallRegular12
                 )
             }
         }
-        Text(
-            modifier = Modifier.padding(top = 12.dp),
-            text = reviewText,
-            color = Theme.color.surfaces.onSurfaceVariant,
-            style = Theme.textStyle.label.smallRegular12,
-            maxLines = 4,
-            overflow = TextOverflow.Ellipsis
-        )
+        Column {
+            Text(
+                modifier = Modifier.padding(top = 12.dp),
+                text = reviewText,
+                color = color.surfaces.onSurfaceVariant,
+                style = textStyle.label.smallRegular12,
+                maxLines = if (isExpanded) Int.MAX_VALUE else 5,
+                onTextLayout = { textLayoutResult ->
+                    isOverflowing = textLayoutResult.hasVisualOverflow
+                }
+            )
+            if (isOverflowing || isExpanded) {
+                Text(
+                    text = if (isExpanded) stringResource(R.string.less) else stringResource(R.string.more),
+                    modifier = Modifier
+                        .padding(top = 4.dp)
+                        .clickable { isExpanded = !isExpanded },
+                    color = color.brand.onPrimaryContainer,
+                    style = textStyle.label.mediumMedium12
+                )
+            }
 
+        }
     }
 }
