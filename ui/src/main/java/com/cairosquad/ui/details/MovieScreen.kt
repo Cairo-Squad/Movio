@@ -35,11 +35,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.basic_component.ExpandableText
 import com.cairosquad.design_system.basic_component.InfoChip
+import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import com.cairosquad.ui.movio_component.ActionBar
@@ -63,7 +65,10 @@ fun MovieScreen(
     val state by viewModel.screenState.collectAsState()
 
 
-
+    MovieContent(
+        uiState = state,
+        interactionListener = viewModel
+    )
 }
 
 @Composable
@@ -253,3 +258,13 @@ fun MovieContent(
     }
 }
 
+@Preview
+@Composable
+private fun PreviewMovieScreen() {
+    MovioTheme {
+        MovieContent(
+            uiState = MovieScreenState(),
+            interactionListener = MovieViewModel()
+        )
+    }
+}
