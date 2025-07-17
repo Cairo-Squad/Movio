@@ -22,14 +22,12 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -41,32 +39,28 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.design_system.basic_component.AppBar
-import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import com.cairosquad.ui.R
 import com.cairosquad.ui.navigation.LocalNavController
+import com.cairosquad.ui.utils.ObserveAsEvent
+import com.cairosquad.ui.utils.errorStatusToMessageResource
+import com.cairosquad.viewmodel.details.episodes.EpisodesDetailEffect
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsInteractionListener
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsViewModel
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.cairosquad.ui.utils.ObserveAsEvent
-import com.cairosquad.ui.utils.errorStatusToMessageResource
-import com.cairosquad.viewmodel.details.episodes.EpisodesDetailEffect
-import androidx.compose.runtime.getValue
 
 @Composable
-fun EpisodesScreenhost(
-     seriesId: Long,
-     seasonNumber: Int,
-    viewModel: EpisodesDetailsViewModel = koinViewModel { parametersOf(seriesId,seasonNumber) }
-){
+fun EpisodesScreen(
+    seriesId: Long,
+    seasonNumber: Int,
+    viewModel: EpisodesDetailsViewModel = koinViewModel { parametersOf(seriesId, seasonNumber) }
+) {
     val navController = LocalNavController.current
     val context = LocalContext.current
     val uiState by viewModel.screenState.collectAsStateWithLifecycle()
@@ -77,22 +71,23 @@ fun EpisodesScreenhost(
                 navController.popBackStack()
             }
 
-            is EpisodesDetailEffect.ErrorHappened -> {
+            is EpisodesDetailEffect.ShowToast -> {
                 Toast.makeText(
                     context,
                     context.getString(errorStatusToMessageResource(effect.message)),
                     Toast.LENGTH_LONG
                 ).show()
             }
-            EpisodesDetailEffect.PlayEpisodes -> TODO()
+
+            EpisodesDetailEffect.PlayEpisode -> TODO()
         }
     }
-    EpisodesScreen(uiState = uiState, listener = viewModel)
+    EpisodesScreenContent(uiState = uiState, listener = viewModel)
 }
 
 
 @Composable
-fun EpisodesScreen(
+private fun EpisodesScreenContent(
     uiState: EpisodesDetailsScreenState,
     listener: EpisodesDetailsInteractionListener
 ) {
@@ -101,7 +96,6 @@ fun EpisodesScreen(
             .fillMaxSize()
             .background(Theme.color.surfaces.surface)
             .windowInsetsPadding(WindowInsets.navigationBars)
-            .verticalScroll(rememberScrollState())
     ) {
         SafeImageViewer(
             modifier = Modifier
@@ -152,11 +146,14 @@ fun EpisodesScreen(
                         )
                     )
                     Spacer(modifier = Modifier.weight(1f))
-                    SeasonChip(text = "Season ${uiState.season.seasonNumber}", imgRes = R.drawable.drop_down_arrow)
+                    SeasonChip(
+                        text = "Season ${uiState.season.seasonNumber}",
+                        imgRes = R.drawable.drop_down_arrow
+                    )
                 }
             }
-            itemsIndexed(uiState.episodes){ index , episode ->
-                 EpisodeCard(
+            itemsIndexed(uiState.episodes) { index, episode ->
+                EpisodeCard(
                     episodeNumber = episode.number,
                     episodeImageUrl = "https://image.tmdb.org/t/p/w500/${episode.imageUrl}",
                     episodeName = episode.name,
@@ -188,11 +185,12 @@ fun SeasonChip(
             .padding(horizontal = 12.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
+        BasicText(
             modifier = Modifier.padding(end = 4.dp, bottom = 1.dp),
             text = text,
-            color = Theme.color.surfaces.onSurfaceContainer,
-            style = Theme.textStyle.label.smallRegular12,
+            style = Theme.textStyle.label.smallRegular12.copy(
+                color = Theme.color.surfaces.onSurfaceContainer
+            )
         )
         Icon(
             imageVector = ImageVector.vectorResource(id = imgRes),
@@ -207,8 +205,8 @@ fun EpisodeCard(
     modifier: Modifier = Modifier,
     episodeName: String,
     episodeNumber: Int,
-     episodeDuration: Int,
-     episodeRating: Float,
+    episodeDuration: Int,
+    episodeRating: Float,
     episodeImageUrl: String? = null
 ) {
     Row(
@@ -256,11 +254,9 @@ fun EpisodeCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Text(
+                BasicText(
                     text = episodeName,
-                    color = Theme.color.surfaces.onSurface,
-                    style = Theme.textStyle.title.mediumMedium14,
-                    fontWeight = FontWeight.SemiBold,
+                    style = Theme.textStyle.title.mediumMedium14.copy(color = Theme.color.surfaces.onSurface),
                     modifier = Modifier.weight(1f)
                 )
                 Image(
@@ -268,76 +264,36 @@ fun EpisodeCard(
                     contentDescription = "Rating",
                     modifier = Modifier.size(16.dp)
                 )
-                Text(
+                BasicText(
                     text = "$episodeRating",
-                    color = Theme.color.surfaces.onSurface,
-                    style = Theme.textStyle.label.smallRegular12
+                    style = Theme.textStyle.label.smallRegular12.copy(color = Theme.color.surfaces.onSurface)
                 )
             }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Text(
+                BasicText(
                     text = "Episode $episodeNumber",
-                    color = Theme.color.surfaces.onSurfaceContainer,
-                    style = Theme.textStyle.label.smallRegular12
+                    style = Theme.textStyle.label.smallRegular12.copy(
+                        color = Theme.color.surfaces.onSurfaceContainer,
+                    )
                 )
-                Text(
+                BasicText(
                     text = " • ",
-                    color = Theme.color.surfaces.onSurfaceContainer,
-                    style = Theme.textStyle.label.smallRegular12
+                    style = Theme.textStyle.label.smallRegular12.copy(
+                        color = Theme.color.surfaces.onSurfaceContainer,
+                    )
                 )
-                Text(
+                BasicText(
                     text = "$episodeDuration+m",
-                    color = Theme.color.surfaces.onSurfaceContainer,
-                    style = Theme.textStyle.label.smallRegular12
+                    style = Theme.textStyle.label.smallRegular12.copy(
+                        color = Theme.color.surfaces.onSurfaceContainer,
+                    )
                 )
             }
         }
     }
 }
-
-@Preview()
-@Composable
-fun PreviewEpisodeCard() {
-    MovioTheme(isDarkTheme = true) {
-        val episode = EpisodeCard(
-            episodeId = 1.toString(),
-            episodeNumber = 1,
-            episodeImageUrl = "https://image.tmdb.org/t/p/w500/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg",
-            episodeName = "Unimatrix Zero",
-            episodeDuration = 44,
-            episodeRating = 4.5f,
-        )
-        //EpisodeCard(episode = episode)
-    }
-}
-
-@Preview
-@Composable
-private fun SeasonChipPreview() {
-    MovioTheme(isDarkTheme = true) {
-        SeasonChip(text = "Season 1", imgRes = R.drawable.drop_down_arrow)
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun EpisodesScreenPreview() {
-    MovioTheme(isDarkTheme = true) {
-        //EpisodesScreen(1L, 1)
-    }
-}
-
-//data class
-data class EpisodeCard(
-    val episodeId: String,
-    val episodeName: String,
-    val episodeNumber: Int,
-    val episodeDuration: Int,
-    val episodeRating: Float,
-    val episodeImageUrl: String? = null
-)
 
 

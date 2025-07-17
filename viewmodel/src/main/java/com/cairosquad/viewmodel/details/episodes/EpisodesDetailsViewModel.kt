@@ -3,7 +3,6 @@ package com.cairosquad.viewmodel.details.episodes
 import com.cairosquad.domain.search.exception.MovioException
 import com.cairosquad.domain.search.usecase.GetSeriesDetailsUseCase
 import com.cairosquad.entity.Episode
-import com.cairosquad.entity.Season
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState.ScreenStatus
 import com.cairosquad.viewmodel.exception.ErrorStatus
@@ -18,41 +17,15 @@ class EpisodesDetailsViewModel(
     EpisodesDetailsInteractionListener {
 
     init {
-      loadBasicDetails()
-        getEpisodes(seriesId,seasonNumber)
+        getEpisodes(seriesId, seasonNumber)
     }
 
-    private fun loadBasicDetails() {
-        tryToCall(
-            onStart = {
-                updateState { it.copy(basicDetailsSectionState = ScreenStatus.LOADING) }
-            },
-            block = {
-                TODO()
-               //seriesDetailsUseCase.getEpisodes(seriesId, seasonNumber)
-            },
-            onSuccess = ::setBasicSeriesDetailsToUiState,
-            onError = { throwable ->
-                setError(throwable) { copy(basicDetailsSectionState = ScreenStatus.ERROR) }
-            },
-            dispatcher = Dispatchers.IO
-        )
-    }
-    private fun setBasicSeriesDetailsToUiState(season: Season) {
-        updateState {
-            it.copy(
-                basicDetailsSectionState = ScreenStatus.SUCCESS,
-                season = season.toUiState()
-            )
-        }
-    }
-
-    private fun getEpisodes(seriesId: Long,seasonNumber: Int) {
+    private fun getEpisodes(seriesId: Long, seasonNumber: Int) {
         tryToCall(
             onStart = {
                 updateState { it.copy(episodesSectionState = ScreenStatus.LOADING) }
             },
-            block = { seriesDetailsUseCase.getEpisodes(seriesId, seasonNumber)},
+            block = { seriesDetailsUseCase.getEpisodes(seriesId, seasonNumber) },
             onSuccess = ::setEpisodesToUiState,
             onError = { throwable ->
                 setError(throwable) { copy(episodesSectionState = ScreenStatus.ERROR) }
@@ -65,7 +38,13 @@ class EpisodesDetailsViewModel(
         updateState {
             it.copy(
                 episodesSectionState = ScreenStatus.SUCCESS,
-                episodes = episodes.map { it.toUiState() }
+                episodes = episodes.map { it.toUiState() },
+                season = EpisodesDetailsScreenState.SeasonUiState
+                    (
+                    posterUrl = episodes.first().seasonPosterPath,
+                    seasonNumber = episodes.first().seasonNumber,
+                    episodesCount = episodes.size
+                )
             )
         }
     }
@@ -75,7 +54,7 @@ class EpisodesDetailsViewModel(
     }
 
     override fun onVideoClick(videoId: String) {
-        sendEffect(EpisodesDetailEffect.PlayEpisodes)
+        sendEffect(EpisodesDetailEffect.PlayEpisode)
     }
 
     override fun onSeasonsDropdownClick() {
@@ -84,8 +63,7 @@ class EpisodesDetailsViewModel(
 
     override fun onSeasonSelected(seriesId: Long, seasonNumber: Int) {
         this.seasonNumber = seasonNumber
-        loadBasicDetails()
-        getEpisodes(seriesId,seasonNumber)
+        getEpisodes(seriesId, seasonNumber)
     }
 
     private fun setError(
