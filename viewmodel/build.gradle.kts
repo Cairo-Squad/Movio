@@ -64,7 +64,7 @@ dependencies {
     androidTestImplementation(libs.androidx.core.testing)
     androidTestImplementation(libs.androidx.junit.ktx)
     testImplementation(libs.kotlinx.coroutines.test)
-
+    testImplementation("androidx.paging:paging-testing:$paging_version")
     // google truth
     testImplementation(libs.truth)
     androidTestImplementation(libs.truth)
