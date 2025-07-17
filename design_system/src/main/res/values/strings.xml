@@ -43,4 +43,9 @@
     <string name="default_image_icon">default image icon</string>
     <string name="recent_search">Recent Search</string>
     <string name="clear_all">Clear all</string>
+    <string name="reviewer_image">Reviewer Image</string>
+    <string name="rating_star">Rating Star</string>
+    <string name="Rate_it">Rate it</string>
+    <string name="add_to_list">Add to list</string>
+    <string name="play">Play</string>
 </resources>
