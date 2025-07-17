@@ -1,7 +1,10 @@
-package com.cairosquad.remote.common
+package com.cairosquad.remote.utils
 
+import com.google.common.truth.Truth.assertThat
+import io.ktor.client.call.body
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
+import io.ktor.client.request.get
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
@@ -9,9 +12,6 @@ import io.ktor.http.headersOf
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.Serializable
 import kotlin.test.Test
-import io.ktor.client.request.get
-import com.google.common.truth.Truth.assertThat
-import io.ktor.client.call.body
 
 class HttpClientFactoryTest {
     @Test
