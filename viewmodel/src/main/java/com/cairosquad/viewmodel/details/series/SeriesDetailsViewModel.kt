@@ -151,7 +151,7 @@ class SeriesDetailsViewModel(
         updateState {
             it.copy(
                 seasonsSectionState = ScreenStatus.SUCCESS,
-                seasons = seasons.map { it.toUiState() }
+                seasons = seasons.map { it.toUiState() }.reversed()
             )
         }
     }

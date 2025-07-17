@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
@@ -52,6 +53,7 @@ import com.cairosquad.ui.movio_component.ActionBar
 import com.cairosquad.ui.movio_component.ArtistCard
 import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.ui.movio_component.ReviewCard
+import com.cairosquad.ui.movio_component.SeasonCard
 import com.cairosquad.ui.movio_component.SectionHeader
 import com.cairosquad.ui.navigation.ArtistRoute
 import com.cairosquad.ui.navigation.LocalNavController
@@ -87,7 +89,7 @@ fun SeriesScreen(
 
             SeriesDetailEffect.ShareSeries -> {
                 val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                    type = "text/plain" // MIME type for text
+                    type = "text/plain"
                     putExtra(Intent.EXTRA_SUBJECT, "Check this out!")
                     putExtra(
                         Intent.EXTRA_TEXT,
@@ -315,16 +317,23 @@ private fun SeriesScreenContent(
                     contentPadding = PaddingValues(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    items(uiState.seasons) {
-                        ArtistCard(
-                            modifier = Modifier.clickable {
+                    itemsIndexed(uiState.seasons) { index, season ->
+                        SeasonCard(
+                            modifier = Modifier.width(260.dp),
+                            seriesName = uiState.series.title,
+                            seasonTitle = season.name,
+                            seasonRate = season.rating,
+                            totalNumberOfEpisodes = season.episodesCount.toString(),
+                            movieImage = "https://image.tmdb.org/t/p/w500/${season.posterPath}",
+                            yearOfPublish = season.airDate,
+                            timeOfPublish = season.airDate,
+                            currentSeason = season.number.toString(),
+                            onClick = {
                                 listener.onSeasonClicked(
                                     seriesId = uiState.series.id,
-                                    seasonNumber = it.number
+                                    seasonNumber = season.number
                                 )
-                            },
-                            name = it.name,
-                            imgUrl = "https://image.tmdb.org/t/p/w500/${it.posterPath}"
+                            }
                         )
                     }
                 }
