@@ -2,6 +2,7 @@ package com.cairosquad.viewmodel.details.reviews
 
 import com.cairosquad.domain.search.usecase.GetMoviesDetailsUseCase
 import com.cairosquad.domain.search.usecase.GetSeriesDetailsUseCase
+import com.cairosquad.entity.Review
 import com.cairosquad.viewmodel.base.BaseViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -21,28 +22,35 @@ class ReviewsViewModel(
     fun getReviews() {
         updateState { it.copy(isLoading = true, error = null) }
         tryToCall(
-            block = {
-                val reviews = if (isMovie) {
-                    getMoviesDetailsUseCase.getMovieReviews(mediaId)
-                } else {
-                    getSeriesDetailsUseCase.getSeriesReviews(mediaId)
-                }
-                reviews
-            },
-            onSuccess = { reviews ->
-                updateState {
-                    it.copy(
-                        isLoading = false,
-                        reviews = reviews.map { it.toUiState() }
-                    )
-                }
-            },
-            onError = { error ->
-                updateState {
-                    it.copy(isLoading = false, error = error.message)
-                }
-            },
+            block = { getReviewsByType() },
+            onSuccess = ::handleSuccess,
+
+            onError = ::handleError,
+
             dispatcher = dispatcher
         )
+    }
+
+    private suspend fun getReviewsByType(): List<Review> {
+        return if (isMovie) {
+            getMoviesDetailsUseCase.getMovieReviews(mediaId)
+        } else {
+            getSeriesDetailsUseCase.getSeriesReviews(mediaId)
+        }
+    }
+
+    private fun handleError(error: Throwable) {
+        updateState {
+            it.copy(isLoading = false, error = error.message)
+        }
+    }
+
+    private fun handleSuccess(reviews: List<Review>) {
+        updateState {
+            it.copy(
+                isLoading = false,
+                reviews = reviews.map { it.toUiState() }
+            )
+        }
     }
 }
