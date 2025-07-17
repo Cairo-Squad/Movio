@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -20,7 +21,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -76,7 +76,7 @@ fun EpisodesScreen(
                 .windowInsetsPadding(WindowInsets.statusBars)
                 .heightIn(max = 10000.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-           //userScrollEnabled = false
+            userScrollEnabled = false,
         ) {
             stickyHeader {
                 AppBar(
@@ -113,32 +113,17 @@ fun EpisodesScreen(
                     SeasonChip(text = "Season 1", imgRes = R.drawable.drop_down_arrow)
                 }
             }
-            //items(20, key = { it }) { index ->
-                //Column(
-
-               // ) {
-            item {
-                EpisodeCard(
-                    episodeId = "1",
+            items(20){
+                val episode = EpisodeCard(
+                    episodeId = 1.toString(),
                     episodeNumber = 1,
                     episodeImageUrl = "https://image.tmdb.org/t/p/w500/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg",
                     episodeName = "Unimatrix Zero",
-                    episodeDuration = "44",
-                    episodeRating = 4.5f
+                    episodeDuration = 44.toString(),
+                    episodeRating = 4.5f,
                 )
+                EpisodeCard(episode = episode)
             }
-            item {
-                EpisodeCard(
-                    episodeId = "1",
-                    episodeNumber = 1,
-                    episodeImageUrl = "https://image.tmdb.org/t/p/w500/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg",
-                    episodeName = "Unimatrix Zero",
-                    episodeDuration = "44",
-                    episodeRating = 4.5f
-                )
-            }
-               // }
-            //}
         }
     }
 }
@@ -177,29 +162,15 @@ fun SeasonChip(
     }
 }
 
-@Preview
-@Composable
-private fun SeasonChipPreview() {
-    MovioTheme(isDarkTheme = true) {
-        SeasonChip(text = "Season 1", imgRes = R.drawable.drop_down_arrow)
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun EpisodesScreenPreview() {
-    MovioTheme(isDarkTheme = true) {
-        EpisodesScreen(1L, 1)
-    }
-}
-
 @Composable
 fun EpisodeCard(
     modifier: Modifier = Modifier,
     episode: EpisodeCard,
 ) {
     Row(
-        modifier = modifier.padding(bottom = 12.dp)
+        modifier = modifier
+            .padding(bottom = 12.dp)
+            .padding(horizontal = 16.dp)
             .background(Color(0xFF0D1321))
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -299,6 +270,22 @@ fun PreviewEpisodeCard() {
     }
 }
 
+@Preview
+@Composable
+private fun SeasonChipPreview() {
+    MovioTheme(isDarkTheme = true) {
+        SeasonChip(text = "Season 1", imgRes = R.drawable.drop_down_arrow)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun EpisodesScreenPreview() {
+    MovioTheme(isDarkTheme = true) {
+        EpisodesScreen(1L, 1)
+    }
+}
+
 //data class
 data class EpisodeCard(
     val episodeId: String,
@@ -308,4 +295,5 @@ data class EpisodeCard(
     val episodeRating: Float,
     val episodeImageUrl: String? = null
 )
+
 
