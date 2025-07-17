@@ -237,7 +237,7 @@ class SearchViewModelTest {
     @Test
     fun `should transition to EXPLORE when back is clicked from SEARCH`() = runBlocking {
         viewModel.onClickSearchTextField()
-        delay(50)
+        delay(200)
         viewModel.onBackClicked()
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
     }
@@ -250,7 +250,7 @@ class SearchViewModelTest {
 
         viewModel.onQueryTextChanged("test")
         viewModel.onSearch()
-        delay(50)
+        delay(200)
         viewModel.onBackClicked()
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
     }
@@ -259,7 +259,7 @@ class SearchViewModelTest {
     fun `should handle error gracefully when search field is clicked`() = runBlocking {
         coEvery { getLocalSearchHistoryUseCase.getAll() } throws IOException()
         viewModel.onClickSearchTextField()
-        delay(50)
+        delay(200)
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
         assertThat(viewModel.screenState.value.recentSearch).isEmpty()
     }
@@ -281,7 +281,7 @@ class SearchViewModelTest {
 
         viewModel.onQueryTextChanged(query)
         viewModel.onSearch()
-        delay(50)
+        delay(200)
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.RESULT)
         assertThat(viewModel.screenState.value.movies).isEmpty()
         assertThat(viewModel.screenState.value.series).isEmpty()
@@ -292,7 +292,7 @@ class SearchViewModelTest {
     fun `should set UNKNOWN_ERROR when clear history fails`() = runBlocking {
         coEvery { clearSearchHistoryUseCase.clearAllHistory() } throws IOException()
         viewModel.onClearHistory()
-        delay(50)
+        delay(200)
         assertThat(viewModel.screenState.value.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
     }
 
@@ -300,7 +300,7 @@ class SearchViewModelTest {
     fun `should set UNKNOWN_ERROR when removing history item fails`() = runBlocking {
         coEvery { clearSearchHistoryUseCase.removeQueryFromHistory(any()) } throws IllegalStateException()
         viewModel.onRemoveHistoryItem("dummy")
-        delay(50)
+        delay(200)
         assertThat(viewModel.screenState.value.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
     }
 
@@ -325,13 +325,13 @@ class SearchViewModelTest {
         val query = "test"
         coEvery { getLocalSearchHistoryUseCase.getByQuery(query) } returns emptyList()
         viewModel.onQueryTextChanged(query)
-        delay(50)
+        delay(200)
         val jobBefore = viewModel.run {
             javaClass.getDeclaredField("searchJob").apply { isAccessible = true }.get(this) as Job?
         }
         require(jobBefore != null && jobBefore.isActive)
         viewModel.onCancelSearch()
-        delay(50)
+        delay(200)
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
         val jobAfter = viewModel.run {
             javaClass.getDeclaredField("searchJob").apply { isAccessible = true }.get(this) as Job?
@@ -354,14 +354,14 @@ class SearchViewModelTest {
         viewModel
 
             .onQueryTextChanged("a")
-        delay(50)
+        delay(200)
         val firstJob =
             viewModel.javaClass.getDeclaredField("searchJob").apply { isAccessible = true }
                 .get(viewModel) as Job
         assertThat(firstJob.isActive).isTrue()
         coEvery { getLocalSearchHistoryUseCase.getByQuery("b") } returns emptyList()
         viewModel.onQueryTextChanged("b")
-        delay(50)
+        delay(200)
         val secondJob =
             viewModel.javaClass.getDeclaredField("searchJob").apply { isAccessible = true }
                 .get(viewModel) as Job
@@ -388,7 +388,7 @@ class SearchViewModelTest {
 
         viewModel.onQueryTextChanged("boom")
         viewModel.onSearch()
-        delay(50)
+        delay(200)
         with(viewModel.screenState.value) {
             assertThat(screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
             assertThat(errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
@@ -401,7 +401,7 @@ class SearchViewModelTest {
             coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies() } throws NetworkException()
             coEvery { getSuggestedMoviesUseCase.getSuggestedMovies() } returns emptyList()
             viewModel.loadDiscoverMovies()
-            delay(50)
+            delay(200)
             with(viewModel.screenState.value) {
                 assertThat(screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
                 assertThat(errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)

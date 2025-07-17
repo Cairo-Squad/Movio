@@ -1,9 +1,17 @@
-package com.cairosquad.repository.common.exception
+package com.cairosquad.repository.common.mappers
 
 import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.exception.NetworkException
 import com.cairosquad.domain.exception.UnknownException
+import com.cairosquad.repository.common.exception.ApiException
+import com.cairosquad.repository.common.exception.DataSourceException
+import com.cairosquad.repository.common.exception.NoInternetException
+import com.cairosquad.repository.common.exception.RequestTimeoutException
+import com.cairosquad.repository.common.exception.ServerException
+import com.cairosquad.repository.common.exception.TooManyRequestsException
+import com.cairosquad.repository.common.exception.UnauthorizedException
+import com.cairosquad.repository.common.exception.UnknownDataSourceException
 
 suspend fun <T> tryToCall(execute: suspend () -> T): T {
     return try {

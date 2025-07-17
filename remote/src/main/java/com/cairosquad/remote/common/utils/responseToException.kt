@@ -1,6 +1,6 @@
 package com.cairosquad.remote.common.utils
 
-import com.cairosquad.remote.common.dto.ErrorDto
+import com.cairosquad.repository.search.data_source.remote.dto.ErrorDto
 import com.cairosquad.repository.common.exception.RequestTimeoutException
 import com.cairosquad.repository.common.exception.ServerException
 import com.cairosquad.repository.common.exception.TooManyRequestsException

@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.cairosquad.local.search.recent.entity.RecentSearchEntity
+import com.cairosquad.repository.search.data_source.local.dto.RecentSearchEntity
 
 @Dao
 interface LocalRecentSearchDao {

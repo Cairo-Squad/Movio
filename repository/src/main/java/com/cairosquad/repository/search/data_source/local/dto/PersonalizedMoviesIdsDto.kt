@@ -1,4 +1,4 @@
-package com.cairosquad.local.search.discovery.dto
+package com.cairosquad.repository.search.data_source.local.dto
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

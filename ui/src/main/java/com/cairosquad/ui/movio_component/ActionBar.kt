@@ -73,7 +73,7 @@ fun ActionBar(
                 .background(
                     brush = Theme.color.gradiant.primaryGradient
                 )
-                .padding(14.9.dp),
+                .padding(15.dp),
             imageVector = ImageVector.vectorResource(id = R.drawable.outline_play),
             contentDescription = stringResource(R.string.play),
             tint = Theme.color.brand.onPrimary,
