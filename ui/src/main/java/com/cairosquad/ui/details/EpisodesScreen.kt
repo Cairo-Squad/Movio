@@ -44,9 +44,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
-import com.cairosquad.ui.R
 import com.cairosquad.ui.navigation.LocalNavController
-import com.cairosquad.ui.utils.ObserveAsEvent
+import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.ui.utils.errorStatusToMessageResource
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailEffect
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsInteractionListener
@@ -54,6 +53,7 @@ import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsViewModel
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import com.cairosquad.design_system.R
 
 @Composable
 fun EpisodesScreen(
@@ -65,7 +65,7 @@ fun EpisodesScreen(
     val context = LocalContext.current
     val uiState by viewModel.screenState.collectAsStateWithLifecycle()
 
-    ObserveAsEvent(viewModel.effect) { effect ->
+    ObserveAsEffect(viewModel.effect) { effect ->
         when (effect) {
             EpisodesDetailEffect.NavigateBack -> {
                 navController.popBackStack()

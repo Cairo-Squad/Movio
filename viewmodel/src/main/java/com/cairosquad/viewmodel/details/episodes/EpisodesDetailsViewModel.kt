@@ -1,7 +1,7 @@
 package com.cairosquad.viewmodel.details.episodes
 
-import com.cairosquad.domain.search.exception.MovioException
-import com.cairosquad.domain.search.usecase.GetSeriesDetailsUseCase
+import com.cairosquad.domain.exception.MovioException
+import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
 import com.cairosquad.entity.Episode
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState.ScreenStatus
