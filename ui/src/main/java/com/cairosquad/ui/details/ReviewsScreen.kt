@@ -56,11 +56,12 @@ private fun ReviewsContent(
             onBackButtonClicked = onBackClicked,
         )
         LazyColumn(
-            modifier = Modifier.padding(top = 12.dp, start = 16.dp, end = 16.dp),
+            modifier = Modifier.padding(top = 12.dp, bottom = 12.dp, start = 16.dp, end = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(reviews) { review ->
                 ReviewCard(
+                    modifier = Modifier.fillMaxWidth(),
                     imgUrl = review.reviewerImageUrl,
                     rating = review.rating,
                     reviewDate = review.reviewDate,
