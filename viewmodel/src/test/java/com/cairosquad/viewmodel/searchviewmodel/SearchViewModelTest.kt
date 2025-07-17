@@ -8,7 +8,6 @@ import com.cairosquad.domain.search.usecase.ClearSearchHistoryUseCase
 import com.cairosquad.domain.search.usecase.GetLocalSearchHistoryUseCase
 import com.cairosquad.domain.search.usecase.GetPersonalizedMoviesUseCase
 import com.cairosquad.domain.search.usecase.GetSuggestedMoviesUseCase
-import com.cairosquad.domain.search.usecase.SearchUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
@@ -28,7 +27,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
