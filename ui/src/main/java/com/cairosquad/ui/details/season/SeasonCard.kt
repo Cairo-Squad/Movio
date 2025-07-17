@@ -146,7 +146,6 @@ fun SeasonCard(
     }
 }
 
-
 @MultiThemePreviews
 @Composable
 private fun SeasonCardPreview() {
