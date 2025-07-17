@@ -1,43 +1,231 @@
 package com.cairosquad.ui.details.artist
 
+import android.widget.Toast
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.cairosquad.design_system.R
+import com.cairosquad.design_system.modifier.CustomBrush
 import com.cairosquad.design_system.theme.Theme
-import com.cairosquad.ui.movio_component.Chip
-import com.cairosquad.ui.navigation.LocalNavController
+import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
+import com.cairosquad.ui.movio_component.InfoChip
+import com.cairosquad.ui.movio_component.MovieCard
+import com.cairosquad.ui.navigation.MovieRoute
+import com.cairosquad.ui.navigation.SeriesRoute
+import com.cairosquad.ui.utils.ObserveAsEvent
+import com.cairosquad.ui.utils.errorStatusToMessageResource
+import com.cairosquad.viewmodel.details.artist.ArtistEffect
+import com.cairosquad.viewmodel.details.artist.ArtistInteractionListener
+import com.cairosquad.viewmodel.details.artist.ArtistScreenState
+import com.cairosquad.viewmodel.details.artist.ArtistViewModel
+import com.cairosquad.viewmodel.search.SearchEffect
+import androidx.compose.foundation.lazy.items
+import com.cairosquad.design_system.basic_component.AppBar
+import org.koin.androidx.compose.koinViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun ArtistScreen(
-    artistId: Long
-) {
-    val navController = LocalNavController.current
+    artistId: Long,
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    artistViewModel : ArtistViewModel= koinViewModel()
+
+    ) {
+
+    LaunchedEffect(Unit) {
+        artistViewModel.loadArtistDetails(artistId)
+        artistViewModel.loadArtistMovies(artistId)
+        artistViewModel.loadArtistSeries(artistId)
+    }
+    val state by artistViewModel.screenState.collectAsState()
+    val context = LocalContext.current
+    ObserveAsEvent(artistViewModel.effect) { event ->
+        when (event) {
+            is ArtistEffect.ErrorHappened -> {
+                Toast.makeText(
+                    context,
+                    context.getString(errorStatusToMessageResource(event.message)),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+
+            is ArtistEffect.NavigateToMovieDetails -> {
+                navController.navigate(MovieRoute(event.movieId))
+            }
+
+            is ArtistEffect.NavigateBack -> {
+                navController.popBackStack()
+            }
+        }
+    }
+
+    ArtistScreenContent(modifier = modifier ,state= state  , listener = artistViewModel)
+}
+
+@Composable
+private fun ArtistScreenContent(modifier: Modifier=Modifier ,state : ArtistScreenState , listener : ArtistInteractionListener) {
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterVertically)
+        modifier = modifier
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.Start,
     ) {
-        BasicText(
-            text = "artist with id: $artistId",
-            style = Theme.textStyle.title.largeBold16
-                .copy(color = Theme.color.surfaces.onSurface),
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(335.dp)
         )
-        Chip(
-            title = "back",
-            onClick = { navController.popBackStack() }
-        )
+        {
+            SafeImageViewer(
+                model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
+                contentDescription = "blured image",
+                modifier = Modifier
+                    .fillMaxSize()
+                    .CustomBrush(0.5f, 16.dp),
+                nudeThreshold = 0.0,
+                nonNudeThreshold = 0.0
+            )
+            AppBar(
+            onBackButtonClicked = listener::onClickBack,
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(top = 12.dp)
+            )
+
+            SafeImageViewer(
+                model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
+                modifier = Modifier
+                    .padding(horizontal = 6.67.dp)
+                    .size(160.dp)
+                    .clip(CircleShape),
+                contentDescription = stringResource(R.string.artist_image),
+                nudeThreshold = 0.0,
+                nonNudeThreshold = 0.0
+            )
+
+
+        }
+        Column(modifier = Modifier.padding(start = 16.dp)) {
+            Text(
+                text = state.artist.name,
+                style = Theme.textStyle.headline.mediumMedium18,
+                color = Theme.color.surfaces.onSurface,
+            )
+
+            Text(
+                text = state.artist.department,
+                style = Theme.textStyle.label.smallRegular14,
+                color = Theme.color.surfaces.onSurfaceVariant,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.padding(top = 16.dp)
+            ) {
+                InfoChip(
+                    text = formatBirthDateLegacy(state.artist.birthDate),
+                    imgRes = R.drawable.date,
+                )
+                InfoChip(
+                    text = state.artist.country,
+                    imgRes = R.drawable.component_1,
+                )
+            }
+
+
+            Text(
+                text = state.artist.biography,
+                style = Theme.textStyle.label.smallRegular12,
+                color = Theme.color.surfaces.onSurface,
+                modifier = Modifier
+                    .padding( vertical = 16.dp),
+                maxLines = 5,
+                overflow = TextOverflow.Ellipsis
+            )
+
+
+            Text(
+                text = "known for",
+                style = Theme.textStyle.title.mediumMedium14,
+                color = Theme.color.surfaces.onSurface,
+                modifier = Modifier.padding(top = 32.dp, bottom = 12.dp)
+            )
+
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+
+                items(state.knownForMovies) { movie ->
+                    MovieCard(
+                        title = movie.title,
+                        vote = movie.rating,
+                        imgUrl = movie.posterPath,
+                        width = 124.dp,
+                        aspectRatio = 0.67f,
+                        modifier = Modifier.clickable { listener.onMovieClick(movie.id) }
+                    )
+                }
+
+                items(state.KnownForSeries) { series ->
+                    MovieCard(
+                        title = series.title,
+                        vote = series.rating,
+                        imgUrl = series.posterPath,
+                        width = 124.dp,
+                        aspectRatio = 0.67f,
+                        modifier = Modifier.clickable { listener.onMovieClick(series.id) }
+                    )
+                }
+            }
+        }
     }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun ArtistScreenContentPreview() {
+  //  ArtistScreenContent()
+}
+private fun formatBirthDateLegacy(birthDateLong: Long): String {
+    val date = Date(birthDateLong)
+    val formatter = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault())
+    return formatter.format(date)
 }

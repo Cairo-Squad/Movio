@@ -62,7 +62,8 @@ fun AppNavigation() {
             }
             composable<ArtistRoute> { backStackEntry ->
                 ArtistScreen(
-                    artistId = backStackEntry.toRoute<ArtistRoute>().artistId
+                    artistId = backStackEntry.toRoute<ArtistRoute>().artistId,
+                    navController=navController
                 )
             }
             composable<SimilarMovieRoute> { backStackEntry ->

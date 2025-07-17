@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.Chip
+import com.cairosquad.ui.navigation.ArtistRoute
 import com.cairosquad.ui.navigation.LocalNavController
 
 @Composable
@@ -40,7 +41,7 @@ fun TopCastScreen(
         )
         Chip(
             title = "back",
-            onClick = { navController.popBackStack() }
+            onClick =  {navController.navigate(ArtistRoute(119783L))}
         )
     }
 
