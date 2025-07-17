@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
+import com.cairosquad.design_system.basic_component.ExpandableText
 import com.cairosquad.design_system.theme.Theme.color
 import com.cairosquad.design_system.theme.Theme.textStyle
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
@@ -115,28 +116,19 @@ fun ReviewCard(
                 )
             }
         }
-        Column {
-            Text(
-                modifier = Modifier.padding(top = 12.dp),
-                text = reviewText,
-                color = color.surfaces.onSurfaceVariant,
-                style = textStyle.label.smallRegular12,
-                maxLines = if (isExpanded) Int.MAX_VALUE else 5,
-                onTextLayout = { textLayoutResult ->
-                    isOverflowing = textLayoutResult.hasVisualOverflow
-                }
-            )
-            if (isOverflowing || isExpanded) {
-                Text(
-                    text = if (isExpanded) stringResource(R.string.less) else stringResource(R.string.more),
-                    modifier = Modifier
-                        .padding(top = 4.dp)
-                        .clickable { isExpanded = !isExpanded },
-                    color = color.brand.onPrimaryContainer,
-                    style = textStyle.label.mediumMedium12
-                )
-            }
+        ExpandableText(
+            text = reviewText,
+            color = color.surfaces.onSurfaceVariant,
+            style = textStyle.label.smallRegular12,
+            collapsedMaxLine = 4,
+            showMoreText = "... " + stringResource(R.string.more),
+            showMoreStyle = textStyle.label.mediumMedium12,
+            showMoreColor = color.brand.onPrimaryContainer,
+            showLessText = " " + stringResource(R.string.less),
+            showLessStyle = textStyle.label.mediumMedium12,
+            showLessColor = color.brand.onPrimaryContainer,
+            modifier = Modifier.padding(top = 12.dp)
+        )
 
-        }
     }
 }
