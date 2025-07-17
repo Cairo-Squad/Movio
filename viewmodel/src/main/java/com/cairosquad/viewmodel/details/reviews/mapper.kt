@@ -14,9 +14,9 @@ fun Review.toUiState() = ReviewsScreenState.ReviewUiState(
 )
 
 @JvmInline
-value class Timestamp(val value: Long)
+private value class Timestamp(val value: Long)
 
-fun Timestamp.toDateFormat(): String {
+private fun Timestamp.toDateFormat(): String {
     val date = Date(this.value)
     val format = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
     return format.format(date)
