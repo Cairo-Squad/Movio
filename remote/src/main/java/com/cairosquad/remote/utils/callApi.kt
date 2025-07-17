@@ -1,4 +1,4 @@
-package com.cairosquad.remote.common.utils
+package com.cairosquad.remote.utils
 
 import com.cairosquad.repository.common.exception.NoInternetException
 import io.ktor.client.statement.HttpResponse
