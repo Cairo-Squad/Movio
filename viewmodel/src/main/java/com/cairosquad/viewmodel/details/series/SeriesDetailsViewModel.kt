@@ -63,11 +63,18 @@ class SeriesDetailsViewModel(
         updateState { it.copy(showLoginBottomSheet = false) }
     }
 
-    override fun onCopySuccess(message: String) {
+    override fun onCopy(message: String, isSuccessful: Boolean) {
         tryToCall(
             onStart = {
+                onDismissShareBottomSheet()
                 delay(500)
-                updateState { it.copy(showSnackBar = true, snackMessage = message) }
+                updateState {
+                    it.copy(
+                        showSnackBar = true,
+                        snackMessage = message,
+                        isProcessSuccess = isSuccessful
+                    )
+                }
             },
             block = { delay(2000) },
             onSuccess = {},

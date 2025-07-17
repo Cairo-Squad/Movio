@@ -10,7 +10,7 @@ interface SeriesDetailsInteractionListener {
     fun onAddToListClicked()
     fun onDismissShareBottomSheet()
     fun onDismissLoginBottomSheet()
-    fun onCopySuccess(message: String)
+    fun onCopy(message: String, isSuccessful: Boolean)
     fun onArtistClicked(artistId: Long)
     fun onSeeAllArtistsClicked(seriesId: Long)
     fun onSeasonClicked(seriesId: Long, seasonNumber: Int)

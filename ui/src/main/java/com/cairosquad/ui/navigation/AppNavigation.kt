@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.AppScreen
@@ -24,6 +25,7 @@ import com.cairosquad.ui.details.TopCastScreen
 import com.cairosquad.ui.search.ForYouScreen
 import com.cairosquad.ui.splash.SplashScreen
 
+private const val BASE_URL = "https://www.cairo-movio.com"
 
 @Composable
 fun AppNavigation() {
@@ -49,15 +51,27 @@ fun AppNavigation() {
             composable<AppRoute> {
                 AppScreen()
             }
-            composable<MovieRoute> { backStackEntry ->
+            composable<MovieRoute>(
+                deepLinks = listOf(
+                    navDeepLink<MovieRoute>(basePath = "$BASE_URL/movie")
+                )
+            ) { backStackEntry ->
                 MovieScreen(
                     movieId = backStackEntry.toRoute<MovieRoute>().movieId
                 )
             }
-            composable<SeriesRoute> { backStackEntry ->
+            composable<SeriesRoute>(
+                deepLinks = listOf(
+                    navDeepLink<SeriesRoute>(basePath = "$BASE_URL/series")
+                )
+            ) { backStackEntry ->
                 SeriesScreen(seriesId = 1399)
             }
-            composable<ArtistRoute> { backStackEntry ->
+            composable<ArtistRoute>(
+                deepLinks = listOf(
+                    navDeepLink<MovieRoute>(basePath = "$BASE_URL/artist")
+                )
+            ) { backStackEntry ->
                 ArtistScreen(
                     artistId = backStackEntry.toRoute<ArtistRoute>().artistId
                 )
