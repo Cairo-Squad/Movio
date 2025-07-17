@@ -84,17 +84,18 @@ fun AppNavigation() {
                     isMovie = backStackEntry.toRoute<ReviewsRoute>().isMovie
                 )
             }
-            composable<SeasonsRoute> { backStackEntry ->
-                SeasonsScreen(
-                    seriesId = backStackEntry.toRoute<SeasonsRoute>().seriesId
-                )
-            }
             composable<SeasonRoute> { backStackEntry ->
                 SeasonScreen(
                     seriesId = backStackEntry.toRoute<SeasonRoute>().seriesId,
-                    seasonNumber = backStackEntry.toRoute<SeasonRoute>().seasonNumber
                 )
             }
+
+            composable<SeasonsRoute> { backStackEntry ->
+                SeasonsScreen(
+                    seriesId = backStackEntry.toRoute<SeasonsRoute>().seriesId,
+                )
+            }
+
             composable<ForYouRoute> {
                 ForYouScreen()
             }
