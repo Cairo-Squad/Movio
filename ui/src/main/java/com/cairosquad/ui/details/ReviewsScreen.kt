@@ -1,46 +1,63 @@
 package com.cairosquad.ui.details
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.cairosquad.design_system.theme.Theme
-import com.cairosquad.ui.movio_component.Chip
-import com.cairosquad.ui.navigation.LocalNavController
+import androidx.navigation.NavHostController
+import com.cairosquad.design_system.basic_component.AppBar
+import com.cairosquad.ui.R
+import com.cairosquad.ui.movio_component.ReviewCard
+import com.cairosquad.viewmodel.details.reviews.ReviewsScreenState.ReviewUiState
+import com.cairosquad.viewmodel.details.reviews.ReviewsViewModel
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ReviewsScreen(
     mediaId: Long,
-    isMovie: Boolean, // false for series, true for movies,
+    isMovie: Boolean,
+    navController: NavHostController,
+    viewModel: ReviewsViewModel = koinViewModel<ReviewsViewModel>(
+        parameters = { parametersOf(mediaId, isMovie) }
+    )
 ) {
-    val navController = LocalNavController.current
+    val state = viewModel.screenState.collectAsState()
 
-    val media = if (isMovie) "movie" else "series"
+    ReviewsContent(
+        onBackClicked = { navController.popBackStack() },
+        reviews = state.value.reviews,
+    )
+}
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterVertically)
+@Composable
+private fun ReviewsContent(
+    onBackClicked: () -> Unit,
+    reviews: List<ReviewUiState>
+) {
+    AppBar(
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+        title = stringResource(R.string.reviews),
+        onBackButtonClicked = onBackClicked,
+    )
+    LazyColumn(
+        modifier = Modifier.padding(top = 12.dp, start = 16.dp, end = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        BasicText(
-            text = "these are reviews for $media with id: $mediaId",
-            style = Theme.textStyle.title.largeBold16
-                .copy(color = Theme.color.surfaces.onSurface),
-        )
-        Chip(
-            title = "back",
-            onClick = { navController.popBackStack() }
-        )
+        items(reviews) { review ->
+            ReviewCard(
+                imgUrl = review.reviewerImageUrl,
+                rating = review.rating,
+                reviewDate = review.reviewDate,
+                reviewText = review.reviewText,
+                reviewerName = review.reviewerName
+            )
+        }
     }
+
 }

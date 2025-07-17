@@ -29,8 +29,8 @@ import com.cairosquad.ui.R
 
 @Composable
 fun ReviewCard(
-    imgUrl: String,
-    movieTitle: String,
+    imgUrl: String?,
+    reviewerName: String,
     rating: String,
     reviewDate: String,
     reviewText: String,
@@ -49,8 +49,7 @@ fun ReviewCard(
             .background(Theme.color.surfaces.surfaceContainer)
             .padding(12.dp)
     ) {
-        Row(
-        ) {
+        Row {
             if (imgUrl?.isNotEmpty() == true) {
                 SafeImageViewer(
                     model = "https://image.tmdb.org/t/p/w500$imgUrl",
@@ -68,7 +67,7 @@ fun ReviewCard(
                         .align(Alignment.CenterVertically)
                         .background(Theme.color.system.defaultImageBackground),
                     contentAlignment = Alignment.Center
-                ){
+                ) {
                     Icon(
                         imageVector = ImageVector.vectorResource(id = com.cairosquad.design_system.R.drawable.image_icon),
                         contentDescription = stringResource(R.string.reviewer_image),
@@ -82,7 +81,7 @@ fun ReviewCard(
                     .weight(1f)
             ) {
                 Text(
-                    text = movieTitle,
+                    text = reviewerName,
                     color = Theme.color.surfaces.onSurface,
                     style = Theme.textStyle.title.mediumMedium14
                 )
