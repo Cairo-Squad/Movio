@@ -28,7 +28,8 @@ class EpisodesDetailsViewModel(
                 updateState { it.copy(basicDetailsSectionState = ScreenStatus.LOADING) }
             },
             block = {
-                seriesDetailsUseCase.getSeasonDetails(seriesId, seasonNumber)
+                TODO()
+               //seriesDetailsUseCase.getEpisodes(seriesId, seasonNumber)
             },
             onSuccess = ::setBasicSeriesDetailsToUiState,
             onError = { throwable ->
