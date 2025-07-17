@@ -1,8 +1,7 @@
 package com.cairosquad.domain.usecase
 
-import com.cairosquad.domain.search.repository.SearchHistoryRepository
-import com.cairosquad.domain.search.repository.SearchRepository
-import com.cairosquad.domain.search.usecase.SearchUseCase
+import com.cairosquad.domain.repository.SearchRepository
+import com.cairosquad.domain.usecase.search.SearchUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
@@ -12,6 +11,7 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -22,18 +22,19 @@ import org.junit.Test
 
 class SearchUseCaseTest {
 
-    private val searchRepository = mockk<SearchRepository>()
-    private val recentSearchRepository = mockk<SearchHistoryRepository>(relaxed = true)
+    private val searchRepository = mockk<SearchRepository>(relaxed = true)
     private lateinit var useCase: SearchUseCase
 
     private val dispatcher = StandardTestDispatcher()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
         Dispatchers.setMain(dispatcher)
-        useCase = SearchUseCase(searchRepository, recentSearchRepository)
+        useCase = SearchUseCase(searchRepository)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @After
     fun tearDown() {
         Dispatchers.resetMain()
@@ -49,12 +50,12 @@ class SearchUseCaseTest {
         )
 
         coEvery { searchRepository.getMovies(query) } returns movies
-        coEvery { recentSearchRepository.addQuery(query) } just runs
+        coEvery { searchRepository.addQuery(query) } just runs
 
         val result = useCase.getMovies(query)
 
         coVerify { searchRepository.getMovies(query) }
-        coVerify { recentSearchRepository.addQuery(query) }
+        coVerify { searchRepository.addQuery(query) }
     }
 
     @Test
@@ -66,12 +67,12 @@ class SearchUseCaseTest {
         )
 
         coEvery { searchRepository.getSeries(query) } returns series
-        coEvery { recentSearchRepository.addQuery(query) } just runs
+        coEvery { searchRepository.addQuery(query) } just runs
 
         val result = useCase.getSeries(query)
 
         coVerify { searchRepository.getSeries(query) }
-        coVerify { recentSearchRepository.addQuery(query) }
+        coVerify { searchRepository.addQuery(query) }
     }
 
     @Test
@@ -85,11 +86,11 @@ class SearchUseCaseTest {
         )
 
         coEvery { searchRepository.getArtists(query) } returns artists
-        coEvery { recentSearchRepository.addQuery(query) } just runs
+        coEvery { searchRepository.addQuery(query) } just runs
 
         val result = useCase.getArtists(query)
 
         coVerify { searchRepository.getArtists(query) }
-        coVerify { recentSearchRepository.addQuery(query) }
+        coVerify { searchRepository.addQuery(query) }
     }
 }

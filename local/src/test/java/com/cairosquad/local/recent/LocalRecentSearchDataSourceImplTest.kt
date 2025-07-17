@@ -2,13 +2,14 @@ package com.cairosquad.local.recent
 
 import com.cairosquad.local.search.recent.LocalRecentSearchDataSourceImpl
 import com.cairosquad.local.search.recent.dao.LocalRecentSearchDao
-import com.cairosquad.local.search.recent.entity.RecentSearchEntity
+import com.cairosquad.repository.search.data_source.local.dto.RecentSearchEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -23,12 +24,14 @@ class LocalRecentSearchDataSourceImplTest {
     private lateinit var dataSource: LocalRecentSearchDataSourceImpl
     private val dispatcher = StandardTestDispatcher()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
         Dispatchers.setMain(dispatcher)
         dataSource = LocalRecentSearchDataSourceImpl(dao)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @After
     fun tearDown() {
         Dispatchers.resetMain()
@@ -80,7 +83,7 @@ class LocalRecentSearchDataSourceImplTest {
         dataSource.addQuery(query)
         // Then
         coVerify {
-            dao.insertQuery(match { it is RecentSearchEntity && it.query == query })
+            dao.insertQuery(match { it.query == query })
         }
     }
 

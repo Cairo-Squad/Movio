@@ -3,7 +3,7 @@ package com.cairosquad.repository.search.data_source.local.dto
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
-import java.time.Instant
+import java.util.Date
 
 fun Series.toCacheDto(query: String,page: Int): SeriesCacheDto {
     return SeriesCacheDto(
@@ -13,7 +13,7 @@ fun Series.toCacheDto(query: String,page: Int): SeriesCacheDto {
         posterPath = posterPath,
         voteAverage = rating.toDouble(),
         query = query,
-        timestamp = Instant.now().toEpochMilli()
+        timestamp = Date().time
     )
 }
 
@@ -44,7 +44,7 @@ fun Movie.toCacheDto(query: String,page:Int): MovieCacheDto {
         posterPath = posterPath,
         voteAverage = rating.toDouble(),
         query = query,
-        timestamp = Instant.now().toEpochMilli()
+        timestamp = Date().time
     )
 }
 
@@ -74,7 +74,7 @@ fun Artist.toCacheDto(query: String,page: Int): ArtistCacheDto {
         name = name,
         photoPath = photoPath,
         query = query,
-        timestamp = Instant.now().toEpochMilli()
+        timestamp = Date().time
     )
 }
 

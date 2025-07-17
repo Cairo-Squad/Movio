@@ -9,6 +9,12 @@ import com.cairosquad.domain.search.usecase.ClearSearchHistoryUseCase
 import com.cairosquad.domain.search.usecase.GetLocalSearchHistoryUseCase
 import com.cairosquad.domain.search.usecase.GetPersonalizedMoviesUseCase
 import com.cairosquad.domain.search.usecase.GetSuggestedMoviesUseCase
+import com.cairosquad.domain.exception.MovioException
+import com.cairosquad.domain.usecase.search.ClearSearchHistoryUseCase
+import com.cairosquad.domain.usecase.search.GetLocalSearchHistoryUseCase
+import com.cairosquad.domain.usecase.movies.GetPersonalizedMoviesUseCase
+import com.cairosquad.domain.usecase.movies.GetSuggestedMoviesUseCase
+import com.cairosquad.domain.usecase.search.SearchUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
@@ -105,22 +111,19 @@ class SearchViewModel(
         }
     }
 
-    override fun onSearch(query: String) {
+    override fun onSearch() {
+
+        val query = screenState.value.query
+
+        if (query.isBlank()) return
+
         updateState {
             it.copy(
                 screenStatus = SearchScreenState.ScreenStatus.LOADING,
-                query = query,
                 errorStatus = null
             )
         }
 
-        if (query.isBlank()) {
-            updateState {
-                it.copy(
-                    screenStatus = SearchScreenState.ScreenStatus.SEARCH,
-                )
-            }
-        } else {
             tryToCall(
                 block = {
                     val movies = cacheMappedPagingData(
@@ -165,7 +168,6 @@ class SearchViewModel(
                 dispatcher = Dispatchers.IO
             )
         }
-    }
     private fun <T : Any, R : Any> cacheMappedPagingData(
         query: String,
         scope: CoroutineScope,
@@ -174,16 +176,18 @@ class SearchViewModel(
     ): Flow<PagingData<R>> = fetch(query)
         .map { pagingData -> pagingData.map(map) }
         .cachedIn(scope)
-    override fun onRecentSearchItemClicked(query: String) = onSearch(query)
+    override fun onRecentSearchItemClicked(query: String) {
+        updateState { it.copy(query = query) }
+        onSearch()
+    }
 
     override fun onClearHistory() {
         tryToCall(
             block = {
                 clearSearchHistoryUseCase.clearAllHistory()
-                emptyList<String>()
             },
             onSuccess = { suggestions ->
-                updateState { it.copy(recentSearch = suggestions, errorStatus = null) }
+                updateState { it.copy(recentSearch = emptyList(), errorStatus = null) }
             },
             onError = { e ->
                 updateState {
@@ -201,10 +205,14 @@ class SearchViewModel(
         tryToCall(
             block = {
                 clearSearchHistoryUseCase.removeQueryFromHistory(query)
-                getLocalSearchHistoryUseCase.getAll()
             },
-            onSuccess = { suggestions ->
-                updateState { it.copy(recentSearch = suggestions, errorStatus = null) }
+            onSuccess = {
+                updateState {
+                    it.copy(
+                        recentSearch = it.recentSearch.filterNot { q -> q == query },
+                        errorStatus = null
+                    )
+                }
             },
             onError = { e ->
                 updateState {
@@ -240,7 +248,11 @@ class SearchViewModel(
     override fun onClickSearchTextField() {
         tryToCall(
             block = {
-                getLocalSearchHistoryUseCase.getAll()
+                if (screenState.value.query.isBlank()) {
+                    getLocalSearchHistoryUseCase.getAll()
+                } else {
+                    getLocalSearchHistoryUseCase.getByQuery(screenState.value.query)
+                }
             },
             onSuccess = { suggestions ->
                 updateState {
@@ -262,12 +274,12 @@ class SearchViewModel(
 
     override fun onRefresh() {
         viewModelScope.launch {
-            updateState { it.copy(isRefreshing = true,) }
+            updateState { it.copy(isRefreshing = true) }
             delay(500L)
             updateState { it.copy(isRefreshing = false) }
         }
         if (screenState.value.query.isBlank()) loadDiscoverMovies()
-        else onSearch(screenState.value.query)
+        else onSearch()
     }
 
     override fun onMovieClicked(movieId: Long) {

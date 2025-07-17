@@ -12,8 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.cairosquad.design_system.basic_component.Chip
 import com.cairosquad.design_system.theme.Theme
-import com.cairosquad.ui.movio_component.Chip
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.ReviewsRoute
 import com.cairosquad.ui.navigation.SeasonsRoute
@@ -56,7 +56,7 @@ fun SeriesScreen(
             onClick = { navController.navigate(ReviewsRoute(seriesId, false)) }
         )
         Chip(
-            title = "see similar seriess for this series",
+            title = "see similar series for this series",
             onClick = { navController.navigate(SimilarSeriesRoute(seriesId)) }
         )
     }
