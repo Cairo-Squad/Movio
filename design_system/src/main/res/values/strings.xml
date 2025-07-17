@@ -51,4 +51,9 @@
     <string name="year_episodes">%1$s | %2$s Episodes</string>
     <string name="rating_star">Rating Star</string>
 
+    <string name="reviewer_image">Reviewer Image</string>
+    <string name="rating_star">Rating Star</string>
+    <string name="Rate_it">Rate it</string>
+    <string name="add_to_list">Add to list</string>
+    <string name="play">Play</string>
 </resources>

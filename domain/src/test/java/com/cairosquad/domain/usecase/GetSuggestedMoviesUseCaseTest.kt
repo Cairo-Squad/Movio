@@ -1,11 +1,11 @@
 package com.cairosquad.domain.usecase
 
-import com.cairosquad.domain.search.repository.MovieDiscoveryRepository
-import com.cairosquad.domain.search.usecase.GetSuggestedMoviesUseCase
+import com.cairosquad.domain.repository.MoviesRepository
+import com.cairosquad.domain.usecase.movies.GetSuggestedMoviesUseCase
 import com.cairosquad.entity.Movie
 import io.mockk.coEvery
-import io.mockk.mockk
 import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -17,7 +17,7 @@ import org.junit.Test
 
 class GetSuggestedMoviesUseCaseTest {
 
-    private val recommendationRepository = mockk<MovieDiscoveryRepository>()
+    private val moviesRepository = mockk<MoviesRepository>()
     private lateinit var useCase: GetSuggestedMoviesUseCase
 
     private val dispatcher = StandardTestDispatcher()
@@ -25,7 +25,7 @@ class GetSuggestedMoviesUseCaseTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(dispatcher)
-        useCase = GetSuggestedMoviesUseCase(recommendationRepository)
+        useCase = GetSuggestedMoviesUseCase(moviesRepository)
     }
 
     @After
@@ -40,12 +40,12 @@ class GetSuggestedMoviesUseCaseTest {
             Movie(id = 1, title = "Interstellar", rating = 8.6f, posterPath = "/interstellar.jpg"),
             Movie(id = 2, title = "Inception", rating = 8.8f, posterPath = "/inception.jpg")
         )
-        coEvery { recommendationRepository.getSuggestedMovies() } returns expectedMovies
+        coEvery { moviesRepository.getSuggestedMovies() } returns expectedMovies
 
         // When
         val result = useCase.getSuggestedMovies()
 
         // Then
-        coVerify { recommendationRepository.getSuggestedMovies() }
+        coVerify { moviesRepository.getSuggestedMovies() }
     }
 }
