@@ -11,7 +11,7 @@ data class ArtistCacheDto(
     val id: Int,
     @ColumnInfo(name = CACHED_ARTIST_NAME_COLUMN_NAME)
     val name: String?,
-    @ColumnInfo(name = CACHED_ARTIST_PHOTO_PATH_COLUMN_NAME)
+    @ColumnInfo(name = "photoPath")
     val photoPath: String?,
     @ColumnInfo(name = CACHED_ARTIST_TIMESTAMP_COLUMN_NAME)
     val timestamp: Long,
