@@ -1,11 +1,11 @@
-package com.cairosquad.remote.common.utils
+package com.cairosquad.remote.utils
 
-import com.cairosquad.repository.search.data_source.remote.dto.ErrorDto
 import com.cairosquad.repository.common.exception.RequestTimeoutException
 import com.cairosquad.repository.common.exception.ServerException
 import com.cairosquad.repository.common.exception.TooManyRequestsException
 import com.cairosquad.repository.common.exception.UnauthorizedException
 import com.cairosquad.repository.common.exception.UnknownDataSourceException
+import com.cairosquad.repository.search.data_source.remote.dto.ErrorDto
 import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
