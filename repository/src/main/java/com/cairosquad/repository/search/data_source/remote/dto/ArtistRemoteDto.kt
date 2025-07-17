@@ -11,4 +11,12 @@ data class ArtistRemoteDto(
     val name: String? = null,
     @SerialName("profile_path")
     val profilePath: String? = null,
+    @SerialName("place_of_birth")
+    val placeOfBirth: String? = null,
+    @SerialName("birthday")
+    val birthday: String? = null,
+    @SerialName("biography")
+    val biography: String? = null,
+    @SerialName("known_for_department")
+    val department: String? = null,
 )
