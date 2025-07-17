@@ -105,7 +105,7 @@ fun SeasonCard(
                 Spacer(modifier = Modifier.weight(1f))
                 Icon(
                     modifier = Modifier
-                        .padding(end = 1.dp)
+                        .padding(end = 3.dp)
                         .size(16.dp),
                     painter = painterResource(id = R.drawable.star),
                     contentDescription = stringResource(R.string.rating_star),
