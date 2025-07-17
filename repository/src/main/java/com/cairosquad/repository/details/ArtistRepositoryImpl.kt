@@ -1,6 +1,6 @@
 package com.cairosquad.repository.details
 
-import com.cairosquad.domain.search.repository.ArtistRepository
+import com.cairosquad.domain.repository.ArtistRepository
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie

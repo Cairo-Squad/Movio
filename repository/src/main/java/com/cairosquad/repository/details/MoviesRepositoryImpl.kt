@@ -1,6 +1,6 @@
 package com.cairosquad.repository.details
 
-import com.cairosquad.domain.search.repository.MoviesRepository
+import com.cairosquad.domain.repository.MoviesRepository
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
@@ -26,6 +26,14 @@ class MoviesRepositoryImpl: MoviesRepository {
     override suspend fun getMovieTopCast(movieId: Long): List<Artist> {
         delay(500)
         return fakeArtists
+    }
+
+    override suspend fun getPersonalizedMovies(): List<Movie> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getSuggestedMovies(): List<Movie> {
+        TODO("Not yet implemented")
     }
 
     private companion object {
