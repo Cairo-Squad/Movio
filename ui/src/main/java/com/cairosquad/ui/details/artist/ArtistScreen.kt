@@ -1,14 +1,10 @@
 package com.cairosquad.ui.details.artist
 
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.collectAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,43 +13,38 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.cairosquad.design_system.R
+import com.cairosquad.design_system.basic_component.AppBar
+import com.cairosquad.design_system.basic_component.InfoChip
 import com.cairosquad.design_system.modifier.CustomBrush
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
-import com.cairosquad.ui.movio_component.InfoChip
 import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.ui.navigation.MovieRoute
-import com.cairosquad.ui.navigation.SeriesRoute
-import com.cairosquad.ui.utils.ObserveAsEvent
+import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.ui.utils.errorStatusToMessageResource
 import com.cairosquad.viewmodel.details.artist.ArtistEffect
 import com.cairosquad.viewmodel.details.artist.ArtistInteractionListener
 import com.cairosquad.viewmodel.details.artist.ArtistScreenState
 import com.cairosquad.viewmodel.details.artist.ArtistViewModel
-import com.cairosquad.viewmodel.search.SearchEffect
-import androidx.compose.foundation.lazy.items
-import com.cairosquad.design_system.basic_component.AppBar
 import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -64,9 +55,9 @@ fun ArtistScreen(
     artistId: Long,
     navController: NavController,
     modifier: Modifier = Modifier,
-    artistViewModel : ArtistViewModel= koinViewModel()
+    artistViewModel: ArtistViewModel = koinViewModel()
 
-    ) {
+) {
 
     LaunchedEffect(Unit) {
         artistViewModel.loadArtistDetails(artistId)
@@ -75,18 +66,18 @@ fun ArtistScreen(
     }
     val state by artistViewModel.screenState.collectAsState()
     val context = LocalContext.current
-    ObserveAsEvent(artistViewModel.effect) { event ->
-        when (event) {
+    ObserveAsEffect(artistViewModel.effect) { effect ->
+        when (effect) {
             is ArtistEffect.ErrorHappened -> {
                 Toast.makeText(
                     context,
-                    context.getString(errorStatusToMessageResource(event.message)),
+                    context.getString(errorStatusToMessageResource(effect.message)),
                     Toast.LENGTH_LONG
                 ).show()
             }
 
             is ArtistEffect.NavigateToMovieDetails -> {
-                navController.navigate(MovieRoute(event.movieId))
+                navController.navigate(MovieRoute(effect.movieId))
             }
 
             is ArtistEffect.NavigateBack -> {
@@ -95,11 +86,15 @@ fun ArtistScreen(
         }
     }
 
-    ArtistScreenContent(modifier = modifier ,state= state  , listener = artistViewModel)
+    ArtistScreenContent(modifier = modifier, state = state, listener = artistViewModel)
 }
 
 @Composable
-private fun ArtistScreenContent(modifier: Modifier=Modifier ,state : ArtistScreenState , listener : ArtistInteractionListener) {
+private fun ArtistScreenContent(
+    modifier: Modifier = Modifier,
+    state: ArtistScreenState,
+    listener: ArtistInteractionListener
+) {
 
     Column(
         modifier = modifier
@@ -123,11 +118,11 @@ private fun ArtistScreenContent(modifier: Modifier=Modifier ,state : ArtistScree
                 nonNudeThreshold = 0.0
             )
             AppBar(
-            onBackButtonClicked = listener::onClickBack,
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .windowInsetsPadding(WindowInsets.statusBars)
-                .padding(top = 4.dp)
+                onBackButtonClicked = listener::onClickBack,
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .windowInsetsPadding(WindowInsets.statusBars)
+                    .padding(top = 4.dp)
 
             )
 
@@ -179,7 +174,7 @@ private fun ArtistScreenContent(modifier: Modifier=Modifier ,state : ArtistScree
                 style = Theme.textStyle.label.smallRegular12,
                 color = Theme.color.surfaces.onSurface,
                 modifier = Modifier
-                    .padding( vertical = 16.dp),
+                    .padding(vertical = 16.dp),
                 maxLines = 5,
                 overflow = TextOverflow.Ellipsis
             )
@@ -225,8 +220,9 @@ private fun ArtistScreenContent(modifier: Modifier=Modifier ,state : ArtistScree
 @Composable
 @Preview(showBackground = true)
 private fun ArtistScreenContentPreview() {
-  //  ArtistScreenContent()
+    //  ArtistScreenContent()
 }
+
 private fun formatBirthDateLegacy(birthDateLong: Long): String {
     val date = Date(birthDateLong)
     val formatter = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault())
