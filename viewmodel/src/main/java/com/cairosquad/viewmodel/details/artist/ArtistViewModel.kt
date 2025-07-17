@@ -1,7 +1,7 @@
 package com.cairosquad.viewmodel.details.artist
 
-import com.cairosquad.domain.search.exception.MovioException
-import com.cairosquad.domain.search.usecase.GetArtistDetailsUseCase
+import com.cairosquad.domain.exception.MovioException
+import com.cairosquad.domain.usecase.artists.GetArtistDetailsUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
@@ -47,8 +47,7 @@ class ArtistViewModel(
     fun loadArtistMovies(artistID: Long) {
         tryToCall(
             block = {
-               val movies = getArtistDetailsUseCase
-                    .getMoviesOfArtist(artistID)
+               val movies = getArtistDetailsUseCase.getMoviesOfArtist(artistID)
                     .map{it.toArtistMovieUiState() }
                 movies
             },
