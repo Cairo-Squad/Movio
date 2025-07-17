@@ -4,10 +4,10 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.cairosquad.local.search.cache.dao.CacheDao
 import com.cairosquad.local.search.discovery.dao.DiscoveryDao
-import com.cairosquad.local.search.discovery.dto.PersonalizedMoviesIdsDto
-import com.cairosquad.local.search.discovery.dto.SuggestedMoviesIdsDto
+import com.cairosquad.repository.search.data_source.local.dto.PersonalizedMoviesIdsDto
+import com.cairosquad.repository.search.data_source.local.dto.SuggestedMoviesIdsDto
 import com.cairosquad.local.search.recent.dao.LocalRecentSearchDao
-import com.cairosquad.local.search.recent.entity.RecentSearchEntity
+import com.cairosquad.repository.search.data_source.local.dto.RecentSearchEntity
 import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.SeriesCacheDto

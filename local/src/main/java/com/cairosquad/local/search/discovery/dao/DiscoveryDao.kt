@@ -4,8 +4,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.cairosquad.local.search.discovery.dto.PersonalizedMoviesIdsDto
-import com.cairosquad.local.search.discovery.dto.SuggestedMoviesIdsDto
+import com.cairosquad.repository.search.data_source.local.dto.PersonalizedMoviesIdsDto
+import com.cairosquad.repository.search.data_source.local.dto.SuggestedMoviesIdsDto
 import com.cairosquad.repository.search.data_source.local.dto.CACHED_ARTIST_TIMESTAMP_COLUMN_NAME
 import com.cairosquad.repository.search.data_source.local.dto.CACHED_MOVIES_ID_COLUMN_NAME
 import com.cairosquad.repository.search.data_source.local.dto.CACHED_MOVIES_TABLE_NAME
