@@ -11,6 +11,7 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -26,12 +27,14 @@ class SearchUseCaseTest {
 
     private val dispatcher = StandardTestDispatcher()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
         Dispatchers.setMain(dispatcher)
         useCase = SearchUseCase(searchRepository)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @After
     fun tearDown() {
         Dispatchers.resetMain()

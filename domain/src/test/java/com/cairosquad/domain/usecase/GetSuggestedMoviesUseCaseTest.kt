@@ -4,9 +4,10 @@ import com.cairosquad.domain.repository.MoviesRepository
 import com.cairosquad.domain.usecase.movies.GetSuggestedMoviesUseCase
 import com.cairosquad.entity.Movie
 import io.mockk.coEvery
-import io.mockk.mockk
 import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -22,12 +23,14 @@ class GetSuggestedMoviesUseCaseTest {
 
     private val dispatcher = StandardTestDispatcher()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
         Dispatchers.setMain(dispatcher)
         useCase = GetSuggestedMoviesUseCase(moviesRepository)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @After
     fun tearDown() {
         Dispatchers.resetMain()

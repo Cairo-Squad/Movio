@@ -1,6 +1,6 @@
 package com.cairosquad.local.cache
 
-import com.cairosquad.local.search.cache.cacheDataSourceImpl
+import com.cairosquad.local.search.cache.CacheDataSourceImpl
 import com.cairosquad.local.search.cache.dao.CacheDao
 import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
@@ -20,20 +20,20 @@ import java.time.Instant
 class LocalSearchCacheDataSourceImplTest {
 
     private lateinit var cacheDao: CacheDao
-    private lateinit var dataSource: cacheDataSourceImpl
+    private lateinit var dataSource: CacheDataSourceImpl
 
     @Before
     fun setup() {
         cacheDao = mockk(relaxed = true)
-        dataSource = spyk(cacheDataSourceImpl(cacheDao))
+        dataSource = spyk(CacheDataSourceImpl(cacheDao))
     }
 
     @Test
     fun `should return mapped movie list when getCachedMovies is called`() = runTest {
         // Given
-        coEvery { cacheDao.getCachedMovies(query1) } returns listOf(entity1)
+        coEvery { cacheDao.getCachedMovies(QUERY1) } returns listOf(entity1)
         //When
-        val result = dataSource.getCachedMovies(query1)
+        val result = dataSource.getCachedMovies(QUERY1)
         //Then
         assertThat(result.first().title).isEqualTo("title")
     }
@@ -50,9 +50,9 @@ class LocalSearchCacheDataSourceImplTest {
     @Test
     fun `should return mapped series list when getCachedSeries is called`() = runTest {
         // Given
-        coEvery { cacheDao.getCachedSeries(query3) } returns listOf(entity3)
+        coEvery { cacheDao.getCachedSeries(QUERY3) } returns listOf(entity3)
         //When
-        val result = dataSource.getCachedSeries(query3)
+        val result = dataSource.getCachedSeries(QUERY3)
         //Then
         assertThat(result.first().name).isEqualTo("Friends")
     }
@@ -98,7 +98,7 @@ class LocalSearchCacheDataSourceImplTest {
     }
 
     private companion object {
-        val query1 = "batman"
+        const val QUERY1 = "batman"
         val entity1 = MovieCacheDto(
             id = 0,
             timestamp = 0,
@@ -115,7 +115,7 @@ class LocalSearchCacheDataSourceImplTest {
             timestamp = Instant.now().toEpochMilli()
         )
 
-        val query3 = "friends"
+        const val QUERY3 = "friends"
         val entity3 = SeriesCacheDto(
             id = 0,
             timestamp = 0,
