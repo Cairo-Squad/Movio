@@ -1,4 +1,4 @@
-package com.cairosquad.repository.common.mappers
+package com.cairosquad.repository.utils.mappers
 
 import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.PersonalizedMoviesIdsDto
