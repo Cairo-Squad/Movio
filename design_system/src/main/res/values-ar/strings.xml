@@ -44,4 +44,11 @@
     <string name="default_image_icon">الصورة الافتراضية</string>
     <string name="recent_search">اخر بحث</string>
     <string name="clear_all">حذف الكل</string>
+    <string name="season_poster">بوستر الموسم</string>
+    <string name="season">الموسم %1$s</string>
+    <string name="episodes">%1$s حلقة</string>
+    <string name="of">من %1$s</string>
+    <string name="season_premiere">الموسم %1$s من %2$s تم عرضه لأول مرة في %3$s.</string>
+    <string name="year_episodes">%1$s | %2$s حلقة</string>
+    <string name="rating_star">نجمة التقييم</string>
 </resources>

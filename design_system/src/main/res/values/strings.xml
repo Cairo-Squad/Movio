@@ -43,4 +43,12 @@
     <string name="default_image_icon">default image icon</string>
     <string name="recent_search">Recent Search</string>
     <string name="clear_all">Clear all</string>
+    <string name="season_poster">Season poster</string>
+    <string name="season">season %1$s</string>
+    <string name="episodes">%1$s Episodes</string>
+    <string name="of">of %1$s</string>
+    <string name="season_premiere">Season %1$s of %2$s premiered on %3$s.</string>
+    <string name="year_episodes">%1$s | %2$s Episodes</string>
+    <string name="rating_star">Rating Star</string>
+
 </resources>
