@@ -22,7 +22,7 @@ class EntityCacheMapperTest {
         val query = "crime series"
         val before = Instant.now().toEpochMilli()
 
-        val cache = series.toCacheDto(query)
+        val cache = series.toCacheDto()
 
         assertThat(cache).isEqualTo(
             SeriesCacheDto(
@@ -30,7 +30,6 @@ class EntityCacheMapperTest {
                 name = series.title,
                 posterPath = series.posterPath,
                 voteAverage = series.rating.toDouble(),
-                query = query,
                 timestamp = cache.timestamp
             )
         )
@@ -48,16 +47,14 @@ class EntityCacheMapperTest {
 
     @Test
     fun `Should Movie maps to MovieCacheDto correctly`() {
-        val query = "dream"
         val before = Instant.now().toEpochMilli()
 
-        val cache = movie.toCacheDto(query)
+        val cache = movie.toCacheDto()
 
         assertThat(cache.id).isEqualTo(movie.id.toInt())
         assertThat(cache.title).isEqualTo(movie.title)
         assertThat(cache.posterPath).isEqualTo(movie.posterPath)
         assertThat(cache.voteAverage).isWithin(0.001).of(movie.rating.toDouble())
-        assertThat(cache.query).isEqualTo(query)
 
         val delta = (Instant.now().toEpochMilli() - cache.timestamp).absoluteValue
         assertThat(cache.timestamp).isAtLeast(before)
@@ -72,17 +69,15 @@ class EntityCacheMapperTest {
 
     @Test
     fun `Should Artist maps to ArtistCacheDto correctly`() {
-        val query = "emma"
         val before = Instant.now().toEpochMilli()
 
-        val cache = artist.toCacheDto(query)
+        val cache = artist.toCacheDto()
 
         assertThat(cache).isEqualTo(
             ArtistCacheDto(
                 id = artist.id.toInt(),
                 name = artist.name,
                 photoPath = artist.photoPath,
-                query = query,
                 timestamp = cache.timestamp
             )
         )
@@ -101,7 +96,7 @@ class EntityCacheMapperTest {
     @Test
     fun `Should Movie with exact float maps correctly to MovieCacheDto`() {
         val result = Movie(id = 1L, title = "Test", posterPath = " ", rating = 9.0f)
-            .toCacheDto("test")
+            .toCacheDto()
 
         assertThat(result.voteAverage).isWithin(0.001).of(9.0)
     }
@@ -109,7 +104,7 @@ class EntityCacheMapperTest {
     @Test
     fun `Should Movie with max float rating maps correctly`() {
         val result = Movie(id = 1000L, title = "Max Float", posterPath = "/max.jpg", rating = Float.MAX_VALUE)
-            .toCacheDto("max")
+            .toCacheDto()
 
         assertThat(result.voteAverage).isWithin(0.001).of(Float.MAX_VALUE.toDouble())
     }
@@ -140,7 +135,6 @@ class EntityCacheMapperTest {
             title = null,
             voteAverage = null,
             posterPath = null,
-            query = "",
             timestamp = 0L
         )
 
@@ -149,7 +143,6 @@ class EntityCacheMapperTest {
             name = null,
             posterPath = null,
             voteAverage = null,
-            query = "any",
             timestamp = 1L
         )
 
@@ -157,7 +150,6 @@ class EntityCacheMapperTest {
             id = 5,
             name = null,
             photoPath = null,
-            query = "test",
             timestamp = 123L
         )
     }
