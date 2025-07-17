@@ -1,8 +1,16 @@
 package com.cairosquad.ui.details
 
-import android.content.ActivityNotFoundException
-import android.content.Intent
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.net.Uri
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -47,6 +55,7 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.basic_component.ExpandableText
 import com.cairosquad.design_system.basic_component.InfoChip
+import com.cairosquad.design_system.basic_component.SnackBar
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import com.cairosquad.ui.movio_component.ActionBar
@@ -55,16 +64,10 @@ import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.ui.movio_component.ReviewCard
 import com.cairosquad.ui.movio_component.SeasonCard
 import com.cairosquad.ui.movio_component.SectionHeader
-import com.cairosquad.ui.navigation.ArtistRoute
-import com.cairosquad.ui.navigation.LocalNavController
-import com.cairosquad.ui.navigation.ReviewsRoute
-import com.cairosquad.ui.navigation.SeasonRoute
-import com.cairosquad.ui.navigation.SeasonsRoute
-import com.cairosquad.ui.navigation.SeriesRoute
-import com.cairosquad.ui.navigation.SimilarSeriesRoute
-import com.cairosquad.ui.navigation.TopCastRoute
+import com.cairosquad.ui.movio_component.ShareBottomSheet
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.ui.utils.errorStatusToMessageResource
+import com.cairosquad.ui.utils.openUrlInAppOrBrowser
 import com.cairosquad.viewmodel.details.series.SeriesDetailEffect
 import com.cairosquad.viewmodel.details.series.SeriesDetailsInteractionListener
 import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState
@@ -77,54 +80,31 @@ fun SeriesScreen(
     seriesId: Long = 1399,
     viewModel: SeriesDetailsViewModel = koinViewModel { parametersOf(seriesId) }
 ) {
-    val navController = LocalNavController.current
+//    val navController = LocalNavController.current
     val context = LocalContext.current
     val uiState by viewModel.screenState.collectAsStateWithLifecycle()
+    val seriesUrl = "https://www.cairo-movio/series/${seriesId}"
+    val message = "Check out this amazing series! "
+    val encodedMessageAndUrl = Uri.encode("$message $seriesUrl")
 
     ObserveAsEffect(viewModel.effect) { effect ->
         when (effect) {
-            SeriesDetailEffect.RateSeries -> {
-                TODO()
-            }
-
-            SeriesDetailEffect.ShareSeries -> {
-                val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                    type = "text/plain"
-                    putExtra(Intent.EXTRA_SUBJECT, "Check this out!")
-                    putExtra(
-                        Intent.EXTRA_TEXT,
-                        "Hey! Watch this amazing video: https://www.cairo-movio/series/${uiState.series.id}"
-                    )
-                }
-
-                context.startActivity(Intent.createChooser(shareIntent, "Share via"))
-            }
-
-            SeriesDetailEffect.FavoriteSeries -> {
-                TODO()
-            }
 
             SeriesDetailEffect.NavigateBack -> {
-                navController.popBackStack()
+//                navController.popBackStack()
             }
 
             SeriesDetailEffect.PlayTrailer -> {
                 val videoId = "bjqEWgDVPe0"
-                val appIntent = Intent(Intent.ACTION_VIEW, "vnd.youtube:$videoId".toUri())
-                val webIntent = Intent(
-                    Intent.ACTION_VIEW,
-                    "https://www.youtube.com/watch?v=$videoId".toUri()
+                val deepLinkUri = "vnd.youtube:$videoId".toUri()
+                val webUri = "https://www.youtube.com/watch?v=$videoId".toUri()
+
+                openUrlInAppOrBrowser(
+                    appPackage = "com.google.android.youtube",
+                    deepLinkUri = deepLinkUri,
+                    webUri = webUri,
+                    context = context
                 )
-
-                try {
-                    context.startActivity(appIntent)
-                } catch (_: ActivityNotFoundException) {
-                    context.startActivity(webIntent)
-                }
-            }
-
-            SeriesDetailEffect.AddSeriesToList -> {
-                TODO()
             }
 
             is SeriesDetailEffect.ErrorHappened -> {
@@ -136,44 +116,117 @@ fun SeriesScreen(
             }
 
             is SeriesDetailEffect.NavigateToAllArtists -> {
-                navController.navigate(TopCastRoute(effect.seriesId, isMovie = false))
+//                navController.navigate(TopCastRoute(effect.seriesId, isMovie = false))
             }
 
             is SeriesDetailEffect.NavigateToAllReviews -> {
-                navController.navigate(ReviewsRoute(effect.seriesId, isMovie = false))
+//                navController.navigate(ReviewsRoute(effect.seriesId, isMovie = false))
             }
 
             is SeriesDetailEffect.NavigateToAllSeasons -> {
-                navController.navigate(SeasonsRoute(effect.seriesId))
+//                navController.navigate(SeasonsRoute(effect.seriesId))
             }
 
             is SeriesDetailEffect.NavigateToAllSimilar -> {
-                navController.navigate(SimilarSeriesRoute(effect.seriesId))
+//                navController.navigate(SimilarSeriesRoute(effect.seriesId))
             }
 
             is SeriesDetailEffect.NavigateToArtistDetails -> {
-                navController.navigate(ArtistRoute(effect.artistId))
+//                navController.navigate(ArtistRoute(effect.artistId))
             }
 
             is SeriesDetailEffect.NavigateToSeasonDetails -> {
-                navController.navigate(
-                    SeasonRoute(
-                        seriesId = effect.seriesId,
-                        seasonNumber = effect.seasonNumber
-                    )
-                )
+//                navController.navigate(
+//                    SeasonRoute(
+//                        seriesId = effect.seriesId,
+//                        seasonNumber = effect.seasonNumber
+//                    )
+//                )
             }
 
             is SeriesDetailEffect.NavigateToSeriesDetails -> {
-                navController.navigate(SeriesRoute(effect.seriesId))
+//                navController.navigate(SeriesRoute(effect.seriesId))
             }
         }
     }
+    Box {
+        SeriesScreenContent(
+            uiState = uiState,
+            listener = viewModel
+        )
+        AnimatedVisibility(
+            visible = uiState.showShareBottomSheet,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            ShareBottomSheet(
+                uiState.showShareBottomSheet,
+                onDismiss = viewModel::onDismissShareBottomSheet,
+                onCopyLinkClick = {
+                    val clipboard =
+                        context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+                    val clip = ClipData.newPlainText("Series link", seriesUrl)
+                    clipboard?.setPrimaryClip(clip)
+                    viewModel.onCopySuccess("Linked to clipboard successfully.")
+                    viewModel.onDismissShareBottomSheet()
+                },
+                onShareFacebookClick = {
 
-    SeriesScreenContent(
-        uiState = uiState,
-        listener = viewModel
-    )
+                    val deepLinkUri = ("fb://facewebmodal/f?href=$encodedMessageAndUrl").toUri()
+                    val webUri =
+                        ("https://www.facebook.com/sharer/sharer.php?u=$encodedMessageAndUrl").toUri()
+                    openUrlInAppOrBrowser(
+                        appPackage = "com.facebook.katana",
+                        deepLinkUri = deepLinkUri,
+                        webUri = webUri,
+                        context = context
+                    )
+                    viewModel.onDismissShareBottomSheet()
+                },
+                onShareXClick = {
+                    val deepLinkUri = ("twitter://post?message=$encodedMessageAndUrl").toUri()
+                    val webUri =
+                        ("https://twitter.com/intent/tweet?url=$encodedMessageAndUrl").toUri()
+                    openUrlInAppOrBrowser(
+                        appPackage = "com.twitter.android",
+                        deepLinkUri = deepLinkUri,
+                        webUri = webUri,
+                        context = context
+                    )
+
+                    viewModel.onDismissShareBottomSheet()
+                }
+            )
+        }
+        AnimatedVisibility(
+            visible = uiState.showLoginBottomSheet,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+
+        }
+        AnimatedVisibility(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .windowInsetsPadding(WindowInsets.navigationBars)
+                .padding(16.dp),
+            visible = uiState.showSnackBar,
+            enter = slideInVertically(
+                initialOffsetY = { fullHeight -> fullHeight },
+                animationSpec = tween(durationMillis = 600)
+            ),
+            exit = slideOutVertically(
+                targetOffsetY = { fullHeight -> fullHeight },
+                animationSpec = tween(durationMillis = 600)
+            )
+        ) {
+            SnackBar(
+                imageVector = ImageVector.vectorResource(if (uiState.isProcessSuccess) R.drawable.archive_tick else R.drawable.danger),
+                message = uiState.snackMessage,
+                action = {}
+            )
+        }
+    }
 }
 
 @Composable

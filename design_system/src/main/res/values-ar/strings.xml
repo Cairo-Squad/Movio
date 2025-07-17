@@ -54,4 +54,5 @@
     <string name="Rate_it">قّيم</string>
     <string name="add_to_list">أضف إلى القائمة</string>
     <string name="play">تشغيل</string>
+    <string name="copy_link">نسخ الرابط</string>
 </resources>

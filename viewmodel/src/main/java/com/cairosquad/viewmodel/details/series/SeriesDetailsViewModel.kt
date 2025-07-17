@@ -11,6 +11,7 @@ import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState.ScreenSt
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 
 class SeriesDetailsViewModel(
     private val seriesDetailsUseCase: GetSeriesDetailsUseCase,
@@ -35,15 +36,15 @@ class SeriesDetailsViewModel(
     }
 
     override fun onShareClicked() {
-        sendEffect(SeriesDetailEffect.ShareSeries)
+        updateState { it.copy(showShareBottomSheet = true) }
     }
 
     override fun onFavoriteClicked() {
-        sendEffect(SeriesDetailEffect.FavoriteSeries)
+        updateState { it.copy(showLoginBottomSheet = true) }
     }
 
     override fun onRateClicked() {
-        sendEffect(SeriesDetailEffect.RateSeries)
+        updateState { it.copy(showLoginBottomSheet = true) }
     }
 
     override fun onPlayTrailerClicked() {
@@ -51,7 +52,30 @@ class SeriesDetailsViewModel(
     }
 
     override fun onAddToListClicked() {
-        sendEffect(SeriesDetailEffect.AddSeriesToList)
+        updateState { it.copy(showLoginBottomSheet = true) }
+    }
+
+    override fun onDismissShareBottomSheet() {
+        updateState { it.copy(showShareBottomSheet = false) }
+    }
+
+    override fun onDismissLoginBottomSheet() {
+        updateState { it.copy(showLoginBottomSheet = false) }
+    }
+
+    override fun onCopySuccess(message: String) {
+        tryToCall(
+            onStart = {
+                delay(500)
+                updateState { it.copy(showSnackBar = true, snackMessage = message) }
+            },
+            block = { delay(2000) },
+            onSuccess = {},
+            onError = {},
+            onEnd = {
+                updateState { it.copy(showSnackBar = false, snackMessage = message) }
+            }
+        )
     }
 
     override fun onArtistClicked(artistId: Long) {
