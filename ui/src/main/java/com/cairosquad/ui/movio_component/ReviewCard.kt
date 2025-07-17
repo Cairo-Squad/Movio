@@ -49,9 +49,8 @@ fun ReviewCard(
             .background(Theme.color.surfaces.surfaceContainer)
             .padding(12.dp)
     ) {
-        Row(
-        ) {
-            if (imgUrl?.isNotEmpty() == true) {
+        Row {
+            if (imgUrl.isNotEmpty()) {
                 SafeImageViewer(
                     model = "https://image.tmdb.org/t/p/w500$imgUrl",
                     modifier = Modifier
