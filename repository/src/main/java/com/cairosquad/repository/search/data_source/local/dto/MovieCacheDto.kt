@@ -11,9 +11,9 @@ data class MovieCacheDto(
     val id: Int,
     @ColumnInfo(name = CACHED_MOVIES_TITLE_COLUMN_NAME)
     val title: String?,
-    @ColumnInfo(name = CACHED_MOVIES_POSTER_PATH_COLUMN_NAME)
+    @ColumnInfo(name = "posterPath")
     val posterPath: String?,
-    @ColumnInfo(name = CACHED_MOVIES_VOTE_AVERAGE_COLUMN_NAME)
+    @ColumnInfo(name = "voteAverage")
     val voteAverage: Double?,
     @ColumnInfo(name = CACHED_MOVIES_TIMESTAMP_COLUMN_NAME)
     val timestamp: Long,
