@@ -51,7 +51,6 @@ private fun ReviewsContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         AppBar(
-            modifier = Modifier.padding(vertical = 4.dp),
             title = stringResource(R.string.reviews),
             onBackButtonClicked = onBackClicked,
         )
