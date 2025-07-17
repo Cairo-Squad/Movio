@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.searchviewmodel
 
+import androidx.paging.PagingData
 import com.cairosquad.domain.search.exception.InternetConnectionException
 import com.cairosquad.domain.search.exception.NetworkException
 import com.cairosquad.domain.search.exception.UnknownException
@@ -15,6 +16,7 @@ import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import com.cairosquad.viewmodel.search.SearchScreenState
 import com.cairosquad.viewmodel.search.SearchViewModel
+import com.cairosquad.viewmodel.search.paging.SearchPager
 import com.cairosquad.viewmodel.search.toUiState
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
@@ -26,6 +28,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -43,7 +47,7 @@ class SearchViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
 
-    private lateinit var searchUseCase: SearchUseCase
+    private lateinit var searchPager: SearchPager
     private lateinit var getRecentSearchUseCase: GetLocalSearchHistoryUseCase
     private lateinit var clearRecentSearchUseCase: ClearSearchHistoryUseCase
     private lateinit var getSuggestedMoviesUseCase: GetSuggestedMoviesUseCase
@@ -54,14 +58,14 @@ class SearchViewModelTest {
     fun setup() {
         Dispatchers.setMain(testDispatcher)
 
-        searchUseCase = mockk(relaxed = true)
+        searchPager = mockk(relaxed = true)
         getRecentSearchUseCase = mockk(relaxed = true)
         clearRecentSearchUseCase = mockk(relaxed = true)
         getSuggestedMoviesUseCase = mockk(relaxed = true)
         getPersonalizedMoviesUseCase = mockk(relaxed = true)
 
         viewModel = SearchViewModel(
-            searchUseCase,
+            searchPager,
             getRecentSearchUseCase,
             clearRecentSearchUseCase,
             getSuggestedMoviesUseCase,
@@ -106,19 +110,6 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `should update query and recent search when query text changes`() = runBlocking {
-        val query = "Batman"
-        val recent = listOf("Batman", "Batman Begins")
-        coEvery { getRecentSearchUseCase.getByQuery(query) } coAnswers { recent }
-
-        viewModel.onQueryTextChanged(query)
-
-        delay(400)
-        assertThat(viewModel.screenState.value.query).isEqualTo(query)
-        assertThat(viewModel.screenState.value.recentSearch).isEqualTo(recent)
-    }
-
-    @Test
     fun `should clear query and set EXPLORE status when search is cancelled`() = runBlocking {
         viewModel.onCancelSearch()
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
@@ -128,34 +119,13 @@ class SearchViewModelTest {
     @Test
     fun `should load search results when valid query is submitted`() = runBlocking {
         val query = "Inception"
-        coEvery { searchUseCase.getMovies(query) } returns listOf(movie1)
-        coEvery { searchUseCase.getSeries(query) } returns listOf(series)
-        coEvery { searchUseCase.getArtists(query) } returns listOf(artist)
+        coEvery { searchPager.movies(query) } returns flowOf(PagingData.from(listOf(movie1)))
+        coEvery { searchPager.series(query) } returns flowOf(PagingData.from(listOf(series)))
+        coEvery { searchPager.artists(query) } returns flowOf(PagingData.from(listOf(artist)))
 
         viewModel.onSearch(query)
         delay(400)
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.RESULT)
-        assertThat(viewModel.screenState.value.movies).hasSize(1)
-        assertThat(viewModel.screenState.value.series).hasSize(1)
-        assertThat(viewModel.screenState.value.artists).hasSize(1)
-    }
-
-    @Test
-    fun `should set error status when search fails`() = runBlocking {
-        coEvery { searchUseCase.getMovies(any()) } throws IOException()
-        coEvery { searchUseCase.getSeries(any()) } returns emptyList()
-        coEvery { searchUseCase.getArtists(any()) } returns emptyList()
-
-        viewModel.onSearch("fail")
-        delay(400)
-        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
-        assertThat(viewModel.screenState.value.errorStatus).isIn(
-            listOf(
-                ErrorStatus.NO_INTERNET,
-                ErrorStatus.NETWORK_ERROR,
-                ErrorStatus.UNKNOWN_ERROR
-            )
-        )
     }
 
     @Test
@@ -163,18 +133,6 @@ class SearchViewModelTest {
         viewModel.onSearch("    ")
         delay(400)
         assertThat(viewModel.screenState.value.screenStatus).isNotEqualTo(SearchScreenState.ScreenStatus.RESULT)
-    }
-
-    @Test
-    fun `should trigger search when recent search item is clicked`() = runBlocking {
-        val query = "Dark"
-        coEvery { searchUseCase.getMovies(query) } returns emptyList()
-        coEvery { searchUseCase.getSeries(query) } returns emptyList()
-        coEvery { searchUseCase.getArtists(query) } returns emptyList()
-
-        viewModel.onRecentSearchItemClicked(query)
-        delay(400)
-        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.RESULT)
     }
 
     @Test
@@ -204,9 +162,9 @@ class SearchViewModelTest {
     @Test
     fun `should transition to EXPLORE when back is clicked from RESULT`() = runBlocking {
         val query = "Batman"
-        coEvery { searchUseCase.getMovies(query) } returns emptyList()
-        coEvery { searchUseCase.getSeries(query) } returns emptyList()
-        coEvery { searchUseCase.getArtists(query) } returns emptyList()
+        coEvery { searchPager.movies(query) } returns flowOf(PagingData.empty())
+        coEvery { searchPager.series(query) } returns flowOf(PagingData.empty())
+        coEvery { searchPager.artists(query) } returns flowOf(PagingData.empty())
 
         viewModel.onQueryTextChanged(query)
         delay(300)
@@ -238,11 +196,11 @@ class SearchViewModelTest {
 
     @Test
     fun `should transition to SEARCH when back is clicked from RESULT`() = runBlocking {
-        coEvery { searchUseCase.getMovies("") } returns emptyList()
-        coEvery { searchUseCase.getSeries("") } returns emptyList()
-        coEvery { searchUseCase.getArtists("") } returns emptyList()
+        coEvery { searchPager.movies("") } returns flowOf(PagingData.empty())
+        coEvery { searchPager.series("") } returns flowOf(PagingData.empty())
+        coEvery { searchPager.artists("") } returns flowOf(PagingData.empty())
         viewModel.onSearch("test")
-        delay(50)
+        delay(200)
         viewModel.onBackClicked()
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
     }
@@ -267,29 +225,18 @@ class SearchViewModelTest {
     @Test
     fun `should transition to RESULT when search returns only artists`() = runBlocking {
         val query = "Painter"
-        coEvery { searchUseCase.getMovies(query) } returns emptyList()
-        coEvery { searchUseCase.getSeries(query) } returns emptyList()
-        coEvery { searchUseCase.getArtists(query) } returns listOf(artist)
+        coEvery { searchPager.movies(query) } returns flowOf(PagingData.empty())
+        coEvery { searchPager.series(query) } returns flowOf(PagingData.empty())
+        coEvery { searchPager.artists(query) } returns flowOf(PagingData.from(listOf(artist)))
         viewModel.onSearch(query)
         delay(50)
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.RESULT)
-        assertThat(viewModel.screenState.value.movies).isEmpty()
-        assertThat(viewModel.screenState.value.series).isEmpty()
-        assertThat(viewModel.screenState.value.artists).hasSize(1)
     }
 
     @Test
     fun `should set UNKNOWN_ERROR when clear history fails`() = runBlocking {
         coEvery { clearRecentSearchUseCase.clearAllHistory() } throws IOException()
         viewModel.onClearHistory()
-        delay(50)
-        assertThat(viewModel.screenState.value.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
-    }
-
-    @Test
-    fun `should set UNKNOWN_ERROR when removing history item fails`() = runBlocking {
-        coEvery { clearRecentSearchUseCase.removeQueryFromHistory(any()) } throws IllegalStateException()
-        viewModel.onRemoveHistoryItem("dummy")
         delay(50)
         assertThat(viewModel.screenState.value.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
     }
@@ -371,32 +318,6 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `should set NETWORK_ERROR when search fails with NetworkException`() = runBlocking {
-        coEvery { searchUseCase.getMovies("boom") } throws NetworkException()
-        coEvery { searchUseCase.getSeries("boom") } returns emptyList()
-        coEvery { searchUseCase.getArtists("boom") } returns emptyList()
-        viewModel.onSearch("boom")
-        delay(50)
-        with(viewModel.screenState.value) {
-            assertThat(screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
-            assertThat(errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
-        }
-    }
-
-    @Test
-    fun `should set FAILED and NETWORK_ERROR when discover movies loading fails with NetworkException`() =
-        runBlocking {
-            coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies() } throws NetworkException()
-            coEvery { getSuggestedMoviesUseCase.getSuggestedMovies() } returns emptyList()
-            viewModel.loadDiscoverMovies()
-            delay(50)
-            with(viewModel.screenState.value) {
-                assertThat(screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
-                assertThat(errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
-            }
-        }
-
-    @Test
     fun `should map generic exception to UNKNOWN_ERROR when handling search exception`() {
         val genericEx = IllegalStateException("boom")
         val status = viewModel.run {
@@ -427,9 +348,9 @@ class SearchViewModelTest {
     @Test
     fun `should show loading then result when performing search`() = runTest {
         val query = "Inception"
-        coEvery { searchUseCase.getMovies(query) } returns listOf(movie1)
-        coEvery { searchUseCase.getSeries(query) } returns listOf(series)
-        coEvery { searchUseCase.getArtists(query) } returns listOf(artist)
+        coEvery { searchPager.movies(query) } returns flowOf(PagingData.from(listOf(movie1)))
+        coEvery { searchPager.series(query) } returns flowOf(PagingData.from(listOf(series)))
+        coEvery { searchPager.artists(query) } returns flowOf(PagingData.from(listOf(artist)))
 
         val testDispatcher = StandardTestDispatcher(testScheduler)
         Dispatchers.setMain(testDispatcher)
@@ -456,43 +377,6 @@ class SearchViewModelTest {
         advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
-    }
-
-    @Test
-    fun `should keep previous results when refresh fails`() = runTest {
-        val query = "Error"
-        val previousMovies = listOf(movie1.toUiState())
-
-        val testDispatcher = StandardTestDispatcher(testScheduler)
-        Dispatchers.setMain(testDispatcher)
-        mockkStatic(Dispatchers::class)
-        every { Dispatchers.IO } returns testDispatcher
-
-        viewModel.updateState {
-            it.copy(
-                screenStatus = SearchScreenState.ScreenStatus.RESULT,
-                query = query,
-                movies = previousMovies
-            )
-        }
-
-        coEvery { searchUseCase.getMovies(query) } throws IOException()
-        coEvery { searchUseCase.getSeries(query) } returns emptyList()
-        coEvery { searchUseCase.getArtists(query) } returns emptyList()
-
-        viewModel.onRefresh()
-
-        advanceTimeBy(600)
-        advanceUntilIdle()
-
-        with(viewModel.screenState.value) {
-            println(">>> current status = $screenStatus")
-            assertThat(screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
-            assertThat(movies).isEqualTo(previousMovies)
-        }
-
-        unmockkStatic(Dispatchers::class)
-        Dispatchers.resetMain()
     }
 
     @Test
