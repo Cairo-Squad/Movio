@@ -5,6 +5,4 @@ interface EpisodesDetailsInteractionListener {
     fun onVideoClick(videoId: String)
     fun onSeasonsDropdownClick()
     fun onSeasonSelected(seriesId: Long, seasonNumber: Int)
-    val isSeasonDropdownExpanded: Boolean
-        get() = false
 }
