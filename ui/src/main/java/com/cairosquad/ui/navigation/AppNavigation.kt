@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.cairosquad.design_system.theme.Theme
+import com.cairosquad.ui.AppScreen
 import com.cairosquad.ui.details.ArtistScreen
 import com.cairosquad.ui.details.MovieScreen
 import com.cairosquad.ui.details.ReviewsScreen
@@ -22,8 +23,6 @@ import com.cairosquad.ui.details.SimilarSeriesScreen
 import com.cairosquad.ui.details.TopCastScreen
 import com.cairosquad.ui.search.ForYouScreen
 import com.cairosquad.ui.splash.SplashScreen
-import com.cairosquad.ui.AppScreen
-
 
 
 @Composable
@@ -56,9 +55,7 @@ fun AppNavigation() {
                 )
             }
             composable<SeriesRoute> { backStackEntry ->
-                SeriesScreen(
-                    seriesId = backStackEntry.toRoute<SeriesRoute>().seriesId
-                )
+                SeriesScreen(seriesId = 1399)
             }
             composable<ArtistRoute> { backStackEntry ->
                 ArtistScreen(
@@ -105,4 +102,5 @@ fun AppNavigation() {
     }
 }
 
-val LocalNavController = staticCompositionLocalOf<NavHostController> { error("No nav controller provided") }
+val LocalNavController =
+    staticCompositionLocalOf<NavHostController> { error("No nav controller provided") }

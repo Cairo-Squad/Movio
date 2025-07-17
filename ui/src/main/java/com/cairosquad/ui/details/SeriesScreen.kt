@@ -2,6 +2,7 @@ package com.cairosquad.ui.details
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -38,7 +39,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -46,7 +46,6 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.basic_component.ExpandableText
 import com.cairosquad.design_system.basic_component.InfoChip
-import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import com.cairosquad.ui.movio_component.ActionBar
@@ -54,7 +53,16 @@ import com.cairosquad.ui.movio_component.ArtistCard
 import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.ui.movio_component.ReviewCard
 import com.cairosquad.ui.movio_component.SectionHeader
+import com.cairosquad.ui.navigation.ArtistRoute
+import com.cairosquad.ui.navigation.LocalNavController
+import com.cairosquad.ui.navigation.ReviewsRoute
+import com.cairosquad.ui.navigation.SeasonRoute
+import com.cairosquad.ui.navigation.SeasonsRoute
+import com.cairosquad.ui.navigation.SeriesRoute
+import com.cairosquad.ui.navigation.SimilarSeriesRoute
+import com.cairosquad.ui.navigation.TopCastRoute
 import com.cairosquad.ui.utils.ObserveAsEffect
+import com.cairosquad.ui.utils.errorStatusToMessageResource
 import com.cairosquad.viewmodel.details.series.SeriesDetailEffect
 import com.cairosquad.viewmodel.details.series.SeriesDetailsInteractionListener
 import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState
@@ -64,20 +72,20 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun SeriesScreen(
-    seriesId: Long,
+    seriesId: Long = 1399,
     viewModel: SeriesDetailsViewModel = koinViewModel { parametersOf(seriesId) }
 ) {
-//    val navController = LocalNavController.current
+    val navController = LocalNavController.current
     val context = LocalContext.current
     val uiState by viewModel.screenState.collectAsStateWithLifecycle()
 
     ObserveAsEffect(viewModel.effect) { effect ->
         when (effect) {
-            is SeriesDetailEffect.RateSeries -> {
-
+            SeriesDetailEffect.RateSeries -> {
+                TODO()
             }
 
-            is SeriesDetailEffect.ShareSeries -> {
+            SeriesDetailEffect.ShareSeries -> {
                 val shareIntent = Intent(Intent.ACTION_SEND).apply {
                     type = "text/plain" // MIME type for text
                     putExtra(Intent.EXTRA_SUBJECT, "Check this out!")
@@ -90,20 +98,16 @@ fun SeriesScreen(
                 context.startActivity(Intent.createChooser(shareIntent, "Share via"))
             }
 
-            is SeriesDetailEffect.ErrorHappened -> {
-
+            SeriesDetailEffect.FavoriteSeries -> {
+                TODO()
             }
 
-            is SeriesDetailEffect.FavoriteSeries -> {
-
+            SeriesDetailEffect.NavigateBack -> {
+                navController.popBackStack()
             }
 
-            is SeriesDetailEffect.NavigateBack -> {
-
-            }
-
-            is SeriesDetailEffect.PlayTrailer -> {
-                val videoId = "dQw4w9WgXcQ"
+            SeriesDetailEffect.PlayTrailer -> {
+                val videoId = "bjqEWgDVPe0"
                 val appIntent = Intent(Intent.ACTION_VIEW, "vnd.youtube:$videoId".toUri())
                 val webIntent = Intent(
                     Intent.ACTION_VIEW,
@@ -117,40 +121,49 @@ fun SeriesScreen(
                 }
             }
 
-            is SeriesDetailEffect.AddSeriesToList -> {
+            SeriesDetailEffect.AddSeriesToList -> {
+                TODO()
+            }
 
+            is SeriesDetailEffect.ErrorHappened -> {
+                Toast.makeText(
+                    context,
+                    context.getString(errorStatusToMessageResource(effect.message)),
+                    Toast.LENGTH_LONG
+                ).show()
             }
 
             is SeriesDetailEffect.NavigateToAllArtists -> {
-
+                navController.navigate(TopCastRoute(effect.seriesId, isMovie = false))
             }
 
             is SeriesDetailEffect.NavigateToAllReviews -> {
-
+                navController.navigate(ReviewsRoute(effect.seriesId, isMovie = false))
             }
 
             is SeriesDetailEffect.NavigateToAllSeasons -> {
-
+                navController.navigate(SeasonsRoute(effect.seriesId))
             }
 
             is SeriesDetailEffect.NavigateToAllSimilar -> {
-
+                navController.navigate(SimilarSeriesRoute(effect.seriesId))
             }
 
             is SeriesDetailEffect.NavigateToArtistDetails -> {
-
+                navController.navigate(ArtistRoute(effect.artistId))
             }
 
             is SeriesDetailEffect.NavigateToSeasonDetails -> {
-
+                navController.navigate(
+                    SeasonRoute(
+                        seriesId = effect.seriesId,
+                        seasonNumber = effect.seasonNumber
+                    )
+                )
             }
 
             is SeriesDetailEffect.NavigateToSeriesDetails -> {
-
-            }
-
-            is SeriesDetailEffect.NavigateToTrailer -> {
-
+                navController.navigate(SeriesRoute(effect.seriesId))
             }
         }
     }
@@ -239,15 +252,19 @@ private fun SeriesScreenContent(
                     ) {
                         InfoChip(
                             text = uiState.series.rating.toString(),
-                            imgRes = R.drawable.review_star
+                            imgRes = R.drawable.review_star,
                         )
 //                        InfoChip(text = "7 seasons", imgRes = R.drawable.)
                         InfoChip(
                             text = uiState.series.releaseDate,
-                            imgRes = R.drawable.date
+                            imgRes = R.drawable.date,
                         )
                     }
-                    ActionBar()
+                    ActionBar(
+                        onRateClicked = listener::onRateClicked,
+                        onPlayClicked = listener::onPlayTrailerClicked,
+                        onAddToListClicked = listener::onAddToListClicked
+                    )
                 }
             }
             item {
@@ -358,19 +375,11 @@ private fun SeriesScreenContent(
                             title = it.title,
                             vote = it.rating,
                             width = 124.dp,
-                            aspectRatio = 0.775f
+                            aspectRatio = 0.775f,
                         )
                     }
                 }
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun SeriesScreenPreview() {
-    MovioTheme(isDarkTheme = true) {
-        SeriesScreen(123)
     }
 }

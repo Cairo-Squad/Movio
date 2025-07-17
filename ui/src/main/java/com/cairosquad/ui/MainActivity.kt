@@ -6,7 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.cairosquad.design_system.theme.MovioTheme
-import com.cairosquad.ui.details.SeriesScreen
+import com.cairosquad.ui.navigation.AppNavigation
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MovioTheme {
-                SeriesScreen(1399)
+                AppNavigation()
             }
         }
     }

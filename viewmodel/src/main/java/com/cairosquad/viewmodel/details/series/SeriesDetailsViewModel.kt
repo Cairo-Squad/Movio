@@ -31,55 +31,60 @@ class SeriesDetailsViewModel(
     }
 
     override fun onBackClicked() {
-        TODO("Not yet implemented")
+        sendEffect(SeriesDetailEffect.NavigateBack)
     }
 
     override fun onShareClicked() {
-        TODO("Not yet implemented")
+        sendEffect(SeriesDetailEffect.ShareSeries)
     }
 
     override fun onFavoriteClicked() {
-        TODO("Not yet implemented")
+        sendEffect(SeriesDetailEffect.FavoriteSeries)
     }
 
     override fun onRateClicked() {
-        TODO("Not yet implemented")
+        sendEffect(SeriesDetailEffect.RateSeries)
     }
 
     override fun onPlayTrailerClicked() {
-        TODO("Not yet implemented")
+        sendEffect(SeriesDetailEffect.PlayTrailer)
     }
 
     override fun onAddToListClicked() {
-        TODO("Not yet implemented")
+        sendEffect(SeriesDetailEffect.AddSeriesToList)
     }
 
     override fun onArtistClicked(artistId: Long) {
-        TODO("Not yet implemented")
+        sendEffect(SeriesDetailEffect.NavigateToArtistDetails(artistId))
     }
 
     override fun onSeeAllArtistsClicked(seriesId: Long) {
-        TODO("Not yet implemented")
+        sendEffect(SeriesDetailEffect.NavigateToAllArtists(seriesId))
     }
 
     override fun onSeasonClicked(seriesId: Long, seasonNumber: Int) {
-        TODO("Not yet implemented")
+        sendEffect(
+            SeriesDetailEffect.NavigateToSeasonDetails(
+                seriesId = seriesId,
+                seasonNumber = seasonNumber
+            )
+        )
     }
 
     override fun onSeeAllSeasonsClicked(seriesId: Long) {
-        TODO("Not yet implemented")
+        sendEffect(SeriesDetailEffect.NavigateToAllSeasons(seriesId))
     }
 
     override fun onSeeAllReviewsClicked(seriesId: Long) {
-        TODO("Not yet implemented")
+        sendEffect(SeriesDetailEffect.NavigateToAllReviews(seriesId))
     }
 
     override fun onSeriesClicked(seriesId: Long) {
-        TODO("Not yet implemented")
+        sendEffect(SeriesDetailEffect.NavigateToSeriesDetails(seriesId))
     }
 
     override fun onSeeAllSimilarClicked(seriesId: Long) {
-        TODO("Not yet implemented")
+        sendEffect(SeriesDetailEffect.NavigateToAllSimilar(seriesId))
     }
 
     private fun getSeriesDetails(seriesId: Long) {
