@@ -11,8 +11,8 @@ permissions:
   checks: write
 
 jobs:
-  build:
-    name: Build
+  build-and-test:
+    name: Build, Test & Coverage
     runs-on: ubuntu-latest
 
     steps:
@@ -20,6 +20,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
@@ -33,14 +34,14 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          key: gradle-${{ runner.os }}-${{ hashFiles('/.gradle', '/gradle-wrapper.properties') }}
           restore-keys: |
             gradle-${{ runner.os }}-
 
       - name: Grant Permission to Gradle
         run: chmod +x ./gradlew
 
-      - name: Create google-services.json for Test Job
+      - name: Create google-services.json
         env:
           GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}
         run: |
@@ -48,7 +49,7 @@ jobs:
           echo "$GOOGLE_SERVICES_JSON_BASE64" | base64 --decode > app/google-services.json
         shell: bash
 
-      - name: Build Project
+      - name: Setup Project Files
         env:
           KEYSTORE: ${{ secrets.KEYSTORE }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -69,76 +70,13 @@ jobs:
           echo "KEYSTORE_FILE = movio-cairo.jks" >> secret.properties
           echo "KEYSTORE_PASSWORD = $KEYSTORE_PASSWORD" >> secret.properties
           echo "KEY_ALIAS = $KEY_ALIAS" >> secret.properties
-          echo "KEY_PASSWORD = $KEYSTORE_PASSWORD" >> secret.properties
+          echo "KEY_PASSWORD = $KEY_PASSWORD" >> secret.properties
           echo "API_KEY = \"$MOVIES_API_KEY\"" >> secret.properties
 
-          # Build signed release APK
-          ./gradlew assembleRelease  testClasses  --build-cache
-
-  test:
-
-    name: Verify Coverage
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Setup JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: gradle
-
-      - name: Cache Gradle
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            gradle-${{ runner.os }}-
-
-      - name: Grant Permission to Gradle
-        run: chmod +x ./gradlew
-
-      - name: Create google-services.json
-        env:
-          GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }} 
+      - name: Build, Test & Generate Coverage Report
         run: |
-          mkdir -p app/ # Ensure the directory exists
-          echo "$GOOGLE_SERVICES_JSON_BASE64" | base64 --decode > app/google-services.json
-        shell: bash
-
-      - name: Run Tests + Generate Kover Report
-        env:
-          KEYSTORE: ${{ secrets.KEYSTORE }}
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          MOVIES_API_KEY: ${{ secrets.MOVIES_API_KEY }}
-          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
-          FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
-        run: |
-          # Cleanup existing files
-          rm -f app/movio-cairo.jks secret.properties release_notes.txt
-
-          # Decode keystore and verify
-          echo "$KEYSTORE" | base64 -d > app/movio-cairo.jks
-
-          # Create secret.properties with necessary properties
-          echo "BASE_URL = \"https://api.themoviedb.org/3/\"" >> secret.properties
-          echo "KEYSTORE_PASSWORD = $KEYSTORE_PASSWORD" >> secret.properties
-          echo "KEY_ALIAS = $KEY_ALIAS" >> secret.properties
-          echo "KEY_PASSWORD = $KEYSTORE_PASSWORD" >> secret.properties
-          echo "API_KEY = \"$MOVIES_API_KEY\"" >> secret.properties
-
-          # Build signed release APK
-          ./gradlew test koverHtmlReport --build-cache
+          # Run all tasks in parallel where possible
+          ./gradlew assembleRelease test koverHtmlReport --build-cache --parallel --daemon
 
       - name: Enforce 80% Coverage
         run: ./gradlew koverVerify --build-cache
@@ -148,7 +86,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: '**/build/test-results/**/*.xml'
+          path: '/build/test-results//*.xml'
 
       - name: Upload HTML Coverage Report
         if: always()
@@ -157,9 +95,11 @@ jobs:
           name: kover-html-report
           path: build/reports/kover/html/
 
+  test:
+
   comment-on-pr:
     name: Test Results
-    needs: test
+    needs: build-and-test
     runs-on: ubuntu-latest
     if: ${{ always() && github.event_name == 'pull_request' }}
 
@@ -173,11 +113,11 @@ jobs:
       - name: Publish Results as PR Comment
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
-          files: test-results/**/*.xml
+          files: test-results//*.xml
 
   confirm-coverage:
     name: Confirm Coverage Upload
-    needs: test
+    needs: build-and-test
     runs-on: ubuntu-latest
     if: always()
 
