@@ -1,8 +1,8 @@
 package com.cairosquad.local.search.discovery
 
 import com.cairosquad.local.search.discovery.dao.DiscoveryDao
-import com.cairosquad.local.search.discovery.dto.toPersonalizedMoviesIdsDto
-import com.cairosquad.local.search.discovery.dto.toSuggestedMoviesIds
+import com.cairosquad.repository.common.mappers.toPersonalizedMoviesIdsDto
+import com.cairosquad.repository.common.mappers.toSuggestedMoviesIds
 import com.cairosquad.repository.search.data_source.local.CacheDataSource
 import com.cairosquad.repository.search.data_source.local.DiscoveryDataSource
 import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto

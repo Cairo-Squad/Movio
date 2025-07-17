@@ -1,7 +1,7 @@
 package com.cairosquad.local.search.recent
 
 import com.cairosquad.local.search.recent.dao.LocalRecentSearchDao
-import com.cairosquad.local.search.recent.entity.RecentSearchEntity
+import com.cairosquad.repository.search.data_source.local.dto.RecentSearchEntity
 import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
 
 class LocalRecentSearchDataSourceImpl(

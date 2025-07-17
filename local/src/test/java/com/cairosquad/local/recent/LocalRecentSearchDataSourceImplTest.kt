@@ -2,7 +2,7 @@ package com.cairosquad.local.recent
 
 import com.cairosquad.local.search.recent.LocalRecentSearchDataSourceImpl
 import com.cairosquad.local.search.recent.dao.LocalRecentSearchDao
-import com.cairosquad.local.search.recent.entity.RecentSearchEntity
+import com.cairosquad.repository.search.data_source.local.dto.RecentSearchEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.just
