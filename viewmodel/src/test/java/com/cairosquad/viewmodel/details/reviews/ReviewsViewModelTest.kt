@@ -1,7 +1,7 @@
 package com.cairosquad.viewmodel.details.reviews
 
-import com.cairosquad.domain.search.usecase.GetMoviesDetailsUseCase
-import com.cairosquad.domain.search.usecase.GetSeriesDetailsUseCase
+import com.cairosquad.domain.usecase.movies.GetMoviesDetailsUseCase
+import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
 import com.cairosquad.entity.Review
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
