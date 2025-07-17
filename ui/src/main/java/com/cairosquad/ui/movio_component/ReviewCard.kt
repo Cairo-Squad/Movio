@@ -2,7 +2,6 @@ package com.cairosquad.ui.movio_component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,13 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +21,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
+import com.cairosquad.design_system.basic_component.DsIcon
+import com.cairosquad.design_system.basic_component.DsText
 import com.cairosquad.design_system.basic_component.ExpandableText
 import com.cairosquad.design_system.theme.Theme.color
 import com.cairosquad.design_system.theme.Theme.textStyle
@@ -42,8 +37,6 @@ fun ReviewCard(
     reviewText: String,
     modifier: Modifier = Modifier
 ) {
-    var isExpanded by remember { mutableStateOf(false) }
-    var isOverflowing by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -77,7 +70,7 @@ fun ReviewCard(
                         .background(color.system.defaultImageBackground),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
+                    DsIcon(
                         imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
                         contentDescription = stringResource(R.string.reviewer_image),
                         tint = Color(0xFFEFF1F5)
@@ -89,12 +82,12 @@ fun ReviewCard(
                     .padding(start = 8.dp)
                     .weight(1f)
             ) {
-                Text(
+                DsText(
                     text = reviewerName,
                     color = color.surfaces.onSurface,
                     style = textStyle.title.mediumMedium14
                 )
-                Text(
+                DsText(
                     modifier = Modifier.padding(top = 4.dp),
                     text = reviewDate,
                     color = color.surfaces.onSurfaceContainer,
@@ -103,12 +96,12 @@ fun ReviewCard(
 
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
+                DsIcon(
                     imageVector = ImageVector.vectorResource(R.drawable.review_star),
                     contentDescription = stringResource(R.string.rating_star),
                     tint = Color.Unspecified,
                 )
-                Text(
+                DsText(
                     modifier = Modifier.padding(start = 4.dp),
                     text = rating,
                     color = color.system.onWarning,
