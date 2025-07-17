@@ -1,6 +1,7 @@
 package com.cairosquad.viewmodel.search
 
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.cairosquad.domain.search.exception.MovioException
@@ -12,9 +13,11 @@ import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import com.cairosquad.viewmodel.search.paging.SearchPager
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -120,15 +123,24 @@ class SearchViewModel(
         } else {
             tryToCall(
                 block = {
-                    val movies =searchPager.movies(query)
-                        .map { it.map { movie -> movie.toUiState() } }
-                        .cachedIn(viewModelScope)
-                    val series = searchPager.series(query)
-                        .map { it.map { series -> series.toUiState() } }
-                        .cachedIn(viewModelScope)
-                    val artists = searchPager.artists(query)
-                        .map { it.map { artists -> artists.toUiState() } }
-                        .cachedIn(viewModelScope)
+                    val movies = cacheMappedPagingData(
+                        query = query,
+                        scope = viewModelScope,
+                        fetch = { searchPager.movies(it) },
+                        map = { it.toUiState() }
+                    )
+                    val series = cacheMappedPagingData(
+                        query = query,
+                        scope = viewModelScope,
+                        fetch = { searchPager.series(it) },
+                        map = { it.toUiState() }
+                    )
+                    val artists =cacheMappedPagingData(
+                        query = query,
+                        scope = viewModelScope,
+                        fetch = { searchPager.artists(it) },
+                        map = { it.toUiState() }
+                    )
                     Triple(movies, series, artists)
                 },
                 onSuccess = { (movies, series, artists) ->
@@ -154,7 +166,14 @@ class SearchViewModel(
             )
         }
     }
-
+    private fun <T : Any, R : Any> cacheMappedPagingData(
+        query: String,
+        scope: CoroutineScope,
+        fetch: (String) -> Flow<PagingData<T>>,
+         map: (T) -> R
+    ): Flow<PagingData<R>> = fetch(query)
+        .map { pagingData -> pagingData.map(map) }
+        .cachedIn(scope)
     override fun onRecentSearchItemClicked(query: String) = onSearch(query)
 
     override fun onClearHistory() {

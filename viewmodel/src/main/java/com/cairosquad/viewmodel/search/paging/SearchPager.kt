@@ -22,7 +22,7 @@ class SearchPager(
         fetcher: suspend (String, Int) -> List<T>
     ): Flow<PagingData<T>> {
         return Pager(
-            config = PagingConfig(pageSize = 20, prefetchDistance = 6),
+            config = PagingConfig(pageSize = 20, prefetchDistance = 2),
             pagingSourceFactory = { SearchPagingSource(query, fetcher) }
         ).flow
     }
