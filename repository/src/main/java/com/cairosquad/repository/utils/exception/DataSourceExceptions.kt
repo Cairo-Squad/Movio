@@ -1,4 +1,4 @@
-package com.cairosquad.repository.common.exception
+package com.cairosquad.repository.utils.exception
 
 sealed class DataSourceException(override val message: String = "") : RuntimeException(message)
 
