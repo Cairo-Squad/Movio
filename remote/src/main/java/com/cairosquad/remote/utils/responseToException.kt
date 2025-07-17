@@ -1,4 +1,4 @@
-package com.cairosquad.remote.common.utils
+package com.cairosquad.remote.utils
 
 import com.cairosquad.repository.search.data_source.remote.dto.ErrorDto
 import com.cairosquad.repository.utils.exception.RequestTimeoutException
