@@ -36,7 +36,7 @@ class GetLocalSearchHistoryUseCaseTest {
     @Test
     fun `should return matching results when query is provided`() = runTest {
         //Given
-        val searchQuery = searchQueyWhenReturnMatches
+        val searchQuery = SEARCH_QUERY_WHEN_RETURN_MATCHES
         val expectedResults = expectedResultsForMatchingSearchQuery
         coEvery { searchRepository.getAllHistoryByQuery(searchQuery) } returns expectedResults
 
@@ -50,7 +50,7 @@ class GetLocalSearchHistoryUseCaseTest {
 
     @Test
     fun `getAll should return all results of search history`() = runTest {
-        val expectedResults = expectedResultforGetAll
+        val expectedResults = expectedResultForGetAll
         coEvery { searchRepository.getAllHistory() } returns expectedResults
 
         //When
@@ -62,9 +62,9 @@ class GetLocalSearchHistoryUseCaseTest {
     }
 
     companion object {
-        const val searchQueyWhenReturnMatches = "A"
+        const val SEARCH_QUERY_WHEN_RETURN_MATCHES = "A"
         val expectedResultsForMatchingSearchQuery = listOf("Ana messa", "Arkan")
-        val expectedResultforGetAll = listOf("Ana messa", "Arkan","Movie","Art")
+        val expectedResultForGetAll = listOf("Ana messa", "Arkan", "Movie", "Art")
 
     }
 }

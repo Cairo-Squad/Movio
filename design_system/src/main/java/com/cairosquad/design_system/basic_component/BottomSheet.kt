@@ -76,7 +76,7 @@ private fun BottomSheetDarkPreview(){
 @Composable
 private fun BottomSheetPreview(isDarkTheme: Boolean = false) {
 
-    var isVisible = remember { mutableStateOf(false) }
+    val isVisible = remember { mutableStateOf(false) }
 
     MovioTheme(
         isDarkTheme = isDarkTheme
