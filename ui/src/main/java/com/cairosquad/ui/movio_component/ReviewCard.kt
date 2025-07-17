@@ -23,9 +23,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.cairosquad.design_system.R
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
-import com.cairosquad.ui.R
 
 @Composable
 fun ReviewCard(
@@ -70,7 +70,7 @@ fun ReviewCard(
                     contentAlignment = Alignment.Center
                 ){
                     Icon(
-                        imageVector = ImageVector.vectorResource(id = com.cairosquad.design_system.R.drawable.image_icon),
+                        imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
                         contentDescription = stringResource(R.string.reviewer_image),
                         tint = Color(0xFFEFF1F5)
                     )

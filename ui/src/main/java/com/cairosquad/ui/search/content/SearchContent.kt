@@ -67,9 +67,7 @@ fun SearchContent(
             trailingIcon = R.drawable.ic_close,
             onTrailingIconClick = { listener.onBackClicked() },
             keyboardActions = KeyboardActions(
-                onDone = {
-                    listener.onSearch(state.query)
-                }
+                onDone = { listener.onSearch() }
             )
         )
 
@@ -98,5 +96,4 @@ fun SearchContent(
         }
     }
 }
-
 
