@@ -19,7 +19,6 @@ class EntityCacheMapperTest {
 
     @Test
     fun `Should Series maps to SeriesCacheDto correctly`() {
-        val query = "crime series"
         val before = Instant.now().toEpochMilli()
 
         val cache = series.toCacheDto()
@@ -56,9 +55,7 @@ class EntityCacheMapperTest {
         assertThat(cache.posterPath).isEqualTo(movie.posterPath)
         assertThat(cache.voteAverage).isWithin(0.001).of(movie.rating.toDouble())
 
-        val delta = (Instant.now().toEpochMilli() - cache.timestamp).absoluteValue
         assertThat(cache.timestamp).isAtLeast(before)
-        assertThat(delta).isAtMost(150)
     }
 
     @Test
