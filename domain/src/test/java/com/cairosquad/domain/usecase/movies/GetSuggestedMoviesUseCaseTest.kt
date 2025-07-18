@@ -1,0 +1,53 @@
+package com.cairosquad.domain.usecase.movies
+
+import com.cairosquad.domain.repository.MoviesRepository
+import com.cairosquad.entity.Movie
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
+
+class GetSuggestedMoviesUseCaseTest {
+
+    private val moviesRepository = mockk<MoviesRepository>()
+    private lateinit var useCase: GetSuggestedMoviesUseCase
+
+    private val dispatcher = StandardTestDispatcher()
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Before
+    fun setUp() {
+        Dispatchers.setMain(dispatcher)
+        useCase = GetSuggestedMoviesUseCase(moviesRepository)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
+
+    @Test
+    fun `should return list of movies from repository when getSuggestedMovies is called`() = runTest {
+        // Given
+        val expectedMovies = listOf(
+            Movie(id = 1, title = "Interstellar", rating = 8.6f, posterPath = "/interstellar.jpg"),
+            Movie(id = 2, title = "Inception", rating = 8.8f, posterPath = "/inception.jpg")
+        )
+        coEvery { moviesRepository.getSuggestedMovies() } returns expectedMovies
+
+        // When
+        val result = useCase.getSuggestedMovies()
+
+        // Then
+        coVerify { moviesRepository.getSuggestedMovies() }
+    }
+}

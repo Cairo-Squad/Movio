@@ -1,7 +1,6 @@
 package com.cairosquad.ui.splash
 
 import androidx.compose.animation.core.EaseInOut
-import androidx.compose.animation.core.EaseInOutBounce
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -27,9 +26,7 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -64,7 +61,9 @@ fun SplashScreen(
         contentAlignment = Alignment.Center
     ) {
         Image(
-            modifier = Modifier.fillMaxSize().alpha(0.3f),
+            modifier = Modifier
+                .fillMaxSize()
+                .alpha(0.3f),
             imageVector = ImageVector.vectorResource(R.drawable.grid),
             contentDescription = "Splash Screen Grid"
         )
@@ -93,7 +92,7 @@ fun SplashScreen(
                     text = stringResource(R.string.movio),
                     style = Theme.textStyle.display.largeBold24.copy(
                         brush = Brush.verticalGradient(
-                            colors = listOf<Color>(
+                            colors = listOf(
                                 Theme.color.brand.onPrimary,
                                 Color(0xFF7C5DF6)
                             )
@@ -109,6 +108,6 @@ fun SplashScreen(
 @Composable
 fun SplashScreenPreview() {
     MovioTheme(isDarkTheme = true) {
-        SplashScreen() {}
+        SplashScreen {}
     }
 }

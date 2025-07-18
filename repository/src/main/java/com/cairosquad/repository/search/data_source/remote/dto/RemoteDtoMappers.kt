@@ -38,6 +38,11 @@ fun SeriesRemoteDto.toEntity(): Series {
         title = name ?: "",
         rating = voteAverage?.toFloat() ?: 0f,
         posterPath = posterPath ?: "",
+        trailerPath = "",
+        genres = emptyList(),
+        overview = "",
+        releaseDate = 0L,
+        seasonsCount = 0,
     )
 }
 

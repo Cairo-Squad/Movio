@@ -9,6 +9,7 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -23,12 +24,14 @@ class LocalRecentSearchDataSourceImplTest {
     private lateinit var dataSource: LocalRecentSearchDataSourceImpl
     private val dispatcher = StandardTestDispatcher()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
         Dispatchers.setMain(dispatcher)
         dataSource = LocalRecentSearchDataSourceImpl(dao)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @After
     fun tearDown() {
         Dispatchers.resetMain()
@@ -80,7 +83,7 @@ class LocalRecentSearchDataSourceImplTest {
         dataSource.addQuery(query)
         // Then
         coVerify {
-            dao.insertQuery(match { it is RecentSearchEntity && it.query == query })
+            dao.insertQuery(match { it.query == query })
         }
     }
 
