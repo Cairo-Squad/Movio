@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.flowOf
 
 data class SearchScreenState(
     val query: String = "",
+    val selectedTabIndex: Int = 0,
     val screenStatus: ScreenStatus = ScreenStatus.LOADING,
     val errorStatus: ErrorStatus? = null,
     val recentSearch: List<String> = emptyList(),

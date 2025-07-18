@@ -292,6 +292,10 @@ class SearchViewModel(
         sendEffect(SearchEffect.NavigateToSeeAllForYouScreen)
     }
 
+    override fun onTabSelected(index: Int) {
+        updateState { it.copy(selectedTabIndex = index) }
+    }
+
     private fun handleSearchException(e: Throwable): ErrorStatus {
         return when (e) {
             is MovioException -> {
