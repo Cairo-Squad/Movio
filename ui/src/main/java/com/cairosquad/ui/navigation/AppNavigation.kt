@@ -14,15 +14,15 @@ import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.details.artist.ArtistScreen
 import com.cairosquad.ui.details.MovieScreen
 import com.cairosquad.ui.details.ReviewsScreen
-import com.cairosquad.ui.details.SeasonScreen
 import com.cairosquad.ui.details.SeasonsScreen
 import com.cairosquad.ui.details.SeriesScreen
-import com.cairosquad.ui.details.SimilarMoviesScreen
+import com.cairosquad.ui.details.similar_movies.SimilarMoviesScreen
 import com.cairosquad.ui.details.SimilarSeriesScreen
 import com.cairosquad.ui.details.TopCastScreen
 import com.cairosquad.ui.search.ForYouScreen
 import com.cairosquad.ui.splash.SplashScreen
 import com.cairosquad.ui.AppScreen
+import com.cairosquad.ui.details.EpisodeScreen
 
 
 @Composable
@@ -67,7 +67,8 @@ fun AppNavigation() {
             }
             composable<SimilarMovieRoute> { backStackEntry ->
                 SimilarMoviesScreen(
-                    movieId = backStackEntry.toRoute<SimilarMovieRoute>().movieId
+                    movieId = backStackEntry.toRoute<SimilarMovieRoute>().movieId,
+                    navController = navController
                 )
             }
             composable<SimilarSeriesRoute> { backStackEntry ->
@@ -86,7 +87,6 @@ fun AppNavigation() {
                 ReviewsScreen(
                     mediaId = backStackEntry.toRoute<ReviewsRoute>().mediaId,
                     isMovie = backStackEntry.toRoute<ReviewsRoute>().isMovie,
-                    navController= navController
                 )
             }
             composable<SeasonsRoute> { backStackEntry ->
@@ -94,10 +94,10 @@ fun AppNavigation() {
                     seriesId = backStackEntry.toRoute<SeasonsRoute>().seriesId
                 )
             }
-            composable<SeasonRoute> { backStackEntry ->
-                SeasonScreen(
-                    seriesId = backStackEntry.toRoute<SeasonRoute>().seriesId,
-                    seasonNumber = backStackEntry.toRoute<SeasonRoute>().seasonNumber
+            composable<EpisodeRoute> { backStackEntry ->
+                EpisodeScreen(
+                    episodeId = backStackEntry.toRoute<EpisodeRoute>().episodeId,
+                    seasonNumber = backStackEntry.toRoute<EpisodeRoute>().seasonNumber
                 )
             }
             composable<ForYouRoute> {

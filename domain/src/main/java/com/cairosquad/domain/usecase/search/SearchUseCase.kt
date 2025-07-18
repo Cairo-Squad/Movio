@@ -12,7 +12,7 @@ class SearchUseCase(
 ) {
     suspend fun getSeries(query: String, page: Int = 1): List<Series> {
         val res = getUserCategoryPreferenceUseCase()
-        val result = searchRepository.getSeries(query).also {
+        val result = searchRepository.getSeries(query,page).also {
             searchRepository.addQuery(query)
         }
 
@@ -25,7 +25,7 @@ class SearchUseCase(
 
     suspend fun getMovies(query: String, page: Int = 1): List<Movie> {
         val res = getUserCategoryPreferenceUseCase()
-        val result = searchRepository.getMovies(query).also {
+        val result = searchRepository.getMovies(query,page).also {
             searchRepository.addQuery(query)
         }
 
@@ -36,8 +36,8 @@ class SearchUseCase(
         }
     }
 
-    suspend fun getArtists(query: String, page: Int = 1): List<Artist> {
-        return searchRepository.getArtists(query).also {
+    suspend fun getArtists(query: String, page: Int ): List<Artist> {
+        return searchRepository.getArtists(query,page).also {
             searchRepository.addQuery(query)
         }
     }

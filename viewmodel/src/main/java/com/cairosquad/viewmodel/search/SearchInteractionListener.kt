@@ -14,4 +14,5 @@ interface SearchInteractionListener {
     fun onSeriesClicked(seriesId: Long)
     fun onArtistClicked(artistId: Long)
     fun onSeeAllForYouClicked()
+    fun onTabSelected(index: Int)
 }

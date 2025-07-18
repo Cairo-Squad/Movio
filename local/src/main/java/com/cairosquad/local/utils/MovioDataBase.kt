@@ -22,7 +22,7 @@ import com.cairosquad.repository.search.data_source.local.dto.UserCategoryPrefer
         RecentSearchEntity::class,
         PersonalizedMoviesIdsDto::class,
         SuggestedMoviesIdsDto::class,
-        UserCategoryPreferenceDto::class
+        UserCategoryPreferenceDto::class,
     ],
     version = 1,
     exportSchema = true,

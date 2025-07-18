@@ -16,7 +16,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import org.junit.jupiter.api.BeforeEach
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class BaseViewModelTest {
@@ -85,7 +84,7 @@ class BaseViewModelTest {
         val newStateValue = 42
 
         // When
-        viewModel.updateStateValue({ it.copy(value = newStateValue) })
+        viewModel.updateStateValue { it.copy(value = newStateValue) }
 
         // Then
         val state = viewModel.screenState.first()
@@ -117,8 +116,8 @@ class BaseViewModelTest {
             // When
             viewModel.testTryToCall(
                 block = { newStateValue },
-                onSuccess = { result -> viewModel.updateStateValue({ it.copy(value = newStateValue) }) },
-                onError = { viewModel.updateStateValue({ it.copy(error = newStateValue) }) }
+                onSuccess = { result -> viewModel.updateStateValue { it.copy(value = newStateValue) } },
+                onError = { viewModel.updateStateValue { it.copy(error = newStateValue) } }
             )
 
             // Then
@@ -174,8 +173,8 @@ class BaseViewModelTest {
 
         viewModel.testTryToCall(
             block = { newStateValue },
-            onSuccess = { result -> viewModel.updateStateValue({ it.copy(value = newStateValue) }) },
-            onError = { viewModel.updateStateValue({ it.copy(error = newStateValue) }) },
+            onSuccess = { result -> viewModel.updateStateValue { it.copy(value = newStateValue) } },
+            onError = { viewModel.updateStateValue { it.copy(error = newStateValue) } },
             onStart = { onStartCalled = true },
             onEnd = { onEndCalled = true }
         )

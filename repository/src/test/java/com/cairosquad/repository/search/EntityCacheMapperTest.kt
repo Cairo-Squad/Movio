@@ -19,13 +19,17 @@ class EntityCacheMapperTest {
 
     @Test
     fun `Should Series maps to SeriesCacheDto correctly`() {
+        val query = "crime series"
+        val page = 1
         val before = Instant.now().toEpochMilli()
 
-        val cache = series.toCacheDto()
+        val cache = series.toCacheDto(query,page)
 
         assertThat(cache).isEqualTo(
             SeriesCacheDto(
                 id = series.id.toInt(),
+                page = page,
+                query = query,
                 name = series.title,
                 posterPath = series.posterPath,
                 voteAverage = series.rating.toDouble(),
@@ -40,15 +44,23 @@ class EntityCacheMapperTest {
 
     @Test
     fun `Should SeriesCacheDto maps to Series correctly`() {
-        val expected = Series(id = 7, title = "", posterPath = "", rating = 0f)
+        val expected = Series(
+            id = 7, title = "", posterPath = "", rating = 0f,
+            trailerPath = "",
+            genres = emptyList(),
+            overview = "",
+            releaseDate = 0L,
+            seasonsCount = 1
+        )
         assertThat(seriesCacheWithNulls.toEntity()).isEqualTo(expected)
     }
 
     @Test
     fun `Should Movie maps to MovieCacheDto correctly`() {
         val before = Instant.now().toEpochMilli()
-
-        val cache = movie.toCacheDto()
+        val query = "crime series"
+        val page = 1
+        val cache = movie.toCacheDto(query,page)
 
         assertThat(cache.id).isEqualTo(movie.id.toInt())
         assertThat(cache.title).isEqualTo(movie.title)
@@ -67,17 +79,17 @@ class EntityCacheMapperTest {
     @Test
     fun `Should Artist maps to ArtistCacheDto correctly`() {
         val before = Instant.now().toEpochMilli()
+        val query = "crime series"
+        val page = 1
+        val tolerance = 200L
 
-        val cache = artist.toCacheDto()
+        val cache = artist.toCacheDto(query, page)
 
-        assertThat(cache).isEqualTo(
-            ArtistCacheDto(
-                id = artist.id.toInt(),
-                name = artist.name,
-                photoPath = artist.photoPath,
-                timestamp = cache.timestamp
-            )
-        )
+        assertThat(cache.id).isEqualTo(artist.id.toInt())
+        assertThat(cache.name).isEqualTo(artist.name)
+        assertThat(cache.query).isEqualTo(query)
+        assertThat(cache.page).isEqualTo(page)
+        assertThat(cache.photoPath).isEqualTo(artist.photoPath)
 
         val delta = (Instant.now().toEpochMilli() - cache.timestamp).absoluteValue
         assertThat(cache.timestamp).isAtLeast(before)
@@ -93,7 +105,7 @@ class EntityCacheMapperTest {
     @Test
     fun `Should Movie with exact float maps correctly to MovieCacheDto`() {
         val result = Movie(id = 1L, title = "Test", posterPath = " ", rating = 9.0f)
-            .toCacheDto()
+            .toCacheDto(query,page)
 
         assertThat(result.voteAverage).isWithin(0.001).of(9.0)
     }
@@ -101,12 +113,14 @@ class EntityCacheMapperTest {
     @Test
     fun `Should Movie with max float rating maps correctly`() {
         val result = Movie(id = 1000L, title = "Max Float", posterPath = "/max.jpg", rating = Float.MAX_VALUE)
-            .toCacheDto()
+            .toCacheDto(query,page)
 
         assertThat(result.voteAverage).isWithin(0.001).of(Float.MAX_VALUE.toDouble())
     }
 
     private companion object {
+        val query = "crime series"
+        val page = 1
         val movie = Movie(
             id = 40L,
             title = "Inception",
@@ -118,7 +132,12 @@ class EntityCacheMapperTest {
             id = 100L,
             title = "Breaking Bad",
             posterPath = "/bb.jpg",
-            rating = 9.5f
+            rating = 9.5f,
+            trailerPath = "",
+            genres = emptyList(),
+            overview = "",
+            releaseDate = 0L,
+            seasonsCount = 1
         )
 
         val artist = Artist(
@@ -130,6 +149,8 @@ class EntityCacheMapperTest {
         val movieCacheWithNulls = MovieCacheDto(
             id = 0,
             title = null,
+            query = query,
+            page = page,
             voteAverage = null,
             posterPath = null,
             timestamp = 0L
@@ -138,6 +159,8 @@ class EntityCacheMapperTest {
         val seriesCacheWithNulls = SeriesCacheDto(
             id = 7,
             name = null,
+            query = query,
+            page = page,
             posterPath = null,
             voteAverage = null,
             timestamp = 1L
@@ -145,6 +168,8 @@ class EntityCacheMapperTest {
 
         val artistCacheWithNulls = ArtistCacheDto(
             id = 5,
+            page = page,
+            query=query,
             name = null,
             photoPath = null,
             timestamp = 123L

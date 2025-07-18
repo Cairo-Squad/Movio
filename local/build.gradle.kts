@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     id("androidx.room") version "2.7.1"
-    alias(libs.plugins.kover)
 }
 
 android {

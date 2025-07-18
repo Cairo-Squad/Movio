@@ -38,20 +38,14 @@
 ##########################################
 # 🌟 TensorFlow Lite
 ##########################################
--keep class org.tensorflow.lite.** { *; }
+# Keep only the used classes fully intact
+-keep class org.tensorflow.lite.task.vision.classifier.ImageClassifier { *; }
+-keep class org.tensorflow.lite.support.common.FileUtil { *; }
+-keep class org.tensorflow.lite.support.image.TensorImage { *; }
+-keep class org.tensorflow.lite.task.core.BaseOptions { *; }
+
+# Suppress warnings for any stripped TensorFlow classes
 -dontwarn org.tensorflow.lite.**
-
-##########################################
-# 🌟 TensorFlow Lite Support API
-##########################################
--keep class org.tensorflow.lite.support.** { *; }
--dontwarn org.tensorflow.lite.support.**
-
--keep class org.tensorflow.lite.support.image.** { *; }
--dontwarn org.tensorflow.lite.support.image.**
-
--keep class org.tensorflow.lite.support.tensorbuffer.** { *; }
--dontwarn org.tensorflow.lite.support.tensorbuffer.**
 
 ##########################################
 # 🌟 Kotlin Metadata (required for reflection)
