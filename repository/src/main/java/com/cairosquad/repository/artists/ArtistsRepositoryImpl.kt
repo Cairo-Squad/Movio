@@ -20,7 +20,7 @@ class ArtistsRepositoryImpl : ArtistsRepository {
         delay(500); return List(10) { fakeSeries }
     }
 
-    private companion object {
+    companion object {
         val fakeMovie = Movie(
             id = 157336L,
             title = "Interstellar",
