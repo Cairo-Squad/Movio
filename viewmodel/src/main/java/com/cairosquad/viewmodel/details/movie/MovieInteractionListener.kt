@@ -1,16 +1,25 @@
 package com.cairosquad.viewmodel.details.movie
 
 interface MovieInteractionListener {
+
     fun onBackClick()
     fun onShareClick()
     fun onFavoriteClick()
+
     fun onRateItClick()
     fun onPlayClick()
     fun onAddToListClick()
-    fun onReadMoreClick()
-    fun onSeeAllCastClick()
+
+    fun onSeeAllCastClick(movieId: Long)
     fun onActorClick(actorId: Long)
-    fun onSeeAllReviewsClick()
-    fun onSeeAllSimilarMoviesClick()
+
+    fun onSeeAllReviewsClick(movieId: Long)
+
+    fun onSeeAllSimilarMoviesClick(movieId: Long)
     fun onMovieClick(movieId: Long)
+
+    fun onCopy(message: String, isSuccessful: Boolean)
+
+    fun onDismissShareBottomSheet()
+    fun onDismissLoginBottomSheet()
 }
