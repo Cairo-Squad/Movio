@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import com.cairosquad.design_system.R
@@ -23,7 +24,7 @@ fun ExpandableText(
     modifier: Modifier = Modifier,
     collapsedMaxLine: Int = 4,
     showMoreText: String = stringResource(R.string.more),
-    showMoreStyle: TextStyle,
+    showMoreStyle: TextStyle =TextStyle(fontWeight = FontWeight.W500),
     showMoreColor: Color = color,
     showLessText: String =stringResource(R.string.less),
     showLessStyle: TextStyle = showMoreStyle,

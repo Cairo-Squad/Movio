@@ -56,12 +56,14 @@ dependencies {
     testImplementation(libs.junit.jupiter)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
-
+    // Paging
+    api(libs.androidx.paging.runtime)
+    api(libs.paging.compose)
     // test
     androidTestImplementation(libs.androidx.core.testing)
     androidTestImplementation(libs.androidx.junit.ktx)
     testImplementation(libs.kotlinx.coroutines.test)
-
+    testImplementation(libs.androidx.paging.testing)
     // google truth
     testImplementation(libs.truth)
     androidTestImplementation(libs.truth)
@@ -69,6 +71,10 @@ dependencies {
     // mockk
     testImplementation(libs.mockk)
     androidTestImplementation(libs.mockk)
+
+    testImplementation(libs.androidx.core.testing)
+    testImplementation(libs.turbine)
+
 
     implementation(project(":domain"))
     testImplementation(kotlin("test"))

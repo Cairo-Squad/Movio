@@ -22,8 +22,8 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.DesignSystemIcon
-import com.cairosquad.design_system.basic_component.DesignSystemText
 import com.cairosquad.design_system.basic_component.ExpandableText
+import com.cairosquad.design_system.basic_component.Text
 import com.cairosquad.design_system.theme.Theme.color
 import com.cairosquad.design_system.theme.Theme.textStyle
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
@@ -60,6 +60,8 @@ fun ReviewCard(
                         .clip(CircleShape)
                         .align(Alignment.CenterVertically),
                     contentDescription = stringResource(R.string.reviewer_image),
+                    nudeThreshold = 0.0,
+                    nonNudeThreshold = 0.0
                 )
             } else {
                 Box(
@@ -82,12 +84,12 @@ fun ReviewCard(
                     .padding(start = 8.dp)
                     .weight(1f)
             ) {
-                DesignSystemText(
+                Text(
                     text = reviewerName,
                     color = color.surfaces.onSurface,
                     style = textStyle.title.mediumMedium14
                 )
-                DesignSystemText(
+                Text(
                     modifier = Modifier.padding(top = 4.dp),
                     text = reviewDate,
                     color = color.surfaces.onSurfaceContainer,
@@ -101,7 +103,7 @@ fun ReviewCard(
                     contentDescription = stringResource(R.string.rating_star),
                     tint = Color.Unspecified,
                 )
-                DesignSystemText(
+                Text(
                     modifier = Modifier.padding(start = 4.dp),
                     text = rating,
                     color = color.system.onWarning,
@@ -122,6 +124,5 @@ fun ReviewCard(
             showLessColor = color.brand.onPrimaryContainer,
             modifier = Modifier.padding(top = 12.dp)
         )
-
     }
 }
