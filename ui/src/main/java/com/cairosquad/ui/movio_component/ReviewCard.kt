@@ -21,8 +21,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
-import com.cairosquad.design_system.basic_component.DsIcon
-import com.cairosquad.design_system.basic_component.DsText
+import com.cairosquad.design_system.basic_component.DesignSystemIcon
+import com.cairosquad.design_system.basic_component.DesignSystemText
 import com.cairosquad.design_system.basic_component.ExpandableText
 import com.cairosquad.design_system.theme.Theme.color
 import com.cairosquad.design_system.theme.Theme.textStyle
@@ -70,7 +70,7 @@ fun ReviewCard(
                         .background(color.system.defaultImageBackground),
                     contentAlignment = Alignment.Center
                 ) {
-                    DsIcon(
+                    DesignSystemIcon(
                         imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
                         contentDescription = stringResource(R.string.reviewer_image),
                         tint = Color(0xFFEFF1F5)
@@ -82,12 +82,12 @@ fun ReviewCard(
                     .padding(start = 8.dp)
                     .weight(1f)
             ) {
-                DsText(
+                DesignSystemText(
                     text = reviewerName,
                     color = color.surfaces.onSurface,
                     style = textStyle.title.mediumMedium14
                 )
-                DsText(
+                DesignSystemText(
                     modifier = Modifier.padding(top = 4.dp),
                     text = reviewDate,
                     color = color.surfaces.onSurfaceContainer,
@@ -96,12 +96,12 @@ fun ReviewCard(
 
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
-                DsIcon(
+                DesignSystemIcon(
                     imageVector = ImageVector.vectorResource(R.drawable.review_star),
                     contentDescription = stringResource(R.string.rating_star),
                     tint = Color.Unspecified,
                 )
-                DsText(
+                DesignSystemText(
                     modifier = Modifier.padding(start = 4.dp),
                     text = rating,
                     color = color.system.onWarning,
