@@ -65,7 +65,7 @@ fun AppNavigation() {
                     navDeepLink<SeriesRoute>(basePath = "$BASE_URL/series")
                 )
             ) { backStackEntry ->
-                SeriesScreen(seriesId = 1399)
+                SeriesScreen(backStackEntry.toRoute<SeriesRoute>().seriesId)
             }
             composable<ArtistRoute>(
                 deepLinks = listOf(
@@ -89,13 +89,15 @@ fun AppNavigation() {
             composable<TopCastRoute> { backStackEntry ->
                 TopCastScreen(
                     mediaId = backStackEntry.toRoute<TopCastRoute>().mediaId,
-                    isMovie = backStackEntry.toRoute<TopCastRoute>().isMovie
+                    isMovie = backStackEntry.toRoute<TopCastRoute>().isMovie,
+                    navController = navController
                 )
             }
             composable<ReviewsRoute> { backStackEntry ->
                 ReviewsScreen(
                     mediaId = backStackEntry.toRoute<ReviewsRoute>().mediaId,
-                    isMovie = backStackEntry.toRoute<ReviewsRoute>().isMovie
+                    isMovie = backStackEntry.toRoute<ReviewsRoute>().isMovie,
+                    navController= navController
                 )
             }
             composable<SeasonsRoute> { backStackEntry ->

@@ -50,10 +50,11 @@
     <string name="season_premiere">الموسم %1$s من %2$s تم عرضه لأول مرة في %3$s.</string>
     <string name="year_episodes">%1$s | %2$s حلقة</string>
     <string name="rating_star">نجمة التقييم</string>
-    <string name="reviewer_image">صورة المراج</string>
+    <string name="reviewer_image">صورة المراجع</string>
     <string name="Rate_it">قّيم</string>
     <string name="add_to_list">أضف إلى القائمة</string>
     <string name="play">تشغيل</string>
+    <string name="less">أقل</string>
     <string name="copy_link">نسخ الرابط</string>
     <string name="you_don_t_have_an_account">ليس لديك حساب</string>
     <string name="you_don_t_have_an_account_description">يرجى تسجيل الدخول أو إنشاء حساب لحفظ العناصر في المفضلة والوصول إليها لاحقًا.</string>
@@ -65,4 +66,3 @@
     <string name="reviews">المراجعات</string>
     <string name="similar_series">المسلسلات مشابهة</string>
 </resources>
-

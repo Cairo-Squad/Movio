@@ -16,12 +16,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import com.cairosquad.design_system.R
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 
@@ -33,33 +36,29 @@ fun ExpandableText(
     modifier: Modifier = Modifier,
     textModifier: Modifier = Modifier,
     collapsedMaxLine: Int = 4,
-    showMoreText: String = "... Show More",
+    showMoreText: String = stringResource(R.string.more),
     showMoreStyle: TextStyle = TextStyle(fontWeight = FontWeight.W500),
     showMoreColor: Color = color,
-    showLessText: String = " Show Less",
+    showLessText: String =stringResource(R.string.less),
     showLessStyle: TextStyle = showMoreStyle,
     showLessColor: Color = color,
     textAlign: TextAlign? = null,
 ) {
     var isExpanded by remember { mutableStateOf(false) }
-    var clickable by remember { mutableStateOf(false) }
+    var isOverflowing by remember { mutableStateOf(false) }
     var lastCharIndex by remember { mutableIntStateOf(0) }
 
     Box(
-        modifier = Modifier
-            .clickable(clickable) {
-                isExpanded = !isExpanded
-            }
-            .then(modifier)
+        modifier = modifier.clickable(enabled = isOverflowing) {
+            isExpanded = !isExpanded
+        }
     ) {
         Text(
-            modifier = textModifier
+            modifier = Modifier
                 .fillMaxWidth()
-                .animateContentSize(
-                    animationSpec = tween(300)
-                ),
+                .animateContentSize(animationSpec = tween(300)),
             text = buildAnnotatedString {
-                if (clickable) {
+                if (isOverflowing) {
                     if (isExpanded) {
                         append(text)
                         withStyle(
@@ -68,10 +67,12 @@ fun ExpandableText(
                             append(showLessText)
                         }
                     } else {
-                        val adjustText = text.substring(startIndex = 0, endIndex = lastCharIndex)
-                            .dropLast(showMoreText.length)
-                            .dropLastWhile { Character.isWhitespace(it) || it == '.' }
-                        append(adjustText)
+                        val showMoreLength = showMoreText.length + 3
+                        val safeEnd = (lastCharIndex - showMoreLength).coerceAtMost(text.length).coerceAtLeast(0)
+                        val visibleText = text.substring(0, safeEnd)
+                            .dropLastWhile { it.isWhitespace() || it == '.' }
+                        append(visibleText)
+
                         withStyle(
                             style = showMoreStyle.toSpanStyle().copy(color = showMoreColor)
                         ) {
@@ -83,19 +84,18 @@ fun ExpandableText(
                 }
             },
             color = color,
-            maxLines = if (isExpanded) Int.MAX_VALUE else collapsedMaxLine,
-            onTextLayout = { textLayoutResult ->
-                if (!isExpanded && textLayoutResult.hasVisualOverflow) {
-                    clickable = true
-                    lastCharIndex = textLayoutResult.getLineEnd(collapsedMaxLine - 1)
-                }
-            },
             style = style,
             textAlign = textAlign,
+            maxLines = if (isExpanded) Int.MAX_VALUE else collapsedMaxLine,
+            onTextLayout = {
+                if (!isExpanded && it.hasVisualOverflow) {
+                    isOverflowing = true
+                    lastCharIndex = it.getLineEnd(collapsedMaxLine - 1)
+                }
+            }
         )
     }
 }
-
 
 @Preview(device = "spec:width=200dp,height=891dp")
 @Composable
