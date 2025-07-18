@@ -32,7 +32,7 @@ class TopCastViewModel(
         return if (isMovie) {
             getMovieDetailsUseCase.getMovieTopCast(mediaId)
         } else {
-            getSeriesDetailsUseCase.getSeriesTopCast(mediaId)
+            getSeriesDetailsUseCase.getSeriesTopCast(mediaId, 1)
         }
     }
 

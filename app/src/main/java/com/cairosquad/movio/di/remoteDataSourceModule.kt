@@ -5,9 +5,11 @@ import com.cairosquad.remote.common.HttpEngine
 import com.cairosquad.remote.movie.RemoteMovieDataSourceImpl
 import com.cairosquad.remote.search.RemoteMovieDiscoveryDataSourceImpl
 import com.cairosquad.remote.search.RemoteSearchDataSourceImpl
+import com.cairosquad.remote.series.RemoteSeriesDataSourceImpl
 import com.cairosquad.repository.movie.data_source.remote.RemoteMovieDataSource
 import com.cairosquad.repository.search.data_source.remote.RemoteMovieDiscoveryDataSource
 import com.cairosquad.repository.search.data_source.remote.RemoteSearchDataSource
+import com.cairosquad.repository.series.data_source.remote.RemoteSeriesDataSource
 import org.koin.dsl.module
 
 val remoteDataSourceModule = module {
@@ -27,5 +29,9 @@ val remoteDataSourceModule = module {
 
     single<RemoteMovieDataSource> {
         RemoteMovieDataSourceImpl(get())
+    }
+
+    single<RemoteSeriesDataSource> {
+        RemoteSeriesDataSourceImpl(get())
     }
 }

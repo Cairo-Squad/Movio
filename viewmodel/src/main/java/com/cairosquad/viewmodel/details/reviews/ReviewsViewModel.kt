@@ -35,7 +35,7 @@ class ReviewsViewModel(
         return if (isMovie) {
             getMovieDetailsUseCase.getMovieReviews(mediaId)
         } else {
-            getSeriesDetailsUseCase.getSeriesReviews(mediaId)
+            getSeriesDetailsUseCase.getSeriesReviews(mediaId, 1)
         }
     }
 
