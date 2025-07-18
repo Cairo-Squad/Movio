@@ -108,8 +108,8 @@ private fun ArtistScreenContent(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(345.dp)
-                .offset(y=(-5).dp)
+                .height(335.dp)
+
         )
         {
             SafeImageViewer(
@@ -117,6 +117,8 @@ private fun ArtistScreenContent(
                 contentDescription = "blured image",
                 modifier = Modifier
                     .fillMaxSize()
+                    .height(355.dp)
+                    .offset(y = (-5).dp)
                     .CustomBrush(0.5f, 16.dp),
                 nudeThreshold = 0.0,
                 nonNudeThreshold = 0.0
@@ -177,7 +179,8 @@ private fun ArtistScreenContent(
                 color = Theme.color.surfaces.onSurface,
                 style = Theme.textStyle.label.smallRegular12,
                 modifier = Modifier
-                    .padding(vertical = 16.dp),
+                    .padding(vertical = 16.dp)
+                    .padding(end=16.dp),
                 collapsedMaxLine= 5,
 
             )
