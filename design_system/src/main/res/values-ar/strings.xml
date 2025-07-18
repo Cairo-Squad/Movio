@@ -48,7 +48,9 @@
     <string name="Rate_it">قّيم</string>
     <string name="add_to_list">أضف إلى القائمة</string>
     <string name="play">تشغيل</string>
+    <string name="known_for">معروف بالتالي</string>
     <string name="less">أقل</string>
-
+    <string name="read_less">اقرأأقل</string>
+    <string name="read_more">اقرأأكثر</string>
     <string name="top_cast">أفضل الممثلين</string>
 </resources>
