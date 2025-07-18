@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
+import com.cairosquad.design_system.basic_component.ExpandableText
 import com.cairosquad.design_system.basic_component.InfoChip
 import com.cairosquad.design_system.modifier.CustomBrush
 import com.cairosquad.design_system.theme.Theme
@@ -101,11 +103,13 @@ private fun ArtistScreenContent(
             .fillMaxSize(),
         horizontalAlignment = Alignment.Start,
     ) {
+
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(335.dp)
+                .height(345.dp)
+                .offset(y=(-5).dp)
         )
         {
             SafeImageViewer(
@@ -168,17 +172,15 @@ private fun ArtistScreenContent(
                 )
             }
 
-
-            Text(
+            ExpandableText(
                 text = state.artist.biography,
-                style = Theme.textStyle.label.smallRegular12,
                 color = Theme.color.surfaces.onSurface,
+                style = Theme.textStyle.label.smallRegular12,
                 modifier = Modifier
                     .padding(vertical = 16.dp),
-                maxLines = 5,
-                overflow = TextOverflow.Ellipsis
-            )
+                collapsedMaxLine= 5,
 
+            )
 
             Text(
                 text = "known for",
