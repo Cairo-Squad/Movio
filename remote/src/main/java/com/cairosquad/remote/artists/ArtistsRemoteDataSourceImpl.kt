@@ -40,12 +40,12 @@ class ArtistsRemoteDataSourceImpl(
     }
 
     @Serializable
-    private data class MoviesListResponse(
+    internal data class MoviesListResponse(
         val cast: List<MovieRemoteDto>
     )
 
     @Serializable
-    private data class SeriesListResponse(
+    internal data class SeriesListResponse(
         val cast: List<SeriesRemoteDto>
     )
 
