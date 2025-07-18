@@ -507,7 +507,7 @@ class SearchViewModelTest {
         unmockkStatic(Dispatchers::class)
         Dispatchers.resetMain()
     }
-
+    //TODO: see the problem on this test
     @Test
     fun `should not clear recentSearch when onClickSearchTextField fails`() = runTest {
         val previous = listOf("a", "b")
@@ -518,8 +518,8 @@ class SearchViewModelTest {
         viewModel.onClickSearchTextField()
         advanceUntilIdle()
         advanceTimeBy(600)
+
         assertThat(viewModel.screenState.value.recentSearch).isEqualTo(previous)
-        assertThat(viewModel.screenState.value.screenStatus)
     }
 
     @Test
