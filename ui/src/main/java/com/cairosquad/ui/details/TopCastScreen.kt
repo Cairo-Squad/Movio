@@ -42,6 +42,9 @@ fun TopCastScreen(
         )
         Chip(
             title = "back",
+            onClick = { navController.popBackStack() }        )
+        Chip(
+            title = "go to one artist",
             onClick =  {navController.navigate(ArtistRoute(119783L))}
         )
     }

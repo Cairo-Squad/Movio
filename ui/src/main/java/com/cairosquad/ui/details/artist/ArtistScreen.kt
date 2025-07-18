@@ -27,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
@@ -113,19 +114,6 @@ private fun ArtistScreenContent(
                 .fillMaxWidth()
                 .height(340.dp)
         ) {
-
-            SafeImageViewer(
-                model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
-                contentDescription = "blured image",
-                modifier = Modifier
-                    .fillMaxSize()
-                    .height(335.dp)
-                    .offset(y = (-5).dp)
-                    .CustomBrush(0.5f, 16.dp),
-                nudeThreshold = 0.0,
-                nonNudeThreshold = 0.0
-            )
-
             SafeImageViewer(
                 model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
                 contentDescription = "blured image",
@@ -143,7 +131,7 @@ private fun ArtistScreenContent(
                     .height(80.dp)
                     .align(Alignment.TopStart)
                     .background(
-                        brush = androidx.compose.ui.graphics.Brush.verticalGradient(
+                        brush = verticalGradient(
                             colors = listOf(
                                 Color.Black.copy(alpha = 1f),
                                 Color.Black.copy(alpha = 0f)
@@ -151,7 +139,23 @@ private fun ArtistScreenContent(
                         )
                     )
             )
-
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(20.dp)
+                    .align(Alignment.BottomCenter)
+                    .background(
+                        brush = verticalGradient(
+                            colors = listOf(
+                                Theme.color.surfaces.surface.copy(alpha = 0f),
+                                Theme.color.surfaces.surface.copy(alpha = .10f),
+                                Theme.color.surfaces.surface.copy(alpha = .50f),
+                                Theme.color.surfaces.surface.copy(alpha = .90f),
+                                Theme.color.surfaces.surface,
+                            )
+                        )
+                    )
+            )
 
             AppBar(
                 onBackButtonClicked = listener::onClickBack,
@@ -160,7 +164,6 @@ private fun ArtistScreenContent(
                     .windowInsetsPadding(WindowInsets.statusBars)
                     .padding(top = 4.dp)
             )
-
 
             SafeImageViewer(
                 model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
