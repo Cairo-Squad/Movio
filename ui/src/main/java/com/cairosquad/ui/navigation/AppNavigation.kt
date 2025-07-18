@@ -13,7 +13,6 @@ import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.AppScreen
-import com.cairosquad.ui.details.ArtistScreen
 import com.cairosquad.ui.details.MovieScreen
 import com.cairosquad.ui.details.ReviewsScreen
 import com.cairosquad.ui.details.SeasonScreen
@@ -22,6 +21,7 @@ import com.cairosquad.ui.details.SeriesScreen
 import com.cairosquad.ui.details.SimilarMoviesScreen
 import com.cairosquad.ui.details.SimilarSeriesScreen
 import com.cairosquad.ui.details.TopCastScreen
+import com.cairosquad.ui.details.artist.ArtistScreen
 import com.cairosquad.ui.search.ForYouScreen
 import com.cairosquad.ui.splash.SplashScreen
 
