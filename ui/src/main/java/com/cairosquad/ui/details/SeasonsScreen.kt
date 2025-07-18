@@ -42,7 +42,7 @@ fun SeasonsScreen(
         )
         Chip(
             title = "see season number 1",
-            onClick = { navController.navigate(SeasonRoute(seriesId, 1)) }
+            onClick = { navController.navigate(SeasonRoute(seriesId)) }
         )
     }
 }
