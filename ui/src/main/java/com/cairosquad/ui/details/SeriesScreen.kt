@@ -142,7 +142,7 @@ fun SeriesScreen(
             }
 
             is SeriesDetailEffect.NavigateToAllSeasons -> {
-                navController.navigate(SeasonsRoute(effect.seriesId))
+                navController.navigate(SeasonRoute(effect.seriesId))
             }
 
             is SeriesDetailEffect.NavigateToAllSimilar -> {
@@ -156,8 +156,7 @@ fun SeriesScreen(
             is SeriesDetailEffect.NavigateToSeasonDetails -> {
                 navController.navigate(
                     SeasonRoute(
-                        seriesId = effect.seriesId,
-                        seasonNumber = effect.seasonNumber
+                        seriesId = effect.seriesId
                     )
                 )
             }
