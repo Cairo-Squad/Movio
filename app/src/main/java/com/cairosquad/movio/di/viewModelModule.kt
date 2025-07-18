@@ -1,6 +1,7 @@
 package com.cairosquad.movio.di
 
 import com.cairosquad.viewmodel.details.artist.ArtistViewModel
+import com.cairosquad.viewmodel.details.movie.MovieViewModel
 import com.cairosquad.viewmodel.details.reviews.ReviewsViewModel
 import com.cairosquad.viewmodel.details.series.SeriesDetailsViewModel
 import com.cairosquad.viewmodel.details.series.season.SeasonsViewModel
@@ -14,6 +15,11 @@ import org.koin.dsl.module
 val viewModelModule = module {
     viewModelOf(::SearchViewModel)
     viewModelOf(::SimilarMoviesViewModel)
+    viewModel { (movieId: Long) ->
+
+        MovieViewModel(movieId = movieId, movieUseCase = get())
+    }
+
     viewModel { (seriesId: Long) ->
         SeriesDetailsViewModel(seriesDetailsUseCase = get(), seriesId = seriesId)
     }

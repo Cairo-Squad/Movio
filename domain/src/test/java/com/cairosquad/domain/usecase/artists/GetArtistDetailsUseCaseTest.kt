@@ -71,6 +71,7 @@ class GetArtistDetailsUseCaseTest {
             genres = listOf(Genre(1, "Action")),
             overview = "overview",
             releaseDate = 123L,
+            trailerPath = "",
         )
 
         private val actor = Artist(
