@@ -40,5 +40,6 @@ data class MovieDetailsRemoteDto(
         overview = overview.orEmpty(),
         releaseDate = TimeUtils.dateToLong(releaseDate ?: ""),
         runtimeMinutes = runtime ?: 0,
+        trailerPath = "" // TODO
     )
 }

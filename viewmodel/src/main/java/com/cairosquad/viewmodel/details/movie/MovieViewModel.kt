@@ -1,7 +1,7 @@
 package com.cairosquad.viewmodel.details.movie
 
 import com.cairosquad.domain.exception.MovioException
-import com.cairosquad.domain.usecase.movies.GetMoviesDetailsUseCase
+import com.cairosquad.domain.usecase.movies.GetMovieDetailsUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Review
@@ -13,7 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 
 class MovieViewModel(
-    private val movieUseCase: GetMoviesDetailsUseCase,
+    private val movieUseCase: GetMovieDetailsUseCase,
     movieId: Long
 ) : BaseViewModel<MovieScreenState, MovieEffect>(MovieScreenState()),
     MovieInteractionListener {

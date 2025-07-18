@@ -43,7 +43,7 @@ data class MovieScreenState(
     )
 
     data class ReviewUiState(
-        val id: Long = 0,
+        val id: String = "",
         val author: String = "",
         val authorPhotoPath: String = "",
         val rating: Float = 0.0f,
