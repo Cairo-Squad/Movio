@@ -68,9 +68,9 @@ import com.cairosquad.ui.movio_component.SectionHeader
 import com.cairosquad.ui.movio_component.ShareBottomSheet
 import com.cairosquad.ui.movio_component.SmallArtistCard
 import com.cairosquad.ui.navigation.ArtistRoute
+import com.cairosquad.ui.navigation.EpisodeRoute
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.ReviewsRoute
-import com.cairosquad.ui.navigation.SeasonRoute
 import com.cairosquad.ui.navigation.SeasonsRoute
 import com.cairosquad.ui.navigation.SeriesRoute
 import com.cairosquad.ui.navigation.SimilarSeriesRoute
@@ -87,7 +87,7 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun SeriesScreen(
-    seriesId: Long = 1399,
+    seriesId: Long,
     viewModel: SeriesDetailsViewModel = koinViewModel { parametersOf(seriesId) }
 ) {
     val navController = LocalNavController.current
@@ -139,8 +139,8 @@ fun SeriesScreen(
 
             is SeriesDetailEffect.NavigateToSeasonDetails -> {
                 navController.navigate(
-                    SeasonRoute(
-                        seriesId = effect.seriesId,
+                    EpisodeRoute(
+                        episodeId = effect.seriesId,
                         seasonNumber = effect.seasonNumber
                     )
                 )

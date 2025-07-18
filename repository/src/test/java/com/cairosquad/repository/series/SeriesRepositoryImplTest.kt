@@ -40,7 +40,7 @@ class SeriesRepositoryImplTest {
         val result = seriesRepository.getSeriesSeasons(1399L)
 
         assertThat(result).isNotNull()
-        assertThat(result).hasSize(2)
+        assertThat(result).hasSize(14)
         assertThat(result[0].seasonName).isEqualTo("Specials")
         assertThat(result[1].seasonName).isEqualTo("Season 1")
     }
