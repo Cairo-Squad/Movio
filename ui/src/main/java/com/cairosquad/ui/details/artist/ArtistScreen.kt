@@ -23,7 +23,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -33,7 +32,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -103,14 +104,29 @@ private fun ArtistScreenContent(
     state: ArtistScreenState,
     listener: ArtistInteractionListener
 ) {
+    val listScroll = rememberScrollState()
+    val density = LocalDensity.current
+
+    val scrollThresholdPx = with(density) { 250.dp.toPx() }
+
+    val progress = (listScroll.value / scrollThresholdPx).coerceIn(0f, 1f)
+
+    val animatedStartColor = lerp(
+        start = Color.Black,
+        stop = Theme.color.surfaces.surface,
+        fraction = progress
+    )
+    val animatedEndColor = lerp(
+        start = Color.Transparent,
+        stop = Theme.color.surfaces.surface,
+        fraction = progress
+    )
     Column(
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
+            .verticalScroll(listScroll),
         horizontalAlignment = Alignment.Start,
     ) {
-
-
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
@@ -131,20 +147,6 @@ private fun ArtistScreenContent(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(80.dp)
-                    .align(Alignment.TopStart)
-                    .background(
-                        brush = verticalGradient(
-                            colors = listOf(
-                                Color.Black.copy(alpha = 1f),
-                                Color.Black.copy(alpha = 0f)
-                            )
-                        )
-                    )
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
                     .height(20.dp)
                     .align(Alignment.BottomCenter)
                     .background(
@@ -159,16 +161,6 @@ private fun ArtistScreenContent(
                         )
                     )
             )
-
-            AppBar(
-                onBackButtonClicked = listener::onClickBack,
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .windowInsetsPadding(WindowInsets.statusBars)
-                    .padding(top = 4.dp)
-            )
-
-
             SafeImageViewer(
                 model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
                 modifier = Modifier
@@ -218,16 +210,16 @@ private fun ArtistScreenContent(
                 .padding(vertical = 16.dp)
                 .padding(horizontal = 16.dp),
             collapsedMaxLine = 5,
-            showMoreText="...Read More",
-            showMoreColor =Theme.color.surfaces.onSurfaceVariant,
-            showLessText="...Read Less"
+            showMoreText = "...Read More",
+            showMoreColor = Theme.color.surfaces.onSurfaceVariant,
+            showLessText = "...Read Less"
         )
 
         BasicText(
             modifier = Modifier.padding(start = 16.dp, top = 32.dp, bottom = 12.dp),
             text = stringResource(R.string.known_for),
             style = Theme.textStyle.title.mediumMedium16
-            .copy(color = Theme.color.surfaces.onSurface)
+                .copy(color = Theme.color.surfaces.onSurface)
 
         )
 
@@ -257,8 +249,18 @@ private fun ArtistScreenContent(
                 )
             }
         }
-
     }
+    AppBar(
+        onBackButtonClicked = listener::onClickBack,
+        modifier = Modifier
+            .background(
+                brush = verticalGradient(
+                    colors = listOf(animatedStartColor, animatedEndColor)
+                )
+            )
+            .windowInsetsPadding(WindowInsets.statusBars)
+            .padding(top = 4.dp)
+    )
 }
 
 private fun formatBirthDateLegacy(birthDateLong: Long): String {
