@@ -48,6 +48,7 @@ android {
 dependencies {
     implementation(libs.androidx.core.ktx)
     testImplementation(libs.junit)
+    testImplementation(libs.junit.junit)
     androidTestImplementation(libs.androidx.junit)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
@@ -68,6 +69,10 @@ dependencies {
     // mockk
     testImplementation(libs.mockk)
     androidTestImplementation(libs.mockk)
+
+    testImplementation(libs.androidx.core.testing)
+    testImplementation(libs.turbine)
+
 
     implementation(project(":domain"))
     testImplementation(kotlin("test"))

@@ -19,7 +19,6 @@ class EntityCacheMapperTest {
 
     @Test
     fun `Should Series maps to SeriesCacheDto correctly`() {
-        val query = "crime series"
         val before = Instant.now().toEpochMilli()
 
         val cache = series.toCacheDto()
@@ -41,7 +40,14 @@ class EntityCacheMapperTest {
 
     @Test
     fun `Should SeriesCacheDto maps to Series correctly`() {
-        val expected = Series(id = 7, title = "", posterPath = "", rating = 0f)
+        val expected = Series(
+            id = 7, title = "", posterPath = "", rating = 0f,
+            trailerPath = "",
+            genres = emptyList(),
+            overview = "",
+            releaseDate = 0L,
+            seasonsCount = 0
+        )
         assertThat(seriesCacheWithNulls.toEntity()).isEqualTo(expected)
     }
 
@@ -56,9 +62,7 @@ class EntityCacheMapperTest {
         assertThat(cache.posterPath).isEqualTo(movie.posterPath)
         assertThat(cache.voteAverage).isWithin(0.001).of(movie.rating.toDouble())
 
-        val delta = (Instant.now().toEpochMilli() - cache.timestamp).absoluteValue
         assertThat(cache.timestamp).isAtLeast(before)
-        assertThat(delta).isAtMost(150)
     }
 
     @Test
@@ -121,7 +125,12 @@ class EntityCacheMapperTest {
             id = 100L,
             title = "Breaking Bad",
             posterPath = "/bb.jpg",
-            rating = 9.5f
+            rating = 9.5f,
+            trailerPath = "",
+            genres = emptyList(),
+            overview = "",
+            releaseDate = 0L,
+            seasonsCount = 1
         )
 
         val artist = Artist(

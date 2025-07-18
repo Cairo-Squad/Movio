@@ -5,13 +5,13 @@ import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Review
-import com.cairosquad.repository.common.mappers.tryToCall
 import com.cairosquad.repository.search.data_source.local.DiscoveryDataSource
 import com.cairosquad.repository.search.data_source.local.dto.toCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.toEntity
 import com.cairosquad.repository.search.data_source.remote.RemoteMovieDiscoveryDataSource
-import com.cairosquad.repository.search.data_source.remote.dto.toEntity
+import com.cairosquad.repository.search.data_source.remote.dto.toEntityList
 import kotlinx.coroutines.delay
+import com.cairosquad.repository.utils.mappers.tryToCall
 import java.util.Date
 
 class MoviesRepositoryImpl(
@@ -39,7 +39,7 @@ class MoviesRepositoryImpl(
             discoveryDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
             discoveryDataSource.getPersonalizedMovies()
                 .takeIf { it.size >= PAGE_SIZE }?.toEntity()
-                ?: remoteMovieDiscoveryDataSource.getPersonalizedMovies().toEntity()
+                ?: remoteMovieDiscoveryDataSource.getPersonalizedMovies().toEntityList()
                     .also { result -> discoveryDataSource.cachePersonalizedMovies(result.toCacheDto()) }
         }
     }
@@ -49,7 +49,7 @@ class MoviesRepositoryImpl(
             discoveryDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
             discoveryDataSource.getSuggestedMovies()
                 .takeIf { it.size >= PAGE_SIZE }?.toEntity()
-                ?: remoteMovieDiscoveryDataSource.getSuggestedMovies().toEntity()
+                ?: remoteMovieDiscoveryDataSource.getSuggestedMovies().toEntityList()
                     .also { result -> discoveryDataSource.cacheSuggestedMovies(result.toCacheDto()) }
         }
     }

@@ -3,18 +3,24 @@ package com.cairosquad.repository.search.data_source.remote.dto
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
+import java.time.LocalDate
+import java.time.ZoneOffset
 
 
 fun ArtistRemoteDto.toEntity(): Artist {
     return Artist(
         id = id?.toLong() ?: 0L,
         name = name ?: "",
-        photoPath = profilePath ?: ""
+        photoPath = profilePath ?: "",
+        country = placeOfBirth ?: "",
+        birthDate = birthday?.toMillisFromDate() ?: 0,
+        biography = biography ?: "",
+        department = department ?: "",
     )
 }
 
 @JvmName("toEntityArtist")
-fun List<ArtistRemoteDto>.toEntity(): List<Artist> {
+fun List<ArtistRemoteDto>.toEntityList(): List<Artist> {
     return map { it.toEntity() }
 }
 
@@ -28,7 +34,7 @@ fun MovieRemoteDto.toEntity(): Movie {
 }
 
 @JvmName("toEntityMovie")
-fun List<MovieRemoteDto>.toEntity(): List<Movie> {
+fun List<MovieRemoteDto>.toEntityList(): List<Movie> {
     return map { it.toEntity() }
 }
 
@@ -38,10 +44,20 @@ fun SeriesRemoteDto.toEntity(): Series {
         title = name ?: "",
         rating = voteAverage?.toFloat() ?: 0f,
         posterPath = posterPath ?: "",
+        trailerPath = "",
+        genres = emptyList(),
+        overview = "",
+        releaseDate = 0L,
+        seasonsCount = 1,
     )
 }
 
 @JvmName("toEntitySeries")
-fun List<SeriesRemoteDto>.toEntity(): List<Series> {
+fun List<SeriesRemoteDto>.toEntityList(): List<Series> {
     return map { it.toEntity() }
+}
+
+private fun String.toMillisFromDate(): Long {
+    val localDate = LocalDate.parse(this) // Assumes input format yyyy-mm-dd
+    return localDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
 }

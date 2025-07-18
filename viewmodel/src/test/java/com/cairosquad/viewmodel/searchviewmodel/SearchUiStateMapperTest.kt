@@ -69,7 +69,12 @@ class SearchUiStateMapperTest {
             id = 202L,
             title = "Breaking Bad",
             posterPath = "/bb.jpg",
-            rating = 9.0f
+            rating = 9.0f,
+            trailerPath = "",
+            genres = emptyList(),
+            overview = "",
+            releaseDate = 0L,
+            seasonsCount = 0
         )
 
         val artist = Artist(

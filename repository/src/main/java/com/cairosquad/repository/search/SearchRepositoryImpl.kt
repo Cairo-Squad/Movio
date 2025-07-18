@@ -4,13 +4,13 @@ import com.cairosquad.domain.repository.SearchRepository
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
-import com.cairosquad.repository.common.mappers.tryToCall
 import com.cairosquad.repository.search.data_source.local.CacheDataSource
 import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
 import com.cairosquad.repository.search.data_source.local.dto.toCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.toEntity
 import com.cairosquad.repository.search.data_source.remote.RemoteSearchDataSource
-import com.cairosquad.repository.search.data_source.remote.dto.toEntity
+import com.cairosquad.repository.utils.mappers.tryToCall
+import com.cairosquad.repository.search.data_source.remote.dto.toEntityList
 import java.util.Date
 
 class SearchRepositoryImpl(
@@ -23,7 +23,7 @@ class SearchRepositoryImpl(
             cacheDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
             cacheDataSource.getCachedSeries(query)
                 .takeIf { it.isNotEmpty() }?.toEntity()
-                ?: remoteSearchDataSource.getSeries(query).toEntity()
+                ?: remoteSearchDataSource.getSeries(query).toEntityList()
                     .also { result -> cacheDataSource.cacheSeries(result.toCacheDto()) }
         }
     }
@@ -33,7 +33,7 @@ class SearchRepositoryImpl(
             cacheDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
             cacheDataSource.getCachedMovies(query)
                 .takeIf { it.isNotEmpty() }?.toEntity()
-                ?: remoteSearchDataSource.getMovies(query).toEntity()
+                ?: remoteSearchDataSource.getMovies(query).toEntityList()
                     .also { result -> cacheDataSource.cacheMovies(result.toCacheDto()) }
         }
     }
@@ -43,7 +43,7 @@ class SearchRepositoryImpl(
             cacheDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
             cacheDataSource.getCachedArtists(query)
                 .takeIf { it.isNotEmpty() }?.toEntity()
-                ?: remoteSearchDataSource.getArtists(query).toEntity()
+                ?: remoteSearchDataSource.getArtists(query).toEntityList()
                     .also { result -> cacheDataSource.cacheArtist(result.toCacheDto()) }
         }
     }
@@ -65,7 +65,7 @@ class SearchRepositoryImpl(
     }
 
     override suspend fun removeQuery(query: String) {
-        tryToCall {dataSource.removeQuery(query)}
+        tryToCall { dataSource.removeQuery(query) }
     }
 
     override suspend fun addQuery(query: String) {

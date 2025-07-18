@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -37,6 +36,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
+
 @Composable
 fun TabRow(
     tabs: List<String>,
@@ -47,7 +47,7 @@ fun TabRow(
 
     val tabPositions = remember { mutableStateMapOf<Int, Pair<Int, Int>>() }
 
-    var rowWidthPx by remember { mutableStateOf(0) }
+    var rowWidthPx by remember { mutableIntStateOf(0) }
 
     val layoutDirection = LocalLayoutDirection.current
     val density = LocalDensity.current
