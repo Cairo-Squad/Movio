@@ -22,7 +22,7 @@ class TopCastViewModel(
         tryToCall(
             block = { getTopCastByMediaType() },
             onSuccess = ::handleSuccess,
-            onError = { updateState { it.copy(isLoading = false, error = it.error) } },
+            onError = { throwable -> updateState { it.copy(isLoading = false, error = throwable.message) } },
             dispatcher = dispatcher
         )
 
