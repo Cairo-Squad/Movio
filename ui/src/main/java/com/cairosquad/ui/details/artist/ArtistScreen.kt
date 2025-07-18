@@ -111,8 +111,20 @@ private fun ArtistScreenContent(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(335.dp)
+                .height(340.dp)
         ) {
+
+            SafeImageViewer(
+                model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
+                contentDescription = "blured image",
+                modifier = Modifier
+                    .fillMaxSize()
+                    .height(335.dp)
+                    .offset(y = (-5).dp)
+                    .CustomBrush(0.5f, 16.dp),
+                nudeThreshold = 0.0,
+                nonNudeThreshold = 0.0
+            )
 
             SafeImageViewer(
                 model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
@@ -154,6 +166,7 @@ private fun ArtistScreenContent(
                 model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
                 modifier = Modifier
                     .padding(horizontal = 6.67.dp)
+                    .padding(top=31.dp)
                     .size(160.dp)
                     .clip(CircleShape),
                 contentDescription = stringResource(R.string.artist_image),
@@ -235,13 +248,6 @@ private fun ArtistScreenContent(
             }
         }
     }
-}
-
-
-@Composable
-@Preview(showBackground = true)
-private fun ArtistScreenContentPreview() {
-    //  ArtistScreenContent()
 }
 
 private fun formatBirthDateLegacy(birthDateLong: Long): String {
