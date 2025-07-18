@@ -23,7 +23,7 @@ class SeriesDetailsViewModel(
         loadDetails(seriesId)
     }
 
-    private fun loadDetails(seriesId: Long) {
+    fun loadDetails(seriesId: Long) {
         getSeriesDetails(seriesId)
         getTopCast(seriesId)
         getSeasons(seriesId)
@@ -77,11 +77,8 @@ class SeriesDetailsViewModel(
                 }
             },
             block = { delay(2000) },
-            onSuccess = {},
+            onSuccess = { updateState { it.copy(showSnackBar = false, snackMessage = message) } },
             onError = {},
-            onEnd = {
-                updateState { it.copy(showSnackBar = false, snackMessage = message) }
-            }
         )
     }
 
@@ -244,7 +241,7 @@ class SeriesDetailsViewModel(
         }
     }
 
-    private fun handleDetailsException(e: Throwable): ErrorStatus {
+    fun handleDetailsException(e: Throwable): ErrorStatus {
         return when (e) {
             is MovioException -> {
                 exceptionToErrorStatus(e)

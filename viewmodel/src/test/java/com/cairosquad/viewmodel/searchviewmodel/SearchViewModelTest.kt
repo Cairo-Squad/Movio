@@ -568,7 +568,12 @@ class SearchViewModelTest {
             id = 1,
             title = "Series",
             rating = 3.5f,
-            posterPath = "/img.jpg"
+            posterPath = "/img.jpg",
+            trailerPath = "",
+            genres = emptyList(),
+            overview = "",
+            releaseDate = 0L,
+            seasonsCount = 1
         )
 
         val artist = Artist(

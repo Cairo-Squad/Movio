@@ -1,462 +1,241 @@
 package com.cairosquad.viewmodel.details.series
 
+import app.cash.turbine.test
+import com.cairosquad.domain.exception.InternetConnectionException
+import com.cairosquad.domain.exception.NetworkException
 import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
-import com.cairosquad.entity.Artist
-import com.cairosquad.entity.Episode
-import com.cairosquad.entity.Genre
-import com.cairosquad.entity.Review
-import com.cairosquad.entity.Season
 import com.cairosquad.entity.Series
+import com.cairosquad.viewmodel.exception.ErrorStatus
+import com.google.common.truth.Truth.assertThat
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.rules.TestWatcher
+import org.junit.runner.Description
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class SeriesDetailsViewModelTest {
 
-    private lateinit var useCase: GetSeriesDetailsUseCase
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
+
+    private val testDispatcher = StandardTestDispatcher()
+    private val seriesId = 123L
+    private val mockUseCase: GetSeriesDetailsUseCase = mockk(relaxed = true)
     private lateinit var viewModel: SeriesDetailsViewModel
 
     @Before
     fun setup() {
-        useCase = mockk(relaxed = true)
-        viewModel = SeriesDetailsViewModel(useCase, 1399)
+        Dispatchers.setMain(testDispatcher)
+        viewModel = SeriesDetailsViewModel(mockUseCase, seriesId)
     }
 
-    private companion object {
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
 
-        val fakeSeries = Series(
-            id = 1399,
-            title = "Game of Thrones",
-            rating = 8.456f,
-            posterPath = "/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg",
-            genres = listOf(
-                Genre(10765, "Sci-Fi & Fantasy"),
-                Genre(18, "Drama"),
-                Genre(10759, "Action & Adventure")
-            ),
-            overview = "Seven noble families fight for control of the mythical land of Westeros. Friction between the houses leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and icy horrors beyond.",
-            releaseDate = 1752597611491L,
-            seasonsCount = 9,
-            trailerPath = "bjqEWgDVPe0"
-        )
+    @Test
+    fun `init SHOULD load all data sections`() = runTest {
+        // Given
+        coEvery { mockUseCase.getSeries(seriesId) } returns mockSeries
+        coEvery { mockUseCase.getSeriesTopCast(seriesId) } returns emptyList()
+        coEvery { mockUseCase.getSeriesSeasons(seriesId) } returns emptyList()
+        coEvery { mockUseCase.getSeriesReviews(seriesId) } returns emptyList()
+        coEvery { mockUseCase.getSimilarSeries(seriesId) } returns emptyList()
 
-        val fakeSeasonsList: List<Season> = listOf(
-            Season(
-                seasonNumber = 0,
-                seasonName = "Specials",
-                seriesId = 1399,
-                episodesCount = 286,
-                rating = 0.0f,
-                posterPath = "/aos6lC1JGYt6ZRL85lgstNsfSeY.jpg",
-                overview = "",
-                airDate = 1291507200000L
-            ),
-            Season(
-                seasonNumber = 1,
-                seasonName = "Season 1",
-                seriesId = 1399,
-                episodesCount = 10,
-                rating = 8.4f,
-                posterPath = "/wgfKiqzuMrFIkU1M68DDDY8kGC1.jpg",
-                overview = "Trouble is brewing in the Seven Kingdoms of Westeros. For the driven inhabitants of this visionary world, control of Westeros' Iron Throne holds the lure of great power. But in a land where the seasons can last a lifetime, winter is coming...and beyond the Great Wall that protects them, an ancient evil has returned. In Season One, the story centers on three primary areas: the Stark and the Lannister families, whose designs on controlling the throne threaten a tenuous peace; the dragon princess Daenerys, heir to the former dynasty, who waits just over the Narrow Sea with her malevolent brother Viserys; and the Great Wall--a massive barrier of ice where a forgotten danger is stirring.",
-                airDate = 1302998400000L
-            ),
-            Season(
-                seasonNumber = 2,
-                seasonName = "Season 2",
-                seriesId = 1399,
-                episodesCount = 10,
-                rating = 8.3f,
-                posterPath = "/9xfNkPwDOqyeUvfNhs1XlWA0esP.jpg",
-                overview = "The cold winds of winter are rising in Westeros...war is coming...and five kings continue their savage quest for control of the all-powerful Iron Throne. With winter fast approaching, the coveted Iron Throne is occupied by the cruel Joffrey, counseled by his conniving mother Cersei and uncle Tyrion. But the Lannister hold on the Throne is under assault on many fronts. Meanwhile, a new leader is rising among the wildings outside the Great Wall, adding new perils for Jon Snow and the order of the Night's Watch.",
-                airDate = 1333238400000L
-            ),
-            Season(
-                seasonNumber = 3,
-                seasonName = "Season 3",
-                seriesId = 1399,
-                episodesCount = 10,
-                rating = 8.3f,
-                posterPath = "/5MkZjRnCKiIGn3bkXrXfndEzqOU.jpg",
-                overview = "Duplicity and treachery...nobility and honor...conquest and triumph...and, of course, dragons. In Season 3, family and loyalty are the overarching themes as many critical storylines from the first two seasons come to a brutal head. Meanwhile, the Lannisters maintain their hold on King's Landing, though stirrings in the North threaten to alter the balance of power; Robb Stark, King of the North, faces a major calamity as he tries to build on his victories; a massive army of wildlings led by Mance Rayder march for the Wall; and Daenerys Targaryen--reunited with her dragons--attempts to raise an army in her quest for the Iron Throne.",
-                airDate = 1364688000000L
-            ),
-            Season(
-                seasonNumber = 4,
-                seasonName = "Season 4",
-                seriesId = 1399,
-                episodesCount = 10,
-                rating = 8.5f,
-                posterPath = "/jXIMScXE4J4EVHUba1JgxZnWbo4.jpg",
-                overview = "The War of the Five Kings is drawing to a close, but new intrigues and plots are in motion, and the surviving factions must contend with enemies not only outside their ranks, but within.",
-                airDate = 1396742400000L
-            ),
-            Season(
-                seasonNumber = 5,
-                seasonName = "Season 5",
-                seriesId = 1399,
-                episodesCount = 10,
-                rating = 8.2f,
-                posterPath = "/7Q1Hy1AHxAzA2lsmzEMBvuWTX0x.jpg",
-                overview = "The War of the Five Kings, once thought to be drawing to a close, is instead entering a new and more chaotic phase. Westeros is on the brink of collapse, and many are seizing what they can while the realm implodes, like a corpse making a feast for crows.",
-                airDate = 1428806400000L
-            ),
-            Season(
-                seasonNumber = 6,
-                seasonName = "Season 6",
-                seriesId = 1399,
-                episodesCount = 10,
-                rating = 8.3f,
-                posterPath = "/p1udLh0gfqyZFmXBGa393gk8go5.jpg",
-                overview = "Following the shocking developments at the conclusion of season five, survivors from all parts of Westeros and Essos regroup to press forward, inexorably, towards their uncertain individual fates. Familiar faces will forge new alliances to bolster their strategic chances at survival, while new characters will emerge to challenge the balance of power in the east, west, north and south.",
-                airDate = 1461456000000L
-            ),
-            Season(
-                seasonNumber = 7,
-                seasonName = "Season 7",
-                seriesId = 1399,
-                episodesCount = 7,
-                rating = 8.2f,
-                posterPath = "/oX51n32QyHeFP5kErksemJsJljL.jpg",
-                overview = "The long winter is here. And with it comes a convergence of armies and attitudes that have been brewing for years.",
-                airDate = 1500163200000L
-            ),
-            Season(
-                seasonNumber = 8,
-                seasonName = "Season 8",
-                seriesId = 1399,
-                episodesCount = 6,
-                rating = 6.2f,
-                posterPath = "/259Q5FuaD3TNB7DGauTaJVRC8XV.jpg",
-                overview = "The Great War has come, the Wall has fallen and the Night King's army of the dead marches towards Westeros. The end is here, but who will take the Iron Throne?",
-                airDate = 1555200000000L
-            )
-        )
+        // When
+        advanceUntilIdle()
 
-        val fakeReviewsList: List<Review> = listOf(
-            Review(
-                id = 0L,
-                author = "lmao7",
-                authorPhotoPath = "/ekmYOUU4tfx9zGGadjRdE7UPce.jpg",
-                rating = "9",
-                date = 1487569648872L,
-                description = "I started watching when it came out as I heard that fans of LOTR also liked this. I stopped watching after Season 1 as I was devastated lol kinda. Only 2015 I decided to continue watching and got addicted like it seemed complicated at first, too many stories and characters. I even used a guide from internet like family tree per house while watching or GOT wiki so I can have more background on the characters. For a TV series, this show can really take you to a different world and never knowing what will happen. It is very daring that any time anybody can just die (I learned not to be attached and have accepted that they will all die so I won't be devastated hehe). I have never read the books but the show is entertaining and you will really root for your faves and really hate on those you hate. \r\n\r\nFantasy, action, drama, comedy, love...and lots of surprises!"
-            ),
-            Review(
-                id = 1L,
-                author = "Vlad Ulbricht",
-                authorPhotoPath = "/srVsbbWgrmA4lmpqsrIYRYxJerc.jpg",
-                rating = "9",
-                date = 1494474799211L,
-                description = "Cruel, bloody, vulgar, Machiavellian, unrepentant. And that is just the writing. The camera angles, the score, the pacing mesh together for grand storytelling: a mix of horror, swords and sorcery, and endless treachery. \r\n\r\nAnd all of that would be somewhat squandered if it wasn't for the best casting I've ever seen. From Lena Headey as soft spoken Cersei to Peter Vaughan as ancient Maester Aemon, each character pulses with depth and believability. Peter Dinklage may have sacrificed a virgin princess to get this role; I've never seen a better fit, not in size (though there is that) but in the way his eyes convey shrewd arrogance coupled with unabashed debauchery."
-            ),
-            Review(
-                id = 2L,
-                author = "tmdb92828292",
-                authorPhotoPath = "",
-                rating = "10",
-                date = 1535072073538L,
-                description = "LOTR meets House of Cards. Imagine a fantasy novel if all of the beasts and mythologies were transported to the real world. There's no such thing as a happy ending, or an ending for that matter (unless you're dead). So as you watch the show make predictions, draw conspiracy theories, and watch them blow up in your face. This show is that kind of a ride!"
-            ),
-            Review(
-                id = 3L,
-                author = "NegatioN",
-                authorPhotoPath = "",
-                rating = "5",
-                date = 1557760572686L,
-                description = "This series starts off like some of the best out there. Although it makes some minor adjustments, it follows the story from the books quite faithfully for the first 4 seasons. And adds a twinkle of big budget movies, and great cinematography. Truly awesome. Up until this point, I was in love with the series, a 10/10. I quickly read all the books, and re-watched all seasons before a new one would come out.\r\n\r\nHowever, from season 5 and onwards, it starts going downhill. They ran out of book-material, and it shows. Everything starts focusing on the big set-pieces, characters become extremely bland and predictable. From here all major characters receive plot-armor, which was one of the things it didn't have before, and that made it interesting to watch. Of course they want you to think that they will still kill some of the main characters, but they're just teasing.\r\n\r\nThe last few seasons I've only been watching to see what the conclusion to this story is, but I cringe and writhe during every episode I watch. What a pitiful way to go out. Hopefully the books finish the story in a more interesting and believable way."
-            ),
-            Review(
-                id = 4L,
-                author = "Dean",
-                authorPhotoPath = "/pbZ9zJZEVYmtmjOZHPRvnnYxqYt.png",
-                rating = "3",
-                date = 1559649790322L,
-                description = "Before watching this TV show I was told that it's best TV show ever. I'm big fan of Vikings TV series and when I asked opinion about GOT to my friend, he said Vikings is nothing compared to GOT. All my coworkers are GOT addicts, so finally I gave it a try. I watched all 8 seasons, so I'm quite qualified to review it: It wasn't bad TV show. Actually it was quite good with interesting characters, but it wasn't as good as I was told and I personally don't agree on that statement that it's better than Vikings. Most interesting parts where around queen Daenerys. This TV show gets tense after season 7, however things don't go like we wanted and ending is awfully bad. Basically, this TV show is ruined by stupidly bad ending which leaves you quite upset. In short, GOT is good TV show (not great), ruined by bad ending."
-            ),
-            Review(
-                id = 5L,
-                author = "Peter89Spencer",
-                authorPhotoPath = "",
-                rating = "9",
-                date = 1582111423389L,
-                description = "I admit that I never saw the whole series. That said, on January last year I decided to binge watch all of it.\r\nFirst 10 minutes of the first episode left me in awe and as I kept watching I finally understood why everybody loved it.\r\nEach episode left me in shock and awe. From shocking character deaths to epic battle scenes. Some of the characters I loved, while a few I hated and glad they finally died.\r\n\r\nSeries 8, as I've finally catched up. I was honestly left disappointed with the ending - and I'd hoped they would save the Nightwalker battle for the last two episodes. Nevertheless, this series was a decent way to end the franchise.\r\n\r\nYour watch has ended."
-            ),
-            Review(
-                id = 6L,
-                author = "Peter McGinn",
-                authorPhotoPath = "/tVbrLJzA2RwRlE7dJLJG54UsAkq.jpg",
-                rating = "5",
-                date = 1600943304758L,
-                description = "I decided to give this a try due to all of the acclaim it received. I smile when I remember seeing a review for another great show that had a higher rating than Game of Thrones, and the reviewer said that the other show was a good show but he gave it just one star because he couldn’t believe it was ranked higher than GOT. I thought, I guess I need to watch this Thrones show that has such rabid devotees.\r\n\r\nI expected a sort of Lord of the Rings on steroids, but I don’t know what drug it is on. The settings and characters are realistic, and the Machiavellian plot lines seems to make sense to me for a while.  As the series went on, however, my interest began to flag a bit. Some of the characters that seemed complex at the outset, devolved into predictable two-dimensional stereotypes. And my stars, the number of rapes going on. I recognize that in such society rape was probably commonplace, but it was likely so in Ancient Rome also, and yet the great series Rome found other ways to titillate than the one-trick pony of forced entry.\r\n\r\nSo I confess I didn’t make it to the end of the show, but from what I hear, even big fans of the show were let down by how it all wound down."
-            ),
-            Review(
-                id = 7L,
-                author = "Dvir971",
-                authorPhotoPath = "/8B04oVsm5gtp3iIIuj84mEtB8b7.jpg",
-                rating = "10",
-                date = 1607150556000L,
-                description = "**The Greatest Story Ever Filmed**\r\n\r\nIt's nothing new that HBO always have the most ambitious projects around, but from 2011 to 2019 they gradually built what I consider the epitome of quality television, and made history. The highly talented show-runners David Benioff and Dan Weiss took the unadaptable giant books by George R. R. Martin and transformed them into this beautifully constructed show, that something of it's kind was never done before. There are so many layers to this story, so many characters and story arcs intertwining with each other that it seems impossible to grasp one man came up with it all.\r\n\r\nThe story Martin created is probably one of the better and most detailed and well-crafted stories of all times, and David and Dan's transformation of the story to the TV medium was beautifully handled. There aren't that many shows when you sit and watch an episode and savor every single scene, if it's the content itself or the many small details that were precisely designed for every frame you watch. It takes a little time to get into the show in the beginning, just because it's very different from what we are generally used to. It's one of those shows that from the very first episode until the last it's just one big story so you just need patience to get used to everything that's going on in there, and after that enjoyment is guaranteed. Above all, the thing the show benefited perhaps the most of is the fact that ever since the day they started writing the first script- the complete story from start to finish was compiled in George's head. Not all the details and specifics of course, but the outline and major plot points were invented years ago when he started working on this huge book series, therefore the production knew exactly where to start, where the story is heading and where it ends, which gave consistency to the story from episode 1 to 73, without getting lost in the way with loose threads.\r\n\r\nThe show gets plenty of criticism for its deviations from the source material season 5 and onwards, but if you just think for a second how enormous this story is it's pretty easy to realize a lot needed to be altered to fit the TV medium, and David and Dan managed to do so while preserving the original essence of Martin's creation, keep the story well constructed and coherent and keep dozens of millions of viewers satisfied, and not only a handful of hard core followers that wanted it to be a page- to-page adaption of the novels. While I enjoyed all the books and didn't agree with a few of the changes they made for the show as well I can see why a lot had to be cut, things don't work the same in books as in television. Considering they knew the ending from the start and the huge amount of details you have to alter just from omitting one storyline if you want to reach the same final goal as the books, I believe it was overall for the best and they knew what they were doing, the story didn't collapse under their hands- at least as far as I'm concerned.\r\n\r\nOne of the most prominent aspects of this show in my opinion is Ramin Djawadi's masterful score which must be one of the most brilliantly unique works ever for a series (whether it's a series of movies or TV series) not only because of the compositions themselves, which are exceptionally beautiful, but also for how the music evolves throughout the seasons and builds the world of the show hand to hand with the writing, the characters and the setting as the story progresses. Also, the way each motif of the music identifies with a certain aspect of the story, though mostly noticeable in later seasons, tells a complete story on its own. Never seen anything like it.\r\n\r\nAll these wordy descriptions couldn't however describe the experience of watching this show live as it aired. The thrill, the off-season anticipation and continuous speculations, the satisfaction of watching a new amazing episode after waiting for so long, the 8-years-long water-cooler talks and the overall influence GoT had on pop culture in the time it was on TV- I'm sure many of us will always remember how it felt, and I'm not sure if we'll get to experience something like that anytime soon. I already watched each season several times, probably more than any other show or movie, and I never get tired of any of it, if it's the well constructed dialogues or blood pumping action sequences. I definitely see myself still constantly revisiting seasons every once in a while from now until further notice.\r\n\r\nI think the success of the show speaks for itself- the countless awards, high acclaim from casual viewers and critics alike, the major fan following, it's influences on the television landscape and on culture in general- it's a winner in all fronts. In my personal opinion it's the greatest television series ever made, but generally speaking I think it's safe to say this show is for the ages and I think it will be remembered for a long time as one of the greatest cinematic works ever produced. Even almost 2 years after the show ended, it still remains one of the most popular and in-demand shows in the world, which I find pretty amazing. I just hope the uproar on social media will calm down eventually so we can once again all enjoy this show together. People tend to use this word too cheaply these days, but I wouldn't say Game of Thrones is anything short of a masterpiece."
-            ),
-            Review(
-                id = 8L,
-                author = "MihaiADobre",
-                authorPhotoPath = "",
-                rating = "10",
-                date = 1608188305236L,
-                description = "Simply the best, except last season."
-            ),
-            Review(
-                id = 9L,
-                author = "JustEntertainment",
-                authorPhotoPath = "/aByFJPeDrN4goGEnEm09QYjwKXy.png",
-                rating = "5",
-                date = 1655726839586L,
-                description = "Starts out exciting and engaging with complicated and likable characters leading the way for the viewer. Lots of sex, lots of nudity, plenty of dragons and magic and gory battles. But as the story goes on, most of the likable characters die off or become emasculated, so you're oddly left rooting for those who were once the loathsome the antagonists to put the \"good chicks,\" whoever they are, out of their misery. From season 3-ish the series takes a wild turn stray of the original book series, the fault of the creator who couldn't keep up with the writing. Did it turn out for the better in the series, or not? That's up for the viewer to decide, that is, if one cares about the leftover matriarchy enough to find out. No spoilers, but the end seemed to leave fans of the series rather underwhelmed."
-            ),
-            Review(
-                id = 10L,
-                author = "GenerationofSwine",
-                authorPhotoPath = "/xYhvrFNntgAowjRsf6mRg9JgITr.jpg",
-                rating = "6",
-                date = 1673494532921L,
-                description = "Well, two thumbs up for the nudity, that holds my interests...honestly. I'm not ashamed to say it.\r\n\r\nAnd the acting was good.\r\n\r\nBut I have a problem with fantasy. World building, world building, world building, world building, and that is coupled with gibberish, gibberish, gibberish, and, by the time it gets around to the thick, juicy, meat of the plot...it lost me.\r\n\r\nI really don't care about the world building, I'd rather jump right in to the plot and not deal with the nonsense. Oh, they have wolves that aren't exactly wolves... I don't care. They have dragons, that's cool but... too much time was spent about why they are so rare and... I don't care, they have dragons, they are rare, just stop the world building and go back to the murder and intrigue.\r\n\r\nI honestly preferred Rome, Deadwood, the Sopranos, all the other shows that didn't have to sacrifice so much to world building."
-            ),
-            Review(
-                id = 11L,
-                author = "betterlikethat",
-                authorPhotoPath = "",
-                rating = "10",
-                date = 1703179162592L,
-                description = "**Game of Thrones: A Cinematic Masterpiece**\r\n\r\nRating: ⭐️⭐️⭐️⭐️⭐️\r\n\r\nGame of Thrones stands tall as a cinematic marvel, blending intricate storytelling, complex characters, and jaw-dropping visuals. With its epic scale and unpredictable twists, it has rightfully earned its place at the top of my must-watch list.\r\nhttps://mustwatchtvseries.xyz/tv/1351/game-of-thrones\r\n\r\n⚔️👑 #GameofThrones #EpicTV"
-            ),
-            Review(
-                id = 12L,
-                author = "Filipe Manuel Neto",
-                authorPhotoPath = "/nidqITf735x9xxHfncXkT9BmOQ7.png",
-                rating = "10",
-                date = 1703541363381L,
-                description = "**A series so massive and absorbing that it seems small on television.**\r\n\r\nWhat can we say about a television series that everyone has said everything about and that, over almost a decade, has collected almost every award it could win? Nothing special. Only that he fully deserved all the awards and public esteem he acquired. Each season deserved, in itself, its own review, but I feel that there is no point in adding more than this small text about the overall work done. Almost everyone has seen the series, and the praise is known to everyone.\r\n\r\nThe numbers behind this series are overwhelming. With each episode costing millions of dollars to make, a luxurious cast and a script so complex that it requires the public's full attention, we are faced with a work that seems worthy of the cinema and is better than many large-production films we have already seen. . The story told is based on the epic fantasy books written by George R. R. Martin, who actively collaborated on the series and is one of those most responsible for the script, heavily inspired by loose pieces of medieval European history. About this, it is necessary to understand one thing: despite the inspirations and violence and rivalries that were in fact common in medieval times, at no point does the series try to be a portrait of medieval Europe, it is absolutely fiction and should be seen that way : For example, the series pays some attention to heraldry and the genealogy of noble families, but very few heraldic shields were made according to the simpler rules of true heraldry.\r\n\r\nThe production and visual effects of the series are one of its strong points: the episodes are so good and impactful that it is difficult to imagine how anything better could be done. All the technology used is state of the art today, and no savings were made in the resources made available to creators. Filming took place across Europe, from Ireland to Spain, passing through Morocco, England and Croatia, taking advantage of the best of locations that, in themselves, are entirely worth a visit for any tourist. The sets could not have been designed with greater attention to detail, and the same can be said of the luxurious costumes for the main cast and thousands of extras. The photography, the filming, the editing, everything was thought out on a large scale. The soundtrack, based on the main song and some other magnificent melodies, is one of the best I've ever seen on a television program.\r\n\r\nThe actors are immense throughout the eight seasons, and we can hardly say anything negative about any of them. We may disagree with the choices in the script, with the way the characters were developed, but the actors were completely up to these challenges and managed them wonderfully. We can also criticize, with some fairness, the graphic brutality of certain scenes, the excessive nudity and the abuse of the sex scenes. This is the negative criticism with which I tend to agree most easily, not least because I don't see anything in these scenes that would be indispensable to the plot in most cases (I would highlight, as one of the exceptions, Cersei's nudity during her punishing walk through the streets of King's Landing).\r\n\r\nOn a positive note, I would highlight the impeccable effort of Peter Dinklage, Emilia Clarke, Lena Headey, Nikolaj Coster Waldau, Sophie Turner, Maisie Williams, Alfie Allen, Isaac Hempstead Wright and Rory McCann. Not only did they play incredibly well, they gave their characters the dramatic and psychological evolution they needed. It is also fair to congratulate Sean Bean, Kit Harington, John Bradley, Conleth Hill, Aidan Gillen, Carice van Houten, Charles Dance, Natalie Dormer and Jack Gleeson, who had much more stable and fixed characters in their hands. Some were more cliché (the case of crazy King Joffrey), but each actor deserves praise."
-            ),
-            Review(
-                id = 13L,
-                author = "madriyanto",
-                authorPhotoPath = "",
-                rating = "0",
-                date = 1718884000000L,
-                description = "HBO's sprawling fantasy epic, Game of Thrones (2011), isn't for the faint of heart. It plunges viewers into the harsh, mysterious world of Westeros, a land steeped in ancient traditions and brutal power struggles. What truly elevates the series, however, is its ability to leverage this captivating setting to explore complex, often disturbing, facets of humanity.\r\n\r\nThe series excels at world-building. Westeros feels tangible, its vast landscapes and intricate political machinations drawing you in. There's a constant sense of unease, a feeling that something dark lurks beneath the surface. This unsettling atmosphere is masterfully used as a backdrop to explore very real, contemporary issues – the lust for power, the devastating consequences of war, and the depths of human cruelty.\r\n\r\nBe prepared, however, for characters who are rarely one-dimensional heroes or villains. Game of Thrones thrives on moral ambiguity. You'll encounter characters who are capable of immense kindness and horrific acts in equal measure. This can be a harsh and even disgusting reality to grapple with, but it's a testament to the show's writing and acting that it can evoke such strong emotions. You'll find yourself feeling deeply invested in the characters' fates, celebrating their victories and mourning their losses.\r\n\r\nThe emotional rollercoaster is a defining aspect of Game of Thrones. It's a series that demands your full attention, rewarding viewers who stay the course with an unforgettable journey filled with heart-pounding battles, shocking twists, and moments of genuine beauty. While the later seasons may not have lived up to the sky-high expectations set by the early installments, the overall experience remains undeniably gripping.\r\n\r\nIn conclusion, Game of Thrones is a landmark television achievement. With its rich setting, unflinching portrayal of human nature, and ability to evoke a wide range of emotions, it's a series that will stay with you long after the credits roll. Just be prepared for a wild ride, filled with both exhilarating highs and soul-crushing lows."
-            )
-        )
+        // Then
+        coVerify(exactly = 1) {
+            mockUseCase.getSeries(seriesId)
+            mockUseCase.getSeriesTopCast(seriesId)
+            mockUseCase.getSeriesSeasons(seriesId)
+            mockUseCase.getSeriesReviews(seriesId)
+            mockUseCase.getSimilarSeries(seriesId)
+        }
+    }
 
-        val fakeEpisode = Episode(
-            id = 63056L,
-            episodeNumber = 1,
-            photoPath = "/wrGWeW4WKxnaeA8sxJb2T9O6ryo.jpg",
-            episodeName = "Winter Is Coming",
-            runtimeMinutes = 62,
-            rating = 8.08f,
-            seasonNumber = 1,
-            seriesId = 1399L
-        )
+    @Test
+    fun `WHEN onBackClicked SHOULD emit NavigateBack effect`() = runTest {
+        viewModel.effect.test {
+            viewModel.onBackClicked()
+            assertThat(awaitItem()).isEqualTo(SeriesDetailEffect.NavigateBack)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
 
-        val fakeArtists = listOf(
-            Artist(
-                id = 119783,
-                name = "Joseph Mawle",
-                photoPath = "/1Ocb9v3h54beGVoJMm4w50UQhLf.jpg",
-                country = "United Kingdom",
-                birthDate = 322704000000L,
-                biography = "",
-                department = "Acting"
-            ),
-            Artist(
-                id = 1050248,
-                name = "Art Parkinson",
-                photoPath = "/ejAKOJME1DsvHECLWdQ7dEtXyyc.jpg",
-                country = "Ireland",
-                birthDate = 1009843200000L,
-                biography = "",
-                department = "Acting"
-            ),
-            Artist(
-                id = 1223792,
-                name = "Kristian Nairn",
-                photoPath = "/dlbq6cCW0xdpFY15q6flP6lDXWV.jpg",
-                country = "Australia",
-                birthDate = 567648000000L,
-                biography = "",
-                department = "Acting"
-            ),
-            Artist(
-                id = 75076,
-                name = "Bronson Webb",
-                photoPath = "/foMvmr6QbClGiGOznSR4dJjim2.jpg",
-                country = "Canada",
-                birthDate = 252460800000L,
-                biography = "",
-                department = "Acting"
-            ),
-            Artist(
-                id = 11282,
-                name = "John Standing",
-                photoPath = "/hQpTeZDljWR2F9n1PcL7sXilwCE.jpg",
-                country = "France",
-                birthDate = -157680000000L,
-                biography = "",
-                department = "Acting"
-            ),
-            Artist(
-                id = 1864916,
-                name = "Rob Ostlere",
-                photoPath = "/wwsP4vXDWbClGiGOznSR4dJjim2.jpg",
-                country = "Germany",
-                birthDate = 441763200000L,
-                biography = "",
-                department = "Acting"
-            ),
-            Artist(
-                id = 1864921,
-                name = "Rania Zouari",
-                photoPath = "/vwV5Dp6rX38FjjgIBRNxPtmn8Ma.jpg",
-                country = "Brazil",
-                birthDate = 788832000000L,
-                biography = "",
-                department = "Acting"
-            ),
-            Artist(
-                id = 191751,
-                name = "Dermot Keaney",
-                photoPath = "/nvXkSjiw3cgpGRmeKRwQkgdprb5.jpg",
-                country = "Nigeria",
-                birthDate = 189216000000L,
-                biography = "",
-                department = "Acting"
-            ),
-            Artist(
-                id = 946696,
-                name = "Ian Whyte",
-                photoPath = "/svlJyDgPbTHoGjbQKU4S2J6g5hi.jpg",
-                country = "Japan",
-                birthDate = 630720000000L,
-                biography = "",
-                department = "Acting"
-            ),
-            Artist(
-                id = 25451,
-                name = "Spencer Wilding",
-                photoPath = "/4NMcve4Nckpi653znyYOnoS4Mci.jpg",
-                country = "South Africa",
-                birthDate = 347155200000L,
-                biography = "",
-                department = "Acting"
-            ),
-            Artist(
-                id = 3284663,
-                name = "Claire Wright",
-                photoPath = "/rx6NoCpwoYQUy4VzMyYGA0R6k5V.jpg",
-                country = "Mexico",
-                birthDate = 883612800000L,
-                biography = "",
-                department = "Acting"
-            ),
-            Artist(
-                id = 1833,
-                name = "Jamie Sives",
-                photoPath = "/bdEyp4f1VUEepihC6vyqCGP6k2s.jpg",
-                country = "Sweden",
-                birthDate = 157766400000L,
-                biography = "",
-                department = "Acting"
-            ),
-            Artist(
-                id = 438859,
-                name = "Susan Brown",
-                photoPath = "/rbi81V4GUsOqjUfLvnoHj4lIAMf.jpg",
-                country = "Italy",
-                birthDate = -94694400000L,
-                biography = "",
-                department = "Acting"
-            ),
-            Artist(
-                id = 11279,
-                name = "Roger Allam",
-                photoPath = "/hrtVjATnltwatFCOjhtCZTnN2hW.jpg",
-                country = "Spain",
-                birthDate = 410227200000L,
-                biography = "",
-                department = "Acting"
-            ),
-            Artist(
-                id = 234907,
-                name = "Dar Salim",
-                photoPath = "/mqIH4exzdXXU47ykPohDTAkZ8tN.jpg",
-                country = "India",
-                birthDate = 725760000000L,
-                biography = "",
-                department = "Acting"
-            ),
-            Artist(
-                id = 20425,
-                name = "Donald Sumpter",
-                photoPath = "/jfdH7vojRZ3fRSesLF8K3tZwwtq.jpg",
-                country = "United States",
-                birthDate = 220838400000L,
-                biography = "",
-                department = "Acting"
-            ),
-            Artist(
-                id = 63141,
-                name = "Ron Donachie",
-                photoPath = "/vnBM7idgiyXoat1E8IBKGekx2GS.jpg",
-                country = "United Kingdom",
-                birthDate = 599616000000L,
-                biography = "",
-                department = "Acting"
-            ),
-            Artist(
-                id = 1600544,
-                name = "Aimee Richardson",
-                photoPath = "/97wwITEknXx7MbQda71NegQvJtz.jpg",
-                country = "Canada",
-                birthDate = 851990400000L,
-                biography = "",
-                department = "Acting"
-            ),
-            Artist(
-                id = 1014921,
-                name = "Esmé Bianco",
-                photoPath = "/3SV97kbZMdUmm6PvSGokM4pvLd4.jpg",
-                country = "France",
-                birthDate = 283824000000L,
-                biography = "",
-                department = "Acting"
-            ),
-            Artist(
-                id = 1600543,
-                name = "Callum Wharry",
-                photoPath = "/sQzCLoiWniQPYyseG0wvGEf3flo.jpg",
-                country = "Germany",
-                birthDate = 946684800000L,
-                biography = "",
-                department = "Acting"
-            ),
-            Artist(
-                id = 117642,
-                name = "Jason Momoa",
-                photoPath = "/3troAR6QbSb6nUFMDu61YCCWLKa.jpg",
-                country = "Brazil",
-                birthDate = 126230400000L,
-                biography = "",
-                department = "Acting"
-            ),
-            Artist(
-                id = 1488470,
-                name = "Coral Messam",
-                photoPath = "",
-                country = "Australia",
-                birthDate = 662601600000L,
-                biography = "",
-                department = "Crew"
-            )
+    @Test
+    fun `WHEN onShareClicked SHOULD update state to show share bottom sheet`() = runTest {
+        viewModel.onShareClicked()
+        assertThat(viewModel.screenState.value.showShareBottomSheet).isTrue()
+    }
+
+    @Test
+    fun `WHEN onFavoriteClicked WHEN not logged in SHOULD show login bottom sheet`() = runTest {
+        viewModel.onFavoriteClicked()
+        assertThat(viewModel.screenState.value.showLoginBottomSheet).isTrue()
+    }
+
+    @Test
+    fun `oWHEN nAddToListClicked WHEN not logged in SHOULD show login bottom sheet`() = runTest {
+        viewModel.onAddToListClicked()
+        assertThat(viewModel.screenState.value.showLoginBottomSheet).isTrue()
+    }
+
+    @Test
+    fun `onRateClicked WHEN not logged in SHOULD show login bottom sheet`() = runTest {
+        viewModel.onRateClicked()
+        assertThat(viewModel.screenState.value.showLoginBottomSheet).isTrue()
+    }
+
+    @Test
+    fun `WHEN onPlayTrailerClicked WHEN clicked SHOULD emit PlayTrailer`() = runTest {
+        viewModel.effect.test {
+            viewModel.onPlayTrailerClicked()
+            assertThat(awaitItem()).isEqualTo(SeriesDetailEffect.PlayTrailer)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `WHEN onDismissShareBottomSheet SHOULD hide share bottom sheet`() = runTest {
+        viewModel.effect.test {
+            viewModel.onShareClicked()
+            viewModel.onDismissShareBottomSheet()
+            assertThat(viewModel.screenState.value.showShareBottomSheet).isFalse()
+        }
+    }
+
+    @Test
+    fun `WHEN onDismissLoginBottomSheet SHOULD hide login bottom sheet`() = runTest {
+        viewModel.effect.test {
+            viewModel.onFavoriteClicked()
+            viewModel.onDismissLoginBottomSheet()
+            assertThat(viewModel.screenState.value.showLoginBottomSheet).isFalse()
+        }
+    }
+
+    @Test
+    fun `WHEN onSeeAllArtistsClicked SHOULD Navigate To All Artists screen`() = runTest {
+        viewModel.effect.test {
+            viewModel.onSeeAllArtistsClicked(1399)
+            assertThat(awaitItem()).isEqualTo(SeriesDetailEffect.NavigateToAllArtists(1399))
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `WHEN onSeasonClicked SHOULD navigate to season screen`() = runTest {
+        viewModel.effect.test {
+            viewModel.onSeasonClicked(1399, 1)
+            assertThat(awaitItem()).isEqualTo(SeriesDetailEffect.NavigateToSeasonDetails(1399, 1))
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `WHEN onSeeAllSeasonsClicked SHOULD navigate to all seasons screen`() = runTest {
+        viewModel.effect.test {
+            viewModel.onSeeAllSeasonsClicked(1399)
+            assertThat(awaitItem()).isEqualTo(SeriesDetailEffect.NavigateToAllSeasons(1399))
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `WHEN onSeeAllReviewsClicked SHOULD navigate to all reviews screen`() = runTest {
+        viewModel.effect.test {
+            viewModel.onSeeAllReviewsClicked(1399)
+            assertThat(awaitItem()).isEqualTo(SeriesDetailEffect.NavigateToAllReviews(1399))
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+
+    @Test
+    fun `WHEN onSeriesClicked SHOULD navigate to similar series`() = runTest {
+        viewModel.effect.test {
+            viewModel.onSeriesClicked(1399)
+            assertThat(awaitItem()).isEqualTo(SeriesDetailEffect.NavigateToSeriesDetails(1399))
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `WHEN onSeeAllSimilarClicked SHOULD navigate to all similar series screen`() = runTest {
+        viewModel.effect.test {
+            viewModel.onSeeAllSimilarClicked(1399)
+            assertThat(awaitItem()).isEqualTo(SeriesDetailEffect.NavigateToAllSimilar(1399))
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `onCopy SHOULD show then hide snackbar after delay`() = runTest {
+        viewModel.onCopy("Copied!", true)
+
+        advanceTimeBy(0)
+        assertThat(viewModel.screenState.value.showSnackBar).isFalse()
+    }
+
+    @Test
+    fun `onArtistClicked SHOULD emit NavigateToArtistDetails effect`() = runTest {
+        viewModel.effect.test {
+            viewModel.onArtistClicked(456L)
+            assertThat(awaitItem()).isEqualTo(SeriesDetailEffect.NavigateToArtistDetails(456L))
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `handleDetailsException SHOULD map exceptions correctly`() {
+        assertThat(viewModel.handleDetailsException(NetworkException()))
+            .isEqualTo(ErrorStatus.NETWORK_ERROR)
+        assertThat(viewModel.handleDetailsException(InternetConnectionException()))
+            .isEqualTo(ErrorStatus.NO_INTERNET)
+        assertThat(viewModel.handleDetailsException(RuntimeException()))
+            .isEqualTo(ErrorStatus.UNKNOWN_ERROR)
+    }
+
+    companion object {
+        private val mockSeries = Series(
+            id = 123,
+            title = "Test Series",
+            rating = 8.7f,
+            posterPath = "/poster.jpg",
+            genres = emptyList(),
+            seasonsCount = 2,
+            releaseDate = 0L,
+            overview = "Test overview",
+            trailerPath = ""
         )
+    }
+
+    class MainDispatcherRule(
+        private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
+    ) : TestWatcher() {
+        override fun starting(description: Description) {
+            Dispatchers.setMain(testDispatcher)
+        }
+
+        override fun finished(description: Description) {
+            Dispatchers.resetMain()
+        }
     }
 }

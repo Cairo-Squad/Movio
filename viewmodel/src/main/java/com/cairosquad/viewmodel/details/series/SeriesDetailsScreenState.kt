@@ -43,8 +43,8 @@ data class SeriesDetailsScreenState(
         val episodesCount: Int = 0,
         val rating: Float = 0F,
         val posterPath: String = "",
-        val overview: String,
-        val airDate: String
+        val overview: String = "",
+        val airDate: String = ""
     )
 
     data class ReviewUiState(
