@@ -18,10 +18,8 @@ import com.cairosquad.ui.details.ReviewsScreen
 import com.cairosquad.ui.details.SeasonScreen
 import com.cairosquad.ui.details.SeasonsScreen
 import com.cairosquad.ui.details.SeriesScreen
-import com.cairosquad.ui.details.SimilarMoviesScreen
 import com.cairosquad.ui.details.similar_series.SimilarSeriesScreen
 import com.cairosquad.ui.details.similar_movies.SimilarMoviesScreen
-import com.cairosquad.ui.details.SimilarSeriesScreen
 import com.cairosquad.ui.details.TopCastScreen
 import com.cairosquad.ui.details.artist.ArtistScreen
 import com.cairosquad.ui.search.ForYouScreen
