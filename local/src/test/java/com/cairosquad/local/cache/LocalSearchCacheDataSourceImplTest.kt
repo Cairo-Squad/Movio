@@ -1,6 +1,6 @@
 package com.cairosquad.local.cache
 
-import com.cairosquad.local.search.cache.LocalSearchCacheDataSourceImpl
+import com.cairosquad.local.search.cache.CacheDataSourceImpl
 import com.cairosquad.local.search.cache.dao.CacheDao
 import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
@@ -20,12 +20,12 @@ import java.time.Instant
 class LocalSearchCacheDataSourceImplTest {
 
     private lateinit var cacheDao: CacheDao
-    private lateinit var dataSource: LocalSearchCacheDataSourceImpl
+    private lateinit var dataSource: CacheDataSourceImpl
 
     @Before
     fun setup() {
         cacheDao = mockk(relaxed = true)
-        dataSource = spyk(LocalSearchCacheDataSourceImpl(cacheDao))
+        dataSource = spyk(CacheDataSourceImpl(cacheDao))
     }
 
     @Test
@@ -163,7 +163,7 @@ class LocalSearchCacheDataSourceImplTest {
         coEvery { cacheDao.deleteExpiredArtistCache(any()) } just Runs
 
         // Act
-        dataSource.clearExpiredCache()
+        dataSource.clearExpiredCache(100L)
 
         // Assert: Verify all 3 DAO calls were made with a timestamp <= now - 1 hour
         coVerify {
