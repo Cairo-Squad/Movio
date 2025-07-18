@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,7 +19,10 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,12 +31,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.cairosquad.design_system.R
@@ -102,7 +104,9 @@ private fun ArtistScreenContent(
     listener: ArtistInteractionListener
 ) {
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.Start,
     ) {
 
@@ -113,19 +117,6 @@ private fun ArtistScreenContent(
                 .fillMaxWidth()
                 .height(340.dp)
         ) {
-
-            SafeImageViewer(
-                model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
-                contentDescription = "blured image",
-                modifier = Modifier
-                    .fillMaxSize()
-                    .height(335.dp)
-                    .offset(y = (-5).dp)
-                    .CustomBrush(0.5f, 16.dp),
-                nudeThreshold = 0.0,
-                nonNudeThreshold = 0.0
-            )
-
             SafeImageViewer(
                 model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
                 contentDescription = "blured image",
@@ -143,7 +134,7 @@ private fun ArtistScreenContent(
                     .height(80.dp)
                     .align(Alignment.TopStart)
                     .background(
-                        brush = androidx.compose.ui.graphics.Brush.verticalGradient(
+                        brush = verticalGradient(
                             colors = listOf(
                                 Color.Black.copy(alpha = 1f),
                                 Color.Black.copy(alpha = 0f)
@@ -151,7 +142,23 @@ private fun ArtistScreenContent(
                         )
                     )
             )
-
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(20.dp)
+                    .align(Alignment.BottomCenter)
+                    .background(
+                        brush = verticalGradient(
+                            colors = listOf(
+                                Theme.color.surfaces.surface.copy(alpha = 0f),
+                                Theme.color.surfaces.surface.copy(alpha = .10f),
+                                Theme.color.surfaces.surface.copy(alpha = .50f),
+                                Theme.color.surfaces.surface.copy(alpha = .90f),
+                                Theme.color.surfaces.surface,
+                            )
+                        )
+                    )
+            )
 
             AppBar(
                 onBackButtonClicked = listener::onClickBack,
@@ -161,12 +168,11 @@ private fun ArtistScreenContent(
                     .padding(top = 4.dp)
             )
 
-
             SafeImageViewer(
                 model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
                 modifier = Modifier
                     .padding(horizontal = 6.67.dp)
-                    .padding(top=31.dp)
+                    .padding(top = 31.dp)
                     .size(160.dp)
                     .clip(CircleShape),
                 contentDescription = stringResource(R.string.artist_image),
@@ -175,78 +181,79 @@ private fun ArtistScreenContent(
             )
         }
 
-        Column(modifier = Modifier.padding(start = 16.dp)) {
-            Text(
-                text = state.artist.name,
-                style = Theme.textStyle.headline.mediumMedium18,
-                color = Theme.color.surfaces.onSurface,
-            )
+        BasicText(
+            modifier = Modifier.padding(start = 16.dp),
+            text = state.artist.name,
+            style = Theme.textStyle.headline.mediumMedium18
+                .copy(color = Theme.color.surfaces.onSurface),
+        )
 
-            Text(
-                text = state.artist.department,
-                style = Theme.textStyle.label.smallRegular14,
-                color = Theme.color.surfaces.onSurfaceVariant,
-                modifier = Modifier.padding(top = 4.dp)
-            )
+        BasicText(
+            modifier = Modifier.padding(start = 16.dp, top = 4.dp),
+            text = state.artist.department,
+            style = Theme.textStyle.label.smallRegular14
+                .copy(color = Theme.color.surfaces.onSurfaceVariant),
+        )
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.padding(top = 16.dp)
-            ) {
-                InfoChip(
-                    text = formatBirthDateLegacy(state.artist.birthDate),
-                    imgRes = R.drawable.date,
-                )
-                InfoChip(
-                    text = state.artist.country,
-                    imgRes = R.drawable.component_1,
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.padding(start = 16.dp, top = 16.dp)
+        ) {
+            InfoChip(
+                text = formatBirthDateLegacy(state.artist.birthDate),
+                imgRes = R.drawable.date,
+            )
+            InfoChip(
+                text = state.artist.country,
+                imgRes = R.drawable.component_1,
+            )
+        }
+
+        ExpandableText(
+            text = state.artist.biography,
+            color = Theme.color.surfaces.onSurface,
+            style = Theme.textStyle.label.smallRegular14,
+            modifier = Modifier
+                .padding(vertical = 16.dp)
+                .padding(horizontal = 16.dp),
+            collapsedMaxLine = 5,
+            showMoreColor = Theme.color.surfaces.onSurfaceVariant
+        )
+
+        Text(
+            text = "Known For",
+            style = Theme.textStyle.title.mediumMedium16,
+            color = Theme.color.surfaces.onSurface,
+            modifier = Modifier.padding(start = 16.dp, top = 32.dp, bottom = 12.dp)
+        )
+
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp)
+        ) {
+            items(state.knownForMovies) { movie ->
+                MovieCard(
+                    title = movie.title,
+                    vote = movie.rating,
+                    imgUrl = movie.posterPath,
+                    width = 124.dp,
+                    aspectRatio = 0.67f,
+                    modifier = Modifier.clickable { listener.onMovieClick(movie.id) }
                 )
             }
 
-            ExpandableText(
-                text = state.artist.biography,
-                color = Theme.color.surfaces.onSurface,
-                style = Theme.textStyle.label.smallRegular14,
-                modifier = Modifier
-                    .padding(vertical = 16.dp)
-                    .padding(end = 16.dp),
-                collapsedMaxLine = 5,
-                showMoreColor =Theme.color.surfaces.onSurfaceVariant
-            )
-
-            Text(
-                text = "known For",
-                style = Theme.textStyle.title.mediumMedium16,
-                color = Theme.color.surfaces.onSurface,
-                modifier = Modifier.padding(top = 32.dp, bottom = 12.dp)
-            )
-
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                items(state.knownForMovies) { movie ->
-                    MovieCard(
-                        title = movie.title,
-                        vote = movie.rating,
-                        imgUrl = movie.posterPath,
-                        width = 124.dp,
-                        aspectRatio = 0.67f,
-                        modifier = Modifier.clickable { listener.onMovieClick(movie.id) }
-                    )
-                }
-
-                items(state.KnownForSeries) { series ->
-                    MovieCard(
-                        title = series.title,
-                        vote = series.rating,
-                        imgUrl = series.posterPath,
-                        width = 124.dp,
-                        aspectRatio = 0.67f,
-                        modifier = Modifier.clickable { listener.onMovieClick(series.id) }
-                    )
-                }
+            items(state.KnownForSeries) { series ->
+                MovieCard(
+                    title = series.title,
+                    vote = series.rating,
+                    imgUrl = series.posterPath,
+                    width = 124.dp,
+                    aspectRatio = 0.67f,
+                    modifier = Modifier.clickable { listener.onMovieClick(series.id) }
+                )
             }
         }
+
     }
 }
 
