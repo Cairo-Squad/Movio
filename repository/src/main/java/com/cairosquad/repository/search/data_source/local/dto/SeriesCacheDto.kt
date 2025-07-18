@@ -11,9 +11,9 @@ data class SeriesCacheDto(
     val id: Int,
     @ColumnInfo(name = CACHED_SERIES_NAME_COLUMN_NAME)
     val name: String?,
-    @ColumnInfo(name = CACHED_SERIES_POSTER_PATH_COLUMN_NAME)
+    @ColumnInfo(name = "posterPath")
     val posterPath: String?,
-    @ColumnInfo(name = CACHED_SERIES_VOTE_AVERAGE_COLUMN_NAME)
+    @ColumnInfo(name = "voteAverage")
     val voteAverage: Double?,
     @ColumnInfo(name = CACHED_SERIES_TIMESTAMP_COLUMN_NAME)
     val timestamp: Long,

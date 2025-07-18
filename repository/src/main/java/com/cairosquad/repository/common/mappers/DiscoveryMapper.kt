@@ -1,6 +1,8 @@
-package com.cairosquad.local.search.discovery.dto
+package com.cairosquad.repository.common.mappers
 
 import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.PersonalizedMoviesIdsDto
+import com.cairosquad.repository.search.data_source.local.dto.SuggestedMoviesIdsDto
 
 
 fun MovieCacheDto.toPersonalizedMoviesIdsDto(): PersonalizedMoviesIdsDto {

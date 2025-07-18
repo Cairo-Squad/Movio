@@ -4,7 +4,7 @@ import com.cairosquad.domain.repository.SearchRepository
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
-import com.cairosquad.repository.common.exception.tryToCall
+import com.cairosquad.repository.common.mappers.tryToCall
 import com.cairosquad.repository.search.data_source.local.CacheDataSource
 import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
 import com.cairosquad.repository.search.data_source.local.dto.toCacheDto

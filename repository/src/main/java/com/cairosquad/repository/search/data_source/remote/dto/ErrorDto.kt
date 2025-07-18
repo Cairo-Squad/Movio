@@ -1,8 +1,7 @@
-package com.cairosquad.remote.common.dto
+package com.cairosquad.repository.search.data_source.remote.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-
 
 @Serializable
 data class ErrorDto(
