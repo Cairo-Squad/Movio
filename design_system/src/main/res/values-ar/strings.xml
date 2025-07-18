@@ -61,9 +61,12 @@
     <string name="login">تسجيل الدخول</string>
     <string name="check_out_this_amazing_series">اطلع على هذه السلسلة الرائعة!</string>
     <string name="seasons_count">%1$s مواسم</string>
-    <string name="top_cast">أشهر الممثلين</string>
     <string name="current_seasons">المواسم الحالية</string>
     <string name="reviews">المراجعات</string>
     <string name="similar_series">المسلسلات مشابهة</string>
+    <string name="known_for">معروف بالتالي</string>
+    <string name="less">أقل</string>
+    <string name="read_less">اقرأأقل</string>
+    <string name="read_more">اقرأأكثر</string>
+    <string name="top_cast">أفضل الممثلين</string>
 </resources>
-

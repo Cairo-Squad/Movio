@@ -9,14 +9,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import com.cairosquad.design_system.theme.Theme
-import com.cairosquad.ui.AppScreen
-import com.cairosquad.ui.details.ArtistScreen
+import com.cairosquad.ui.details.artist.ArtistScreen
 import com.cairosquad.ui.details.MovieScreen
 import com.cairosquad.ui.details.ReviewsScreen
-import com.cairosquad.ui.details.EpisodeScreen
+import com.cairosquad.ui.details.SeasonScreen
 import com.cairosquad.ui.details.SeasonsScreen
 import com.cairosquad.ui.details.SeriesScreen
 import com.cairosquad.ui.details.SimilarMoviesScreen
@@ -24,8 +22,8 @@ import com.cairosquad.ui.details.SimilarSeriesScreen
 import com.cairosquad.ui.details.TopCastScreen
 import com.cairosquad.ui.search.ForYouScreen
 import com.cairosquad.ui.splash.SplashScreen
+import com.cairosquad.ui.AppScreen
 
-private const val BASE_URL = "https://www.cairo-movio.com"
 
 @Composable
 fun AppNavigation() {
@@ -51,29 +49,20 @@ fun AppNavigation() {
             composable<AppRoute> {
                 AppScreen()
             }
-            composable<MovieRoute>(
-                deepLinks = listOf(
-                    navDeepLink<MovieRoute>(basePath = "$BASE_URL/movie")
-                )
-            ) { backStackEntry ->
+            composable<MovieRoute> { backStackEntry ->
                 MovieScreen(
                     movieId = backStackEntry.toRoute<MovieRoute>().movieId
                 )
             }
-            composable<SeriesRoute>(
-                deepLinks = listOf(
-                    navDeepLink<SeriesRoute>(basePath = "$BASE_URL/series")
+            composable<SeriesRoute> { backStackEntry ->
+                SeriesScreen(
+                    seriesId = backStackEntry.toRoute<SeriesRoute>().seriesId
                 )
-            ) { backStackEntry ->
-                SeriesScreen(seriesId = 1399)
             }
-            composable<ArtistRoute>(
-                deepLinks = listOf(
-                    navDeepLink<ArtistRoute>(basePath = "$BASE_URL/artist")
-                )
-            ) { backStackEntry ->
+            composable<ArtistRoute> { backStackEntry ->
                 ArtistScreen(
-                    artistId = backStackEntry.toRoute<ArtistRoute>().artistId
+                    artistId = backStackEntry.toRoute<ArtistRoute>().artistId,
+                    navController=navController
                 )
             }
             composable<SimilarMovieRoute> { backStackEntry ->
@@ -89,27 +78,28 @@ fun AppNavigation() {
             composable<TopCastRoute> { backStackEntry ->
                 TopCastScreen(
                     mediaId = backStackEntry.toRoute<TopCastRoute>().mediaId,
-                    isMovie = backStackEntry.toRoute<TopCastRoute>().isMovie
+                    isMovie = backStackEntry.toRoute<TopCastRoute>().isMovie,
+                    navController = navController
                 )
             }
             composable<ReviewsRoute> { backStackEntry ->
                 ReviewsScreen(
                     mediaId = backStackEntry.toRoute<ReviewsRoute>().mediaId,
-                    isMovie = backStackEntry.toRoute<ReviewsRoute>().isMovie
+                    isMovie = backStackEntry.toRoute<ReviewsRoute>().isMovie,
+                    navController= navController
                 )
             }
-            composable<EpisodeRoute> { backStackEntry ->
-                EpisodeScreen(
-                    episodeId = backStackEntry.toRoute<EpisodeRoute>().episodeId
-                )
-            }
-
             composable<SeasonsRoute> { backStackEntry ->
                 SeasonsScreen(
-                    seriesId = backStackEntry.toRoute<SeasonsRoute>().seriesId,
+                    seriesId = backStackEntry.toRoute<SeasonsRoute>().seriesId
                 )
             }
-
+            composable<SeasonRoute> { backStackEntry ->
+                SeasonScreen(
+                    seriesId = backStackEntry.toRoute<SeasonRoute>().seriesId,
+                    seasonNumber = backStackEntry.toRoute<SeasonRoute>().seasonNumber
+                )
+            }
             composable<ForYouRoute> {
                 ForYouScreen()
             }
