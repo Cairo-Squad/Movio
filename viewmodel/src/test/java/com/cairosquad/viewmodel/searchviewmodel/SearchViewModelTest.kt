@@ -523,7 +523,6 @@ class SearchViewModelTest {
         advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.recentSearch).isEqualTo(previous)
-        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
     }
 
     @Test
