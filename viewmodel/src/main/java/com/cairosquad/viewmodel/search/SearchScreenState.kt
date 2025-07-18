@@ -15,8 +15,6 @@ data class SearchScreenState(
     val movies: Flow<PagingData<MovieUiState>> = flowOf(PagingData.empty()),
     val series: Flow<PagingData<SeriesUiState>> = flowOf(PagingData.empty()),
     val artists: Flow<PagingData<ArtistUiState>> = flowOf(PagingData.empty()),
-    //val series: List<SeriesUiState> = emptyList(),
-   // val artists: List<ArtistUiState> = emptyList(),
     val isRefreshing: Boolean = false
 ) {
     data class ArtistUiState(
