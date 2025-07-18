@@ -87,7 +87,7 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun SeriesScreen(
-    seriesId: Long = 1399,
+    seriesId: Long,
     viewModel: SeriesDetailsViewModel = koinViewModel { parametersOf(seriesId) }
 ) {
     val navController = LocalNavController.current

@@ -3,35 +3,31 @@ package com.cairosquad.ui.details
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.theme.Theme
-import com.cairosquad.ui.movio_component.SeasonScreenCard
 import com.cairosquad.ui.movio_component.SeasonCard
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.EpisodeRoute
@@ -39,15 +35,15 @@ import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.viewmodel.details.series.season.SeasonDetailEffect
 import com.cairosquad.viewmodel.details.series.season.SeasonDetailsInteractionListener
 import com.cairosquad.viewmodel.details.series.season.SeasonDetailsScreenState
-import com.cairosquad.viewmodel.details.series.season.SeasonViewModel
+import com.cairosquad.viewmodel.details.series.season.SeasonsViewModel
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
 fun SeasonsScreen(
-    seriesId: Long = 67197,
+    seriesId: Long,
     seasonNumber: Int = 1,
-    viewModel: SeasonViewModel = koinViewModel{ parametersOf(seriesId, seasonNumber) }
+    viewModel: SeasonsViewModel = koinViewModel{ parametersOf(seriesId, seasonNumber) }
 ) {
     val uiState by viewModel.screenState.collectAsStateWithLifecycle()
     val navController = LocalNavController.current
@@ -79,10 +75,11 @@ fun SeasonScreenContent(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+                .windowInsetsPadding(WindowInsets.statusBars),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp)
         ) {
-            item {
+            stickyHeader {
                 AppBar(
                     title = stringResource(R.string.current_season),
                     onBackButtonClicked = listener::onBackClicked,
@@ -91,16 +88,16 @@ fun SeasonScreenContent(
             }
             items(uiState.season) { season ->
                 SeasonCard(
-                    seriesName = "gehad",
+                    seriesName = uiState.seriesTitle,
                     seasonTitle =season.name,
                     seasonRate=season.rating,
                     totalNumberOfEpisodes = season.episodesCount.toString(),
                     movieImage = season.posterPath,
                     yearOfPublish = season.airDate,
-                    timeOfPublish = season.airDate,
+                    timeOfPublish = season.timeOfPublish,
                     currentSeason = "${season.number}",
                     onClick ={ listener.onEpisodeClicked(season.id, season.number)},
-                    modifier=Modifier.height(100.dp).width (75.dp),
+                    modifier=Modifier.height(100.dp).fillMaxWidth(),
                 )
             }
 

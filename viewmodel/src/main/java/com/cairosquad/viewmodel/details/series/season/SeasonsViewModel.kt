@@ -9,7 +9,7 @@ import com.cairosquad.viewmodel.exception.ErrorStatus
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
-class SeasonViewModel(
+class SeasonsViewModel(
     private val seriesDetailsUseCase: GetSeriesDetailsUseCase,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
     seriesId: Long,
@@ -21,8 +21,17 @@ class SeasonViewModel(
         }
 
     private fun loadSeasonDetails(seriesId: Long, seasonNumber: Int) {
+        getSeriesName(seriesId)
         getSeasonDetails(seriesId, seasonNumber)
         getEpisodes(seriesId, seasonNumber)
+    }
+    private fun getSeriesName(seriesId: Long) {
+        tryToCall(
+            block = { seriesDetailsUseCase.getSeries(seriesId).title },
+            onSuccess = { seriesTitle -> updateState { it.copy(seriesTitle = seriesTitle) } },
+            onError = { },
+            dispatcher = dispatcher
+        )
     }
     private fun getSeasonDetails(seriesId: Long, seasonNumber: Int) {
         tryToCall(

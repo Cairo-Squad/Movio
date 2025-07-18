@@ -2,11 +2,14 @@ package com.cairosquad.viewmodel.details.series.season
 
 import com.cairosquad.entity.Episode
 import com.cairosquad.entity.Season
-import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.util.TimeUtil
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 data class SeasonDetailsScreenState(
+    val seriesTitle: String = "",
     val seasonSectionState: ScreenStatus = ScreenStatus.INITIAL,
     val episodesSectionState: ScreenStatus = ScreenStatus.INITIAL,
     val errorStatus: ErrorStatus? = null,
@@ -21,7 +24,8 @@ data class SeasonDetailsScreenState(
         val rating: Float = 0F,
         val posterPath: String = "",
         val overview: String = "",
-        val airDate: String = ""
+        val airDate: String = "",
+        val timeOfPublish: String = ""
     )
 
     data class EpisodeUiState(
@@ -48,7 +52,8 @@ fun Season.toUiState() = SeasonDetailsScreenState.SeasonUiState(
     rating = rating / 2,
     posterPath = posterPath,
     overview = overview,
-    airDate = TimeUtil.convertLongToYear(airDate)
+    airDate = TimeUtil.convertLongToYear(airDate),
+    timeOfPublish = Timestamp(airDate).toDateFormat()
 )
 fun Episode.toUiState() = SeasonDetailsScreenState.EpisodeUiState(
     id = id,
@@ -58,3 +63,13 @@ fun Episode.toUiState() = SeasonDetailsScreenState.EpisodeUiState(
     runtimeMinutes = runtimeMinutes,
     rating = rating / 2
 )
+
+
+@JvmInline
+private value class Timestamp(val value: Long)
+
+private fun Timestamp.toDateFormat(): String {
+    val date = Date(this.value)
+    val format = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
+    return format.format(date)
+}

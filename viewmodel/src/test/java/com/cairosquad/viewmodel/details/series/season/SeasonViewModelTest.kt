@@ -27,7 +27,7 @@ class SeasonViewModelTest {
     private val dispatcher = StandardTestDispatcher()
 
     private lateinit var getSeriesDetailsUseCase: GetSeriesDetailsUseCase
-    private lateinit var viewModel: SeasonViewModel
+    private lateinit var viewModel: SeasonsViewModel
 
     private val seriesId = 1L
     private val seasonNumber = 2
@@ -56,7 +56,7 @@ class SeasonViewModelTest {
         coEvery { getSeriesDetailsUseCase.getEpisodes(any(), any()) } returns mockEpisodes
 
         // Act
-        viewModel = SeasonViewModel(getSeriesDetailsUseCase, dispatcher, seriesId, seasonNumber)
+        viewModel = SeasonsViewModel(getSeriesDetailsUseCase, dispatcher, seriesId, seasonNumber)
 
         advanceUntilIdle()
 
@@ -73,7 +73,7 @@ class SeasonViewModelTest {
         coEvery { getSeriesDetailsUseCase.getEpisodes(any(), any()) } returns emptyList()
 
         // Act
-        viewModel = SeasonViewModel(getSeriesDetailsUseCase, dispatcher, seriesId, seasonNumber)
+        viewModel = SeasonsViewModel(getSeriesDetailsUseCase, dispatcher, seriesId, seasonNumber)
         advanceUntilIdle()
 
         // Assert
@@ -89,7 +89,7 @@ class SeasonViewModelTest {
         coEvery { getSeriesDetailsUseCase.getEpisodes(any(), any()) } throws IOException()
 
         // Act
-        viewModel = SeasonViewModel(getSeriesDetailsUseCase, dispatcher, seriesId, seasonNumber)
+        viewModel = SeasonsViewModel(getSeriesDetailsUseCase, dispatcher, seriesId, seasonNumber)
         advanceUntilIdle()
 
         // Assert
@@ -100,7 +100,7 @@ class SeasonViewModelTest {
 
     @Test
     fun `should emit NavigateBack effect manually`() = runTest {
-        viewModel = SeasonViewModel(getSeriesDetailsUseCase, dispatcher, seriesId, seasonNumber)
+        viewModel = SeasonsViewModel(getSeriesDetailsUseCase, dispatcher, seriesId, seasonNumber)
         advanceUntilIdle()
 
         var emittedEffect: SeasonDetailEffect? = null
@@ -129,7 +129,7 @@ class SeasonViewModelTest {
         coEvery { getSeriesDetailsUseCase.getEpisodes(any(), any()) } returns listOf(mockEpisode)
 
         // Act
-        viewModel = SeasonViewModel(getSeriesDetailsUseCase, dispatcher, seriesId, seasonNumber)
+        viewModel = SeasonsViewModel(getSeriesDetailsUseCase, dispatcher, seriesId, seasonNumber)
         advanceUntilIdle()
 
         // Assert
@@ -149,7 +149,7 @@ class SeasonViewModelTest {
         // Arrange
         val episodeId = 123L
         val seasonNumber = 1
-        viewModel = SeasonViewModel(getSeriesDetailsUseCase, dispatcher, seriesId, seasonNumber)
+        viewModel = SeasonsViewModel(getSeriesDetailsUseCase, dispatcher, seriesId, seasonNumber)
         advanceUntilIdle()
 
         var emittedEffect: SeasonDetailEffect? = null
