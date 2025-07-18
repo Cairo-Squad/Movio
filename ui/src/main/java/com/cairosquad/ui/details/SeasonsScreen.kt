@@ -12,24 +12,20 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.theme.Theme
-import com.cairosquad.ui.details.season.SeasonCard
+import com.cairosquad.ui.movio_component.SeasonScreenCard
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.EpisodeRoute
 import com.cairosquad.ui.utils.ObserveAsEffect
@@ -87,7 +83,7 @@ fun SeasonScreenContent(
                 )
             }
             items(uiState.season) { season ->
-                SeasonCard(
+                SeasonScreenCard(
                     movieTitle = season.name,
                     movieRate = season.rating,
                     totalNumberOfEpisodes = season.episodesCount.toString(),
@@ -97,7 +93,7 @@ fun SeasonScreenContent(
                     currentSeason = "${season.number}",
                     height = 100.dp,
                     width = 76.dp,
-                    onClick = { listener.onEpisodeClicked(season.id)}
+                    onClick = { listener.onEpisodeClicked(season.id) }
                 )
             }
 
