@@ -31,6 +31,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -49,7 +50,11 @@ import com.cairosquad.ui.movio_component.ArtistCard
 import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.ui.movio_component.ReviewCard
 import com.cairosquad.ui.movio_component.SectionHeader
+import com.cairosquad.ui.navigation.ArtistRoute
 import com.cairosquad.ui.navigation.LocalNavController
+import com.cairosquad.ui.navigation.MovieRoute
+import com.cairosquad.ui.utils.ObserveAsEffect
+import com.cairosquad.viewmodel.details.movie.MovieEffect
 import com.cairosquad.viewmodel.details.movie.MovieInteractionListener
 import com.cairosquad.viewmodel.details.movie.MovieScreenState
 import com.cairosquad.viewmodel.details.movie.MovieViewModel
@@ -64,6 +69,17 @@ fun MovieScreen(
 
     val state by viewModel.screenState.collectAsState()
 
+    ObserveAsEffect(viewModel.effect) { effect ->
+        when (effect) {
+            is MovieEffect.NavigateToActor -> {
+                navController.navigate(ArtistRoute(effect.actorId))
+            }
+
+            is MovieEffect.NavigateToMovie -> {
+                navController.navigate(MovieRoute(effect.movieId))
+            }
+        }
+    }
 
     MovieContent(
         uiState = state,
@@ -85,14 +101,15 @@ fun MovieContent(
     ) {
         SafeImageViewer(
             modifier = Modifier
+                .blur(16.dp)
                 .fillMaxWidth()
                 .height(400.dp)
-                .offset(y = (-20).dp),
+                .offset(y = (-28).dp),
             model = "https://image.tmdb.org/t/p/w500/${uiState.movie.posterPath}",
             contentDescription = "",
-            blur = 16,
-            nudeThreshold = 0.001,
-            nonNudeThreshold = 1.0
+            blur = 0,
+            nudeThreshold = 0.0,
+            nonNudeThreshold = 0.0
         )
         LazyColumn(
             modifier = Modifier
@@ -218,7 +235,7 @@ fun MovieContent(
                     items(uiState.reviews) {
                         ReviewCard(
                             imgUrl = "https://image.tmdb.org/t/p/w500/${it.authorPhotoPath}",
-                            movieTitle = it.author,
+                            reviewerName = it.author,
                             rating = it.rating.toString(),
                             reviewDate = it.date,
                             reviewText = it.description
