@@ -14,10 +14,8 @@ class ReviewsViewModel(
     private val getSeriesDetailsUseCase: GetSeriesDetailsUseCase,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 
-) : BaseViewModel<ReviewsScreenState, Nothing>(ReviewsScreenState()) {
-    init {
-        getReviews()
-    }
+) : BaseViewModel<ReviewsScreenState, ReviewsEffect>(initialState = ReviewsScreenState()),
+    ReviewsInteractionListener {
 
     fun getReviews() {
         updateState { it.copy(isLoading = true, error = null) }
@@ -52,5 +50,9 @@ class ReviewsViewModel(
                 reviews = reviews.map { it.toUiState() }
             )
         }
+    }
+
+    override fun onClickBack() {
+        sendEffect(ReviewsEffect.NavigateBack)
     }
 }
