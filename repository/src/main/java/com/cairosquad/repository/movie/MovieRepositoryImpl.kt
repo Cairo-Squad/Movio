@@ -4,13 +4,13 @@ import com.cairosquad.domain.repository.MoviesRepository
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Review
-import com.cairosquad.repository.common.mappers.tryToCall
 import com.cairosquad.repository.movie.data_source.remote.RemoteMovieDataSource
 import com.cairosquad.repository.search.data_source.local.DiscoveryDataSource
 import com.cairosquad.repository.search.data_source.local.dto.toCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.toEntity
 import com.cairosquad.repository.search.data_source.remote.RemoteMovieDiscoveryDataSource
 import com.cairosquad.repository.search.data_source.remote.dto.toEntity
+import com.cairosquad.repository.utils.mappers.tryToCall
 import java.util.Date
 
 class MovieRepositoryImpl(
@@ -46,9 +46,17 @@ class MovieRepositoryImpl(
         return tryToCall {
             discoveryDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
             discoveryDataSource.getPersonalizedMovies()
-                .takeIf { it.size >= PAGE_SIZE }?.toEntity()
-                ?: remoteMovieDiscoveryDataSource.getPersonalizedMovies().toEntity()
-                    .also { result -> discoveryDataSource.cachePersonalizedMovies(result.toCacheDto()) }
+                .takeIf { it.size >= PAGE_SIZE }?.map { it.toEntity() }
+                ?: remoteMovieDiscoveryDataSource.getPersonalizedMovies().map { it.toEntity() }
+                    .also { result ->
+                        discoveryDataSource.cachePersonalizedMovies(
+                            result.toCacheDto(
+                                "ELSAYEDMAGDY",
+                                1
+                            )
+                        )
+                    }
+
         }
     }
 
@@ -56,9 +64,16 @@ class MovieRepositoryImpl(
         return tryToCall {
             discoveryDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
             discoveryDataSource.getSuggestedMovies()
-                .takeIf { it.size >= PAGE_SIZE }?.toEntity()
-                ?: remoteMovieDiscoveryDataSource.getSuggestedMovies().toEntity()
-                    .also { result -> discoveryDataSource.cacheSuggestedMovies(result.toCacheDto()) }
+                .takeIf { it.size >= PAGE_SIZE }?.map { it.toEntity() }
+                ?: remoteMovieDiscoveryDataSource.getSuggestedMovies().map { it.toEntity() }
+                    .also { result ->
+                        discoveryDataSource.cacheSuggestedMovies(
+                            result.toCacheDto(
+                                "ELSAYEDMAGDY",
+                                1
+                            )
+                        )
+                    }
         }
     }
 

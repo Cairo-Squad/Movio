@@ -43,5 +43,6 @@ data class SeriesDetailsRemoteDto(
         overview = overview.orEmpty(),
         releaseDate = TimeUtils.dateToLong(firstAirDate ?: ""),
         seasonsCount = numberOfSeasons ?: 0,
+        trailerPath = "" // TODO
     )
 }
