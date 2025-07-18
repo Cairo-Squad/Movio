@@ -25,3 +25,6 @@ const val CACHED_SERIES_PAGE_COLUMN_NAME = "page"
 const val CACHED_SERIES_NAME_COLUMN_NAME = "name"
 const val CACHED_SERIES_POSTER_PATH_COLUMN_NAME = "posterPath"
 const val CACHED_SERIES_VOTE_AVERAGE_COLUMN_NAME = "voteAverage"
+
+// Details
+const val CASHED_MOVIE_DETAILS_TABLE_NAME = "MovieDetailsTable"

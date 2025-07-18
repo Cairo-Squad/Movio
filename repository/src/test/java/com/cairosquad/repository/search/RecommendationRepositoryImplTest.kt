@@ -4,7 +4,8 @@ import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Review
-import com.cairosquad.repository.movies.MoviesRepositoryImpl
+import com.cairosquad.repository.movie.MovieRepositoryImpl
+import com.cairosquad.repository.movie.data_source.remote.RemoteMovieDataSource
 import com.cairosquad.repository.search.data_source.local.DiscoveryDataSource
 import com.cairosquad.repository.search.data_source.remote.RemoteMovieDiscoveryDataSource
 import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
@@ -18,15 +19,18 @@ import kotlin.test.Test
 class RecommendationRepositoryImplTest {
     private lateinit var remoteMovieDiscoveryDataSource: RemoteMovieDiscoveryDataSource
     private lateinit var discoveryDataSource: DiscoveryDataSource
-    private lateinit var recommendationRepository: MoviesRepositoryImpl
+    private lateinit var recommendationRepository: MovieRepositoryImpl
+    private lateinit var remoteMovieDataSource: RemoteMovieDataSource
 
     @Before
     fun setUp() {
         discoveryDataSource = mockk(relaxed = true)
         remoteMovieDiscoveryDataSource = mockk(relaxed = true)
-        recommendationRepository = MoviesRepositoryImpl(
+        remoteMovieDataSource = mockk(relaxed = true)
+        recommendationRepository = MovieRepositoryImpl(
             remoteMovieDiscoveryDataSource = remoteMovieDiscoveryDataSource,
-            discoveryDataSource = discoveryDataSource
+            discoveryDataSource = discoveryDataSource,
+            remoteMovieDataSource = remoteMovieDataSource
         )
     }
 

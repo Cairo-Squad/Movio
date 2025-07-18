@@ -27,7 +27,7 @@ val viewModelModule = module {
         TopCastViewModel(
             mediaId = mediaId,
             isMovie = isMovie,
-            getMoviesDetailsUseCase = get(),
+            getMovieDetailsUseCase = get(),
             getSeriesDetailsUseCase = get()
         )
     }
@@ -36,7 +36,7 @@ val viewModelModule = module {
         ReviewsViewModel(
             mediaId = mediaId,
             isMovie = isMovie,
-            getMoviesDetailsUseCase = get(),
+            getMovieDetailsUseCase = get(),
             getSeriesDetailsUseCase = get()
         )
     }

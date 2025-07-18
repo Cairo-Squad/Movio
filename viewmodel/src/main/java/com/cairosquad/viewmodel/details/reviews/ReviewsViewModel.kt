@@ -1,6 +1,6 @@
 package com.cairosquad.viewmodel.details.reviews
 
-import com.cairosquad.domain.usecase.movies.GetMoviesDetailsUseCase
+import com.cairosquad.domain.usecase.movies.GetMovieDetailsUseCase
 import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
 import com.cairosquad.entity.Review
 import com.cairosquad.viewmodel.base.BaseViewModel
@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 class ReviewsViewModel(
     private val mediaId: Long,
     private val isMovie: Boolean,
-    private val getMoviesDetailsUseCase: GetMoviesDetailsUseCase,
+    private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
     private val getSeriesDetailsUseCase: GetSeriesDetailsUseCase,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 
@@ -31,9 +31,9 @@ class ReviewsViewModel(
 
     private suspend fun getReviewsByType(): List<Review> {
         return if (isMovie) {
-            getMoviesDetailsUseCase.getMovieReviews(mediaId)
+            getMovieDetailsUseCase.getMovieReviews(mediaId)
         } else {
-            getSeriesDetailsUseCase.getSeriesReviews(mediaId)
+            getSeriesDetailsUseCase.getSeriesReviews(mediaId, 1)
         }
     }
 

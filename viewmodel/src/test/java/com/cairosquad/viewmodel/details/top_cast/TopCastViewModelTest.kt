@@ -1,6 +1,6 @@
 package com.cairosquad.viewmodel.details.top_cast
 
-import com.cairosquad.domain.usecase.movies.GetMoviesDetailsUseCase
+import com.cairosquad.domain.usecase.movies.GetMovieDetailsUseCase
 import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
 import com.cairosquad.entity.Artist
 import com.google.common.truth.Truth.assertThat
@@ -24,14 +24,14 @@ class TopCastViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
     private val testScope = TestScope(testDispatcher)
 
-    private lateinit var getMoviesDetailsUseCase: GetMoviesDetailsUseCase
+    private lateinit var getMovieDetailsUseCase: GetMovieDetailsUseCase
     private lateinit var getSeriesDetailsUseCase: GetSeriesDetailsUseCase
     private lateinit var viewModel: TopCastViewModel
 
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        getMoviesDetailsUseCase = mockk(relaxed = true)
+        getMovieDetailsUseCase = mockk(relaxed = true)
         getSeriesDetailsUseCase = mockk(relaxed = true)
     }
 
@@ -43,11 +43,11 @@ class TopCastViewModelTest {
     @Test
     fun `getTopCast should return movie cast when isMovie is true`() = testScope.runTest {
         // Given
-        coEvery { getMoviesDetailsUseCase.getMovieTopCast(MOVIE_ID) } returns testCast
+        coEvery { getMovieDetailsUseCase.getMovieTopCast(MOVIE_ID) } returns testCast
         viewModel = TopCastViewModel(
             mediaId = MOVIE_ID,
             isMovie = true,
-            getMoviesDetailsUseCase = getMoviesDetailsUseCase,
+            getMovieDetailsUseCase = getMovieDetailsUseCase,
             getSeriesDetailsUseCase = getSeriesDetailsUseCase,
             dispatcher = testDispatcher
         )
@@ -71,7 +71,7 @@ class TopCastViewModelTest {
         viewModel = TopCastViewModel(
             mediaId = SERIES_ID,
             isMovie = false,
-            getMoviesDetailsUseCase = getMoviesDetailsUseCase,
+            getMovieDetailsUseCase = getMovieDetailsUseCase,
             getSeriesDetailsUseCase = getSeriesDetailsUseCase,
             dispatcher = testDispatcher
         )
@@ -90,11 +90,11 @@ class TopCastViewModelTest {
     @Test
     fun `getTopCast should return error when use case throws exception`() = testScope.runTest {
         // Given
-        coEvery { getMoviesDetailsUseCase.getMovieTopCast(MOVIE_ID) } throws Exception(ERROR_MESSAGE)
+        coEvery { getMovieDetailsUseCase.getMovieTopCast(MOVIE_ID) } throws Exception(ERROR_MESSAGE)
         viewModel = TopCastViewModel(
             mediaId = MOVIE_ID,
             isMovie = true,
-            getMoviesDetailsUseCase = getMoviesDetailsUseCase,
+            getMovieDetailsUseCase = getMovieDetailsUseCase,
             getSeriesDetailsUseCase = getSeriesDetailsUseCase,
             dispatcher = testDispatcher
         )
