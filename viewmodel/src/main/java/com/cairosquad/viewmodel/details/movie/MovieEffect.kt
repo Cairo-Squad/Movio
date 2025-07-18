@@ -1,6 +1,6 @@
 package com.cairosquad.viewmodel.details.movie
 
-import com.cairosquad.viewmodel.details.movie.MovieScreenState.ErrorStatus
+import com.cairosquad.viewmodel.exception.ErrorStatus
 
 sealed interface MovieEffect {
 

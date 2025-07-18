@@ -32,7 +32,8 @@ data class MovieScreenState(
         val genres: List<String> = emptyList(),
         val overview: String = "",
         val releaseDate: String = "0",
-        val runtimeMinutes: Int = 0,
+        val runtimeMinutes: String = "",
+        val trailerPath: String = ""
     )
 
     data class TopCastUiState(

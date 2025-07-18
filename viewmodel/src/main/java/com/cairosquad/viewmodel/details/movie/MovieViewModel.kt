@@ -101,12 +101,12 @@ class MovieViewModel(
     private fun getSimilarMovies(movieId: Long) {
         tryToCall(
             onStart = {
-                updateState { it.copy(reviewsSectionState = ScreenStatus.LOADING) }
+                updateState { it.copy(similarSeriesSectionState = ScreenStatus.LOADING) }
             },
             block = { movieUseCase.getSimilarMovies(movieId) },
             onSuccess = ::setSimilarMovies,
             onError = { throwable ->
-                setError(throwable) { copy(reviewsSectionState = ScreenStatus.ERROR) }
+                setError(throwable) { copy(similarSeriesSectionState = ScreenStatus.ERROR) }
             },
             dispatcher = Dispatchers.IO
         )
@@ -115,7 +115,7 @@ class MovieViewModel(
     private fun setSimilarMovies(movies: List<Movie>) {
         updateState {
             it.copy(
-                reviewsSectionState = ScreenStatus.SUCCESS,
+                similarSeriesSectionState = ScreenStatus.SUCCESS,
                 similarMovies = movies.map { it.toMovieUiState() }
             )
         }
