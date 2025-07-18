@@ -1,13 +1,13 @@
 package com.cairosquad.repository.artists
 
-import com.cairosquad.domain.repository.ArtistsRepository
+import com.cairosquad.domain.repository.ArtistRepository
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import kotlinx.coroutines.delay
 
-class ArtistsRepositoryImpl: ArtistsRepository {
+class ArtistsRepositoryImpl: ArtistRepository {
     override suspend fun getArtist(artistId: Long): Artist {
         delay(500); return fakeArtist
     }
