@@ -1,6 +1,8 @@
 package com.cairosquad.local.search.cache
 
 import com.cairosquad.local.search.cache.dao.CacheDao
+import com.cairosquad.repository.artists.dto.ArtistMovieCachedDto
+import com.cairosquad.repository.artists.dto.ArtistSeriesCachedDto
 import com.cairosquad.repository.search.data_source.local.CacheDataSource
 import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
@@ -35,8 +37,25 @@ class CacheDataSourceImpl(
 
     override suspend fun cacheArtist(artists: List<ArtistCacheDto>) = cacheDao.cacheArtist(artists)
 
+    override suspend fun cacheArtistMovies(artistMovieCachedDto: List<ArtistMovieCachedDto>) {
+        cacheDao.cacheArtistMovies(artistMovieCachedDto)
+    }
+
+    override suspend fun getCachedArtistMovies(artistId: Long): List<MovieCacheDto> {
+        return cacheDao.getCachedArtistMovies(artistId)
+    }
+
+    override suspend fun cacheArtistSeries(artistSeriesCachedDto: List<ArtistSeriesCachedDto>) {
+        cacheDao.cacheArtistSeries(artistSeriesCachedDto)
+    }
+
+    override suspend fun getCachedArtistSeries(artistId: Long): List<SeriesCacheDto> {
+        return cacheDao.getCachedArtistSeries(artistId)
+    }
 
     override suspend fun clearExpiredCache(expirationTime: Long) {
+        cacheDao.deleteExpiredArtistMoviesCache(expirationTime)
+        cacheDao.deleteExpiredArtistSeriesCache(expirationTime)
         cacheDao.deleteExpiredMoviesCache(expirationTime)
         cacheDao.deleteExpiredSeriesCache(expirationTime)
         cacheDao.deleteExpiredArtistCache(expirationTime)
