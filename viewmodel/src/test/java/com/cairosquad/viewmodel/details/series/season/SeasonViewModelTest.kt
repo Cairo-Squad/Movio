@@ -148,6 +148,7 @@ class SeasonViewModelTest {
     fun `should emit NavigateToEpisodeDetails effect manually`() = runTest {
         // Arrange
         val episodeId = 123L
+        val seasonNumber = 1
         viewModel = SeasonViewModel(getSeriesDetailsUseCase, dispatcher, seriesId, seasonNumber)
         advanceUntilIdle()
 
@@ -159,11 +160,11 @@ class SeasonViewModelTest {
         }
 
         // Act
-        viewModel.onEpisodeClicked(episodeId)
+        viewModel.onEpisodeClicked(episodeId, seasonNumber)
         advanceUntilIdle()
 
         // Assert
-        assertThat(emittedEffect).isEqualTo(SeasonDetailEffect.NavigateToEpisodeDetails(episodeId))
+        assertThat(emittedEffect).isEqualTo(SeasonDetailEffect.NavigateToEpisodeDetails(episodeId, seasonNumber))
 
         job.cancel()
     }

@@ -290,10 +290,15 @@ class ArtistViewModelTest {
         )
 
         val series1 = Series(
-            id = 1,
-            title = "Band of Brothers",
-            rating = 4.8f,
-            posterPath = "/img.jpg"
+            id = 303L,
+            title = "Game of Thrones",
+            posterPath = "/got.jpg",
+            rating = 9.0f,
+            seasonsCount = 8,
+            releaseDate = 20110417,
+            overview = "Fantasy drama series",
+            trailerPath = "/got_trailer.mp4",
+            genres = emptyList()
         )
     }
 }
