@@ -10,6 +10,7 @@ appcompat = "1.6.1"
 kotlinxCoroutinesTest = "1.7.3"
 runtime = "1.8.3"
 foundation = "1.8.3"
+turbine = "1.2.1"
 uiTestJunit4 = "1.8.3"
 serialization = "1.9.0"
 activityCompose = "1.10.1"
@@ -104,6 +105,7 @@ ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "k
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktorVersion" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorVersion" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "uiTestJunit4" }
 ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktorVersion" }
 
