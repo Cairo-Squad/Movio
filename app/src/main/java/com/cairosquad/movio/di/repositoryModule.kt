@@ -1,6 +1,6 @@
 package com.cairosquad.movio.di
 
-import com.cairosquad.domain.repository.ArtistsRepository
+import com.cairosquad.domain.repository.ArtistRepository
 import com.cairosquad.domain.repository.MoviesRepository
 import com.cairosquad.domain.repository.SearchRepository
 import com.cairosquad.domain.repository.SeriesRepository
@@ -23,7 +23,7 @@ val repositoryModule = module {
         SeriesRepositoryImpl()
     }
 
-    single<ArtistsRepository> {
+    single<ArtistRepository> {
         ArtistsRepositoryImpl()
     }
 

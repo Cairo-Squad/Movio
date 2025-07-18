@@ -15,7 +15,7 @@ import com.cairosquad.ui.AppScreen
 import com.cairosquad.ui.details.ArtistScreen
 import com.cairosquad.ui.details.MovieScreen
 import com.cairosquad.ui.details.ReviewsScreen
-import com.cairosquad.ui.details.SeasonScreen
+import com.cairosquad.ui.details.EpisodeScreen
 import com.cairosquad.ui.details.SeasonsScreen
 import com.cairosquad.ui.details.SeriesScreen
 import com.cairosquad.ui.details.SimilarMoviesScreen
@@ -55,7 +55,9 @@ fun AppNavigation() {
                 )
             }
             composable<SeriesRoute> { backStackEntry ->
-                SeriesScreen(seriesId = 1399)
+                SeriesScreen(
+                    seriesId = backStackEntry.toRoute<SeriesRoute>().seriesId
+                )
             }
             composable<ArtistRoute> { backStackEntry ->
                 ArtistScreen(
@@ -84,9 +86,9 @@ fun AppNavigation() {
                     isMovie = backStackEntry.toRoute<ReviewsRoute>().isMovie
                 )
             }
-            composable<SeasonRoute> { backStackEntry ->
-                SeasonScreen(
-                    seriesId = backStackEntry.toRoute<SeasonRoute>().seriesId,
+            composable<EpisodeRoute> { backStackEntry ->
+                EpisodeScreen(
+                    episodeId = backStackEntry.toRoute<EpisodeRoute>().episodeId
                 )
             }
 

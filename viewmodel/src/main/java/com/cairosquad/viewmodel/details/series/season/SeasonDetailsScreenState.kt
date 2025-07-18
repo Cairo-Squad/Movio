@@ -14,6 +14,7 @@ data class SeasonDetailsScreenState(
     val episodes: List<EpisodeUiState> = emptyList()
 ) {
     data class SeasonUiState(
+        val id: Long = 0L,
         val number: Int = 0,
         val name: String = "",
         val episodesCount: Int = 0,
@@ -40,6 +41,7 @@ data class SeasonDetailsScreenState(
     }
 }
 fun Season.toUiState() = SeasonDetailsScreenState.SeasonUiState(
+    id = seriesId,
     number = seasonNumber,
     name = seasonName,
     episodesCount = episodesCount,

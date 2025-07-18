@@ -56,7 +56,7 @@ import com.cairosquad.ui.movio_component.SectionHeader
 import com.cairosquad.ui.navigation.ArtistRoute
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.ReviewsRoute
-import com.cairosquad.ui.navigation.SeasonRoute
+import com.cairosquad.ui.navigation.EpisodeRoute
 import com.cairosquad.ui.navigation.SeasonsRoute
 import com.cairosquad.ui.navigation.SeriesRoute
 import com.cairosquad.ui.navigation.SimilarSeriesRoute
@@ -142,7 +142,7 @@ fun SeriesScreen(
             }
 
             is SeriesDetailEffect.NavigateToAllSeasons -> {
-                navController.navigate(SeasonRoute(effect.seriesId))
+                navController.navigate(SeasonsRoute(effect.seriesId))
             }
 
             is SeriesDetailEffect.NavigateToAllSimilar -> {
@@ -155,8 +155,8 @@ fun SeriesScreen(
 
             is SeriesDetailEffect.NavigateToSeasonDetails -> {
                 navController.navigate(
-                    SeasonRoute(
-                        seriesId = effect.seriesId
+                    EpisodeRoute(
+                        episodeId = effect.seriesId
                     )
                 )
             }
