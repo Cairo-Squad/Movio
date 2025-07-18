@@ -48,8 +48,21 @@ class SearchPagerTest {
     fun `series should emit PagingData with correct series items`() = runTest {
         // Given
         val expected = listOf(
-            Series(id = 1, title = "Batman Begins", rating = 0.1f, posterPath = "http:"),
-            Series(id = 2, title = "The Dark Knight", rating = 0.0f, posterPath = "")
+            Series(id = 1, title = "Batman Begins", rating = 0.1f, posterPath = "http:",
+                trailerPath = "",
+                genres = emptyList(),
+                overview = "",
+                releaseDate = 0L,
+                seasonsCount = 1
+            ),
+            Series(
+                id = 2, title = "The Dark Knight", rating = 0.0f, posterPath = "",
+                trailerPath = "",
+                genres = emptyList(),
+                overview = "",
+                releaseDate = 0L,
+                seasonsCount = 1
+            )
         )
         coEvery { searchUseCase.getSeries(testQuery, 1) } returns expected
         coEvery { searchUseCase.getSeries(testQuery, match { it != 1 }) } returns emptyList()

@@ -10,6 +10,9 @@ import com.cairosquad.repository.search.data_source.local.dto.CACHED_ARTIST_TABL
 import com.cairosquad.repository.search.data_source.local.dto.CACHED_ARTIST_TIMESTAMP_COLUMN_NAME
 import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.CACHED_ARTIST_ID_COLUMN_NAME
+import com.cairosquad.repository.search.data_source.local.dto.CACHED_ARTIST_NAME_COLUMN_NAME
+import com.cairosquad.repository.search.data_source.local.dto.CACHED_ARTIST_PAGE_COLUMN_NAME
+import com.cairosquad.repository.search.data_source.local.dto.CACHED_ARTIST_QUERY_COLUMN_NAME
 import com.cairosquad.repository.search.data_source.local.dto.CACHED_MOVIES_ID_COLUMN_NAME
 import com.cairosquad.repository.search.data_source.local.dto.CACHED_MOVIES_PAGE_COLUMN_NAME
 import com.cairosquad.repository.search.data_source.local.dto.CACHED_MOVIES_QUERY_COLUMN_NAME
@@ -62,6 +65,9 @@ interface CacheDao {
 
     @Query("SELECT * FROM $CACHED_ARTIST_TABLE_NAME where $CACHED_ARTIST_ID_COLUMN_NAME = :id")
     suspend fun getCachedArtist(id: Long): ArtistCacheDto
+
+    @Query("SELECT * FROM $CACHED_ARTIST_TABLE_NAME where $CACHED_ARTIST_QUERY_COLUMN_NAME = :query AND $CACHED_ARTIST_PAGE_COLUMN_NAME = :page ORDER BY id")
+    suspend fun getCachedArtist(query: String, page: Int): List<ArtistCacheDto>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun cacheArtist(results: List<ArtistCacheDto>)

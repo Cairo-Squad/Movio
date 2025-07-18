@@ -66,11 +66,10 @@ class SearchRepositoryImplTest {
                     genres = emptyList(),
                     overview = "",
                     releaseDate = 0L,
-                    seasonsCount = 0
+                    seasonsCount = 1
                 )
             ), result
         )
-        assertEquals(listOf(Series(42, "Dark", 8.8f, "/dark.jpg")), result)
         coVerify { cacheDS.getCachedSeries(QUERY1,page) }
         coVerify(exactly = 0) { remoteDS.getSeries(any(),page) }
     }
@@ -87,7 +86,14 @@ class SearchRepositoryImplTest {
         val result = repository.getSeries(QUERY2,page)
 
         //Then
-        assertEquals(listOf(Series(7, "Lost", 8.3f, "/lost.jpg")), result)
+        assertEquals(listOf(Series(
+            7, "Lost", 8.3f, "/lost.jpg",
+            trailerPath = "",
+            genres = emptyList(),
+            overview = "",
+            releaseDate = 0L,
+            seasonsCount = 1
+        )), result)
         coVerify { remoteDS.getSeries(QUERY2,page) }
         assertEquals(
             listOf(
@@ -173,7 +179,7 @@ class SearchRepositoryImplTest {
             id = 42,
             page = page,
             name = "Dark",
-            query = QUERY5,
+            query = QUERY1,
             posterPath = "/dark.jpg",
             voteAverage = 8.8,
             timestamp = Date().time
