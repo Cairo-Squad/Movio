@@ -57,7 +57,18 @@ class SearchRepositoryImplTest {
         val result = repository.getSeries(QUERY1)
 
         //Then
-        assertEquals(listOf(Series(42, "Dark", 8.8f, "/dark.jpg")), result)
+        assertEquals(
+            listOf(
+                Series(
+                    42, "Dark", 8.8f, "/dark.jpg",
+                    trailerPath = "",
+                    genres = emptyList(),
+                    overview = "",
+                    releaseDate = 0L,
+                    seasonsCount = 1
+                )
+            ), result
+        )
         coVerify { cacheDS.getCachedSeries(QUERY1) }
         coVerify(exactly = 0) { remoteDS.getSeries(any()) }
     }
@@ -74,7 +85,18 @@ class SearchRepositoryImplTest {
         val result = repository.getSeries(QUERY2)
 
         //Then
-        assertEquals(listOf(Series(7, "Lost", 8.3f, "/lost.jpg")), result)
+        assertEquals(
+            listOf(
+                Series(
+                    7, "Lost", 8.3f, "/lost.jpg",
+                    trailerPath = "",
+                    genres = emptyList(),
+                    overview = "",
+                    releaseDate = 0L,
+                    seasonsCount = 1
+                )
+            ), result
+        )
         coVerify { remoteDS.getSeries(QUERY2) }
         coVerify { cacheDS.cacheSeries(any()) }
     }

@@ -63,7 +63,14 @@ class SearchUseCaseTest {
         // Given
         val query = "Breaking Bad"
         val series = listOf(
-            Series(id = 1, title = "Breaking Bad", rating = 9.5f, posterPath = "/bb.jpg")
+            Series(
+                id = 1, title = "Breaking Bad", rating = 9.5f, posterPath = "/bb.jpg",
+                trailerPath = "",
+                genres = emptyList(),
+                overview = "",
+                releaseDate = 0L,
+                seasonsCount = 1
+            )
         )
 
         coEvery { searchRepository.getSeries(query) } returns series

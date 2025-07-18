@@ -69,7 +69,7 @@ fun AppNavigation() {
             }
             composable<ArtistRoute>(
                 deepLinks = listOf(
-                    navDeepLink<MovieRoute>(basePath = "$BASE_URL/artist")
+                    navDeepLink<ArtistRoute>(basePath = "$BASE_URL/artist")
                 )
             ) { backStackEntry ->
                 ArtistScreen(
