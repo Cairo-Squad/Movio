@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -49,13 +50,15 @@ private fun TopCastContent(
     onClick: (Long) -> Unit,
     cast: List<TopCastScreenState.ArtistUiState>
 ) {
-    Column {
+    Column (
+        modifier = Modifier.fillMaxSize().systemBarsPadding()
+    ){
         AppBar(
             title = stringResource(R.string.top_cast),
             onBackButtonClicked = onBackClick,
         )
         LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
+            columns = GridCells.Adaptive(minSize = 101.33.dp),
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
