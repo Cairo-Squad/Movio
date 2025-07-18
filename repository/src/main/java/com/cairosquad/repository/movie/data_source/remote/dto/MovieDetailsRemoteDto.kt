@@ -1,17 +1,16 @@
 package com.cairosquad.repository.movie.data_source.remote.dto
 
 
+import com.cairosquad.entity.Movie
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class MovieDetailsRemoteDto(
-    @SerialName("adult")
-    val adult: Boolean? = null,
     @SerialName("backdrop_path")
     val backdropPath: String? = null,
     @SerialName("genres")
-    val genres: List<Genre?>? = null,
+    val genres: List<GenreDto?>? = null,
     @SerialName("id")
     val id: Int,
     @SerialName("overview")
@@ -30,4 +29,15 @@ data class MovieDetailsRemoteDto(
     val voteAverage: Double? = null,
     @SerialName("vote_count")
     val voteCount: Int? = null
-)
+) {
+    fun toEntity() = Movie(
+        id = id.toLong(),
+        title = title.orEmpty(),
+        rating = voteAverage?.toFloat() ?: 0f,
+        posterPath = posterPath.orEmpty(),
+        genres = genres?.mapNotNull { it?.toEntity() } ?: emptyList(),
+        overview = overview.orEmpty(),
+        releaseDate = releaseDate.orEmpty().toLong(),
+        runtimeMinutes = runtime ?: 0,
+    )
+}

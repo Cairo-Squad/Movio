@@ -14,4 +14,6 @@ data class AuthorDetailsDto(
     val avatarPath: String? = null,
     @SerialName("rating")
     val rating: Int? = null
-) {}
+) {
+
+}

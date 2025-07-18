@@ -4,7 +4,7 @@ import com.cairosquad.remote.BuildConfig
 import com.cairosquad.remote.common.utils.callApi
 import com.cairosquad.remote.common.utils.constructUrl
 import com.cairosquad.repository.movie.data_source.remote.RemoteMovieDataSource
-import com.cairosquad.repository.movie.data_source.remote.dto.CastResponse
+import com.cairosquad.repository.movie.data_source.remote.dto.CreditResponse
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieDetailsRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
@@ -44,7 +44,7 @@ class RemoteMovieDataSourceImpl(
     }
 
     override suspend fun getMovieTopCast(movieId: Long, page: Int): List<ArtistRemoteDto> {
-        return callApi<CastResponse> {
+        return callApi<CreditResponse> {
             httpClient.get(constructUrl("movie/$movieId/credits")) {
                 parameter(API_KEY, BuildConfig.API_KEY)
                 parameter(PAGE, page)
