@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -29,7 +31,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.theme.Theme
-import com.cairosquad.ui.details.season.SeasonCard
+import com.cairosquad.ui.movio_component.SeasonCard
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.EpisodeRoute
 import com.cairosquad.ui.utils.ObserveAsEffect
@@ -88,16 +90,17 @@ fun SeasonScreenContent(
             }
             items(uiState.season) { season ->
                 SeasonCard(
-                    movieTitle = season.name,
-                    movieRate = season.rating,
+
+                    seriesName = "gehad",
+                    seasonTitle =season.name,
+                    seasonRate=season.rating,
                     totalNumberOfEpisodes = season.episodesCount.toString(),
                     movieImage = season.posterPath,
                     yearOfPublish = season.airDate,
                     timeOfPublish = season.airDate,
                     currentSeason = "${season.number}",
-                    height = 100.dp,
-                    width = 76.dp,
-                    onClick = { listener.onEpisodeClicked(season.id)}
+                    onClick = { listener.onEpisodeClicked(season.id)},
+                    modifier=Modifier.height(100.dp).width (75.dp),
                 )
             }
 
