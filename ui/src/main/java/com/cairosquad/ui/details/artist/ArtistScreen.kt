@@ -192,14 +192,25 @@ private fun ArtistScreenContent(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.padding(start = 16.dp, top = 16.dp)
         ) {
+            val lastWord = state.artist.country
+                ?.trim()
+                ?.let { full ->
+                    val partsByComma = full.split(",")
+                    val lastPart = partsByComma.lastOrNull()?.trim().orEmpty()
+
+                    lastPart.split(" ").lastOrNull()?.trim()
+                }
+                ?.takeIf { it.isNotBlank() }
             InfoChip(
                 text = formatBirthDateLegacy(state.artist.birthDate),
                 imgRes = R.drawable.date,
             )
-            InfoChip(
-                text = state.artist.country,
-                imgRes = R.drawable.component_1,
-            )
+            if (lastWord != null) {
+                InfoChip(
+                    text = state.artist.country,
+                    imgRes = R.drawable.component_1,
+                )
+            }
         }
 
         ExpandableText(
