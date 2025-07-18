@@ -517,6 +517,7 @@ class SearchViewModelTest {
 
         viewModel.onClickSearchTextField()
         advanceUntilIdle()
+        advanceTimeBy(600)
 
         assertThat(viewModel.screenState.value.recentSearch).isEqualTo(previous)
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
