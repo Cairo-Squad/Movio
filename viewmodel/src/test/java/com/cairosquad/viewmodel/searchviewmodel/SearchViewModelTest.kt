@@ -9,7 +9,6 @@ import com.cairosquad.domain.usecase.movies.GetPersonalizedMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetSuggestedMoviesUseCase
 import com.cairosquad.domain.usecase.search.ClearSearchHistoryUseCase
 import com.cairosquad.domain.usecase.search.GetLocalSearchHistoryUseCase
-import com.cairosquad.domain.usecase.search.SearchUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
@@ -565,14 +564,24 @@ class SearchViewModelTest {
             id = 1,
             title = "The dark knight",
             rating = 4.0f,
-            posterPath = "/img.jpg"
+            posterPath = "/img.jpg",
+            genres = emptyList(),
+            overview = "",
+            releaseDate = 0L,
+            runtimeMinutes = 5,
+            trailerPath = ""
         )
 
         val movie2 = Movie(
             id = 2,
             title = "Girl",
             rating = 4.5f,
-            posterPath = "/img.jpg"
+            posterPath = "/img.jpg",
+            genres = emptyList(),
+            overview = "",
+            releaseDate = 0L,
+            runtimeMinutes = 5,
+            trailerPath = ""
         )
 
         val series = Series(

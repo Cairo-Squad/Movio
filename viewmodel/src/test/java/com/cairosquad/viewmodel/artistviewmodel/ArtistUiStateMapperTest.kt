@@ -78,7 +78,12 @@ class ArtistUiStateMapperTest {
             id = 202L,
             title = "Harry Potter",
             posterPath = "/hp.jpg",
-            rating = 8.5f
+            rating = 8.5f,
+            genres = emptyList(),
+            overview = "",
+            releaseDate = 9L,
+            runtimeMinutes = 5,
+            trailerPath = ""
         )
 
         val series = Series(
