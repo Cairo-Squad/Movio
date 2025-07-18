@@ -58,5 +58,10 @@
     <string name="you_don_t_have_an_account">You don\'t have an account</string>
     <string name="you_don_t_have_an_account_description">Please log in or create an account to save items to your favorites and access them later.</string>
     <string name="login">Login</string>
-    <string name="check_out_this_amazing_series">"Check out this amazing series! "</string>
+    <string name="check_out_this_amazing_series">"Check out this amazing series!"</string>
+    <string name="seasons_count">%1$s seasons</string>
+    <string name="top_cast">Top Cast</string>
+    <string name="current_seasons">Current Seasons</string>
+    <string name="reviews">Reviews</string>
+    <string name="similar_series">Similar Series</string>
 </resources>

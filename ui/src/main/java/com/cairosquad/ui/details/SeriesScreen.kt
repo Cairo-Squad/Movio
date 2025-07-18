@@ -299,7 +299,10 @@ private fun SeriesScreenContent(
                             imgRes = R.drawable.review_star,
                         )
                         InfoChip(
-                            text = "${uiState.series.seasonsCount} seasons",
+                            text = stringResource(
+                                R.string.seasons_count,
+                                uiState.series.seasonsCount
+                            ),
                             imgRes = R.drawable.ic_media
                         )
                         InfoChip(
@@ -330,7 +333,7 @@ private fun SeriesScreenContent(
             item {
                 SectionHeader(
                     modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                    title = "Top Cast",
+                    title = stringResource(R.string.top_cast),
                     actionText = stringResource(R.string.see_all),
                     actionIcon = ImageVector.vectorResource(R.drawable.arrow),
                     onActionClick = { listener.onSeeAllArtistsClicked(seriesId = uiState.series.id) }
@@ -353,7 +356,7 @@ private fun SeriesScreenContent(
             item {
                 SectionHeader(
                     modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                    title = "Current Seasons",
+                    title = stringResource(R.string.current_seasons),
                     actionText = stringResource(R.string.see_all),
                     actionIcon = ImageVector.vectorResource(R.drawable.arrow),
                     onActionClick = { listener.onSeeAllSeasonsClicked(seriesId = uiState.series.id) }
@@ -386,7 +389,7 @@ private fun SeriesScreenContent(
             item {
                 SectionHeader(
                     modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                    title = "Reviews",
+                    title = stringResource(R.string.reviews),
                     actionText = stringResource(R.string.see_all),
                     actionIcon = ImageVector.vectorResource(R.drawable.arrow),
                     onActionClick = { listener.onSeeAllReviewsClicked(seriesId = uiState.series.id) }
@@ -409,7 +412,7 @@ private fun SeriesScreenContent(
             item {
                 SectionHeader(
                     modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                    title = "Similar Series",
+                    title = stringResource(R.string.similar_series),
                     actionText = stringResource(R.string.see_all),
                     actionIcon = ImageVector.vectorResource(R.drawable.arrow),
                     onActionClick = { listener.onSeeAllSimilarClicked(seriesId = uiState.series.id) }

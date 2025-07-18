@@ -59,5 +59,10 @@
     <string name="you_don_t_have_an_account_description">يرجى تسجيل الدخول أو إنشاء حساب لحفظ العناصر في المفضلة والوصول إليها لاحقًا.</string>
     <string name="login">تسجيل الدخول</string>
     <string name="check_out_this_amazing_series">اطلع على هذه السلسلة الرائعة!</string>
+    <string name="seasons_count">%1$s مواسم</string>
+    <string name="top_cast">أشهر الممثلين</string>
+    <string name="current_seasons">المواسم الحالية</string>
+    <string name="reviews">المراجعات</string>
+    <string name="similar_series">المسلسلات مشابهة</string>
 </resources>
 
