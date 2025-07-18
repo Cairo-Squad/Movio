@@ -221,7 +221,7 @@ private fun ArtistScreenContent(
         )
 
         Text(
-            text = "known For",
+            text = "Known For",
             style = Theme.textStyle.title.mediumMedium16,
             color = Theme.color.surfaces.onSurface,
             modifier = Modifier.padding(start = 16.dp, top = 32.dp, bottom = 12.dp)
