@@ -134,7 +134,8 @@ fun SeriesScreen(
             is SeriesDetailEffect.NavigateToSeasonDetails -> {
                 navController.navigate(
                     EpisodeRoute(
-                        episodeId = effect.seriesId
+                        episodeId = effect.seriesId,
+                        seasonNumber = effect.seasonNumber
                     )
                 )
             }
@@ -400,7 +401,7 @@ private fun SeriesScreenContent(
                     items(uiState.reviews) {
                         ReviewCard(
                             imgUrl = "https://image.tmdb.org/t/p/w500/${it.authorPhotoPath}",
-                            movieTitle = it.author,
+                            reviewerName = it.author,
                             rating = it.rating.toString(),
                             reviewDate = it.date,
                             reviewText = it.description

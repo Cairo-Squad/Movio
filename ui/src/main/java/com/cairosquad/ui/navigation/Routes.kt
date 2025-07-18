@@ -52,7 +52,8 @@ data class SeasonsRoute(
 
 @Serializable
 data class EpisodeRoute(
-    val episodeId: Long
+    val episodeId: Long,
+    val seasonNumber: Int
     )
 
 @Serializable

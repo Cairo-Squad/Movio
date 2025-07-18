@@ -48,7 +48,7 @@ fun SeasonsScreen(
     ObserveAsEffect(viewModel.effect) { effect ->
         when (effect) {
             SeasonDetailEffect.NavigateBack -> navController.popBackStack()
-            is SeasonDetailEffect.NavigateToEpisodeDetails -> navController.navigate(EpisodeRoute(effect.episodeId))
+            is SeasonDetailEffect.NavigateToEpisodeDetails -> navController.navigate(EpisodeRoute(effect.episodeId, effect.seasonNumber))
 
         }
     }
@@ -93,7 +93,7 @@ fun SeasonScreenContent(
                     currentSeason = "${season.number}",
                     height = 100.dp,
                     width = 76.dp,
-                    onClick = { listener.onEpisodeClicked(season.id) }
+                    onClick = { listener.onEpisodeClicked(season.id, season.number) }
                 )
             }
 

@@ -79,7 +79,7 @@ class SeasonViewModel(
         sendEffect(SeasonDetailEffect.NavigateBack)
     }
 
-    override fun onEpisodeClicked(episodeId: Long) {
-        sendEffect(SeasonDetailEffect.NavigateToEpisodeDetails(episodeId))
+    override fun onEpisodeClicked(episodeId: Long, seasonNumber: Int) {
+        sendEffect(SeasonDetailEffect.NavigateToEpisodeDetails(episodeId, seasonNumber))
     }
 }
