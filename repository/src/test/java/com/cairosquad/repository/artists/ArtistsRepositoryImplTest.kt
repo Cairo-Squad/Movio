@@ -98,7 +98,9 @@ class ArtistsRepositoryImplTest {
                 title = it.title,
                 posterPath = it.posterPath,
                 voteAverage = it.rating.toDouble(),
-                timestamp = System.currentTimeMillis()
+                timestamp = System.currentTimeMillis(),
+                page = 1,
+                query = ""
             )
         }
 
@@ -135,7 +137,9 @@ class ArtistsRepositoryImplTest {
             id = 1,
             name = "Jane",
             photoPath = "/jane.jpg",
-            timestamp = System.currentTimeMillis()
+            timestamp = System.currentTimeMillis(),
+            page = 1,
+            query = ""
         )
         val artistRemoteDto = ArtistRemoteDto(id = 2, name = "John", profilePath = "/john.jpg")
         val remoteSeriesDto =

@@ -24,7 +24,10 @@ class ArtistsRepositoryImpl(
         } catch (_: IllegalStateException) {
             tryToCall {
                 artistsRemoteDataSource.getArtist(artistId).toEntity()
-                    .also { cacheDataSource.cacheArtist(listOf(it.toCacheDto())) }
+                    .also { cacheDataSource.cacheArtist(listOf(it.toCacheDto(
+                        "ELSAYEDMAGDY",
+                        1
+                    ))) }
             }
         }
 
@@ -37,7 +40,10 @@ class ArtistsRepositoryImpl(
             cacheDataSource.getCachedArtistMovies(artistId = artistId)
                 .takeIf { it.isNotEmpty() }?.toEntity()
                 ?: artistsRemoteDataSource.getMoviesOfArtist(artistId).toEntityList()
-                    .also { cacheDataSource.cacheMovies(it.toCacheDto()) }
+                    .also { cacheDataSource.cacheMovies(it.toCacheDto(
+                        "ELSAYEDMAGDY",
+                        1
+                    )) }
                     .also { cacheDataSource.cacheArtistMovies(it.toArtistMoviesCachedDto(artistId)) }
         }
     }
@@ -48,7 +54,10 @@ class ArtistsRepositoryImpl(
             cacheDataSource.getCachedArtistSeries(artistId = artistId)
                 .takeIf { it.isNotEmpty() }?.toEntity()
                 ?: artistsRemoteDataSource.getSeriesOfArtist(artistId).toEntityList()
-                    .also { cacheDataSource.cacheSeries(it.toCacheDto()) }
+                    .also { cacheDataSource.cacheSeries(it.toCacheDto(
+                        "ELSAYEDMAGDY",
+                        1
+                    )) }
                     .also { cacheDataSource.cacheArtistSeries(it.toArtistSeriesCachedDto(artistId)) }
         }
     }

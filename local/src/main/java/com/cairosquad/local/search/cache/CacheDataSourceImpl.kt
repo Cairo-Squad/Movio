@@ -1,9 +1,9 @@
 package com.cairosquad.local.search.cache
 
 import com.cairosquad.local.search.cache.dao.CacheDao
+import com.cairosquad.repository.search.data_source.local.CacheDataSource
 import com.cairosquad.repository.artists.dto.ArtistMovieCachedDto
 import com.cairosquad.repository.artists.dto.ArtistSeriesCachedDto
-import com.cairosquad.repository.search.data_source.local.CacheDataSource
 import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.SeriesCacheDto
@@ -15,7 +15,7 @@ class CacheDataSourceImpl(
 
     override suspend fun getCachedMovies(id: Long) = cacheDao.getCachedMovies(id)
 
-    override suspend fun getCachedMovies(query: String) = cacheDao.getCachedMovies(query)
+    override suspend fun getCachedMovies(query: String, page: Int) = cacheDao.getCachedMovies(query, page)
 
     override suspend fun cacheMovies(movies: List<MovieCacheDto>) = cacheDao.cacheMovies(movies)
 
@@ -24,7 +24,7 @@ class CacheDataSourceImpl(
 
     override suspend fun getCachedSeries(id: Long) = cacheDao.getCachedSeries(id)
 
-    override suspend fun getCachedSeries(query: String) = cacheDao.getCachedSeries(query)
+    override suspend fun getCachedSeries(query: String, page: Int) = cacheDao.getCachedSeries(query, page)
 
     override suspend fun cacheSeries(series: List<SeriesCacheDto>) = cacheDao.cacheSeries(series)
 
@@ -33,7 +33,7 @@ class CacheDataSourceImpl(
 
     override suspend fun getCachedArtists(id: Long) = cacheDao.getCachedArtist(id)
 
-    override suspend fun getCachedArtists(query: String) = cacheDao.getCachedArtist(query)
+    override suspend fun getCachedArtists(query: String, page: Int) = cacheDao.getCachedArtist(query, page)
 
     override suspend fun cacheArtist(artists: List<ArtistCacheDto>) = cacheDao.cacheArtist(artists)
 
