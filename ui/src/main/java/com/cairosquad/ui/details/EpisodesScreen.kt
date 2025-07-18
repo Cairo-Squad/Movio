@@ -53,6 +53,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppDropDownMenu
+import com.cairosquad.design_system.basic_component.CustomDropdownMenu
 
 @Composable
 fun EpisodesScreen(
@@ -161,7 +162,7 @@ private fun EpisodesScreenContent(
                         )
                     )
                     Spacer(modifier = Modifier.weight(1f))
-                    AppDropDownMenu(
+                    CustomDropdownMenu(
                         selectedText = "Season ${uiState.selectedSeasonNumber}",
                         options = seasonOptions,
                         imgRes = R.drawable.drop_down_arrow,

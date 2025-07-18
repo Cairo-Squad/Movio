@@ -18,6 +18,7 @@ class EpisodesDetailsViewModel(
     EpisodesDetailsInteractionListener {
 
     init {
+        getSeasons(seriesId)
         getEpisodes(seriesId, seasonNumber)
     }
 
@@ -36,22 +37,49 @@ class EpisodesDetailsViewModel(
     }
 
     private fun setEpisodesToUiState(episodes: List<Episode>) {
-        updateState {
-            it.copy(
+        updateState { currentState ->
+            val selectedSeason = currentState.seasons.firstOrNull { it.seasonNumber == seasonNumber }
+
+            currentState.copy(
                 episodesSectionState = ScreenStatus.SUCCESS,
                 episodes = episodes.map { it.toUiState() },
-                season = EpisodesDetailsScreenState.SeasonUiState
-                    (
-                    posterUrl = episodes.first().seasonPosterPath,
-                    seasonNumber = episodes.first().seasonNumber,
-                    episodesCount = episodes.size,
+                season = EpisodesDetailsScreenState.SeasonUiState(
+                    posterUrl = selectedSeason?.posterUrl.orEmpty(),
+                    seasonNumber = seasonNumber,
+                    episodesCount = selectedSeason?.episodesCount ?: 0
                 ),
-                selectedSeasonNumber = episodes.first().seasonNumber,
-                currentSeasonNumber = episodes.first().seasonNumber
+                selectedSeasonNumber = seasonNumber,
+                currentSeasonNumber = seasonNumber
             )
         }
-        Log.d("shahd",episodes.first().seasonNumber.toString())
     }
+
+
+
+    private fun getSeasons(seriesId: Long) {
+        tryToCall(
+            onStart = {},
+            block = { seriesDetailsUseCase.getSeriesSeasons(seriesId) },
+            onSuccess = { seasons ->
+                updateState {
+                    it.copy(
+                        seasons = seasons.map { season ->
+                            EpisodesDetailsScreenState.SeasonUiState(
+                                seasonNumber = season.seasonNumber,
+                                posterUrl = season.posterPath,
+                                episodesCount = season.episodesCount
+                            )
+                        }
+                    )
+                }
+            },
+            onError = {
+                // Optional: Handle error for season list
+            },
+            dispatcher = Dispatchers.IO
+        )
+    }
+
 
     override fun onBackClick() {
         sendEffect(EpisodesDetailEffect.NavigateBack)
@@ -65,18 +93,19 @@ class EpisodesDetailsViewModel(
         updateState { it.copy(isSeasonDropdownExpanded = !it.isSeasonDropdownExpanded) }
     }
 
-//    override fun onSeasonSelected(seriesId: Long, seasonNumber: Int) {
-//        this.seasonNumber = seasonNumber
-//        getEpisodes(seriesId, seasonNumber)
-//    }
-
     override fun onSeasonSelected(seriesId: Long, seasonNumber: Int) {
         if (this.seasonNumber == seasonNumber) return
-
         this.seasonNumber = seasonNumber
-        updateState { it.copy(episodesSectionState = ScreenStatus.LOADING) }
+        updateState {
+            it.copy(
+                episodesSectionState = ScreenStatus.LOADING,
+                selectedSeasonNumber = seasonNumber,
+                isSeasonDropdownExpanded = false
+            )
+        }
         getEpisodes(seriesId, seasonNumber)
     }
+
 
     private fun setError(
         throwable: Throwable,
