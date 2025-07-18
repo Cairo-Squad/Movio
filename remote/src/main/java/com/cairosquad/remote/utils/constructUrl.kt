@@ -1,4 +1,4 @@
-package com.cairosquad.remote.common.utils
+package com.cairosquad.remote.utils
 
 import com.cairosquad.remote.BuildConfig
 import java.util.Locale

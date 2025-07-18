@@ -1,4 +1,4 @@
-package com.cairosquad.remote.common
+package com.cairosquad.remote.utils
 
 import io.ktor.client.engine.okhttp.OkHttpEngine
 import org.junit.Assert.assertTrue
