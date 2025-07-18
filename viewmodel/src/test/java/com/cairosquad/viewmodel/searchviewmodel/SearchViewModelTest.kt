@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.searchviewmodel
 
+import android.view.SearchEvent
 import androidx.paging.PagingData
 import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.exception.MovioException
@@ -14,6 +15,7 @@ import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
+import com.cairosquad.viewmodel.search.SearchEffect
 import com.cairosquad.viewmodel.search.SearchScreenState
 import com.cairosquad.viewmodel.search.SearchViewModel
 import com.cairosquad.viewmodel.search.paging.SearchPager
@@ -22,6 +24,7 @@ import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import io.mockk.Runs
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -31,6 +34,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -43,6 +47,7 @@ import kotlinx.coroutines.test.setMain
 import org.junit.Before
 import org.junit.Test
 import java.io.IOException
+import kotlin.test.assertEquals
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchViewModelTest {
@@ -58,7 +63,6 @@ class SearchViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-
         searchPager = mockk(relaxed = true)
         getLocalSearchHistoryUseCase = mockk(relaxed = true)
         getRecentSearchUseCase = mockk(relaxed = true)
@@ -74,6 +78,36 @@ class SearchViewModelTest {
             getPersonalizedMoviesUseCase
         )
     }
+    @Test
+    fun `Should update query and trigger search when recent search item clicked`() = runTest {
+        val query = "Batman"
+        val moviesFlow = emptyFlow<PagingData<Movie>>()
+        val seriesFlow = emptyFlow<PagingData<Series>>()
+        val artistsFlow = emptyFlow<PagingData<Artist>>()
+
+        coEvery { searchPager.series(query) } returns seriesFlow
+        coEvery { searchPager.movies(query) } returns moviesFlow
+        coEvery { searchPager.artists(query) } returns artistsFlow
+
+        viewModel.onRecentSearchItemClicked(query)
+
+        advanceUntilIdle()
+
+        val state = viewModel.screenState.value
+        assertThat(state.query).isEqualTo(query)
+
+        assertThat(state.screenStatus).isIn(
+            listOf(
+                SearchScreenState.ScreenStatus.LOADING,
+                SearchScreenState.ScreenStatus.SEARCH,
+                SearchScreenState.ScreenStatus.RESULT,
+                SearchScreenState.ScreenStatus.FAILED
+            )
+        )
+        coVerify(exactly = 1) { searchPager.series(query) }
+        coVerify(exactly = 1) { searchPager.movies(query) }
+        coVerify(exactly = 1) { searchPager.artists(query) }
+    }
 
     @Test
     fun `should remove item from recent search on successful deletion`() = runBlocking {
@@ -87,12 +121,32 @@ class SearchViewModelTest {
         coEvery { clearSearchHistoryUseCase.removeQueryFromHistory(query) } just Runs
 
         viewModel.onRemoveHistoryItem(query)
-        delay(50) // لإتاحة الوقت لمعالجة الكوروتين
+        delay(50)
 
         val state = viewModel.screenState.value
         assertThat(state.recentSearch).doesNotContain(query)
         assertThat(state.recentSearch).containsExactly("other")
         assertThat(state.errorStatus).isNull()
+    }
+
+    @Test
+    fun `should map Movie to MovieUiState correctly`() {
+        val movie = movie1
+        val uiState = movie.toUiState()
+        assertThat(uiState.id).isEqualTo(movie.id)
+        assertThat(uiState.title).isEqualTo(movie.title)
+        assertThat(uiState.rating).isEqualTo(movie.rating / 2)
+        assertThat(uiState.posterPath).isEqualTo(movie.posterPath)
+    }
+    @Test
+    fun `should not call searchPager when query is blank`() = runTest {
+        viewModel.updateState { it.copy(query = "") }
+
+        viewModel.onSearch()
+        advanceUntilIdle()
+
+        val state = viewModel.screenState.value
+        assertThat(state.screenStatus).isNotEqualTo(SearchScreenState.ScreenStatus.RESULT)
     }
 
     @Test
@@ -114,7 +168,6 @@ class SearchViewModelTest {
         assertThat(state.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
         assertThat(state.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
     }
-
     @Test
     fun `should remove query from recentSearch when removal succeeds`() = runTest {
         val initial = listOf("Batman", "Spiderman", "Superman")
