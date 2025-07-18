@@ -3,7 +3,6 @@ package com.cairosquad.ui.details
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,20 +26,17 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.design_system.basic_component.AppBar
@@ -56,6 +52,7 @@ import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsViewModel
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import com.cairosquad.design_system.R
+import com.cairosquad.design_system.basic_component.AppDropDownMenu
 
 @Composable
 fun EpisodesScreen(
@@ -84,15 +81,18 @@ fun EpisodesScreen(
             EpisodesDetailEffect.PlayEpisode -> TODO()
         }
     }
-    EpisodesScreenContent(uiState = uiState, listener = viewModel)
+    EpisodesScreenContent(uiState = uiState, listener = viewModel,seriesId)
 }
 
 
 @Composable
 private fun EpisodesScreenContent(
     uiState: EpisodesDetailsScreenState,
-    listener: EpisodesDetailsInteractionListener
+    listener: EpisodesDetailsInteractionListener,
+    seriesId: Long
 ) {
+    val seasonOptions = uiState.seasons.map { "Season ${it.seasonNumber}" }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -100,15 +100,27 @@ private fun EpisodesScreenContent(
             .windowInsetsPadding(WindowInsets.navigationBars)
             .verticalScroll(rememberScrollState())
     ) {
-        SafeImageViewer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(375.dp)
-                .blur(16.dp)
-                .offset(y = (-20).dp),
-            model = "https://image.tmdb.org/t/p/w500/${uiState.season.posterUrl}",
-            contentDescription = "",
-        )
+        Box {
+            SafeImageViewer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(400.dp)
+                    .blur(16.dp)
+                    .offset(y = (-20).dp),
+                model = "https://image.tmdb.org/t/p/w500/${uiState.season.posterUrl}",
+                contentDescription = "",
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(Color.Black, Color.Transparent)
+                        )
+                    )
+            )
+        }
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -149,19 +161,24 @@ private fun EpisodesScreenContent(
                         )
                     )
                     Spacer(modifier = Modifier.weight(1f))
-                    SeasonChip(
-                        text = "Season ${uiState.season.seasonNumber}",
-                        imgRes = R.drawable.drop_down_arrow
+                    AppDropDownMenu(
+                        selectedText = "Season ${uiState.selectedSeasonNumber}",
+                        options = seasonOptions,
+                        imgRes = R.drawable.drop_down_arrow,
+                        onOptionSelected = { selected ->
+                            val seasonNum = selected.removePrefix("Season ").toIntOrNull() ?: 1
+                            listener.onSeasonSelected(seriesId, seasonNum)
+                        },
                     )
                 }
             }
             itemsIndexed(uiState.episodes) { index, episode ->
                 EpisodeCard(
-                    episodeNumber = episode.number,
+                    episodeNumber =  episode.number.toString().padStart(2, '0'),
                     episodeImageUrl = "https://image.tmdb.org/t/p/w500/${episode.imageUrl}",
                     episodeName = episode.name,
                     episodeDuration = episode.runtime,
-                    episodeRating = episode.rating,
+                    episodeRating = String.format("%.1f", episode.rating),
                 )
             }
         }
@@ -169,47 +186,12 @@ private fun EpisodesScreenContent(
 }
 
 @Composable
-fun SeasonChip(
-    text: String,
-    imgRes: Int,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier
-            .clip(CircleShape)
-            .background(
-                color = Theme.color.surfaces.surfaceContainer,
-            )
-            .border(
-                width = 1.dp,
-                color = Theme.color.surfaces.onSurfaceAt3,
-                shape = CircleShape
-            )
-            .padding(horizontal = 12.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        BasicText(
-            modifier = Modifier.padding(end = 4.dp, bottom = 1.dp),
-            text = text,
-            style = Theme.textStyle.label.smallRegular12.copy(
-                color = Theme.color.surfaces.onSurfaceContainer
-            )
-        )
-        Icon(
-            imageVector = ImageVector.vectorResource(id = imgRes),
-            contentDescription = stringResource(R.string.icon),
-            tint = Color.Unspecified
-        )
-    }
-}
-
-@Composable
 fun EpisodeCard(
     modifier: Modifier = Modifier,
     episodeName: String,
-    episodeNumber: Int,
+    episodeNumber: String,
     episodeDuration: Int,
-    episodeRating: Float,
+    episodeRating: String,
     episodeImageUrl: String? = null
 ) {
     Row(
@@ -289,7 +271,7 @@ fun EpisodeCard(
                     )
                 )
                 BasicText(
-                    text = "$episodeDuration+m",
+                    text = "${episodeDuration}m",
                     style = Theme.textStyle.label.smallRegular12.copy(
                         color = Theme.color.surfaces.onSurfaceContainer,
                     )
