@@ -84,7 +84,8 @@ fun AppNavigation() {
             composable<ReviewsRoute> { backStackEntry ->
                 ReviewsScreen(
                     mediaId = backStackEntry.toRoute<ReviewsRoute>().mediaId,
-                    isMovie = backStackEntry.toRoute<ReviewsRoute>().isMovie
+                    isMovie = backStackEntry.toRoute<ReviewsRoute>().isMovie,
+                    navController= navController
                 )
             }
             composable<SeasonsRoute> { backStackEntry ->
