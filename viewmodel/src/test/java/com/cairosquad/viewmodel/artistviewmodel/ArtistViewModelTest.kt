@@ -7,14 +7,13 @@ import com.cairosquad.domain.usecase.artists.GetArtistDetailsUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
-import com.cairosquad.viewmodel.exception.ErrorStatus
-import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import com.cairosquad.viewmodel.details.artist.ArtistScreenState
 import com.cairosquad.viewmodel.details.artist.ArtistViewModel
-import com.cairosquad.viewmodel.details.artist.ArtistEffect
-import com.cairosquad.viewmodel.details.artist.toArtistUiState
 import com.cairosquad.viewmodel.details.artist.toArtistMovieUiState
 import com.cairosquad.viewmodel.details.artist.toArtistSeriesUiState
+import com.cairosquad.viewmodel.details.artist.toArtistUiState
+import com.cairosquad.viewmodel.exception.ErrorStatus
+import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -156,49 +155,52 @@ class ArtistViewModelTest {
 
 
     @Test
-    fun `should set NETWORK_ERROR when loadArtistDetails fails with NetworkException`() = runBlocking {
-        val artistId = 1L
-        coEvery { getArtistDetailsUseCase.getArtist(artistId) } throws NetworkException()
+    fun `should set NETWORK_ERROR when loadArtistDetails fails with NetworkException`() =
+        runBlocking {
+            val artistId = 1L
+            coEvery { getArtistDetailsUseCase.getArtist(artistId) } throws NetworkException()
 
-        viewModel.loadArtistDetails(artistId)
+            viewModel.loadArtistDetails(artistId)
 
-        delay(400)
+            delay(400)
 
-        with(viewModel.screenState.value) {
-            assertThat(screenStatus).isEqualTo(ArtistScreenState.ScreenStatus.FAILED)
-            assertThat(errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
+            with(viewModel.screenState.value) {
+                assertThat(screenStatus).isEqualTo(ArtistScreenState.ScreenStatus.FAILED)
+                assertThat(errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
+            }
         }
-    }
 
     @Test
-    fun `should set UNKNOWN_ERROR when loadArtistDetails fails with UnknownException`() = runBlocking {
-        val artistId = 1L
-        coEvery { getArtistDetailsUseCase.getArtist(artistId) } throws UnknownException()
+    fun `should set UNKNOWN_ERROR when loadArtistDetails fails with UnknownException`() =
+        runBlocking {
+            val artistId = 1L
+            coEvery { getArtistDetailsUseCase.getArtist(artistId) } throws UnknownException()
 
-        viewModel.loadArtistDetails(artistId)
+            viewModel.loadArtistDetails(artistId)
 
-        delay(400)
+            delay(400)
 
-        with(viewModel.screenState.value) {
-            assertThat(screenStatus).isEqualTo(ArtistScreenState.ScreenStatus.FAILED)
-            assertThat(errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
+            with(viewModel.screenState.value) {
+                assertThat(screenStatus).isEqualTo(ArtistScreenState.ScreenStatus.FAILED)
+                assertThat(errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
+            }
         }
-    }
 
     @Test
-    fun `should set NO_INTERNET when loadArtistDetails fails with InternetConnectionException`() = runBlocking {
-        val artistId = 1L
-        coEvery { getArtistDetailsUseCase.getArtist(artistId) } throws InternetConnectionException()
+    fun `should set NO_INTERNET when loadArtistDetails fails with InternetConnectionException`() =
+        runBlocking {
+            val artistId = 1L
+            coEvery { getArtistDetailsUseCase.getArtist(artistId) } throws InternetConnectionException()
 
-        viewModel.loadArtistDetails(artistId)
+            viewModel.loadArtistDetails(artistId)
 
-        delay(400)
+            delay(400)
 
-        with(viewModel.screenState.value) {
-            assertThat(screenStatus).isEqualTo(ArtistScreenState.ScreenStatus.FAILED)
-            assertThat(errorStatus).isEqualTo(ErrorStatus.NO_INTERNET)
+            with(viewModel.screenState.value) {
+                assertThat(screenStatus).isEqualTo(ArtistScreenState.ScreenStatus.FAILED)
+                assertThat(errorStatus).isEqualTo(ErrorStatus.NO_INTERNET)
+            }
         }
-    }
 
     @Test
     fun `should map NetworkException to NETWORK_ERROR when handling artist exception`() {
@@ -239,34 +241,36 @@ class ArtistViewModelTest {
     }
 
     @Test
-    fun `should set NETWORK_ERROR when loadArtistMovies fails with NetworkException`() = runBlocking {
-        val artistId = 1L
-        coEvery { getArtistDetailsUseCase.getMoviesOfArtist(artistId) } throws NetworkException()
+    fun `should set NETWORK_ERROR when loadArtistMovies fails with NetworkException`() =
+        runBlocking {
+            val artistId = 1L
+            coEvery { getArtistDetailsUseCase.getMoviesOfArtist(artistId) } throws NetworkException()
 
-        viewModel.loadArtistMovies(artistId)
+            viewModel.loadArtistMovies(artistId)
 
-        delay(400)
+            delay(400)
 
-        with(viewModel.screenState.value) {
-            assertThat(screenStatus).isEqualTo(ArtistScreenState.ScreenStatus.FAILED)
-            assertThat(errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
+            with(viewModel.screenState.value) {
+                assertThat(screenStatus).isEqualTo(ArtistScreenState.ScreenStatus.FAILED)
+                assertThat(errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
+            }
         }
-    }
 
     @Test
-    fun `should set NETWORK_ERROR when loadArtistSeries fails with NetworkException`() = runBlocking {
-        val artistId = 1L
-        coEvery { getArtistDetailsUseCase.getSeriesOfArtist(artistId) } throws NetworkException()
+    fun `should set NETWORK_ERROR when loadArtistSeries fails with NetworkException`() =
+        runBlocking {
+            val artistId = 1L
+            coEvery { getArtistDetailsUseCase.getSeriesOfArtist(artistId) } throws NetworkException()
 
-        viewModel.loadArtistSeries(artistId)
+            viewModel.loadArtistSeries(artistId)
 
-        delay(400)
+            delay(400)
 
-        with(viewModel.screenState.value) {
-            assertThat(screenStatus).isEqualTo(ArtistScreenState.ScreenStatus.FAILED)
-            assertThat(errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
+            with(viewModel.screenState.value) {
+                assertThat(screenStatus).isEqualTo(ArtistScreenState.ScreenStatus.FAILED)
+                assertThat(errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
+            }
         }
-    }
 
     private companion object {
         val artist = Artist(
@@ -290,15 +294,15 @@ class ArtistViewModelTest {
         )
 
         val series1 = Series(
-            id = 303L,
-            title = "Game of Thrones",
-            posterPath = "/got.jpg",
-            rating = 9.0f,
-            seasonsCount = 8,
-            releaseDate = 20110417,
-            overview = "Fantasy drama series",
-            trailerPath = "/got_trailer.mp4",
-            genres = emptyList()
+            id = 1,
+            title = "Band of Brothers",
+            rating = 4.8f,
+            posterPath = "/img.jpg",
+            trailerPath = "",
+            genres = emptyList(),
+            overview = "",
+            releaseDate = 0L,
+            seasonsCount = 0
         )
     }
 }
