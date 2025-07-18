@@ -93,7 +93,7 @@ class SearchRepositoryImplTest {
                     genres = emptyList(),
                     overview = "",
                     releaseDate = 0L,
-                    seasonsCount = 0
+                    seasonsCount = 1
                 )
             ), result
         )

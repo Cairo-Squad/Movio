@@ -48,7 +48,7 @@ fun SeriesRemoteDto.toEntity(): Series {
         genres = emptyList(),
         overview = "",
         releaseDate = 0L,
-        seasonsCount = 0,
+        seasonsCount = 1,
     )
 }
 

@@ -150,7 +150,14 @@ class ArtistsRepositoryImplTest {
             department = ""
         )
         val expectedSeries =
-            listOf(Series(id = 1, title = "Series A", posterPath = "/img.jpg", rating = 0f))
+            listOf(Series(
+                id = 1, title = "Series A", posterPath = "/img.jpg", rating = 0f,
+                trailerPath = "",
+                genres = emptyList(),
+                overview = "",
+                releaseDate = 0L,
+                seasonsCount = 1
+            ))
     }
 
     val expectedMovies = listOf(
