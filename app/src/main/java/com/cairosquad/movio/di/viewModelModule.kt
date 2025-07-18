@@ -17,4 +17,13 @@ val viewModelModule = module {
         )
     }
 
+    viewModel { (mediaId: Long, isMovie: Boolean) ->
+        ReviewsViewModel(
+            mediaId = mediaId,
+            isMovie = isMovie,
+            getMoviesDetailsUseCase = get(),
+            getSeriesDetailsUseCase = get()
+        )
+    }
+
 }

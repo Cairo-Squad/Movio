@@ -48,5 +48,7 @@
     <string name="Rate_it">قّيم</string>
     <string name="add_to_list">أضف إلى القائمة</string>
     <string name="play">تشغيل</string>
+    <string name="less">أقل</string>
+
     <string name="top_cast">أفضل الممثلين</string>
 </resources>

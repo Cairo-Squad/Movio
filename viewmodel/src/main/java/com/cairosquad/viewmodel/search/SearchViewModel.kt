@@ -214,6 +214,7 @@ class SearchViewModel(
     }
 
     override fun onClickSearchTextField() {
+        val previousSearch = screenState.value.recentSearch
         tryToCall(
             block = {
                 if (screenState.value.query.isBlank()) {
@@ -234,6 +235,7 @@ class SearchViewModel(
                 updateState {
                     it.copy(
                         screenStatus = SearchScreenState.ScreenStatus.SEARCH,
+                        recentSearch = previousSearch
                     )
                 }
             }
