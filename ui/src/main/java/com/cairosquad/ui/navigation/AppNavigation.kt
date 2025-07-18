@@ -25,7 +25,6 @@ import com.cairosquad.ui.splash.SplashScreen
 import com.cairosquad.ui.AppScreen
 
 
-
 @Composable
 fun AppNavigation() {
 
@@ -79,7 +78,8 @@ fun AppNavigation() {
             composable<TopCastRoute> { backStackEntry ->
                 TopCastScreen(
                     mediaId = backStackEntry.toRoute<TopCastRoute>().mediaId,
-                    isMovie = backStackEntry.toRoute<TopCastRoute>().isMovie
+                    isMovie = backStackEntry.toRoute<TopCastRoute>().isMovie,
+                    navController = navController
                 )
             }
             composable<ReviewsRoute> { backStackEntry ->
@@ -107,4 +107,5 @@ fun AppNavigation() {
     }
 }
 
-val LocalNavController = staticCompositionLocalOf<NavHostController> { error("No nav controller provided") }
+val LocalNavController =
+    staticCompositionLocalOf<NavHostController> { error("No nav controller provided") }
