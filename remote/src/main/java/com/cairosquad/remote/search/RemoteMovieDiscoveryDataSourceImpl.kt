@@ -13,9 +13,10 @@ import io.ktor.client.request.parameter
 class RemoteMovieDiscoveryDataSourceImpl(
     private val httpClient: HttpClient
 ) : RemoteMovieDiscoveryDataSource {
-    override suspend fun getPersonalizedMovies(): List<MovieRemoteDto> {
+    override suspend fun getPersonalizedMovies(page : Int): List<MovieRemoteDto> {
         return callApi<SearchResultResponse<MovieRemoteDto>> {
             httpClient.get(constructUrl("movie/top_rated")) {
+                parameter(PAGE_NUMBER, page)
                 parameter(API_KEY, BuildConfig.API_KEY)
             }
         }.results?.filterNotNull()?.filter { it.id != null } ?: emptyList()
@@ -30,5 +31,6 @@ class RemoteMovieDiscoveryDataSourceImpl(
     }
     companion object {
         private const val API_KEY = "api_key"
+        private const val PAGE_NUMBER = "page"
     }
 }
