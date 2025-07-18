@@ -85,7 +85,12 @@ class ArtistUiStateMapperTest {
             id = 303L,
             title = "Game of Thrones",
             posterPath = "/got.jpg",
-            rating = 9.0f
+            rating = 9.0f,
+            trailerPath = "",
+            genres = emptyList(),
+            overview = "",
+            releaseDate = 0L,
+            seasonsCount = 0
         )
     }
 }
