@@ -51,5 +51,7 @@
     <string name="known_for">معروف بالتالي</string>
 
     <string name="less">أقل</string>
+    <string name="read_less">اقرأ افل</string>
+    <string name="read_more">اقرأأكثر</string>
 
 </resources>

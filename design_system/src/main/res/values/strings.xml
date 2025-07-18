@@ -50,5 +50,7 @@
     <string name="play">Play</string>
     <string name="known_for">Known For</string>
     <string name="less">Less</string>
+    <string name="read_less">Read Less</string>
+    <string name="read_more">Read More</string>
 
 </resources>
