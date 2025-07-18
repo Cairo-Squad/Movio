@@ -6,7 +6,7 @@ import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Review
 import com.cairosquad.repository.common.mappers.tryToCall
-import com.cairosquad.repository.movie.data_source.remote.MovieDataSource
+import com.cairosquad.repository.movie.data_source.remote.RemoteMovieDataSource
 import com.cairosquad.repository.search.data_source.local.DiscoveryDataSource
 import com.cairosquad.repository.search.data_source.local.dto.toCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.toEntity
@@ -18,7 +18,7 @@ import java.util.Date
 class MovieRepositoryImpl(
     private val remoteMovieDiscoveryDataSource: RemoteMovieDiscoveryDataSource,
     private val discoveryDataSource: DiscoveryDataSource,
-    private val movieDataSource: MovieDataSource
+    private val remoteMovieDataSource: RemoteMovieDataSource
 ): MoviesRepository {
     override suspend fun getMovie(movieId: Long): Movie {
         delay(500); return fakeMovie

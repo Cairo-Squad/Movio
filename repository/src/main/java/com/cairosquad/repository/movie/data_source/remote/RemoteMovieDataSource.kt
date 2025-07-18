@@ -6,13 +6,13 @@ import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
 
 
-interface MovieDataSource {
+interface RemoteMovieDataSource {
     suspend fun getMovie(movieId: Long): MovieDetailsRemoteDto
 
-    suspend fun getMovieReviews(movieId: Long): List<ReviewRemoteDto>
+    suspend fun getMovieReviews(movieId: Long, page: Int = 1): List<ReviewRemoteDto>
 
-    suspend fun getSimilarMovies(movieId: Long): List<MovieRemoteDto>
+    suspend fun getSimilarMovies(movieId: Long, page: Int = 1): List<MovieRemoteDto>
 
-    suspend fun getMovieTopCast(movieId: Long): List<ArtistRemoteDto>
+    suspend fun getMovieTopCast(movieId: Long, page: Int = 1): List<ArtistRemoteDto>
 
 }

@@ -1,7 +1,7 @@
 package com.cairosquad.repository.search
 
 import com.cairosquad.repository.movie.MovieRepositoryImpl
-import com.cairosquad.repository.movie.data_source.remote.MovieDataSource
+import com.cairosquad.repository.movie.data_source.remote.RemoteMovieDataSource
 import com.cairosquad.repository.search.data_source.local.DiscoveryDataSource
 import com.cairosquad.repository.search.data_source.remote.RemoteMovieDiscoveryDataSource
 import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
@@ -16,17 +16,17 @@ class RecommendationRepositoryImplTest {
     private lateinit var remoteMovieDiscoveryDataSource: RemoteMovieDiscoveryDataSource
     private lateinit var discoveryDataSource: DiscoveryDataSource
     private lateinit var recommendationRepository: MovieRepositoryImpl
-    private lateinit var movieDataSource: MovieDataSource
+    private lateinit var remoteMovieDataSource: RemoteMovieDataSource
 
     @Before
     fun setUp() {
         discoveryDataSource = mockk(relaxed = true)
         remoteMovieDiscoveryDataSource = mockk(relaxed = true)
-        movieDataSource = mockk(relaxed = true)
+        remoteMovieDataSource = mockk(relaxed = true)
         recommendationRepository = MovieRepositoryImpl(
             remoteMovieDiscoveryDataSource = remoteMovieDiscoveryDataSource,
             discoveryDataSource = discoveryDataSource,
-            movieDataSource = movieDataSource
+            remoteMovieDataSource = remoteMovieDataSource
         )
     }
 
