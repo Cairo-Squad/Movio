@@ -9,11 +9,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-
+import com.cairosquad.design_system.R
 @Composable
 fun ExpandableText(
     text: String,
@@ -21,10 +22,10 @@ fun ExpandableText(
     style: TextStyle,
     modifier: Modifier = Modifier,
     collapsedMaxLine: Int = 4,
-    showMoreText: String = "... Show More",
+    showMoreText: String = stringResource(R.string.more),
     showMoreStyle: TextStyle,
     showMoreColor: Color = color,
-    showLessText: String = " Show Less",
+    showLessText: String =stringResource(R.string.less),
     showLessStyle: TextStyle = showMoreStyle,
     showLessColor: Color = color,
     textAlign: TextAlign? = null,
