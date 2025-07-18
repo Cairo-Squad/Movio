@@ -91,7 +91,6 @@ fun SeasonScreenContent(
             }
             items(uiState.season) { season ->
                 SeasonCard(
-
                     seriesName = "gehad",
                     seasonTitle =season.name,
                     seasonRate=season.rating,
@@ -100,7 +99,7 @@ fun SeasonScreenContent(
                     yearOfPublish = season.airDate,
                     timeOfPublish = season.airDate,
                     currentSeason = "${season.number}",
-                    onClick = { listener.onEpisodeClicked(season.id)},
+                    onClick ={ listener.onEpisodeClicked(season.id, season.number)},
                     modifier=Modifier.height(100.dp).width (75.dp),
                 )
             }
