@@ -1,7 +1,6 @@
 package com.cairosquad.safe_image_viewer.safe_image_viewer
 
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box

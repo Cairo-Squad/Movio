@@ -2,10 +2,10 @@ package com.cairosquad.viewmodel.search
 
 import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
-import com.cairosquad.domain.usecase.search.ClearSearchHistoryUseCase
-import com.cairosquad.domain.usecase.search.GetLocalSearchHistoryUseCase
 import com.cairosquad.domain.usecase.movies.GetPersonalizedMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetSuggestedMoviesUseCase
+import com.cairosquad.domain.usecase.search.ClearSearchHistoryUseCase
+import com.cairosquad.domain.usecase.search.GetLocalSearchHistoryUseCase
 import com.cairosquad.domain.usecase.search.SearchUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
@@ -51,6 +51,7 @@ class SearchViewModel(
                 )
             }
         },
+
         onError = { e ->
             updateState {
                 it.copy(
@@ -214,6 +215,7 @@ class SearchViewModel(
     }
 
     override fun onClickSearchTextField() {
+        val previousSearch = screenState.value.recentSearch
         tryToCall(
             block = {
                 if (screenState.value.query.isBlank()) {
@@ -234,6 +236,7 @@ class SearchViewModel(
                 updateState {
                     it.copy(
                         screenStatus = SearchScreenState.ScreenStatus.SEARCH,
+                        recentSearch = previousSearch
                     )
                 }
             }

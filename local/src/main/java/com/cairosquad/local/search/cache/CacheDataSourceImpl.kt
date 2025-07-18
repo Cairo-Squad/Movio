@@ -3,10 +3,10 @@ package com.cairosquad.local.search.cache
 import com.cairosquad.local.search.cache.dao.CacheDao
 import com.cairosquad.repository.artists.dto.ArtistMovieCachedDto
 import com.cairosquad.repository.artists.dto.ArtistSeriesCachedDto
+import com.cairosquad.repository.search.data_source.local.CacheDataSource
 import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.SeriesCacheDto
-import com.cairosquad.repository.search.data_source.local.CacheDataSource
 
 class CacheDataSourceImpl(
     private val cacheDao: CacheDao

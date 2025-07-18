@@ -14,12 +14,10 @@
 ##########################################
 # 🌟 TensorFlow Lite
 ##########################################
--keep class org.tensorflow.lite.** { *; }
-
-##########################################
-# 🌟 TensorFlow Lite Support API
-##########################################
--keep class org.tensorflow.lite.support.** { *; }
+-keep class org.tensorflow.lite.task.vision.classifier.ImageClassifier { *; }
+-keep class org.tensorflow.lite.support.common.FileUtil { *; }
+-keep class org.tensorflow.lite.support.image.TensorImage { *; }
+-keep class org.tensorflow.lite.task.core.BaseOptions { *; }
 
 ##########################################
 # 🌟 Kotlin Metadata
