@@ -130,8 +130,22 @@ class ArtistsRepositoryImplTest {
 
     private companion object {
         val remoteMovies = listOf(
-            Movie(id = 1, title = "Remote Movie 1", posterPath = "/poster1.jpg", rating = 8.0f),
-            Movie(id = 2, title = "Remote Movie 2", posterPath = "/poster2.jpg", rating = 7.0f),
+            Movie(
+                id = 1, title = "Remote Movie 1", posterPath = "/poster1.jpg", rating = 8.0f,
+                genres = emptyList(),
+                overview = "",
+                releaseDate = 0L,
+                runtimeMinutes = 0,
+                trailerPath = ""
+            ),
+            Movie(
+                id = 2, title = "Remote Movie 2", posterPath = "/poster2.jpg", rating = 7.0f,
+                genres = emptyList(),
+                overview = "",
+                releaseDate = 0L,
+                runtimeMinutes = 0,
+                trailerPath = ""
+            ),
         )
         val cachedDto = ArtistCacheDto(
             id = 1,
@@ -165,6 +179,13 @@ class ArtistsRepositoryImplTest {
     }
 
     val expectedMovies = listOf(
-        Movie(id = 1, title = "Film 1", rating = 7.5f, posterPath = "/film1.jpg")
+        Movie(
+            id = 1, title = "Film 1", rating = 7.5f, posterPath = "/film1.jpg",
+            genres = emptyList(),
+            overview = "",
+            releaseDate = 0L,
+            runtimeMinutes = 0,
+            trailerPath = ""
+        )
     )
 }
