@@ -14,7 +14,8 @@ fun DesignSystemText(
     modifier: Modifier = Modifier,
     style: TextStyle = Theme.textStyle.body.smallRegular10,
     color: Color = Theme.color.surfaces.onSurface,
-    maxLines: Int = 6,
+    maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
     overflow: TextOverflow = TextOverflow.Clip,
 ) {
     Text(
@@ -23,6 +24,7 @@ fun DesignSystemText(
         style = style,
         color = color,
         maxLines = maxLines,
+        minLines = minLines,
         overflow = overflow
     )
 }
