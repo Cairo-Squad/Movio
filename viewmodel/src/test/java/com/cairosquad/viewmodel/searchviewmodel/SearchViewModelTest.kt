@@ -512,6 +512,7 @@ class SearchViewModelTest {
 
     @Test
     fun `should not clear recentSearch when onClickSearchTextField fails`() = runTest {
+        Dispatchers.setMain(UnconfinedTestDispatcher())
         val previous = listOf("a", "b")
         viewModel.updateState { it.copy(recentSearch = previous) }
 
