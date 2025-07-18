@@ -2,6 +2,7 @@ package com.cairosquad.repository.movie.data_source.remote.dto
 
 
 import com.cairosquad.entity.Review
+import com.cairosquad.repository.common.TimeUtils
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -27,7 +28,7 @@ data class ReviewRemoteDto(
         author = author.orEmpty(),
         authorPhotoPath = authorDetails?.avatarPath.orEmpty(),
         rating = authorDetails?.rating.toString(),
-        date = createdAt.orEmpty().toLong(),
+        date = TimeUtils.isoDateToLong(createdAt ?: ""),
         description = content.orEmpty()
     )
 }

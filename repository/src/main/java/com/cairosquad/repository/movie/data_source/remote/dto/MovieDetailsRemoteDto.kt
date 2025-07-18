@@ -2,6 +2,7 @@ package com.cairosquad.repository.movie.data_source.remote.dto
 
 
 import com.cairosquad.entity.Movie
+import com.cairosquad.repository.common.TimeUtils
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -37,7 +38,7 @@ data class MovieDetailsRemoteDto(
         posterPath = posterPath.orEmpty(),
         genres = genres?.mapNotNull { it?.toEntity() } ?: emptyList(),
         overview = overview.orEmpty(),
-        releaseDate = releaseDate,
+        releaseDate = TimeUtils.dateToLong(releaseDate ?: ""),
         runtimeMinutes = runtime ?: 0,
     )
 }
