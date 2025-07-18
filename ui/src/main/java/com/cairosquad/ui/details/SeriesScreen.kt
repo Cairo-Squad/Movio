@@ -35,13 +35,19 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
@@ -54,21 +60,13 @@ import com.cairosquad.design_system.basic_component.SnackBar
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import com.cairosquad.ui.movio_component.ActionBar
-import com.cairosquad.ui.movio_component.ArtistCard
 import com.cairosquad.ui.movio_component.LoginBottomSheet
 import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.ui.movio_component.ReviewCard
 import com.cairosquad.ui.movio_component.SeasonCard
 import com.cairosquad.ui.movio_component.SectionHeader
 import com.cairosquad.ui.movio_component.ShareBottomSheet
-import com.cairosquad.ui.navigation.ArtistRoute
-import com.cairosquad.ui.navigation.LocalNavController
-import com.cairosquad.ui.navigation.ReviewsRoute
-import com.cairosquad.ui.navigation.SeasonRoute
-import com.cairosquad.ui.navigation.SeasonsRoute
-import com.cairosquad.ui.navigation.SeriesRoute
-import com.cairosquad.ui.navigation.SimilarSeriesRoute
-import com.cairosquad.ui.navigation.TopCastRoute
+import com.cairosquad.ui.movio_component.SmallArtistCard
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.ui.utils.ShareUtil
 import com.cairosquad.ui.utils.errorStatusToMessageResource
@@ -84,7 +82,7 @@ fun SeriesScreen(
     seriesId: Long = 1399,
     viewModel: SeriesDetailsViewModel = koinViewModel { parametersOf(seriesId) }
 ) {
-    val navController = LocalNavController.current
+//    val navController = LocalNavController.current
     val context = LocalContext.current
     val uiState by viewModel.screenState.collectAsStateWithLifecycle()
     val seriesUrl = "https://www.cairo-movio.com/series/${seriesId}"
@@ -95,7 +93,7 @@ fun SeriesScreen(
         when (effect) {
 
             SeriesDetailEffect.NavigateBack -> {
-                navController.popBackStack()
+//                navController.popBackStack()
             }
 
             SeriesDetailEffect.PlayTrailer -> {
@@ -112,36 +110,36 @@ fun SeriesScreen(
             }
 
             is SeriesDetailEffect.NavigateToAllArtists -> {
-                navController.navigate(TopCastRoute(effect.seriesId, isMovie = false))
+//                navController.navigate(TopCastRoute(effect.seriesId, isMovie = false))
             }
 
             is SeriesDetailEffect.NavigateToAllReviews -> {
-                navController.navigate(ReviewsRoute(effect.seriesId, isMovie = false))
+//                navController.navigate(ReviewsRoute(effect.seriesId, isMovie = false))
             }
 
             is SeriesDetailEffect.NavigateToAllSeasons -> {
-                navController.navigate(SeasonsRoute(effect.seriesId))
+//                navController.navigate(SeasonsRoute(effect.seriesId))
             }
 
             is SeriesDetailEffect.NavigateToAllSimilar -> {
-                navController.navigate(SimilarSeriesRoute(effect.seriesId))
+//                navController.navigate(SimilarSeriesRoute(effect.seriesId))
             }
 
             is SeriesDetailEffect.NavigateToArtistDetails -> {
-                navController.navigate(ArtistRoute(effect.artistId))
+//                navController.navigate(ArtistRoute(effect.artistId))
             }
 
             is SeriesDetailEffect.NavigateToSeasonDetails -> {
-                navController.navigate(
-                    SeasonRoute(
-                        seriesId = effect.seriesId,
-                        seasonNumber = effect.seasonNumber
-                    )
-                )
+//                navController.navigate(
+//                    SeasonRoute(
+//                        seriesId = effect.seriesId,
+//                        seasonNumber = effect.seasonNumber
+//                    )
+//                )
             }
 
             is SeriesDetailEffect.NavigateToSeriesDetails -> {
-                navController.navigate(SeriesRoute(effect.seriesId))
+//                navController.navigate(SeriesRoute(effect.seriesId))
             }
         }
     }
@@ -221,51 +219,101 @@ private fun SeriesScreenContent(
     uiState: SeriesDetailsScreenState,
     listener: SeriesDetailsInteractionListener
 ) {
+    val listState = rememberScrollState()
+    val density = LocalDensity.current
+
+    val scrollThresholdPx = with(density) { 275.dp.toPx() }
+
+    val progress = (listState.value / scrollThresholdPx).coerceIn(0f, 1f)
+
+    val animatedStartColor = lerp(
+        start = Color.Black,
+        stop = Theme.color.surfaces.surface,
+        fraction = progress
+    )
+    val animatedEndColor = lerp(
+        start = Color.Transparent,
+        stop = Theme.color.surfaces.surface,
+        fraction = progress
+    )
+    val animatedBrush = Brush.verticalGradient(
+        colors = listOf(animatedStartColor, animatedEndColor)
+    )
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Theme.color.surfaces.surface)
             .windowInsetsPadding(WindowInsets.navigationBars)
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(listState)
     ) {
-        SafeImageViewer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(400.dp)
-                .offset(y = (-20).dp),
-            model = "https://image.tmdb.org/t/p/w500/${uiState.series.posterPath}",
-            contentDescription = "",
-            blur = 16,
-            nudeThreshold = 0.001,
-            nonNudeThreshold = 1.0
-        )
+        if (uiState.series.posterPath.isNotEmpty() == true) {
+            SafeImageViewer(
+                modifier = Modifier
+                    .blur(16.dp)
+                    .fillMaxWidth()
+                    .height(400.dp)
+                    .offset(y = (-28).dp),
+                model = "https://image.tmdb.org/t/p/w500/${uiState.series.posterPath}",
+                contentDescription = "",
+                blur = 0,
+                nudeThreshold = 0.001,
+                nonNudeThreshold = 1.0
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .size(height = 260.dp, width = 200.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Theme.color.system.defaultImageBackground),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
+                    contentDescription = stringResource(R.string.default_image_icon),
+                    tint = Color(0xFFEFF1F5)
+                )
+            }
+        }
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
                 .windowInsetsPadding(WindowInsets.statusBars)
                 .heightIn(max = 10000.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalAlignment = Alignment.Start,
             userScrollEnabled = false
         ) {
-            stickyHeader {
-                AppBar(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    onBackButtonClicked = listener::onBackClicked,
-                    onShareButtonClicked = listener::onShareClicked,
-                    onFavoriteButtonClicked = listener::onFavoriteClicked
-                )
-
-            }
             item {
-                SafeImageViewer(
+                Column(
                     modifier = Modifier
-                        .padding(top = 12.dp, bottom = 24.dp)
-                        .size(height = 260.dp, width = 200.dp)
-                        .clip(RoundedCornerShape(8.dp)),
-                    model = "https://image.tmdb.org/t/p/w500/${uiState.series.posterPath}",
-                    contentDescription = "",
-                )
+                        .fillMaxWidth()
+                        .padding(top = 56.dp, bottom = 24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    if (uiState.series.posterPath?.isNotEmpty() == true)
+                        SafeImageViewer(
+                            modifier = Modifier
+                                .size(height = 260.dp, width = 200.dp)
+                                .clip(RoundedCornerShape(8.dp)),
+                            model = "https://image.tmdb.org/t/p/w500/${uiState.series.posterPath}",
+                            contentDescription = "",
+                        )
+                    else
+                        Box(
+                            modifier = Modifier
+                                .size(height = 260.dp, width = 200.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(Theme.color.system.defaultImageBackground),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                modifier = Modifier.size(24.dp),
+                                imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
+                                contentDescription = stringResource(R.string.default_image_icon),
+                                tint = Color(0xFFEFF1F5)
+                            )
+                        }
+                }
             }
             item {
                 Column(
@@ -340,10 +388,10 @@ private fun SeriesScreenContent(
                 )
                 LazyRow(
                     contentPadding = PaddingValues(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.Start)
                 ) {
                     items(uiState.cast) {
-                        ArtistCard(
+                        SmallArtistCard(
                             modifier = Modifier.clickable {
                                 listener.onArtistClicked(it.id)
                             },
@@ -363,7 +411,7 @@ private fun SeriesScreenContent(
                 )
                 LazyRow(
                     contentPadding = PaddingValues(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start)
                 ) {
                     itemsIndexed(uiState.seasons) { index, season ->
                         SeasonCard(
@@ -396,7 +444,7 @@ private fun SeriesScreenContent(
                 )
                 LazyRow(
                     contentPadding = PaddingValues(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start)
                 ) {
                     items(uiState.reviews) {
                         ReviewCard(
@@ -419,7 +467,7 @@ private fun SeriesScreenContent(
                 )
                 LazyRow(
                     contentPadding = PaddingValues(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start)
                 ) {
                     items(uiState.similarSeries) {
                         MovieCard(
@@ -439,4 +487,13 @@ private fun SeriesScreenContent(
             }
         }
     }
+    AppBar(
+        modifier = Modifier
+            .background(brush = animatedBrush)
+            .windowInsetsPadding(WindowInsets.statusBars)
+            .fillMaxWidth(),
+        onBackButtonClicked = listener::onBackClicked,
+        onShareButtonClicked = listener::onShareClicked,
+        onFavoriteButtonClicked = listener::onFavoriteClicked
+    )
 }
