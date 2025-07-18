@@ -22,9 +22,11 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -96,6 +98,7 @@ private fun EpisodesScreenContent(
             .fillMaxSize()
             .background(Theme.color.surfaces.surface)
             .windowInsetsPadding(WindowInsets.navigationBars)
+            .verticalScroll(rememberScrollState())
     ) {
         SafeImageViewer(
             modifier = Modifier
