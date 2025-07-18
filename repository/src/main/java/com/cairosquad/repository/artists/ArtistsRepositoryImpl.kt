@@ -5,12 +5,12 @@ import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import com.cairosquad.repository.artists.data_source.ArtistsRemoteDataSource
-import com.cairosquad.repository.common.mappers.tryToCall
 import com.cairosquad.repository.search.data_source.local.CacheDataSource
 import com.cairosquad.repository.search.data_source.local.dto.toCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.toEntity
 import com.cairosquad.repository.search.data_source.remote.dto.toEntity
 import com.cairosquad.repository.search.data_source.remote.dto.toEntityList
+import com.cairosquad.repository.utils.mappers.tryToCall
 import java.util.Date
 
 class ArtistsRepositoryImpl(
