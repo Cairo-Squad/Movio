@@ -518,6 +518,7 @@ class SearchViewModelTest {
         coEvery { getLocalSearchHistoryUseCase.getAll() } throws IOException()
 
         viewModel.onClickSearchTextField()
+        advanceTimeBy(500)
         advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.recentSearch).isEqualTo(previous)

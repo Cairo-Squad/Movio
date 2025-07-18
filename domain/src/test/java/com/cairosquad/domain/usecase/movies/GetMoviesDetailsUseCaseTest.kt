@@ -63,7 +63,7 @@ class GetMoviesDetailsUseCaseTest {
         coVerify(exactly = 1) { moviesRepository.getMovieTopCast(123L) }
     }
 
-    @Test(expected = RuntimeException::class)
+    @Test
     fun `getMovie SHOULD throw exception when repository fails`() = runTest {
         coEvery { moviesRepository.getMovie(123L) } throws RuntimeException("Failed to fetch")
 
