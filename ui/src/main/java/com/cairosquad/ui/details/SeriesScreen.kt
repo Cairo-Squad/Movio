@@ -67,6 +67,14 @@ import com.cairosquad.ui.movio_component.SeasonCard
 import com.cairosquad.ui.movio_component.SectionHeader
 import com.cairosquad.ui.movio_component.ShareBottomSheet
 import com.cairosquad.ui.movio_component.SmallArtistCard
+import com.cairosquad.ui.navigation.ArtistRoute
+import com.cairosquad.ui.navigation.LocalNavController
+import com.cairosquad.ui.navigation.ReviewsRoute
+import com.cairosquad.ui.navigation.SeasonRoute
+import com.cairosquad.ui.navigation.SeasonsRoute
+import com.cairosquad.ui.navigation.SeriesRoute
+import com.cairosquad.ui.navigation.SimilarSeriesRoute
+import com.cairosquad.ui.navigation.TopCastRoute
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.ui.utils.ShareUtil
 import com.cairosquad.ui.utils.errorStatusToMessageResource
@@ -82,7 +90,7 @@ fun SeriesScreen(
     seriesId: Long = 1399,
     viewModel: SeriesDetailsViewModel = koinViewModel { parametersOf(seriesId) }
 ) {
-//    val navController = LocalNavController.current
+    val navController = LocalNavController.current
     val context = LocalContext.current
     val uiState by viewModel.screenState.collectAsStateWithLifecycle()
     val seriesUrl = "https://www.cairo-movio.com/series/${seriesId}"
@@ -93,7 +101,7 @@ fun SeriesScreen(
         when (effect) {
 
             SeriesDetailEffect.NavigateBack -> {
-//                navController.popBackStack()
+                navController.popBackStack()
             }
 
             SeriesDetailEffect.PlayTrailer -> {
@@ -110,36 +118,36 @@ fun SeriesScreen(
             }
 
             is SeriesDetailEffect.NavigateToAllArtists -> {
-//                navController.navigate(TopCastRoute(effect.seriesId, isMovie = false))
+                navController.navigate(TopCastRoute(effect.seriesId, isMovie = false))
             }
 
             is SeriesDetailEffect.NavigateToAllReviews -> {
-//                navController.navigate(ReviewsRoute(effect.seriesId, isMovie = false))
+                navController.navigate(ReviewsRoute(effect.seriesId, isMovie = false))
             }
 
             is SeriesDetailEffect.NavigateToAllSeasons -> {
-//                navController.navigate(SeasonsRoute(effect.seriesId))
+                navController.navigate(SeasonsRoute(effect.seriesId))
             }
 
             is SeriesDetailEffect.NavigateToAllSimilar -> {
-//                navController.navigate(SimilarSeriesRoute(effect.seriesId))
+                navController.navigate(SimilarSeriesRoute(effect.seriesId))
             }
 
             is SeriesDetailEffect.NavigateToArtistDetails -> {
-//                navController.navigate(ArtistRoute(effect.artistId))
+                navController.navigate(ArtistRoute(effect.artistId))
             }
 
             is SeriesDetailEffect.NavigateToSeasonDetails -> {
-//                navController.navigate(
-//                    SeasonRoute(
-//                        seriesId = effect.seriesId,
-//                        seasonNumber = effect.seasonNumber
-//                    )
-//                )
+                navController.navigate(
+                    SeasonRoute(
+                        seriesId = effect.seriesId,
+                        seasonNumber = effect.seasonNumber
+                    )
+                )
             }
 
             is SeriesDetailEffect.NavigateToSeriesDetails -> {
-//                navController.navigate(SeriesRoute(effect.seriesId))
+                navController.navigate(SeriesRoute(effect.seriesId))
             }
         }
     }
