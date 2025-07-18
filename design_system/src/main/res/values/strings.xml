@@ -54,8 +54,11 @@
     <string name="Rate_it">Rate it</string>
     <string name="add_to_list">Add to list</string>
     <string name="play">Play</string>
+    <string name="known_for">Known For</string>
     <string name="top_cast">Top Cast</string>
     <string name="less">Less</string>
+    <string name="read_less">Read Less</string>
+    <string name="read_more">Read More</string>
     <string name="copy_link">Copy link</string>
     <string name="you_don_t_have_an_account">You don\'t have an account</string>
     <string name="you_don_t_have_an_account_description">Please log in or create an account to save items to your favorites and access them later.</string>

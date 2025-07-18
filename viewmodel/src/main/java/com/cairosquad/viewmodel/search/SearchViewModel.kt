@@ -51,6 +51,7 @@ class SearchViewModel(
                 )
             }
         },
+
         onError = { e ->
             updateState {
                 it.copy(
