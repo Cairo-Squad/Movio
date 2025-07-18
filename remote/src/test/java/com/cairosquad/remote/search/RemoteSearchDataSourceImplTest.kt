@@ -107,9 +107,9 @@ class RemoteSearchDataSourceImplTest {
     fun `should return movie list when getMovies is called with valid query`() = runTest {
         // Given
         val query = "batman"
-
+        val page = 1
         // When
-        val result = remoteSearchDataSource.getMovies(query)
+        val result = remoteSearchDataSource.getMovies(query,page)
 
         // Then
         assertThat(result).isNotEmpty()
@@ -121,9 +121,9 @@ class RemoteSearchDataSourceImplTest {
     fun `should return series list when getSeries is called with valid query`() = runTest {
         // Given
         val query = "batman"
-
+        val page = 1
         // When
-        val result = remoteSearchDataSource.getSeries(query)
+        val result = remoteSearchDataSource.getSeries(query,page)
 
         // Then
         assertThat(result).isNotEmpty()
@@ -135,9 +135,9 @@ class RemoteSearchDataSourceImplTest {
     fun `should return artist list when getArtists is called with valid query`() = runTest {
         // Given
         val query = "christian"
-
+        val page = 1
         // When
-        val result = remoteSearchDataSource.getArtists(query)
+        val result = remoteSearchDataSource.getArtists(query,page)
 
         // Then
         assertThat(result).isNotEmpty()

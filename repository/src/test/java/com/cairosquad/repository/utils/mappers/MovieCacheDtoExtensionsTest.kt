@@ -14,7 +14,9 @@ class MovieCacheDtoExtensionsTest {
             title = "movie name",
             posterPath = "/posterPath.jpg",
             voteAverage = 4.5,
-            timestamp = 341324L
+            timestamp = 341324L,
+            page = 1,
+            query = ""
         )
 
         val result = movieCacheDto.toPersonalizedMoviesIdsDto()
@@ -30,21 +32,27 @@ class MovieCacheDtoExtensionsTest {
                 title = "movie name",
                 posterPath = "/posterPath.jpg",
                 voteAverage = 4.5,
-                timestamp = 341324L
+                timestamp = 341324L,
+                page = 1,
+                query = ""
             ),
             MovieCacheDto(
                 id = 2,
                 title = "movie name",
                 posterPath = "/posterPath.jpg",
                 voteAverage = 4.5,
-                timestamp = 341324L
+                timestamp = 341324L,
+                page = 1,
+                query = ""
             ),
             MovieCacheDto(
                 id = 3,
                 title = "movie name",
                 posterPath = "/posterPath.jpg",
                 voteAverage = 4.5,
-                timestamp = 341324L
+                timestamp = 341324L,
+                page = 1,
+                query = ""
             )
         )
 
@@ -64,7 +72,9 @@ class MovieCacheDtoExtensionsTest {
             title = "movie name",
             posterPath = "/posterPath.jpg",
             voteAverage = 4.5,
-            timestamp = 341324L
+            timestamp = 341324L,
+            page = 1,
+            query = ""
         )
 
         val result = movieCacheDto.toSuggestedMoviesIds()
@@ -80,21 +90,27 @@ class MovieCacheDtoExtensionsTest {
                 title = "movie name",
                 posterPath = "/posterPath.jpg",
                 voteAverage = 4.5,
-                timestamp = 341324L
+                timestamp = 341324L,
+                page = 1,
+                query = ""
             ),
             MovieCacheDto(
                 id = 8,
                 title = "movie name",
                 posterPath = "/posterPath.jpg",
                 voteAverage = 4.5,
-                timestamp = 341324L
+                timestamp = 341324L,
+                page = 1,
+                query = ""
             ),
             MovieCacheDto(
                 id = 9,
                 title = "movie name",
                 posterPath = "/posterPath.jpg",
                 voteAverage = 4.5,
-                timestamp = 341324L
+                timestamp = 341324L,
+                page = 1,
+                query = ""
             )
         )
 

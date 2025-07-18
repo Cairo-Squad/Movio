@@ -9,9 +9,10 @@ import com.cairosquad.repository.search.data_source.local.DiscoveryDataSource
 import com.cairosquad.repository.search.data_source.local.dto.toCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.toEntity
 import com.cairosquad.repository.search.data_source.remote.RemoteMovieDiscoveryDataSource
+import com.cairosquad.repository.search.data_source.remote.dto.toEntity
+import com.cairosquad.repository.utils.mappers.tryToCall
 import com.cairosquad.repository.search.data_source.remote.dto.toEntityList
 import kotlinx.coroutines.delay
-import com.cairosquad.repository.utils.mappers.tryToCall
 import java.util.Date
 
 class MoviesRepositoryImpl(
@@ -40,7 +41,14 @@ class MoviesRepositoryImpl(
             discoveryDataSource.getPersonalizedMovies()
                 .takeIf { it.size >= PAGE_SIZE }?.toEntity()
                 ?: remoteMovieDiscoveryDataSource.getPersonalizedMovies().toEntityList()
-                    .also { result -> discoveryDataSource.cachePersonalizedMovies(result.toCacheDto()) }
+                    .also { result ->
+                        discoveryDataSource.cachePersonalizedMovies(
+                            result.toCacheDto(
+                                "ELSAYEDMAGDY",
+                                1
+                            )
+                        )
+                    }
         }
     }
 
@@ -50,7 +58,14 @@ class MoviesRepositoryImpl(
             discoveryDataSource.getSuggestedMovies()
                 .takeIf { it.size >= PAGE_SIZE }?.toEntity()
                 ?: remoteMovieDiscoveryDataSource.getSuggestedMovies().toEntityList()
-                    .also { result -> discoveryDataSource.cacheSuggestedMovies(result.toCacheDto()) }
+                    .also { result ->
+                        discoveryDataSource.cacheSuggestedMovies(
+                            result.toCacheDto(
+                                "ELSAYEDMAGDY",
+                                1
+                            )
+                        )
+                    }
         }
     }
 
