@@ -21,6 +21,7 @@ import com.cairosquad.ui.navigation.EpisodeRoute
 @Composable
 fun EpisodeScreen(
     episodeId: Long,
+    seasonNumber: Int
 ) {
     val navController = LocalNavController.current
 
@@ -43,7 +44,7 @@ fun EpisodeScreen(
         )
         Chip(
             title = "see season number 1",
-            onClick = { navController.navigate(EpisodeRoute(episodeId)) }
+            onClick = { navController.navigate(EpisodeRoute(episodeId,seasonNumber)) }
         )
     }
     }

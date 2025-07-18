@@ -31,6 +31,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.theme.Theme
+import com.cairosquad.ui.movio_component.SeasonScreenCard
 import com.cairosquad.ui.movio_component.SeasonCard
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.EpisodeRoute
@@ -54,7 +55,7 @@ fun SeasonsScreen(
     ObserveAsEffect(viewModel.effect) { effect ->
         when (effect) {
             SeasonDetailEffect.NavigateBack -> navController.popBackStack()
-            is SeasonDetailEffect.NavigateToEpisodeDetails -> navController.navigate(EpisodeRoute(effect.episodeId))
+            is SeasonDetailEffect.NavigateToEpisodeDetails -> navController.navigate(EpisodeRoute(effect.episodeId, effect.seasonNumber))
 
         }
     }

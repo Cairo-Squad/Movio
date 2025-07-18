@@ -54,6 +54,11 @@
     <string name="Rate_it">Rate it</string>
     <string name="add_to_list">Add to list</string>
     <string name="play">Play</string>
+    <string name="known_for">Known For</string>
+    <string name="top_cast">Top Cast</string>
+    <string name="less">Less</string>
+    <string name="read_less">Read Less</string>
+    <string name="read_more">Read More</string>
     <string name="current_season">Current Seasons</string>
     <string name="copy_link">Copy link</string>
     <string name="you_don_t_have_an_account">You don\'t have an account</string>
@@ -61,7 +66,6 @@
     <string name="login">Login</string>
     <string name="check_out_this_amazing_series">"Check out this amazing series!"</string>
     <string name="seasons_count">%1$s seasons</string>
-    <string name="top_cast">Top Cast</string>
     <string name="current_seasons">Current Seasons</string>
     <string name="reviews">Reviews</string>
     <string name="similar_series">Similar Series</string>
