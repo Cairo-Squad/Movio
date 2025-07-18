@@ -58,6 +58,18 @@ class SearchRepositoryImplTest {
         val result = repository.getSeries(QUERY1,page)
 
         //Then
+        assertEquals(
+            listOf(
+                Series(
+                    42, "Dark", 8.8f, "/dark.jpg",
+                    trailerPath = "",
+                    genres = emptyList(),
+                    overview = "",
+                    releaseDate = 0L,
+                    seasonsCount = 0
+                )
+            ), result
+        )
         assertEquals(listOf(Series(42, "Dark", 8.8f, "/dark.jpg")), result)
         coVerify { cacheDS.getCachedSeries(QUERY1,page) }
         coVerify(exactly = 0) { remoteDS.getSeries(any(),page) }
@@ -77,6 +89,18 @@ class SearchRepositoryImplTest {
         //Then
         assertEquals(listOf(Series(7, "Lost", 8.3f, "/lost.jpg")), result)
         coVerify { remoteDS.getSeries(QUERY2,page) }
+        assertEquals(
+            listOf(
+                Series(
+                    7, "Lost", 8.3f, "/lost.jpg",
+                    trailerPath = "",
+                    genres = emptyList(),
+                    overview = "",
+                    releaseDate = 0L,
+                    seasonsCount = 1
+                )
+            ), result
+        )
         coVerify { cacheDS.cacheSeries(any()) }
     }
 
@@ -194,6 +218,7 @@ class SearchRepositoryImplTest {
             profilePath = "/a.jpg",
         )
     }
+
     @Test
     fun `should return all queries when getAll is called`() = runTest {
         // Given

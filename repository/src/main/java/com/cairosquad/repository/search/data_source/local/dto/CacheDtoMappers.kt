@@ -28,6 +28,11 @@ fun SeriesCacheDto.toEntity(): Series {
         title = name ?: "",
         posterPath = posterPath ?: "",
         rating = voteAverage?.toFloat() ?: 0f,
+        trailerPath = "",
+        genres = emptyList(),
+        overview = "",
+        releaseDate = 0L,
+        seasonsCount = 0,
     )
 }
 

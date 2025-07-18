@@ -1,7 +1,6 @@
-package com.cairosquad.domain.usecase
+package com.cairosquad.domain.usecase.search
 
 import com.cairosquad.domain.repository.SearchRepository
-import com.cairosquad.domain.usecase.search.SearchUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
@@ -65,7 +64,14 @@ class SearchUseCaseTest {
         // Given
         val query = "Breaking Bad"
         val series = listOf(
-            Series(id = 1, title = "Breaking Bad", rating = 9.5f, posterPath = "/bb.jpg")
+            Series(
+                id = 1, title = "Breaking Bad", rating = 9.5f, posterPath = "/bb.jpg",
+                trailerPath = "",
+                genres = emptyList(),
+                overview = "",
+                releaseDate = 0L,
+                seasonsCount = 1
+            )
         )
         val page = 1
         coEvery { searchRepository.getSeries(query, page) } returns series

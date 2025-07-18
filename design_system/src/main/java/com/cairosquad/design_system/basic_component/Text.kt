@@ -9,7 +9,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.cairosquad.design_system.theme.Theme
 
 @Composable
-fun DesignSystemText(
+fun Text(
     text: String,
     modifier: Modifier = Modifier,
     style: TextStyle = Theme.textStyle.body.smallRegular10,

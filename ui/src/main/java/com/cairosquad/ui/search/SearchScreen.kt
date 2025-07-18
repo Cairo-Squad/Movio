@@ -49,7 +49,11 @@ fun SearchScreen(
             is SearchEffect.NavigateToMovieDetails -> {
                 navController.navigate(MovieRoute(effect.movieId))
             }
-            SearchEffect.NavigateToSeeAllForYouScreen -> { navController.navigate(ForYouRoute) }
+
+            SearchEffect.NavigateToSeeAllForYouScreen -> {
+                navController.navigate(ForYouRoute)
+            }
+
             is SearchEffect.NavigateToSeriesDetails -> {
                 navController.navigate(SeriesRoute(effect.seriesId))
             }
