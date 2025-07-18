@@ -12,7 +12,7 @@ data class MovieDetailsRemoteDto(
     @SerialName("genres")
     val genres: List<GenreDto?>? = null,
     @SerialName("id")
-    val id: Int,
+    val id: Long,
     @SerialName("overview")
     val overview: String? = null,
     @SerialName("poster_path")
@@ -31,13 +31,13 @@ data class MovieDetailsRemoteDto(
     val voteCount: Int? = null
 ) {
     fun toEntity() = Movie(
-        id = id.toLong(),
+        id = id,
         title = title.orEmpty(),
         rating = voteAverage?.toFloat() ?: 0f,
         posterPath = posterPath.orEmpty(),
         genres = genres?.mapNotNull { it?.toEntity() } ?: emptyList(),
         overview = overview.orEmpty(),
-        releaseDate = releaseDate.orEmpty().toLong(),
+        releaseDate = releaseDate,
         runtimeMinutes = runtime ?: 0,
     )
 }

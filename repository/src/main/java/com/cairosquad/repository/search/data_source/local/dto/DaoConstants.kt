@@ -15,3 +15,5 @@ const val CACHED_SERIES_TIMESTAMP_COLUMN_NAME = "timestamp"
 const val CACHED_SERIES_ID_COLUMN_NAME = "id"
 const val CACHED_SERIES_NAME_COLUMN_NAME = "name"
 
+// Details
+const val CASHED_MOVIE_DETAILS_TABLE_NAME = "MovieDetailsTable"

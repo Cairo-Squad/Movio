@@ -16,7 +16,7 @@ data class ReviewRemoteDto(
     @SerialName("created_at")
     val createdAt: String? = null,
     @SerialName("id")
-    val id: Long,
+    val id: String,
     @SerialName("updated_at")
     val updatedAt: String? = null,
     @SerialName("url")

@@ -1,7 +1,7 @@
 package com.cairosquad.movio.di
 
-import com.cairosquad.viewmodel.details.reviews.ReviewsViewModel
 import com.cairosquad.viewmodel.details.artist.ArtistViewModel
+import com.cairosquad.viewmodel.details.reviews.ReviewsViewModel
 import com.cairosquad.viewmodel.details.top_cast.TopCastViewModel
 import com.cairosquad.viewmodel.search.SearchViewModel
 import org.koin.core.module.dsl.viewModel
@@ -14,7 +14,7 @@ val viewModelModule = module {
         TopCastViewModel(
             mediaId = mediaId,
             isMovie = isMovie,
-            getMoviesDetailsUseCase = get(),
+            getMovieDetailsUseCase = get(),
             getSeriesDetailsUseCase = get()
         )
     }
@@ -23,7 +23,7 @@ val viewModelModule = module {
         ReviewsViewModel(
             mediaId = mediaId,
             isMovie = isMovie,
-            getMoviesDetailsUseCase = get(),
+            getMovieDetailsUseCase = get(),
             getSeriesDetailsUseCase = get()
         )
     }
