@@ -53,10 +53,12 @@ fun ExpandableText(
                             append(showLessText)
                         }
                     } else {
-                        val safeEnd = lastCharIndex.coerceAtMost(text.length)
+                        val showMoreLength = showMoreText.length + 3
+                        val safeEnd = (lastCharIndex - showMoreLength).coerceAtMost(text.length).coerceAtLeast(0)
                         val visibleText = text.substring(0, safeEnd)
                             .dropLastWhile { it.isWhitespace() || it == '.' }
                         append(visibleText)
+
                         withStyle(
                             style = showMoreStyle.toSpanStyle().copy(color = showMoreColor)
                         ) {
