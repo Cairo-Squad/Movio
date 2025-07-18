@@ -3,7 +3,7 @@ package com.cairosquad.viewmodel.search.paging
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.cairosquad.domain.search.usecase.SearchUseCase
+import com.cairosquad.domain.usecase.search.SearchUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series

@@ -1,7 +1,7 @@
 package com.cairosquad.viewmodel.searchviewmodel
 
 import androidx.paging.testing.asSnapshot
-import com.cairosquad.domain.search.usecase.SearchUseCase
+import com.cairosquad.domain.usecase.search.SearchUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
