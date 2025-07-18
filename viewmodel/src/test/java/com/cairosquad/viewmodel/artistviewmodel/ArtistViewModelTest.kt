@@ -283,14 +283,24 @@ class ArtistViewModelTest {
             id = 1,
             title = "Forrest Gump",
             rating = 4.5f,
-            posterPath = "/img.jpg"
+            posterPath = "/img.jpg",
+            genres = emptyList(),
+            overview = "",
+            releaseDate = 9L,
+            runtimeMinutes = 5,
+            trailerPath = ""
         )
 
         val movie2 = Movie(
             id = 2,
             title = "Cast Away",
             rating = 4.0f,
-            posterPath = "/img.jpg"
+            posterPath = "/img.jpg",
+            genres = emptyList(),
+            overview = "",
+            releaseDate = 9L,
+            runtimeMinutes = 5,
+            trailerPath = ""
         )
 
         val series1 = Series(

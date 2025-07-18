@@ -36,18 +36,33 @@ class GetPersonalizedMoviesUseCaseTest {
     }
 
     @Test
-    fun `should return a list of Personalized movies from the repository when getPersonalizedMovies is called`() = runTest {
-        // Given
-        val expectedMovies = listOf(
-            Movie(id = 101, title = "Dune", rating = 8.1f, posterPath = "/dune.jpg"),
-            Movie(id = 102, title = "Blade Runner", rating = 8.0f, posterPath = "/blade.jpg")
-        )
-        coEvery { moviesRepository.getPersonalizedMovies() } returns expectedMovies
+    fun `should return a list of Personalized movies from the repository when getPersonalizedMovies is called`() =
+        runTest {
+            // Given
+            val expectedMovies = listOf(
+                Movie(
+                    id = 101, title = "Dune", rating = 8.1f, posterPath = "/dune.jpg",
+                    genres = emptyList(),
+                    overview = "",
+                    releaseDate = 9L,
+                    runtimeMinutes = 5,
+                    trailerPath = ""
+                ),
+                Movie(
+                    id = 102, title = "Blade Runner", rating = 8.0f, posterPath = "/blade.jpg",
+                    genres = emptyList(),
+                    overview = "",
+                    releaseDate = 9L,
+                    runtimeMinutes = 5,
+                    trailerPath = ""
+                )
+            )
+            coEvery { moviesRepository.getPersonalizedMovies() } returns expectedMovies
 
-        // When
-        val result = useCase.getPersonalizedMovies()
+            // When
+            val result = useCase.getPersonalizedMovies()
 
-        // Then
-        coVerify { moviesRepository.getPersonalizedMovies() }
-    }
+            // Then
+            coVerify { moviesRepository.getPersonalizedMovies() }
+        }
 }
