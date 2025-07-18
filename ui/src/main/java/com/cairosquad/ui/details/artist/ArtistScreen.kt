@@ -168,6 +168,7 @@ private fun ArtistScreenContent(
                     .padding(top = 4.dp)
             )
 
+
             SafeImageViewer(
                 model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
                 modifier = Modifier
@@ -217,14 +218,17 @@ private fun ArtistScreenContent(
                 .padding(vertical = 16.dp)
                 .padding(horizontal = 16.dp),
             collapsedMaxLine = 5,
-            showMoreColor = Theme.color.surfaces.onSurfaceVariant
+            showMoreText="...Read More",
+            showMoreColor =Theme.color.surfaces.onSurfaceVariant,
+            showLessText="...Read Less"
         )
 
-        Text(
-            text = "Known For",
-            style = Theme.textStyle.title.mediumMedium16,
-            color = Theme.color.surfaces.onSurface,
-            modifier = Modifier.padding(start = 16.dp, top = 32.dp, bottom = 12.dp)
+        BasicText(
+            modifier = Modifier.padding(start = 16.dp, top = 32.dp, bottom = 12.dp),
+            text = stringResource(R.string.known_for),
+            style = Theme.textStyle.title.mediumMedium16
+            .copy(color = Theme.color.surfaces.onSurface)
+
         )
 
         LazyRow(
