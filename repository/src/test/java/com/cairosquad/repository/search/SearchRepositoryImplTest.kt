@@ -121,7 +121,18 @@ class SearchRepositoryImplTest {
         val result = repository.getMovies(QUERY3,page)
 
         //Then
-        assertEquals(listOf(Movie(1, "Inception", 8.8f, "/inc.jpg")), result)
+        assertEquals(
+            listOf(
+                Movie(
+                    1, "Inception", 8.8f, "/inc.jpg",
+                    genres = emptyList(),
+                    overview = "",
+                    releaseDate = 0L,
+                    runtimeMinutes = 5,
+                    trailerPath = ""
+                )
+            ), result
+        )
         coVerify(exactly = 0) { remoteDS.getMovies(any(),page) }
     }
 
@@ -137,7 +148,18 @@ class SearchRepositoryImplTest {
         val result = repository.getMovies(QUERY4,page)
 
         //Then
-        assertEquals(listOf(Movie(99, "Matrix", rating = 8.7f, "/mx.jpg")), result)
+        assertEquals(
+            listOf(
+                Movie(
+                    99, "Matrix", rating = 8.7f, "/mx.jpg",
+                    genres = emptyList(),
+                    overview = "",
+                    releaseDate = 0L,
+                    runtimeMinutes = 5,
+                    trailerPath = ""
+                )
+            ), result
+        )
         coVerify { remoteDS.getMovies(QUERY4,page) }
         coVerify { cacheDS.cacheMovies(any()) }
     }

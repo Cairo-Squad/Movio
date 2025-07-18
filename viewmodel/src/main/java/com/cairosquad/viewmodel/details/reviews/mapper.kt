@@ -22,7 +22,7 @@ private fun Timestamp.toDateFormat(): String {
     return format.format(date)
 }
 
-private fun String.toSingleDecimal(): String {
+internal fun String.toSingleDecimal(): String {
     return this.toDoubleOrNull()
         ?.let { String.format(Locale.getDefault(), "%.1f", it) }
         ?: "0.0"

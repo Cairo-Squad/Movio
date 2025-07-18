@@ -19,13 +19,12 @@ fun Movie.toArtistMovieUiState() = ArtistScreenState.MovieUiState(
     title = title,
     rating = rating,
     posterPath = posterPath
-
 )
+
 fun Series.toArtistSeriesUiState() = ArtistScreenState.SeriesUiState(
     id = id,
     title = title,
     rating = rating,
     posterPath = posterPath
-
 )
 

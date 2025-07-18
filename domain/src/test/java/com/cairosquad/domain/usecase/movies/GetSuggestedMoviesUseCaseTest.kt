@@ -39,8 +39,22 @@ class GetSuggestedMoviesUseCaseTest {
     fun `should return list of movies from repository when getSuggestedMovies is called`() = runTest {
         // Given
         val expectedMovies = listOf(
-            Movie(id = 1, title = "Interstellar", rating = 8.6f, posterPath = "/interstellar.jpg"),
-            Movie(id = 2, title = "Inception", rating = 8.8f, posterPath = "/inception.jpg")
+            Movie(
+                id = 1, title = "Interstellar", rating = 8.6f, posterPath = "/interstellar.jpg",
+                genres = emptyList(),
+                overview = "",
+                releaseDate = 9L,
+                runtimeMinutes = 5,
+                trailerPath = ""
+            ),
+            Movie(
+                id = 2, title = "Inception", rating = 8.8f, posterPath = "/inception.jpg",
+                genres = emptyList(),
+                overview = "",
+                releaseDate = 9L,
+                runtimeMinutes = 5,
+                trailerPath = ""
+            )
         )
         coEvery { moviesRepository.getSuggestedMovies() } returns expectedMovies
 
