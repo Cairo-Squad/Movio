@@ -56,15 +56,13 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     // Paging
-    val paging_version = "3.3.6"
-
-    implementation("androidx.paging:paging-runtime:$paging_version")
-    implementation("androidx.paging:paging-compose:$paging_version")
+    api(libs.androidx.paging.runtime)
+    api(libs.paging.compose)
     // test
     androidTestImplementation(libs.androidx.core.testing)
     androidTestImplementation(libs.androidx.junit.ktx)
     testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation("androidx.paging:paging-testing:$paging_version")
+    testImplementation(libs.androidx.paging.testing)
     // google truth
     testImplementation(libs.truth)
     androidTestImplementation(libs.truth)
