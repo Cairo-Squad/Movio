@@ -7,8 +7,13 @@ data class EpisodesDetailsScreenState(
     val episodesSectionState: ScreenStatus = ScreenStatus.INITIAL,
     val errorStatus: ErrorStatus? = null,
     val season: SeasonUiState = SeasonUiState(),
-    val episodes: List<EpisodeUiState> = emptyList()
-) {
+    val episodes: List<EpisodeUiState> = emptyList(),
+    val seasons: List<SeasonUiState> = emptyList(),
+    val selectedSeasonNumber: Int = 1,
+    val isSeasonDropdownExpanded: Boolean = false,
+    val isRefreshing: Boolean = false,
+    val currentSeasonNumber: Int = 1
+    ) {
     data class EpisodeUiState(
         val id: Long = 0L,
         val name: String = "",

@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.details.episodes
 
+import android.util.Log
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
 import com.cairosquad.entity.Episode
@@ -43,10 +44,13 @@ class EpisodesDetailsViewModel(
                     (
                     posterUrl = episodes.first().seasonPosterPath,
                     seasonNumber = episodes.first().seasonNumber,
-                    episodesCount = episodes.size
-                )
+                    episodesCount = episodes.size,
+                ),
+                selectedSeasonNumber = episodes.first().seasonNumber,
+                currentSeasonNumber = episodes.first().seasonNumber
             )
         }
+        Log.d("shahd",episodes.first().seasonNumber.toString())
     }
 
     override fun onBackClick() {
@@ -58,11 +62,19 @@ class EpisodesDetailsViewModel(
     }
 
     override fun onSeasonsDropdownClick() {
-        //updateState { it.copy(isSeasonDropdownExpanded = !it.isSeasonDropdownExpanded) }
+        updateState { it.copy(isSeasonDropdownExpanded = !it.isSeasonDropdownExpanded) }
     }
 
+//    override fun onSeasonSelected(seriesId: Long, seasonNumber: Int) {
+//        this.seasonNumber = seasonNumber
+//        getEpisodes(seriesId, seasonNumber)
+//    }
+
     override fun onSeasonSelected(seriesId: Long, seasonNumber: Int) {
+        if (this.seasonNumber == seasonNumber) return
+
         this.seasonNumber = seasonNumber
+        updateState { it.copy(episodesSectionState = ScreenStatus.LOADING) }
         getEpisodes(seriesId, seasonNumber)
     }
 
