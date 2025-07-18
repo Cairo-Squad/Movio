@@ -2,26 +2,58 @@ package com.cairosquad.repository.artists
 
 import com.cairosquad.domain.repository.ArtistsRepository
 import com.cairosquad.entity.Artist
-import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import com.cairosquad.repository.artists.data_source.ArtistsRemoteDataSource
+import com.cairosquad.repository.common.mappers.tryToCall
+import com.cairosquad.repository.search.data_source.local.CacheDataSource
+import com.cairosquad.repository.search.data_source.local.dto.toCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.toEntity
 import com.cairosquad.repository.search.data_source.remote.dto.toEntity
 import com.cairosquad.repository.search.data_source.remote.dto.toEntityList
-import kotlinx.coroutines.delay
+import java.util.Date
 
 class ArtistsRepositoryImpl(
-    private val artistsRemoteDataSource: ArtistsRemoteDataSource
-): ArtistsRepository {
+    private val artistsRemoteDataSource: ArtistsRemoteDataSource,
+    private val cacheDataSource: CacheDataSource,
+) : ArtistsRepository {
     override suspend fun getArtist(artistId: Long): Artist {
-        return artistsRemoteDataSource.getArtist(artistId).toEntity()
+        return try {
+            cacheDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
+            cacheDataSource.getCachedArtists(id = artistId).toEntity()
+        } catch (_: IllegalStateException) {
+            tryToCall {
+                artistsRemoteDataSource.getArtist(artistId).toEntity()
+                    .also { cacheDataSource.cacheArtist(listOf(it.toCacheDto())) }
+            }
+        }
+
+
     }
 
     override suspend fun getMoviesOfArtist(artistId: Long): List<Movie> {
-        return artistsRemoteDataSource.getMoviesOfArtist(artistId).toEntityList()
+        return tryToCall {
+            cacheDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
+            cacheDataSource.getCachedArtistMovies(artistId = artistId)
+                .takeIf { it.isNotEmpty() }?.toEntity()
+                ?: artistsRemoteDataSource.getMoviesOfArtist(artistId).toEntityList()
+                    .also { cacheDataSource.cacheMovies(it.toCacheDto()) }
+                    .also { cacheDataSource.cacheArtistMovies(it.toArtistMoviesCachedDto(artistId)) }
+        }
     }
 
     override suspend fun getSeriesOfArtist(artistId: Long): List<Series> {
-        return artistsRemoteDataSource.getSeriesOfArtist(artistId).toEntityList()
+        return tryToCall {
+            cacheDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
+            cacheDataSource.getCachedArtistSeries(artistId = artistId)
+                .takeIf { it.isNotEmpty() }?.toEntity()
+                ?: artistsRemoteDataSource.getSeriesOfArtist(artistId).toEntityList()
+                    .also { cacheDataSource.cacheSeries(it.toCacheDto()) }
+                    .also { cacheDataSource.cacheArtistSeries(it.toArtistSeriesCachedDto(artistId)) }
+        }
+    }
+
+    private companion object {
+        private const val CACHE_EXPIRATION_MILLIS = 3_600_000
     }
 }

@@ -20,7 +20,7 @@ class ArtistsRemoteDataSourceImpl(
             httpClient.get(constructUrl("person/$artistId")) {
                 parameter(API_KEY, BuildConfig.API_KEY)
             }
-    }
+        }
     }
 
     override suspend fun getMoviesOfArtist(artistId: Long): List<MovieRemoteDto> {
