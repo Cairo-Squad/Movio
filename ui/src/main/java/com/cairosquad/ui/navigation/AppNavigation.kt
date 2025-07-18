@@ -19,7 +19,7 @@ import com.cairosquad.ui.details.SeasonScreen
 import com.cairosquad.ui.details.SeasonsScreen
 import com.cairosquad.ui.details.SeriesScreen
 import com.cairosquad.ui.details.SimilarMoviesScreen
-import com.cairosquad.ui.details.SimilarSeriesScreen
+import com.cairosquad.ui.details.similar_series.SimilarSeriesScreen
 import com.cairosquad.ui.details.TopCastScreen
 import com.cairosquad.ui.details.artist.ArtistScreen
 import com.cairosquad.ui.search.ForYouScreen
@@ -84,7 +84,8 @@ fun AppNavigation() {
             }
             composable<SimilarSeriesRoute> { backStackEntry ->
                 SimilarSeriesScreen(
-                    seriesId = backStackEntry.toRoute<SimilarSeriesRoute>().seriesId
+                    seriesId = backStackEntry.toRoute<SimilarSeriesRoute>().seriesId,
+                    navController = navController
                 )
             }
             composable<TopCastRoute> { backStackEntry ->
