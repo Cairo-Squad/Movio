@@ -1,6 +1,7 @@
 package com.cairosquad.ui.details.artist
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,6 +27,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -51,6 +54,7 @@ import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+
 
 @Composable
 fun ArtistScreen(
@@ -97,40 +101,54 @@ private fun ArtistScreenContent(
     state: ArtistScreenState,
     listener: ArtistInteractionListener
 ) {
-
     Column(
-        modifier = modifier
-            .fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.Start,
     ) {
+
 
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(335.dp)
+        ) {
 
-        )
-        {
             SafeImageViewer(
                 model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
                 contentDescription = "blured image",
                 modifier = Modifier
                     .fillMaxSize()
-                    .height(355.dp)
+                    .height(335.dp)
                     .offset(y = (-5).dp)
                     .CustomBrush(0.5f, 16.dp),
                 nudeThreshold = 0.0,
                 nonNudeThreshold = 0.0
             )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(80.dp)
+                    .align(Alignment.TopStart)
+                    .background(
+                        brush = androidx.compose.ui.graphics.Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Black.copy(alpha = 1f),
+                                Color.Black.copy(alpha = 0f)
+                            )
+                        )
+                    )
+            )
+
+
             AppBar(
                 onBackButtonClicked = listener::onClickBack,
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .windowInsetsPadding(WindowInsets.statusBars)
                     .padding(top = 4.dp)
-
             )
+
 
             SafeImageViewer(
                 model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
@@ -142,9 +160,8 @@ private fun ArtistScreenContent(
                 nudeThreshold = 0.0,
                 nonNudeThreshold = 0.0
             )
-
-
         }
+
         Column(modifier = Modifier.padding(start = 16.dp)) {
             Text(
                 text = state.artist.name,
@@ -158,7 +175,6 @@ private fun ArtistScreenContent(
                 color = Theme.color.surfaces.onSurfaceVariant,
                 modifier = Modifier.padding(top = 4.dp)
             )
-
 
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -177,17 +193,17 @@ private fun ArtistScreenContent(
             ExpandableText(
                 text = state.artist.biography,
                 color = Theme.color.surfaces.onSurface,
-                style = Theme.textStyle.label.smallRegular12,
+                style = Theme.textStyle.label.smallRegular14,
                 modifier = Modifier
                     .padding(vertical = 16.dp)
-                    .padding(end=16.dp),
-                collapsedMaxLine= 5,
-
+                    .padding(end = 16.dp),
+                collapsedMaxLine = 5,
+                showMoreColor =Theme.color.surfaces.onSurfaceVariant
             )
 
             Text(
-                text = "known for",
-                style = Theme.textStyle.title.mediumMedium14,
+                text = "known For",
+                style = Theme.textStyle.title.mediumMedium16,
                 color = Theme.color.surfaces.onSurface,
                 modifier = Modifier.padding(top = 32.dp, bottom = 12.dp)
             )
@@ -195,7 +211,6 @@ private fun ArtistScreenContent(
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-
                 items(state.knownForMovies) { movie ->
                     MovieCard(
                         title = movie.title,
@@ -221,6 +236,7 @@ private fun ArtistScreenContent(
         }
     }
 }
+
 
 @Composable
 @Preview(showBackground = true)
