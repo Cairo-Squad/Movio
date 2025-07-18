@@ -201,10 +201,13 @@ private fun ArtistScreenContent(
                     lastPart.split(" ").lastOrNull()?.trim()
                 }
                 ?.takeIf { it.isNotBlank() }
-            InfoChip(
-                text = formatBirthDateLegacy(state.artist.birthDate),
-                imgRes = R.drawable.date,
-            )
+            val birthDate=state.artist.birthDate;
+            if(birthDate !=null) {
+                InfoChip(
+                    text = formatBirthDateLegacy(state.artist.birthDate),
+                    imgRes = R.drawable.date,
+                )
+            }
             if (lastWord != null) {
                 InfoChip(
                     text = state.artist.country,
