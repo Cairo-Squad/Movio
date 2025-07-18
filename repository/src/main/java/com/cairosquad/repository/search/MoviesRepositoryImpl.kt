@@ -34,13 +34,13 @@ class MoviesRepositoryImpl(
         delay(500); return fakeArtists
     }
 
-    override suspend fun getPersonalizedMovies(): List<Movie> {
+    override suspend fun getPersonalizedMovies(page : Int): List<Movie> {
         return tryToCall {
             discoveryDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
-            discoveryDataSource.getPersonalizedMovies()
+            discoveryDataSource.getPersonalizedMovies(page)
                 .takeIf { it.size >= PAGE_SIZE }?.toEntity()
-                ?: remoteMovieDiscoveryDataSource.getPersonalizedMovies().toEntity()
-                    .also { result -> discoveryDataSource.cachePersonalizedMovies(result.toCacheDto("ELSAYEDMAGDY",1)) }
+                ?: remoteMovieDiscoveryDataSource.getPersonalizedMovies(page).toEntity()
+                    .also { result -> discoveryDataSource.cachePersonalizedMovies(result.toCacheDto("",page)) }
         }
     }
 
