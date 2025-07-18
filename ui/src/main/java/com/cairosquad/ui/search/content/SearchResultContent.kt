@@ -61,7 +61,7 @@ fun SearchResultContent(
         }
     }
 
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
+    val selectedTabIndex = state.selectedTabIndex
 
     Column(
         modifier = modifier
@@ -94,7 +94,7 @@ fun SearchResultContent(
                 stringResource(R.string.artists),
             ),
             selectedTabIndex = selectedTabIndex,
-            onTabSelected = { selectedTabIndex = it }
+            onTabSelected = { listener.onTabSelected(it) }
         )
 
         when (selectedTabIndex) {
