@@ -303,7 +303,6 @@ class SearchViewModel(
     }
 
     private fun handleSearchException(e: Throwable): ErrorStatus {
-        Log.d("asdasd", "handleSearchException: $e")
         return when (e) {
             is MovioException -> {
                 exceptionToErrorStatus(e)

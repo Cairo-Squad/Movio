@@ -1,9 +1,7 @@
 package com.cairosquad.viewmodel.searchviewmodel
 
-import android.view.SearchEvent
 import androidx.paging.PagingData
 import com.cairosquad.domain.exception.InternetConnectionException
-import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.exception.NetworkException
 import com.cairosquad.domain.exception.UnknownException
 import com.cairosquad.domain.usecase.movies.GetPersonalizedMoviesUseCase
@@ -15,12 +13,10 @@ import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
-import com.cairosquad.viewmodel.search.SearchEffect
 import com.cairosquad.viewmodel.search.SearchScreenState
 import com.cairosquad.viewmodel.search.SearchViewModel
 import com.cairosquad.viewmodel.search.paging.SearchPager
 import com.cairosquad.viewmodel.search.toUiState
-import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -47,7 +43,6 @@ import kotlinx.coroutines.test.setMain
 import org.junit.Before
 import org.junit.Test
 import java.io.IOException
-import kotlin.test.assertEquals
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchViewModelTest {
@@ -78,6 +73,7 @@ class SearchViewModelTest {
             getPersonalizedMoviesUseCase
         )
     }
+
     @Test
     fun `Should update query and trigger search when recent search item clicked`() = runTest {
         val query = "Batman"
@@ -138,6 +134,7 @@ class SearchViewModelTest {
         assertThat(uiState.rating).isEqualTo(movie.rating / 2)
         assertThat(uiState.posterPath).isEqualTo(movie.posterPath)
     }
+
     @Test
     fun `should not call searchPager when query is blank`() = runTest {
         viewModel.updateState { it.copy(query = "") }
@@ -168,6 +165,7 @@ class SearchViewModelTest {
         assertThat(state.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
         assertThat(state.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
     }
+
     @Test
     fun `should remove query from recentSearch when removal succeeds`() = runTest {
         val initial = listOf("Batman", "Spiderman", "Superman")
