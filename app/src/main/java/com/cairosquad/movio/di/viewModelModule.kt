@@ -4,6 +4,7 @@ import com.cairosquad.viewmodel.details.reviews.ReviewsViewModel
 import com.cairosquad.viewmodel.details.artist.ArtistViewModel
 import com.cairosquad.viewmodel.details.top_cast.TopCastViewModel
 import com.cairosquad.viewmodel.details.series.SeriesDetailsViewModel
+import com.cairosquad.viewmodel.details.similar_series.SimilarSeriesViewModel
 import com.cairosquad.viewmodel.search.SearchViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
@@ -33,4 +34,6 @@ val viewModelModule = module {
     }
 
     viewModelOf(::ArtistViewModel)
+    viewModelOf(::SimilarSeriesViewModel)
+
 }
