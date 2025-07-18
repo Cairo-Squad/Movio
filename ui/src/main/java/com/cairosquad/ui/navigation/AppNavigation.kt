@@ -20,12 +20,14 @@ import com.cairosquad.ui.details.SeriesScreen
 import com.cairosquad.ui.details.SimilarMoviesScreen
 import com.cairosquad.ui.details.SimilarSeriesScreen
 import com.cairosquad.ui.details.TopCastScreen
+import com.cairosquad.ui.details.artist.ArtistScreen
 import com.cairosquad.ui.search.ForYouScreen
 import com.cairosquad.ui.splash.SplashScreen
-
-private const val BASE_URL = "https://www.cairo-movio.com"
 import com.cairosquad.ui.AppScreen
 import com.cairosquad.ui.details.EpisodesScreen
+
+
+private const val BASE_URL = "https://www.cairo-movio.com"
 
 
 @Composable
