@@ -1,7 +1,6 @@
-package com.cairosquad.domain.usecase
+package com.cairosquad.domain.usecase.search
 
 import com.cairosquad.domain.repository.SearchRepository
-import com.cairosquad.domain.usecase.search.GetLocalSearchHistoryUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

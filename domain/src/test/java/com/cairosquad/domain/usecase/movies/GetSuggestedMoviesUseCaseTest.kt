@@ -1,7 +1,6 @@
-package com.cairosquad.domain.usecase
+package com.cairosquad.domain.usecase.movies
 
 import com.cairosquad.domain.repository.MoviesRepository
-import com.cairosquad.domain.usecase.movies.GetSuggestedMoviesUseCase
 import com.cairosquad.entity.Movie
 import io.mockk.coEvery
 import io.mockk.coVerify

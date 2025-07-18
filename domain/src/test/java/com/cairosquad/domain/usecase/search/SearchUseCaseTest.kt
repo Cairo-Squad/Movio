@@ -1,7 +1,6 @@
-package com.cairosquad.domain.usecase
+package com.cairosquad.domain.usecase.search
 
 import com.cairosquad.domain.repository.SearchRepository
-import com.cairosquad.domain.usecase.search.SearchUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series

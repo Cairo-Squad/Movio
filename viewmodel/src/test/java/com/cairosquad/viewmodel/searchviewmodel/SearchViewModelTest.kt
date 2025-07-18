@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.searchviewmodel
 
+import app.cash.turbine.test
 import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.exception.NetworkException
 import com.cairosquad.domain.exception.UnknownException
@@ -13,6 +14,7 @@ import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
+import com.cairosquad.viewmodel.search.SearchEffect
 import com.cairosquad.viewmodel.search.SearchScreenState
 import com.cairosquad.viewmodel.search.SearchViewModel
 import com.cairosquad.viewmodel.search.toUiState
@@ -547,6 +549,42 @@ class SearchViewModelTest {
 
         unmockkStatic(Dispatchers::class)
         Dispatchers.resetMain()
+    }
+
+    @Test
+    fun `should navigate to movie details when movie is clicked`() = runTest {
+        viewModel.effect.test {
+            viewModel.onMovieClicked(123)
+            assertThat(awaitItem()).isEqualTo(SearchEffect.NavigateToMovieDetails(123))
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `should navigate to series details when series is clicked`() = runTest {
+        viewModel.effect.test {
+            viewModel.onSeriesClicked(123)
+            assertThat(awaitItem()).isEqualTo(SearchEffect.NavigateToSeriesDetails(123))
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `should navigate to artist details when artist is clicked`() = runTest {
+        viewModel.effect.test {
+            viewModel.onArtistClicked(123)
+            assertThat(awaitItem()).isEqualTo(SearchEffect.NavigateToArtistDetails(123))
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `should navigate to see all for you movies when see all is clicked`() = runTest {
+        viewModel.effect.test {
+            viewModel.onSeeAllForYouClicked()
+            assertThat(awaitItem()).isEqualTo(SearchEffect.NavigateToSeeAllForYouScreen)
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     private companion object {

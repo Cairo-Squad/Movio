@@ -20,7 +20,8 @@ fun Series.toUiState() = SeriesDetailsScreenState.SeriesUiState(
     genres = genres.map { it.name },
     seasonsCount = seasonsCount,
     releaseDate = TimeUtil.convertLongToTime(releaseDate),
-    overview = overview
+    overview = overview,
+    trailerPath = trailerPath
 )
 
 fun Season.toUiState() = SeriesDetailsScreenState.SeasonUiState(

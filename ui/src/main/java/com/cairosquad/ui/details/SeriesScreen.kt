@@ -298,7 +298,10 @@ private fun SeriesScreenContent(
                             text = uiState.series.rating.toString(),
                             imgRes = R.drawable.review_star,
                         )
-//                        InfoChip(text = "7 seasons", imgRes = R.drawable.)
+                        InfoChip(
+                            text = "${uiState.series.seasonsCount} seasons",
+                            imgRes = R.drawable.ic_media
+                        )
                         InfoChip(
                             text = uiState.series.releaseDate,
                             imgRes = R.drawable.date,
