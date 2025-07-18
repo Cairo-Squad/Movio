@@ -22,11 +22,10 @@ class ArtistsRemoteDataSourceImplTest {
     @Test
     fun `getArtist should return ArtistRemoteDto`() = runTest {
         val artistId = 42L
-        val expected = ArtistRemoteDto(id = 42, name = "Jane Doe", profilePath = "/jane.jpg")
 
         val mockEngine = MockEngine { _ ->
             respond(
-                content = Json.encodeToString(expected),
+                content = Json.encodeToString(expectedArtist),
                 status = HttpStatusCode.OK,
                 headers = headersOf(HttpHeaders.ContentType, "application/json")
             )
@@ -42,7 +41,7 @@ class ArtistsRemoteDataSourceImplTest {
 
         val result = dataSource.getArtist(artistId)
 
-        assertThat(result).isEqualTo(expected)
+        assertThat(result).isEqualTo(expectedArtist)
     }
 
     @Test
@@ -50,10 +49,7 @@ class ArtistsRemoteDataSourceImplTest {
         val artistId = 99L
 
         val mockResponse = ArtistsRemoteDataSourceImpl.MoviesListResponse(
-            cast = listOf(
-                MovieRemoteDto(id = 1, title = "Movie 1", posterPath = null),
-                MovieRemoteDto(id = null, title = "Movie 2", posterPath = null)
-            )
+            cast = remoteMovies
         )
 
         val mockEngine = MockEngine { _ ->
@@ -85,12 +81,7 @@ class ArtistsRemoteDataSourceImplTest {
         val mockEngine = MockEngine { _ ->
             respond(
                 content = Json.encodeToString(
-                    SeriesListResponse(
-                        cast = listOf(
-                            SeriesRemoteDto(id = 100, name = "Series A", posterPath = "/a.jpg"),
-                            SeriesRemoteDto(id = null, name = "Series B", posterPath = null)
-                        )
-                    )
+                    SeriesListResponse(cast = remoteSeries)
                 ),
                 status = HttpStatusCode.OK,
                 headers = headersOf(HttpHeaders.ContentType, "application/json")
@@ -110,4 +101,16 @@ class ArtistsRemoteDataSourceImplTest {
         assertThat(result[0].id).isEqualTo(100)
     }
 
+    private companion object {
+        val remoteMovies = listOf(
+            MovieRemoteDto(id = 1, title = "Movie 1", posterPath = null),
+            MovieRemoteDto(id = null, title = "Movie 2", posterPath = null)
+        )
+        val remoteSeries = listOf(
+            SeriesRemoteDto(id = 100, name = "Series A", posterPath = "/a.jpg"),
+            SeriesRemoteDto(id = null, name = "Series B", posterPath = null)
+        )
+        val expectedArtist = ArtistRemoteDto(id = 42, name = "Jane Doe", profilePath = "/jane.jpg")
+
+    }
 }

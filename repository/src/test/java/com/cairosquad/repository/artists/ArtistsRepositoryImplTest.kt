@@ -9,6 +9,7 @@ import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.toEntity
 import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
+import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.SeriesRemoteDto
 import com.google.common.truth.Truth.assertThat
 import io.mockk.Runs
@@ -37,13 +38,9 @@ class ArtistsRepositoryImplTest {
     @Test
     fun `getMoviesOfArtist fetches from remote and caches when cache is empty`() = runTest {
         val artistId = 5L
-        val remoteMovies = listOf(
-            Movie(id = 1, title = "Remote Movie 1", posterPath = "/poster1.jpg", rating = 8.0f),
-            Movie(id = 2, title = "Remote Movie 2", posterPath = "/poster2.jpg", rating = 7.0f),
-        )
 
         val remoteMovieDtos = remoteMovies.map {
-            com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto(
+            MovieRemoteDto(
                 id = it.id.toInt(),
                 title = it.title,
                 posterPath = it.posterPath,
@@ -65,12 +62,7 @@ class ArtistsRepositoryImplTest {
     @Test
     fun `getArtist returns cached artist if available`() = runTest {
         val artistId = 1L
-        val cachedDto = ArtistCacheDto(
-            id = 1,
-            name = "Jane",
-            photoPath = "/jane.jpg",
-            timestamp = System.currentTimeMillis()
-        )
+
         val expected = cachedDto.toEntity()
 
         coEvery { cacheDataSource.clearExpiredCache(any()) } just Runs
@@ -84,34 +76,21 @@ class ArtistsRepositoryImplTest {
     @Test
     fun `getArtist fetches from remote and caches when cache is empty`() = runTest {
         val artistId = 2L
-        val remoteDto = ArtistRemoteDto(id = 2, name = "John", profilePath = "/john.jpg")
-        val expected = Artist(
-            id = 2,
-            name = "John",
-            photoPath = "/john.jpg",
-            country = "",
-            birthDate = 0L,
-            biography = "",
-            department = ""
-        )
 
         coEvery { cacheDataSource.clearExpiredCache(any()) } just Runs
         coEvery { cacheDataSource.getCachedArtists(artistId) } throws IllegalStateException()
-        coEvery { artistsRemoteDataSource.getArtist(artistId) } returns remoteDto
+        coEvery { artistsRemoteDataSource.getArtist(artistId) } returns artistRemoteDto
         coEvery { cacheDataSource.cacheArtist(any()) } just Runs
 
         val result = repository.getArtist(artistId)
 
-        assertThat(result).isEqualTo(expected)
+        assertThat(result).isEqualTo(expectedArtist)
     }
 
 
     @Test
     fun `getMoviesOfArtist returns cached movies if available`() = runTest {
         val artistId = 3L
-        val expectedMovies = listOf(
-            Movie(id = 1, title = "Film 1", rating = 7.5f, posterPath = "/film1.jpg")
-        )
 
         val cachedMovies = expectedMovies.map {
             MovieCacheDto(
@@ -135,10 +114,6 @@ class ArtistsRepositoryImplTest {
     @Test
     fun `getSeriesOfArtist returns from remote and caches when cache is empty`() = runTest {
         val artistId = 4L
-        val remoteSeriesDto =
-            listOf(SeriesRemoteDto(id = 1, name = "Series A", posterPath = "/img.jpg"))
-        val expected =
-            listOf(Series(id = 1, title = "Series A", posterPath = "/img.jpg", rating = 0f))
 
         coEvery { cacheDataSource.clearExpiredCache(any()) } just Runs
         coEvery { cacheDataSource.getCachedArtistSeries(artistId) } returns emptyList()
@@ -148,6 +123,37 @@ class ArtistsRepositoryImplTest {
 
         val result = repository.getSeriesOfArtist(artistId)
 
-        assertThat(result).isEqualTo(expected)
+        assertThat(result).isEqualTo(expectedSeries)
     }
+
+    private companion object {
+        val remoteMovies = listOf(
+            Movie(id = 1, title = "Remote Movie 1", posterPath = "/poster1.jpg", rating = 8.0f),
+            Movie(id = 2, title = "Remote Movie 2", posterPath = "/poster2.jpg", rating = 7.0f),
+        )
+        val cachedDto = ArtistCacheDto(
+            id = 1,
+            name = "Jane",
+            photoPath = "/jane.jpg",
+            timestamp = System.currentTimeMillis()
+        )
+        val artistRemoteDto = ArtistRemoteDto(id = 2, name = "John", profilePath = "/john.jpg")
+        val remoteSeriesDto =
+            listOf(SeriesRemoteDto(id = 1, name = "Series A", posterPath = "/img.jpg"))
+        val expectedArtist = Artist(
+            id = 2,
+            name = "John",
+            photoPath = "/john.jpg",
+            country = "",
+            birthDate = 0L,
+            biography = "",
+            department = ""
+        )
+        val expectedSeries =
+            listOf(Series(id = 1, title = "Series A", posterPath = "/img.jpg", rating = 0f))
+    }
+
+    val expectedMovies = listOf(
+        Movie(id = 1, title = "Film 1", rating = 7.5f, posterPath = "/film1.jpg")
+    )
 }
