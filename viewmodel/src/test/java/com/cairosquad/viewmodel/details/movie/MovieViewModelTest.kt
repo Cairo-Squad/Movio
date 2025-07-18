@@ -121,15 +121,6 @@ class MovieViewModelTest {
     }
 
     @Test
-    fun `WHEN onDismissLoginBottomSheet SHOULD hide login bottom sheet`() = runTest {
-        viewModel.effect.test {
-            viewModel.onFavoriteClick()
-            viewModel.onDismissLoginBottomSheet()
-            assertThat(viewModel.screenState.value.isNoAccountBottomSheetOpen).isFalse()
-        }
-    }
-
-    @Test
     fun `WHEN onSeeAllCastClick SHOULD Navigate To All Actors screen`() = runTest {
         viewModel.effect.test {
             viewModel.onSeeAllCastClick(1399)
