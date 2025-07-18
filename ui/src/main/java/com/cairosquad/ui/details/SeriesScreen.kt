@@ -449,7 +449,7 @@ private fun SeriesScreenContent(
                     items(uiState.reviews) {
                         ReviewCard(
                             imgUrl = "https://image.tmdb.org/t/p/w500/${it.authorPhotoPath}",
-                            movieTitle = it.author,
+                            reviewerName = it.author,
                             rating = it.rating.toString(),
                             reviewDate = it.date,
                             reviewText = it.description

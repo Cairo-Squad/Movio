@@ -22,8 +22,8 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.DesignSystemIcon
-import com.cairosquad.design_system.basic_component.DesignSystemText
 import com.cairosquad.design_system.basic_component.ExpandableText
+import com.cairosquad.design_system.basic_component.Text
 import com.cairosquad.design_system.theme.Theme.color
 import com.cairosquad.design_system.theme.Theme.textStyle
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
@@ -48,7 +48,7 @@ fun ReviewCard(
             .clip(RoundedCornerShape(8.dp))
             .heightIn(min = 137.dp)
             .width(258.dp)
-            .background(Theme.color.surfaces.surfaceContainer)
+            .background(color.surfaces.surfaceContainer)
             .padding(12.dp)
     ) {
         Row {
@@ -69,7 +69,7 @@ fun ReviewCard(
                         .size(32.dp)
                         .clip(CircleShape)
                         .align(Alignment.CenterVertically)
-                        .background(Theme.color.system.defaultImageBackground),
+                        .background(color.system.defaultImageBackground),
                     contentAlignment = Alignment.Center
                 ) {
                     DesignSystemIcon(
@@ -84,12 +84,12 @@ fun ReviewCard(
                     .padding(start = 8.dp)
                     .weight(1f)
             ) {
-                DesignSystemText(
+                Text(
                     text = reviewerName,
                     color = color.surfaces.onSurface,
                     style = textStyle.title.mediumMedium14
                 )
-                DesignSystemText(
+                Text(
                     modifier = Modifier.padding(top = 4.dp),
                     text = reviewDate,
                     color = color.surfaces.onSurfaceContainer,
@@ -103,7 +103,7 @@ fun ReviewCard(
                     contentDescription = stringResource(R.string.rating_star),
                     tint = Color.Unspecified,
                 )
-                DesignSystemText(
+                Text(
                     modifier = Modifier.padding(start = 4.dp),
                     text = rating,
                     color = color.system.onWarning,
