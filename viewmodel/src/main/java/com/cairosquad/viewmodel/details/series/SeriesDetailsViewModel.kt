@@ -11,6 +11,7 @@ import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState.ScreenSt
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 
 class SeriesDetailsViewModel(
     private val seriesDetailsUseCase: GetSeriesDetailsUseCase,
@@ -22,7 +23,7 @@ class SeriesDetailsViewModel(
         loadDetails(seriesId)
     }
 
-    private fun loadDetails(seriesId: Long) {
+    fun loadDetails(seriesId: Long) {
         getSeriesDetails(seriesId)
         getTopCast(seriesId)
         getSeasons(seriesId)
@@ -35,15 +36,15 @@ class SeriesDetailsViewModel(
     }
 
     override fun onShareClicked() {
-        sendEffect(SeriesDetailEffect.ShareSeries)
+        updateState { it.copy(showShareBottomSheet = true) }
     }
 
     override fun onFavoriteClicked() {
-        sendEffect(SeriesDetailEffect.FavoriteSeries)
+        updateState { it.copy(showLoginBottomSheet = true) }
     }
 
     override fun onRateClicked() {
-        sendEffect(SeriesDetailEffect.RateSeries)
+        updateState { it.copy(showLoginBottomSheet = true) }
     }
 
     override fun onPlayTrailerClicked() {
@@ -51,7 +52,34 @@ class SeriesDetailsViewModel(
     }
 
     override fun onAddToListClicked() {
-        sendEffect(SeriesDetailEffect.AddSeriesToList)
+        updateState { it.copy(showLoginBottomSheet = true) }
+    }
+
+    override fun onDismissShareBottomSheet() {
+        updateState { it.copy(showShareBottomSheet = false) }
+    }
+
+    override fun onDismissLoginBottomSheet() {
+        updateState { it.copy(showLoginBottomSheet = false) }
+    }
+
+    override fun onCopy(message: String, isSuccessful: Boolean) {
+        tryToCall(
+            onStart = {
+                onDismissShareBottomSheet()
+                delay(500)
+                updateState {
+                    it.copy(
+                        showSnackBar = true,
+                        snackMessage = message,
+                        isProcessSuccess = isSuccessful
+                    )
+                }
+            },
+            block = { delay(2000) },
+            onSuccess = { updateState { it.copy(showSnackBar = false, snackMessage = message) } },
+            onError = {},
+        )
     }
 
     override fun onArtistClicked(artistId: Long) {
@@ -151,7 +179,7 @@ class SeriesDetailsViewModel(
         updateState {
             it.copy(
                 seasonsSectionState = ScreenStatus.SUCCESS,
-                seasons = seasons.map { it.toUiState() }
+                seasons = seasons.map { it.toUiState() }.reversed()
             )
         }
     }
@@ -213,7 +241,7 @@ class SeriesDetailsViewModel(
         }
     }
 
-    private fun handleDetailsException(e: Throwable): ErrorStatus {
+    fun handleDetailsException(e: Throwable): ErrorStatus {
         return when (e) {
             is MovioException -> {
                 exceptionToErrorStatus(e)

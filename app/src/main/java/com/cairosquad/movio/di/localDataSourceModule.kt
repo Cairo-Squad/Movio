@@ -1,7 +1,7 @@
 package com.cairosquad.movio.di
 
 import androidx.room.Room
-import com.cairosquad.local.search.cache.cacheDataSourceImpl
+import com.cairosquad.local.search.cache.CacheDataSourceImpl
 import com.cairosquad.local.search.cache.dao.CacheDao
 import com.cairosquad.local.search.discovery.DiscoveryDataSourceImpl
 import com.cairosquad.local.search.discovery.dao.DiscoveryDao
@@ -32,7 +32,7 @@ val localDataSourceModule = module {
     }
 
     single<CacheDataSource> {
-        cacheDataSourceImpl(get())
+        CacheDataSourceImpl(get())
     }
 
     single<LocalRecentSearchDataSource> {

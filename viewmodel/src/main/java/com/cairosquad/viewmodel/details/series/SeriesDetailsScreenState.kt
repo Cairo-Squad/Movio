@@ -9,6 +9,11 @@ data class SeriesDetailsScreenState(
     val reviewsSectionState: ScreenStatus = ScreenStatus.INITIAL,
     val similarSeriesSectionState: ScreenStatus = ScreenStatus.INITIAL,
     val errorStatus: ErrorStatus? = null,
+    val showShareBottomSheet: Boolean = false,
+    val showLoginBottomSheet: Boolean = false,
+    val showSnackBar: Boolean = false,
+    val snackMessage: String = "",
+    val isProcessSuccess: Boolean = false,
     val series: SeriesUiState = SeriesUiState(),
     val cast: List<ArtistUiState> = emptyList(),
     val seasons: List<SeasonUiState> = emptyList(),
@@ -23,7 +28,8 @@ data class SeriesDetailsScreenState(
         val genres: List<String> = emptyList(),
         val seasonsCount: Int = 0,
         val releaseDate: String = "",
-        val overview: String = ""
+        val overview: String = "",
+        val trailerPath: String = ""
     )
 
     data class ArtistUiState(
@@ -38,8 +44,8 @@ data class SeriesDetailsScreenState(
         val episodesCount: Int = 0,
         val rating: Float = 0F,
         val posterPath: String = "",
-        val overview: String,
-        val airDate: String
+        val overview: String = "",
+        val airDate: String = ""
     )
 
     data class ReviewUiState(

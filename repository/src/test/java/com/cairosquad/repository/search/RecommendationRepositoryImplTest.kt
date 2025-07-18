@@ -42,6 +42,41 @@ class RecommendationRepositoryImplTest {
         }
 
     @Test
+    fun `should return fake movie when getMovie is called`() = runTest {
+        val result = recommendationRepository.getMovie(1L)
+
+        assertThat(result).isNotNull()
+        assertThat(result.title).isEqualTo("Interstellar")
+    }
+
+    @Test
+    fun `should return fake reviews list when getMovieReviews is called`() = runTest {
+        val result = recommendationRepository.getMovieReviews(1L)
+
+        assertThat(result).isNotNull()
+        assertThat(result).hasSize(2)
+        assertThat(result[0].author).isEqualTo("lmao7")
+    }
+
+    @Test
+    fun `should return list of 10 fake movies when getSimilarMovies is called`() = runTest {
+        val result = recommendationRepository.getSimilarMovies(1L)
+
+        assertThat(result).hasSize(10)
+        assertThat(result).contains(MoviesRepositoryImpl.fakeMovie)
+    }
+
+    @Test
+    fun `should return fake artists list when getMovieTopCast is called`() = runTest {
+        val result = recommendationRepository.getMovieTopCast(1L)
+
+        assertThat(result).isNotNull()
+        assertThat(result).hasSize(3)
+        assertThat(result[0].name).isEqualTo("Joseph Mawle")
+    }
+
+
+    @Test
     fun `should return empty list when getForYouMovies is called with empty remote data`() =
         runTest {
             // Given

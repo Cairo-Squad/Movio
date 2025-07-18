@@ -1,8 +1,13 @@
 package com.cairosquad.ui.details
 
-import android.content.ActivityNotFoundException
-import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +30,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
@@ -33,26 +39,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.basic_component.ExpandableText
 import com.cairosquad.design_system.basic_component.InfoChip
+import com.cairosquad.design_system.basic_component.SnackBar
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import com.cairosquad.ui.movio_component.ActionBar
 import com.cairosquad.ui.movio_component.ArtistCard
+import com.cairosquad.ui.movio_component.LoginBottomSheet
 import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.ui.movio_component.ReviewCard
+import com.cairosquad.ui.movio_component.SeasonCard
 import com.cairosquad.ui.movio_component.SectionHeader
+import com.cairosquad.ui.movio_component.ShareBottomSheet
 import com.cairosquad.ui.navigation.ArtistRoute
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.ReviewsRoute
@@ -62,6 +70,7 @@ import com.cairosquad.ui.navigation.SeriesRoute
 import com.cairosquad.ui.navigation.SimilarSeriesRoute
 import com.cairosquad.ui.navigation.TopCastRoute
 import com.cairosquad.ui.utils.ObserveAsEffect
+import com.cairosquad.ui.utils.ShareUtil
 import com.cairosquad.ui.utils.errorStatusToMessageResource
 import com.cairosquad.viewmodel.details.series.SeriesDetailEffect
 import com.cairosquad.viewmodel.details.series.SeriesDetailsInteractionListener
@@ -78,51 +87,19 @@ fun SeriesScreen(
     val navController = LocalNavController.current
     val context = LocalContext.current
     val uiState by viewModel.screenState.collectAsStateWithLifecycle()
+    val seriesUrl = "https://www.cairo-movio.com/series/${seriesId}"
+    val message = stringResource(R.string.check_out_this_amazing_series)
+    val encodedMessageAndUrl = Uri.encode("$message $seriesUrl")
 
     ObserveAsEffect(viewModel.effect) { effect ->
         when (effect) {
-            SeriesDetailEffect.RateSeries -> {
-                TODO()
-            }
-
-            SeriesDetailEffect.ShareSeries -> {
-                val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                    type = "text/plain" // MIME type for text
-                    putExtra(Intent.EXTRA_SUBJECT, "Check this out!")
-                    putExtra(
-                        Intent.EXTRA_TEXT,
-                        "Hey! Watch this amazing video: https://www.cairo-movio/series/${uiState.series.id}"
-                    )
-                }
-
-                context.startActivity(Intent.createChooser(shareIntent, "Share via"))
-            }
-
-            SeriesDetailEffect.FavoriteSeries -> {
-                TODO()
-            }
 
             SeriesDetailEffect.NavigateBack -> {
                 navController.popBackStack()
             }
 
             SeriesDetailEffect.PlayTrailer -> {
-                val videoId = "bjqEWgDVPe0"
-                val appIntent = Intent(Intent.ACTION_VIEW, "vnd.youtube:$videoId".toUri())
-                val webIntent = Intent(
-                    Intent.ACTION_VIEW,
-                    "https://www.youtube.com/watch?v=$videoId".toUri()
-                )
-
-                try {
-                    context.startActivity(appIntent)
-                } catch (_: ActivityNotFoundException) {
-                    context.startActivity(webIntent)
-                }
-            }
-
-            SeriesDetailEffect.AddSeriesToList -> {
-                TODO()
+                ShareUtil.playOnYoutube(videoId = "bjqEWgDVPe0", context = context)
             }
 
             is SeriesDetailEffect.ErrorHappened -> {
@@ -131,6 +108,7 @@ fun SeriesScreen(
                     context.getString(errorStatusToMessageResource(effect.message)),
                     Toast.LENGTH_LONG
                 ).show()
+                TODO("Replace it with SnackBar")
             }
 
             is SeriesDetailEffect.NavigateToAllArtists -> {
@@ -166,11 +144,75 @@ fun SeriesScreen(
             }
         }
     }
-
-    SeriesScreenContent(
-        uiState = uiState,
-        listener = viewModel
-    )
+    Box {
+        SeriesScreenContent(
+            uiState = uiState,
+            listener = viewModel
+        )
+        AnimatedVisibility(
+            visible = uiState.showShareBottomSheet,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            ShareBottomSheet(
+                isVisible = uiState.showShareBottomSheet,
+                onDismiss = viewModel::onDismissShareBottomSheet,
+                onCopyLinkClick = {
+                    ShareUtil.copyLink(
+                        seriesUrl = seriesUrl,
+                        context = context,
+                        onDismiss = viewModel::onCopy
+                    )
+                },
+                onShareFacebookClick = {
+                    ShareUtil.shareOnFacebook(
+                        encodedMessageAndUrl = encodedMessageAndUrl,
+                        context = context,
+                        onDismiss = viewModel::onDismissShareBottomSheet
+                    )
+                },
+                onShareXClick = {
+                    ShareUtil.shareOnX(
+                        encodedMessageAndUrl = encodedMessageAndUrl,
+                        context = context,
+                        onDismiss = viewModel::onDismissShareBottomSheet
+                    )
+                }
+            )
+        }
+        AnimatedVisibility(
+            visible = uiState.showLoginBottomSheet,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            LoginBottomSheet(
+                isVisible = uiState.showLoginBottomSheet,
+                onDismiss = viewModel::onDismissLoginBottomSheet,
+                onLoginClick = {}
+            )
+        }
+        AnimatedVisibility(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .windowInsetsPadding(WindowInsets.navigationBars)
+                .padding(16.dp),
+            visible = uiState.showSnackBar,
+            enter = slideInVertically(
+                initialOffsetY = { fullHeight -> fullHeight },
+                animationSpec = tween(durationMillis = 600)
+            ),
+            exit = slideOutVertically(
+                targetOffsetY = { fullHeight -> fullHeight },
+                animationSpec = tween(durationMillis = 600)
+            )
+        ) {
+            SnackBar(
+                imageVector = ImageVector.vectorResource(if (uiState.isProcessSuccess) R.drawable.archive_tick else R.drawable.danger),
+                message = uiState.snackMessage,
+                action = {}
+            )
+        }
+    }
 }
 
 @Composable
@@ -189,10 +231,12 @@ private fun SeriesScreenContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(400.dp)
-                .blur(16.dp)
                 .offset(y = (-20).dp),
             model = "https://image.tmdb.org/t/p/w500/${uiState.series.posterPath}",
             contentDescription = "",
+            blur = 16,
+            nudeThreshold = 0.001,
+            nonNudeThreshold = 1.0
         )
         LazyColumn(
             modifier = Modifier
@@ -253,7 +297,13 @@ private fun SeriesScreenContent(
                             text = uiState.series.rating.toString(),
                             imgRes = R.drawable.review_star,
                         )
-//                        InfoChip(text = "7 seasons", imgRes = R.drawable.)
+                        InfoChip(
+                            text = stringResource(
+                                R.string.seasons_count,
+                                uiState.series.seasonsCount
+                            ),
+                            imgRes = R.drawable.ic_media
+                        )
                         InfoChip(
                             text = uiState.series.releaseDate,
                             imgRes = R.drawable.date,
@@ -282,7 +332,7 @@ private fun SeriesScreenContent(
             item {
                 SectionHeader(
                     modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                    title = "Top Cast",
+                    title = stringResource(R.string.top_cast),
                     actionText = stringResource(R.string.see_all),
                     actionIcon = ImageVector.vectorResource(R.drawable.arrow),
                     onActionClick = { listener.onSeeAllArtistsClicked(seriesId = uiState.series.id) }
@@ -305,7 +355,7 @@ private fun SeriesScreenContent(
             item {
                 SectionHeader(
                     modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                    title = "Current Seasons",
+                    title = stringResource(R.string.current_seasons),
                     actionText = stringResource(R.string.see_all),
                     actionIcon = ImageVector.vectorResource(R.drawable.arrow),
                     onActionClick = { listener.onSeeAllSeasonsClicked(seriesId = uiState.series.id) }
@@ -314,16 +364,23 @@ private fun SeriesScreenContent(
                     contentPadding = PaddingValues(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    items(uiState.seasons) {
-                        ArtistCard(
-                            modifier = Modifier.clickable {
+                    itemsIndexed(uiState.seasons) { index, season ->
+                        SeasonCard(
+                            modifier = Modifier.width(260.dp),
+                            seriesName = uiState.series.title,
+                            seasonTitle = season.name,
+                            seasonRate = season.rating,
+                            totalNumberOfEpisodes = season.episodesCount.toString(),
+                            movieImage = "https://image.tmdb.org/t/p/w500/${season.posterPath}",
+                            yearOfPublish = season.airDate,
+                            timeOfPublish = season.airDate,
+                            currentSeason = season.number.toString(),
+                            onClick = {
                                 listener.onSeasonClicked(
                                     seriesId = uiState.series.id,
-                                    seasonNumber = it.number
+                                    seasonNumber = season.number
                                 )
-                            },
-                            name = it.name,
-                            imgUrl = "https://image.tmdb.org/t/p/w500/${it.posterPath}"
+                            }
                         )
                     }
                 }
@@ -331,7 +388,7 @@ private fun SeriesScreenContent(
             item {
                 SectionHeader(
                     modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                    title = "Reviews",
+                    title = stringResource(R.string.reviews),
                     actionText = stringResource(R.string.see_all),
                     actionIcon = ImageVector.vectorResource(R.drawable.arrow),
                     onActionClick = { listener.onSeeAllReviewsClicked(seriesId = uiState.series.id) }
@@ -354,7 +411,7 @@ private fun SeriesScreenContent(
             item {
                 SectionHeader(
                     modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                    title = "Similar Series",
+                    title = stringResource(R.string.similar_series),
                     actionText = stringResource(R.string.see_all),
                     actionIcon = ImageVector.vectorResource(R.drawable.arrow),
                     onActionClick = { listener.onSeeAllSimilarClicked(seriesId = uiState.series.id) }

@@ -50,7 +50,7 @@ fun ReviewCard(
             .padding(12.dp)
     ) {
         Row {
-            if (imgUrl?.isNotEmpty() == true) {
+            if (imgUrl.isNotEmpty()) {
                 SafeImageViewer(
                     model = "https://image.tmdb.org/t/p/w500$imgUrl",
                     modifier = Modifier
