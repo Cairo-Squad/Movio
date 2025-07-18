@@ -5,6 +5,7 @@ import com.cairosquad.viewmodel.search.paging.SearchPager
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
-val viewModelModule = module {
+val pagerModule = module {
     viewModelOf(::SearchViewModel)
+    single { SearchPager(get()) }
 }

@@ -1,5 +1,6 @@
 package com.cairosquad.repository.search
 
+import com.cairosquad.repository.movies.MoviesRepositoryImpl
 import com.cairosquad.repository.search.data_source.local.DiscoveryDataSource
 import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.search.data_source.remote.RemoteMovieDiscoveryDataSource

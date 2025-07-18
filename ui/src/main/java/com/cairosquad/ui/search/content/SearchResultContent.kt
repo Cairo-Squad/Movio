@@ -30,6 +30,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.InputField
 import com.cairosquad.design_system.basic_component.TabRow
@@ -47,7 +50,9 @@ fun SearchResultContent(
     listener: SearchInteractionListener,
     modifier: Modifier = Modifier
 ) {
-
+    val movies = state.movies.collectAsLazyPagingItems()
+    val artists = state.artists.collectAsLazyPagingItems()
+    val series = state.series.collectAsLazyPagingItems()
     val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     DisposableEffect(backPressedDispatcher) {
         val callback = object : OnBackPressedCallback(true) {
@@ -99,23 +104,23 @@ fun SearchResultContent(
 
         when (selectedTabIndex) {
             0 -> {
-                SearchResultText(noOfResults = state.movies.size)
-                AllResultsTabContent(state = state, listener = listener)
+                SearchResultText(noOfResults = movies.itemCount)
+                AllResultsTabContent(movies = movies, listener = listener)
             }
 
             1 -> {
-                SearchResultText(noOfResults = state.movies.size)
-                MoviesTabContent(state = state, listener = listener)
+                SearchResultText(noOfResults = movies.itemCount)
+                MoviesTabContent(movies = movies, listener = listener)
             }
 
             2 -> {
-                SearchResultText(noOfResults = state.series.size)
-                SeriesTabContent(state = state, listener = listener)
+                SearchResultText(noOfResults = series.itemCount)
+                SeriesTabContent(series = series, listener = listener)
             }
 
             3 -> {
-                SearchResultText(noOfResults = state.artists.size)
-                ArtistsTabContent(state = state, listener = listener)
+                SearchResultText(noOfResults = artists.itemCount)
+                ArtistsTabContent(artist = artists, listener = listener)
             }
         }
     }
@@ -123,12 +128,12 @@ fun SearchResultContent(
 
 @Composable
 private fun AllResultsTabContent(
-    state: SearchScreenState,
+    movies: LazyPagingItems<SearchScreenState.MovieUiState>,
     listener: SearchInteractionListener,
     modifier: Modifier = Modifier
 ) {
     AnimatedVisibility(
-        visible = state.movies.isEmpty(),
+        visible = movies.itemCount == 0,
         enter = fadeIn(),
         exit = fadeOut()
     ) {
@@ -146,7 +151,7 @@ private fun AllResultsTabContent(
     }
 
     AnimatedVisibility(
-        visible = state.movies.isNotEmpty(),
+        visible = movies.itemCount > 0,
         enter = fadeIn(),
         exit = fadeOut()
     ) {
@@ -158,16 +163,18 @@ private fun AllResultsTabContent(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
-            items(state.movies) { result ->
-                MovieCard(
-                    modifier = Modifier
-                        .clickable(onClick = { listener.onMovieClicked(result.id) }),
-                    title = result.title,
-                    vote = result.rating,
-                    imgUrl = result.posterPath,
-                    width = null,
-                    aspectRatio = 0.743f
-                )
+            items(movies.itemCount) { index ->
+                movies[index]?.let { result ->
+                    MovieCard(
+                        modifier = Modifier
+                            .clickable(onClick = { listener.onMovieClicked(result.id) }),
+                        title = result.title,
+                        vote = result.rating,
+                        imgUrl = result.posterPath,
+                        width = null,
+                        aspectRatio = 0.743f
+                    )
+                }
             }
         }
     }
@@ -175,12 +182,12 @@ private fun AllResultsTabContent(
 
 @Composable
 private fun MoviesTabContent(
-    state: SearchScreenState,
+    movies: LazyPagingItems<SearchScreenState.MovieUiState>,
     listener: SearchInteractionListener,
     modifier: Modifier = Modifier
 ) {
     AnimatedVisibility(
-        visible = state.movies.isEmpty(),
+        visible = movies.itemCount == 0,
         enter = fadeIn(),
         exit = fadeOut()
     ) {
@@ -197,7 +204,7 @@ private fun MoviesTabContent(
     }
 
     AnimatedVisibility(
-        visible = state.movies.isNotEmpty(),
+        visible = movies.itemCount > 0,
         enter = fadeIn(),
         exit = fadeOut()
     ) {
@@ -209,16 +216,19 @@ private fun MoviesTabContent(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
-            items(state.movies) { movie ->
-                MovieCard(
-                    modifier = Modifier
-                        .clickable(onClick = { listener.onMovieClicked(movie.id) }),
-                    title = movie.title,
-                    vote = movie.rating,
-                    imgUrl = movie.posterPath,
-                    width = null,
-                    aspectRatio = 0.743f
-                )
+            items(movies.itemCount) { index ->
+                movies[index]?.let { movie ->
+                    MovieCard(
+                        modifier = Modifier.clickable {
+                            listener.onMovieClicked(movie.id)
+                        },
+                        title = movie.title,
+                        vote = movie.rating,
+                        imgUrl = movie.posterPath,
+                        width = null,
+                        aspectRatio = 0.743f
+                    )
+                }
             }
         }
     }
@@ -226,12 +236,12 @@ private fun MoviesTabContent(
 
 @Composable
 private fun SeriesTabContent(
-    state: SearchScreenState,
+    series: LazyPagingItems<SearchScreenState.SeriesUiState>,
     listener: SearchInteractionListener,
     modifier: Modifier = Modifier
 ) {
     AnimatedVisibility(
-        visible = state.series.isEmpty(),
+        visible = series.itemCount == 0,
         enter = fadeIn(),
         exit = fadeOut()
     ) {
@@ -248,7 +258,7 @@ private fun SeriesTabContent(
     }
 
     AnimatedVisibility(
-        visible = state.series.isNotEmpty(),
+        visible = series.itemCount > 0,
         enter = fadeIn(),
         exit = fadeOut()
     ) {
@@ -260,16 +270,18 @@ private fun SeriesTabContent(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
-            items(state.series) { series ->
-                MovieCard(
-                    modifier = Modifier
-                        .clickable(onClick = { listener.onSeriesClicked(series.id) }),
-                    title = series.title,
-                    vote = series.rating,
-                    imgUrl = series.posterPath,
-                    width = null,
-                    aspectRatio = 0.743f
-                )
+            items(series.itemCount) { index ->
+                series[index]?.let { series ->
+                    MovieCard(
+                        modifier = Modifier
+                            .clickable(onClick = { listener.onSeriesClicked(series.id) }),
+                        title = series.title,
+                        vote = series.rating,
+                        imgUrl = series.posterPath,
+                        width = null,
+                        aspectRatio = 0.743f
+                    )
+                }
             }
         }
     }
@@ -277,12 +289,12 @@ private fun SeriesTabContent(
 
 @Composable
 private fun ArtistsTabContent(
-    state: SearchScreenState,
+    artist: LazyPagingItems<SearchScreenState.ArtistUiState>,
     listener: SearchInteractionListener,
     modifier: Modifier = Modifier
 ) {
     AnimatedVisibility(
-        visible = state.artists.isEmpty(),
+        visible = artist.itemCount == 0,
         enter = fadeIn(),
         exit = fadeOut()
     ) {
@@ -299,7 +311,7 @@ private fun ArtistsTabContent(
     }
 
     AnimatedVisibility(
-        visible = state.artists.isNotEmpty(),
+        visible = artist.itemCount > 0,
         enter = fadeIn(),
         exit = fadeOut()
     ) {
@@ -311,13 +323,15 @@ private fun ArtistsTabContent(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
-            items(state.artists) { artist ->
-                ArtistCard(
-                    modifier = Modifier
-                        .clickable(onClick = { listener.onArtistClicked(artist.id) }),
-                    name = artist.name,
-                    imgUrl = artist.photoPath,
-                )
+            items(artist.itemCount) { index ->
+                artist[index]?.let { artist ->
+                    ArtistCard(
+                        modifier = Modifier
+                            .clickable(onClick = { listener.onArtistClicked(artist.id) }),
+                        name = artist.name,
+                        imgUrl = artist.photoPath,
+                    )
+                }
             }
         }
     }
