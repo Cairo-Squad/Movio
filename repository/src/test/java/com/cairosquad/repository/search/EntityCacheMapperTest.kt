@@ -47,7 +47,7 @@ class EntityCacheMapperTest {
             genres = emptyList(),
             overview = "",
             releaseDate = 0L,
-            seasonsCount = 1
+            seasonsCount = 0
         )
         assertThat(seriesCacheWithNulls.toEntity()).isEqualTo(expected)
     }
