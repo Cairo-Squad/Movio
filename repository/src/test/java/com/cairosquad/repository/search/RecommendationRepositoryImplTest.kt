@@ -1,9 +1,9 @@
 package com.cairosquad.repository.search
 
-import com.cairosquad.repository.movies.MoviesRepositoryImpl
+import com.cairosquad.repository.movie.MovieRepositoryImpl
 import com.cairosquad.repository.search.data_source.local.DiscoveryDataSource
-import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.search.data_source.remote.RemoteMovieDiscoveryDataSource
+import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -14,13 +14,13 @@ import kotlin.test.Test
 class RecommendationRepositoryImplTest {
     private lateinit var remoteMovieDiscoveryDataSource: RemoteMovieDiscoveryDataSource
     private lateinit var discoveryDataSource: DiscoveryDataSource
-    private lateinit var recommendationRepository: MoviesRepositoryImpl
+    private lateinit var recommendationRepository: MovieRepositoryImpl
 
     @Before
     fun setUp() {
         discoveryDataSource = mockk(relaxed = true)
         remoteMovieDiscoveryDataSource = mockk(relaxed = true)
-        recommendationRepository = MoviesRepositoryImpl(
+        recommendationRepository = MovieRepositoryImpl(
             remoteMovieDiscoveryDataSource = remoteMovieDiscoveryDataSource,
             discoveryDataSource = discoveryDataSource
         )

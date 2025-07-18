@@ -5,9 +5,9 @@ import com.cairosquad.domain.repository.MoviesRepository
 import com.cairosquad.domain.repository.SearchRepository
 import com.cairosquad.domain.repository.SeriesRepository
 import com.cairosquad.repository.artists.ArtistsRepositoryImpl
-import com.cairosquad.repository.movies.MoviesRepositoryImpl
-import com.cairosquad.repository.series.SeriesRepositoryImpl
+import com.cairosquad.repository.movie.MovieRepositoryImpl
 import com.cairosquad.repository.search.SearchRepositoryImpl
+import com.cairosquad.repository.series.SeriesRepositoryImpl
 import org.koin.dsl.module
 
 val repositoryModule = module {
@@ -16,7 +16,7 @@ val repositoryModule = module {
     }
 
     single<MoviesRepository> {
-        MoviesRepositoryImpl(get(), get())
+        MovieRepositoryImpl(get(), get())
     }
 
     single<SeriesRepository> {

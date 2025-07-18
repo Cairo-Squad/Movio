@@ -1,4 +1,4 @@
-package com.cairosquad.repository.movies
+package com.cairosquad.repository.movie
 
 import com.cairosquad.domain.repository.MoviesRepository
 import com.cairosquad.entity.Artist
@@ -6,6 +6,7 @@ import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Review
 import com.cairosquad.repository.common.mappers.tryToCall
+import com.cairosquad.repository.movie.data_source.remote.MovieDataSource
 import com.cairosquad.repository.search.data_source.local.DiscoveryDataSource
 import com.cairosquad.repository.search.data_source.local.dto.toCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.toEntity
@@ -14,9 +15,10 @@ import com.cairosquad.repository.search.data_source.remote.dto.toEntity
 import kotlinx.coroutines.delay
 import java.util.Date
 
-class MoviesRepositoryImpl(
+class MovieRepositoryImpl(
     private val remoteMovieDiscoveryDataSource: RemoteMovieDiscoveryDataSource,
-    private val discoveryDataSource: DiscoveryDataSource
+    private val discoveryDataSource: DiscoveryDataSource,
+    private val movieDataSource: MovieDataSource
 ): MoviesRepository {
     override suspend fun getMovie(movieId: Long): Movie {
         delay(500); return fakeMovie
