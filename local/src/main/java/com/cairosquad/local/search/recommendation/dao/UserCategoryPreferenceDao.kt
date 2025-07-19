@@ -6,7 +6,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.cairosquad.repository.search.data_source.local.dto.GenreDto
-import com.cairosquad.repository.search.data_source.local.dto.UserCategoryPreferenceDto
 
 @Dao
 interface UserCategoryPreferenceDao {

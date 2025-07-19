@@ -2,7 +2,6 @@ package com.cairosquad.repository.search.data_source.local
 
 import com.cairosquad.entity.Genre
 import com.cairosquad.repository.search.data_source.local.dto.GenreDto
-import com.cairosquad.repository.search.data_source.local.dto.UserCategoryPreferenceDto
 
 interface UserCategoryPreferenceLocalDataSource {
     suspend fun updatePreferences(genres: List<GenreDto>)

@@ -5,10 +5,6 @@ import com.cairosquad.entity.Genre
 import com.cairosquad.entity.UserCategoryPreference
 import com.cairosquad.repository.search.data_source.local.UserCategoryPreferenceLocalDataSource
 import com.cairosquad.repository.search.data_source.local.dto.GenreDto
-import com.cairosquad.repository.search.data_source.local.dto.UserCategoryPreferenceDto
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 class UserCategoryPreferenceRepositoryImpl (
     private val localDataSource: UserCategoryPreferenceLocalDataSource,

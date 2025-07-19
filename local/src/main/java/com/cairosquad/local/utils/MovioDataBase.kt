@@ -8,11 +8,13 @@ import com.cairosquad.repository.search.data_source.local.dto.PersonalizedMovies
 import com.cairosquad.repository.search.data_source.local.dto.SuggestedMoviesIdsDto
 import com.cairosquad.local.search.recent.dao.LocalRecentSearchDao
 import com.cairosquad.local.search.recommendation.dao.UserCategoryPreferenceDao
+import com.cairosquad.repository.artists.dto.ArtistMovieCachedDto
+import com.cairosquad.repository.artists.dto.ArtistSeriesCachedDto
 import com.cairosquad.repository.search.data_source.local.dto.RecentSearchEntity
 import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.GenreDto
 import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.SeriesCacheDto
-import com.cairosquad.repository.search.data_source.local.dto.UserCategoryPreferenceDto
 
 @Database(
     entities = [
@@ -22,7 +24,9 @@ import com.cairosquad.repository.search.data_source.local.dto.UserCategoryPrefer
         RecentSearchEntity::class,
         PersonalizedMoviesIdsDto::class,
         SuggestedMoviesIdsDto::class,
-        UserCategoryPreferenceDto::class,
+        GenreDto::class,
+        ArtistMovieCachedDto::class,
+        ArtistSeriesCachedDto::class
     ],
     version = 1,
     exportSchema = true,

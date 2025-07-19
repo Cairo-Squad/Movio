@@ -3,7 +3,6 @@ package com.cairosquad.local.search.recommendation.dao
 import androidx.room.Transaction
 import com.cairosquad.repository.search.data_source.local.UserCategoryPreferenceLocalDataSource
 import com.cairosquad.repository.search.data_source.local.dto.GenreDto
-import com.cairosquad.repository.search.data_source.local.dto.UserCategoryPreferenceDto
 
 class GenreLocalDataSourceImpl(
     private val genreDao: UserCategoryPreferenceDao
