@@ -88,7 +88,7 @@ class GetMoviesDetailsUseCaseTest {
             id = 123.toString(),
             author = "Ana",
             authorPhotoPath = "/poster.png",
-            rating = "8",
+            rating = 8.0,
             date = 123,
             description = ""
         )
