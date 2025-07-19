@@ -3,12 +3,10 @@ package com.cairosquad.ui.details.artist
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -197,7 +195,7 @@ private fun ArtistScreenContent(
                         lastPart.split(" ").lastOrNull()?.trim()
                     }
                     ?.takeIf { it.isNotBlank() }
-                val birthDate = state.artist.birthDate;
+                val birthDate = state.artist.birthDate
                 if (birthDate != null) {
                     item {
                         InfoChip(
