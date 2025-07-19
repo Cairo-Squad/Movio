@@ -84,17 +84,17 @@ class SeriesDetailsUiStateMapperTest {
     @Test
     fun `Review toUiState SHOULD map fields and transform rating and date`() {
         val review = Review(
-            id = "5",
+            id = 5L,
             author = "Jane Smith",
             authorPhotoPath = "/author.jpg",
-            rating = 10.0,
+            rating = 10.toString(), // out of 10
             date = TimeUtil.convertLongToNamedDate(0L).let { 0L }, // epoch
             description = "Amazing series!"
         )
 
         val uiState = review.toUiState()
 
-        assertThat(uiState.id).isEqualTo("5")
+        assertThat(uiState.id).isEqualTo(5L)
         assertThat(uiState.author).isEqualTo("Jane Smith")
         assertThat(uiState.authorPhotoPath).isEqualTo("/author.jpg")
         assertThat(uiState.rating).isEqualTo(5.0f) // halved
@@ -126,10 +126,10 @@ class SeriesDetailsUiStateMapperTest {
     @Test
     fun `Review toUiState SHOULD handle negative timestamp`() {
         val review = Review(
-            id = "10L",
+            id = 10L,
             author = "Time Traveler",
             authorPhotoPath = "",
-            rating = 0.0,
+            rating = "0",
             date = getMillis("1965-05-15"),
             description = "Before 1970!"
         )
