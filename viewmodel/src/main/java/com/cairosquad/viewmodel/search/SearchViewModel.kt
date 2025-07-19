@@ -43,7 +43,7 @@ class SearchViewModel(
                     screenStatus = SearchScreenState.ScreenStatus.LOADING,
                 )
             }
-            val forYou = getPersonalizedMoviesUseCase.getPersonalizedMovies().map { it.toUiState() }
+            val forYou = getPersonalizedMoviesUseCase.getPersonalizedMovies(1).map { it.toUiState() }
             val exploreMore = getSuggestedMoviesUseCase.getSuggestedMovies().map { it.toUiState() }
             forYou to exploreMore
         },

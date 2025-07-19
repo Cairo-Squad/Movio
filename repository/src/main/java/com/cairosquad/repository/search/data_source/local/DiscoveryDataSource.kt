@@ -4,7 +4,7 @@ import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
 
 interface DiscoveryDataSource {
 
-    suspend fun getPersonalizedMovies(): List<MovieCacheDto>
+    suspend fun getPersonalizedMovies(page : Int): List<MovieCacheDto>
 
     suspend fun cachePersonalizedMovies(movies: List<MovieCacheDto>)
 
