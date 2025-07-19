@@ -28,8 +28,8 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.SeasonCard
-import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.EpisodesRoute
+import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.viewmodel.details.series.season.SeasonDetailEffect
 import com.cairosquad.viewmodel.details.series.season.SeasonDetailsInteractionListener
@@ -71,6 +71,17 @@ fun SeasonScreenContent(
             .fillMaxSize()
             .background(Theme.color.surfaces.surface)
     ){
+        Box(
+            modifier = Modifier
+                .windowInsetsPadding(WindowInsets.statusBars)
+                .size(230.dp)
+                .blur(264.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
+                .background(
+                    color = Color(0x33734EF8),
+                    shape = CircleShape
+                )
+                .align(Alignment.TopEnd)
+        )
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -96,21 +107,11 @@ fun SeasonScreenContent(
                     timeOfPublish = season.timeOfPublish,
                     currentSeason = "${season.number}",
                     onClick ={ listener.onSeasonClicked(season.seriesId, season.number)},
-                    modifier=Modifier.height(100.dp).fillMaxWidth(),
+                    modifier=Modifier
+                        .height(100.dp)
+                        .fillMaxWidth(),
                 )
             }
-
         }
-        Box(
-            modifier = Modifier
-                .windowInsetsPadding(WindowInsets.statusBars)
-                .size(230.dp)
-                .blur(264.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
-                .background(
-                    color = Color(0x33734EF8),
-                    shape = CircleShape
-                )
-                .align(Alignment.TopEnd)
-        )
     }
 }
