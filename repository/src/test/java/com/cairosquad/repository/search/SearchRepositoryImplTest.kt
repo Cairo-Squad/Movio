@@ -28,6 +28,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import java.time.Instant
+import java.util.Date
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchRepositoryImplTest {
@@ -49,12 +50,12 @@ class SearchRepositoryImplTest {
 
     @Test
     fun `should return cached series list when series are found in cache`() = runTest {
-
         //Given
-        coEvery { cacheDS.getCachedSeries(QUERY1) } returns listOf(cacheDto1)
+        val page = 1
+        coEvery { cacheDS.getCachedSeries(QUERY1,page) } returns listOf(cacheDto1)
         coEvery { cacheDS.clearExpiredCache(any()) } returns Unit
         //When
-        val result = repository.getSeries(QUERY1)
+        val result = repository.getSeries(QUERY1,page)
 
         //Then
         assertEquals(
@@ -65,26 +66,35 @@ class SearchRepositoryImplTest {
                     genres = emptyList(),
                     overview = "",
                     releaseDate = 0L,
-                    seasonsCount = 0
+                    seasonsCount = 1
                 )
             ), result
         )
-        coVerify { cacheDS.getCachedSeries(QUERY1) }
-        coVerify(exactly = 0) { remoteDS.getSeries(any()) }
+        coVerify { cacheDS.getCachedSeries(QUERY1,page) }
+        coVerify(exactly = 0) { remoteDS.getSeries(any(),page) }
     }
 
     @Test
     fun `should fetch and cache series list when series not found in cache`() = runTest {
-
         //Given
-        coEvery { cacheDS.getCachedSeries(QUERY2) } returns emptyList()
-        coEvery { remoteDS.getSeries(QUERY2) } returns listOf(remoteDto2)
+        val page = 1
+        coEvery { cacheDS.getCachedSeries(QUERY2,page) } returns emptyList()
+        coEvery { remoteDS.getSeries(QUERY2,page) } returns listOf(remoteDto2)
         coEvery { cacheDS.cacheSeries(any()) } just runs
         coEvery { cacheDS.clearExpiredCache(any()) } returns Unit
         //When
-        val result = repository.getSeries(QUERY2)
+        val result = repository.getSeries(QUERY2,page)
 
         //Then
+        assertEquals(listOf(Series(
+            7, "Lost", 8.3f, "/lost.jpg",
+            trailerPath = "",
+            genres = emptyList(),
+            overview = "",
+            releaseDate = 0L,
+            seasonsCount = 1
+        )), result)
+        coVerify { remoteDS.getSeries(QUERY2,page) }
         assertEquals(
             listOf(
                 Series(
@@ -97,79 +107,104 @@ class SearchRepositoryImplTest {
                 )
             ), result
         )
-        coVerify { remoteDS.getSeries(QUERY2) }
         coVerify { cacheDS.cacheSeries(any()) }
     }
 
 
     @Test
     fun `should return cached movies list when movies are found in cache`() = runTest {
-
         //Given
-        coEvery { cacheDS.getCachedMovies(QUERY3) } returns listOf(cacheDto3)
+        val page = 1
+        coEvery { cacheDS.getCachedMovies(QUERY3, page) } returns listOf(cacheDto3)
         coEvery { cacheDS.clearExpiredCache(any()) } returns Unit
         //When
-        val result = repository.getMovies(QUERY3)
+        val result = repository.getMovies(QUERY3,page)
 
         //Then
-        assertEquals(listOf(Movie(1, "Inception", 8.8f, "/inc.jpg")), result)
-        coVerify(exactly = 0) { remoteDS.getMovies(any()) }
+        assertEquals(
+            listOf(
+                Movie(
+                    1, "Inception", 8.8f, "/inc.jpg",
+                    genres = emptyList(),
+                    overview = "",
+                    releaseDate = 0L,
+                    runtimeMinutes = 5,
+                    trailerPath = ""
+                )
+            ), result
+        )
+        coVerify(exactly = 0) { remoteDS.getMovies(any(),page) }
     }
 
     @Test
     fun `should fetch and cache movies list when movies not found in cache`() = runTest {
-
         //Given
-        coEvery { cacheDS.getCachedMovies(QUERY4) } returns emptyList()
-        coEvery { remoteDS.getMovies(QUERY4) } returns listOf(remoteDto4)
+        val page = 1
+        coEvery { cacheDS.getCachedMovies(QUERY4,page) } returns emptyList()
+        coEvery { remoteDS.getMovies(QUERY4, page) } returns listOf(remoteDto4)
         coEvery { cacheDS.cacheMovies(any()) } just runs
         coEvery { cacheDS.clearExpiredCache(any()) } returns Unit
         //When
-        val result = repository.getMovies(QUERY4)
+        val result = repository.getMovies(QUERY4,page)
 
         //Then
-        assertEquals(listOf(Movie(99, "Matrix", rating = 8.7f, "/mx.jpg")), result)
-        coVerify { remoteDS.getMovies(QUERY4) }
+        assertEquals(
+            listOf(
+                Movie(
+                    99, "Matrix", rating = 8.7f, "/mx.jpg",
+                    genres = emptyList(),
+                    overview = "",
+                    releaseDate = 0L,
+                    runtimeMinutes = 5,
+                    trailerPath = ""
+                )
+            ), result
+        )
+        coVerify { remoteDS.getMovies(QUERY4,page) }
         coVerify { cacheDS.cacheMovies(any()) }
     }
 
     @Test
     fun `should return cached artists list when artists are found in cache`() = runTest {
-
         //Given
-        coEvery { cacheDS.getCachedArtists(QUERY5) } returns listOf(cacheDto5)
+        val page = 1
+        coEvery { cacheDS.getCachedArtists(QUERY5,page) } returns listOf(cacheDto5)
         coEvery { cacheDS.clearExpiredCache(any()) } returns Unit
         //When
-        val result = repository.getArtists(QUERY5)
+        val result = repository.getArtists(QUERY5,page)
 
         //Then
         assertEquals(listOf(Artist(5, "The Weeknd", "/w.jpg")), result)
-        coVerify(exactly = 0) { remoteDS.getArtists(any()) }
+        coVerify(exactly = 0) { remoteDS.getArtists(any(),page) }
     }
 
     @Test
     fun `should fetch and cache artists list when artists not found in cache`() = runTest {
         //Given
-        coEvery { cacheDS.getCachedArtists(QUERY6) } returns emptyList()
-        coEvery { remoteDS.getArtists(QUERY6) } returns listOf(remoteDto6)
+        val page = 1
+        coEvery { cacheDS.getCachedArtists(QUERY6,page) } returns emptyList()
+        coEvery { remoteDS.getArtists(QUERY6,page) } returns listOf(remoteDto6)
         coEvery { cacheDS.cacheArtist(any()) } just runs
         coEvery { cacheDS.clearExpiredCache(any()) } returns Unit
         //When
-        val result = repository.getArtists(QUERY6)
+        val result = repository.getArtists(QUERY6,page)
         //Then
         assertEquals(listOf(Artist(8, "Adele", "/a.jpg")), result)
-        coVerify { remoteDS.getArtists(QUERY6) }
+        coVerify { remoteDS.getArtists(QUERY6,page) }
         coVerify { cacheDS.cacheArtist(any()) }
     }
 
     private companion object {
         const val QUERY1 = "dark"
+        val page = 1
         val cacheDto1 = SeriesCacheDto(
             id = 42,
+            page = page,
             name = "Dark",
+            query = QUERY1,
             posterPath = "/dark.jpg",
             voteAverage = 8.8,
-            timestamp = Instant.now().toEpochMilli()
+            timestamp = Date().time
         )
         const val QUERY2 = "lost"
         val remoteDto2 = SeriesRemoteDto(
@@ -182,6 +217,8 @@ class SearchRepositoryImplTest {
         val cacheDto3 = MovieCacheDto(
             id = 1,
             title = "Inception",
+            query = QUERY3,
+            page = 1,
             posterPath = "/inc.jpg",
             voteAverage = 8.8,
             timestamp = Instant.now().toEpochMilli()
@@ -197,6 +234,8 @@ class SearchRepositoryImplTest {
         val cacheDto5 = ArtistCacheDto(
             id = 5,
             name = "The Weeknd",
+            query = QUERY5,
+            page = 1,
             photoPath = "/w.jpg",
             timestamp = Instant.now().toEpochMilli()
         )

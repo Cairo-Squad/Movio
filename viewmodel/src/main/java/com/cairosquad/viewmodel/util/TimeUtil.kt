@@ -41,4 +41,10 @@ internal object TimeUtil {
         val formatter = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
         return formatter.format(date)
     }
+
+    internal fun convertIntToHourMinuteFormat(time: Int): String {
+        val hours = time / 60
+        val minutes = time % 60
+        return "${hours}h ${minutes}min"
+    }
 }

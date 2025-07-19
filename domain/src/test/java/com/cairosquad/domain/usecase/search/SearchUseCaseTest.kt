@@ -44,16 +44,32 @@ class SearchUseCaseTest {
         // Given
         val query = "Batman"
         val movies = listOf(
-            Movie(id = 1, title = "Batman Begins", rating = 8.2f, posterPath = "/batman1.jpg"),
-            Movie(id = 2, title = "The Dark Knight", rating = 9.0f, posterPath = "/batman2.jpg")
+            Movie(
+                id = 1, title = "Batman Begins", rating = 8.2f, posterPath = "/batman1.jpg",
+                genres = emptyList(),
+                overview = "",
+                releaseDate = 9L,
+                runtimeMinutes = 5,
+                trailerPath = ""
+            ),
+            Movie(
+                id = 2, title = "The Dark Knight", rating = 9.0f, posterPath = "/batman2.jpg",
+                genres = emptyList(),
+                overview = "",
+                releaseDate = 9L,
+                runtimeMinutes = 5,
+                trailerPath = ""
+            )
         )
 
-        coEvery { searchRepository.getMovies(query) } returns movies
+        val page = 1
+
+        coEvery { searchRepository.getMovies(query, page) } returns movies
         coEvery { searchRepository.addQuery(query) } just runs
 
-        val result = useCase.getMovies(query)
+        val result = useCase.getMovies(query, page)
 
-        coVerify { searchRepository.getMovies(query) }
+        coVerify { searchRepository.getMovies(query, page) }
         coVerify { searchRepository.addQuery(query) }
     }
 
@@ -71,13 +87,13 @@ class SearchUseCaseTest {
                 seasonsCount = 1
             )
         )
-
-        coEvery { searchRepository.getSeries(query) } returns series
+        val page = 1
+        coEvery { searchRepository.getSeries(query, page) } returns series
         coEvery { searchRepository.addQuery(query) } just runs
 
-        val result = useCase.getSeries(query)
+        val result = useCase.getSeries(query, page)
 
-        coVerify { searchRepository.getSeries(query) }
+        coVerify { searchRepository.getSeries(query, page) }
         coVerify { searchRepository.addQuery(query) }
     }
 
@@ -90,13 +106,13 @@ class SearchUseCaseTest {
                 id = 1, name = "Leonardo DiCaprio", photoPath = "/leo.jpg",
             )
         )
-
-        coEvery { searchRepository.getArtists(query) } returns artists
+        val page = 1
+        coEvery { searchRepository.getArtists(query, page) } returns artists
         coEvery { searchRepository.addQuery(query) } just runs
 
-        val result = useCase.getArtists(query)
+        val result = useCase.getArtists(query, page)
 
-        coVerify { searchRepository.getArtists(query) }
+        coVerify { searchRepository.getArtists(query, page) }
         coVerify { searchRepository.addQuery(query) }
     }
 }

@@ -1,6 +1,6 @@
 package com.cairosquad.viewmodel.details.reviews
 
-import com.cairosquad.domain.usecase.movies.GetMoviesDetailsUseCase
+import com.cairosquad.domain.usecase.movies.GetMovieDetailsUseCase
 import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
 import com.cairosquad.entity.Review
 import com.cairosquad.viewmodel.base.BaseViewModel
@@ -10,14 +10,12 @@ import kotlinx.coroutines.Dispatchers
 class ReviewsViewModel(
     private val mediaId: Long,
     private val isMovie: Boolean,
-    private val getMoviesDetailsUseCase: GetMoviesDetailsUseCase,
+    private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
     private val getSeriesDetailsUseCase: GetSeriesDetailsUseCase,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 
-) : BaseViewModel<ReviewsScreenState, Nothing>(ReviewsScreenState()) {
-    init {
-        getReviews()
-    }
+) : BaseViewModel<ReviewsScreenState, ReviewsEffect>(initialState = ReviewsScreenState()),
+    ReviewsInteractionListener {
 
     fun getReviews() {
         updateState { it.copy(isLoading = true, error = null) }
@@ -33,9 +31,9 @@ class ReviewsViewModel(
 
     private suspend fun getReviewsByType(): List<Review> {
         return if (isMovie) {
-            getMoviesDetailsUseCase.getMovieReviews(mediaId)
+            getMovieDetailsUseCase.getMovieReviews(mediaId)
         } else {
-            getSeriesDetailsUseCase.getSeriesReviews(mediaId)
+            getSeriesDetailsUseCase.getSeriesReviews(mediaId, 1)
         }
     }
 
@@ -52,5 +50,9 @@ class ReviewsViewModel(
                 reviews = reviews.map { it.toUiState() }
             )
         }
+    }
+
+    override fun onClickBack() {
+        sendEffect(ReviewsEffect.NavigateBack)
     }
 }

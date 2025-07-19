@@ -1,48 +1,117 @@
 package com.cairosquad.ui.details
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.cairosquad.design_system.basic_component.Chip
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.cairosquad.design_system.R
+import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.theme.Theme
+import com.cairosquad.ui.movio_component.SeasonCard
 import com.cairosquad.ui.navigation.LocalNavController
-import com.cairosquad.ui.navigation.SeasonRoute
+import com.cairosquad.ui.navigation.EpisodeRoute
+import com.cairosquad.ui.utils.ObserveAsEffect
+import com.cairosquad.viewmodel.details.series.season.SeasonDetailEffect
+import com.cairosquad.viewmodel.details.series.season.SeasonDetailsInteractionListener
+import com.cairosquad.viewmodel.details.series.season.SeasonDetailsScreenState
+import com.cairosquad.viewmodel.details.series.season.SeasonsViewModel
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun SeasonsScreen(
     seriesId: Long,
+    seasonNumber: Int = 1,
+    viewModel: SeasonsViewModel = koinViewModel{ parametersOf(seriesId, seasonNumber) }
 ) {
+    val uiState by viewModel.screenState.collectAsStateWithLifecycle()
     val navController = LocalNavController.current
 
-    Column(
+    ObserveAsEffect(viewModel.effect) { effect ->
+        when (effect) {
+            SeasonDetailEffect.NavigateBack -> navController.popBackStack()
+            is SeasonDetailEffect.NavigateToEpisodeDetails -> navController.navigate(EpisodeRoute(effect.episodeId, effect.seasonNumber))
+
+        }
+    }
+
+    SeasonScreenContent(
+        uiState = uiState,
+        listener = viewModel
+    )
+}
+
+@Composable
+fun SeasonScreenContent(
+    uiState: SeasonDetailsScreenState,
+    listener: SeasonDetailsInteractionListener
+){
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterVertically)
-    ) {
-        BasicText(
-            text = "Seasons for Series with id: $seriesId",
-            style = Theme.textStyle.title.largeBold16
-                .copy(color = Theme.color.surfaces.onSurface),
-        )
-        Chip(
-            title = "back",
-            onClick = { navController.popBackStack() }
-        )
-        Chip(
-            title = "see season number 1",
-            onClick = { navController.navigate(SeasonRoute(seriesId, 1)) }
+            .background(Theme.color.surfaces.surface)
+    ){
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(WindowInsets.statusBars),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp)
+        ) {
+            stickyHeader {
+                AppBar(
+                    title = stringResource(R.string.current_season),
+                    onBackButtonClicked = listener::onBackClicked,
+                    modifier = Modifier.background(Theme.color.surfaces.surface)
+                )
+            }
+            items(uiState.season) { season ->
+                SeasonCard(
+                    seriesName = uiState.seriesTitle,
+                    seasonTitle =season.name,
+                    seasonRate=season.rating,
+                    totalNumberOfEpisodes = season.episodesCount.toString(),
+                    movieImage = season.posterPath,
+                    yearOfPublish = season.airDate,
+                    timeOfPublish = season.timeOfPublish,
+                    currentSeason = "${season.number}",
+                    onClick ={ listener.onEpisodeClicked(season.id, season.number)},
+                    modifier=Modifier.height(100.dp).fillMaxWidth(),
+                )
+            }
+
+        }
+        Box(
+            modifier = Modifier
+                .windowInsetsPadding(WindowInsets.statusBars)
+                .size(230.dp)
+                .blur(264.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
+                .background(
+                    color = Color(0x33734EF8),
+                    shape = CircleShape
+                )
+                .align(Alignment.TopEnd)
         )
     }
 }

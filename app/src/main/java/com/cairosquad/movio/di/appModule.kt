@@ -8,6 +8,7 @@ val appModule = module {
         domainModule,
         repositoryModule,
         localDataSourceModule,
-        viewModelModule
+        viewModelModule,
+        pagerModule
     )
 }

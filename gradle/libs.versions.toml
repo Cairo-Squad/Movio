@@ -1,5 +1,6 @@
 [versions]
 agp = "8.5.2"
+
 tensorflowLiteTaskVision = "0.4.3"
 constraintlayoutCompose = "1.1.1"
 datastorePreferences = "1.1.7"
@@ -40,12 +41,14 @@ firebaseBom = "33.16.0"
 firebaseCrashlytics = "19.4.4"
 ksp = "2.2.0-2.0.2"
 composeBom = "2024.09.00"
-
+paging_version = "3.3.6"
 
 [libraries]
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
+androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging_version" }
+androidx-paging-testing = { module = "androidx.paging:paging-testing", version.ref = "paging_version" }
 androidx-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "runtime" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleRuntimeKtx" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
@@ -74,6 +77,7 @@ androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging_version" }
 tensorflow-lite = { module = "org.tensorflow:tensorflow-lite", version.ref = "tensorflowLite" }
 tensorflow-lite-task-vision = { module = "org.tensorflow:tensorflow-lite-task-vision", version.ref = "tensorflowLiteTaskVision" }
 androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }

@@ -67,7 +67,7 @@ fun ActionBar(
         Icon(
             modifier = Modifier
                 .size(56.dp)
-                .padding(4.67.dp)
+                .padding(5.dp)
                 .clip(CircleShape)
                 .clickable(onClick = onPlayClicked)
                 .background(

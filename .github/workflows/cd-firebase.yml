@@ -83,15 +83,18 @@ jobs:
           echo "notes=$TRUNCATED_MSG" >> $GITHUB_OUTPUT
           echo "Release notes: $TRUNCATED_MSG"
 
-      - name: Upload APK to Firebase App Distribution
+      - name: Upload APKs to Firebase App Distribution
         env:
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
           FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
         run: |
           npm install -g firebase-tools
-          firebase appdistribution:distribute \
-            app/build/outputs/apk/release/app-release.apk \
-            --app "$FIREBASE_APP_ID" \
-            --token "$FIREBASE_AUTH_TOKEN" \
-            --groups "cairo_squad" \
-            --release-notes-file release_notes.txt
+
+          for apk in app/build/outputs/apk/release/*-release.apk; do
+            echo "Uploading $apk"
+            firebase appdistribution:distribute \
+              "$apk" \
+              --app "$FIREBASE_APP_ID" \
+              --token "$FIREBASE_AUTH_TOKEN" \
+              --groups "cairo_squad" \
+              --release-notes-file release_notes.txt

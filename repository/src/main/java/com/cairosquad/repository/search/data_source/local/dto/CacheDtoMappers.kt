@@ -5,19 +5,21 @@ import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import java.util.Date
 
-fun Series.toCacheDto(): SeriesCacheDto {
+fun Series.toCacheDto(query: String,page: Int): SeriesCacheDto {
     return SeriesCacheDto(
         id = id.toInt(),
+        page = page,
         name = title,
         posterPath = posterPath,
         voteAverage = rating.toDouble(),
+        query = query,
         timestamp = Date().time
     )
 }
 
 @JvmName("toCacheSeriesDto")
-fun List<Series>.toCacheDto(): List<SeriesCacheDto> {
-    return map { it.toCacheDto() }
+fun List<Series>.toCacheDto(query: String,page: Int): List<SeriesCacheDto> {
+    return map { it.toCacheDto(query,page) }
 }
 
 fun SeriesCacheDto.toEntity(): Series {
@@ -30,7 +32,7 @@ fun SeriesCacheDto.toEntity(): Series {
         genres = emptyList(),
         overview = "",
         releaseDate = 0L,
-        seasonsCount = 0,
+        seasonsCount = 1,
     )
 }
 
@@ -39,19 +41,21 @@ fun List<SeriesCacheDto>.toEntity(): List<Series> {
     return map { it.toEntity() }
 }
 
-fun Movie.toCacheDto(): MovieCacheDto {
+fun Movie.toCacheDto(query: String,page:Int): MovieCacheDto {
     return MovieCacheDto(
         id = id.toInt(),
+        page = page,
         title = title,
         posterPath = posterPath,
         voteAverage = rating.toDouble(),
+        query = query,
         timestamp = Date().time
     )
 }
 
 @JvmName("toCacheMovieDto")
-fun List<Movie>.toCacheDto(): List<MovieCacheDto> {
-    return map { it.toCacheDto() }
+fun List<Movie>.toCacheDto(query: String,page: Int): List<MovieCacheDto> {
+    return map { it.toCacheDto(query,page) }
 }
 
 fun MovieCacheDto.toEntity(): Movie {
@@ -59,7 +63,12 @@ fun MovieCacheDto.toEntity(): Movie {
         id = id.toLong(),
         title = title ?: "",
         posterPath = posterPath ?: "",
-        rating = voteAverage?.toFloat() ?: 0f
+        rating = voteAverage?.toFloat() ?: 0f,
+        trailerPath = "",
+        genres = emptyList(),
+        overview = "",
+        releaseDate = 0L,
+        runtimeMinutes = 0,
     )
 }
 
@@ -68,18 +77,20 @@ fun List<MovieCacheDto>.toEntity(): List<Movie> {
     return map { it.toEntity() }
 }
 
-fun Artist.toCacheDto(): ArtistCacheDto {
+fun Artist.toCacheDto(query: String,page: Int): ArtistCacheDto {
     return ArtistCacheDto(
         id = id.toInt(),
+        page =page ,
         name = name,
         photoPath = photoPath,
+        query = query,
         timestamp = Date().time
     )
 }
 
 @JvmName("toCacheArtistDto")
-fun List<Artist>.toCacheDto(): List<ArtistCacheDto> {
-    return map { it.toCacheDto() }
+fun List<Artist>.toCacheDto(query: String,page: Int): List<ArtistCacheDto> {
+    return map { it.toCacheDto(query,page) }
 }
 
 fun ArtistCacheDto.toEntity(): Artist {

@@ -46,7 +46,10 @@ fun ArtistCard(
                     .clip(CircleShape),
                 contentDescription = stringResource(R.string.artist_image),
                 nudeThreshold = 0.0,
-                nonNudeThreshold = 0.0
+                nonNudeThreshold = 0.0,
+                loadingPlaceholder = {
+                    LoadingArtistCard()
+                }
             )
         } else {
             Box(
@@ -56,7 +59,7 @@ fun ArtistCard(
                     .clip(CircleShape)
                     .background(Theme.color.system.defaultImageBackground),
                 contentAlignment = Alignment.Center
-            ){
+            ) {
                 Icon(
                     modifier = Modifier.size(24.dp),
                     imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
