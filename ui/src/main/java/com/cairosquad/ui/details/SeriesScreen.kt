@@ -69,7 +69,7 @@ import com.cairosquad.ui.movio_component.SectionHeader
 import com.cairosquad.ui.movio_component.ShareBottomSheet
 import com.cairosquad.ui.movio_component.SmallArtistCard
 import com.cairosquad.ui.navigation.ArtistRoute
-import com.cairosquad.ui.navigation.EpisodeRoute
+import com.cairosquad.ui.navigation.EpisodesRoute
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.ReviewsRoute
 import com.cairosquad.ui.navigation.SeasonsRoute
@@ -140,8 +140,8 @@ fun SeriesScreen(
 
             is SeriesDetailEffect.NavigateToSeasonDetails -> {
                 navController.navigate(
-                    EpisodeRoute(
-                        episodeId = effect.seriesId,
+                    EpisodesRoute(
+                        seriesId = effect.seriesId,
                         seasonNumber = effect.seasonNumber
                     )
                 )

@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.details.series
 
+import android.util.Log
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Review
 import com.cairosquad.entity.Season
@@ -12,17 +13,19 @@ fun Artist.toUiState() = SeriesDetailsScreenState.ArtistUiState(
     photoPath = photoPath
 )
 
-fun Series.toUiState() = SeriesDetailsScreenState.SeriesUiState(
-    id = id,
-    title = title,
-    rating = String.format("%.1f", rating / 2).toFloat(),
-    posterPath = posterPath,
-    genres = genres.map { it.name },
-    seasonsCount = seasonsCount,
-    releaseDate = TimeUtil.convertLongToTime(releaseDate),
-    overview = overview,
-    trailerPath = trailerPath
-)
+fun Series.toUiState(): SeriesDetailsScreenState.SeriesUiState {
+    return SeriesDetailsScreenState.SeriesUiState(
+        id = id,
+        title = title,
+        rating = String.format("%.1f", rating / 2).toFloat(),
+        posterPath = posterPath,
+        genres = genres.map { it.name },
+        seasonsCount = seasonsCount,
+        releaseDate = TimeUtil.convertLongToTime(releaseDate),
+        overview = overview,
+        trailerPath = trailerPath
+    )
+}
 
 fun Season.toUiState() = SeriesDetailsScreenState.SeasonUiState(
     number = seasonNumber,

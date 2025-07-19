@@ -8,7 +8,7 @@ import java.util.Locale
 fun Review.toUiState() = ReviewsScreenState.ReviewUiState(
     reviewerName = author,
     reviewDate = Timestamp(date).toDateFormat(),
-    rating = rating.toSingleDecimal(),
+    rating = rating.toString(),
     reviewText = description,
     reviewerImageUrl = authorPhotoPath
 )

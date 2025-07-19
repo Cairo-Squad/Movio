@@ -1,0 +1,57 @@
+package com.cairosquad.viewmodel.details.similar_series
+
+import com.cairosquad.domain.exception.MovioException
+import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
+import com.cairosquad.viewmodel.base.BaseViewModel
+import com.cairosquad.viewmodel.details.similar_series.SimilarSeriesScreenState.ScreenStatus
+import com.cairosquad.viewmodel.exception.ErrorStatus
+import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
+import kotlinx.coroutines.Dispatchers
+
+class SimilarSeriesViewModel(
+    private val getSeriesDetailsUseCase: GetSeriesDetailsUseCase
+) : BaseViewModel<SimilarSeriesScreenState, SimilarSeriesEffect>(SimilarSeriesScreenState()),
+    SimilarSeriesInteractionListener {
+
+    fun fetchSimilarSeries(seriesId: Long) {
+        tryToCall(
+            onStart = {
+                updateState {
+                    it.copy(
+                        screenStatus = ScreenStatus.LOADING
+                    )
+                }
+            },
+            block = {
+                getSeriesDetailsUseCase.getSimilarSeries(seriesId, 1)
+            }, onSuccess = { seriesList ->
+                updateState {
+                    it.copy(
+                        screenStatus = ScreenStatus.SUCCESS,
+                        series = seriesList.map { it.toUiState() }
+                    )
+                }
+            },
+            onError = { e ->
+                updateState {
+                    it.copy(
+                        screenStatus = ScreenStatus.ERROR,
+                        errorStatus = when (e) {
+                            is MovioException -> exceptionToErrorStatus(e)
+                            else -> ErrorStatus.UNKNOWN_ERROR
+                        }
+                    )
+                }
+            },
+            dispatcher = Dispatchers.IO
+        )
+    }
+
+    override fun onClickBack() {
+        sendEffect(SimilarSeriesEffect.NavigateBack)
+    }
+
+    override fun onSeriesClicked(seriesId: Long) {
+        sendEffect(SimilarSeriesEffect.NavigateToSeriesDetails(seriesId))
+    }
+}
