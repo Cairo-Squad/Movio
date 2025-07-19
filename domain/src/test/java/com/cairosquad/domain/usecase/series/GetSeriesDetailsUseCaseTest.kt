@@ -12,9 +12,11 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.assertThrows
+import kotlin.test.assertEquals
 
 class GetSeriesDetailsUseCaseTest {
 
@@ -153,7 +155,8 @@ class GetSeriesDetailsUseCaseTest {
             runtimeMinutes = 45,
             rating = 9f,
             seasonNumber = 2,
-            seriesId = 123
+            seriesId = 123,
+            seasonPosterPath = "1XS1oqL89opfnbLl8WnZY1O1uJx.jpg"
         )
     }
 }
