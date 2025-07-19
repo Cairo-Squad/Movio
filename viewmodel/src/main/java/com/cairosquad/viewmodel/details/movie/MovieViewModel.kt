@@ -189,9 +189,8 @@ class MovieViewModel(
     }
 
     override fun onDismissLoginBottomSheet() {
-        updateState { it.copy(isNoAccountBottomSheetOpen = true) }
+        updateState { it.copy(isNoAccountBottomSheetOpen = false) }
     }
-
 
     private fun setError(
         throwable: Throwable,
