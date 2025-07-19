@@ -66,7 +66,7 @@ class SearchRepositoryImpl(
                         addAll(artist.map { it.name ?: "" })
                         addAll(series.map { it.name ?: "" })
                     }
-                    merged.distinct().take(20)
+                    merged.distinct().shuffled().take(20)
                 }
                 ?: dataSource.getAll()
         }
