@@ -24,7 +24,9 @@ data class EpisodeRemoteDto(
     @SerialName("still_path")
     val stillPath: String? = null,
     @SerialName("vote_average")
-    val voteAverage: Double? = null
+    val voteAverage: Double? = null,
+    @SerialName("show_id")
+    val seriesId: Long
 ) {
     fun toEntity(): Episode {
         return Episode(
@@ -35,6 +37,7 @@ data class EpisodeRemoteDto(
             runtimeMinutes = runtime ?: 0,
             rating = voteAverage?.toFloat() ?: 0f,
             seasonNumber = seasonNumber ?: 0,
+            seriesId = seriesId,
         )
     }
 }
