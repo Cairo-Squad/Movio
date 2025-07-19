@@ -69,7 +69,7 @@ import com.cairosquad.ui.navigation.ArtistRoute
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.MovieRoute
 import com.cairosquad.ui.navigation.ReviewsRoute
-import com.cairosquad.ui.navigation.SimilarSeriesRoute
+import com.cairosquad.ui.navigation.SimilarMovieRoute
 import com.cairosquad.ui.navigation.TopCastRoute
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.ui.utils.ShareUtil
@@ -125,7 +125,7 @@ fun MovieScreen(
             }
 
             is MovieEffect.NavigateToSimilarMovies -> {
-                navController.navigate(SimilarSeriesRoute(movieId))
+                navController.navigate(SimilarMovieRoute(movieId))
             }
 
             MovieEffect.PlayTrailer -> {
@@ -445,13 +445,13 @@ fun MovieContent(
                 }
             }
             item {
-                when (uiState.similarSeriesSectionState) {
+                when (uiState.similarMoviesSectionState) {
                     MovieScreenState.ScreenStatus.INITIAL -> {}
                     MovieScreenState.ScreenStatus.LOADING -> {}
                     MovieScreenState.ScreenStatus.SUCCESS -> {
                         SectionHeader(
                             modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                            title = "Similar Series",
+                            title = "Similar Movies",
                             actionText = stringResource(R.string.see_all),
                             actionIcon = ImageVector.vectorResource(R.drawable.arrow),
                             onActionClick = { interactionListener.onSeeAllSimilarMoviesClick(uiState.movie.id) }

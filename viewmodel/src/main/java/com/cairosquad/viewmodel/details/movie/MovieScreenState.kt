@@ -6,7 +6,7 @@ data class MovieScreenState(
     val basicDetailsSectionState: ScreenStatus = ScreenStatus.INITIAL,
     val castSectionState: ScreenStatus = ScreenStatus.INITIAL,
     val reviewsSectionState: ScreenStatus = ScreenStatus.INITIAL,
-    val similarSeriesSectionState: ScreenStatus = ScreenStatus.INITIAL,
+    val similarMoviesSectionState: ScreenStatus = ScreenStatus.INITIAL,
 
     val isLoading: Boolean = true,
     val movie: MovieDetailsUiState = MovieDetailsUiState(),
