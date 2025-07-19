@@ -278,23 +278,6 @@ class SearchRepositoryImplTest {
         assertEquals(expectedQueries, result)
     }
 
-//    @Test
-//    fun `should return filtered queries when getByQuery is called with non-blank query`() =
-//        runTest {
-//            // Given
-//            val expectedFilteredQueries = listOf("filteredQuery1", "filteredQuery2")
-//            val specificQuery = "search term"
-//            coEvery { localDataSource.getByQuery(specificQuery) } returns expectedFilteredQueries
-//
-//            // When
-//            val result = repository.getAllHistoryByQuery(specificQuery)
-//
-//            // Then
-//            assertEquals(expectedFilteredQueries, result)
-//            coVerify(exactly = 1) { localDataSource.getByQuery(specificQuery) }
-//            coVerify(exactly = 0) { localDataSource.getAll() }
-//        }
-
     @Test
     fun `should clear all queries when clearAll is called`() = runTest {
         // Given

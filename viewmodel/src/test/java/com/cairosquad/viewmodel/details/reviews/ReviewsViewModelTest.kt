@@ -70,7 +70,7 @@ class ReviewsViewModelTest {
     fun `getReviews should return reviews state when the series use case return reviews`() =
         testScope.runTest {
             // Given
-            coEvery { getSeriesDetailsUseCase.getSeriesReviews(SERIES_ID) } returns testReviews
+            coEvery { getSeriesDetailsUseCase.getSeriesReviews(SERIES_ID, 1) } returns testReviews
             viewModel = ReviewsViewModel(
                 mediaId = SERIES_ID,
                 isMovie = false,
@@ -121,14 +121,14 @@ class ReviewsViewModelTest {
         private const val SERIES_ID = 202L
         private const val AUTHOR_NAME = "lmao7"
         private const val AUTHOR_PHOTO_PATH = "/ekmYOUU4tfx9zGGadjRdE7UPce.jpg"
-        private const val RATING = "9"
+        private const val RATING = 9.0
         private const val DATE = 1487569648872L
         private const val DESCRIPTION = "good"
         private const val ERROR_MESSAGE = "Network error"
 
         private val testReviews = listOf(
             Review(
-                id = 0L,
+                id = "",
                 author = AUTHOR_NAME,
                 authorPhotoPath = AUTHOR_PHOTO_PATH,
                 rating = RATING,

@@ -27,8 +27,20 @@ class ForYouPagerTest {
     @Test
     fun `movies should emit PagingData with correct movie items`() = runTest {
         val expected = listOf(
-            Movie(id = 1, title = "Inception", rating = 8.8f, posterPath = "/inception.jpg"),
-            Movie(id = 2, title = "Interstellar", rating = 8.6f, posterPath = "/interstellar.jpg")
+            Movie(
+                id = 1, title = "Inception", rating = 8.8f, posterPath = "/inception.jpg",
+                genres = emptyList(),
+                overview = "",
+                releaseDate = 0L,
+                runtimeMinutes = 0,
+                trailerPath = ""
+            ),
+            Movie(id = 2, title = "Interstellar", rating = 8.6f, posterPath = "/interstellar.jpg",
+                genres = emptyList(),
+                overview = "",
+                releaseDate = 0L,
+                runtimeMinutes = 0,
+                trailerPath = "")
         )
         coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(1) } returns expected
         coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(match { it != 1 }) } returns emptyList()

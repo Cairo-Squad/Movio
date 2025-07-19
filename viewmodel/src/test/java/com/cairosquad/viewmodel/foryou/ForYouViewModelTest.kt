@@ -59,8 +59,18 @@ class ForYouViewModelTest {
     fun `getForYouMovies should update forYou on success`() = runTest(testDispatcher) {
         // Given
         val dummyMovies = listOf(
-            Movie(id = 1, title = "A", rating = 8f, posterPath = "a.jpg"),
-            Movie(id = 2, title = "B", rating = 9f, posterPath = "b.jpg")
+            Movie(id = 1, title = "A", rating = 8f, posterPath = "a.jpg",
+                genres = emptyList(),
+                overview = "",
+                releaseDate = 0L,
+                runtimeMinutes = 0,
+                trailerPath = ""),
+            Movie(id = 2, title = "B", rating = 9f, posterPath = "b.jpg",
+                genres = emptyList(),
+                overview = "",
+                releaseDate = 0L,
+                runtimeMinutes = 0,
+                trailerPath = "")
         )
         val dummyPagingData = PagingData.from(dummyMovies)
         every { forYouPager.movies() } returns flowOf(dummyPagingData)
@@ -115,8 +125,18 @@ class ForYouViewModelTest {
     fun `cacheMappedPagingData should map Movie to UiState correctly`() = runTest(testDispatcher) {
         // Given
         val originalMovies = listOf(
-            Movie(id = 1, title = "Movie 1", rating = 8.5f, posterPath = "/poster1.jpg"),
-            Movie(id = 2, title = "Movie 2", rating = 7.0f, posterPath = "/poster2.jpg")
+            Movie(id = 1, title = "Movie 1", rating = 8.5f, posterPath = "/poster1.jpg",
+                genres = emptyList(),
+                overview = "",
+                releaseDate = 0L,
+                runtimeMinutes = 0,
+                trailerPath = ""),
+            Movie(id = 2, title = "Movie 2", rating = 7.0f, posterPath = "/poster2.jpg",
+                genres = emptyList(),
+                overview = "",
+                releaseDate = 0L,
+                runtimeMinutes = 0,
+                trailerPath = "")
         )
         val pagingData = PagingData.from(originalMovies)
         every { forYouPager.movies() } returns flowOf(pagingData)
@@ -168,7 +188,12 @@ class ForYouViewModelTest {
             id = 1,
             title = "Test Movie",
             rating = 8.0f,
-            posterPath = "/test.jpg"
+            posterPath = "/test.jpg",
+            genres = emptyList(),
+            overview = "",
+            releaseDate = 0L,
+            runtimeMinutes = 0,
+            trailerPath = ""
         )
     }
 }

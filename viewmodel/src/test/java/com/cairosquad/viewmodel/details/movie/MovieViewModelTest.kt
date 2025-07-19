@@ -3,7 +3,7 @@ package com.cairosquad.viewmodel.details.movie
 import app.cash.turbine.test
 import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.exception.NetworkException
-import com.cairosquad.domain.usecase.movies.GetMoviesDetailsUseCase
+import com.cairosquad.domain.usecase.movies.GetMovieDetailsUseCase
 import com.cairosquad.entity.Movie
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.google.common.truth.Truth.assertThat
@@ -35,7 +35,7 @@ class MovieViewModelTest {
 
     private val testDispatcher = StandardTestDispatcher()
     private val movieId = 123L
-    private val mockUseCase: GetMoviesDetailsUseCase = mockk(relaxed = true)
+    private val mockUseCase: GetMovieDetailsUseCase = mockk(relaxed = true)
     private lateinit var viewModel: MovieViewModel
 
     @Before

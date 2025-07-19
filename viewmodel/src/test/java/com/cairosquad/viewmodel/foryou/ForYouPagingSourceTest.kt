@@ -29,7 +29,8 @@ class ForYouPagingSourceTest {
         genres = listOf(Genre(id = 1, name = "Action")),
         overview = "Test overview",
         releaseDate = 1234567890L,
-        runtimeMinutes = 120
+        runtimeMinutes = 120,
+        trailerPath = ""
     )
 
     @Before

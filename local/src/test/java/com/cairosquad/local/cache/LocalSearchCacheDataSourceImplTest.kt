@@ -119,7 +119,11 @@ class LocalSearchCacheDataSourceImplTest {
             name = "Emma",
             photoPath = null,
             query = query,
-            timestamp = Instant.now().toEpochMilli()
+            timestamp = Instant.now().toEpochMilli(),
+            country = "",
+            birthDate = 0L,
+            biography = "",
+            department = ""
         )
         coEvery { cacheDao.cacheArtist(any()) } just Runs
         // When
@@ -143,7 +147,11 @@ class LocalSearchCacheDataSourceImplTest {
             query = query,
             timestamp = 0,
             name = "Emma",
-            photoPath = "photo.jpg"
+            photoPath = "photo.jpg",
+            country = "",
+            birthDate = 0L,
+            biography = "",
+            department = ""
         )
         coEvery { cacheDao.getCachedArtist(query,page) } returns listOf(entity)
         //When

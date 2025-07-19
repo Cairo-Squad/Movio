@@ -1,6 +1,5 @@
 package com.cairosquad.viewmodel.details.series
 
-import android.util.Log
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
 import com.cairosquad.entity.Artist
@@ -84,7 +83,6 @@ class SeriesDetailsViewModel(
     }
 
     override fun onArtistClicked(artistId: Long) {
-        Log.d("Series", "onArtistClicked: $artistId")
         sendEffect(SeriesDetailEffect.NavigateToArtistDetails(artistId))
     }
 
@@ -93,7 +91,6 @@ class SeriesDetailsViewModel(
     }
 
     override fun onSeasonClicked(seriesId: Long, seasonNumber: Int) {
-        Log.d("Series", "onArtistClicked: $seriesId, $seasonNumber")
 
         sendEffect(
             SeriesDetailEffect.NavigateToSeasonDetails(
@@ -112,8 +109,6 @@ class SeriesDetailsViewModel(
     }
 
     override fun onSeriesClicked(seriesId: Long) {
-        Log.d("Series", "onArtistClicked: $seriesId")
-
         sendEffect(SeriesDetailEffect.NavigateToSeriesDetails(seriesId))
     }
 
