@@ -37,35 +37,63 @@ class RemoteMovieDataSourceImplTest {
     }
 
     @Test
-    fun `getMovie - Given valid response - When getMovie called - Then return MovieDetailsRemoteDto`() =
-        runBlocking {
-            val client = createMockClient(MOVIE_RESPONSE)
-            val dataSource = RemoteMovieDataSourceImpl(client)
-            val result = dataSource.getMovie(10)
-            assertEquals(10, result.id)
-            assertEquals("Oppenheimer", result.title)
-            assertEquals("2023-07-21", result.releaseDate)
-        }
+    fun `getMovie should return MovieDetailsRemoteDto when response is valid`() = runBlocking {
+        //given
+        val client = createMockClient(MOVIE_RESPONSE)
+        val dataSource = RemoteMovieDataSourceImpl(client)
+
+        //when
+        val result = dataSource.getMovie(10)
+
+        //then
+        assertEquals(10, result.id)
+        assertEquals("Oppenheimer", result.title)
+        assertEquals("2023-07-21", result.releaseDate)
+    }
 
     @Test
-    fun `getMovieReviews - Given list of reviews - When called - Then return non-empty list`() =
-        runBlocking {
-            val client = createMockClient(REVIEW_RESPONSE)
-            val dataSource = RemoteMovieDataSourceImpl(client)
-            val result = dataSource.getMovieReviews(10, 1)
-            assertEquals(2, result.size)
-            assertEquals("Alice", result[0].author)
-        }
+    fun `getMovieReviews should return list of reviews when response has results`() = runBlocking {
+        //given
+        val client = createMockClient(REVIEW_RESPONSE)
+        val dataSource = RemoteMovieDataSourceImpl(client)
+
+        //when
+        val result = dataSource.getMovieReviews(10, 1)
+
+        //then
+        assertEquals(2, result.size)
+        assertEquals("Alice", result[0].author)
+    }
 
     @Test
-    fun `getSimilarMovies - Given list of movies - When called - Then return MovieRemoteDto list`() =
+    fun `getSimilarMovies should return similar movies list when response is valid`() =
         runBlocking {
+            //given
             val client = createMockClient(SIMILAR_MOVIES_RESPONSE)
             val dataSource = RemoteMovieDataSourceImpl(client)
+
+            //when
             val result = dataSource.getSimilarMovies(10, 1)
+
+            //then
             assertEquals(1, result.size)
             assertEquals("Tenet", result[0].title)
         }
+
+    @Test
+    fun `getMovieTopCast should return cast list when credits response is valid`() = runBlocking {
+        //given
+        val client = createMockClient(CREDITS_RESPONSE)
+        val dataSource = RemoteMovieDataSourceImpl(client)
+
+        //when
+        val result = dataSource.getMovieTopCast(10, 1)
+
+        //then
+        assertEquals(2, result.size)
+        assertEquals("Cillian Murphy", result[0].name)
+        assertEquals("Emily Blunt", result[1].name)
+    }
 
     private companion object {
         const val MOVIE_RESPONSE = """
@@ -102,6 +130,23 @@ class RemoteMovieDataSourceImplTest {
                   "id": 21,
                   "title": "Tenet",
                   "overview": "Time inversion"
+                }
+              ]
+            }
+        """
+        const val CREDITS_RESPONSE = """
+            {
+              "id": 10,
+              "cast": [
+                {
+                  "id": 1,
+                  "name": "Cillian Murphy",
+                  "character": "J. Robert Oppenheimer"
+                },
+                {
+                  "id": 2,
+                  "name": "Emily Blunt",
+                  "character": "Katherine Oppenheimer"
                 }
               ]
             }

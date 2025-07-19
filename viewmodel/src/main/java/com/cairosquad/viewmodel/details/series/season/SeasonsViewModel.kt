@@ -29,7 +29,7 @@ class SeasonsViewModel(
         tryToCall(
             block = { seriesDetailsUseCase.getSeries(seriesId).title },
             onSuccess = { seriesTitle -> updateState { it.copy(seriesTitle = seriesTitle) } },
-            onError = {  },
+            onError = { updateState { it.copy(errorStatus = ErrorStatus.UNKNOWN_ERROR) } },
             dispatcher = dispatcher
         )
     }
