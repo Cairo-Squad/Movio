@@ -1,7 +1,9 @@
 package com.cairosquad.viewmodel.details.movie
 
+import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.movies.GetMovieDetailsUseCase
+import com.cairosquad.domain.usecase.search.UpdateUserCategoryPreferenceUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Review
@@ -11,10 +13,12 @@ import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MovieViewModel(
     private val movieUseCase: GetMovieDetailsUseCase,
-    movieId: Long
+    movieId: Long,
+    private val updateUserCategoryPreferenceUseCase: UpdateUserCategoryPreferenceUseCase,
 ) : BaseViewModel<MovieScreenState, MovieEffect>(MovieScreenState()),
     MovieInteractionListener {
 
@@ -49,6 +53,11 @@ class MovieViewModel(
                 basicDetailsSectionState = ScreenStatus.SUCCESS,
                 movie = movie.toMovieUiState()
             )
+        }
+        viewModelScope.launch {
+            movie.genres.forEach { genre ->
+                updateUserCategoryPreferenceUseCase(movie.genres)
+            }
         }
     }
 
