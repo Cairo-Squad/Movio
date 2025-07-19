@@ -34,7 +34,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -54,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.basic_component.ExpandableText
+import com.cairosquad.design_system.basic_component.Icon
 import com.cairosquad.design_system.basic_component.InfoChip
 import com.cairosquad.design_system.basic_component.SnackBar
 import com.cairosquad.design_system.theme.Theme

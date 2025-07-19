@@ -22,7 +22,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
-import com.cairosquad.design_system.basic_component.DesignSystemIcon
+import com.cairosquad.design_system.basic_component.Icon
 import com.cairosquad.design_system.basic_component.ExpandableText
 import com.cairosquad.design_system.basic_component.Text
 import com.cairosquad.design_system.theme.Theme.color
@@ -74,7 +74,7 @@ fun ReviewCard(
                         .background(color.system.defaultImageBackground),
                     contentAlignment = Alignment.Center
                 ) {
-                    DesignSystemIcon(
+                    Icon(
                         imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
                         contentDescription = stringResource(R.string.reviewer_image),
                         tint = Color(0xFFEFF1F5)
@@ -100,7 +100,7 @@ fun ReviewCard(
 
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
-                DesignSystemIcon(
+                Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.review_star),
                     contentDescription = stringResource(R.string.rating_star),
                     tint = Color.Unspecified,
