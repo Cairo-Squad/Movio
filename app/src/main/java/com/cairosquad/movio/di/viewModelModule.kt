@@ -27,11 +27,11 @@ val viewModelModule = module {
     }
     viewModelOf(::SimilarMoviesViewModel)
     viewModel { (movieId: Long) ->
-        MovieViewModel(movieId = movieId, movieUseCase = get())
+        MovieViewModel(movieId = movieId, movieUseCase = get(), updateUserCategoryPreferenceUseCase = get())
     }
 
     viewModel { (seriesId: Long) ->
-        SeriesDetailsViewModel(seriesDetailsUseCase = get(), seriesId = seriesId)
+        SeriesDetailsViewModel(seriesDetailsUseCase = get(), seriesId = seriesId, updateUserCategoryPreferenceUseCase = get())
     }
     viewModel { (mediaId: Long, isMovie: Boolean) ->
         TopCastViewModel(
@@ -53,7 +53,7 @@ val viewModelModule = module {
 
     viewModelOf(::ArtistViewModel)
     viewModel { (seriesId: Long) ->
-        SeriesDetailsViewModel(seriesDetailsUseCase = get(), seriesId = seriesId)
+        SeriesDetailsViewModel(seriesDetailsUseCase = get(), seriesId = seriesId, updateUserCategoryPreferenceUseCase = get())
     }
 
     viewModel { (seriesId: Long, seasonNumber: Int) ->
