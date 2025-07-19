@@ -122,6 +122,7 @@ private fun ArtistScreenContent(
         stop = Theme.color.surfaces.surface,
         fraction = progress
     )
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -161,6 +162,16 @@ private fun ArtistScreenContent(
                             )
                         )
                     )
+            )
+            AppBar(
+                onBackButtonClicked = listener::onClickBack,
+                modifier = Modifier
+                    .background(
+                        brush = verticalGradient(
+                            colors = listOf(animatedStartColor, animatedEndColor)
+                        )
+                    )
+                    .windowInsetsPadding(WindowInsets.statusBars).align(Alignment.TopCenter)
             )
             SafeImageViewer(
                 model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
@@ -270,17 +281,7 @@ private fun ArtistScreenContent(
             }
         }
     }
-    AppBar(
-        onBackButtonClicked = listener::onClickBack,
-        modifier = Modifier
-            .background(
-                brush = verticalGradient(
-                    colors = listOf(animatedStartColor, animatedEndColor)
-                )
-            )
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .padding(top = 4.dp)
-    )
+
 }
 
 private fun formatBirthDateLegacy(birthDateLong: Long): String {
