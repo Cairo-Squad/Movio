@@ -52,7 +52,6 @@ dependencies {
     testImplementation(libs.junit)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.material3)
     // Koin
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.android)
