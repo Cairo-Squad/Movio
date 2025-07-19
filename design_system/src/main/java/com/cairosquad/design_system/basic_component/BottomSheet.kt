@@ -34,11 +34,11 @@ fun BottomSheet(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
     containerColor: Color = Theme.color.surfaces.surface,
+    scrimColor: Color = Theme.color.surfaces.onSurfaceAt4,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState()
     var modifiedIsVisible by remember { mutableStateOf(isVisible) }
-
     LaunchedEffect(isVisible) {
         if (isVisible) {
             modifiedIsVisible = true
@@ -54,6 +54,7 @@ fun BottomSheet(
             modifier = modifier,
             sheetState = sheetState,
             containerColor = containerColor,
+            scrimColor = scrimColor
         ) {
             content()
         }

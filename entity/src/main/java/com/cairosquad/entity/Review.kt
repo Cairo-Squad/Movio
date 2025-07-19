@@ -1,10 +1,10 @@
 package com.cairosquad.entity
 
 data class Review(
-    val id: Long,
+    val id: String,
     val author: String,
     val authorPhotoPath: String,
-    val rating: String,
+    val rating: Double,
     val date: Long,
     val description: String,
 )

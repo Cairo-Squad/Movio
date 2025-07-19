@@ -28,6 +28,11 @@ fun SeriesCacheDto.toEntity(): Series {
         title = name ?: "",
         posterPath = posterPath ?: "",
         rating = voteAverage?.toFloat() ?: 0f,
+        trailerPath = "",
+        genres = emptyList(),
+        overview = "",
+        releaseDate = 0L,
+        seasonsCount = 1,
     )
 }
 
@@ -58,7 +63,12 @@ fun MovieCacheDto.toEntity(): Movie {
         id = id.toLong(),
         title = title ?: "",
         posterPath = posterPath ?: "",
-        rating = voteAverage?.toFloat() ?: 0f
+        rating = voteAverage?.toFloat() ?: 0f,
+        trailerPath = "",
+        genres = emptyList(),
+        overview = "",
+        releaseDate = 0L,
+        runtimeMinutes = 0,
     )
 }
 

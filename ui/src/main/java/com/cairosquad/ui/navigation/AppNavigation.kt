@@ -11,19 +11,18 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.cairosquad.design_system.theme.Theme
-import com.cairosquad.ui.details.ArtistScreen
+import com.cairosquad.ui.details.artist.ArtistScreen
 import com.cairosquad.ui.details.MovieScreen
 import com.cairosquad.ui.details.ReviewsScreen
-import com.cairosquad.ui.details.SeasonScreen
 import com.cairosquad.ui.details.SeasonsScreen
 import com.cairosquad.ui.details.SeriesScreen
-import com.cairosquad.ui.details.SimilarMoviesScreen
-import com.cairosquad.ui.details.SimilarSeriesScreen
+import com.cairosquad.ui.details.similar_series.SimilarSeriesScreen
+import com.cairosquad.ui.details.similar_movies.SimilarMoviesScreen
 import com.cairosquad.ui.details.TopCastScreen
 import com.cairosquad.ui.search.ForYouScreen
 import com.cairosquad.ui.splash.SplashScreen
 import com.cairosquad.ui.AppScreen
-
+import com.cairosquad.ui.details.EpisodeScreen
 
 
 @Composable
@@ -62,29 +61,33 @@ fun AppNavigation() {
             }
             composable<ArtistRoute> { backStackEntry ->
                 ArtistScreen(
-                    artistId = backStackEntry.toRoute<ArtistRoute>().artistId
+                    artistId = backStackEntry.toRoute<ArtistRoute>().artistId,
+                    navController=navController
                 )
             }
             composable<SimilarMovieRoute> { backStackEntry ->
                 SimilarMoviesScreen(
-                    movieId = backStackEntry.toRoute<SimilarMovieRoute>().movieId
+                    movieId = backStackEntry.toRoute<SimilarMovieRoute>().movieId,
+                    navController = navController
                 )
             }
             composable<SimilarSeriesRoute> { backStackEntry ->
                 SimilarSeriesScreen(
-                    seriesId = backStackEntry.toRoute<SimilarSeriesRoute>().seriesId
+                    seriesId = backStackEntry.toRoute<SimilarSeriesRoute>().seriesId,
+                    navController = navController
                 )
             }
             composable<TopCastRoute> { backStackEntry ->
                 TopCastScreen(
                     mediaId = backStackEntry.toRoute<TopCastRoute>().mediaId,
-                    isMovie = backStackEntry.toRoute<TopCastRoute>().isMovie
+                    isMovie = backStackEntry.toRoute<TopCastRoute>().isMovie,
+                    navController = navController
                 )
             }
             composable<ReviewsRoute> { backStackEntry ->
                 ReviewsScreen(
                     mediaId = backStackEntry.toRoute<ReviewsRoute>().mediaId,
-                    isMovie = backStackEntry.toRoute<ReviewsRoute>().isMovie
+                    isMovie = backStackEntry.toRoute<ReviewsRoute>().isMovie,
                 )
             }
             composable<SeasonsRoute> { backStackEntry ->
@@ -92,10 +95,10 @@ fun AppNavigation() {
                     seriesId = backStackEntry.toRoute<SeasonsRoute>().seriesId
                 )
             }
-            composable<SeasonRoute> { backStackEntry ->
-                SeasonScreen(
-                    seriesId = backStackEntry.toRoute<SeasonRoute>().seriesId,
-                    seasonNumber = backStackEntry.toRoute<SeasonRoute>().seasonNumber
+            composable<EpisodeRoute> { backStackEntry ->
+                EpisodeScreen(
+                    episodeId = backStackEntry.toRoute<EpisodeRoute>().episodeId,
+                    seasonNumber = backStackEntry.toRoute<EpisodeRoute>().seasonNumber
                 )
             }
             composable<ForYouRoute> {
@@ -105,4 +108,5 @@ fun AppNavigation() {
     }
 }
 
-val LocalNavController = staticCompositionLocalOf<NavHostController> { error("No nav controller provided") }
+val LocalNavController =
+    staticCompositionLocalOf<NavHostController> { error("No nav controller provided") }

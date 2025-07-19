@@ -15,8 +15,8 @@ class GetSeriesDetailsUseCase(
         return seriesRepository.getSeries(seriesId)
     }
 
-    suspend fun getSeriesReviews(seriesId: Long): List<Review> {
-        return seriesRepository.getSeriesReviews(seriesId)
+    suspend fun getSeriesReviews(seriesId: Long, page: Int): List<Review> {
+        return seriesRepository.getSeriesReviews(seriesId, page)
     }
 
     suspend fun getSeriesSeasons(seriesId: Long): List<Season> {
@@ -27,11 +27,11 @@ class GetSeriesDetailsUseCase(
         return seriesRepository.getEpisodes(seriesId, seasonNumber)
     }
 
-    suspend fun getSimilarSeries(seriesId: Long): List<Series> {
-        return seriesRepository.getSimilarSeries(seriesId)
+    suspend fun getSimilarSeries(seriesId: Long, page: Int): List<Series> {
+        return seriesRepository.getSimilarSeries(seriesId, page)
     }
 
-    suspend fun getSeriesTopCast(seriesId: Long): List<Artist> {
-        return seriesRepository.getSeriesTopCast(seriesId)
+    suspend fun getSeriesTopCast(seriesId: Long, page: Int): List<Artist> {
+        return seriesRepository.getSeriesTopCast(seriesId, page)
     }
 }

@@ -5,8 +5,9 @@ data class Movie(
     val title: String,
     val rating: Float,
     val posterPath: String,
-    val genres: List<Genre> = emptyList(), // TODO: remove default value
-    val overview: String = "", // TODO: remove default value
-    val releaseDate: Long = 0, // TODO: remove default value
-    val runtimeMinutes: Int = 1, // TODO: remove default value
+    val genres: List<Genre>,
+    val overview: String,
+    val releaseDate: Long,
+    val runtimeMinutes: Int,
+    val trailerPath: String,
 )
