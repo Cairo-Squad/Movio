@@ -29,7 +29,7 @@ class SeasonsViewModel(
         tryToCall(
             block = { seriesDetailsUseCase.getSeries(seriesId).title },
             onSuccess = { seriesTitle -> updateState { it.copy(seriesTitle = seriesTitle) } },
-            onError = { },
+            onError = {  },
             dispatcher = dispatcher
         )
     }
@@ -88,7 +88,7 @@ class SeasonsViewModel(
         sendEffect(SeasonDetailEffect.NavigateBack)
     }
 
-    override fun onEpisodeClicked(episodeId: Long, seasonNumber: Int) {
-        sendEffect(SeasonDetailEffect.NavigateToEpisodeDetails(episodeId, seasonNumber))
+    override fun onSeasonClicked(seriesId: Long, seasonNumber: Int) {
+        sendEffect(SeasonDetailEffect.NavigateToEpisodesScreen(seriesId, seasonNumber))
     }
 }
