@@ -9,6 +9,8 @@ import com.cairosquad.domain.usecase.movies.GetPersonalizedMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetSuggestedMoviesUseCase
 import com.cairosquad.domain.usecase.search.ClearSearchHistoryUseCase
 import com.cairosquad.domain.usecase.search.GetLocalSearchHistoryUseCase
+import com.cairosquad.domain.usecase.search.GetUserCategoryPreferenceUseCase
+import com.cairosquad.domain.usecase.search.SearchUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
@@ -27,6 +29,7 @@ class SearchViewModel(
     private val clearSearchHistoryUseCase: ClearSearchHistoryUseCase,
     private val getSuggestedMoviesUseCase: GetSuggestedMoviesUseCase,
     private val getPersonalizedMoviesUseCase: GetPersonalizedMoviesUseCase,
+    private val getUserCategoryPreferenceUseCase: GetUserCategoryPreferenceUseCase
 ) : BaseViewModel<SearchScreenState, SearchEffect>(initialState = SearchScreenState()),
     SearchInteractionListener {
 
@@ -107,9 +110,7 @@ class SearchViewModel(
     }
 
     override fun onSearch() {
-
         val query = screenState.value.query
-
         if (query.isBlank()) return
 
         updateState {
@@ -127,21 +128,27 @@ class SearchViewModel(
                     fetch = { searchPager.movies(it) },
                     map = { it.toUiState() }
                 )
+
                 val series = cacheMappedPagingData(
                     query = query,
                     scope = viewModelScope,
                     fetch = { searchPager.series(it) },
                     map = { it.toUiState() }
                 )
+
                 val artists = cacheMappedPagingData(
                     query = query,
                     scope = viewModelScope,
                     fetch = { searchPager.artists(it) },
                     map = { it.toUiState() }
                 )
-                Triple(movies, series, artists)
+
+                val topGenres = getUserCategoryPreferenceUseCase()
+                Triple(movies, series, artists) to topGenres
             },
-            onSuccess = { (movies, series, artists) ->
+            onSuccess = { (results, topGenres) ->
+                val (movies, series, artists) = results
+
                 updateState {
                     it.copy(
                         screenStatus = SearchScreenState.ScreenStatus.RESULT,
@@ -163,6 +170,7 @@ class SearchViewModel(
             dispatcher = Dispatchers.IO
         )
     }
+
 
     private fun <T : Any, R : Any> cacheMappedPagingData(
         query: String,
