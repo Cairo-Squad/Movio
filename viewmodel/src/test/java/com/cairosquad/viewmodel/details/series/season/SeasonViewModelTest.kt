@@ -50,7 +50,7 @@ class SeasonViewModelTest {
             Season(1, 2, "S2", 10, 8.0f, "path.jpg", "overview", 2020L)
         )
         val mockEpisodes = listOf(
-            Episode(1, 1, "e1.jpg", "Ep1", 45, 8.0f, 2, 1)
+            Episode(1, 1, "e1.jpg", "Ep1", 45, 8.0f, 2)
         )
         coEvery { getSeriesDetailsUseCase.getSeriesSeasons(any()) } returns mockSeasons
         coEvery { getSeriesDetailsUseCase.getEpisodes(any(), any()) } returns mockEpisodes
@@ -123,7 +123,7 @@ class SeasonViewModelTest {
     fun `should map season and episodes to ui state`() = runTest {
         // Arrange
         val mockSeason = Season(1, 2, "S2", 10, 8.0f, "path.jpg", "overview", 2020L)
-        val mockEpisode = Episode(1, 1, "e1.jpg", "Ep1", 45, 8.0f, 2, 1)
+        val mockEpisode = Episode(1, 1, "e1.jpg", "Ep1", 45, 8.0f, 2)
 
         coEvery { getSeriesDetailsUseCase.getSeriesSeasons(any()) } returns listOf(mockSeason)
         coEvery { getSeriesDetailsUseCase.getEpisodes(any(), any()) } returns listOf(mockEpisode)

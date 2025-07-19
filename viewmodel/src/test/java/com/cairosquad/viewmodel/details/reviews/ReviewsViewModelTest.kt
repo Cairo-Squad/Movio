@@ -70,7 +70,12 @@ class ReviewsViewModelTest {
     fun `getReviews should return reviews state when the series use case return reviews`() =
         testScope.runTest {
             // Given
-            coEvery { getSeriesDetailsUseCase.getSeriesReviews(SERIES_ID) } returns testReviews
+            coEvery {
+                getSeriesDetailsUseCase.getSeriesReviews(
+                    SERIES_ID,
+                    page = 1
+                )
+            } returns testReviews
             viewModel = ReviewsViewModel(
                 mediaId = SERIES_ID,
                 isMovie = false,
@@ -128,10 +133,10 @@ class ReviewsViewModelTest {
 
         private val testReviews = listOf(
             Review(
-                id = 0L,
+                id = "0",
                 author = AUTHOR_NAME,
                 authorPhotoPath = AUTHOR_PHOTO_PATH,
-                rating = RATING,
+                rating = 9.0,
                 date = DATE,
                 description = DESCRIPTION
             )

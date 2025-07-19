@@ -67,7 +67,7 @@ class TopCastViewModelTest {
     @Test
     fun `getTopCast should return series cast when isMovie is false`() = testScope.runTest {
         // Given
-        coEvery { getSeriesDetailsUseCase.getSeriesTopCast(SERIES_ID) } returns testCast
+        coEvery { getSeriesDetailsUseCase.getSeriesTopCast(SERIES_ID, page = 1) } returns testCast
         viewModel = TopCastViewModel(
             mediaId = SERIES_ID,
             isMovie = false,
