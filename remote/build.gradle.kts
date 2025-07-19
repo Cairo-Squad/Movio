@@ -80,10 +80,11 @@ dependencies {
 
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${libs.versions.junitJupiter.get()}")
     testImplementation(libs.truth)
     testImplementation(libs.koin.test)
-
+    testImplementation(libs.mockk)
     implementation(libs.logging.interceptor)
 
     implementation(project(":repository"))
