@@ -8,4 +8,5 @@ data class Episode(
     val runtimeMinutes: Int,
     val rating: Float,
     val seasonNumber: Int,
+    val seriesId: Long,
 )

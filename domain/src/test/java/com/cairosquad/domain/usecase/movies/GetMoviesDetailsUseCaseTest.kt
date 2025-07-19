@@ -46,6 +46,7 @@ class GetMoviesDetailsUseCaseTest {
     @Test
     fun `getSimilarMovies SHOULD return similar movies from repository`() = runTest {
         coEvery { moviesRepository.getSimilarMovies(123L, 1) } returns listOf(similarMovie)
+
         val result = useCase.getSimilarMovies(123L)
 
         assertThat(result).containsExactly(similarMovie)
@@ -55,6 +56,7 @@ class GetMoviesDetailsUseCaseTest {
     @Test
     fun `getMovieTopCast SHOULD return top cast from repository`() = runTest {
         coEvery { moviesRepository.getMovieTopCast(123L, 1) } returns listOf(actor)
+
         val result = useCase.getMovieTopCast(123L)
 
         assertThat(result).containsExactly(actor)
@@ -83,7 +85,7 @@ class GetMoviesDetailsUseCaseTest {
         )
 
         private val review = Review(
-            id = "123",
+            id = 123.toString(),
             author = "Ana",
             authorPhotoPath = "/poster.png",
             rating = 8.0,
