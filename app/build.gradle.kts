@@ -16,11 +16,6 @@ plugins {
 android {
     namespace = "com.cairosquad.movio"
     compileSdk = 35
-    splits {
-        abi {
-            isEnable = true
-        }
-    }
 
     defaultConfig {
         applicationId = "com.cairosquad.movio"

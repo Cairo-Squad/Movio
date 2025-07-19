@@ -91,7 +91,7 @@ jobs:
         run: |
           npm install -g firebase-tools
 
-          for apk in app/build/outputs/apk/release/*-release.apk; do
+          for apk in app/build/outputs/apk/release/app-release.apk
             echo "Uploading $apk"
             firebase appdistribution:distribute \
               "$apk" \
