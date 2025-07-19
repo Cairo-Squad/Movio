@@ -23,7 +23,7 @@ class SimilarSeriesViewModel(
                 }
             },
             block = {
-                getSeriesDetailsUseCase.getSimilarSeries(seriesId)
+                getSeriesDetailsUseCase.getSimilarSeries(seriesId, 1)
             }, onSuccess = { seriesList ->
                 updateState {
                     it.copy(
