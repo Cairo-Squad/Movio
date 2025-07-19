@@ -1,6 +1,7 @@
 package com.cairosquad.ui.details
 
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -68,7 +69,7 @@ import com.cairosquad.ui.movio_component.SectionHeader
 import com.cairosquad.ui.movio_component.ShareBottomSheet
 import com.cairosquad.ui.movio_component.SmallArtistCard
 import com.cairosquad.ui.navigation.ArtistRoute
-import com.cairosquad.ui.navigation.EpisodeRoute
+import com.cairosquad.ui.navigation.EpisodesRoute
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.ReviewsRoute
 import com.cairosquad.ui.navigation.SeasonsRoute
@@ -118,19 +119,19 @@ fun SeriesScreen(
             }
 
             is SeriesDetailEffect.NavigateToAllArtists -> {
-                navController.navigate(TopCastRoute(effect.seriesId, isMovie = false))
+                navController.navigate(TopCastRoute(seriesId, isMovie = false))
             }
 
             is SeriesDetailEffect.NavigateToAllReviews -> {
-                navController.navigate(ReviewsRoute(effect.seriesId, isMovie = false))
+                navController.navigate(ReviewsRoute(seriesId, isMovie = false))
             }
 
             is SeriesDetailEffect.NavigateToAllSeasons -> {
-                navController.navigate(SeasonsRoute(effect.seriesId))
+                navController.navigate(SeasonsRoute(seriesId))
             }
 
             is SeriesDetailEffect.NavigateToAllSimilar -> {
-                navController.navigate(SimilarSeriesRoute(effect.seriesId))
+                navController.navigate(SimilarSeriesRoute(seriesId))
             }
 
             is SeriesDetailEffect.NavigateToArtistDetails -> {
@@ -139,14 +140,15 @@ fun SeriesScreen(
 
             is SeriesDetailEffect.NavigateToSeasonDetails -> {
                 navController.navigate(
-                    EpisodeRoute(
-                        episodeId = effect.seriesId,
+                    EpisodesRoute(
+                        seriesId = effect.seriesId,
                         seasonNumber = effect.seasonNumber
                     )
                 )
             }
 
             is SeriesDetailEffect.NavigateToSeriesDetails -> {
+                Log.d("Series ASDASD ", "SeriesScreen: ${effect.seriesId}")
                 navController.navigate(SeriesRoute(effect.seriesId))
             }
         }
@@ -254,35 +256,29 @@ private fun SeriesScreenContent(
             .windowInsetsPadding(WindowInsets.navigationBars)
             .verticalScroll(listState)
     ) {
-        if (uiState.series.posterPath.isNotEmpty() == true) {
-            SafeImageViewer(
-                modifier = Modifier
-                    .blur(16.dp)
-                    .fillMaxWidth()
-                    .height(400.dp)
-                    .offset(y = (-28).dp),
-                model = "https://image.tmdb.org/t/p/w500/${uiState.series.posterPath}",
-                contentDescription = "",
-                blur = 0,
-                nudeThreshold = 0.001,
-                nonNudeThreshold = 1.0
-            )
-        } else {
-            Box(
-                modifier = Modifier
-                    .size(height = 260.dp, width = 200.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(Theme.color.system.defaultImageBackground),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    modifier = Modifier.size(24.dp),
-                    imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
-                    contentDescription = stringResource(R.string.default_image_icon),
-                    tint = Color(0xFFEFF1F5)
-                )
+        when (uiState.basicDetailsSectionState) {
+            SeriesDetailsScreenState.ScreenStatus.INITIAL -> {}
+            SeriesDetailsScreenState.ScreenStatus.LOADING -> {}
+            SeriesDetailsScreenState.ScreenStatus.SUCCESS -> {
+                if (uiState.series.posterPath.isNotEmpty()) {
+                    SafeImageViewer(
+                        modifier = Modifier
+                            .blur(16.dp)
+                            .fillMaxWidth()
+                            .height(400.dp)
+                            .offset(y = (-28).dp),
+                        model = "https://image.tmdb.org/t/p/w500/${uiState.series.posterPath}",
+                        contentDescription = "",
+                        blur = 0,
+                        nudeThreshold = 0.0,
+                        nonNudeThreshold = 0.0
+                    )
+                }
             }
+
+            SeriesDetailsScreenState.ScreenStatus.ERROR -> {}
         }
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -292,205 +288,265 @@ private fun SeriesScreenContent(
             userScrollEnabled = false
         ) {
             item {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 56.dp, bottom = 24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    if (uiState.series.posterPath?.isNotEmpty() == true)
-                        SafeImageViewer(
+                when (uiState.basicDetailsSectionState) {
+                    SeriesDetailsScreenState.ScreenStatus.INITIAL -> {}
+                    SeriesDetailsScreenState.ScreenStatus.LOADING -> {}
+                    SeriesDetailsScreenState.ScreenStatus.SUCCESS -> {
+                        Column(
                             modifier = Modifier
-                                .size(height = 260.dp, width = 200.dp)
-                                .clip(RoundedCornerShape(8.dp)),
-                            model = "https://image.tmdb.org/t/p/w500/${uiState.series.posterPath}",
-                            contentDescription = "",
-                        )
-                    else
-                        Box(
-                            modifier = Modifier
-                                .size(height = 260.dp, width = 200.dp)
-                                .clip(RoundedCornerShape(8.dp))
-                                .background(Theme.color.system.defaultImageBackground),
-                            contentAlignment = Alignment.Center
+                                .fillMaxWidth()
+                                .padding(top = 56.dp, bottom = 24.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Icon(
-                                modifier = Modifier.size(24.dp),
-                                imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
-                                contentDescription = stringResource(R.string.default_image_icon),
-                                tint = Color(0xFFEFF1F5)
-                            )
+                            if (uiState.series.posterPath.isNotEmpty())
+                                SafeImageViewer(
+                                    modifier = Modifier
+                                        .size(height = 260.dp, width = 200.dp)
+                                        .clip(RoundedCornerShape(8.dp)),
+                                    model = "https://image.tmdb.org/t/p/w500/${uiState.series.posterPath}",
+                                    contentDescription = "",
+                                )
+                            else
+                                Box(
+                                    modifier = Modifier
+                                        .size(height = 260.dp, width = 200.dp)
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .background(Theme.color.system.defaultImageBackground),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        modifier = Modifier.size(24.dp),
+                                        imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
+                                        contentDescription = stringResource(R.string.default_image_icon),
+                                        tint = Color(0xFFEFF1F5)
+                                    )
+                                }
                         }
-                }
-            }
-            item {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    horizontalAlignment = Alignment.Start
-                ) {
-                    BasicText(
-                        modifier = Modifier.padding(bottom = 8.dp),
-                        text = uiState.series.title,
-                        style = Theme.textStyle.headline.mediumMedium18.copy(
-                            color = Theme.color.surfaces.onSurface
-                        )
-                    )
-                    BasicText(
-                        modifier = Modifier.padding(bottom = 12.dp),
-                        text = uiState.series.genres.joinToString(", "),
-                        style = Theme.textStyle.label.smallRegular14.copy(
-                            color = Theme.color.surfaces.onSurfaceVariant
-                        )
-                    )
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        InfoChip(
-                            text = uiState.series.rating.toString(),
-                            imgRes = R.drawable.review_star,
-                        )
-                        InfoChip(
-                            text = stringResource(
-                                R.string.seasons_count,
-                                uiState.series.seasonsCount
-                            ),
-                            imgRes = R.drawable.ic_media
-                        )
-                        InfoChip(
-                            text = uiState.series.releaseDate,
-                            imgRes = R.drawable.date,
-                        )
                     }
-                    ActionBar(
-                        onRateClicked = listener::onRateClicked,
-                        onPlayClicked = listener::onPlayTrailerClicked,
-                        onAddToListClicked = listener::onAddToListClicked
-                    )
+
+                    SeriesDetailsScreenState.ScreenStatus.ERROR -> {}
                 }
+
             }
             item {
-                ExpandableText(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .padding(top = 16.dp),
-                    text = uiState.series.overview,
-                    color = Theme.color.surfaces.onSurface,
-                    style = Theme.textStyle.label.smallRegular14,
-                    showMoreStyle = Theme.textStyle.label.smallRegular14,
-                    showMoreColor = Theme.color.surfaces.onSurfaceVariant,
-                    showLessColor = Theme.color.surfaces.onSurfaceVariant,
-                )
-            }
-            item {
-                SectionHeader(
-                    modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                    title = stringResource(R.string.top_cast),
-                    actionText = stringResource(R.string.see_all),
-                    actionIcon = ImageVector.vectorResource(R.drawable.arrow),
-                    onActionClick = { listener.onSeeAllArtistsClicked(seriesId = uiState.series.id) }
-                )
-                LazyRow(
-                    contentPadding = PaddingValues(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.Start)
-                ) {
-                    items(uiState.cast) {
-                        SmallArtistCard(
-                            modifier = Modifier.clickable {
-                                listener.onArtistClicked(it.id)
-                            },
-                            name = it.name,
-                            imgUrl = "https://image.tmdb.org/t/p/w500/${it.photoPath}"
-                        )
-                    }
-                }
-            }
-            item {
-                SectionHeader(
-                    modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                    title = stringResource(R.string.current_seasons),
-                    actionText = stringResource(R.string.see_all),
-                    actionIcon = ImageVector.vectorResource(R.drawable.arrow),
-                    onActionClick = { listener.onSeeAllSeasonsClicked(seriesId = uiState.series.id) }
-                )
-                LazyRow(
-                    contentPadding = PaddingValues(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start)
-                ) {
-                    itemsIndexed(uiState.seasons) { index, season ->
-                        SeasonCard(
-                            modifier = Modifier.width(260.dp),
-                            seriesName = uiState.series.title,
-                            seasonTitle = season.name,
-                            seasonRate = season.rating,
-                            totalNumberOfEpisodes = season.episodesCount.toString(),
-                            movieImage = "https://image.tmdb.org/t/p/w500/${season.posterPath}",
-                            yearOfPublish = season.airDate,
-                            timeOfPublish = season.airDate,
-                            currentSeason = season.number.toString(),
-                            onClick = {
-                                listener.onSeasonClicked(
-                                    seriesId = uiState.series.id,
-                                    seasonNumber = season.number
+                when (uiState.basicDetailsSectionState) {
+                    SeriesDetailsScreenState.ScreenStatus.INITIAL -> {}
+                    SeriesDetailsScreenState.ScreenStatus.LOADING -> {}
+                    SeriesDetailsScreenState.ScreenStatus.SUCCESS -> {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                            horizontalAlignment = Alignment.Start
+                        ) {
+                            BasicText(
+                                modifier = Modifier.padding(bottom = 8.dp),
+                                text = uiState.series.title,
+                                style = Theme.textStyle.headline.mediumMedium18.copy(
+                                    color = Theme.color.surfaces.onSurface
+                                )
+                            )
+                            BasicText(
+                                modifier = Modifier.padding(bottom = 12.dp),
+                                text = uiState.series.genres.joinToString(", "),
+                                style = Theme.textStyle.label.smallRegular14.copy(
+                                    color = Theme.color.surfaces.onSurfaceVariant
+                                )
+                            )
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 16.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            ) {
+                                InfoChip(
+                                    text = uiState.series.rating.toString(),
+                                    imgRes = R.drawable.review_star,
+                                )
+                                InfoChip(
+                                    text = stringResource(
+                                        R.string.seasons_count,
+                                        uiState.series.seasonsCount
+                                    ),
+                                    imgRes = R.drawable.ic_media
+                                )
+                                InfoChip(
+                                    text = uiState.series.releaseDate,
+                                    imgRes = R.drawable.date,
                                 )
                             }
-                        )
+                            ActionBar(
+                                onRateClicked = listener::onRateClicked,
+                                onPlayClicked = listener::onPlayTrailerClicked,
+                                onAddToListClicked = listener::onAddToListClicked
+                            )
+                        }
                     }
+
+                    SeriesDetailsScreenState.ScreenStatus.ERROR -> {}
                 }
             }
             item {
-                SectionHeader(
-                    modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                    title = stringResource(R.string.reviews),
-                    actionText = stringResource(R.string.see_all),
-                    actionIcon = ImageVector.vectorResource(R.drawable.arrow),
-                    onActionClick = { listener.onSeeAllReviewsClicked(seriesId = uiState.series.id) }
-                )
-                LazyRow(
-                    contentPadding = PaddingValues(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start)
-                ) {
-                    items(uiState.reviews) {
-                        ReviewCard(
-                            imgUrl = "https://image.tmdb.org/t/p/w500/${it.authorPhotoPath}",
-                            reviewerName = it.author,
-                            rating = it.rating.toString(),
-                            reviewDate = it.date,
-                            reviewText = it.description
-                        )
-                    }
-                }
-            }
-            item {
-                SectionHeader(
-                    modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                    title = stringResource(R.string.similar_series),
-                    actionText = stringResource(R.string.see_all),
-                    actionIcon = ImageVector.vectorResource(R.drawable.arrow),
-                    onActionClick = { listener.onSeeAllSimilarClicked(seriesId = uiState.series.id) }
-                )
-                LazyRow(
-                    contentPadding = PaddingValues(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start)
-                ) {
-                    items(uiState.similarSeries) {
-                        MovieCard(
+                when (uiState.basicDetailsSectionState) {
+                    SeriesDetailsScreenState.ScreenStatus.INITIAL -> {}
+                    SeriesDetailsScreenState.ScreenStatus.LOADING -> {}
+                    SeriesDetailsScreenState.ScreenStatus.SUCCESS -> {
+                        ExpandableText(
                             modifier = Modifier
-                                .width(124.dp)
-                                .clickable {
-                                    listener.onSeriesClicked(it.id)
-                                },
-                            imgUrl = "https://image.tmdb.org/t/p/w500/${it.posterPath}",
-                            title = it.title,
-                            vote = it.rating,
-                            width = 124.dp,
-                            aspectRatio = 0.775f,
+                                .padding(horizontal = 16.dp)
+                                .padding(top = 16.dp),
+                            text = uiState.series.overview,
+                            color = Theme.color.surfaces.onSurface,
+                            style = Theme.textStyle.label.smallRegular14,
+                            showMoreStyle = Theme.textStyle.label.smallRegular14,
+                            showMoreColor = Theme.color.surfaces.onSurfaceVariant,
+                            showLessColor = Theme.color.surfaces.onSurfaceVariant,
                         )
                     }
+
+                    SeriesDetailsScreenState.ScreenStatus.ERROR -> {}
+                }
+
+            }
+            item {
+                when (uiState.castSectionState) {
+                    SeriesDetailsScreenState.ScreenStatus.INITIAL -> {}
+                    SeriesDetailsScreenState.ScreenStatus.LOADING -> {}
+                    SeriesDetailsScreenState.ScreenStatus.SUCCESS -> {
+                        SectionHeader(
+                            modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
+                            title = stringResource(R.string.top_cast),
+                            actionText = stringResource(R.string.see_all),
+                            actionIcon = ImageVector.vectorResource(R.drawable.arrow),
+                            onActionClick = { listener.onSeeAllArtistsClicked(seriesId = uiState.series.id) }
+                        )
+                        LazyRow(
+                            contentPadding = PaddingValues(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.Start)
+                        ) {
+                            items(uiState.cast) {
+                                SmallArtistCard(
+                                    modifier = Modifier.clickable {
+                                        listener.onArtistClicked(it.id)
+                                    },
+                                    name = it.name,
+                                    imgUrl = "https://image.tmdb.org/t/p/w500/${it.photoPath}"
+                                )
+                            }
+                        }
+                    }
+
+                    SeriesDetailsScreenState.ScreenStatus.ERROR -> {}
+                }
+            }
+            item {
+                when (uiState.seasonsSectionState) {
+                    SeriesDetailsScreenState.ScreenStatus.INITIAL -> {}
+                    SeriesDetailsScreenState.ScreenStatus.LOADING -> {}
+                    SeriesDetailsScreenState.ScreenStatus.SUCCESS -> {
+                        SectionHeader(
+                            modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
+                            title = stringResource(R.string.current_seasons),
+                            actionText = stringResource(R.string.see_all),
+                            actionIcon = ImageVector.vectorResource(R.drawable.arrow),
+                            onActionClick = { listener.onSeeAllSeasonsClicked(seriesId = uiState.series.id) }
+                        )
+                        LazyRow(
+                            contentPadding = PaddingValues(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start)
+                        ) {
+                            itemsIndexed(uiState.seasons) { index, season ->
+                                SeasonCard(
+                                    modifier = Modifier.width(260.dp),
+                                    seriesName = uiState.series.title,
+                                    seasonTitle = season.name,
+                                    seasonRate = season.rating,
+                                    totalNumberOfEpisodes = season.episodesCount.toString(),
+                                    movieImage = "https://image.tmdb.org/t/p/w500/${season.posterPath}",
+                                    yearOfPublish = season.airDate,
+                                    timeOfPublish = season.airDate,
+                                    currentSeason = season.number.toString(),
+                                    onClick = {
+                                        listener.onSeasonClicked(
+                                            seriesId = uiState.series.id,
+                                            seasonNumber = season.number
+                                        )
+                                    }
+                                )
+                            }
+                        }
+                    }
+
+                    SeriesDetailsScreenState.ScreenStatus.ERROR -> {}
+                }
+            }
+            item {
+                when (uiState.reviewsSectionState) {
+                    SeriesDetailsScreenState.ScreenStatus.INITIAL -> {}
+                    SeriesDetailsScreenState.ScreenStatus.LOADING -> {}
+                    SeriesDetailsScreenState.ScreenStatus.SUCCESS -> {
+                        SectionHeader(
+                            modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
+                            title = stringResource(R.string.reviews),
+                            actionText = stringResource(R.string.see_all),
+                            actionIcon = ImageVector.vectorResource(R.drawable.arrow),
+                            onActionClick = { listener.onSeeAllReviewsClicked(seriesId = uiState.series.id) }
+                        )
+                        LazyRow(
+                            contentPadding = PaddingValues(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start)
+                        ) {
+                            items(uiState.reviews) {
+                                ReviewCard(
+                                    imgUrl = "https://image.tmdb.org/t/p/w500/${it.authorPhotoPath}",
+                                    reviewerName = it.author,
+                                    rating = it.rating.toString(),
+                                    reviewDate = it.date,
+                                    reviewText = it.description,
+                                    isExpandable = false
+                                )
+                            }
+                        }
+                    }
+
+                    SeriesDetailsScreenState.ScreenStatus.ERROR -> {}
+                }
+
+            }
+            item {
+                when (uiState.similarSeriesSectionState) {
+                    SeriesDetailsScreenState.ScreenStatus.INITIAL -> {}
+                    SeriesDetailsScreenState.ScreenStatus.LOADING -> {}
+                    SeriesDetailsScreenState.ScreenStatus.SUCCESS -> {
+                        SectionHeader(
+                            modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
+                            title = stringResource(R.string.similar_series),
+                            actionText = stringResource(R.string.see_all),
+                            actionIcon = ImageVector.vectorResource(R.drawable.arrow),
+                            onActionClick = { listener.onSeeAllSimilarClicked(seriesId = uiState.series.id) }
+                        )
+                        LazyRow(
+                            contentPadding = PaddingValues(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start)
+                        ) {
+                            items(uiState.similarSeries) {
+                                MovieCard(
+                                    modifier = Modifier
+                                        .width(124.dp)
+                                        .clickable {
+                                            listener.onSeriesClicked(it.id)
+                                        },
+                                    imgUrl = "https://image.tmdb.org/t/p/w500/${it.posterPath}",
+                                    title = it.title,
+                                    vote = it.rating,
+                                    width = 124.dp,
+                                    aspectRatio = 0.775f,
+                                )
+                            }
+                        }
+                    }
+
+                    SeriesDetailsScreenState.ScreenStatus.ERROR -> {}
                 }
             }
         }

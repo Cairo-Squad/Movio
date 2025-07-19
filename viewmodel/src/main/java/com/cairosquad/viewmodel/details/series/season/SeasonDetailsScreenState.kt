@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.details.series.season
 
+import android.util.Log
 import com.cairosquad.entity.Episode
 import com.cairosquad.entity.Season
 import com.cairosquad.viewmodel.exception.ErrorStatus
@@ -17,7 +18,7 @@ data class SeasonDetailsScreenState(
     val episodes: List<EpisodeUiState> = emptyList()
 ) {
     data class SeasonUiState(
-        val id: Long = 0L,
+        val seriesId: Long = 0L,
         val number: Int = 0,
         val name: String = "",
         val episodesCount: Int = 0,
@@ -44,17 +45,19 @@ data class SeasonDetailsScreenState(
         ERROR
     }
 }
-fun Season.toUiState() = SeasonDetailsScreenState.SeasonUiState(
-    id = seriesId,
-    number = seasonNumber,
-    name = seasonName,
-    episodesCount = episodesCount,
-    rating = rating / 2,
-    posterPath = posterPath,
-    overview = overview,
-    airDate = TimeUtil.convertLongToYear(airDate),
-    timeOfPublish = Timestamp(airDate).toDateFormat()
-)
+fun Season.toUiState():SeasonDetailsScreenState.SeasonUiState {
+    return SeasonDetailsScreenState.SeasonUiState(
+        seriesId = seriesId,
+        number = seasonNumber,
+        name = seasonName,
+        episodesCount = episodesCount,
+        rating = rating / 2,
+        posterPath = posterPath,
+        overview = overview,
+        airDate = TimeUtil.convertLongToYear(airDate),
+        timeOfPublish = Timestamp(airDate).toDateFormat()
+    )
+}
 fun Episode.toUiState() = SeasonDetailsScreenState.EpisodeUiState(
     id = id,
     episodeNumber = episodeNumber,

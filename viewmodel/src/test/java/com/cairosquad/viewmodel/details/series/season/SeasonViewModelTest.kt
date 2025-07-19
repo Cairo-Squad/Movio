@@ -160,11 +160,11 @@ class SeasonViewModelTest {
         }
 
         // Act
-        viewModel.onEpisodeClicked(episodeId, seasonNumber)
+        viewModel.onSeasonClicked(episodeId, seasonNumber)
         advanceUntilIdle()
 
         // Assert
-        assertThat(emittedEffect).isEqualTo(SeasonDetailEffect.NavigateToEpisodeDetails(episodeId, seasonNumber))
+        assertThat(emittedEffect).isEqualTo(SeasonDetailEffect.NavigateToEpisodesScreen(episodeId, seasonNumber))
 
         job.cancel()
     }

@@ -13,7 +13,7 @@ interface MoviesRepository {
 
     suspend fun getMovieTopCast(movieId: Long, page: Int): List<Artist>
 
-    suspend fun getPersonalizedMovies(): List<Movie>
+    suspend fun getPersonalizedMovies(page : Int): List<Movie>
 
     suspend fun getSuggestedMovies(): List<Movie>
 }

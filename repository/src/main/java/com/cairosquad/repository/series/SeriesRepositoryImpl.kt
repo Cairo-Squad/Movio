@@ -21,7 +21,7 @@ class SeriesRepositoryImpl(
     }
 
     override suspend fun getSeriesSeasons(seriesId: Long): List<Season> {
-        return remoteSeriesDataSource.getSeriesSeasons(seriesId).map { it.toEntity() }
+        return remoteSeriesDataSource.getSeriesSeasons(seriesId).map { it.toEntity(seriesId) }
     }
 
     override suspend fun getEpisodes(

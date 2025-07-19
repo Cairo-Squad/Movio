@@ -1,18 +1,29 @@
 package com.cairosquad.ui.details
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -79,37 +90,52 @@ private fun ReviewsContent(
             ReviewsLoadingContent()
         }
 
-        else -> Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .systemBarsPadding(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            AppBar(
-                title = stringResource(R.string.reviews),
-                onBackButtonClicked = listener::onClickBack,
-            )
-            LazyColumn(
-                modifier = Modifier.padding(
-                    top = 12.dp,
-                    bottom = 12.dp,
-                    start = 16.dp,
-                    end = 16.dp
-                ),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(state.reviews) { review ->
-                    ReviewCard(
-                        modifier = Modifier.fillMaxWidth(),
-                        imgUrl = review.reviewerImageUrl,
-                        rating = review.rating,
-                        reviewDate = review.reviewDate,
-                        reviewText = review.reviewText,
-                        reviewerName = review.reviewerName
+        else -> Box {
+            Box(
+                modifier = Modifier
+                    .windowInsetsPadding(WindowInsets.statusBars)
+                    .size(230.dp)
+                    .blur(264.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
+                    .background(
+                        color = Color(0x33734EF8),
+                        shape = CircleShape
                     )
+                    .align(Alignment.TopEnd)
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+
+                    .systemBarsPadding(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                AppBar(
+                    title = stringResource(R.string.reviews),
+                    onBackButtonClicked = listener::onClickBack,
+                )
+                LazyColumn(
+                    modifier = Modifier.padding(
+                        top = 12.dp,
+                        bottom = 12.dp,
+                        start = 16.dp,
+                        end = 16.dp
+                    ),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(state.reviews) { review ->
+                        ReviewCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            imgUrl = review.reviewerImageUrl,
+                            rating = review.rating,
+                            reviewDate = review.reviewDate,
+                            reviewText = review.reviewText,
+                            reviewerName = review.reviewerName
+                        )
+                    }
                 }
             }
         }
+
     }
 }
 

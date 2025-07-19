@@ -204,7 +204,7 @@ class SearchViewModelTest {
         val forYouList = listOf(movie1)
         val exploreMoreList = listOf(movie2)
 
-        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies() } returns listOf(movie1)
+        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(1) } returns listOf(movie1)
         coEvery { getSuggestedMoviesUseCase.getSuggestedMovies() } returns listOf(movie2)
 
         viewModel.loadDiscoverMovies()
@@ -218,7 +218,7 @@ class SearchViewModelTest {
 
     @Test
     fun `should set error status when discover movies loading fails`() = runBlocking {
-        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies() } throws IOException()
+        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(1) } throws IOException()
         coEvery { getSuggestedMoviesUseCase.getSuggestedMovies() } returns emptyList()
 
         viewModel.loadDiscoverMovies()
@@ -503,7 +503,7 @@ class SearchViewModelTest {
         mockkStatic(Dispatchers::class)
         every { Dispatchers.IO } returns testDispatcher
 
-        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies() } returns listOf(movie1)
+        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(1) } returns listOf(movie1)
         coEvery { getSuggestedMoviesUseCase.getSuggestedMovies() } returns listOf(movie2)
 
         viewModel.updateState { it.copy(query = "") }
