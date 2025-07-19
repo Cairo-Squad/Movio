@@ -3,6 +3,7 @@ package com.cairosquad.ui.details
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
@@ -81,7 +82,7 @@ private fun ReviewsContent(
 
         else -> Column(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .systemBarsPadding(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
