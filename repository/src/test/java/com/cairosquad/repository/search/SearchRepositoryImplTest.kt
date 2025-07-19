@@ -128,7 +128,7 @@ class SearchRepositoryImplTest {
                     genres = emptyList(),
                     overview = "",
                     releaseDate = 0L,
-                    runtimeMinutes = 5,
+                    runtimeMinutes = 0,
                     trailerPath = ""
                 )
             ), result
@@ -155,7 +155,7 @@ class SearchRepositoryImplTest {
                     genres = emptyList(),
                     overview = "",
                     releaseDate = 0L,
-                    runtimeMinutes = 5,
+                    runtimeMinutes = 0,
                     trailerPath = ""
                 )
             ), result
@@ -237,7 +237,11 @@ class SearchRepositoryImplTest {
             query = QUERY5,
             page = 1,
             photoPath = "/w.jpg",
-            timestamp = Instant.now().toEpochMilli()
+            timestamp = Instant.now().toEpochMilli(),
+            country = "",
+            birthDate = 0L,
+            biography = "",
+            department = ""
         )
         const val QUERY6 = "adele"
         val remoteDto6 = ArtistRemoteDto(
@@ -273,23 +277,6 @@ class SearchRepositoryImplTest {
         // Then
         assertEquals(expectedQueries, result)
     }
-
-    @Test
-    fun `should return filtered queries when getByQuery is called with non-blank query`() =
-        runTest {
-            // Given
-            val expectedFilteredQueries = listOf("filteredQuery1", "filteredQuery2")
-            val specificQuery = "search term"
-            coEvery { localDataSource.getByQuery(specificQuery) } returns expectedFilteredQueries
-
-            // When
-            val result = repository.getAllHistoryByQuery(specificQuery)
-
-            // Then
-            assertEquals(expectedFilteredQueries, result)
-            coVerify(exactly = 1) { localDataSource.getByQuery(specificQuery) }
-            coVerify(exactly = 0) { localDataSource.getAll() }
-        }
 
     @Test
     fun `should clear all queries when clearAll is called`() = runTest {

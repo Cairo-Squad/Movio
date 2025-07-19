@@ -3,12 +3,10 @@ package com.cairosquad.ui.details.artist
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -107,180 +105,171 @@ private fun ArtistScreenContent(
 ) {
     val listScroll = rememberScrollState()
     val density = LocalDensity.current
-
     val scrollThresholdPx = with(density) { 250.dp.toPx() }
-
     val progress = (listScroll.value / scrollThresholdPx).coerceIn(0f, 1f)
 
-    val animatedStartColor = lerp(
-        start = Color.Black,
-        stop = Theme.color.surfaces.surface,
-        fraction = progress
+    val animatedStartColor = lerp(Color.Black, Theme.color.surfaces.surface, progress)
+    val animatedEndColor = lerp(Color.Transparent, Theme.color.surfaces.surface, progress)
+    val animatedBrush = verticalGradient(
+        colors = listOf(animatedStartColor, animatedEndColor)
     )
-    val animatedEndColor = lerp(
-        start = Color.Transparent,
-        stop = Theme.color.surfaces.surface,
-        fraction = progress
-    )
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(listScroll),
-        horizontalAlignment = Alignment.Start,
-    ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(340.dp)
+    Box(modifier = modifier.fillMaxSize()) {
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .verticalScroll(listScroll),
+            horizontalAlignment = Alignment.Start,
         ) {
-            SafeImageViewer(
-                model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
-                contentDescription = "blured image",
-                modifier = Modifier
-                    .fillMaxSize()
-                    .height(335.dp)
-                    .offset(y = (-5).dp)
-                    .CustomBrush(0.5f, 16.dp),
-                nudeThreshold = 0.0,
-                nonNudeThreshold = 0.0
-            )
             Box(
+                contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(20.dp)
-                    .align(Alignment.BottomCenter)
-                    .background(
-                        brush = verticalGradient(
-                            colors = listOf(
-                                Theme.color.surfaces.surface.copy(alpha = 0f),
-                                Theme.color.surfaces.surface.copy(alpha = .10f),
-                                Theme.color.surfaces.surface.copy(alpha = .50f),
-                                Theme.color.surfaces.surface.copy(alpha = .90f),
-                                Theme.color.surfaces.surface,
+                    .height(340.dp)
+            ) {
+                SafeImageViewer(
+                    model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
+                    contentDescription = "blured image",
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .height(335.dp)
+                        .offset(y = (-5).dp)
+                        .CustomBrush(0.5f, 16.dp),
+                    nudeThreshold = 0.0,
+                    nonNudeThreshold = 0.0
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(20.dp)
+                        .align(Alignment.BottomCenter)
+                        .background(
+                            brush = verticalGradient(
+                                colors = listOf(
+                                    Theme.color.surfaces.surface.copy(alpha = 0f),
+                                    Theme.color.surfaces.surface.copy(alpha = .10f),
+                                    Theme.color.surfaces.surface.copy(alpha = .50f),
+                                    Theme.color.surfaces.surface.copy(alpha = .90f),
+                                    Theme.color.surfaces.surface,
+                                )
                             )
                         )
-                    )
+                )
+                SafeImageViewer(
+                    model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
+                    modifier = Modifier
+                        .padding(horizontal = 6.67.dp)
+                        .padding(top = 31.dp)
+                        .size(160.dp)
+                        .clip(CircleShape),
+                    contentDescription = stringResource(R.string.artist_image),
+                    nudeThreshold = 0.0,
+                    nonNudeThreshold = 0.0
+                )
+            }
+
+            BasicText(
+                modifier = Modifier.padding(start = 16.dp),
+                text = state.artist.name,
+                style = Theme.textStyle.headline.mediumMedium18
+                    .copy(color = Theme.color.surfaces.onSurface),
             )
-            SafeImageViewer(
-                model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
+
+            BasicText(
+                modifier = Modifier.padding(start = 16.dp, top = 4.dp),
+                text = state.artist.department,
+                style = Theme.textStyle.label.smallRegular14
+                    .copy(color = Theme.color.surfaces.onSurfaceVariant),
+            )
+
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.padding(top = 16.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp)
+            ) {
+                val lastWord = state.artist.country
+                    ?.trim()
+                    ?.let { full ->
+                        val partsByComma = full.split(",")
+                        val lastPart = partsByComma.lastOrNull()?.trim().orEmpty()
+
+                        lastPart.split(" ").lastOrNull()?.trim()
+                    }
+                    ?.takeIf { it.isNotBlank() }
+                val birthDate = state.artist.birthDate
+                if (birthDate != null) {
+                    item {
+                        InfoChip(
+                            text = formatBirthDateLegacy(state.artist.birthDate),
+                            imgRes = R.drawable.date,
+                        )
+                    }
+                }
+                if (lastWord != null) {
+                    item {
+                        InfoChip(
+                            text = state.artist.country,
+                            imgRes = R.drawable.component_1,
+                        )
+                    }
+                }
+            }
+
+            ExpandableText(
+                text = state.artist.biography,
+                color = Theme.color.surfaces.onSurface,
+                style = Theme.textStyle.label.smallRegular14,
                 modifier = Modifier
-                    .padding(horizontal = 6.67.dp)
-                    .padding(top = 31.dp)
-                    .size(160.dp)
-                    .clip(CircleShape),
-                contentDescription = stringResource(R.string.artist_image),
-                nudeThreshold = 0.0,
-                nonNudeThreshold = 0.0
+                    .padding(vertical = 16.dp)
+                    .padding(horizontal = 16.dp),
+                collapsedMaxLine = 5,
+                showMoreText = "...Read More",
+                showMoreColor = Theme.color.surfaces.onSurfaceVariant,
+                showLessText = "...Read Less"
             )
-        }
 
-        BasicText(
-            modifier = Modifier.padding(start = 16.dp),
-            text = state.artist.name,
-            style = Theme.textStyle.headline.mediumMedium18
-                .copy(color = Theme.color.surfaces.onSurface),
-        )
+            BasicText(
+                modifier = Modifier.padding(start = 16.dp, top = 32.dp, bottom = 12.dp),
+                text = stringResource(R.string.known_for),
+                style = Theme.textStyle.title.mediumMedium16
+                    .copy(color = Theme.color.surfaces.onSurface)
 
-        BasicText(
-            modifier = Modifier.padding(start = 16.dp, top = 4.dp),
-            text = state.artist.department,
-            style = Theme.textStyle.label.smallRegular14
-                .copy(color = Theme.color.surfaces.onSurfaceVariant),
-        )
+            )
 
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.padding(top = 16.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp)
-        ) {
-            val lastWord = state.artist.country
-                ?.trim()
-                ?.let { full ->
-                    val partsByComma = full.split(",")
-                    val lastPart = partsByComma.lastOrNull()?.trim().orEmpty()
-
-                    lastPart.split(" ").lastOrNull()?.trim()
-                }
-                ?.takeIf { it.isNotBlank() }
-            val birthDate=state.artist.birthDate;
-            if(birthDate !=null) {
-                item{
-                    InfoChip(
-                        text = formatBirthDateLegacy(state.artist.birthDate),
-                        imgRes = R.drawable.date,
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp)
+            ) {
+                items(state.knownForMovies) { movie ->
+                    MovieCard(
+                        title = movie.title,
+                        vote = movie.rating,
+                        imgUrl = movie.posterPath,
+                        width = 124.dp,
+                        aspectRatio = 0.67f,
+                        modifier = Modifier.clickable { listener.onMovieClick(movie.id) }
                     )
                 }
-            }
-            if (lastWord != null) {
-                item {
-                    InfoChip(
-                        text = state.artist.country,
-                        imgRes = R.drawable.component_1,
+
+                items(state.KnownForSeries) { series ->
+                    MovieCard(
+                        title = series.title,
+                        vote = series.rating,
+                        imgUrl = series.posterPath,
+                        width = 124.dp,
+                        aspectRatio = 0.67f,
+                        modifier = Modifier.clickable { listener.onMovieClick(series.id) }
                     )
                 }
             }
         }
-
-        ExpandableText(
-            text = state.artist.biography,
-            color = Theme.color.surfaces.onSurface,
-            style = Theme.textStyle.label.smallRegular14,
+        AppBar(
+            onBackButtonClicked = listener::onClickBack,
             modifier = Modifier
-                .padding(vertical = 16.dp)
-                .padding(horizontal = 16.dp),
-            collapsedMaxLine = 5,
-            showMoreText = "...Read More",
-            showMoreColor = Theme.color.surfaces.onSurfaceVariant,
-            showLessText = "...Read Less"
+                .background(animatedBrush)
+                .windowInsetsPadding(WindowInsets.statusBars)
+                .padding(top = 4.dp)
         )
-
-        BasicText(
-            modifier = Modifier.padding(start = 16.dp, top = 32.dp, bottom = 12.dp),
-            text = stringResource(R.string.known_for),
-            style = Theme.textStyle.title.mediumMedium16
-                .copy(color = Theme.color.surfaces.onSurface)
-
-        )
-
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp)
-        ) {
-            items(state.knownForMovies) { movie ->
-                MovieCard(
-                    title = movie.title,
-                    vote = movie.rating,
-                    imgUrl = movie.posterPath,
-                    width = 124.dp,
-                    aspectRatio = 0.67f,
-                    modifier = Modifier.clickable { listener.onMovieClick(movie.id) }
-                )
-            }
-
-            items(state.KnownForSeries) { series ->
-                MovieCard(
-                    title = series.title,
-                    vote = series.rating,
-                    imgUrl = series.posterPath,
-                    width = 124.dp,
-                    aspectRatio = 0.67f,
-                    modifier = Modifier.clickable { listener.onMovieClick(series.id) }
-                )
-            }
-        }
     }
-    AppBar(
-        onBackButtonClicked = listener::onClickBack,
-        modifier = Modifier
-            .background(
-                brush = verticalGradient(
-                    colors = listOf(animatedStartColor, animatedEndColor)
-                )
-            )
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .padding(top = 4.dp)
-    )
 }
 
 private fun formatBirthDateLegacy(birthDateLong: Long): String {

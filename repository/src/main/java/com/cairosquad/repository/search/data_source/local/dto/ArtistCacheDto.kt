@@ -19,4 +19,12 @@ data class ArtistCacheDto(
     val query: String,
     @ColumnInfo(name = CACHED_ARTIST_TIMESTAMP_COLUMN_NAME)
     val timestamp: Long,
+    @ColumnInfo(name = "country")
+    val country: String,
+    @ColumnInfo(name = "birthDate")
+    val birthDate: Long,
+    @ColumnInfo(name = "biography")
+    val biography: String,
+    @ColumnInfo(name = "department")
+    val department: String,
 )

@@ -153,7 +153,11 @@ class ArtistsRepositoryImplTest {
             photoPath = "/jane.jpg",
             timestamp = System.currentTimeMillis(),
             page = 1,
-            query = ""
+            query = "",
+            country = "",
+            birthDate = 0L,
+            biography = "",
+            department = ""
         )
         val artistRemoteDto = ArtistRemoteDto(id = 2, name = "John", profilePath = "/john.jpg")
         val remoteSeriesDto =

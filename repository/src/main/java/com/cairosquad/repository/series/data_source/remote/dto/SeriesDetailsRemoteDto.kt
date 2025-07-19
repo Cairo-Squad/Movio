@@ -2,8 +2,8 @@ package com.cairosquad.repository.series.data_source.remote.dto
 
 
 import com.cairosquad.entity.Series
-import com.cairosquad.repository.common.TimeUtils
 import com.cairosquad.repository.movie.data_source.remote.dto.GenreDto
+import com.cairosquad.repository.utils.TimeUtils
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -41,8 +41,8 @@ data class SeriesDetailsRemoteDto(
         posterPath = posterPath.orEmpty(),
         genres = genres?.mapNotNull { it?.toEntity() } ?: emptyList(),
         overview = overview.orEmpty(),
-        releaseDate = TimeUtils.dateToLong(firstAirDate ?: ""),
+        releaseDate = firstAirDate?.let { TimeUtils.dateToLong(it) } ?: 0L,
         seasonsCount = numberOfSeasons ?: 0,
-        trailerPath = "" // TODO
+        trailerPath = ""
     )
 }
