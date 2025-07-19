@@ -126,17 +126,27 @@ private fun ArtistScreenContent(
                     .fillMaxWidth()
                     .height(340.dp)
             ) {
-                SafeImageViewer(
-                    model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
-                    contentDescription = "blured image",
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .height(335.dp)
-                        .offset(y = (-5).dp)
-                        .CustomBrush(0.5f, 16.dp),
-                    nudeThreshold = 0.0,
-                    nonNudeThreshold = 0.0
-                )
+                if (state.artist.photoPath.isBlank()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .height(335.dp)
+                            .offset(y = (-5).dp)
+                            .CustomBrush(0.5f, 16.dp),
+                    )
+                } else {
+                    SafeImageViewer(
+                        model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
+                        contentDescription = "blured image",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .height(335.dp)
+                            .offset(y = (-5).dp)
+                            .CustomBrush(0.5f, 16.dp),
+                        nudeThreshold = 0.0,
+                        nonNudeThreshold = 0.0
+                    )
+                }
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -154,17 +164,27 @@ private fun ArtistScreenContent(
                             )
                         )
                 )
-                SafeImageViewer(
-                    model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
-                    modifier = Modifier
-                        .padding(horizontal = 6.67.dp)
-                        .padding(top = 31.dp)
-                        .size(160.dp)
-                        .clip(CircleShape),
-                    contentDescription = stringResource(R.string.artist_image),
-                    nudeThreshold = 0.0,
-                    nonNudeThreshold = 0.0
-                )
+                if (state.artist.photoPath.isBlank()) {
+                    Box(
+                        modifier = Modifier
+                            .padding(horizontal = 6.67.dp)
+                            .padding(top = 31.dp)
+                            .size(160.dp)
+                            .clip(CircleShape),
+                    )
+                } else {
+                    SafeImageViewer(
+                        model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
+                        modifier = Modifier
+                            .padding(horizontal = 6.67.dp)
+                            .padding(top = 31.dp)
+                            .size(160.dp)
+                            .clip(CircleShape),
+                        contentDescription = stringResource(R.string.artist_image),
+                        nudeThreshold = 0.0,
+                        nonNudeThreshold = 0.0
+                    )
+                }
             }
 
             BasicText(
