@@ -12,11 +12,9 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.assertThrows
-import kotlin.test.assertEquals
 
 class GetSeriesDetailsUseCaseTest {
 
@@ -40,12 +38,12 @@ class GetSeriesDetailsUseCaseTest {
 
     @Test
     fun `getSeriesReviews SHOULD return reviews from repository`() = runTest {
-        coEvery { seriesRepository.getSeriesReviews(1L) } returns listOf(review)
+        coEvery { seriesRepository.getSeriesReviews(1L, 1) } returns listOf(review)
 
-        val result = useCase.getSeriesReviews(1L)
+        val result = useCase.getSeriesReviews(1L, 1)
 
         assertThat(result).containsExactly(review)
-        coVerify(exactly = 1) { seriesRepository.getSeriesReviews(1L) }
+        coVerify(exactly = 1) { seriesRepository.getSeriesReviews(1L, 1) }
     }
 
     @Test
@@ -70,22 +68,22 @@ class GetSeriesDetailsUseCaseTest {
 
     @Test
     fun `getSimilarSeries SHOULD return similar series from repository`() = runTest {
-        coEvery { seriesRepository.getSimilarSeries(1L) } returns listOf(series2)
+        coEvery { seriesRepository.getSimilarSeries(1L, 1) } returns listOf(series2)
 
-        val result = useCase.getSimilarSeries(1L)
+        val result = useCase.getSimilarSeries(1L, 1)
 
         assertThat(result).containsExactly(series2)
-        coVerify(exactly = 1) { seriesRepository.getSimilarSeries(1L) }
+        coVerify(exactly = 1) { seriesRepository.getSimilarSeries(1L, 1) }
     }
 
     @Test
     fun `getSeriesTopCast SHOULD return top cast from repository`() = runTest {
-        coEvery { seriesRepository.getSeriesTopCast(1L) } returns listOf(actor)
+        coEvery { seriesRepository.getSeriesTopCast(1L, 1) } returns listOf(actor)
 
-        val result = useCase.getSeriesTopCast(1L)
+        val result = useCase.getSeriesTopCast(1L, 1)
 
         assertThat(result).containsExactly(actor)
-        coVerify(exactly = 1) { seriesRepository.getSeriesTopCast(1L) }
+        coVerify(exactly = 1) { seriesRepository.getSeriesTopCast(1L, 1) }
     }
 
     @Test
@@ -140,10 +138,10 @@ class GetSeriesDetailsUseCaseTest {
             department = "actor"
         )
         private val review = Review(
-            id = 123,
+            id = 123.toString(),
             author = "Ana",
             authorPhotoPath = "/poster.png",
-            rating = "8",
+            rating = 8.0,
             date = 123,
             description = ""
         )
@@ -156,7 +154,6 @@ class GetSeriesDetailsUseCaseTest {
             rating = 9f,
             seasonNumber = 2,
             seriesId = 123,
-            seasonPosterPath = "1XS1oqL89opfnbLl8WnZY1O1uJx.jpg"
         )
     }
 }
