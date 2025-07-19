@@ -103,7 +103,7 @@ class RemoteRecommendationDataSourceImplTest {
     @Test
     fun `should return list of Personalized movies when getPersonalizedMovies is successful`() = runTest {
         // When
-        val movies = remoteDataSource.getPersonalizedMovies()
+        val movies = remoteDataSource.getPersonalizedMovies(1)
 
         // Then
         assertThat(movies).isNotEmpty()
@@ -140,7 +140,7 @@ class RemoteRecommendationDataSourceImplTest {
         }
         remoteDataSource = RemoteMovieDiscoveryDataSourceImpl(httpClient)
 
-        val movies = remoteDataSource.getPersonalizedMovies()
+        val movies = remoteDataSource.getPersonalizedMovies(1)
         assertThat(movies).isEmpty()
     }
 
@@ -186,7 +186,7 @@ class RemoteRecommendationDataSourceImplTest {
         }
         remoteDataSource = RemoteMovieDiscoveryDataSourceImpl(httpClient)
 
-        val movies = remoteDataSource.getPersonalizedMovies()
+        val movies = remoteDataSource.getPersonalizedMovies(1)
         assertThat(movies).hasSize(1)
         assertThat(movies[0].id).isEqualTo(10)
     }
@@ -215,7 +215,7 @@ class RemoteRecommendationDataSourceImplTest {
         // When
         var thrownException: Throwable? = null
         try {
-            remoteDataSource.getPersonalizedMovies()
+            remoteDataSource.getPersonalizedMovies(1)
         } catch (e: Exception) {
             thrownException = e
         }

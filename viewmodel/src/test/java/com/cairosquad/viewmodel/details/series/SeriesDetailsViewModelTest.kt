@@ -53,10 +53,10 @@ class SeriesDetailsViewModelTest {
     fun `init SHOULD load all data sections`() = runTest {
         // Given
         coEvery { mockUseCase.getSeries(seriesId) } returns mockSeries
-        coEvery { mockUseCase.getSeriesTopCast(seriesId) } returns emptyList()
+        coEvery { mockUseCase.getSeriesTopCast(seriesId, 1) } returns emptyList()
         coEvery { mockUseCase.getSeriesSeasons(seriesId) } returns emptyList()
-        coEvery { mockUseCase.getSeriesReviews(seriesId) } returns emptyList()
-        coEvery { mockUseCase.getSimilarSeries(seriesId) } returns emptyList()
+        coEvery { mockUseCase.getSeriesReviews(seriesId, 1) } returns emptyList()
+        coEvery { mockUseCase.getSimilarSeries(seriesId, 1) } returns emptyList()
 
         // When
         advanceUntilIdle()
@@ -64,10 +64,10 @@ class SeriesDetailsViewModelTest {
         // Then
         coVerify(exactly = 1) {
             mockUseCase.getSeries(seriesId)
-            mockUseCase.getSeriesTopCast(seriesId)
+            mockUseCase.getSeriesTopCast(seriesId, 1)
             mockUseCase.getSeriesSeasons(seriesId)
-            mockUseCase.getSeriesReviews(seriesId)
-            mockUseCase.getSimilarSeries(seriesId)
+            mockUseCase.getSeriesReviews(seriesId, 1)
+            mockUseCase.getSimilarSeries(seriesId, 1)
         }
     }
 

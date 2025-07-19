@@ -18,7 +18,6 @@ class EpisodesDetailsViewModel(
     EpisodesDetailsInteractionListener {
 
     init {
-        Log.d("asdasd", ": $seriesId | $seasonNumber")
         getSeasons(seriesId)
         getEpisodes(seriesId, seasonNumber)
     }
