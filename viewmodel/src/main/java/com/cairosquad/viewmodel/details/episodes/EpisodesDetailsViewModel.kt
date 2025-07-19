@@ -18,6 +18,7 @@ class EpisodesDetailsViewModel(
     EpisodesDetailsInteractionListener {
 
     init {
+        Log.d("asdasd", ": $seriesId | $seasonNumber")
         getSeasons(seriesId)
         getEpisodes(seriesId, seasonNumber)
     }
@@ -75,6 +76,7 @@ class EpisodesDetailsViewModel(
             },
             onError = {
                 // Optional: Handle error for season list
+                Log.d("asdas", "getSeasons: $it")
             },
             dispatcher = Dispatchers.IO
         )

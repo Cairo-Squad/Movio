@@ -78,7 +78,7 @@ fun EpisodesScreen(
                 ).show()
             }
 
-            EpisodesDetailEffect.PlayEpisode -> TODO()
+            EpisodesDetailEffect.PlayEpisode -> {  }
         }
     }
     EpisodesScreenContent(uiState = uiState, listener = viewModel,seriesId)

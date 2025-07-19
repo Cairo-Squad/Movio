@@ -9,5 +9,4 @@ data class Episode(
     val rating: Float,
     val seasonNumber: Int,
     val seriesId: Long,
-    val seasonPosterPath: String
 )
