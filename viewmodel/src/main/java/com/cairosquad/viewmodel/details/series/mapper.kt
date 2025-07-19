@@ -17,7 +17,7 @@ fun Series.toUiState(): SeriesDetailsScreenState.SeriesUiState {
     return SeriesDetailsScreenState.SeriesUiState(
         id = id,
         title = title,
-        rating = String.format("%.1f", rating / 2).toFloat(),
+        rating = (rating * 10).toInt().toFloat() / 10,
         posterPath = posterPath,
         genres = genres.map { it.name },
         seasonsCount = seasonsCount,
@@ -31,7 +31,7 @@ fun Season.toUiState() = SeriesDetailsScreenState.SeasonUiState(
     number = seasonNumber,
     name = seasonName,
     episodesCount = episodesCount,
-    rating = String.format("%.1f", rating / 2).toFloat(),
+    rating = (rating * 10).toInt().toFloat() / 10,
     posterPath = posterPath,
     overview = overview,
     airDate = TimeUtil.convertLongToYear(airDate)
@@ -41,7 +41,7 @@ fun Review.toUiState() = SeriesDetailsScreenState.ReviewUiState(
     id = id,
     author = author,
     authorPhotoPath = authorPhotoPath,
-    rating = String.format("%.1f", rating.toFloat() / 2).toFloat(),
+    rating = (rating * 10).toInt().toFloat() / 10,
     date = TimeUtil.convertLongToNamedDate(date),
     description = description
 )

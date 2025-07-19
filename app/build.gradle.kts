@@ -16,11 +16,6 @@ plugins {
 android {
     namespace = "com.cairosquad.movio"
     compileSdk = 35
-    splits {
-        abi {
-            isEnable = true
-        }
-    }
 
     defaultConfig {
         applicationId = "com.cairosquad.movio"
@@ -57,10 +52,21 @@ android {
                 "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("release")
+            ndk {
+                abiFilters += listOf("armeabi-v7a", "arm64-v8a")
+            }
         }
         debug {
             isMinifyEnabled = false
             isShrinkResources = false
+            ndk {
+                abiFilters += listOf(
+                    "armeabi-v7a",
+                    "arm64-v8a",
+                    "x86",
+                    "x86_64"
+                )
+            }
         }
     }
     compileOptions {

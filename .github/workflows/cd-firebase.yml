@@ -5,7 +5,6 @@ on:
     branches:
       - develop
       - master
-      - feature/details/main
 
 jobs:
   deploy:
@@ -90,12 +89,9 @@ jobs:
           FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
         run: |
           npm install -g firebase-tools
-
-          for apk in app/build/outputs/apk/release/*-release.apk; do
-            echo "Uploading $apk"
-            firebase appdistribution:distribute \
-              "$apk" \
-              --app "$FIREBASE_APP_ID" \
-              --token "$FIREBASE_AUTH_TOKEN" \
-              --groups "cairo_squad" \
-              --release-notes-file release_notes.txt
+          firebase appdistribution:distribute \
+            app/build/outputs/apk/release/app-release.apk \
+            --app "$FIREBASE_APP_ID" \
+            --token "$FIREBASE_AUTH_TOKEN" \
+            --groups "cairo_squad" \
+            --release-notes-file release_notes.txt

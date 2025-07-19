@@ -77,7 +77,7 @@ class EntityCacheMapperTest {
             genres = emptyList(),
             overview = "",
             releaseDate = 0L,
-            runtimeMinutes = 5,
+            runtimeMinutes = 0,
             trailerPath = ""
         )
         assertThat(movieCacheWithNulls.toEntity()).isEqualTo(expected)
@@ -116,7 +116,7 @@ class EntityCacheMapperTest {
             genres = emptyList(),
             overview = "",
             releaseDate = 0L,
-            runtimeMinutes = 5,
+            runtimeMinutes = 0,
             trailerPath = ""
         )
             .toCacheDto(query, page)
@@ -131,7 +131,7 @@ class EntityCacheMapperTest {
             genres = emptyList(),
             overview = "",
             releaseDate = 0L,
-            runtimeMinutes = 5,
+            runtimeMinutes = 0,
             trailerPath = ""
         )
             .toCacheDto(query, page)
@@ -150,7 +150,7 @@ class EntityCacheMapperTest {
             genres = emptyList(),
             overview = "",
             releaseDate = 0L,
-            runtimeMinutes = 5,
+            runtimeMinutes = 0,
             trailerPath = ""
         )
 
@@ -198,7 +198,11 @@ class EntityCacheMapperTest {
             query = query,
             name = null,
             photoPath = null,
-            timestamp = 123L
+            timestamp = 123L,
+            country = "",
+            birthDate = 0L,
+            biography = "",
+            department = ""
         )
     }
 }

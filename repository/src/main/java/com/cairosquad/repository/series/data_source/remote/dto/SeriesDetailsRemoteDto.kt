@@ -41,8 +41,8 @@ data class SeriesDetailsRemoteDto(
         posterPath = posterPath.orEmpty(),
         genres = genres?.mapNotNull { it?.toEntity() } ?: emptyList(),
         overview = overview.orEmpty(),
-        releaseDate = TimeUtils.dateToLong(firstAirDate ?: ""),
+        releaseDate = firstAirDate?.let { TimeUtils.dateToLong(it) } ?: 0L,
         seasonsCount = numberOfSeasons ?: 0,
-        trailerPath = "" // TODO
+        trailerPath = ""
     )
 }
