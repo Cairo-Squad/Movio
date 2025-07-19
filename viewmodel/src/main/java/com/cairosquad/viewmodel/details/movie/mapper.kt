@@ -14,7 +14,7 @@ fun Artist.toArtistUiState() = MovieScreenState.TopCastUiState(
 fun Movie.toMovieUiState() = MovieScreenState.MovieDetailsUiState(
     id = id,
     title = title,
-    rating = String.format("%.1f", rating / 2).toFloat(),
+    rating = String.format("%.1f", if (rating != 0f) rating / 2 else 0).toFloat(),
     posterPath = posterPath,
     genres = genres.map { it.name },
     overview = overview,
@@ -27,7 +27,8 @@ fun Review.toReviewUiState() = MovieScreenState.ReviewUiState(
     id = id,
     author = author,
     authorPhotoPath = authorPhotoPath,
-    rating = rating.toFloat(),
-    date = date.toString(),
+    rating = String.format("%.1f", if (rating.toFloat() != 0f) rating.toFloat() / 2 else 0)
+        .toFloat(),
+    date = TimeUtil.convertLongToNamedDate(date),
     description = description
 )
