@@ -82,6 +82,29 @@ class RemoteSeriesDataSourceImplTest {
     }
 
 
+    @Test
+    fun `getSeriesReviews should return empty list when results is null`() = runTest {
+        val mockResponse = ResultResponse<ReviewRemoteDto>(results = null)
+        val mockEngine = MockEngine {
+            respond(
+                content = Json.encodeToString(
+                    ResultResponse.serializer(ReviewRemoteDto.serializer()),
+                    mockResponse
+                ),
+                status = HttpStatusCode.OK,
+                headers = headersOf(HttpHeaders.ContentType, "application/json")
+            )
+        }
+        val httpClient = HttpClient(mockEngine) {
+            install(ContentNegotiation) {
+                json(Json { ignoreUnknownKeys = true })
+            }
+        }
+        val dataSource = RemoteSeriesDataSourceImpl(httpClient)
+        val result = dataSource.getSeriesReviews(seriesId = 1, page = 1)
+        assertThat(result).isEmpty()
+    }
+
 
 
 }
