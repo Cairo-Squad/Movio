@@ -26,7 +26,7 @@ class SimilarMoviesViewModel(
             block = {
                 getMoviesDetailsUseCase.getSimilarMovies(movieId)
             }, onSuccess = { movies ->
-                updateState {
+                updateState { it ->
                     it.copy(
                         screenStatus = ScreenStatus.SUCCESS,
                         movies = movies.map { it.toUiState() }
