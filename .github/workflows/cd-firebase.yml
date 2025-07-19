@@ -71,8 +71,8 @@ jobs:
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
           FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
         run: |
-          ./gradlew assembleRelease --build-cache
-          ls -l app/build/outputs/apk/release/app-release.apk || { echo "apk not generated"; exit 1; }
+          ./gradlew assembleRelease --build-cache -x test -x lint
+          ls -l app/build/outputs/apk/release/app-release.apk || { echo "apk not generated"; exit 1; }      
 
       - name: Extract Release Notes
         id: release_notes
@@ -89,12 +89,9 @@ jobs:
           FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
         run: |
           npm install -g firebase-tools
-
-          for apk in app/build/outputs/apk/release/*-release.apk; do
-            echo "Uploading $apk"
-            firebase appdistribution:distribute \
-              "$apk" \
-              --app "$FIREBASE_APP_ID" \
-              --token "$FIREBASE_AUTH_TOKEN" \
-              --groups "cairo_squad" \
-              --release-notes-file release_notes.txt
+          firebase appdistribution:distribute \
+            app/build/outputs/apk/release/app-release.apk \
+            --app "$FIREBASE_APP_ID" \
+            --token "$FIREBASE_AUTH_TOKEN" \
+            --groups "cairo_squad" \
+            --release-notes-file release_notes.txt

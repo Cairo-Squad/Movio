@@ -1,4 +1,4 @@
-package com.cairosquad.repository.common
+package com.cairosquad.repository.utils
 
 import java.text.SimpleDateFormat
 import java.util.Locale

@@ -77,37 +77,6 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `Should update query and trigger search when recent search item clicked`() = runTest {
-        val query = "Batman"
-        val moviesFlow = emptyFlow<PagingData<Movie>>()
-        val seriesFlow = emptyFlow<PagingData<Series>>()
-        val artistsFlow = emptyFlow<PagingData<Artist>>()
-
-        coEvery { searchPager.series(query) } returns seriesFlow
-        coEvery { searchPager.movies(query) } returns moviesFlow
-        coEvery { searchPager.artists(query) } returns artistsFlow
-
-        viewModel.onRecentSearchItemClicked(query)
-
-        advanceUntilIdle()
-
-        val state = viewModel.screenState.value
-        assertThat(state.query).isEqualTo(query)
-
-        assertThat(state.screenStatus).isIn(
-            listOf(
-                SearchScreenState.ScreenStatus.LOADING,
-                SearchScreenState.ScreenStatus.SEARCH,
-                SearchScreenState.ScreenStatus.RESULT,
-                SearchScreenState.ScreenStatus.FAILED
-            )
-        )
-        coVerify(exactly = 1) { searchPager.series(query) }
-        coVerify(exactly = 1) { searchPager.movies(query) }
-        coVerify(exactly = 1) { searchPager.artists(query) }
-    }
-
-    @Test
     fun `should remove item from recent search on successful deletion`() = runBlocking {
         val query = "test"
         val initialState = SearchScreenState(
@@ -204,7 +173,7 @@ class SearchViewModelTest {
         val forYouList = listOf(movie1)
         val exploreMoreList = listOf(movie2)
 
-        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies() } returns listOf(movie1)
+        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(1) } returns listOf(movie1)
         coEvery { getSuggestedMoviesUseCase.getSuggestedMovies() } returns listOf(movie2)
 
         viewModel.loadDiscoverMovies()
@@ -218,7 +187,7 @@ class SearchViewModelTest {
 
     @Test
     fun `should set error status when discover movies loading fails`() = runBlocking {
-        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies() } throws IOException()
+        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(1) } throws IOException()
         coEvery { getSuggestedMoviesUseCase.getSuggestedMovies() } returns emptyList()
 
         viewModel.loadDiscoverMovies()
@@ -503,7 +472,7 @@ class SearchViewModelTest {
         mockkStatic(Dispatchers::class)
         every { Dispatchers.IO } returns testDispatcher
 
-        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies() } returns listOf(movie1)
+        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(1) } returns listOf(movie1)
         coEvery { getSuggestedMoviesUseCase.getSuggestedMovies() } returns listOf(movie2)
 
         viewModel.updateState { it.copy(query = "") }

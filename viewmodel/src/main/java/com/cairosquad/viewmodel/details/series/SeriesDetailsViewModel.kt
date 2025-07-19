@@ -91,6 +91,7 @@ class SeriesDetailsViewModel(
     }
 
     override fun onSeasonClicked(seriesId: Long, seasonNumber: Int) {
+
         sendEffect(
             SeriesDetailEffect.NavigateToSeasonDetails(
                 seriesId = seriesId,

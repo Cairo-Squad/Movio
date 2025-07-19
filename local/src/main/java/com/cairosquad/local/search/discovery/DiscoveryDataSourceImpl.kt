@@ -11,8 +11,8 @@ class DiscoveryDataSourceImpl(
     private val cacheDataSource: CacheDataSource,
     private val discoveryDao: DiscoveryDao
 ): DiscoveryDataSource {
-    override suspend fun getPersonalizedMovies(): List<MovieCacheDto> {
-        return discoveryDao.getPersonalizedMoviesIds()
+    override suspend fun getPersonalizedMovies(page : Int): List<MovieCacheDto> {
+        return discoveryDao.getPersonalizedMovies(page)
     }
 
     override suspend fun cachePersonalizedMovies(movies: List<MovieCacheDto>) {

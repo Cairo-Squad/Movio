@@ -34,6 +34,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -68,7 +69,7 @@ import com.cairosquad.ui.navigation.ArtistRoute
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.MovieRoute
 import com.cairosquad.ui.navigation.ReviewsRoute
-import com.cairosquad.ui.navigation.SimilarSeriesRoute
+import com.cairosquad.ui.navigation.SimilarMovieRoute
 import com.cairosquad.ui.navigation.TopCastRoute
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.ui.utils.ShareUtil
@@ -124,7 +125,7 @@ fun MovieScreen(
             }
 
             is MovieEffect.NavigateToSimilarMovies -> {
-                navController.navigate(SimilarSeriesRoute(movieId))
+                navController.navigate(SimilarMovieRoute(movieId))
             }
 
             MovieEffect.PlayTrailer -> {
@@ -274,13 +275,30 @@ fun MovieContent(
                                 .padding(top = 56.dp, bottom = 24.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            SafeImageViewer(
-                                modifier = Modifier
-                                    .size(height = 260.dp, width = 200.dp)
-                                    .clip(RoundedCornerShape(8.dp)),
-                                model = "https://image.tmdb.org/t/p/w500/${uiState.movie.posterPath}",
-                                contentDescription = "",
-                            )
+                            if (uiState.movie.posterPath.isNotEmpty()) {
+                                SafeImageViewer(
+                                    modifier = Modifier
+                                        .size(height = 260.dp, width = 200.dp)
+                                        .clip(RoundedCornerShape(8.dp)),
+                                    model = "https://image.tmdb.org/t/p/w500/${uiState.movie.posterPath}",
+                                    contentDescription = "",
+                                )
+                            } else {
+                                Box(
+                                    modifier = Modifier
+                                        .size(height = 260.dp, width = 200.dp)
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .background(Theme.color.system.defaultImageBackground),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        modifier = Modifier.size(24.dp),
+                                        imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
+                                        contentDescription = stringResource(R.string.default_image_icon),
+                                        tint = Color(0xFFEFF1F5)
+                                    )
+                                }
+                            }
                         }
                     }
 
@@ -416,7 +434,8 @@ fun MovieContent(
                                     reviewerName = it.author,
                                     rating = it.rating.toString(),
                                     reviewDate = it.date,
-                                    reviewText = it.description
+                                    reviewText = it.description,
+                                    isExpandable = false
                                 )
                             }
                         }
@@ -426,13 +445,13 @@ fun MovieContent(
                 }
             }
             item {
-                when (uiState.similarSeriesSectionState) {
+                when (uiState.similarMoviesSectionState) {
                     MovieScreenState.ScreenStatus.INITIAL -> {}
                     MovieScreenState.ScreenStatus.LOADING -> {}
                     MovieScreenState.ScreenStatus.SUCCESS -> {
                         SectionHeader(
                             modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                            title = "Similar Series",
+                            title = "Similar Movies",
                             actionText = stringResource(R.string.see_all),
                             actionIcon = ImageVector.vectorResource(R.drawable.arrow),
                             onActionClick = { interactionListener.onSeeAllSimilarMoviesClick(uiState.movie.id) }

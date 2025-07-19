@@ -2,7 +2,7 @@ package com.cairosquad.repository.series.data_source.remote.dto
 
 
 import com.cairosquad.entity.Season
-import com.cairosquad.repository.common.TimeUtils
+import com.cairosquad.repository.utils.TimeUtils
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -25,11 +25,11 @@ data class SeasonRemoteDto(
     @SerialName("vote_average")
     val voteAverage: Double? = null
 ) {
-    fun toEntity(): Season {
+    fun toEntity(seriesId: Long): Season {
         return Season(
             seasonNumber = seasonNumber ?: 0,
             seasonName = name.orEmpty(),
-            seriesId = id ?: 0,
+            seriesId = seriesId,
             episodesCount = episodeCount ?: 0,
             rating = voteAverage?.toFloat() ?: 0f,
             posterPath = posterPath.orEmpty(),

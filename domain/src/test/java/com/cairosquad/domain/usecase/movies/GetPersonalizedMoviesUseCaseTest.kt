@@ -57,12 +57,12 @@ class GetPersonalizedMoviesUseCaseTest {
                     trailerPath = ""
                 )
             )
-            coEvery { moviesRepository.getPersonalizedMovies() } returns expectedMovies
+            coEvery { moviesRepository.getPersonalizedMovies(1) } returns expectedMovies
 
             // When
-            val result = useCase.getPersonalizedMovies()
+            val result = useCase.getPersonalizedMovies(1)
 
             // Then
-            coVerify { moviesRepository.getPersonalizedMovies() }
+            coVerify { moviesRepository.getPersonalizedMovies(1) }
         }
 }
