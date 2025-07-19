@@ -3,6 +3,7 @@ package com.cairosquad.ui.details.artist
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -188,9 +189,10 @@ private fun ArtistScreenContent(
                 .copy(color = Theme.color.surfaces.onSurfaceVariant),
         )
 
-        Row(
+        LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.padding(start = 16.dp, top = 16.dp)
+            modifier = Modifier.padding(top = 16.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp)
         ) {
             val lastWord = state.artist.country
                 ?.trim()
@@ -203,16 +205,20 @@ private fun ArtistScreenContent(
                 ?.takeIf { it.isNotBlank() }
             val birthDate=state.artist.birthDate;
             if(birthDate !=null) {
-                InfoChip(
-                    text = formatBirthDateLegacy(state.artist.birthDate),
-                    imgRes = R.drawable.date,
-                )
+                item{
+                    InfoChip(
+                        text = formatBirthDateLegacy(state.artist.birthDate),
+                        imgRes = R.drawable.date,
+                    )
+                }
             }
             if (lastWord != null) {
-                InfoChip(
-                    text = state.artist.country,
-                    imgRes = R.drawable.component_1,
-                )
+                item {
+                    InfoChip(
+                        text = state.artist.country,
+                        imgRes = R.drawable.component_1,
+                    )
+                }
             }
         }
 
