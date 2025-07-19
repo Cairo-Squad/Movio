@@ -2,7 +2,7 @@ package com.cairosquad.repository.movie.data_source.remote.dto
 
 
 import com.cairosquad.entity.Movie
-import com.cairosquad.repository.common.TimeUtils
+import com.cairosquad.repository.utils.TimeUtils
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
