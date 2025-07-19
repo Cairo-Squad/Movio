@@ -60,14 +60,16 @@ fun LoginBottomSheet(
                 modifier = Modifier.padding(bottom = 8.dp),
                 text = stringResource(R.string.you_don_t_have_an_account),
                 style = Theme.textStyle.title.mediumMedium16.copy(
-                    color = Theme.color.surfaces.onSurface
+                    color = Theme.color.surfaces.onSurface,
+                    textAlign = TextAlign.Center
                 )
             )
             BasicText(
                 modifier = Modifier.padding(bottom = 40.dp),
                 text = stringResource(R.string.you_don_t_have_an_account_description),
                 style = Theme.textStyle.label.smallRegular12.copy(
-                    color = Theme.color.surfaces.onSurfaceContainer
+                    color = Theme.color.surfaces.onSurfaceContainer,
+                    textAlign = TextAlign.Center
                 )
             )
             Button(

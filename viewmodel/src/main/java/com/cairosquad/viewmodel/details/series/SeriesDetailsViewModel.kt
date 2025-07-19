@@ -143,7 +143,7 @@ class SeriesDetailsViewModel(
             onStart = {
                 updateState { it.copy(castSectionState = ScreenStatus.LOADING) }
             },
-            block = { seriesDetailsUseCase.getSeriesTopCast(seriesId) },
+            block = { seriesDetailsUseCase.getSeriesTopCast(seriesId, 1) },
             onSuccess = ::setTopCastToUiState,
             onError = { throwable ->
                 setError(throwable) { copy(castSectionState = ScreenStatus.ERROR) }
@@ -189,7 +189,7 @@ class SeriesDetailsViewModel(
             onStart = {
                 updateState { it.copy(reviewsSectionState = ScreenStatus.LOADING) }
             },
-            block = { seriesDetailsUseCase.getSeriesReviews(seriesId) },
+            block = { seriesDetailsUseCase.getSeriesReviews(seriesId, 1) },
             onSuccess = ::setReviewsToUiState,
             onError = { throwable ->
                 setError(throwable) { copy(reviewsSectionState = ScreenStatus.ERROR) }
@@ -212,7 +212,7 @@ class SeriesDetailsViewModel(
             onStart = {
                 updateState { it.copy(similarSeriesSectionState = ScreenStatus.LOADING) }
             },
-            block = { seriesDetailsUseCase.getSimilarSeries(seriesId) },
+            block = { seriesDetailsUseCase.getSimilarSeries(seriesId, 1) },
             onSuccess = ::setSimilarSeriesToUiState,
             onError = { throwable ->
                 setError(throwable) { copy(similarSeriesSectionState = ScreenStatus.ERROR) }

@@ -8,7 +8,7 @@ import java.util.Locale
 fun Review.toUiState() = ReviewsScreenState.ReviewUiState(
     reviewerName = author,
     reviewDate = Timestamp(date).toDateFormat(),
-    rating = rating.toSingleDecimal(),
+    rating = rating.toString(),
     reviewText = description,
     reviewerImageUrl = authorPhotoPath
 )
@@ -22,7 +22,7 @@ private fun Timestamp.toDateFormat(): String {
     return format.format(date)
 }
 
-private fun String.toSingleDecimal(): String {
+internal fun String.toSingleDecimal(): String {
     return this.toDoubleOrNull()
         ?.let { String.format(Locale.getDefault(), "%.1f", it) }
         ?: "0.0"

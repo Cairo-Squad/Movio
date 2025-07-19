@@ -30,6 +30,11 @@ fun MovieRemoteDto.toEntity(): Movie {
         title = title ?: "",
         rating = voteAverage?.toFloat() ?: 0f,
         posterPath = posterPath ?: "",
+        genres = emptyList(),
+        overview = "",
+        releaseDate = 0L,
+        runtimeMinutes = 0,
+        trailerPath = "",
     )
 }
 

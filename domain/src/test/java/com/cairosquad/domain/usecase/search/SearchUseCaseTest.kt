@@ -44,8 +44,22 @@ import org.junit.Test
         // Given
         val query = "Batman"
         val movies = listOf(
-            Movie(id = 1, title = "Batman Begins", rating = 8.2f, posterPath = "/batman1.jpg"),
-            Movie(id = 2, title = "The Dark Knight", rating = 9.0f, posterPath = "/batman2.jpg")
+            Movie(
+                id = 1, title = "Batman Begins", rating = 8.2f, posterPath = "/batman1.jpg",
+                genres = emptyList(),
+                overview = "",
+                releaseDate = 9L,
+                runtimeMinutes = 5,
+                trailerPath = ""
+            ),
+            Movie(
+                id = 2, title = "The Dark Knight", rating = 9.0f, posterPath = "/batman2.jpg",
+                genres = emptyList(),
+                overview = "",
+                releaseDate = 9L,
+                runtimeMinutes = 5,
+                trailerPath = ""
+            )
         )
 
         val page = 1
