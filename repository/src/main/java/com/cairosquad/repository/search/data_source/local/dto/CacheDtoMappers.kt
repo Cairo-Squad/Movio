@@ -84,7 +84,11 @@ fun Artist.toCacheDto(query: String,page: Int): ArtistCacheDto {
         name = name,
         photoPath = photoPath,
         query = query,
-        timestamp = Date().time
+        timestamp = Date().time,
+        country = country,
+        birthDate = birthDate,
+        biography = biography,
+        department = department,
     )
 }
 
@@ -98,6 +102,10 @@ fun ArtistCacheDto.toEntity(): Artist {
         id = id.toLong(),
         name = name ?: "",
         photoPath = photoPath ?: "",
+        country = country,
+        birthDate = birthDate,
+        biography = biography,
+        department = department,
     )
 }
 
