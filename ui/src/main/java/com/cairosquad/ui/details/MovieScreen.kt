@@ -240,18 +240,28 @@ fun MovieContent(
             MovieScreenState.ScreenStatus.INITIAL -> {}
             MovieScreenState.ScreenStatus.LOADING -> {}
             MovieScreenState.ScreenStatus.SUCCESS -> {
-                SafeImageViewer(
-                    modifier = Modifier
-                        .blur(16.dp)
-                        .fillMaxWidth()
-                        .height(400.dp)
-                        .offset(y = (-28).dp),
-                    model = "https://image.tmdb.org/t/p/w500/${uiState.movie.posterPath}",
-                    contentDescription = "",
-                    blur = 0,
-                    nudeThreshold = 0.0,
-                    nonNudeThreshold = 0.0
-                )
+                if (uiState.movie.posterPath.isNotEmpty()) {
+                    SafeImageViewer(
+                        modifier = Modifier
+                            .blur(16.dp)
+                            .fillMaxWidth()
+                            .height(400.dp)
+                            .offset(y = (-28).dp),
+                        model = "https://image.tmdb.org/t/p/w500/${uiState.movie.posterPath}",
+                        contentDescription = "",
+                        blur = 0,
+                        nudeThreshold = 0.0,
+                        nonNudeThreshold = 0.0
+                    )
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .blur(16.dp)
+                            .fillMaxWidth()
+                            .height(400.dp)
+                            .offset(y = (-28).dp),
+                    )
+                }
             }
 
             MovieScreenState.ScreenStatus.ERROR -> {}

@@ -273,6 +273,14 @@ private fun SeriesScreenContent(
                         nudeThreshold = 0.0,
                         nonNudeThreshold = 0.0
                     )
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .blur(16.dp)
+                            .fillMaxWidth()
+                            .height(400.dp)
+                            .offset(y = (-28).dp),
+                    )
                 }
             }
 

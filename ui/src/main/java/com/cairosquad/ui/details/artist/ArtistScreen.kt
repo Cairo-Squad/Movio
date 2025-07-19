@@ -170,7 +170,8 @@ private fun ArtistScreenContent(
                             .padding(horizontal = 6.67.dp)
                             .padding(top = 31.dp)
                             .size(160.dp)
-                            .clip(CircleShape),
+                            .clip(CircleShape)
+                            .background(Theme.color.system.defaultImageBackground),
                     )
                 } else {
                     SafeImageViewer(
