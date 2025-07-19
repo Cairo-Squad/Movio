@@ -1,7 +1,9 @@
 package com.cairosquad.viewmodel.details.series
 
+import androidx.lifecycle.viewModelScope
 import android.util.Log
 import com.cairosquad.domain.exception.MovioException
+import com.cairosquad.domain.usecase.search.UpdateUserCategoryPreferenceUseCase
 import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Review
@@ -13,10 +15,12 @@ import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SeriesDetailsViewModel(
     private val seriesDetailsUseCase: GetSeriesDetailsUseCase,
-    seriesId: Long
+    seriesId: Long,
+    private val updateUserCategoryPreferenceUseCase: UpdateUserCategoryPreferenceUseCase,
 ) : BaseViewModel<SeriesDetailsScreenState, SeriesDetailEffect>(SeriesDetailsScreenState()),
     SeriesDetailsInteractionListener {
 
@@ -84,7 +88,6 @@ class SeriesDetailsViewModel(
     }
 
     override fun onArtistClicked(artistId: Long) {
-        Log.d("Series", "onArtistClicked: $artistId")
         sendEffect(SeriesDetailEffect.NavigateToArtistDetails(artistId))
     }
 
@@ -93,8 +96,6 @@ class SeriesDetailsViewModel(
     }
 
     override fun onSeasonClicked(seriesId: Long, seasonNumber: Int) {
-        Log.d("Series", "onArtistClicked: $seriesId, $seasonNumber")
-
         sendEffect(
             SeriesDetailEffect.NavigateToSeasonDetails(
                 seriesId = seriesId,
@@ -112,8 +113,6 @@ class SeriesDetailsViewModel(
     }
 
     override fun onSeriesClicked(seriesId: Long) {
-        Log.d("Series", "onArtistClicked: $seriesId")
-
         sendEffect(SeriesDetailEffect.NavigateToSeriesDetails(seriesId))
     }
 
@@ -141,6 +140,11 @@ class SeriesDetailsViewModel(
                 basicDetailsSectionState = ScreenStatus.SUCCESS,
                 series = series.toUiState()
             )
+        }
+        viewModelScope.launch {
+            series.genres.forEach { genre ->
+                updateUserCategoryPreferenceUseCase(series.genres)
+            }
         }
     }
 
