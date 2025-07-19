@@ -27,7 +27,7 @@ fun Review.toReviewUiState() = MovieScreenState.ReviewUiState(
     id = id,
     author = author,
     authorPhotoPath = authorPhotoPath,
-    rating = String.format("%.1f", rating.toFloat() / 2).toFloat(),
+    rating = rating.toFloat(),
     date = date.toString(),
     description = description
 )
