@@ -84,7 +84,7 @@ class ForYouViewModelTest {
         val internetException = InternetConnectionException()
         val unknownException = UnknownException()
 
-        // When/Then
+        // When & Then
         assertEquals(
             ErrorStatus.NETWORK_ERROR,
             viewModel.handleSearchException(networkException)
@@ -126,8 +126,6 @@ class ForYouViewModelTest {
         testDispatcher.scheduler.advanceUntilIdle()
 
         // Then
-        // Verify that the mapping function (toUiState) is applied correctly
-        // The forYou flow should contain mapped data
         assertNotNull(viewModel.screenState.value.forYou)
     }
 
@@ -160,7 +158,6 @@ class ForYouViewModelTest {
         testDispatcher.scheduler.advanceUntilIdle()
 
         // Then
-        // Verify that cachedIn is working by checking the flow is cached
         val cachedFlow = viewModel.screenState.value.forYou
         assertNotNull(cachedFlow)
     }
