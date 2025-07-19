@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -30,7 +29,7 @@ import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.SeasonCard
 import com.cairosquad.ui.navigation.LocalNavController
-import com.cairosquad.ui.navigation.EpisodeRoute
+import com.cairosquad.ui.navigation.EpisodesRoute
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.viewmodel.details.series.season.SeasonDetailEffect
 import com.cairosquad.viewmodel.details.series.season.SeasonDetailsInteractionListener
@@ -51,7 +50,7 @@ fun SeasonsScreen(
     ObserveAsEffect(viewModel.effect) { effect ->
         when (effect) {
             SeasonDetailEffect.NavigateBack -> navController.popBackStack()
-            is SeasonDetailEffect.NavigateToEpisodeDetails -> navController.navigate(EpisodeRoute(effect.episodeId, effect.seasonNumber))
+            is SeasonDetailEffect.NavigateToEpisodesScreen -> navController.navigate(EpisodesRoute(effect.seriesId, effect.seasonNumber))
 
         }
     }
@@ -96,7 +95,7 @@ fun SeasonScreenContent(
                     yearOfPublish = season.airDate,
                     timeOfPublish = season.timeOfPublish,
                     currentSeason = "${season.number}",
-                    onClick ={ listener.onEpisodeClicked(season.id, season.number)},
+                    onClick ={ listener.onSeasonClicked(season.seriesId, season.number)},
                     modifier=Modifier.height(100.dp).fillMaxWidth(),
                 )
             }

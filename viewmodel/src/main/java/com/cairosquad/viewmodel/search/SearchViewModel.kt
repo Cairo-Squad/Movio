@@ -1,6 +1,5 @@
 package com.cairosquad.viewmodel.search
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
@@ -10,7 +9,6 @@ import com.cairosquad.domain.usecase.movies.GetPersonalizedMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetSuggestedMoviesUseCase
 import com.cairosquad.domain.usecase.search.ClearSearchHistoryUseCase
 import com.cairosquad.domain.usecase.search.GetLocalSearchHistoryUseCase
-import com.cairosquad.domain.usecase.search.SearchUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus

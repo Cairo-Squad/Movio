@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.DesignSystemIcon
@@ -35,7 +36,8 @@ fun ReviewCard(
     rating: String,
     reviewDate: String,
     reviewText: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isExpandable: Boolean = true
 ) {
 
     Column(
@@ -111,18 +113,28 @@ fun ReviewCard(
                 )
             }
         }
-        ExpandableText(
-            text = reviewText,
-            color = color.surfaces.onSurfaceVariant,
-            style = textStyle.label.smallRegular12,
-            collapsedMaxLine = 4,
-            showMoreText = "... " + stringResource(R.string.more),
-            showMoreStyle = textStyle.label.mediumMedium12,
-            showMoreColor = color.brand.onPrimaryContainer,
-            showLessText = " " + stringResource(R.string.less),
-            showLessStyle = textStyle.label.mediumMedium12,
-            showLessColor = color.brand.onPrimaryContainer,
-            modifier = Modifier.padding(top = 12.dp)
-        )
+        if (isExpandable) {
+            ExpandableText(
+                text = reviewText,
+                color = color.surfaces.onSurfaceVariant,
+                style = textStyle.label.smallRegular12,
+                collapsedMaxLine = 4,
+                showMoreText = "... " + stringResource(R.string.more),
+                showMoreStyle = textStyle.label.mediumMedium12,
+                showMoreColor = color.brand.onPrimaryContainer,
+                showLessText = " " + stringResource(R.string.less),
+                showLessStyle = textStyle.label.mediumMedium12,
+                showLessColor = color.brand.onPrimaryContainer,
+                modifier = Modifier.padding(top = 12.dp)
+            )
+        } else {
+            Text(
+                text = reviewText,
+                color = color.surfaces.onSurfaceVariant,
+                style = textStyle.label.smallRegular12,
+                maxLines = 4,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
     }
 }
