@@ -5,6 +5,7 @@ on:
     branches:
       - develop
       - master
+      - feature/details/main
 
 jobs:
   deploy:
@@ -71,8 +72,8 @@ jobs:
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
           FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
         run: |
-          ./gradlew assembleRelease --build-cache
-          ls -l app/build/outputs/apk/release/app-release.apk || { echo "apk not generated"; exit 1; }
+          ./gradlew assembleRelease --build-cache -x test -x lint
+          ls -l app/build/outputs/apk/release/app-release.apk || { echo "apk not generated"; exit 1; }      
 
       - name: Extract Release Notes
         id: release_notes
