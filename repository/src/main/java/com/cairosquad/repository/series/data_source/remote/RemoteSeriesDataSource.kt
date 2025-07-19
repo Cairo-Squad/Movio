@@ -21,4 +21,6 @@ interface RemoteSeriesDataSource {
 
     suspend fun getEpisodes(seriesId: Long, seasonNumber: Int): List<EpisodeRemoteDto>
 
+    suspend fun getVideoKey(seriesId: Long): String?
+
 }

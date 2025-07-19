@@ -5,6 +5,7 @@ import com.cairosquad.remote.utils.callApi
 import com.cairosquad.remote.utils.constructUrl
 import com.cairosquad.repository.movie.data_source.remote.dto.CreditResponse
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
+import com.cairosquad.repository.movie.data_source.remote.dto.VideoResponse
 import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.ResultResponse
 import com.cairosquad.repository.search.data_source.remote.dto.SeriesRemoteDto
@@ -82,6 +83,14 @@ class RemoteSeriesDataSourceImpl(
                 parameter(API_KEY, BuildConfig.API_KEY)
             }
         }.episodes ?: emptyList()
+    }
+
+    override suspend fun getVideoKey(seriesId: Long): String? {
+        return callApi<VideoResponse> {
+            httpClient.get(constructUrl("tv/$seriesId/videos")) {
+                parameter(API_KEY, BuildConfig.API_KEY)
+            }
+        }.getVideoKey()
     }
 
     companion object {
