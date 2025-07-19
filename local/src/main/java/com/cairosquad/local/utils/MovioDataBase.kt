@@ -4,17 +4,17 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.cairosquad.local.search.cache.dao.CacheDao
 import com.cairosquad.local.search.discovery.dao.DiscoveryDao
-import com.cairosquad.repository.search.data_source.local.dto.PersonalizedMoviesIdsDto
-import com.cairosquad.repository.search.data_source.local.dto.SuggestedMoviesIdsDto
 import com.cairosquad.local.search.recent.dao.LocalRecentSearchDao
 import com.cairosquad.local.search.recommendation.dao.UserCategoryPreferenceDao
 import com.cairosquad.repository.artists.dto.ArtistMovieCachedDto
 import com.cairosquad.repository.artists.dto.ArtistSeriesCachedDto
-import com.cairosquad.repository.search.data_source.local.dto.RecentSearchEntity
 import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.GenreDto
 import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.PersonalizedMoviesIdsDto
+import com.cairosquad.repository.search.data_source.local.dto.RecentSearchEntity
 import com.cairosquad.repository.search.data_source.local.dto.SeriesCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.SuggestedMoviesIdsDto
 
 @Database(
     entities = [
@@ -40,6 +40,5 @@ abstract class MovioDataBase : RoomDatabase() {
     abstract fun discoveryDao(): DiscoveryDao
 
     abstract fun userCategoryPreferenceDao(): UserCategoryPreferenceDao
-
 
 }

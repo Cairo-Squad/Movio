@@ -6,7 +6,9 @@ import com.cairosquad.domain.usecase.movies.GetPersonalizedMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetSuggestedMoviesUseCase
 import com.cairosquad.domain.usecase.search.ClearSearchHistoryUseCase
 import com.cairosquad.domain.usecase.search.GetLocalSearchHistoryUseCase
+import com.cairosquad.domain.usecase.search.GetUserCategoryPreferenceUseCase
 import com.cairosquad.domain.usecase.search.SearchUseCase
+import com.cairosquad.domain.usecase.search.UpdateUserCategoryPreferenceUseCase
 import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
@@ -20,4 +22,6 @@ val domainModule = module {
     singleOf(::GetSeriesDetailsUseCase)
     singleOf(::GetArtistDetailsUseCase)
     singleOf(::GetMoviesDetailsUseCase)
+    singleOf(::GetUserCategoryPreferenceUseCase)
+    singleOf(::UpdateUserCategoryPreferenceUseCase)
 }
