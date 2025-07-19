@@ -13,7 +13,7 @@ fun Artist.toUiState() = SeriesDetailsScreenState.ArtistUiState(
 )
 
 fun Series.toUiState() = SeriesDetailsScreenState.SeriesUiState(
-    id = 0L,
+    id = id,
     title = title,
     rating = String.format("%.1f", rating / 2).toFloat(),
     posterPath = posterPath,
