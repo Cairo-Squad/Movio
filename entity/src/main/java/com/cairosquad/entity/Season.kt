@@ -1,9 +1,9 @@
 package com.cairosquad.entity
 
 data class Season(
+    val seriesId: Long,
     val seasonNumber: Int,
     val seasonName: String,
-    val seriesId: Long,
     val episodesCount: Int,
     val rating: Float,
     val posterPath: String,

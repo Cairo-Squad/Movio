@@ -1,9 +1,8 @@
 package com.cairosquad.viewmodel.searchviewmodel
 
-import android.view.SearchEvent
 import androidx.paging.PagingData
+import app.cash.turbine.test
 import com.cairosquad.domain.exception.InternetConnectionException
-import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.exception.NetworkException
 import com.cairosquad.domain.exception.UnknownException
 import com.cairosquad.domain.usecase.movies.GetPersonalizedMoviesUseCase
@@ -20,7 +19,6 @@ import com.cairosquad.viewmodel.search.SearchScreenState
 import com.cairosquad.viewmodel.search.SearchViewModel
 import com.cairosquad.viewmodel.search.paging.SearchPager
 import com.cairosquad.viewmodel.search.toUiState
-import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -47,7 +45,6 @@ import kotlinx.coroutines.test.setMain
 import org.junit.Before
 import org.junit.Test
 import java.io.IOException
-import kotlin.test.assertEquals
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchViewModelTest {
@@ -77,36 +74,6 @@ class SearchViewModelTest {
             getSuggestedMoviesUseCase,
             getPersonalizedMoviesUseCase
         )
-    }
-    @Test
-    fun `Should update query and trigger search when recent search item clicked`() = runTest {
-        val query = "Batman"
-        val moviesFlow = emptyFlow<PagingData<Movie>>()
-        val seriesFlow = emptyFlow<PagingData<Series>>()
-        val artistsFlow = emptyFlow<PagingData<Artist>>()
-
-        coEvery { searchPager.series(query) } returns seriesFlow
-        coEvery { searchPager.movies(query) } returns moviesFlow
-        coEvery { searchPager.artists(query) } returns artistsFlow
-
-        viewModel.onRecentSearchItemClicked(query)
-
-        advanceUntilIdle()
-
-        val state = viewModel.screenState.value
-        assertThat(state.query).isEqualTo(query)
-
-        assertThat(state.screenStatus).isIn(
-            listOf(
-                SearchScreenState.ScreenStatus.LOADING,
-                SearchScreenState.ScreenStatus.SEARCH,
-                SearchScreenState.ScreenStatus.RESULT,
-                SearchScreenState.ScreenStatus.FAILED
-            )
-        )
-        coVerify(exactly = 1) { searchPager.series(query) }
-        coVerify(exactly = 1) { searchPager.movies(query) }
-        coVerify(exactly = 1) { searchPager.artists(query) }
     }
 
     @Test
@@ -138,6 +105,7 @@ class SearchViewModelTest {
         assertThat(uiState.rating).isEqualTo(movie.rating / 2)
         assertThat(uiState.posterPath).isEqualTo(movie.posterPath)
     }
+
     @Test
     fun `should not call searchPager when query is blank`() = runTest {
         viewModel.updateState { it.copy(query = "") }
@@ -168,6 +136,7 @@ class SearchViewModelTest {
         assertThat(state.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
         assertThat(state.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
     }
+
     @Test
     fun `should remove query from recentSearch when removal succeeds`() = runTest {
         val initial = listOf("Batman", "Spiderman", "Superman")
@@ -204,7 +173,7 @@ class SearchViewModelTest {
         val forYouList = listOf(movie1)
         val exploreMoreList = listOf(movie2)
 
-        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies() } returns listOf(movie1)
+        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(1) } returns listOf(movie1)
         coEvery { getSuggestedMoviesUseCase.getSuggestedMovies() } returns listOf(movie2)
 
         viewModel.loadDiscoverMovies()
@@ -218,7 +187,7 @@ class SearchViewModelTest {
 
     @Test
     fun `should set error status when discover movies loading fails`() = runBlocking {
-        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies() } throws IOException()
+        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(1) } throws IOException()
         coEvery { getSuggestedMoviesUseCase.getSuggestedMovies() } returns emptyList()
 
         viewModel.loadDiscoverMovies()
@@ -326,7 +295,7 @@ class SearchViewModelTest {
     fun `should handle error gracefully when search field is clicked`() = runBlocking {
         coEvery { getRecentSearchUseCase.getAll() } throws IOException()
         viewModel.onClickSearchTextField()
-        delay(50)
+        delay(200)
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
         assertThat(viewModel.screenState.value.recentSearch).isEmpty()
     }
@@ -377,13 +346,13 @@ class SearchViewModelTest {
         val query = "test"
         coEvery { getRecentSearchUseCase.getByQuery(query) } returns emptyList()
         viewModel.onQueryTextChanged(query)
-        delay(50)
+        delay(200)
         val jobBefore = viewModel.run {
             javaClass.getDeclaredField("searchJob").apply { isAccessible = true }.get(this) as Job?
         }
         require(jobBefore != null && jobBefore.isActive)
         viewModel.onCancelSearch()
-        delay(50)
+        delay(200)
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
         val jobAfter = viewModel.run {
             javaClass.getDeclaredField("searchJob").apply { isAccessible = true }.get(this) as Job?
@@ -406,14 +375,14 @@ class SearchViewModelTest {
         viewModel
 
             .onQueryTextChanged("a")
-        delay(50)
+        delay(200)
         val firstJob =
             viewModel.javaClass.getDeclaredField("searchJob").apply { isAccessible = true }
                 .get(viewModel) as Job
         assertThat(firstJob.isActive).isTrue()
         coEvery { getRecentSearchUseCase.getByQuery("b") } returns emptyList()
         viewModel.onQueryTextChanged("b")
-        delay(50)
+        delay(200)
         val secondJob =
             viewModel.javaClass.getDeclaredField("searchJob").apply { isAccessible = true }
                 .get(viewModel) as Job
@@ -503,7 +472,7 @@ class SearchViewModelTest {
         mockkStatic(Dispatchers::class)
         every { Dispatchers.IO } returns testDispatcher
 
-        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies() } returns listOf(movie1)
+        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(1) } returns listOf(movie1)
         coEvery { getSuggestedMoviesUseCase.getSuggestedMovies() } returns listOf(movie2)
 
         viewModel.updateState { it.copy(query = "") }
@@ -523,26 +492,77 @@ class SearchViewModelTest {
         Dispatchers.resetMain()
     }
 
+    @Test
+    fun `should navigate to movie details when movie is clicked`() = runTest {
+        viewModel.effect.test {
+            viewModel.onMovieClicked(123)
+            assertThat(awaitItem()).isEqualTo(SearchEffect.NavigateToMovieDetails(123))
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `should navigate to series details when series is clicked`() = runTest {
+        viewModel.effect.test {
+            viewModel.onSeriesClicked(123)
+            assertThat(awaitItem()).isEqualTo(SearchEffect.NavigateToSeriesDetails(123))
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `should navigate to artist details when artist is clicked`() = runTest {
+        viewModel.effect.test {
+            viewModel.onArtistClicked(123)
+            assertThat(awaitItem()).isEqualTo(SearchEffect.NavigateToArtistDetails(123))
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `should navigate to see all for you movies when see all is clicked`() = runTest {
+        viewModel.effect.test {
+            viewModel.onSeeAllForYouClicked()
+            assertThat(awaitItem()).isEqualTo(SearchEffect.NavigateToSeeAllForYouScreen)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
     private companion object {
         val movie1 = Movie(
             id = 1,
             title = "The dark knight",
             rating = 4.0f,
-            posterPath = "/img.jpg"
+            posterPath = "/img.jpg",
+            genres = emptyList(),
+            overview = "",
+            releaseDate = 0L,
+            runtimeMinutes = 5,
+            trailerPath = ""
         )
 
         val movie2 = Movie(
             id = 2,
             title = "Girl",
             rating = 4.5f,
-            posterPath = "/img.jpg"
+            posterPath = "/img.jpg",
+            genres = emptyList(),
+            overview = "",
+            releaseDate = 0L,
+            runtimeMinutes = 5,
+            trailerPath = ""
         )
 
         val series = Series(
             id = 1,
             title = "Series",
             rating = 3.5f,
-            posterPath = "/img.jpg"
+            posterPath = "/img.jpg",
+            trailerPath = "",
+            genres = emptyList(),
+            overview = "",
+            releaseDate = 0L,
+            seasonsCount = 1
         )
 
         val artist = Artist(

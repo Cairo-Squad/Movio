@@ -1,7 +1,7 @@
 package com.cairosquad.remote.search
 
 import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.SearchResultResponse
+import com.cairosquad.repository.search.data_source.remote.dto.ResultResponse
 import com.google.common.truth.Truth.assertThat
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
@@ -31,7 +31,7 @@ class RemoteRecommendationDataSourceImplTest {
                 "/3/movie/top_rated" -> {
                     respond(
                         content = json.encodeToString(
-                            SearchResultResponse(
+                            ResultResponse(
                                 page = 1,
                                 results = listOf(
                                     MovieRemoteDto(
@@ -59,7 +59,7 @@ class RemoteRecommendationDataSourceImplTest {
                 "/3/movie/now_playing" -> {
                     respond(
                         content = json.encodeToString(
-                            SearchResultResponse(
+                            ResultResponse(
                                 page = 1,
                                 results = listOf(
                                     MovieRemoteDto(
@@ -103,7 +103,7 @@ class RemoteRecommendationDataSourceImplTest {
     @Test
     fun `should return list of Personalized movies when getPersonalizedMovies is successful`() = runTest {
         // When
-        val movies = remoteDataSource.getPersonalizedMovies()
+        val movies = remoteDataSource.getPersonalizedMovies(1)
 
         // Then
         assertThat(movies).isNotEmpty()
@@ -120,7 +120,7 @@ class RemoteRecommendationDataSourceImplTest {
                 "/3/movie/top_rated" -> {
                     respond(
                         content = json.encodeToString(
-                            SearchResultResponse<MovieRemoteDto>(
+                            ResultResponse<MovieRemoteDto>(
                                 page = 1,
                                 results = emptyList(),
                                 totalPages = 0,
@@ -140,7 +140,7 @@ class RemoteRecommendationDataSourceImplTest {
         }
         remoteDataSource = RemoteMovieDiscoveryDataSourceImpl(httpClient)
 
-        val movies = remoteDataSource.getPersonalizedMovies()
+        val movies = remoteDataSource.getPersonalizedMovies(1)
         assertThat(movies).isEmpty()
     }
 
@@ -152,7 +152,7 @@ class RemoteRecommendationDataSourceImplTest {
                 "/3/movie/top_rated" -> {
                     respond(
                         content = json.encodeToString(
-                            SearchResultResponse(
+                            ResultResponse(
                                 page = 1,
                                 results = listOf(
                                     MovieRemoteDto(
@@ -186,7 +186,7 @@ class RemoteRecommendationDataSourceImplTest {
         }
         remoteDataSource = RemoteMovieDiscoveryDataSourceImpl(httpClient)
 
-        val movies = remoteDataSource.getPersonalizedMovies()
+        val movies = remoteDataSource.getPersonalizedMovies(1)
         assertThat(movies).hasSize(1)
         assertThat(movies[0].id).isEqualTo(10)
     }
@@ -215,7 +215,7 @@ class RemoteRecommendationDataSourceImplTest {
         // When
         var thrownException: Throwable? = null
         try {
-            remoteDataSource.getPersonalizedMovies()
+            remoteDataSource.getPersonalizedMovies(1)
         } catch (e: Exception) {
             thrownException = e
         }
@@ -243,7 +243,7 @@ class RemoteRecommendationDataSourceImplTest {
                 "/3/movie/now_playing" -> {
                     respond(
                         content = json.encodeToString(
-                            SearchResultResponse<MovieRemoteDto>(
+                            ResultResponse<MovieRemoteDto>(
                                 page = 1,
                                 results = emptyList(),
                                 totalPages = 0,

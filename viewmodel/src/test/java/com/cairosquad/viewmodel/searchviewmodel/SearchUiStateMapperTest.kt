@@ -62,14 +62,24 @@ class SearchUiStateMapperTest {
             id = 101L,
             title = "Inception",
             posterPath = "/inc.jpg",
-            rating = 8.0f
+            rating = 8.0f,
+            genres = emptyList(),
+            overview = "",
+            releaseDate = 0L,
+            runtimeMinutes = 5,
+            trailerPath = ""
         )
 
         val series = Series(
             id = 202L,
             title = "Breaking Bad",
             posterPath = "/bb.jpg",
-            rating = 9.0f
+            rating = 9.0f,
+            trailerPath = "",
+            genres = emptyList(),
+            overview = "",
+            releaseDate = 0L,
+            seasonsCount = 0
         )
 
         val artist = Artist(

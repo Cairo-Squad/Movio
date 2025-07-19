@@ -19,11 +19,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.theme.MovioTheme
@@ -37,6 +40,7 @@ fun AppBar(
     onShareButtonClicked: (() -> Unit)? = null,
     onFavoriteButtonClicked: (() -> Unit)? = null,
 ) {
+    val layoutDirection = LocalLayoutDirection.current
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -54,7 +58,12 @@ fun AppBar(
                     .clip(CircleShape)
                     .clickable(onClick = onBackButtonClicked)
                     .size(40.dp)
-                    .padding(8.dp),
+                    .padding(8.dp)
+                    .graphicsLayer {
+                        if (layoutDirection == LayoutDirection.Rtl) {
+                            scaleX = -1f
+                        }
+                    },
                 painter = painterResource(R.drawable.arrow_left_icon_round),
                 contentDescription = stringResource(R.string.back_icon),
                 tint = Theme.color.surfaces.onSurface,

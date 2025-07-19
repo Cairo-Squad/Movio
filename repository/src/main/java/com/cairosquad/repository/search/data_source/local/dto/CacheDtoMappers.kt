@@ -28,6 +28,11 @@ fun SeriesCacheDto.toEntity(): Series {
         title = name ?: "",
         posterPath = posterPath ?: "",
         rating = voteAverage?.toFloat() ?: 0f,
+        trailerPath = "",
+        genres = emptyList(),
+        overview = "",
+        releaseDate = 0L,
+        seasonsCount = 1,
     )
 }
 
@@ -58,7 +63,12 @@ fun MovieCacheDto.toEntity(): Movie {
         id = id.toLong(),
         title = title ?: "",
         posterPath = posterPath ?: "",
-        rating = voteAverage?.toFloat() ?: 0f
+        rating = voteAverage?.toFloat() ?: 0f,
+        trailerPath = "",
+        genres = emptyList(),
+        overview = "",
+        releaseDate = 0L,
+        runtimeMinutes = 0,
     )
 }
 
@@ -74,7 +84,11 @@ fun Artist.toCacheDto(query: String,page: Int): ArtistCacheDto {
         name = name,
         photoPath = photoPath,
         query = query,
-        timestamp = Date().time
+        timestamp = Date().time,
+        country = country,
+        birthDate = birthDate,
+        biography = biography,
+        department = department,
     )
 }
 
@@ -88,6 +102,10 @@ fun ArtistCacheDto.toEntity(): Artist {
         id = id.toLong(),
         name = name ?: "",
         photoPath = photoPath ?: "",
+        country = country,
+        birthDate = birthDate,
+        biography = biography,
+        department = department,
     )
 }
 

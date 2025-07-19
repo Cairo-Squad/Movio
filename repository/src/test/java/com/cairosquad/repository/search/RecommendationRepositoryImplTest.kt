@@ -1,9 +1,15 @@
 package com.cairosquad.repository.search
 
-import com.cairosquad.repository.movies.MoviesRepositoryImpl
+import com.cairosquad.entity.Artist
+import com.cairosquad.entity.Genre
+import com.cairosquad.entity.Movie
+import com.cairosquad.entity.Review
+import com.cairosquad.repository.movie.MovieRepositoryImpl
+import com.cairosquad.repository.movie.data_source.remote.RemoteMovieDataSource
 import com.cairosquad.repository.search.data_source.local.DiscoveryDataSource
-import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.search.data_source.remote.RemoteMovieDiscoveryDataSource
+import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
+import com.cairosquad.repository.search.data_source.remote.dto.toEntity
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -14,15 +20,18 @@ import kotlin.test.Test
 class RecommendationRepositoryImplTest {
     private lateinit var remoteMovieDiscoveryDataSource: RemoteMovieDiscoveryDataSource
     private lateinit var discoveryDataSource: DiscoveryDataSource
-    private lateinit var recommendationRepository: MoviesRepositoryImpl
+    private lateinit var recommendationRepository: MovieRepositoryImpl
+    private lateinit var remoteMovieDataSource: RemoteMovieDataSource
 
     @Before
     fun setUp() {
         discoveryDataSource = mockk(relaxed = true)
         remoteMovieDiscoveryDataSource = mockk(relaxed = true)
-        recommendationRepository = MoviesRepositoryImpl(
+        remoteMovieDataSource = mockk(relaxed = true)
+        recommendationRepository = MovieRepositoryImpl(
             remoteMovieDiscoveryDataSource = remoteMovieDiscoveryDataSource,
-            discoveryDataSource = discoveryDataSource
+            discoveryDataSource = discoveryDataSource,
+            remoteMovieDataSource = remoteMovieDataSource
         )
     }
 
@@ -30,10 +39,10 @@ class RecommendationRepositoryImplTest {
     fun `should return mapped movie list when getForYouMovies is called with remote movies`() =
         runTest {
             // Given
-            coEvery { remoteMovieDiscoveryDataSource.getPersonalizedMovies() } returns remoteMovies
+            coEvery { remoteMovieDiscoveryDataSource.getPersonalizedMovies(1) } returns remoteMovies
 
             // When
-            val result = recommendationRepository.getPersonalizedMovies()
+            val result = recommendationRepository.getPersonalizedMovies(1)
 
             // Then
             assertThat(result).hasSize(2)
@@ -42,13 +51,25 @@ class RecommendationRepositoryImplTest {
         }
 
     @Test
+    fun `should return list of 10 fake movies when getSimilarMovies is called`() = runTest {
+
+        coEvery { remoteMovieDataSource.getSimilarMovies(1L, 1)} returns List(10) { fakeMovieRemote }
+
+        val result = recommendationRepository.getSimilarMovies(1L, 1)
+
+        assertThat(result).hasSize(10)
+        assertThat(result).contains(fakeMovie)
+    }
+
+
+    @Test
     fun `should return empty list when getForYouMovies is called with empty remote data`() =
         runTest {
             // Given
-            coEvery { remoteMovieDiscoveryDataSource.getPersonalizedMovies() } returns emptyList()
+            coEvery { remoteMovieDiscoveryDataSource.getPersonalizedMovies(1) } returns emptyList()
 
             // When
-            val result = recommendationRepository.getPersonalizedMovies()
+            val result = recommendationRepository.getPersonalizedMovies(1)
 
             // Then
             assertThat(result).isEmpty()
@@ -95,6 +116,25 @@ class RecommendationRepositoryImplTest {
                 posterPath = "some_path",
                 voteAverage = 4.2
             )
+        )
+
+        val fakeMovie = Movie(
+            id = 157336L,
+            title = "Interstellar",
+            rating = 8.457f,
+            posterPath = "/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+            genres = emptyList(),
+            overview = "",
+            releaseDate = 0L,
+            runtimeMinutes = 0,
+            trailerPath = ""
+        )
+
+        val fakeMovieRemote = MovieRemoteDto(
+            id = 157336,
+            title = "Interstellar",
+            voteAverage = 8.457,
+            posterPath = "/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
         )
     }
 }

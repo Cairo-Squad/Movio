@@ -137,10 +137,14 @@ fun TabRow(
 @Preview
 @Composable
 private fun TabRowPreview() {
-    MovioTheme {
+    MovioTheme(isDarkTheme = true) {
         val tabs = listOf("Top Results", "Movies", "Series", "Artists")
         var selectedTabIndex by remember { mutableIntStateOf(0) }
-        Box(Modifier.background(Theme.color.surfaces.surface)) {
+        Box(
+            Modifier
+                .background(Theme.color.surfaces.surface)
+                .padding(16.dp)
+        ) {
             TabRow(
                 tabs = tabs,
                 selectedTabIndex = selectedTabIndex,

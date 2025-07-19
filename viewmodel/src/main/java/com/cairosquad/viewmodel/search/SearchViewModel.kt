@@ -43,7 +43,7 @@ class SearchViewModel(
                     screenStatus = SearchScreenState.ScreenStatus.LOADING,
                 )
             }
-            val forYou = getPersonalizedMoviesUseCase.getPersonalizedMovies().map { it.toUiState() }
+            val forYou = getPersonalizedMoviesUseCase.getPersonalizedMovies(1).map { it.toUiState() }
             val exploreMore = getSuggestedMoviesUseCase.getSuggestedMovies().map { it.toUiState() }
             forYou to exploreMore
         },
@@ -57,6 +57,7 @@ class SearchViewModel(
                 )
             }
         },
+
         onError = { e ->
             updateState {
                 it.copy(
@@ -118,58 +119,60 @@ class SearchViewModel(
             )
         }
 
-            tryToCall(
-                block = {
-                    val movies = cacheMappedPagingData(
-                        query = query,
-                        scope = viewModelScope,
-                        fetch = { searchPager.movies(it) },
-                        map = { it.toUiState() }
+        tryToCall(
+            block = {
+                val movies = cacheMappedPagingData(
+                    query = query,
+                    scope = viewModelScope,
+                    fetch = { searchPager.movies(it) },
+                    map = { it.toUiState() }
+                )
+                val series = cacheMappedPagingData(
+                    query = query,
+                    scope = viewModelScope,
+                    fetch = { searchPager.series(it) },
+                    map = { it.toUiState() }
+                )
+                val artists = cacheMappedPagingData(
+                    query = query,
+                    scope = viewModelScope,
+                    fetch = { searchPager.artists(it) },
+                    map = { it.toUiState() }
+                )
+                Triple(movies, series, artists)
+            },
+            onSuccess = { (movies, series, artists) ->
+                updateState {
+                    it.copy(
+                        screenStatus = SearchScreenState.ScreenStatus.RESULT,
+                        movies = movies,
+                        series = series,
+                        artists = artists,
+                        errorStatus = null
                     )
-                    val series = cacheMappedPagingData(
-                        query = query,
-                        scope = viewModelScope,
-                        fetch = { searchPager.series(it) },
-                        map = { it.toUiState() }
+                }
+            },
+            onError = { e ->
+                updateState {
+                    it.copy(
+                        screenStatus = SearchScreenState.ScreenStatus.FAILED,
+                        errorStatus = handleSearchException(e)
                     )
-                    val artists =cacheMappedPagingData(
-                        query = query,
-                        scope = viewModelScope,
-                        fetch = { searchPager.artists(it) },
-                        map = { it.toUiState() }
-                    )
-                    Triple(movies, series, artists)
-                },
-                onSuccess = { (movies, series, artists) ->
-                    updateState {
-                        it.copy(
-                            screenStatus = SearchScreenState.ScreenStatus.RESULT,
-                            movies = movies,
-                            series = series,
-                            artists = artists,
-                            errorStatus = null
-                        )
-                    }
-                },
-                onError = { e ->
-                    updateState {
-                        it.copy(
-                            screenStatus = SearchScreenState.ScreenStatus.FAILED,
-                            errorStatus = handleSearchException(e)
-                        )
-                    }
-                },
-                dispatcher = Dispatchers.IO
-            )
-        }
+                }
+            },
+            dispatcher = Dispatchers.IO
+        )
+    }
+
     private fun <T : Any, R : Any> cacheMappedPagingData(
         query: String,
         scope: CoroutineScope,
         fetch: (String) -> Flow<PagingData<T>>,
-         map: (T) -> R
+        map: (T) -> R
     ): Flow<PagingData<R>> = fetch(query)
         .map { pagingData -> pagingData.map(map) }
         .cachedIn(scope)
+
     override fun onRecentSearchItemClicked(query: String) {
         updateState { it.copy(query = query) }
         onSearch()
@@ -240,6 +243,7 @@ class SearchViewModel(
     }
 
     override fun onClickSearchTextField() {
+        val previousSearch = screenState.value.recentSearch
         tryToCall(
             block = {
                 if (screenState.value.query.isBlank()) {
@@ -260,6 +264,7 @@ class SearchViewModel(
                 updateState {
                     it.copy(
                         screenStatus = SearchScreenState.ScreenStatus.SEARCH,
+                        recentSearch = previousSearch
                     )
                 }
             }
