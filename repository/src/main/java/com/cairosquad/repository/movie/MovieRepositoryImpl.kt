@@ -42,12 +42,12 @@ class MovieRepositoryImpl(
         }
     }
 
-    override suspend fun getPersonalizedMovies(): List<Movie> {
+    override suspend fun getPersonalizedMovies(page: Int): List<Movie> {
         return tryToCall {
             discoveryDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
-            discoveryDataSource.getPersonalizedMovies()
+            discoveryDataSource.getPersonalizedMovies(page)
                 .takeIf { it.size >= PAGE_SIZE }?.map { it.toEntity() }
-                ?: remoteMovieDiscoveryDataSource.getPersonalizedMovies().map { it.toEntity() }
+                ?: remoteMovieDiscoveryDataSource.getPersonalizedMovies(page).map { it.toEntity() }
                     .also { result ->
                         discoveryDataSource.cachePersonalizedMovies(
                             result.toCacheDto(
