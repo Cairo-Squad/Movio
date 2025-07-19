@@ -9,10 +9,14 @@ data class ArtistCacheDto(
     @ColumnInfo(name = CACHED_ARTIST_ID_COLUMN_NAME)
     @PrimaryKey
     val id: Int,
+    @ColumnInfo(name = CACHED_ARTIST_PAGE_COLUMN_NAME)
+    val page: Int,
     @ColumnInfo(name = CACHED_ARTIST_NAME_COLUMN_NAME)
     val name: String?,
-    @ColumnInfo(name = CACHED_ARTIST_PHOTO_PATH_COLUMN_NAME)
+    @ColumnInfo(name = "photoPath")
     val photoPath: String?,
+    @ColumnInfo(name = CACHED_ARTIST_QUERY_COLUMN_NAME)
+    val query: String,
     @ColumnInfo(name = CACHED_ARTIST_TIMESTAMP_COLUMN_NAME)
     val timestamp: Long,
 )

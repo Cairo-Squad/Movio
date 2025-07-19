@@ -8,13 +8,17 @@ import androidx.room.PrimaryKey
 data class MovieCacheDto(
     @ColumnInfo(name = CACHED_MOVIES_ID_COLUMN_NAME)
     @PrimaryKey
-    val id: Int,
+    val id: Int ,
+    @ColumnInfo(name = CACHED_MOVIES_PAGE_COLUMN_NAME)
+    val page: Int,
     @ColumnInfo(name = CACHED_MOVIES_TITLE_COLUMN_NAME)
     val title: String?,
-    @ColumnInfo(name = CACHED_MOVIES_POSTER_PATH_COLUMN_NAME)
+    @ColumnInfo(name = "posterPath")
     val posterPath: String?,
-    @ColumnInfo(name = CACHED_MOVIES_VOTE_AVERAGE_COLUMN_NAME)
+    @ColumnInfo(name = "voteAverage")
     val voteAverage: Double?,
+    @ColumnInfo(name = CACHED_MOVIES_QUERY_COLUMN_NAME)
+    val query: String,
     @ColumnInfo(name = CACHED_MOVIES_TIMESTAMP_COLUMN_NAME)
     val timestamp: Long,
 )

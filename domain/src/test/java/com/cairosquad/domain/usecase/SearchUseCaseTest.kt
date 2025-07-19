@@ -1,8 +1,7 @@
 package com.cairosquad.domain.usecase
 
-import com.cairosquad.domain.search.repository.SearchHistoryRepository
-import com.cairosquad.domain.search.repository.SearchRepository
-import com.cairosquad.domain.search.usecase.SearchUseCase
+import com.cairosquad.domain.repository.SearchRepository
+import com.cairosquad.domain.usecase.search.SearchUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
@@ -12,6 +11,7 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -22,18 +22,19 @@ import org.junit.Test
 
 class SearchUseCaseTest {
 
-    private val searchRepository = mockk<SearchRepository>()
-    private val recentSearchRepository = mockk<SearchHistoryRepository>(relaxed = true)
+    private val searchRepository = mockk<SearchRepository>(relaxed = true)
     private lateinit var useCase: SearchUseCase
 
     private val dispatcher = StandardTestDispatcher()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
         Dispatchers.setMain(dispatcher)
-        useCase = SearchUseCase(searchRepository, recentSearchRepository)
+        useCase = SearchUseCase(searchRepository)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @After
     fun tearDown() {
         Dispatchers.resetMain()
@@ -48,13 +49,15 @@ class SearchUseCaseTest {
             Movie(id = 2, title = "The Dark Knight", rating = 9.0f, posterPath = "/batman2.jpg")
         )
 
-        coEvery { searchRepository.getMovies(query) } returns movies
-        coEvery { recentSearchRepository.addQuery(query) } just runs
+        val page = 1
 
-        val result = useCase.getMovies(query)
+        coEvery { searchRepository.getMovies(query, page) } returns movies
+        coEvery { searchRepository.addQuery(query) } just runs
 
-        coVerify { searchRepository.getMovies(query) }
-        coVerify { recentSearchRepository.addQuery(query) }
+        val result = useCase.getMovies(query, page)
+
+        coVerify { searchRepository.getMovies(query, page) }
+        coVerify { searchRepository.addQuery(query) }
     }
 
     @Test
@@ -64,14 +67,14 @@ class SearchUseCaseTest {
         val series = listOf(
             Series(id = 1, title = "Breaking Bad", rating = 9.5f, posterPath = "/bb.jpg")
         )
+        val page = 1
+        coEvery { searchRepository.getSeries(query, page) } returns series
+        coEvery { searchRepository.addQuery(query) } just runs
 
-        coEvery { searchRepository.getSeries(query) } returns series
-        coEvery { recentSearchRepository.addQuery(query) } just runs
+        val result = useCase.getSeries(query, page)
 
-        val result = useCase.getSeries(query)
-
-        coVerify { searchRepository.getSeries(query) }
-        coVerify { recentSearchRepository.addQuery(query) }
+        coVerify { searchRepository.getSeries(query, page) }
+        coVerify { searchRepository.addQuery(query) }
     }
 
     @Test
@@ -83,13 +86,13 @@ class SearchUseCaseTest {
                 id = 1, name = "Leonardo DiCaprio", photoPath = "/leo.jpg",
             )
         )
+        val page = 1
+        coEvery { searchRepository.getArtists(query, page) } returns artists
+        coEvery { searchRepository.addQuery(query) } just runs
 
-        coEvery { searchRepository.getArtists(query) } returns artists
-        coEvery { recentSearchRepository.addQuery(query) } just runs
+        val result = useCase.getArtists(query, page)
 
-        val result = useCase.getArtists(query)
-
-        coVerify { searchRepository.getArtists(query) }
-        coVerify { recentSearchRepository.addQuery(query) }
+        coVerify { searchRepository.getArtists(query, page) }
+        coVerify { searchRepository.addQuery(query) }
     }
 }

@@ -1,24 +1,17 @@
 package com.cairosquad.movio.di
 
-import com.cairosquad.domain.search.repository.SearchHistoryRepository
-import com.cairosquad.domain.search.repository.DiscoveryRepository
-import com.cairosquad.domain.search.repository.SearchRepository
-import com.cairosquad.repository.search.LocalRecentSearchRepositoryImpl
-import com.cairosquad.repository.search.DiscoveryRepositoryImpl
+import com.cairosquad.domain.repository.MoviesRepository
+import com.cairosquad.domain.repository.SearchRepository
+import com.cairosquad.repository.movies.MoviesRepositoryImpl
 import com.cairosquad.repository.search.SearchRepositoryImpl
 import org.koin.dsl.module
 
 val repositoryModule = module {
     single<SearchRepository> {
-        SearchRepositoryImpl(get(), get())
+        SearchRepositoryImpl(get(), get(),get())
     }
 
-    single<DiscoveryRepository> {
-        DiscoveryRepositoryImpl(get(), get())
+    single<MoviesRepository> {
+        MoviesRepositoryImpl(get(), get())
     }
-
-    single<SearchHistoryRepository> {
-        LocalRecentSearchRepositoryImpl(get())
-    }
-
 }

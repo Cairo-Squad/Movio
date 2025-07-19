@@ -56,7 +56,7 @@ fun SeriesScreen(
             onClick = { navController.navigate(ReviewsRoute(seriesId, false)) }
         )
         Chip(
-            title = "see similar seriess for this series",
+            title = "see similar series for this series",
             onClick = { navController.navigate(SimilarSeriesRoute(seriesId)) }
         )
     }
