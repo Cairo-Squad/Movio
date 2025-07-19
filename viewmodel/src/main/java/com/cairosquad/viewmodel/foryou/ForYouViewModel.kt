@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 
 class ForYouViewModel(private val forYouPager: ForYouPager) :
     BaseViewModel<ForYouState, Any>(ForYouState()), ForYouInteractionListener {
+
     init {
         getForYouMovies()
     }

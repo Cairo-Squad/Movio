@@ -2,7 +2,6 @@ package com.cairosquad.ui.search
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.Crossfade
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
@@ -22,29 +21,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.basic_component.RefreshBox
-import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.ui.navigation.LocalNavController
-import com.cairosquad.ui.search.content.ExploreScreenContent
-import com.cairosquad.ui.search.content.SearchContent
-import com.cairosquad.ui.search.content.SearchFailContent
-import com.cairosquad.ui.search.content.SearchLoadingContent
-import com.cairosquad.ui.search.content.SearchResultContent
-import com.cairosquad.viewmodel.foryou.ForYouInteractionListener
 import com.cairosquad.viewmodel.foryou.ForYouState
 import com.cairosquad.viewmodel.foryou.ForYouViewModel
 import com.cairosquad.viewmodel.search.SearchInteractionListener
-import com.cairosquad.viewmodel.search.SearchScreenState
-import com.cairosquad.viewmodel.search.SearchScreenState.ScreenStatus
 import com.cairosquad.viewmodel.search.SearchViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -71,7 +60,7 @@ fun ForYouScreen(
         ) {
             AppBar(
                 modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars),
-                title = "For you",
+                title = stringResource(R.string.for_you),
                 onBackButtonClicked = {
                     navController.popBackStack()
                 },
