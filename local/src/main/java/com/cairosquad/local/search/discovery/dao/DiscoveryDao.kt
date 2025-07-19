@@ -8,6 +8,7 @@ import com.cairosquad.repository.search.data_source.local.dto.PersonalizedMovies
 import com.cairosquad.repository.search.data_source.local.dto.SuggestedMoviesIdsDto
 import com.cairosquad.repository.search.data_source.local.dto.CACHED_ARTIST_TIMESTAMP_COLUMN_NAME
 import com.cairosquad.repository.search.data_source.local.dto.CACHED_MOVIES_ID_COLUMN_NAME
+import com.cairosquad.repository.search.data_source.local.dto.CACHED_MOVIES_PAGE_COLUMN_NAME
 import com.cairosquad.repository.search.data_source.local.dto.CACHED_MOVIES_TABLE_NAME
 import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
 
@@ -25,8 +26,13 @@ interface DiscoveryDao {
     suspend fun getPersonalizedMoviesIds(): List<MovieCacheDto>
 
     @Query(
-        "DELETE FROM PersonalizedMoviesIdsDto " +
-                "WHERE movie_id IN " +
+        "SELECT * FROM $CACHED_MOVIES_TABLE_NAME " +
+                "where $CACHED_MOVIES_PAGE_COLUMN_NAME =:page"
+    )
+    suspend fun getPersonalizedMovies(page:Int): List<MovieCacheDto>
+
+    @Query(
+        "DELETE FROM PersonalizedMoviesIdsDto WHERE movie_id IN " +
                 "(SELECT id FROM MovieCacheDto " +
                 "WHERE $CACHED_ARTIST_TIMESTAMP_COLUMN_NAME < :expirationTime)"
     )

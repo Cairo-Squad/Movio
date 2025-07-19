@@ -133,7 +133,7 @@ private fun EpisodesScreenContent(
                 AppBar(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    onBackButtonClicked = {},
+                    onBackButtonClicked = { listener.onBackClick() },
                 )
             }
             item {
