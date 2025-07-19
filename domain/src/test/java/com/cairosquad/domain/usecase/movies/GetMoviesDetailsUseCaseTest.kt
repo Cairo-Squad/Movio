@@ -16,11 +16,11 @@ import org.junit.jupiter.api.assertThrows
 
 class GetMoviesDetailsUseCaseTest {
     private val moviesRepository: MoviesRepository = mockk(relaxed = true)
-    private lateinit var useCase: GetMoviesDetailsUseCase
+    private lateinit var useCase: GetMovieDetailsUseCase
 
     @Before
     fun setUp() {
-        useCase = GetMoviesDetailsUseCase(moviesRepository)
+        useCase = GetMovieDetailsUseCase(moviesRepository)
     }
 
     @Test
@@ -35,32 +35,32 @@ class GetMoviesDetailsUseCaseTest {
 
     @Test
     fun `getMovieReviews SHOULD return reviews from repository`() = runTest {
-        coEvery { moviesRepository.getMovieReviews(123L) } returns listOf(review)
+        coEvery { moviesRepository.getMovieReviews(123L, 1) } returns listOf(review)
 
         val result = useCase.getMovieReviews(123L)
 
         assertThat(result).containsExactly(review)
-        coVerify(exactly = 1) { moviesRepository.getMovieReviews(123L) }
+        coVerify(exactly = 1) { moviesRepository.getMovieReviews(123L, 1) }
     }
 
     @Test
     fun `getSimilarMovies SHOULD return similar movies from repository`() = runTest {
-        coEvery { moviesRepository.getSimilarMovies(123L) } returns listOf(similarMovie)
+        coEvery { moviesRepository.getSimilarMovies(123L, 1) } returns listOf(similarMovie)
 
         val result = useCase.getSimilarMovies(123L)
 
         assertThat(result).containsExactly(similarMovie)
-        coVerify(exactly = 1) { moviesRepository.getSimilarMovies(123L) }
+        coVerify(exactly = 1) { moviesRepository.getSimilarMovies(123L, 1) }
     }
 
     @Test
     fun `getMovieTopCast SHOULD return top cast from repository`() = runTest {
-        coEvery { moviesRepository.getMovieTopCast(123L) } returns listOf(actor)
+        coEvery { moviesRepository.getMovieTopCast(123L, 1) } returns listOf(actor)
 
         val result = useCase.getMovieTopCast(123L)
 
         assertThat(result).containsExactly(actor)
-        coVerify(exactly = 1) { moviesRepository.getMovieTopCast(123L) }
+        coVerify(exactly = 1) { moviesRepository.getMovieTopCast(123L, 1) }
     }
 
     @Test
@@ -85,10 +85,10 @@ class GetMoviesDetailsUseCaseTest {
         )
 
         private val review = Review(
-            id = 123,
+            id = 123.toString(),
             author = "Ana",
             authorPhotoPath = "/poster.png",
-            rating = "8",
+            rating = 8.0,
             date = 123,
             description = ""
         )
