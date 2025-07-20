@@ -110,7 +110,7 @@ fun TrendingMovieCard(
 
 @Preview
 @Composable
-fun TrendingMovieCardPrevNight() {
+private fun TrendingMovieCardPrevNight() {
     MovioTheme(isDarkTheme = true) {
         TrendingMovieCard("", movieTitle = "Ocean with David Attenborough", movieCategory = "Documentary", rating = "4.5")
     }
@@ -118,7 +118,7 @@ fun TrendingMovieCardPrevNight() {
 
 @Preview
 @Composable
-fun TrendingMovieCardPrevLight() {
+private fun TrendingMovieCardPrevLight() {
     MovioTheme(isDarkTheme = false) {
         TrendingMovieCard("", movieTitle = "Ocean with David Attenborough", movieCategory = "Documentary", rating = "4.5")
     }
