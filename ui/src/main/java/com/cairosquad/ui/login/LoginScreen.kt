@@ -113,7 +113,8 @@ private fun LoginScreenContent(
         Button(
             text = stringResource(R.string.login),
             onClick = { interactionListener.onLoginClick() },
-            modifier = Modifier.padding(bottom = 40.dp)
+            modifier = Modifier.padding(bottom = 40.dp),
+            isLoading = uiState.isLoading
         )
 
         Row(
