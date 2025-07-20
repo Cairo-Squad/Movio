@@ -8,8 +8,8 @@ fun extractErrorMessage(errorBody: String?): String {
         if (errorBody.isNullOrBlank()) return "Unexpected error"
         val json = Json { ignoreUnknownKeys = true }
         val errorDto = json.decodeFromString<ErrorDto>(errorBody)
-        errorDto.statusMessage ?: "Unexpected error"
+        errorDto.statusMessage ?: " "
     } catch (e: Exception) {
-        "Unexpected error"
+        throw e
     }
 }

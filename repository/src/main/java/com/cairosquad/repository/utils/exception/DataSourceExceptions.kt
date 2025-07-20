@@ -6,8 +6,9 @@ sealed class DataSourceException(override val message: String = "") : RuntimeExc
 class UnknownDataSourceException(override val message: String = "") : DataSourceException(message)
 class ServerException(override val message: String = "") : DataSourceException(message)
 class NoInternetException(override val message: String = "") : DataSourceException(message)
-class EmptyResponseException(override val message: String = "Empty response body") : DataSourceException(message)
-class JsonParsingException(override val message: String = "Failed to parse response") : DataSourceException(message)
+// repo
+class RepoEmptyResponseException(override val message: String = "Empty response body") : DataSourceException(message)
+class RepoJsonParsingException(override val message: String = "Failed to parse response") : DataSourceException(message)
 
 // API-specific
 sealed class ApiException(override val message: String = "") : DataSourceException(message)
