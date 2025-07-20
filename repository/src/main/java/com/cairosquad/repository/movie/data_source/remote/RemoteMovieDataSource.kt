@@ -15,4 +15,20 @@ interface RemoteMovieDataSource {
 
     suspend fun getMovieTopCast(movieId: Long, page: Int): List<ArtistRemoteDto>
 
+    suspend fun getTopRatingMovies(page: Int): List<MovieRemoteDto>
+
+    suspend fun getUpcomingMovies(page: Int): List<MovieRemoteDto>
+
+    suspend fun getNowPlayingMovies(page: Int): List<MovieRemoteDto>
+
+    suspend fun getTrendingMovies(page: Int): List<MovieRemoteDto>
+
+    suspend fun getMoreRecommendedMovies(page: Int): List<MovieRemoteDto>
+
+    suspend fun getFreeToWatchMovies(page: Int): List<MovieRemoteDto>
+
+    suspend fun getMoviesByCategory(categoryId: String, page: Int): List<MovieRemoteDto>
+
+    suspend fun getRandomMoviesUseCase(page: Int): List<MovieRemoteDto>
+
 }

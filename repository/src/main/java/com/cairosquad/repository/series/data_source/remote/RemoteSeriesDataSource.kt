@@ -21,4 +21,21 @@ interface RemoteSeriesDataSource {
 
     suspend fun getEpisodes(seriesId: Long, seasonNumber: Int): List<EpisodeRemoteDto>
 
+    suspend fun getTopRatingSeries(page: Int): List<SeriesRemoteDto>
+
+    suspend fun getMoreRecommendedSeries(page: Int): List<SeriesRemoteDto>
+
+    suspend fun getOnTvSeries(page: Int): List<SeriesRemoteDto>
+
+    suspend fun getAiringTodaySeries(page: Int): List<SeriesRemoteDto>
+
+    suspend fun getTrendingSeries(page: Int): List<SeriesRemoteDto>
+
+
+    suspend fun getFreeToWatchSeries(page: Int): List<SeriesRemoteDto>
+
+    suspend fun getSeriesByCategory(category: String, page: Int): List<SeriesRemoteDto>
+
+    suspend fun getRandomSeries(page: Int): List<SeriesRemoteDto>
+
 }
