@@ -7,9 +7,4 @@
     <string name="add_to_list">أضف إلى القائمة</string>
     <string name="play">تشغيل</string>
     <string name="reviews">المراجعات</string>
-    <string name="all">الكل</string>
-    <string name="action">أكشن</string>
-    <string name="animation">رسوم متحركة</string>
-    <string name="crime">جريمة</string>
-    <string name="horror">رعب</string>
 </resources>
