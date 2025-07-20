@@ -4,16 +4,17 @@ import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.ResultResponse
 import com.cairosquad.repository.search.data_source.remote.dto.SeriesRemoteDto
-import com.cairosquad.repository.utils.exception.EmptyResponseException
 import com.cairosquad.repository.utils.exception.ServerException
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.spyk
 import kotlinx.coroutines.test.runTest
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
 import org.junit.Test
+import retrofit2.HttpException
 import retrofit2.Response
 
 class RemoteSearchDataSourceImplTest {
@@ -29,8 +30,7 @@ class RemoteSearchDataSourceImplTest {
 
     @Test
     fun `should return movie list when getMovies is successful`() = runTest {
-        // Given
-        val response = ResultResponse(
+        val response = ResultResponse<MovieRemoteDto>(
             page = 1,
             results = listOf(
                 MovieRemoteDto(id = 123, title = "Batman Begins", posterPath = "/batman.jpg", voteAverage = 8.2)
@@ -38,12 +38,10 @@ class RemoteSearchDataSourceImplTest {
             totalPages = 1,
             totalResults = 1
         )
-        coEvery { apiService.getMovies("batman", 1) } returns Response.success(response)
+        coEvery { apiService.getMovies("batman", 1) } returns response
 
-        // When
         val result = remoteSearchDataSource.getMovies("batman", 1)
 
-        // Then
         assertThat(result).hasSize(1)
         assertThat(result[0].id).isEqualTo(123)
         assertThat(result[0].title).isEqualTo("Batman Begins")
@@ -51,7 +49,7 @@ class RemoteSearchDataSourceImplTest {
 
     @Test
     fun `should return series list when getSeries is successful`() = runTest {
-        val response = ResultResponse(
+        val response = ResultResponse<SeriesRemoteDto>(
             page = 1,
             results = listOf(
                 SeriesRemoteDto(id = 456, name = "Batman Series", posterPath = "/batman_series.jpg")
@@ -59,7 +57,7 @@ class RemoteSearchDataSourceImplTest {
             totalPages = 1,
             totalResults = 1
         )
-        coEvery { apiService.getSeries("batman", 1) } returns Response.success(response)
+        coEvery { apiService.getSeries("batman", 1) } returns response
 
         val result = remoteSearchDataSource.getSeries("batman", 1)
 
@@ -70,7 +68,7 @@ class RemoteSearchDataSourceImplTest {
 
     @Test
     fun `should return artist list when getArtists is successful`() = runTest {
-        val response = ResultResponse(
+        val response = ResultResponse<ArtistRemoteDto>(
             page = 1,
             results = listOf(
                 ArtistRemoteDto(id = 789, name = "Christian Bale", profilePath = "/bale.jpg")
@@ -78,7 +76,7 @@ class RemoteSearchDataSourceImplTest {
             totalPages = 1,
             totalResults = 1
         )
-        coEvery { apiService.getArtists("christian", 1) } returns Response.success(response)
+        coEvery { apiService.getArtists("christian", 1) } returns response
 
         val result = remoteSearchDataSource.getArtists("christian", 1)
 
@@ -89,39 +87,43 @@ class RemoteSearchDataSourceImplTest {
 
     @Test
     fun `should throw EmptyResponseException when movie response body is null`() = runTest {
-        coEvery { apiService.getMovies("query", 1) } returns Response.success(null)
+        val response = ResultResponse<MovieRemoteDto>(
+            page = 1,
+            results = null,
+            totalPages = 1,
+            totalResults = 0
+        )
+        coEvery { apiService.getMovies("query", 1) } returns response
 
-        var exception: Throwable? = null
-        try {
-            remoteSearchDataSource.getMovies("query", 1)
-        } catch (e: Throwable) {
-            exception = e
-        }
+        val result = remoteSearchDataSource.getMovies("query", 1)
 
-        assertThat(exception).isInstanceOf(EmptyResponseException::class.java)
+        assertThat(result).isEmpty()
     }
 
     @Test
     fun `should throw ServerException when API returns 500`() = runTest {
-        coEvery { apiService.getSeries("query", 1) } returns Response.error(
-            500,
-            """{ "status_message": "Internal Server Error" }""".toResponseBody(null)
-        )
+        val errorBody = """{ "status_message": "Internal Server Error" }"""
+            .toResponseBody("application/json".toMediaTypeOrNull())
 
-        var exception: Throwable? = null
+        val response = Response.error<ResultResponse<SeriesRemoteDto>>(500, errorBody)
+        val exception = HttpException(response)
+
+        coEvery { apiService.getSeries("query", 1) } throws exception
+
+        var thrown: Throwable? = null
         try {
             remoteSearchDataSource.getSeries("query", 1)
         } catch (e: Throwable) {
-            exception = e
+            thrown = e
         }
 
-        assertThat(exception).isInstanceOf(ServerException::class.java)
-        assertThat(exception?.message).isEqualTo("Internal Server Error")
+        assertThat(thrown).isInstanceOf(ServerException::class.java)
+        assertThat(thrown?.message).isEqualTo("Internal Server Error")
     }
 
     @Test
     fun `should return empty list when artist response has only null or invalid ids`() = runTest {
-        val response = ResultResponse(
+        val response = ResultResponse<ArtistRemoteDto>(
             page = 1,
             results = listOf(
                 null,
@@ -130,7 +132,7 @@ class RemoteSearchDataSourceImplTest {
             totalPages = 1,
             totalResults = 2
         )
-        coEvery { apiService.getArtists("invalid", 1) } returns Response.success(response)
+        coEvery { apiService.getArtists("invalid", 1) } returns response
 
         val result = remoteSearchDataSource.getArtists("invalid", 1)
 
