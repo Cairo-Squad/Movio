@@ -73,8 +73,8 @@ dependencies {
     implementation(libs.logging.interceptor)
 
     // --- Retrofit 3 (Beta) ---
-    implementation("com.squareup.retrofit3:retrofit:3.0.0")
-    implementation("com.squareup.retrofit3:converter-kotlinx-serialization:3.0.0")
+    implementation("com.squareup.retrofit2:retrofit:3.0.0")
+    implementation("com.squareup.retrofit2:converter-kotlinx-serialization:3.0.0")
     implementation ("com.squareup.okhttp3:okhttp:3.10.0")
 
     testImplementation(kotlin("test"))
