@@ -4,8 +4,16 @@ import com.cairosquad.entity.Genre
 import com.cairosquad.viewmodel.exception.ErrorStatus
 
 class HomeScreenState (
-    val Movies :List<HomeScreenState.MovieUiState> = emptyList(),
-    val Series :List<HomeScreenState.SeriesUiState> =emptyList(),
+    val topRatingMovies: List<MovieUiState> = emptyList(),
+    val trendingMovies: List<MovieUiState> = emptyList(),
+    val freeToWatchMovies: List<MovieUiState> = emptyList(),
+    val upcomingMovies: List<MovieUiState> = emptyList(),
+    val nowPlayingMovies: List<MovieUiState> = emptyList(),
+    val moreRecommendedMovies: List<MovieUiState> = emptyList(),
+    val topRatingSeries: List<SeriesUiState> = emptyList(),
+    val airingTodaySeries: List<SeriesUiState> = emptyList(),
+    val onTvSeries: List<SeriesUiState> = emptyList(),
+    val moreRecommendedSeries: List<SeriesUiState> = emptyList(),
     val screenStatus: HomeScreenState.ScreenStatus = HomeScreenState.ScreenStatus.LOADING,
     val errorStatus: ErrorStatus? = null,
 ) {
