@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "1a9add31fc08db735d056b49cb81f4f3",
+    "identityHash": "a0647281061dd28051cb36e129a62e85",
     "entities": [
       {
         "tableName": "MovieCacheDto",
@@ -108,7 +108,7 @@
       },
       {
         "tableName": "CachedArtistDto",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `page` INTEGER NOT NULL, `name` TEXT, `photoPath` TEXT, `queryColumn` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `page` INTEGER NOT NULL, `name` TEXT, `photoPath` TEXT, `queryColumn` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `country` TEXT NOT NULL, `birthDate` INTEGER NOT NULL, `biography` TEXT NOT NULL, `department` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -142,6 +142,30 @@
             "fieldPath": "timestamp",
             "columnName": "timestamp",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "country",
+            "columnName": "country",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "birthDate",
+            "columnName": "birthDate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "biography",
+            "columnName": "biography",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "department",
+            "columnName": "department",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -263,7 +287,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1a9add31fc08db735d056b49cb81f4f3')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a0647281061dd28051cb36e129a62e85')"
     ]
   }
 }

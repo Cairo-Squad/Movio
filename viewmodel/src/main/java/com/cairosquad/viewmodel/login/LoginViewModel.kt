@@ -1,7 +1,10 @@
 package com.cairosquad.viewmodel.login
 
+import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.authentication.LoginUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
+import com.cairosquad.viewmodel.exception.ErrorStatus
+import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 
 class LoginViewModel(
     private val loginUseCase: LoginUseCase
@@ -105,6 +108,18 @@ class LoginViewModel(
     private fun handleError(
         throwable: Throwable
     ) {
-        // TODO
+        if (throwable is MovioException) {
+            updateState {
+                it.copy(
+                    error = exceptionToErrorStatus(throwable)
+                )
+            }
+        } else {
+            updateState {
+                it.copy(
+                    error = ErrorStatus.UNKNOWN_ERROR
+                )
+            }
+        }
     }
 }
