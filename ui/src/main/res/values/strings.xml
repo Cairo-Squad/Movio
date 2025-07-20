@@ -8,4 +8,9 @@
     <string name="add_to_list">Add to list</string>
     <string name="play">Play</string>
     <string name="reviews">Reviews</string>
+    <string name="all">All</string>
+    <string name="action">Action</string>
+    <string name="animation">Animation</string>
+    <string name="crime">Crime</string>
+    <string name="horror">Horror</string>
 </resources>
