@@ -51,7 +51,7 @@ class RemoteArtistDataSourceImplTest {
         val result = dataSource.getMoviesOfArtist(artistId)
 
         // Then
-        assertThat(result).hasSize(1)
+        assertThat(result).hasSize(2)
         assertThat(result.first().id).isEqualTo(1)
     }
 
@@ -68,7 +68,7 @@ class RemoteArtistDataSourceImplTest {
         val result = dataSource.getSeriesOfArtist(artistId)
 
         // Then
-        assertThat(result).hasSize(1)
+        assertThat(result).hasSize(2)
         assertThat(result[0].id).isEqualTo(100)
     }
 

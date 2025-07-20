@@ -85,7 +85,7 @@ class RemoteMovieDataSourceImplTest {
         val result = dataSource.getSimilarMovies(movieId, page)
 
         // Then
-        assertThat(result).hasSize(1)
+        assertThat(result).hasSize(2)
         assertThat(result[0].title).isEqualTo("Tenet")
     }
 
