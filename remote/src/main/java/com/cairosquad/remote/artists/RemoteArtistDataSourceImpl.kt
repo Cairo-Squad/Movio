@@ -15,10 +15,12 @@ class RemoteArtistDataSourceImpl(
     }
 
     override suspend fun getMoviesOfArtist(artistId: Long): List<MovieRemoteDto> {
-        return safeCallApi { apiService.getMoviesOfArtist(artistId) }.cast.filter { it.id != null }
+        return safeCallApi { apiService.getMoviesOfArtist(artistId) }
+            .results?.filterNotNull().orEmpty()
     }
 
     override suspend fun getSeriesOfArtist(artistId: Long): List<SeriesRemoteDto> {
-        return safeCallApi { apiService.getSeriesOfArtist(artistId) }.cast.filter { it.id != null }
+        return safeCallApi { apiService.getSeriesOfArtist(artistId) }
+            .results?.filterNotNull().orEmpty()
     }
 }

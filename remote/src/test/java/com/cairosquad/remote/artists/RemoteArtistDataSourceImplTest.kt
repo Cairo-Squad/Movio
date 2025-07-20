@@ -1,9 +1,8 @@
 package com.cairosquad.remote.artists
 
-import com.cairosquad.remote.artists.response.MoviesListResponse
-import com.cairosquad.remote.artists.response.SeriesListResponse
 import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
+import com.cairosquad.repository.search.data_source.remote.dto.ResultResponse
 import com.cairosquad.repository.search.data_source.remote.dto.SeriesRemoteDto
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
@@ -42,7 +41,10 @@ class RemoteArtistDataSourceImplTest {
     fun `getMoviesOfArtist should return list with non-null IDs`() = runTest {
         // Given
         val artistId = 99L
-        val response = MoviesListResponse(cast = remoteMovies)
+        val response = ResultResponse(
+            results = remoteMovies
+        )
+
         coEvery { apiService.getMoviesOfArtist(artistId) } returns response
 
         // When
@@ -57,7 +59,9 @@ class RemoteArtistDataSourceImplTest {
     fun `getSeriesOfArtist should return list with non-null IDs`() = runTest {
         // Given
         val artistId = 7L
-        val response = SeriesListResponse(cast = remoteSeries)
+        val response = ResultResponse(
+            results = remoteSeries
+        )
         coEvery { apiService.getSeriesOfArtist(artistId) } returns response
 
         // When
