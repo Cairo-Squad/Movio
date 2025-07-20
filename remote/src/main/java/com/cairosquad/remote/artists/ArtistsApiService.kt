@@ -6,7 +6,6 @@ import com.cairosquad.remote.artists.response.SeriesListResponse
 import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
 import retrofit2.http.GET
 import retrofit2.http.Path
-import retrofit2.http.Query
 
 interface ArtistsApiService {
     @GET("person/{id}")

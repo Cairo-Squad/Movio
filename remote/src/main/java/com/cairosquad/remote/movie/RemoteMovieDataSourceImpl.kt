@@ -15,11 +15,11 @@ class RemoteMovieDataSourceImpl(
     }
 
     override suspend fun getMovieReviews(movieId: Long, page: Int): List<ReviewRemoteDto> {
-        return apiService.getMovieReviews(movieId, page).results?.filterNotNull().orEmpty()
+        return apiService.getMovieReviews(movieId, page)
     }
 
     override suspend fun getSimilarMovies(movieId: Long, page: Int): List<MovieRemoteDto> {
-        return apiService.getSimilarMovies(movieId, page).results?.filterNotNull().orEmpty()
+        return apiService.getSimilarMovies(movieId, page)
     }
 
     override suspend fun getMovieTopCast(movieId: Long, page: Int): List<ArtistRemoteDto> {
