@@ -29,7 +29,7 @@ class RemoteArtistDataSourceImplTest {
     fun `getArtist should return artist data`() = runTest {
         // Given
         val artistId = 42L
-        coEvery { apiService.getArtist(artistId, any(), any()) } returns expectedArtist
+        coEvery { apiService.getArtist(artistId) } returns expectedArtist
 
         // When
         val result = dataSource.getArtist(artistId)
@@ -43,7 +43,7 @@ class RemoteArtistDataSourceImplTest {
         // Given
         val artistId = 99L
         val response = MoviesListResponse(cast = remoteMovies)
-        coEvery { apiService.getMoviesOfArtist(artistId, any(), any()) } returns response
+        coEvery { apiService.getMoviesOfArtist(artistId) } returns response
 
         // When
         val result = dataSource.getMoviesOfArtist(artistId)
@@ -58,7 +58,7 @@ class RemoteArtistDataSourceImplTest {
         // Given
         val artistId = 7L
         val response = SeriesListResponse(cast = remoteSeries)
-        coEvery { apiService.getSeriesOfArtist(artistId, any(), any()) } returns response
+        coEvery { apiService.getSeriesOfArtist(artistId) } returns response
 
         // When
         val result = dataSource.getSeriesOfArtist(artistId)

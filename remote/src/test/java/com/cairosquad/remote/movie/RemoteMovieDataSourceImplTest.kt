@@ -36,7 +36,7 @@ class RemoteMovieDataSourceImplTest {
             releaseDate = "2023-07-21",
             voteAverage = 9.2
         )
-        coEvery { apiService.getMovie(movieId, any()) } returns expected
+        coEvery { apiService.getMovie(movieId) } returns expected
 
         // When
         val result = dataSource.getMovie(movieId)
@@ -58,7 +58,7 @@ class RemoteMovieDataSourceImplTest {
                 ReviewRemoteDto(id = "r2", author = "Bob", content = "Masterpiece!")
             )
         )
-        coEvery { apiService.getMovieReviews(movieId, any(), page) } returns expected
+        coEvery { apiService.getMovieReviews(movieId, page) } returns expected
 
         // When
         val result = dataSource.getMovieReviews(movieId, page)
@@ -79,7 +79,7 @@ class RemoteMovieDataSourceImplTest {
                 null
             )
         )
-        coEvery { apiService.getSimilarMovies(movieId, any(), page) } returns expected
+        coEvery { apiService.getSimilarMovies(movieId, page) } returns expected
 
         // When
         val result = dataSource.getSimilarMovies(movieId, page)
@@ -101,7 +101,7 @@ class RemoteMovieDataSourceImplTest {
                 ArtistRemoteDto(id = 2, name = "Emily Blunt", profilePath = null)
             )
         )
-        coEvery { apiService.getMovieTopCast(movieId, any(), page) } returns expected
+        coEvery { apiService.getMovieTopCast(movieId, page) } returns expected
 
         // When
         val result = dataSource.getMovieTopCast(movieId, page)
