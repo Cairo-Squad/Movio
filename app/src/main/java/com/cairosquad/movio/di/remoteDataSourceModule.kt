@@ -6,7 +6,9 @@ import com.cairosquad.remote.movie.MovieApiService
 import com.cairosquad.remote.movie.RemoteMovieDataSourceImpl
 import com.cairosquad.remote.search.RemoteMovieDiscoveryDataSourceImpl
 import com.cairosquad.remote.search.RemoteSearchDataSourceImpl
+import com.cairosquad.remote.search.SearchApiService
 import com.cairosquad.remote.series.RemoteSeriesDataSourceImpl
+import com.cairosquad.remote.series.SeriesApiService
 import com.cairosquad.remote.utils.HttpClientFactory
 import com.cairosquad.remote.utils.HttpEngine
 import com.cairosquad.remote.utils.retrofit.provideRetrofit
@@ -19,6 +21,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val remoteDataSourceModule = module {
+
     single {
         HttpClientFactory.create(
             engine = HttpEngine.provide()
@@ -28,6 +31,21 @@ val remoteDataSourceModule = module {
         provideRetrofit(
             tokenProvider = { null }
         )
+    }
+
+
+    single {
+        provideRetrofit(
+            tokenProvider = { null }
+        )
+    }
+
+    single<SeriesApiService> {
+        get<Retrofit>().create(SeriesApiService::class.java)
+    }
+
+    single<SearchApiService> {
+        get<Retrofit>().create(SearchApiService::class.java)
     }
 
     single<RemoteSearchDataSource> {

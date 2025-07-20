@@ -35,4 +35,3 @@ fun provideRetrofit(tokenProvider: () -> String?): Retrofit {
         .addConverterFactory(json.asConverterFactory(contentType))
         .build()
 }
-
