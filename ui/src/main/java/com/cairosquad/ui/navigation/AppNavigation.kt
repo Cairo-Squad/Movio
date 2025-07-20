@@ -21,6 +21,7 @@ import com.cairosquad.ui.details.TopCastScreen
 import com.cairosquad.ui.details.artist.ArtistScreen
 import com.cairosquad.ui.details.similar_movies.SimilarMoviesScreen
 import com.cairosquad.ui.details.similar_series.SimilarSeriesScreen
+import com.cairosquad.ui.login.LoginScreen
 import com.cairosquad.ui.search.ForYouScreen
 import com.cairosquad.ui.splash.SplashScreen
 
@@ -36,7 +37,7 @@ fun AppNavigation() {
         NavHost(
             modifier = Modifier.background(Theme.color.surfaces.surface),
             navController = navController,
-            startDestination = SplashRoute
+            startDestination = LoginRoute // TODO: Change back to splash after finishing the feature
         ) {
             composable<SplashRoute> {
                 SplashScreen(
@@ -46,6 +47,11 @@ fun AppNavigation() {
                     }
                 )
             }
+
+            composable<LoginRoute> {
+                LoginScreen()
+            }
+
             composable<AppRoute> {
                 AppScreen()
             }
