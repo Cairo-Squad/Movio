@@ -8,4 +8,14 @@
     <string name="add_to_list">Add to list</string>
     <string name="play">Play</string>
     <string name="reviews">Reviews</string>
+    <string name="welcome_back">Welcome back</string>
+    <string name="user_name">Username</string>
+    <string name="password_you_entered_is_incorrect">Password you entered is incorrect</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="login">Login</string>
+    <string name="or">Or</string>
+    <string name="continue_as_a_guest">Continue as a guest</string>
+    <string name="dont_have_an_account">Don’t have an account?</string>
+    <string name="signup">Sign up</string>
+
 </resources>

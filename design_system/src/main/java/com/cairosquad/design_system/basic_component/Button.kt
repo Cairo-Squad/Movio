@@ -1,6 +1,7 @@
 package com.cairosquad.design_system.basic_component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,12 +26,14 @@ fun Button(
     modifier: Modifier = Modifier,
     textStyle: TextStyle = Theme.textStyle.label.mediumMedium14,
     textColor: Color = Theme.color.brand.onPrimary,
-    containerColor: Color = Theme.color.brand.primary
+    containerColor: Color = Theme.color.brand.primary,
+    borderColor:Color = Color.Unspecified
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
             .clip(CircleShape)
+            .border(1.dp,borderColor)
             .clickable(onClick = onClick)
             .background(containerColor)
             .padding(horizontal = 12.dp, vertical = 16.dp),

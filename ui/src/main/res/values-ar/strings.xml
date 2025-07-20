@@ -7,4 +7,13 @@
     <string name="add_to_list">أضف إلى القائمة</string>
     <string name="play">تشغيل</string>
     <string name="reviews">المراجعات</string>
+    <string name="welcome_back">مرحبا من جديد</string>
+    <string name="user_name">اسم المستخدم</string>
+    <string name="password_you_entered_is_incorrect">كلمة المرور التي أدخلتها غير صحيحة</string>
+    <string name="forgot_password">نسيت كلمة المرور؟</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="or">أو</string>
+    <string name="continue_as_a_guest">المتابعة كضيف</string>
+    <string name="dont_have_an_account">لا تمتلك حساب؟</string>
+    <string name="signup">إنشاء حساب</string>
 </resources>
