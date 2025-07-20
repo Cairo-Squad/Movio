@@ -83,7 +83,7 @@ fun HomeScreenContent(
             )
 
             MediaSection(
-                modifier = Modifier,
+                modifier = Modifier.padding(bottom = 32.dp),
                 mediaList = MediaSectionItem.fakeItems,
                 onClickMedia = { },
                 sectionTitle = stringResource(R.string.free_to_watch),
@@ -92,7 +92,7 @@ fun HomeScreenContent(
             )
 
             MediaSection(
-                modifier = Modifier,
+                modifier = Modifier.padding(bottom = 32.dp),
                 mediaList = MediaSectionItem.fakeItems,
                 onClickMedia = { },
                 sectionTitle = stringResource(R.string.up_coming),
@@ -101,7 +101,7 @@ fun HomeScreenContent(
             )
 
             MediaSection(
-                modifier = Modifier,
+                modifier = Modifier.padding(bottom = 32.dp),
                 mediaList = MediaSectionItem.fakeItems,
                 onClickMedia = { },
                 sectionTitle = stringResource(R.string.more_recommended),
