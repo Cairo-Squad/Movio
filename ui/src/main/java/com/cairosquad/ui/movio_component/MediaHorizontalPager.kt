@@ -76,17 +76,17 @@ fun MediaHorizontalPager(
             .height(430.dp)
             .fillMaxWidth()
     ) {
-        (0..<mediaList.size).forEach { pageIndex ->
+        mediaList.forEachIndexed { pageIndex, media ->
             val pageOffset =
                 (pageIndex - pagerState.currentPage - pagerState.currentPageOffsetFraction)
-            val activityLevel = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f)
+            val isCurrentPageFloat = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f)
             SafeImageViewer(
                 modifier = Modifier
-                    .alpha(activityLevel)
+                    .alpha(isCurrentPageFloat)
                     .fillMaxSize()
                     .blur(20.dp)
                     .offset(y = (-28).dp),
-                model = mediaList[pageIndex].photoPath,
+                model = media.photoPath,
                 contentDescription = stringResource(R.string.movie_poster),
                 loadingPlaceholder = { },
                 nonNudeThreshold = 0.0
@@ -109,18 +109,18 @@ fun MediaHorizontalPager(
                 val pageOffset =
                     (pageIndex - pagerState.currentPage - pagerState.currentPageOffsetFraction)
 
-                val activityLevel = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f)
+                val isCurrentPageFloat = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f)
 
                 val cardAngle = 20.0f * pageOffset
                 val cardSize = DpSize(
-                    width = lerp(140, 200, activityLevel).dp,
-                    height = lerp(200, 260, activityLevel).dp
+                    width = lerp(140, 200, isCurrentPageFloat).dp,
+                    height = lerp(200, 260, isCurrentPageFloat).dp
                 )
 
                 Box(
                     modifier = Modifier
                         .size(200.dp, 260.dp)
-                        .zIndex(activityLevel),
+                        .zIndex(isCurrentPageFloat),
                     contentAlignment = Alignment.Center
                 ) {
                     MediaHorizontalPagerCard(
@@ -130,7 +130,7 @@ fun MediaHorizontalPager(
                         title = media.title,
                         imgUrl = media.photoPath,
                         categories = media.categories,
-                        activityLevel = activityLevel,
+                        isCurrentPageFloat = isCurrentPageFloat,
                         onClick = { onClickMedia(media.id) }
                     )
                 }
@@ -147,7 +147,7 @@ fun MediaHorizontalPager(
                 .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(
-                            Color.Black.copy(alpha = .9f),
+                            Color.Black,
                             Color.Black.copy(alpha = 0f)
                         ),
                     )
@@ -220,7 +220,7 @@ private fun MediaHorizontalPagerCard(
     categories: List<String>,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
-    activityLevel: Float = 1f
+    isCurrentPageFloat: Float = 1f
 ) {
     Box(
         modifier
@@ -235,7 +235,7 @@ private fun MediaHorizontalPagerCard(
         )
         Icon(
             modifier = Modifier
-                .alpha(lerp(0f, 1f, activityLevel))
+                .alpha(lerp(0f, 1f, isCurrentPageFloat))
                 .align(Alignment.Center)
                 .size(40.dp)
                 .background(Theme.color.surfaces.onSurfaceAt2, CircleShape)
@@ -249,7 +249,7 @@ private fun MediaHorizontalPagerCard(
 
         Box(
             modifier = Modifier
-                .alpha(lerp(0f, 1f, activityLevel))
+                .alpha(lerp(0f, 1f, isCurrentPageFloat))
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .align(Alignment.BottomCenter)
@@ -286,7 +286,7 @@ private fun MediaHorizontalPagerCard(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     contentPadding = PaddingValues(horizontal = 8.dp)
                 ) {
-                    (0..<minOf(3, categories.size)).forEach {
+                    (0..< minOf(3, categories.size)).forEach {
                         item {
                             ChipWithNoBackGround(text = categories[it])
                         }
@@ -299,7 +299,7 @@ private fun MediaHorizontalPagerCard(
             modifier = Modifier
                 .fillMaxSize()
                 .clickable(onClick = onClick)
-                .background(Color.Black.copy(alpha = lerp(0.80f, 0f, activityLevel)))
+                .background(Color.Black.copy(alpha = lerp(0.80f, 0f, isCurrentPageFloat)))
         )
     }
 }
