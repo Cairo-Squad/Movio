@@ -1,5 +1,6 @@
 package com.cairosquad.repository.series.data_source.remote
 
+import com.cairosquad.entity.Series
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.SeriesRemoteDto
@@ -20,5 +21,22 @@ interface RemoteSeriesDataSource {
     suspend fun getSeriesSeasons(seriesId: Long): List<SeasonRemoteDto>
 
     suspend fun getEpisodes(seriesId: Long, seasonNumber: Int): List<EpisodeRemoteDto>
+
+    suspend fun getTopRatingSeries(page: Int): List<SeriesRemoteDto>
+
+    suspend fun getMoreRecommendedSeries(page: Int): List<SeriesRemoteDto>
+
+    suspend fun getOnTvSeries(page: Int): List<SeriesRemoteDto>
+
+    suspend fun getAiringTodaySeries(page: Int): List<SeriesRemoteDto>
+
+    suspend fun getTrendingSeries(page: Int): List<SeriesRemoteDto>
+
+
+    suspend fun getFreeToWatchSeries(page: Int): List<SeriesRemoteDto>
+
+    suspend fun getSeriesByCategory(category: String, page: Int): List<SeriesRemoteDto>
+
+    suspend fun getRandomSeries(page: Int): List<SeriesRemoteDto>
 
 }
