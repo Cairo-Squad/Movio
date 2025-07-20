@@ -46,4 +46,5 @@ interface SeriesApiService {
         @Path("seriesId") seriesId: Long,
         @Path("seasonNumber") seasonNumber: Int
     ): SeasonResponse
+
 }
