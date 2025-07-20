@@ -2,6 +2,7 @@ package com.cairosquad.design_system.basic_component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,13 +28,14 @@ fun Chip(
         if (isSelected) Theme.color.brand.primary else Theme.color.surfaces.onSurfaceAt3
     val textColor =
         if (isSelected) Theme.color.brand.onPrimary else Theme.color.surfaces.onSurfaceVariant
-    Row(
+    Box(
         modifier = modifier
             .height(32.dp)
             .background(color = backgroundColor, shape = CircleShape)
             .clip(CircleShape)
             .clickable(onClick = onClick)
-            .padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically
+            .padding(horizontal = 12.dp),
+        contentAlignment = Alignment.Center
     ) {
         Text(
             text = title,

@@ -25,13 +25,12 @@ fun CategoriesChips(
         modifier = modifier
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        contentPadding = PaddingValues(start = 16.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         itemsIndexed(categories) { index, categoryTitle  ->
             val isSelected = selectedChipIndex == index
             Chip(
-                modifier = Modifier.padding(start = 12.dp),
                 title = categoryTitle ,
                 isSelected = isSelected,
             ) {
@@ -50,7 +49,7 @@ private fun CategoriesChipsPreviewAr() {
         "أكشن",
         "رسوم متحركة",
         "جريمة",
-        "رعب"
+        "رعب","كوميدي"
     )
     MovioTheme(isDarkTheme = true) {
         CategoriesChips(arabicGenres, 0, {})
