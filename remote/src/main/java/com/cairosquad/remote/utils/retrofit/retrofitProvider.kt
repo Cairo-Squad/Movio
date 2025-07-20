@@ -5,11 +5,11 @@ import com.cairosquad.remote.utils.retrofit.interceptor.ApiKeyInterceptor
 import com.cairosquad.remote.utils.retrofit.interceptor.AuthInterceptor
 import com.cairosquad.remote.utils.retrofit.interceptor.LanguageInterceptor
 import kotlinx.serialization.json.Json
-import retrofit2.Retrofit
-import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
 fun retrofitProvider(tokenProvider: () -> String?): Retrofit {
     val contentType = "application/json".toMediaType()
@@ -36,4 +36,3 @@ fun retrofitProvider(tokenProvider: () -> String?): Retrofit {
         .addConverterFactory(json.asConverterFactory(contentType))
         .build()
 }
-

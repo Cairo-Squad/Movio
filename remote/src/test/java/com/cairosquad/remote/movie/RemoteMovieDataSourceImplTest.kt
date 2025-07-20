@@ -1,157 +1,114 @@
 package com.cairosquad.remote.movie
 
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.mock.MockEngine
-import io.ktor.client.engine.mock.respond
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.http.ContentType
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.headersOf
-import io.ktor.serialization.kotlinx.json.json
-import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.json.Json
-import org.junit.Assert.assertEquals
+import com.cairosquad.repository.movie.data_source.remote.dto.CreditResponse
+import com.cairosquad.repository.movie.data_source.remote.dto.MovieDetailsRemoteDto
+import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
+import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
+import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
+import com.cairosquad.repository.search.data_source.remote.dto.ResultResponse
+import com.google.common.truth.Truth.assertThat
+import io.mockk.coEvery
+import io.mockk.mockk
+import io.mockk.spyk
+import kotlinx.coroutines.test.runTest
+import org.junit.Before
 import org.junit.Test
 
 class RemoteMovieDataSourceImplTest {
 
+    private lateinit var apiService: MovieApiService
+    private lateinit var dataSource: RemoteMovieDataSourceImpl
 
-    private fun createMockClient(
-        responseJson: String,
-        status: HttpStatusCode = HttpStatusCode.OK
-    ): HttpClient {
-        return HttpClient(MockEngine) {
-            engine {
-                addHandler {
-                    respond(
-                        content = responseJson,
-                        status = status,
-                        headers = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString()))
-                    )
-                }
-            }
-            install(ContentNegotiation) {
-                json(Json { ignoreUnknownKeys = true })
-            }
-        }
+    @Before
+    fun setUp() {
+        apiService = mockk(relaxed = true)
+        dataSource = spyk(RemoteMovieDataSourceImpl(apiService))
     }
 
     @Test
-    fun `getMovie should return MovieDetailsRemoteDto when response is valid`() = runBlocking {
-        //given
-        val client = createMockClient(MOVIE_RESPONSE)
-        val dataSource = RemoteMovieDataSourceImpl(client)
+    fun `getMovie should return movie details`() = runTest {
+        // Given
+        val movieId = 10L
+        val expected = MovieDetailsRemoteDto(
+            id = 10,
+            title = "Oppenheimer",
+            overview = "A brilliant physicist...",
+            releaseDate = "2023-07-21",
+            voteAverage = 9.2
+        )
+        coEvery { apiService.getMovie(movieId) } returns expected
 
-        //when
-        val result = dataSource.getMovie(10)
+        // When
+        val result = dataSource.getMovie(movieId)
 
-        //then
-        assertEquals(10, result.id)
-        assertEquals("Oppenheimer", result.title)
-        assertEquals("2023-07-21", result.releaseDate)
+        // Then
+        assertThat(result.id).isEqualTo(10)
+        assertThat(result.title).isEqualTo("Oppenheimer")
+        assertThat(result.releaseDate).isEqualTo("2023-07-21")
     }
 
     @Test
-    fun `getMovieReviews should return list of reviews when response has results`() = runBlocking {
-        //given
-        val client = createMockClient(REVIEW_RESPONSE)
-        val dataSource = RemoteMovieDataSourceImpl(client)
+    fun `getMovieReviews should return non-null list of reviews`() = runTest {
+        // Given
+        val movieId = 10L
+        val page = 1
+        val expected = ResultResponse(
+            results = listOf(
+                ReviewRemoteDto(id = "r1", author = "Alice", content = "Great movie!"),
+                ReviewRemoteDto(id = "r2", author = "Bob", content = "Masterpiece!")
+            )
+        )
+        coEvery { apiService.getMovieReviews(movieId, page) } returns expected
 
-        //when
-        val result = dataSource.getMovieReviews(10, 1)
+        // When
+        val result = dataSource.getMovieReviews(movieId, page)
 
-        //then
-        assertEquals(2, result.size)
-        assertEquals("Alice", result[0].author)
+        // Then
+        assertThat(result).hasSize(2)
+        assertThat(result.first().author).isEqualTo("Alice")
     }
 
     @Test
-    fun `getSimilarMovies should return similar movies list when response is valid`() =
-        runBlocking {
-            //given
-            val client = createMockClient(SIMILAR_MOVIES_RESPONSE)
-            val dataSource = RemoteMovieDataSourceImpl(client)
+    fun `getSimilarMovies should return filtered list of movies`() = runTest {
+        // Given
+        val movieId = 10L
+        val page = 1
+        val expected = ResultResponse(
+            results = listOf(
+                MovieRemoteDto(id = 21, title = "Tenet", posterPath = null),
+                null
+            )
+        )
+        coEvery { apiService.getSimilarMovies(movieId, page) } returns expected
 
-            //when
-            val result = dataSource.getSimilarMovies(10, 1)
+        // When
+        val result = dataSource.getSimilarMovies(movieId, page)
 
-            //then
-            assertEquals(1, result.size)
-            assertEquals("Tenet", result[0].title)
-        }
-
-    @Test
-    fun `getMovieTopCast should return cast list when credits response is valid`() = runBlocking {
-        //given
-        val client = createMockClient(CREDITS_RESPONSE)
-        val dataSource = RemoteMovieDataSourceImpl(client)
-
-        //when
-        val result = dataSource.getMovieTopCast(10, 1)
-
-        //then
-        assertEquals(2, result.size)
-        assertEquals("Cillian Murphy", result[0].name)
-        assertEquals("Emily Blunt", result[1].name)
+        // Then
+        assertThat(result).hasSize(1)
+        assertThat(result[0].title).isEqualTo("Tenet")
     }
 
-    private companion object {
-        const val MOVIE_RESPONSE = """
-            {
-              "id": 10,
-              "title": "Oppenheimer",
-              "overview": "A brilliant physicist...",
-              "release_date": "2023-07-21",
-              "vote_average": 9.2
-            }
-        """
+    @Test
+    fun `getMovieTopCast should return cast list`() = runTest {
+        // Given
+        val movieId = 10L
+        val page = 1
+        val expected = CreditResponse(
+            id = 10,
+            cast = listOf(
+                ArtistRemoteDto(id = 1, name = "Cillian Murphy", profilePath = null),
+                ArtistRemoteDto(id = 2, name = "Emily Blunt", profilePath = null)
+            )
+        )
+        coEvery { apiService.getMovieTopCast(movieId, page) } returns expected
 
-        const val REVIEW_RESPONSE = """
-            {
-              "results": [
-                {
-                  "id": "r1",
-                  "author": "Alice",
-                  "content": "Great movie!"
-                },
-                {
-                  "id": "r2",
-                  "author": "Bob",
-                  "content": "Masterpiece!"
-                }
-              ]
-            }
-        """
+        // When
+        val result = dataSource.getMovieTopCast(movieId, page)
 
-        const val SIMILAR_MOVIES_RESPONSE = """
-            {
-              "results": [
-                {
-                  "id": 21,
-                  "title": "Tenet",
-                  "overview": "Time inversion"
-                }
-              ]
-            }
-        """
-        const val CREDITS_RESPONSE = """
-            {
-              "id": 10,
-              "cast": [
-                {
-                  "id": 1,
-                  "name": "Cillian Murphy",
-                  "character": "J. Robert Oppenheimer"
-                },
-                {
-                  "id": 2,
-                  "name": "Emily Blunt",
-                  "character": "Katherine Oppenheimer"
-                }
-              ]
-            }
-        """
-
-
+        // Then
+        assertThat(result).hasSize(2)
+        assertThat(result[0].name).isEqualTo("Cillian Murphy")
+        assertThat(result[1].name).isEqualTo("Emily Blunt")
     }
 }
