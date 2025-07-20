@@ -76,7 +76,7 @@ class RemoteMovieDataSourceImplTest {
         val expected = ResultResponse(
             results = listOf(
                 MovieRemoteDto(id = 21, title = "Tenet", posterPath = null),
-                null
+                MovieRemoteDto(id = null, title = null, posterPath = null),
             )
         )
         coEvery { apiService.getSimilarMovies(movieId, page) } returns expected

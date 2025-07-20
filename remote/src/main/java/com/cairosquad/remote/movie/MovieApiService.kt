@@ -5,6 +5,7 @@ import com.cairosquad.repository.movie.data_source.remote.dto.CreditResponse
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieDetailsRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
+import com.cairosquad.repository.search.data_source.remote.dto.ResultResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -20,13 +21,13 @@ interface MovieApiService {
     suspend fun getMovieReviews(
         @Path("movieId") movieId: Long,
         @Query("page") page: Int
-    ): List<ReviewRemoteDto>
+    ): ResultResponse<ReviewRemoteDto>
 
     @GET("movie/{movieId}/similar")
     suspend fun getSimilarMovies(
         @Path("movieId") movieId: Long,
         @Query("page") page: Int
-    ): List<MovieRemoteDto>
+    ): ResultResponse<MovieRemoteDto>
 
     @GET("movie/{movieId}/credits")
     suspend fun getMovieTopCast(
