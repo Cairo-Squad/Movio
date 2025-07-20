@@ -77,6 +77,57 @@ class MovieRepositoryImpl(
         }
     }
 
+    override suspend fun getTopRatingMovies(page: Int): List<Movie> {
+        return tryToCall {
+            remoteMovieDataSource.getTopRatingMovies(page).map { it.toEntity() }
+        }
+    }
+
+    override suspend fun getUpcomingMovies(page: Int): List<Movie> {
+        return tryToCall {
+            remoteMovieDataSource.getUpcomingMovies(page).map { it.toEntity() }
+        }
+    }
+
+    override suspend fun getNowPlayingMovies(page: Int): List<Movie> {
+        return tryToCall {
+            remoteMovieDataSource.getNowPlayingMovies(page).map { it.toEntity() }
+        }
+    }
+
+    override suspend fun getTrendingMovies(page: Int): List<Movie> {
+        return tryToCall {
+            remoteMovieDataSource.getTrendingMovies(page).map { it.toEntity() }
+        }
+    }
+
+    override suspend fun getMoreRecommendedMovies(page: Int): List<Movie> {
+        return tryToCall {
+            remoteMovieDataSource.getMoreRecommendedMovies(page).map { it.toEntity() }
+        }
+    }
+
+    override suspend fun getFreeToWatchMovies(page: Int): List<Movie> {
+        return tryToCall {
+            remoteMovieDataSource.getFreeToWatchMovies(page).map { it.toEntity() }
+        }
+    }
+
+    override suspend fun getMoviesByCategory(
+        categoryId: String,
+        page: Int
+    ): List<Movie> {
+        return tryToCall {
+            remoteMovieDataSource.getMoviesByCategory(categoryId,page).map { it.toEntity() }
+        }
+    }
+
+    override suspend fun getRandomMoviesUseCase(page: Int): List<Movie> {
+        return tryToCall {
+            remoteMovieDataSource.getRandomMoviesUseCase(page).map { it.toEntity() }
+        }
+    }
+
     private companion object {
         private const val CACHE_EXPIRATION_MILLIS = 3_600_000
         private const val PAGE_SIZE = 20
