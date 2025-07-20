@@ -111,4 +111,85 @@ class RemoteMovieDataSourceImplTest {
         assertThat(result[0].name).isEqualTo("Cillian Murphy")
         assertThat(result[1].name).isEqualTo("Emily Blunt")
     }
+
+    @Test
+    fun `getMovieReviews should return all valid items`() = runTest {
+        // Given
+        val movieId = 10L
+        val page = 1
+        val expected = ResultResponse(
+            results = listOf(
+                ReviewRemoteDto(id = "r1", author = "Alice", content = "Good"),
+                ReviewRemoteDto(id = "r2", author = "Bob", content = "Excellent")
+            )
+        )
+        coEvery { apiService.getMovieReviews(movieId, page) } returns expected
+
+        // When
+        val result = dataSource.getMovieReviews(movieId, page)
+
+        // Then
+        assertThat(result).hasSize(2)
+    }
+
+    @Test
+    fun `getMovieReviews should filter out null items from results`() = runTest {
+        // Given
+        val movieId = 10L
+        val page = 1
+        val validReview = ReviewRemoteDto(id = "r1", author = "Alice", content = "Nice")
+        val expected = ResultResponse(results = listOf(null, validReview, null))
+        coEvery { apiService.getMovieReviews(movieId, page) } returns expected
+
+        // When
+        val result = dataSource.getMovieReviews(movieId, page)
+
+        // Then
+        assertThat(result).hasSize(1)
+        assertThat(result.first().id).isEqualTo("r1")
+    }
+
+    @Test
+    fun `getMovieReviews should return empty list when results is null`() = runTest {
+        // Given
+        val movieId = 10L
+        val page = 1
+        val expected = ResultResponse<ReviewRemoteDto>(results = null)
+        coEvery { apiService.getMovieReviews(movieId, page) } returns expected
+
+        // When
+        val result = dataSource.getMovieReviews(movieId, page)
+
+        // Then
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun `getMovieTopCast filters out null items in cast list`() = runTest {
+        // Given
+        val artist1 = ArtistRemoteDto(id = 1, name = "Actor A")
+        val artist2 = ArtistRemoteDto(id = 2, name = "Actor B")
+        val response = CreditResponse(cast = listOf(artist1, null, artist2), id = 1)
+        coEvery { apiService.getMovieTopCast(1L, 1) } returns response
+
+        // When
+        val result = dataSource.getMovieTopCast(1L, 1)
+
+        // Then
+        assertThat(result).containsExactly(artist1, artist2)
+    }
+
+    @Test
+    fun `getMovieTopCast returns empty list when cast is null`() = runTest {
+        // Given
+        val response = CreditResponse(cast = null, id = 2)
+        coEvery { apiService.getMovieTopCast(1L, 1) } returns response
+
+        // When
+        val result = dataSource.getMovieTopCast(1L, 1)
+
+        // Then
+        assertThat(result).isEmpty()
+    }
+
 }
