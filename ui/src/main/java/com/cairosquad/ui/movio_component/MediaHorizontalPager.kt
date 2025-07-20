@@ -27,6 +27,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -54,20 +55,31 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.Icon
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
+import kotlinx.coroutines.delay
 import kotlin.math.absoluteValue
 
 @SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 fun MediaHorizontalPager(
     mediaList: List<MediaHorizontalPagerItem>,
-    currentPage: Int,
+    initialPage: Int,
     onClickMedia: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val pagerState = rememberPagerState(
-        initialPage = currentPage,
+        initialPage = initialPage,
         pageCount = { mediaList.size }
     )
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(30_000)
+            pagerState.animateScrollToPage(
+                page = (pagerState.currentPage + 1) % mediaList.size,
+                animationSpec = tween(600)
+            )
+        }
+    }
 
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
 
