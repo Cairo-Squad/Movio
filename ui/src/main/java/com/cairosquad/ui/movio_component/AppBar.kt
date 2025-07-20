@@ -66,7 +66,7 @@ fun AppBar(modifier: Modifier = Modifier) {
         ) {
             Image(
                 painter = painterResource(
-                    com.cairosquad.ui.R.drawable.user_profile
+                    com.cairosquad.design_system.R.drawable.outline_play
                 ),
                 contentDescription =  stringResource(com.cairosquad.ui.R.string.user_profile_image)
             )
