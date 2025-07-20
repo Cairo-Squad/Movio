@@ -1,6 +1,7 @@
 [versions]
 agp = "8.5.2"
 
+lottieCompose = "6.6.7"
 tensorflowLiteTaskVision = "0.4.3"
 constraintlayoutCompose = "1.1.1"
 datastorePreferences = "1.1.7"
@@ -76,6 +77,7 @@ junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging_version" }
 tensorflow-lite = { module = "org.tensorflow:tensorflow-lite", version.ref = "tensorflowLite" }
