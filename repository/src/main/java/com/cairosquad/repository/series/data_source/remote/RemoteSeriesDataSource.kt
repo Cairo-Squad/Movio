@@ -1,6 +1,5 @@
 package com.cairosquad.repository.series.data_source.remote
 
-import com.cairosquad.entity.Series
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.SeriesRemoteDto

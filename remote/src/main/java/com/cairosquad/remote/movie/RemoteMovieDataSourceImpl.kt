@@ -1,7 +1,6 @@
 package com.cairosquad.remote.movie
 
 import com.cairosquad.remote.BuildConfig
-import com.cairosquad.remote.series.RemoteSeriesDataSourceImpl
 import com.cairosquad.remote.utils.callApi
 import com.cairosquad.remote.utils.constructUrl
 import com.cairosquad.repository.movie.data_source.remote.RemoteMovieDataSource
