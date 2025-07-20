@@ -28,13 +28,7 @@ class HomeViewModel(
     private fun loadHomeData() {
         loadTopRatingMovies()
         loadTrendingMovies()
-        loadFreeToWatchMovies()
-        loadUpcomingMovies()
-        loadMoreRecommendedMovies()
-        loadTopRatingSeries()
-        loadAiringTodaySeries()
-        loadOnTvSeries()
-        loadMoreRecommendedSeries()
+
     }
     private fun loadTopRatingMovies() {
         tryToCall(
@@ -75,6 +69,7 @@ class HomeViewModel(
                     it.copy(errorStatus = handleHomeException(throwable))
                 }
             },
+        )
 
 
     }
@@ -212,8 +207,10 @@ class HomeViewModel(
         sendEffect(HomeEffect.NavigateToProfile)
     }
 
-    override fun onClickCategory(category: String) {
-        sendEffect(HomeEffect.NavigateToCategory(category))
+    override fun onClickTab(tabType: HomeScreenState.TabType) {
+       updateState {
+           it.copy(selectedTap=tabType)
+       }
     }
 
     override fun onClickMovie(movieId: Long) {

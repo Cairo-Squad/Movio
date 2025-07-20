@@ -16,6 +16,7 @@ class HomeScreenState (
     val moreRecommendedSeries: List<SeriesUiState> = emptyList(),
     val screenStatus: HomeScreenState.ScreenStatus = HomeScreenState.ScreenStatus.LOADING,
     val errorStatus: ErrorStatus? = null,
+    val selectedTab: TabType = TabType.ALL,
 ) {
     data class MovieUiState(
         val id: Long = 0L,
@@ -37,5 +38,11 @@ class HomeScreenState (
         LOADING,
         SUCCESS,
         FAILED
+    }
+    enum class TabType {
+        ALL,
+        MOVIES,
+        TV_SHOWS,
+        CATEGORIES
     }
 }
