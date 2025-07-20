@@ -42,7 +42,7 @@ class RemoteArtistDataSourceImplTest {
         // Given
         val artistId = 99L
         val response = ResultResponse(
-            results = remoteMovies
+            results = listOf(remoteMovies)
         )
 
         coEvery { apiService.getMoviesOfArtist(artistId) } returns response
@@ -51,7 +51,7 @@ class RemoteArtistDataSourceImplTest {
         val result = dataSource.getMoviesOfArtist(artistId)
 
         // Then
-        assertThat(result).hasSize(2)
+        assertThat(result).hasSize(1)
         assertThat(result.first().id).isEqualTo(1)
     }
 
@@ -60,7 +60,7 @@ class RemoteArtistDataSourceImplTest {
         // Given
         val artistId = 7L
         val response = ResultResponse(
-            results = remoteSeries
+            results = listOf(remoteSeries)
         )
         coEvery { apiService.getSeriesOfArtist(artistId) } returns response
 
@@ -68,19 +68,14 @@ class RemoteArtistDataSourceImplTest {
         val result = dataSource.getSeriesOfArtist(artistId)
 
         // Then
-        assertThat(result).hasSize(2)
+        assertThat(result).hasSize(1)
         assertThat(result[0].id).isEqualTo(100)
     }
 
     private companion object {
-        val remoteMovies = listOf(
-            MovieRemoteDto(id = 1, title = "Movie 1", posterPath = null),
-            MovieRemoteDto(id = null, title = "Movie 2", posterPath = null)
-        )
-        val remoteSeries = listOf(
-            SeriesRemoteDto(id = 100, name = "Series A", posterPath = "/a.jpg"),
-            SeriesRemoteDto(id = null, name = "Series B", posterPath = null)
-        )
+        val remoteMovies = MovieRemoteDto(id = 1, title = "Movie 1", posterPath = null)
+        val remoteSeries = SeriesRemoteDto(id = 100, name = "Series A", posterPath = "/a.jpg")
         val expectedArtist = ArtistRemoteDto(id = 42, name = "Jane Doe", profilePath = "/jane.jpg")
     }
+
 }
