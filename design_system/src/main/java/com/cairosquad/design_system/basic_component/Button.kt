@@ -1,5 +1,8 @@
 package com.cairosquad.design_system.basic_component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -36,24 +39,28 @@ fun Button(
     textStyle: TextStyle = Theme.textStyle.label.mediumMedium14,
     textColor: Color = Theme.color.brand.onPrimary,
     containerColor: Color = Theme.color.brand.primary,
-    borderColor:Color = Color.Unspecified,
+    borderColor: Color = Color.Unspecified,
     isLoading: Boolean = false,
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
             .clip(CircleShape)
-            .border(1.dp,borderColor)
+            .border(1.dp, borderColor)
             .clickable(onClick = onClick)
             .background(containerColor)
             .padding(horizontal = 12.dp, vertical = 16.dp),
         contentAlignment = Alignment.Center
     ) {
-        if (isLoading) {
-            Row (
+        AnimatedVisibility(
+            visible = isLoading,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            Row(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 val composition by rememberLottieComposition(
                     LottieCompositionSpec.RawRes(R.raw.spinner)
                 )
@@ -68,12 +75,12 @@ fun Button(
                     style = textStyle.copy(color = textColor)
                 )
             }
-        } else {
-            BasicText(
-                text = text,
-                style = textStyle.copy(color = textColor)
-            )
         }
+
+        BasicText(
+            text = text,
+            style = textStyle.copy(color = textColor)
+        )
     }
 }
 
