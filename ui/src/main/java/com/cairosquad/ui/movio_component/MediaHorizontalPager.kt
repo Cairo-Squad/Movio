@@ -1,6 +1,7 @@
 package com.cairosquad.ui.movio_component
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -10,17 +11,18 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -30,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -44,10 +47,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.compose.ui.zIndex
@@ -71,15 +76,23 @@ fun MediaHorizontalPager(
         pageCount = { mediaList.size }
     )
 
-    LaunchedEffect(Unit) {
+    var isAutoScrollingRightNow by remember { mutableStateOf(false) }
+
+    LaunchedEffect(isAutoScrollingRightNow || pagerState.currentPageOffsetFraction.absoluteValue < 0.24f) {
+        isAutoScrollingRightNow = false
         while (true) {
-            delay(30_000)
+            delay(10_000)
+            isAutoScrollingRightNow = true
             pagerState.animateScrollToPage(
                 page = (pagerState.currentPage + 1) % mediaList.size,
                 animationSpec = tween(600)
             )
+            isAutoScrollingRightNow = false
         }
     }
+
+    val layoutDirection = LocalLayoutDirection.current
+    val isRtl = layoutDirection == LayoutDirection.Rtl
 
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
 
@@ -114,7 +127,8 @@ fun MediaHorizontalPager(
                 state = pagerState,
                 beyondViewportPageCount = 2,
                 contentPadding = PaddingValues(horizontal = ((screenWidthDp - 200) / 2).dp),
-                pageSpacing = (-50).dp
+                pageSpacing = (-50).dp,
+                reverseLayout = isRtl
             ) { pageIndex ->
 
                 val media = mediaList[pageIndex]
@@ -154,20 +168,6 @@ fun MediaHorizontalPager(
                 modifier = Modifier.padding(top = 16.dp)
             )
         }
-        Box(
-            modifier = Modifier
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Black,
-                            Color.Black.copy(alpha = 0f)
-                        ),
-                    )
-                )
-                .statusBarsPadding()
-                .padding(top = 48.dp)
-                .fillMaxWidth()
-        )
     }
 }
 
@@ -234,12 +234,16 @@ private fun MediaHorizontalPagerCard(
     onClick: () -> Unit = {},
     isCurrentPageFloat: Float = 1f
 ) {
+
+    var isImageSafe by remember { mutableStateOf(true) }
+
     Box(
         modifier
             .clip(RoundedCornerShape(8.dp))
     ) {
         SafeImageViewer(
             modifier = Modifier.fillMaxSize(),
+            onIsImageSafeChanged = { isImageSafe = it },
             model = imgUrl,
             contentDescription = stringResource(R.string.movie_poster),
             loadingPlaceholder = { LoadingMovieImage(Modifier.fillMaxSize()) },
@@ -262,24 +266,29 @@ private fun MediaHorizontalPagerCard(
             modifier = Modifier
                 .alpha(lerp(0f, 1f, isCurrentPageFloat))
                 .fillMaxWidth()
+                .heightIn(min = 51.dp)
                 .wrapContentHeight()
                 .align(Alignment.BottomCenter)
                 .onGloballyPositioned {
                     bottomSectionDp = with(density) { it.size.height.toDp().value.toInt() }
                 },
         ) {
-            SafeImageViewer(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .height(bottomSectionDp.dp)
-                    .blur(20.dp),
-                alignment = Alignment.BottomCenter,
-                model = imgUrl,
-                contentDescription = stringResource(R.string.movie_poster),
-                loadingPlaceholder = { },
-                nonNudeThreshold = 0.0
-            )
+            AnimatedVisibility(
+                visible = isImageSafe,
+                modifier = Modifier.align(Alignment.BottomCenter)
+            )  {
+                SafeImageViewer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(bottomSectionDp.dp)
+                        .blur(25.dp),
+                    alignment = Alignment.BottomCenter,
+                    model = imgUrl,
+                    contentDescription = stringResource(R.string.movie_poster),
+                    loadingPlaceholder = { },
+                    nonNudeThreshold = 0.0
+                )
+            }
             Column(
                 modifier = Modifier
                     .padding(top = 4.dp, bottom = 8.dp),
@@ -291,16 +300,15 @@ private fun MediaHorizontalPagerCard(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     style = Theme.textStyle.label.mediumMedium12
-                        .copy(Theme.color.brand.onPrimary)
+                        .copy(Theme.color.surfaces.onSurface)
                 )
-                LazyRow(
+                FlowRow(
+                    modifier = Modifier.padding(horizontal = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    contentPadding = PaddingValues(horizontal = 8.dp)
+                    maxLines = 1
                 ) {
-                    (0..< minOf(3, genres.size)).forEach {
-                        item {
-                            ChipWithNoBackGround(text = genres[it])
-                        }
+                    genres.forEach { genre ->
+                        ChipWithNoBackGround(text = genre)
                     }
                 }
             }
@@ -332,7 +340,7 @@ private fun ChipWithNoBackGround(
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
         style = Theme.textStyle.label.mediumMedium12
-            .copy(Theme.color.brand.onPrimary)
+            .copy(Theme.color.surfaces.onSurfaceContainer)
     )
 }
 

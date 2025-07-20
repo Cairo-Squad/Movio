@@ -10,4 +10,14 @@
     <string name="reviews">Reviews</string>
     <string name="user_profile_image">User Profile Image</string>
     <string name="application_logo">Application Logo</string>
+    <string name="top_rating">Top Rating</string>
+    <string name="trending">Trending</string>
+    <string name="free_to_watch">Free To Watch</string>
+    <string name="up_coming">Up Coming</string>
+    <string name="more_recommended">More Recommended</string>
+    <string name="all">"     All     "</string>
+    <string name="movies">Movies</string>
+    <string name="tv_shows">TV Shows</string>
+    <string name="categories">Categories</string>
+    <string name="see_all">See all</string>
 </resources>

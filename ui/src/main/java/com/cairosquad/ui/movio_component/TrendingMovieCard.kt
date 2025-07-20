@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -19,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.basic_component.Chip
@@ -39,22 +41,17 @@ fun TrendingMovieCard(
     Row(
         modifier = modifier
             .height(100.dp)
-            .width(336.dp)
+            .fillMaxWidth()
     ) {
         if (imgUrl?.isNotEmpty() == true) {
             SafeImageViewer(
-                model = "https://image.tmdb.org/t/p/w500$imgUrl",
-                contentDescription = stringResource(com.cairosquad.design_system.R.string.movie_poster),
                 modifier = Modifier
                     .fillMaxHeight()
                     .width(76.dp)
                     .clip(RoundedCornerShape(8.dp)),
-                loadingPlaceholder = {
-                    LoadingMovieImage(
-                        Modifier
-                            .fillMaxSize()
-                    )
-                }
+                model = "https://image.tmdb.org/t/p/w500$imgUrl",
+                contentDescription = stringResource(com.cairosquad.design_system.R.string.movie_poster),
+                loadingPlaceholder = { LoadingMovieImage(Modifier.fillMaxSize()) }
             )
         } else {
             Box(
@@ -82,7 +79,9 @@ fun TrendingMovieCard(
                 Text(
                     movieTitle,
                     color = Theme.color.surfaces.onSurface,
-                    style = Theme.textStyle.title.mediumMedium14
+                    style = Theme.textStyle.title.mediumMedium14,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Row(
                     modifier = Modifier.padding(top = 8.dp),
@@ -103,7 +102,13 @@ fun TrendingMovieCard(
                 }
 
             }
-            Chip(modifier = Modifier.align(Alignment.BottomStart), title = movieCategory)
+            Chip(
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .height(24.dp),
+                title = movieCategory,
+                textStyle = Theme.textStyle.label.smallRegular12
+            )
         }
     }
 }
