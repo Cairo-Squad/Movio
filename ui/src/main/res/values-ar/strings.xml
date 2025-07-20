@@ -16,4 +16,6 @@
     <string name="continue_as_a_guest">المتابعة كضيف</string>
     <string name="dont_have_an_account">لا تمتلك حساب؟</string>
     <string name="signup">إنشاء حساب</string>
+    <string name="password">كلمة السر</string>
+
 </resources>
