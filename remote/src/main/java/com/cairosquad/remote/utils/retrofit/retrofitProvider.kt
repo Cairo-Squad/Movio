@@ -11,7 +11,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
-fun provideRetrofit(tokenProvider: () -> String?): Retrofit {
+fun retrofitProvider(tokenProvider: () -> String?): Retrofit {
     val contentType = "application/json".toMediaType()
 
     val client = OkHttpClient.Builder()
@@ -32,6 +32,7 @@ fun provideRetrofit(tokenProvider: () -> String?): Retrofit {
     return Retrofit.Builder()
         .baseUrl(BuildConfig.BASE_URL)
         .client(client)
+        //.converterFactories { add(json.asConverterFactory(contentType)) }
         .addConverterFactory(json.asConverterFactory(contentType))
         .build()
 }

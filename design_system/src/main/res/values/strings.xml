@@ -71,4 +71,7 @@
     <string name="current_seasons">Current Seasons</string>
     <string name="reviews">Reviews</string>
     <string name="similar_series">Similar Series</string>
+    <string name="unauthorized_access">You are not authorized to perform this action</string>
+    <string name="error_parsing_data">Something went wrong while processing data</string>
+
 </resources>
