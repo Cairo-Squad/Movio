@@ -8,4 +8,6 @@
     <string name="add_to_list">Add to list</string>
     <string name="play">Play</string>
     <string name="reviews">Reviews</string>
+    <string name="user_profile_image">User Profile Image</string>
+    <string name="application_logo">Application Logo</string>
 </resources>
