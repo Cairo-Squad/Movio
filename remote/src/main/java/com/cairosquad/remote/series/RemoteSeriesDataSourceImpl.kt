@@ -1,6 +1,5 @@
 package com.cairosquad.remote.series
 
-import com.cairosquad.remote.utils.retrofit.safeCallApi
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.SeriesRemoteDto
@@ -12,44 +11,31 @@ import com.cairosquad.repository.series.data_source.remote.dto.SeriesDetailsRemo
 class RemoteSeriesDataSourceImpl(
     private val seriesApiService: SeriesApiService
 ) : RemoteSeriesDataSource {
+
     override suspend fun getSeries(seriesId: Long): SeriesDetailsRemoteDto {
-        return safeCallApi { seriesApiService.getSeries(seriesId) }
+        return seriesApiService.getSeries(seriesId)
     }
 
-    override suspend fun getSeriesReviews(
-        seriesId: Long,
-        page: Int
-    ): List<ReviewRemoteDto> {
-        return safeCallApi { seriesApiService.getSeriesReviews(seriesId, page) }
-            .results?.filterNotNull().orEmpty()
+    override suspend fun getSeriesReviews(seriesId: Long, page: Int): List<ReviewRemoteDto> {
+        return seriesApiService.getSeriesReviews(seriesId, page)
     }
 
-    override suspend fun getSimilarSeries(
-        seriesId: Long,
-        page: Int
-    ): List<SeriesRemoteDto> {
-        return safeCallApi { seriesApiService.getSimilarSeries(seriesId, page) }
-            .results?.filterNotNull().orEmpty()
+    override suspend fun getSimilarSeries(seriesId: Long, page: Int): List<SeriesRemoteDto> {
+        return seriesApiService.getSimilarSeries(seriesId, page)
     }
 
-    override suspend fun getSeriesTopCast(
-        seriesId: Long,
-        page: Int
-    ): List<ArtistRemoteDto> {
-        return safeCallApi { seriesApiService.getSeriesTopCast(seriesId, page) }
-            .cast?.filterNotNull().orEmpty()
+    override suspend fun getSeriesTopCast(seriesId: Long, page: Int): List<ArtistRemoteDto> {
+        return seriesApiService.getSeriesTopCast(seriesId, 1)
+            .first().cast?.filterNotNull().orEmpty()
     }
 
     override suspend fun getSeriesSeasons(seriesId: Long): List<SeasonRemoteDto> {
-        return safeCallApi { seriesApiService.getSeriesSeasons(seriesId) }
-            .seasons?.filterNotNull() ?: emptyList()
+        return seriesApiService.getSeriesSeasons(seriesId)
+            .first().seasons?.filterNotNull().orEmpty()
     }
 
-    override suspend fun getEpisodes(
-        seriesId: Long,
-        seasonNumber: Int
-    ): List<EpisodeRemoteDto> {
-        return safeCallApi { seriesApiService.getEpisodes(seriesId, seasonNumber) }
-            .episodes ?: emptyList()
+    override suspend fun getEpisodes(seriesId: Long, seasonNumber: Int): List<EpisodeRemoteDto> {
+        return seriesApiService.getEpisodes(seriesId, seasonNumber)
+            .first().episodes ?: emptyList()
     }
 }

@@ -10,18 +10,14 @@ class RemoteSearchDataSourceImpl(
     private val searchApiService: SearchApiService
 ) : RemoteSearchDataSource {
     override suspend fun getMovies(query: String, page: Int): List<MovieRemoteDto> {
-        return safeCallApi { searchApiService.getMovies(query, page) }
-            .results?.filterNotNull()?.filter { it.id != null } ?: emptyList()
+        return searchApiService.getMovies(query, page).filter { it.id != null }
     }
 
     override suspend fun getSeries(query: String, page: Int): List<SeriesRemoteDto> {
-        return safeCallApi { searchApiService.getSeries(query, page) }
-            .results?.filterNotNull()?.filter { it.id != null } ?: emptyList()
+        return searchApiService.getSeries(query, page).filter { it.id != null }
     }
 
     override suspend fun getArtists(query: String, page: Int): List<ArtistRemoteDto> {
-        return safeCallApi { searchApiService.getArtists(query, page) }
-            .results?.filterNotNull()?.filter { it.id != null } ?: emptyList()
+        return searchApiService.getArtists(query, page).filter { it.id != null }
     }
-
 }
