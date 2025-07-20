@@ -9,25 +9,19 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ArtistsApiService {
-
     @GET("person/{id}")
     suspend fun getArtist(
-        @Path("id") artistId: Long,
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String
+        @Path("id") artistId: Long
     ): ArtistRemoteDto
 
     @GET("person/{id}/movie_credits")
     suspend fun getMoviesOfArtist(
-        @Path("id") artistId: Long,
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String
+        @Path("id") artistId: Long
     ): MoviesListResponse
 
     @GET("person/{id}/tv_credits")
     suspend fun getSeriesOfArtist(
-        @Path("id") artistId: Long,
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String
+        @Path("id") artistId: Long
     ): SeriesListResponse
+
 }

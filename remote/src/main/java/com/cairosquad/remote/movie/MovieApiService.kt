@@ -14,28 +14,24 @@ interface MovieApiService {
 
     @GET("movie/{movieId}")
     suspend fun getMovie(
-        @Path("movieId") movieId: Long,
-        @Query("api_key") apiKey: String
+        @Path("movieId") movieId: Long
     ): MovieDetailsRemoteDto
 
     @GET("movie/{movieId}/reviews")
     suspend fun getMovieReviews(
         @Path("movieId") movieId: Long,
-        @Query("api_key") apiKey: String,
         @Query("page") page: Int
     ): ResultResponse<ReviewRemoteDto>
 
     @GET("movie/{movieId}/similar")
     suspend fun getSimilarMovies(
         @Path("movieId") movieId: Long,
-        @Query("api_key") apiKey: String,
         @Query("page") page: Int
     ): ResultResponse<MovieRemoteDto>
 
     @GET("movie/{movieId}/credits")
     suspend fun getMovieTopCast(
         @Path("movieId") movieId: Long,
-        @Query("api_key") apiKey: String,
         @Query("page") page: Int
     ): CreditResponse
 }
