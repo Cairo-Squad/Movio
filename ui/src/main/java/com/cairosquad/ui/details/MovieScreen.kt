@@ -60,11 +60,11 @@ import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import com.cairosquad.ui.movio_component.ActionBar
 import com.cairosquad.ui.movio_component.ArtistCard
-import com.cairosquad.ui.movio_component.LoginBottomSheet
 import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.ui.movio_component.ReviewCard
 import com.cairosquad.ui.movio_component.SectionHeader
-import com.cairosquad.ui.movio_component.ShareBottomSheet
+import com.cairosquad.ui.movio_component.bottom_sheet.LoginBottomSheet
+import com.cairosquad.ui.movio_component.bottom_sheet.ShareBottomSheet
 import com.cairosquad.ui.navigation.ArtistRoute
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.MovieRoute
@@ -253,7 +253,6 @@ fun MovieContent(
                     nonNudeThreshold = 0.0
                 )
             }
-
             MovieScreenState.ScreenStatus.ERROR -> {}
         }
         LazyColumn(
@@ -301,7 +300,6 @@ fun MovieContent(
                             }
                         }
                     }
-
                     MovieScreenState.ScreenStatus.ERROR -> {}
                 }
             }
@@ -386,25 +384,27 @@ fun MovieContent(
                     MovieScreenState.ScreenStatus.INITIAL -> {}
                     MovieScreenState.ScreenStatus.LOADING -> {}
                     MovieScreenState.ScreenStatus.SUCCESS -> {
-                        SectionHeader(
-                            modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                            title = "Top Cast",
-                            actionText = stringResource(R.string.see_all),
-                            actionIcon = ImageVector.vectorResource(R.drawable.arrow),
-                            onActionClick = { interactionListener.onSeeAllCastClick(uiState.movie.id) }
-                        )
-                        LazyRow(
-                            contentPadding = PaddingValues(horizontal = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            items(uiState.topCast) {
-                                ArtistCard(
-                                    modifier = Modifier.clickable {
-                                        interactionListener.onActorClick(it.id)
-                                    },
-                                    name = it.name,
-                                    imgUrl = "https://image.tmdb.org/t/p/w500/${it.photoPath}"
-                                )
+                        if (uiState.topCast.isNotEmpty()) {
+                            SectionHeader(
+                                modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
+                                title = "Top Cast",
+                                actionText = stringResource(R.string.see_all),
+                                actionIcon = ImageVector.vectorResource(R.drawable.arrow),
+                                onActionClick = { interactionListener.onSeeAllCastClick(uiState.movie.id) }
+                            )
+                            LazyRow(
+                                contentPadding = PaddingValues(horizontal = 16.dp),
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                items(uiState.topCast) {
+                                    ArtistCard(
+                                        modifier = Modifier.clickable {
+                                            interactionListener.onActorClick(it.id)
+                                        },
+                                        name = it.name,
+                                        imgUrl = "https://image.tmdb.org/t/p/w500/${it.photoPath}"
+                                    )
+                                }
                             }
                         }
                     }
@@ -417,30 +417,31 @@ fun MovieContent(
                     MovieScreenState.ScreenStatus.INITIAL -> {}
                     MovieScreenState.ScreenStatus.LOADING -> {}
                     MovieScreenState.ScreenStatus.SUCCESS -> {
-                        SectionHeader(
-                            modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                            title = "Reviews",
-                            actionText = stringResource(R.string.see_all),
-                            actionIcon = ImageVector.vectorResource(R.drawable.arrow),
-                            onActionClick = { interactionListener.onSeeAllReviewsClick(uiState.movie.id) }
-                        )
-                        LazyRow(
-                            contentPadding = PaddingValues(horizontal = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            items(uiState.reviews) {
-                                ReviewCard(
-                                    imgUrl = "https://image.tmdb.org/t/p/w500/${it.authorPhotoPath}",
-                                    reviewerName = it.author,
-                                    rating = it.rating.toString(),
-                                    reviewDate = it.date,
-                                    reviewText = it.description,
-                                    isExpandable = false
-                                )
+                        if (uiState.reviews.isNotEmpty()) {
+                            SectionHeader(
+                                modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
+                                title = "Reviews",
+                                actionText = stringResource(R.string.see_all),
+                                actionIcon = ImageVector.vectorResource(R.drawable.arrow),
+                                onActionClick = { interactionListener.onSeeAllReviewsClick(uiState.movie.id) }
+                            )
+                            LazyRow(
+                                contentPadding = PaddingValues(horizontal = 16.dp),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                items(uiState.reviews) {
+                                    ReviewCard(
+                                        imgUrl = "https://image.tmdb.org/t/p/w500/${it.authorPhotoPath}",
+                                        reviewerName = it.author,
+                                        rating = it.rating.toString(),
+                                        reviewDate = it.date,
+                                        reviewText = it.description,
+                                        isExpandable = false
+                                    )
+                                }
                             }
                         }
                     }
-
                     MovieScreenState.ScreenStatus.ERROR -> {}
                 }
             }
@@ -449,35 +450,40 @@ fun MovieContent(
                     MovieScreenState.ScreenStatus.INITIAL -> {}
                     MovieScreenState.ScreenStatus.LOADING -> {}
                     MovieScreenState.ScreenStatus.SUCCESS -> {
-                        SectionHeader(
-                            modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                            title = "Similar Movies",
-                            actionText = stringResource(R.string.see_all),
-                            actionIcon = ImageVector.vectorResource(R.drawable.arrow),
-                            onActionClick = { interactionListener.onSeeAllSimilarMoviesClick(uiState.movie.id) }
-                        )
-                        LazyRow(
-                            contentPadding = PaddingValues(horizontal = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-
-                            items(uiState.similarMovies) {
-                                MovieCard(
-                                    modifier = Modifier
-                                        .width(124.dp)
-                                        .clickable {
-                                            interactionListener.onMovieClick(it.id)
-                                        },
-                                    imgUrl = "https://image.tmdb.org/t/p/w500/${it.posterPath}",
-                                    title = it.title,
-                                    vote = it.rating,
-                                    width = 124.dp,
-                                    aspectRatio = 0.775f,
-                                )
+                        if (uiState.similarMovies.isNotEmpty()) {
+                            SectionHeader(
+                                modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
+                                title = "Similar Movies",
+                                actionText = stringResource(R.string.see_all),
+                                actionIcon = ImageVector.vectorResource(R.drawable.arrow),
+                                onActionClick = {
+                                    interactionListener.onSeeAllSimilarMoviesClick(
+                                        uiState.movie.id
+                                    )
+                                }
+                            )
+                            LazyRow(
+                                contentPadding = PaddingValues(horizontal = 16.dp),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                items(uiState.similarMovies) {
+                                    MovieCard(
+                                        modifier = Modifier
+                                            .width(124.dp)
+                                            .clickable {
+                                                interactionListener.onMovieClick(it.id)
+                                            },
+                                        imgUrl = "https://image.tmdb.org/t/p/w500/${it.posterPath}",
+                                        title = it.title,
+                                        vote = it.rating,
+                                        width = 124.dp,
+                                        aspectRatio = 0.775f,
+                                    )
+                                }
                             }
+
                         }
                     }
-
                     MovieScreenState.ScreenStatus.ERROR -> {}
                 }
             }
