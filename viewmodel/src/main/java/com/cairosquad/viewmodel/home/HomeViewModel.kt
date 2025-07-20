@@ -224,8 +224,8 @@ class HomeViewModel(
         sendEffect(HomeEffect.NavigateSeries(seriesId))
     }
 
-    override fun onClickSeeAllTopRated() {
-        sendEffect(HomeEffect.NavigateToSeeAllTopRated)
+    override fun onClickSeeAllTopRated(isMovie :Boolean ) {
+        sendEffect(HomeEffect.NavigateToSeeAllTopRated(isMovie))
     }
 
     override fun onClickSeeAllTrending() {
@@ -240,8 +240,8 @@ class HomeViewModel(
         sendEffect(HomeEffect.NavigateToSeeAllUpcoming)
     }
 
-    override fun onClickSeeAllMoreRecommended() {
-        sendEffect(HomeEffect.NavigateToSeeAllMoreRecommended)
+    override fun onClickSeeAllMoreRecommended(isMovie:Boolean) {
+        sendEffect(HomeEffect.NavigateToSeeAllMoreRecommended(isMovie))
     }
 
     override fun onClickSeeAllAiringToday() {
