@@ -2,8 +2,8 @@ package com.cairosquad.viewmodel.home
 
 sealed class HomeEffect {
     data object NavigateToProfile: HomeEffect()
-    data class NavigateMovie(val movieID :Long) : HomeEffect()
-    data class NavigateSeries(val movieID :Long) : HomeEffect()
+    data class NavigateMovie(val movieId :Long) : HomeEffect()
+    data class NavigateSeries(val movieId :Long) : HomeEffect()
     data class NavigateToSeeAllTopRated(val isMovie :Boolean): HomeEffect()
     data object NavigateToSeeAllTrending: HomeEffect()
     data object NavigateToSeeAllFreeToWatch: HomeEffect()
