@@ -1,6 +1,6 @@
 package com.cairosquad.viewmodel.home
 
-interface HomeIteractionsListhener {
+interface HomeInteractionsListener {
     fun onClickProfile()
     fun onClickCategory(category: String)
     fun onClickFeaturedMovie(movieId: Long)
