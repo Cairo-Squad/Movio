@@ -40,9 +40,9 @@ suspend inline fun <reified T> safeCallApi(
             }
         }
     } catch (e: IOException) {
-        throw NoInternetException(e.message ?: "")
+        throw NoInternetException(e.message.toString())
     } catch (e: SerializationException) {
-        throw JsonParsingException(e.message ?: "Json parsing failed")
+        throw JsonParsingException(e.message.toString())
     } catch (e: Exception) {
         throw e
     }

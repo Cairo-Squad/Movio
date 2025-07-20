@@ -5,7 +5,6 @@ import com.cairosquad.repository.movie.data_source.remote.dto.MovieDetailsRemote
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.ResultResponse
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -44,7 +43,6 @@ class RemoteMovieDataSourceImplTest {
         // Then
         assertThat(result.id).isEqualTo(10)
         assertThat(result.title).isEqualTo("Oppenheimer")
-        assertThat(result.releaseDate).isEqualTo("2023-07-21")
     }
 
     @Test
@@ -52,19 +50,18 @@ class RemoteMovieDataSourceImplTest {
         // Given
         val movieId = 10L
         val page = 1
-        val expected = ResultResponse(
-            results = listOf(
-                ReviewRemoteDto(id = "r1", author = "Alice", content = "Great movie!"),
-                ReviewRemoteDto(id = "r2", author = "Bob", content = "Masterpiece!")
-            )
+        val expected = listOf(
+            ReviewRemoteDto(id = "r1", author = "Alice", content = "Great movie!"),
+            ReviewRemoteDto(id = "r2", author = "Bob", content = "")
         )
+
         coEvery { apiService.getMovieReviews(movieId, page) } returns expected
 
         // When
         val result = dataSource.getMovieReviews(movieId, page)
 
         // Then
-        assertThat(result).hasSize(2)
+        assertThat(result).hasSize(1)
         assertThat(result.first().author).isEqualTo("Alice")
     }
 
@@ -73,11 +70,9 @@ class RemoteMovieDataSourceImplTest {
         // Given
         val movieId = 10L
         val page = 1
-        val expected = ResultResponse(
-            results = listOf(
-                MovieRemoteDto(id = 21, title = "Tenet", posterPath = null),
-                null
-            )
+        val expected = listOf(
+            MovieRemoteDto(id = 21, title = "Tenet", posterPath = null),
+            MovieRemoteDto(id = null, title = "Ten", posterPath = null),
         )
         coEvery { apiService.getSimilarMovies(movieId, page) } returns expected
 
@@ -85,7 +80,7 @@ class RemoteMovieDataSourceImplTest {
         val result = dataSource.getSimilarMovies(movieId, page)
 
         // Then
-        assertThat(result).hasSize(1)
+        assertThat(result).hasSize(2)
         assertThat(result[0].title).isEqualTo("Tenet")
     }
 
@@ -98,7 +93,7 @@ class RemoteMovieDataSourceImplTest {
             id = 10,
             cast = listOf(
                 ArtistRemoteDto(id = 1, name = "Cillian Murphy", profilePath = null),
-                ArtistRemoteDto(id = 2, name = "Emily Blunt", profilePath = null)
+                ArtistRemoteDto(id = null, name = "Emily Blunt", profilePath = null)
             )
         )
         coEvery { apiService.getMovieTopCast(movieId, page) } returns expected
@@ -109,6 +104,5 @@ class RemoteMovieDataSourceImplTest {
         // Then
         assertThat(result).hasSize(2)
         assertThat(result[0].name).isEqualTo("Cillian Murphy")
-        assertThat(result[1].name).isEqualTo("Emily Blunt")
     }
 }

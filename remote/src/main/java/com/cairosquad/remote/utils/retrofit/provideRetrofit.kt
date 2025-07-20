@@ -11,27 +11,29 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
-fun provideRetrofit(tokenProvider: () -> String?): Retrofit {
-    val contentType = "application/json".toMediaType()
-
-    val client = OkHttpClient.Builder()
-        .addInterceptor(ApiKeyInterceptor(BuildConfig.API_KEY))
-        .addInterceptor(AuthInterceptor(tokenProvider))
-        .addInterceptor(LanguageInterceptor())
-        .addInterceptor(HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        })
-        .build()
-
-    val json = Json {
+object RetrofitProvider {
+    private val contentType = "application/json".toMediaType()
+    private val json = Json {
         ignoreUnknownKeys = true
         coerceInputValues = true
         isLenient = true
     }
 
-    return Retrofit.Builder()
-        .baseUrl(BuildConfig.BASE_URL)
-        .client(client)
-        .addConverterFactory(json.asConverterFactory(contentType))
-        .build()
+    fun create(tokenProvider: () -> String?): Retrofit {
+
+        val client = OkHttpClient.Builder()
+            .addInterceptor(ApiKeyInterceptor(BuildConfig.API_KEY))
+            .addInterceptor(AuthInterceptor(tokenProvider))
+            .addInterceptor(LanguageInterceptor())
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
+            .build()
+
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.BASE_URL)
+            .client(client)
+            .addConverterFactory(json.asConverterFactory(contentType))
+            .build()
+    }
 }

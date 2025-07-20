@@ -11,7 +11,7 @@ import com.cairosquad.remote.series.RemoteSeriesDataSourceImpl
 import com.cairosquad.remote.series.SeriesApiService
 import com.cairosquad.remote.utils.HttpClientFactory
 import com.cairosquad.remote.utils.HttpEngine
-import com.cairosquad.remote.utils.retrofit.provideRetrofit
+import com.cairosquad.remote.utils.retrofit.RetrofitProvider
 import com.cairosquad.repository.artists.data_source.ArtistsRemoteDataSource
 import com.cairosquad.repository.movie.data_source.remote.RemoteMovieDataSource
 import com.cairosquad.repository.search.data_source.remote.RemoteMovieDiscoveryDataSource
@@ -27,25 +27,11 @@ val remoteDataSourceModule = module {
             engine = HttpEngine.provide()
         )
     }
-    single {
-        provideRetrofit(
-            tokenProvider = { null }
-        )
-    }
-
 
     single {
-        provideRetrofit(
+        RetrofitProvider.create(
             tokenProvider = { null }
         )
-    }
-
-    single<SeriesApiService> {
-        get<Retrofit>().create(SeriesApiService::class.java)
-    }
-
-    single<SearchApiService> {
-        get<Retrofit>().create(SearchApiService::class.java)
     }
 
     single<RemoteSearchDataSource> {
@@ -68,9 +54,18 @@ val remoteDataSourceModule = module {
         RemoteSeriesDataSourceImpl(get())
     }
 
+    single<SeriesApiService> {
+        get<Retrofit>().create(SeriesApiService::class.java)
+    }
+
+    single<SearchApiService> {
+        get<Retrofit>().create(SearchApiService::class.java)
+    }
+
     single<ArtistsApiService> {
         get<Retrofit>().create(ArtistsApiService::class.java)
     }
+
     single<MovieApiService> {
         get<Retrofit>().create(MovieApiService::class.java)
     }
