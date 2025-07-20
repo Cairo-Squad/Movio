@@ -8,6 +8,7 @@ import com.cairosquad.entity.Season
 import com.cairosquad.entity.Series
 import com.cairosquad.repository.search.data_source.remote.dto.toEntity
 import com.cairosquad.repository.series.data_source.remote.RemoteSeriesDataSource
+import com.cairosquad.repository.utils.mappers.tryToCall
 
 class SeriesRepositoryImpl(
     private val remoteSeriesDataSource: RemoteSeriesDataSource
@@ -37,5 +38,57 @@ class SeriesRepositoryImpl(
 
     override suspend fun getSeriesTopCast(seriesId: Long, page: Int): List<Artist> {
         return remoteSeriesDataSource.getSeriesTopCast(seriesId, page).map { it.toEntity() }
+    }
+
+    override suspend fun getTopRatingSeries(page: Int): List<Series> {
+        return tryToCall {
+            remoteSeriesDataSource.getTopRatingSeries(page).map { it.toEntity() }
+        }
+    }
+
+    override suspend fun getMoreRecommendedSeries(page: Int): List<Series> {
+        return tryToCall {
+            remoteSeriesDataSource.getMoreRecommendedSeries(page).map { it.toEntity() }
+        }
+    }
+
+    override suspend fun getOnTvSeries(page: Int): List<Series> {
+        return tryToCall {
+            remoteSeriesDataSource.getOnTvSeries(page).map { it.toEntity() }
+        }
+    }
+
+    override suspend fun getAiringTodaySeries(page: Int): List<Series> {
+        return tryToCall {
+            remoteSeriesDataSource.getAiringTodaySeries(page).map { it.toEntity() }
+        }
+    }
+
+    override suspend fun getTrendingSeries(page: Int): List<Series> {
+        return tryToCall {
+            remoteSeriesDataSource.getTrendingSeries(page).map { it.toEntity() }
+        }
+    }
+
+
+    override suspend fun getFreeToWatchSeries(page: Int): List<Series> {
+        return tryToCall {
+            remoteSeriesDataSource.getFreeToWatchSeries(page).map { it.toEntity() }
+        }
+    }
+
+    override suspend fun getSeriesByCategory(
+        category: String,
+        page: Int
+    ): List<Series> {
+        return tryToCall {
+            remoteSeriesDataSource.getSeriesByCategory(category,page).map { it.toEntity() }
+        }
+    }
+
+    override suspend fun getRandomSeries(page: Int): List<Series> {
+        return tryToCall {
+            remoteSeriesDataSource.getRandomSeries(page).map { it.toEntity() }
+        }
     }
 }

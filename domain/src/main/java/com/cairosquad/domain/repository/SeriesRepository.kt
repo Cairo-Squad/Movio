@@ -18,4 +18,22 @@ interface SeriesRepository {
     suspend fun getSimilarSeries(seriesId: Long, page: Int): List<Series>
 
     suspend fun getSeriesTopCast(seriesId: Long, page: Int): List<Artist>
+
+    suspend fun getTopRatingSeries(page: Int): List<Series>
+
+    suspend fun getMoreRecommendedSeries(page: Int): List<Series>
+
+    suspend fun getOnTvSeries(page: Int): List<Series>
+
+    suspend fun getAiringTodaySeries(page: Int): List<Series>
+
+    suspend fun getTrendingSeries(page: Int): List<Series>
+
+
+    suspend fun getFreeToWatchSeries(page: Int): List<Series>
+
+    suspend fun getSeriesByCategory(category: String, page: Int): List<Series>
+
+    suspend fun getRandomSeries(page: Int): List<Series>
+
 }

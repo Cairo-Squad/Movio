@@ -84,8 +84,89 @@ class RemoteSeriesDataSourceImpl(
         }.episodes ?: emptyList()
     }
 
+    override suspend fun getTopRatingSeries(page: Int): List<SeriesRemoteDto> {
+        return callApi<ResultResponse<SeriesRemoteDto>> {
+            httpClient.get(constructUrl("tv/top_rated")) {
+                parameter(API_KEY, BuildConfig.API_KEY)
+                parameter(PAGE, page)
+            }
+        }.results?.filterNotNull().orEmpty()
+    }
+
+    override suspend fun getMoreRecommendedSeries(page: Int): List<SeriesRemoteDto> {
+        return callApi<ResultResponse<SeriesRemoteDto>> {
+            httpClient.get(constructUrl("tv/popular")) {
+                parameter(API_KEY, BuildConfig.API_KEY)
+                parameter(PAGE, page)
+            }
+        }.results?.filterNotNull().orEmpty()
+    }
+
+    override suspend fun getOnTvSeries(page: Int): List<SeriesRemoteDto> {
+        return callApi<ResultResponse<SeriesRemoteDto>> {
+            httpClient.get(constructUrl("tv/on_the_air")) {
+                parameter(API_KEY, BuildConfig.API_KEY)
+                parameter(PAGE, page)
+            }
+        }.results?.filterNotNull().orEmpty()
+    }
+
+    override suspend fun getAiringTodaySeries(page: Int): List<SeriesRemoteDto> {
+        return callApi<ResultResponse<SeriesRemoteDto>> {
+            httpClient.get(constructUrl("tv/airing_today")) {
+                parameter(API_KEY, BuildConfig.API_KEY)
+                parameter(PAGE, page)
+            }
+        }.results?.filterNotNull().orEmpty()
+    }
+
+    override suspend fun getTrendingSeries(page: Int): List<SeriesRemoteDto> {
+        return callApi<ResultResponse<SeriesRemoteDto>> {
+            httpClient.get(constructUrl("trending/tv/{day}")) {
+                parameter(API_KEY, BuildConfig.API_KEY)
+                parameter(PAGE, page)
+            }
+        }.results?.filterNotNull().orEmpty()
+    }
+
+
+
+    override suspend fun getFreeToWatchSeries(page: Int): List<SeriesRemoteDto> {
+        return callApi<ResultResponse<SeriesRemoteDto>> {
+            httpClient.get(constructUrl("discover/tv")) {
+                parameter(API_KEY, BuildConfig.API_KEY)
+                parameter(PAGE, page)
+                parameter(WITH_WATCH_PROVIDERS,"free")
+            }
+        }.results?.filterNotNull().orEmpty()
+    }
+
+    override suspend fun getSeriesByCategory(
+        categoryId: String,
+        page: Int
+    ): List<SeriesRemoteDto> {
+        return callApi<ResultResponse<SeriesRemoteDto>> {
+            httpClient.get(constructUrl("discover/tv")) {
+                parameter(API_KEY, BuildConfig.API_KEY)
+                parameter(PAGE, page)
+                parameter(WITH_GENRES, categoryId)
+            }
+        }.results?.filterNotNull().orEmpty()
+    }
+
+    override suspend fun getRandomSeries(page: Int): List<SeriesRemoteDto> {
+        return callApi<ResultResponse<SeriesRemoteDto>> {
+            httpClient.get(constructUrl("discover/tv")) {
+                parameter(API_KEY, BuildConfig.API_KEY)
+                parameter(PAGE, page)
+            }
+        }.results?.filterNotNull().orEmpty()
+    }
+
     companion object {
         private const val API_KEY = "api_key"
         private const val PAGE = "page"
+        private const val WITH_WATCH_PROVIDERS = "with_watch_providers"
+        private const val WITH_GENRES = "with_genres"
     }
 }
