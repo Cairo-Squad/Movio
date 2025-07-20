@@ -122,16 +122,13 @@ dependencies {
     implementation(libs.ktor.client.okhttp)
     implementation(libs.logging.interceptor)
 
-    // --- Retrofit 3 (Beta) ---
-    implementation("com.squareup.retrofit2:retrofit:3.0.0")
-    implementation("com.squareup.retrofit2:converter-kotlinx-serialization:3.0.0")
+    // --- Retrofit 3 ---
+    implementation(libs.retrofit)
+    implementation(libs.converter.kotlinx.serialization)
 
     implementation(libs.kotlinx.serialization.json)
 
-    // --- OkHttp Logging Interceptor ---
-    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
-
-    implementation ("com.squareup.okhttp3:okhttp:3.10.0")
+    implementation (libs.okhttp)
 
     // Room
     implementation(libs.androidx.room.runtime)
