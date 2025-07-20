@@ -216,10 +216,6 @@ class HomeViewModel(
         sendEffect(HomeEffect.NavigateToCategory(category))
     }
 
-    override fun onClickFeaturedMovie(movieId: Long) {
-        sendEffect(HomeEffect.NavigateToFeaturedMovie(movieId))
-    }
-
     override fun onClickMovie(movieId: Long) {
         sendEffect(HomeEffect.NavigateMovie(movieId))
     }
