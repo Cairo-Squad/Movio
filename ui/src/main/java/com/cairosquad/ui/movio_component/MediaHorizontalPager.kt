@@ -129,7 +129,7 @@ fun MediaHorizontalPager(
                             .rotate(cardAngle),
                         title = media.title,
                         imgUrl = media.photoPath,
-                        categories = media.categories,
+                        genres = media.genres,
                         isCurrentPageFloat = isCurrentPageFloat,
                         onClick = { onClickMedia(media.id) }
                     )
@@ -163,7 +163,7 @@ data class MediaHorizontalPagerItem(
     val id: Long,
     val title: String,
     val photoPath: String,
-    val categories: List<String>,
+    val genres: List<String>,
 ) {
     companion object {
         val fakeMediaItems = listOf(
@@ -171,43 +171,43 @@ data class MediaHorizontalPagerItem(
                 id = 1311031,
                 title = "Demon Slayer: Kimetsu no Yaiba Infinity Castle",
                 photoPath = "https://image.tmdb.org/t/p/w500/aFRDH3P7TX61FVGpaLhKr6QiOC1.jpg",
-                categories = listOf("Animation", "Action", "Fantasy", "Thriller")
+                genres = listOf("Animation", "Action", "Fantasy", "Thriller")
             ),
             MediaHorizontalPagerItem(
                 id = 1061474,
                 title = "Superman",
                 photoPath = "https://image.tmdb.org/t/p/w500/ombsmhYUqR4qqOLOxAyr5V8hbyv.jpg",
-                categories = listOf("Science Fiction", "Adventure", "Action")
+                genres = listOf("Science Fiction", "Adventure", "Action")
             ),
             MediaHorizontalPagerItem(
                 id = 541671,
                 title = "Ballerina",
                 photoPath = "https://image.tmdb.org/t/p/w500/2VUmvqsHb6cEtdfscEA6fqqVzLg.jpg",
-                categories = listOf("Action", "Thriller", "Crime")
+                genres = listOf("Action", "Thriller", "Crime")
             ),
             MediaHorizontalPagerItem(
                 id = 1087192,
                 title = "How to Train Your Dragon",
                 photoPath = "https://image.tmdb.org/t/p/w500/q5pXRYTycaeW6dEgsCrd4mYPmxM.jpg",
-                categories = listOf("Fantasy", "Family", "Action")
+                genres = listOf("Fantasy", "Family", "Action")
             ),
             MediaHorizontalPagerItem(
                 id = 1269208,
                 title = "Wall to Wall",
                 photoPath = "https://image.tmdb.org/t/p/w500/5hlNv3Kd9xovvSgrslWhMriGpZ8.jpg",
-                categories = listOf("Thriller", "Drama")
+                genres = listOf("Thriller", "Drama")
             ),
             MediaHorizontalPagerItem(
                 id = 617126,
                 title = "The Fantastic Four: First Steps",
                 photoPath = "https://image.tmdb.org/t/p/w500/x26MtUlwtWD26d0G0FXcppxCJio.jpg",
-                categories = listOf("Science Fiction", "Adventure")
+                genres = listOf("Science Fiction", "Adventure")
             ),
             MediaHorizontalPagerItem(
                 id = 1071585,
                 title = "M3GAN 2.0",
                 photoPath = "https://image.tmdb.org/t/p/w500/4a63rQqIDTrYNdcnTXdPsQyxVLo.jpg",
-                categories = listOf("Action", "Science Fiction", "Thriller")
+                genres = listOf("Action", "Science Fiction", "Thriller")
             )
         )
     }
@@ -217,7 +217,7 @@ data class MediaHorizontalPagerItem(
 private fun MediaHorizontalPagerCard(
     title: String,
     imgUrl: String,
-    categories: List<String>,
+    genres: List<String>,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     isCurrentPageFloat: Float = 1f
@@ -231,7 +231,6 @@ private fun MediaHorizontalPagerCard(
             model = imgUrl,
             contentDescription = stringResource(R.string.movie_poster),
             loadingPlaceholder = { LoadingMovieImage(Modifier.fillMaxSize()) },
-            nonNudeThreshold = 0.0
         )
         Icon(
             modifier = Modifier
@@ -286,9 +285,9 @@ private fun MediaHorizontalPagerCard(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     contentPadding = PaddingValues(horizontal = 8.dp)
                 ) {
-                    (0..< minOf(3, categories.size)).forEach {
+                    (0..< minOf(3, genres.size)).forEach {
                         item {
-                            ChipWithNoBackGround(text = categories[it])
+                            ChipWithNoBackGround(text = genres[it])
                         }
                     }
                 }
