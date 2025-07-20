@@ -9,8 +9,6 @@ import com.cairosquad.remote.search.RemoteSearchDataSourceImpl
 import com.cairosquad.remote.search.SearchApiService
 import com.cairosquad.remote.series.RemoteSeriesDataSourceImpl
 import com.cairosquad.remote.series.SeriesApiService
-import com.cairosquad.remote.utils.HttpClientFactory
-import com.cairosquad.remote.utils.HttpEngine
 import com.cairosquad.remote.utils.retrofit.retrofitProvider
 import com.cairosquad.repository.artists.data_source.ArtistsRemoteDataSource
 import com.cairosquad.repository.movie.data_source.remote.RemoteMovieDataSource
@@ -22,11 +20,6 @@ import retrofit2.Retrofit
 
 val remoteDataSourceModule = module {
 
-    single {
-        HttpClientFactory.create(
-            engine = HttpEngine.provide()
-        )
-    }
     single {
         retrofitProvider (
             tokenProvider = { null }

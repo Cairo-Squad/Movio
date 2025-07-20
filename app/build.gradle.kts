@@ -115,11 +115,7 @@ dependencies {
     implementation(libs.koin.test)
     implementation(libs.koin.annotations)
     ksp(libs.koin.ksp)
-
-    // ktor
-    implementation(libs.bundles.ktor)
     implementation(libs.logging.interceptor)
-    implementation(libs.ktor.client.okhttp)
     implementation(libs.logging.interceptor)
 
     // --- Retrofit 3 ---

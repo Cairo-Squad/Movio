@@ -11,9 +11,9 @@ import com.cairosquad.repository.utils.exception.ServerException
 import com.cairosquad.repository.utils.exception.TooManyRequestsException
 import com.cairosquad.repository.utils.exception.UnauthorizedException
 import com.cairosquad.repository.utils.exception.UnknownDataSourceException
-import kotlinx.io.IOException
 import kotlinx.serialization.SerializationException
 import retrofit2.HttpException
+import java.io.IOException
 
 suspend inline fun <reified T> safeCallApi(
     crossinline call: suspend () -> T
@@ -43,6 +43,3 @@ suspend inline fun <reified T> safeCallApi(
         throw e
     }
 }
-
-
-

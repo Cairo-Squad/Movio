@@ -32,7 +32,6 @@ fun retrofitProvider(tokenProvider: () -> String?): Retrofit {
     return Retrofit.Builder()
         .baseUrl(BuildConfig.BASE_URL)
         .client(client)
-        //.converterFactories { add(json.asConverterFactory(contentType)) }
         .addConverterFactory(json.asConverterFactory(contentType))
         .build()
 }
