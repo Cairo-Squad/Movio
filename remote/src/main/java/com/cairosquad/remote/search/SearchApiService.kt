@@ -14,25 +14,25 @@ interface SearchApiService {
     suspend fun getMovies(
         @Query("query") query: String,
         @Query("page") page: Int
-    ): Response<ResultResponse<MovieRemoteDto>>
+    ): ResultResponse<MovieRemoteDto>
 
     @GET("search/tv")
     suspend fun getSeries(
         @Query("query") query: String,
         @Query("page") page: Int
-    ): Response<ResultResponse<SeriesRemoteDto>>
+    ): ResultResponse<SeriesRemoteDto>
 
     @GET("search/person")
     suspend fun getArtists(
         @Query("query") query: String,
         @Query("page") page: Int
-    ): Response<ResultResponse<ArtistRemoteDto>>
+    ): ResultResponse<ArtistRemoteDto>
 
     @GET("movie/top_rated")
     suspend fun getPersonalizedMovies(
         @Query("page") page: Int
-    ): Response<ResultResponse<MovieRemoteDto>>
+    ): ResultResponse<MovieRemoteDto>
 
     @GET("movie/now_playing")
-    suspend fun getSuggestedMovies(): Response<ResultResponse<MovieRemoteDto>>
+    suspend fun getSuggestedMovies(): ResultResponse<MovieRemoteDto>
 }

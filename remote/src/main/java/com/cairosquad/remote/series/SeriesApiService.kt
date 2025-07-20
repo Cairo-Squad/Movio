@@ -17,35 +17,35 @@ interface SeriesApiService {
     @GET("tv/{seriesId}")
     suspend fun getSeries(
         @Path("seriesId") seriesId: Long
-    ): Response<SeriesDetailsRemoteDto>
+    ): SeriesDetailsRemoteDto
 
     @GET("tv/{seriesId}/reviews")
     suspend fun getSeriesReviews(
         @Path("seriesId") seriesId: Long,
         @Query("page") page: Int
-    ): Response<ResultResponse<ReviewRemoteDto>>
+    ): ResultResponse<ReviewRemoteDto>
 
     @GET("tv/{seriesId}/similar")
     suspend fun getSimilarSeries(
         @Path("seriesId") seriesId: Long,
         @Query("page") page: Int
-    ): Response<ResultResponse<SeriesRemoteDto>>
+    ): ResultResponse<SeriesRemoteDto>
 
     @GET("tv/{seriesId}/credits")
     suspend fun getSeriesTopCast(
         @Path("seriesId") seriesId: Long,
         @Query("page") page: Int
-    ): Response<CreditResponse>
+    ): CreditResponse
 
     @GET("tv/{seriesId}")
     suspend fun getSeriesSeasons(
         @Path("seriesId") seriesId: Long
-    ): Response<SeriesResponse>
+    ): SeriesResponse
 
     @GET("tv/{seriesId}/season/{seasonNumber}")
     suspend fun getEpisodes(
         @Path("seriesId") seriesId: Long,
         @Path("seasonNumber") seasonNumber: Int
-    ): Response<SeasonResponse>
+    ): SeasonResponse
 
 }
