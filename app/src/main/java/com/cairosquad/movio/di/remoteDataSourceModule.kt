@@ -1,6 +1,8 @@
 package com.cairosquad.movio.di
 
-import com.cairosquad.remote.artists.ArtistsRemoteDataSourceImpl
+import com.cairosquad.remote.artists.ArtistsApiService
+import com.cairosquad.remote.artists.RemoteArtistDataSourceImpl
+import com.cairosquad.remote.movie.MovieApiService
 import com.cairosquad.remote.movie.RemoteMovieDataSourceImpl
 import com.cairosquad.remote.search.RemoteMovieDiscoveryDataSourceImpl
 import com.cairosquad.remote.search.RemoteSearchDataSourceImpl
@@ -23,6 +25,11 @@ val remoteDataSourceModule = module {
     single {
         HttpClientFactory.create(
             engine = HttpEngine.provide()
+        )
+    }
+    single {
+        provideRetrofit(
+            tokenProvider = { null }
         )
     }
 
@@ -50,7 +57,7 @@ val remoteDataSourceModule = module {
     }
 
     single<ArtistsRemoteDataSource> {
-        ArtistsRemoteDataSourceImpl(get())
+        RemoteArtistDataSourceImpl(get())
     }
 
     single<RemoteMovieDataSource> {
@@ -59,5 +66,12 @@ val remoteDataSourceModule = module {
 
     single<RemoteSeriesDataSource> {
         RemoteSeriesDataSourceImpl(get())
+    }
+
+    single<ArtistsApiService> {
+        get<Retrofit>().create(ArtistsApiService::class.java)
+    }
+    single<MovieApiService> {
+        get<Retrofit>().create(MovieApiService::class.java)
     }
 }
