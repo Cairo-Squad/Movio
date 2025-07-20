@@ -7,4 +7,6 @@
     <string name="add_to_list">أضف إلى القائمة</string>
     <string name="play">تشغيل</string>
     <string name="reviews">المراجعات</string>
+    <string name="user_profile_image">صورة بروفايل المستخدم</string>
+    <string name="application_logo">لوجو التطبيق</string>
 </resources>
