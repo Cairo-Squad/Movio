@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.google.firebase.perf)
     alias(libs.plugins.google.firebase.appdistribution)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
     id("androidx.room") version "2.7.1"
 }
 
@@ -120,6 +121,17 @@ dependencies {
     implementation(libs.logging.interceptor)
     implementation(libs.ktor.client.okhttp)
     implementation(libs.logging.interceptor)
+
+    // --- Retrofit 3 (Beta) ---
+    implementation("com.squareup.retrofit3:retrofit:3.0.0")
+    implementation("com.squareup.retrofit3:converter-kotlinx-serialization:3.0.0")
+
+    implementation(libs.kotlinx.serialization.json)
+
+    // --- OkHttp Logging Interceptor ---
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    implementation ("com.squareup.okhttp3:okhttp:3.10.0")
 
     // Room
     implementation(libs.androidx.room.runtime)
