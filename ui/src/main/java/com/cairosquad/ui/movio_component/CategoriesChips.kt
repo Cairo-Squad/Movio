@@ -1,10 +1,11 @@
 package com.cairosquad.ui.movio_component
 
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,13 +21,14 @@ fun CategoriesChips(
     onChipSelected: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Row(
+    LazyRow(
         modifier = modifier
-            .fillMaxWidth()
-            .horizontalScroll(rememberScrollState()),
-        verticalAlignment = Alignment.CenterVertically
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        contentPadding = PaddingValues(start = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        categories.forEachIndexed { index, categoryTitle  ->
+        itemsIndexed(categories) { index, categoryTitle  ->
             val isSelected = selectedChipIndex == index
             Chip(
                 modifier = Modifier.padding(start = 12.dp),
