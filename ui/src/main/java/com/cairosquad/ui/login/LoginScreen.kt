@@ -52,17 +52,18 @@ fun LoginScreen(
 ) {
     val navController = LocalNavController.current
     val uiState by viewModel.screenState.collectAsState()
-    val urlTest = "https://www.google.com"
+    val resetPasswordUrl = "https://www.themoviedb.org/reset-password"
+    val signUpUrl = "https://www.themoviedb.org/signup"
     ObserveAsEffect(viewModel.effect) { effect ->
         when (effect) {
             LoginEffect.NavigateToForgetPassword -> navController.navigate(
-                ForgetPasswordWebViewRoute(url = urlTest)
+                ForgetPasswordWebViewRoute(url = resetPasswordUrl)
             )
 
             LoginEffect.NavigateToHome -> TODO()
             LoginEffect.NavigateToGuestHome -> TODO()
             LoginEffect.NavigateToSignUp -> navController.navigate(
-                SignUpWebViewRoute(url = urlTest)
+                SignUpWebViewRoute(url = signUpUrl)
             )
         }
     }
