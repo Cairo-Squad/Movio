@@ -34,4 +34,41 @@ interface MovieApiService {
         @Path("movieId") movieId: Long,
         @Query("page") page: Int
     ): CreditResponse
+
+    @GET("movie/top_rated")
+    suspend fun getTopRatingMovies(
+        @Query("page") page: Int
+    ): ResultResponse<MovieRemoteDto>
+
+    @GET("movie/upcoming")
+    suspend fun getUpcomingMovies(
+        @Query("page") page: Int
+    ): ResultResponse<MovieRemoteDto>
+
+    @GET("movie/now_playing")
+    suspend fun getNowPlayingMovies(
+        @Query("page") page: Int
+    ): ResultResponse<MovieRemoteDto>
+
+    @GET("trending/movie/day")
+    suspend fun getTrendingMovies(
+        @Query("page") page: Int
+    ): ResultResponse<MovieRemoteDto>
+
+    @GET("movie/popular")
+    suspend fun getMoreRecommendedMovies(
+        @Query("page") page: Int
+    ): ResultResponse<MovieRemoteDto>
+
+    @GET("discover/movie")
+    suspend fun getFreeToWatchMovies(
+        @Query("page") page: Int,
+        @Query("with_watch_providers") free: String = "free" // TODO: find better way
+    ): ResultResponse<MovieRemoteDto>
+
+    @GET("discover/movie")
+    suspend fun getMoviesByCategory(
+        @Query("with_genres") categoryId: String,
+        @Query("page") page: Int,
+    ): ResultResponse<MovieRemoteDto>
 }

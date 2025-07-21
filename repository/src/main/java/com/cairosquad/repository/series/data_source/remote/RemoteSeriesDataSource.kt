@@ -8,7 +8,6 @@ import com.cairosquad.repository.series.data_source.remote.dto.SeasonRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesDetailsRemoteDto
 
 interface RemoteSeriesDataSource {
-
     suspend fun getSeries(seriesId: Long): SeriesDetailsRemoteDto
 
     suspend fun getSeriesReviews(seriesId: Long, page: Int): List<ReviewRemoteDto>
@@ -31,11 +30,7 @@ interface RemoteSeriesDataSource {
 
     suspend fun getTrendingSeries(page: Int): List<SeriesRemoteDto>
 
-
     suspend fun getFreeToWatchSeries(page: Int): List<SeriesRemoteDto>
 
     suspend fun getSeriesByCategory(category: String, page: Int): List<SeriesRemoteDto>
-
-    suspend fun getRandomSeries(page: Int): List<SeriesRemoteDto>
-
 }

@@ -85,10 +85,4 @@ class SeriesRepositoryImpl(
             remoteSeriesDataSource.getSeriesByCategory(category,page).map { it.toEntity() }
         }
     }
-
-    override suspend fun getRandomSeries(page: Int): List<Series> {
-        return tryToCall {
-            remoteSeriesDataSource.getRandomSeries(page).map { it.toEntity() }
-        }
-    }
 }

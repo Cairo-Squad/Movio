@@ -4,14 +4,12 @@ import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.movies.GetFreeToWatchMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetMoreRecommendedMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetNowPlayingMoviesUseCase
-import com.cairosquad.domain.usecase.movies.GetRandomMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetTopRatingMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetTrendingMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetUpcomingMoviesUseCase
 import com.cairosquad.domain.usecase.series.GetAiringTodaySeriesUseCase
 import com.cairosquad.domain.usecase.series.GetMoreRecommendedSeriesUseCase
 import com.cairosquad.domain.usecase.series.GetOnTvSeriesUseCase
-import com.cairosquad.domain.usecase.series.GetRandomSeriesUseCase
 import com.cairosquad.domain.usecase.series.GetTopRatingSeriesUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
@@ -28,8 +26,6 @@ class HomeViewModel(
     private val getMoreRecommendedSeriesUseCase: GetMoreRecommendedSeriesUseCase,
     private val getOnTvSeriesUseCase: GetOnTvSeriesUseCase,
     private val getTopRatingSeriesUseCase: GetTopRatingSeriesUseCase,
-    private val getRandomSeriesUseCase: GetRandomSeriesUseCase,
-    private val getRandomMoviesUseCase: GetRandomMoviesUseCase,
 ) : BaseViewModel<HomeScreenState, HomeEffect>(initialState = HomeScreenState()),
     HomeInteractionsListener {
 
@@ -38,8 +34,6 @@ class HomeViewModel(
     }
 
     private fun loadHomeData() {
-        loadRandomSeries()
-        loadRandomMovies()
         loadTopRatingMovies()
         loadTrendingMovies()
         loadNowPlayingMovies()
@@ -220,41 +214,6 @@ class HomeViewModel(
             onSuccess = { series ->
                 updateState {
                     it.copy(moreRecommendedSeries = series)
-                }
-            },
-            onError = { throwable ->
-                updateState {
-                    it.copy(errorStatus = handleHomeException(throwable))
-                }
-            },
-        )
-    }
-    private fun loadRandomMovies() {
-        tryToCall(
-            block = { getRandomMoviesUseCase.getRandomMovies(1).map { it.toHomeMovieUiState() } },
-            onSuccess = { movies ->
-                updateState {
-                    it.copy(randomMovies = movies)
-                }
-            },
-            onError = { throwable ->
-                updateState {
-                    it.copy(errorStatus = handleHomeException(throwable))
-                }
-            },
-        )
-
-
-    }
-
-    private fun loadRandomSeries() {
-        tryToCall(
-            block = {
-                getRandomSeriesUseCase.getRandomSeries(1).map { it.toHomeSeriesUiState() }
-            },
-            onSuccess = { series ->
-                updateState {
-                    it.copy(randomSeries = series)
                 }
             },
             onError = { throwable ->

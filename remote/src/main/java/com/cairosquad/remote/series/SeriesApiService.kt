@@ -7,7 +7,6 @@ import com.cairosquad.repository.search.data_source.remote.dto.SeriesRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeasonResponse
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesDetailsRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesResponse
-import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -47,5 +46,42 @@ interface SeriesApiService {
         @Path("seriesId") seriesId: Long,
         @Path("seasonNumber") seasonNumber: Int
     ): SeasonResponse
+
+    @GET("tv/top_rated")
+    suspend fun getTopRatingSeries(
+        @Query("page") page: Int
+    ): ResultResponse<SeriesRemoteDto>
+
+    @GET("tv/popular")
+    suspend fun getMoreRecommendedSeries(
+        @Query("page") page: Int
+    ): ResultResponse<SeriesRemoteDto>
+
+    @GET("tv/on_the_air")
+    suspend fun getOnTvSeries(
+        @Query("page") page: Int
+    ): ResultResponse<SeriesRemoteDto>
+
+    @GET("tv/airing_today")
+    suspend fun getAiringTodaySeries(
+        @Query("page") page: Int
+    ): ResultResponse<SeriesRemoteDto>
+
+    @GET("trending/tv/day")
+    suspend fun getTrendingSeries(
+        @Query("page") page: Int
+    ): ResultResponse<SeriesRemoteDto>
+
+    @GET("discover/tv")
+    suspend fun getFreeToWatchSeries(
+        @Query("page") page: Int,
+        @Query("with_watch_providers") free: String = "free" // TODO: find better way
+    ): ResultResponse<SeriesRemoteDto>
+
+    @GET("discover/tv")
+    suspend fun getSeriesByCategory(
+        @Query("with_genres") categoryId: String,
+        @Query("page") page: Int,
+    ): ResultResponse<SeriesRemoteDto>
 
 }
