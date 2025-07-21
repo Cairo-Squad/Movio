@@ -1,6 +1,5 @@
 package com.cairosquad.viewmodel.home
 
-import com.cairosquad.entity.Genre
 import com.cairosquad.viewmodel.exception.ErrorStatus
 
 data class HomeScreenState (
@@ -25,7 +24,7 @@ data class HomeScreenState (
         val title: String = "",
         val rating: Float = 0f,
         val posterPath: String = "",
-        val genres: List<Genre> =emptyList()
+        val genres: List<GenreUiState> = emptyList()
     )
 
     data class SeriesUiState(
@@ -33,7 +32,12 @@ data class HomeScreenState (
         val title: String = "",
         val rating: Float = 0f,
         val posterPath: String = "",
-        val genres: List<Genre> = emptyList()
+        val genres: List<GenreUiState> = emptyList()
+    )
+
+    data class GenreUiState(
+        val id: Long = 0L,
+        val name: String = ""
     )
 
     enum class ScreenStatus {

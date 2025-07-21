@@ -17,11 +17,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -41,7 +39,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -60,6 +57,7 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.Icon
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
+import com.cairosquad.viewmodel.home.HomeScreenState
 import kotlinx.coroutines.delay
 import kotlin.math.absoluteValue
 
@@ -82,6 +80,7 @@ fun MediaHorizontalPager(
         isAutoScrollingRightNow = false
         while (true) {
             delay(10_000)
+            if (mediaList.isEmpty()) continue
             isAutoScrollingRightNow = true
             pagerState.animateScrollToPage(
                 page = (pagerState.currentPage + 1) % mediaList.size,
@@ -111,7 +110,7 @@ fun MediaHorizontalPager(
                     .fillMaxSize()
                     .blur(20.dp)
                     .offset(y = (-28).dp),
-                model = media.photoPath,
+                model = "https://image.tmdb.org/t/p/w500${media.photoPath}",
                 contentDescription = stringResource(R.string.movie_poster),
                 loadingPlaceholder = { },
                 nonNudeThreshold = 0.0
@@ -177,51 +176,26 @@ data class MediaHorizontalPagerItem(
     val photoPath: String,
     val genres: List<String>,
 ) {
+
     companion object {
-        val fakeMediaItems = listOf(
-            MediaHorizontalPagerItem(
-                id = 1311031,
-                title = "Demon Slayer: Kimetsu no Yaiba Infinity Castle",
-                photoPath = "https://image.tmdb.org/t/p/w500/aFRDH3P7TX61FVGpaLhKr6QiOC1.jpg",
-                genres = listOf("Animation", "Action", "Fantasy", "Thriller")
-            ),
-            MediaHorizontalPagerItem(
-                id = 1061474,
-                title = "Superman",
-                photoPath = "https://image.tmdb.org/t/p/w500/ombsmhYUqR4qqOLOxAyr5V8hbyv.jpg",
-                genres = listOf("Science Fiction", "Adventure", "Action")
-            ),
-            MediaHorizontalPagerItem(
-                id = 541671,
-                title = "Ballerina",
-                photoPath = "https://image.tmdb.org/t/p/w500/2VUmvqsHb6cEtdfscEA6fqqVzLg.jpg",
-                genres = listOf("Action", "Thriller", "Crime")
-            ),
-            MediaHorizontalPagerItem(
-                id = 1087192,
-                title = "How to Train Your Dragon",
-                photoPath = "https://image.tmdb.org/t/p/w500/q5pXRYTycaeW6dEgsCrd4mYPmxM.jpg",
-                genres = listOf("Fantasy", "Family", "Action")
-            ),
-            MediaHorizontalPagerItem(
-                id = 1269208,
-                title = "Wall to Wall",
-                photoPath = "https://image.tmdb.org/t/p/w500/5hlNv3Kd9xovvSgrslWhMriGpZ8.jpg",
-                genres = listOf("Thriller", "Drama")
-            ),
-            MediaHorizontalPagerItem(
-                id = 617126,
-                title = "The Fantastic Four: First Steps",
-                photoPath = "https://image.tmdb.org/t/p/w500/x26MtUlwtWD26d0G0FXcppxCJio.jpg",
-                genres = listOf("Science Fiction", "Adventure")
-            ),
-            MediaHorizontalPagerItem(
-                id = 1071585,
-                title = "M3GAN 2.0",
-                photoPath = "https://image.tmdb.org/t/p/w500/4a63rQqIDTrYNdcnTXdPsQyxVLo.jpg",
-                genres = listOf("Action", "Science Fiction", "Thriller")
+
+        fun fromHomeMovieUiState(movie: HomeScreenState.MovieUiState): MediaHorizontalPagerItem {
+            return MediaHorizontalPagerItem(
+                id = movie.id,
+                title = movie.title,
+                photoPath = movie.posterPath,
+                genres = movie.genres.map { it.name }
             )
-        )
+        }
+
+        fun fromHomeSeriesUiState(series: HomeScreenState.SeriesUiState): MediaHorizontalPagerItem {
+            return MediaHorizontalPagerItem(
+                id = series.id,
+                title = series.title,
+                photoPath = series.posterPath,
+                genres = series.genres.map { it.name }
+            )
+        }
     }
 }
 
@@ -244,7 +218,7 @@ private fun MediaHorizontalPagerCard(
         SafeImageViewer(
             modifier = Modifier.fillMaxSize(),
             onIsImageSafeChanged = { isImageSafe = it },
-            model = imgUrl,
+            model = "https://image.tmdb.org/t/p/w500${imgUrl}",
             contentDescription = stringResource(R.string.movie_poster),
             loadingPlaceholder = { LoadingMovieImage(Modifier.fillMaxSize()) },
         )
@@ -266,7 +240,7 @@ private fun MediaHorizontalPagerCard(
             modifier = Modifier
                 .alpha(lerp(0f, 1f, isCurrentPageFloat))
                 .fillMaxWidth()
-                .heightIn(min = 51.dp)
+//                .heightIn(min = 51.dp)
                 .wrapContentHeight()
                 .align(Alignment.BottomCenter)
                 .onGloballyPositioned {
@@ -283,7 +257,7 @@ private fun MediaHorizontalPagerCard(
                         .height(bottomSectionDp.dp)
                         .blur(25.dp),
                     alignment = Alignment.BottomCenter,
-                    model = imgUrl,
+                    model = "https://image.tmdb.org/t/p/w500${imgUrl}",
                     contentDescription = stringResource(R.string.movie_poster),
                     loadingPlaceholder = { },
                     nonNudeThreshold = 0.0

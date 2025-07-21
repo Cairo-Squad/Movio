@@ -1,6 +1,7 @@
 package com.cairosquad.ui.home
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -11,10 +12,15 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
-    homeViewModel: HomeViewModel = koinViewModel()
+    viewModel: HomeViewModel = koinViewModel()
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
 
-    HomeScreenContent(selectedTabIndex, { selectedTabIndex = it })
+    val screenState by viewModel.screenState.collectAsState()
+
+    HomeScreenContent(
+        screenState = screenState,
+        listener = viewModel,
+    )
 }
 

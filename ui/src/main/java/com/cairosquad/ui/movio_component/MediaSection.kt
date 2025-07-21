@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
+import com.cairosquad.viewmodel.home.HomeScreenState
 
 @Composable
 fun MediaSection(
@@ -141,50 +142,15 @@ data class MediaSectionItem(
     val rating: Float,
 ){
     companion object {
-        val fakeItems = listOf(
-            MediaSectionItem(
-                id = 1311031,
-                title = "Demon Slayer: Kimetsu no Yaiba Infinity Castle",
-                photoPath = "https://image.tmdb.org/t/p/w500/aFRDH3P7TX61FVGpaLhKr6QiOC1.jpg",
-                rating = 4.5f
-            ),
-            MediaSectionItem(
-                id = 1061474,
-                title = "Superman",
-                photoPath = "https://image.tmdb.org/t/p/w500/ombsmhYUqR4qqOLOxAyr5V8hbyv.jpg",
-                rating = 4.5f
-            ),
-            MediaSectionItem(
-                id = 541671,
-                title = "Ballerina",
-                photoPath = "https://image.tmdb.org/t/p/w500/2VUmvqsHb6cEtdfscEA6fqqVzLg.jpg",
-                rating = 4.5f
-            ),
-            MediaSectionItem(
-                id = 1087192,
-                title = "How to Train Your Dragon",
-                photoPath = "https://image.tmdb.org/t/p/w500/q5pXRYTycaeW6dEgsCrd4mYPmxM.jpg",
-                rating = 4.5f
-            ),
-            MediaSectionItem(
-                id = 1269208,
-                title = "Wall to Wall",
-                photoPath = "https://image.tmdb.org/t/p/w500/5hlNv3Kd9xovvSgrslWhMriGpZ8.jpg",
-                rating = 4.5f
-            ),
-            MediaSectionItem(
-                id = 617126,
-                title = "The Fantastic Four: First Steps",
-                photoPath = "https://image.tmdb.org/t/p/w500/x26MtUlwtWD26d0G0FXcppxCJio.jpg",
-                rating = 4.5f
-            ),
-            MediaSectionItem(
-                id = 1071585,
-                title = "M3GAN 2.0",
-                photoPath = "https://image.tmdb.org/t/p/w500/4a63rQqIDTrYNdcnTXdPsQyxVLo.jpg",
-                rating = 4.5f
+
+        fun fromHomeMovieUiState(movie: HomeScreenState.MovieUiState): MediaSectionItem {
+            return MediaSectionItem(
+                id = movie.id,
+                title = movie.title,
+                photoPath = movie.posterPath,
+                rating = movie.rating,
             )
-        )
+        }
     }
 }
 

@@ -18,7 +18,6 @@ import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 
 class HomeViewModel(
-
     private val getFreeToWatchMoviesUseCase: GetFreeToWatchMoviesUseCase,
     private val getMoreRecommendedMoviesUseCase: GetMoreRecommendedMoviesUseCase,
     private val getTopRatingMoviesUseCase: GetTopRatingMoviesUseCase,
@@ -31,9 +30,6 @@ class HomeViewModel(
     private val getTopRatingSeriesUseCase: GetTopRatingSeriesUseCase,
     private val getRandomSeriesUseCase: GetRandomSeriesUseCase,
     private val getRandomMoviesUseCase: GetRandomMoviesUseCase,
-
-
-
 ) : BaseViewModel<HomeScreenState, HomeEffect>(initialState = HomeScreenState()),
     HomeInteractionsListener {
 
@@ -273,9 +269,9 @@ class HomeViewModel(
         sendEffect(HomeEffect.NavigateToProfile)
     }
 
-    override fun onClickTab(tabType: HomeScreenState.TabType) {
+    override fun onClickTab(tabIndex: Int) { //tabType: HomeScreenState.TabType) {
         updateState {
-            it.copy(selectedTab = tabType)
+            it.copy(selectedTab = HomeScreenState.TabType.entries[tabIndex])
         }
     }
 

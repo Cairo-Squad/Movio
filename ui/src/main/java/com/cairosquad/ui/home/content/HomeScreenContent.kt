@@ -26,11 +26,13 @@ import com.cairosquad.ui.movio_component.MediaHorizontalPagerItem
 import com.cairosquad.ui.movio_component.MediaSection
 import com.cairosquad.ui.movio_component.MediaSectionItem
 import com.cairosquad.ui.movio_component.MediaSectionLayoutType
+import com.cairosquad.viewmodel.home.HomeInteractionsListener
+import com.cairosquad.viewmodel.home.HomeScreenState
 
 @Composable
 fun HomeScreenContent(
-    selectedTabIndex: Int,
-    onTabSelected: (Int) -> Unit = {},
+    screenState: HomeScreenState,
+    listener: HomeInteractionsListener,
 ) {
     val listState = rememberScrollState()
     val density = LocalDensity.current
@@ -59,14 +61,16 @@ fun HomeScreenContent(
         ) {
             MediaHorizontalPager(
                 modifier = Modifier,
-                mediaList = MediaHorizontalPagerItem.fakeMediaItems,
+                mediaList = screenState.topRatingMovies
+                    .map(MediaHorizontalPagerItem::fromHomeMovieUiState)
+                    .take(7),
                 initialPage = 3,
                 onClickMedia = { }
             )
 
             MediaSection(
                 modifier = Modifier.padding(bottom = 32.dp),
-                mediaList = MediaSectionItem.fakeItems,
+                mediaList = screenState.topRatingMovies.map(MediaSectionItem::fromHomeMovieUiState),
                 onClickMedia = { },
                 sectionTitle = stringResource(R.string.top_rating),
                 mediaSectionLayoutType = MediaSectionLayoutType.LazyRow,
@@ -75,7 +79,7 @@ fun HomeScreenContent(
 
             MediaSection(
                 modifier = Modifier.padding(bottom = 32.dp),
-                mediaList = MediaSectionItem.fakeItems,
+                mediaList = screenState.trendingMovies.map(MediaSectionItem::fromHomeMovieUiState),
                 onClickMedia = { },
                 sectionTitle = stringResource(R.string.trending),
                 mediaSectionLayoutType = MediaSectionLayoutType.LazyHorizontalGrid(3),
@@ -84,7 +88,7 @@ fun HomeScreenContent(
 
             MediaSection(
                 modifier = Modifier.padding(bottom = 32.dp),
-                mediaList = MediaSectionItem.fakeItems,
+                mediaList = screenState.freeToWatchMovies.map(MediaSectionItem::fromHomeMovieUiState),
                 onClickMedia = { },
                 sectionTitle = stringResource(R.string.free_to_watch),
                 mediaSectionLayoutType = MediaSectionLayoutType.LazyRow,
@@ -93,7 +97,7 @@ fun HomeScreenContent(
 
             MediaSection(
                 modifier = Modifier.padding(bottom = 32.dp),
-                mediaList = MediaSectionItem.fakeItems,
+                mediaList = screenState.upcomingMovies.map(MediaSectionItem::fromHomeMovieUiState),
                 onClickMedia = { },
                 sectionTitle = stringResource(R.string.up_coming),
                 mediaSectionLayoutType = MediaSectionLayoutType.LazyRow,
@@ -102,7 +106,9 @@ fun HomeScreenContent(
 
             MediaSection(
                 modifier = Modifier.padding(bottom = 32.dp),
-                mediaList = MediaSectionItem.fakeItems,
+                mediaList = screenState.moreRecommendedMovies
+                    .map(MediaSectionItem::fromHomeMovieUiState)
+                    .take(8),
                 onClickMedia = { },
                 sectionTitle = stringResource(R.string.more_recommended),
                 mediaSectionLayoutType = MediaSectionLayoutType.LazyVerticalGrid(158),
@@ -124,8 +130,8 @@ fun HomeScreenContent(
                     stringResource(R.string.tv_shows),
                     stringResource(R.string.categories),
                 ),
-                selectedTabIndex = selectedTabIndex,
-                onTabSelected = onTabSelected
+                selectedTabIndex = screenState.selectedTab.ordinal,
+                onTabSelected = listener::onClickTab
             )
         }
     }
