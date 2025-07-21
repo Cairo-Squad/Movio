@@ -1,6 +1,5 @@
 package com.cairosquad.viewmodel.details.artist
 
-import android.util.Log
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.artists.GetArtistDetailsUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
@@ -70,7 +69,6 @@ class ArtistViewModel(
                 series
             },
             onSuccess = { series ->
-                Log.d("ASDASD", "loadArtistSeries: $series")
                 updateState {
                     it.copy(KnownForSeries = series)
                 }

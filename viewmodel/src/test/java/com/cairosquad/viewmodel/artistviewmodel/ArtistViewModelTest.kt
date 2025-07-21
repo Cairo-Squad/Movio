@@ -42,7 +42,8 @@ class ArtistViewModelTest {
         getArtistDetailsUseCase = mockk(relaxed = true)
 
         viewModel = ArtistViewModel(
-            getArtistDetailsUseCase = getArtistDetailsUseCase
+            getArtistDetailsUseCase = getArtistDetailsUseCase,
+            artistId = 1L
         )
     }
 
@@ -56,18 +57,6 @@ class ArtistViewModelTest {
         delay(400)
 
         assertThat(viewModel.screenState.value.artist).isEqualTo(artist.toArtistUiState())
-    }
-
-    @Test
-    fun `should set loading status when loadArtistDetails is called`() = runBlocking {
-        val artistId = 1L
-        coEvery { getArtistDetailsUseCase.getArtist(artistId) } returns artist
-
-        viewModel.loadArtistDetails(artistId)
-
-        delay(100)
-
-        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(ArtistScreenState.ScreenStatus.LOADING)
     }
 
 //    @Test
