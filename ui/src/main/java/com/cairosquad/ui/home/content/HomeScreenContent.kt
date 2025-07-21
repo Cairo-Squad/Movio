@@ -1,10 +1,14 @@
 package com.cairosquad.ui.home.content
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
@@ -20,6 +24,7 @@ import com.cairosquad.design_system.basic_component.TabRow
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.R
 import com.cairosquad.ui.movio_component.AppBar
+import com.cairosquad.ui.movio_component.MediaSectionItem
 import com.cairosquad.viewmodel.home.HomeInteractionsListener
 import com.cairosquad.viewmodel.home.HomeScreenState
 
@@ -31,40 +36,72 @@ fun HomeScreenContent(
     val scrollState = rememberScrollState()
 
     Crossfade(screenState.selectedTab) { selectedTab ->
-        when(selectedTab) {
-            HomeScreenState.TabType.ALL -> {
-                HomeScreenContentAllTab(
-                    screenState = screenState,
-                    listener = listener,
-                    scrollState = scrollState
-                )
-            }
-            HomeScreenState.TabType.MOVIES -> {
-                HomeScreenContentMoviesTab(
-                    screenState = screenState,
-                    listener = listener,
-                    scrollState = scrollState
-                )
-            }
-            HomeScreenState.TabType.TV_SHOWS -> {
-                HomeScreenContentSeriesTab(
-                    screenState = screenState,
-                    listener = listener,
-                    scrollState = scrollState
-                )
-            }
-            HomeScreenState.TabType.CATEGORIES -> {
-                // TODO
+        if (screenState.seeAllType == null) {
+            when (selectedTab) {
+                HomeScreenState.TabType.ALL -> {
+                    HomeScreenContentAllTab(
+                        screenState = screenState,
+                        listener = listener,
+                        scrollState = scrollState
+                    )
+                }
+
+                HomeScreenState.TabType.MOVIES -> {
+                    HomeScreenContentMoviesTab(
+                        screenState = screenState,
+                        listener = listener,
+                        scrollState = scrollState
+                    )
+                }
+
+                HomeScreenState.TabType.TV_SHOWS -> {
+                    HomeScreenContentSeriesTab(
+                        screenState = screenState,
+                        listener = listener,
+                        scrollState = scrollState
+                    )
+                }
+
+                HomeScreenState.TabType.CATEGORIES -> {
+                    HomeScreenSeeAllContent(
+                        modifier = Modifier
+                            .statusBarsPadding()
+                            .padding(top = 48.dp)
+                            .padding(top = 36.dp),
+                        screenState = screenState,
+                        listener = listener,
+                        scrollState = scrollState
+                    )
+                }
             }
         }
     }
 
-    TobContent(
-        screenState = screenState,
-        listener = listener,
-        scrollState = scrollState
-    )
+    AnimatedVisibility(
+        visible = screenState.seeAllType == null,
+        exit = fadeOut(),
+        enter = fadeIn(),
+    ) {
+        TobContent(
+            screenState = screenState,
+            listener = listener,
+            scrollState = scrollState
+        )
+    }
 
+    AnimatedVisibility(
+        visible = screenState.seeAllType != null,
+        exit = fadeOut(),
+        enter = fadeIn(),
+    ) {
+        SeeAllContent(
+            modifier = Modifier.statusBarsPadding(),
+            title = screenState.seeAllType ?: "",
+            mediaList = screenState.moreRecommendedMovies.map(MediaSectionItem::fromHomeMovieUiState),
+            onClickMedia = listener::onClickMovie,
+            onClickBack = listener::onClickBackInSeeAllScreen
+        )
+    }
 }
 
 @Composable
@@ -110,3 +147,5 @@ private fun TobContent(
         )
     }
 }
+
+

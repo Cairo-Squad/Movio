@@ -18,6 +18,7 @@ data class HomeScreenState (
     val screenStatus: HomeScreenState.ScreenStatus = HomeScreenState.ScreenStatus.LOADING,
     val errorStatus: ErrorStatus? = null,
     val selectedTab: TabType = TabType.ALL,
+    val seeAllType: String? = null,
 ) {
     data class MovieUiState(
         val id: Long = 0L,

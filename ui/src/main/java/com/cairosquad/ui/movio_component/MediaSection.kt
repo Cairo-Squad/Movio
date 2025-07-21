@@ -27,9 +27,9 @@ import com.cairosquad.viewmodel.home.HomeScreenState
 fun MediaSection(
     mediaList: List<MediaSectionItem>,
     onClickMedia: (Long) -> Unit,
-    sectionTitle: String,
     mediaSectionLayoutType: MediaSectionLayoutType,
     modifier: Modifier = Modifier,
+    sectionTitle: String? = null,
     seeAllAction: (() -> Unit)? = null,
 ) {
 
@@ -39,13 +39,15 @@ fun MediaSection(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        SectionHeader(
-            title = sectionTitle,
-            modifier = Modifier,
-            actionText = stringResource(com.cairosquad.ui.R.string.see_all).takeIf { seeAllAction != null },
-            actionIcon = ImageVector.vectorResource(R.drawable.arrow),
-            onActionClick = { seeAllAction?.invoke() }
-        )
+        if (sectionTitle != null) {
+            SectionHeader(
+                title = sectionTitle,
+                modifier = Modifier,
+                actionText = stringResource(com.cairosquad.ui.R.string.see_all).takeIf { seeAllAction != null },
+                actionIcon = ImageVector.vectorResource(R.drawable.arrow),
+                onActionClick = { seeAllAction?.invoke() }
+            )
+        }
 
         when (mediaSectionLayoutType) {
             is MediaSectionLayoutType.LazyHorizontalGrid -> {
@@ -85,7 +87,7 @@ fun MediaSection(
                             imgUrl = media.photoPath,
                             title = media.title,
                             vote = media.rating,
-                            aspectRatio = 0.877f,
+                            aspectRatio = mediaSectionLayoutType.aspectRatio,
                             width = null
                         )
                     }
@@ -165,7 +167,10 @@ data class MediaSectionItem(
 
 sealed class MediaSectionLayoutType {
     data class LazyHorizontalGrid(val rowsCount: Int) : MediaSectionLayoutType()
-    data class LazyVerticalGrid(val minWidthDp: Int) : MediaSectionLayoutType()
+    data class LazyVerticalGrid(
+        val minWidthDp: Int,
+        val aspectRatio: Float = 0.877f
+    ) : MediaSectionLayoutType()
     object LazyRow: MediaSectionLayoutType()
     object LazyColumn: MediaSectionLayoutType()
 }

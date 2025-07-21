@@ -21,10 +21,6 @@ import com.cairosquad.ui.details.TopCastScreen
 import com.cairosquad.ui.details.artist.ArtistScreen
 import com.cairosquad.ui.details.similar_movies.SimilarMoviesScreen
 import com.cairosquad.ui.details.similar_series.SimilarSeriesScreen
-import com.cairosquad.ui.home.HomeCategoriesContent
-import com.cairosquad.ui.home.MoreRecommendedContent
-import com.cairosquad.ui.home.TopRatingContent
-import com.cairosquad.ui.home.TrendingContent
 import com.cairosquad.ui.search.ForYouScreen
 import com.cairosquad.ui.splash.SplashScreen
 
@@ -106,18 +102,6 @@ fun AppNavigation() {
             }
             composable<ForYouRoute> {
                 ForYouScreen()
-            }
-            composable<TopRatingRoute> {
-                TopRatingContent()
-            }
-            composable<TrendingRoute> {
-                TrendingContent()
-            }
-            composable<MoreRecommendedRoute> {
-                MoreRecommendedContent()
-            }
-            composable<CategoriesRoute> {
-                HomeCategoriesContent()
             }
         }
     }

@@ -44,7 +44,7 @@ fun HomeScreenContentSeriesTab(
             onClickMedia = listener::onClickMovie,
             sectionTitle = stringResource(R.string.top_rating),
             mediaSectionLayoutType = MediaSectionLayoutType.LazyRow,
-            seeAllAction = { }
+            seeAllAction = { listener.onClickSeeAllTopRated(true) }
         )
 
         MediaSection(
@@ -53,7 +53,7 @@ fun HomeScreenContentSeriesTab(
             onClickMedia = listener::onClickMovie,
             sectionTitle = stringResource(R.string.airing_today),
             mediaSectionLayoutType = MediaSectionLayoutType.LazyRow,
-            seeAllAction = { }
+            seeAllAction = { listener.onClickSeeAllAiringToday() }
         )
 
         MediaSection(
@@ -62,7 +62,7 @@ fun HomeScreenContentSeriesTab(
             onClickMedia = listener::onClickMovie,
             sectionTitle = stringResource(R.string.on_tv),
             mediaSectionLayoutType = MediaSectionLayoutType.LazyRow,
-            seeAllAction = { }
+            seeAllAction = { listener.onClickSeeAllOnTv() }
         )
 
         MediaSection(
@@ -73,7 +73,7 @@ fun HomeScreenContentSeriesTab(
             onClickMedia = listener::onClickMovie,
             sectionTitle = stringResource(R.string.more_recommended),
             mediaSectionLayoutType = MediaSectionLayoutType.LazyVerticalGrid(158),
-            seeAllAction = { }
+            seeAllAction = { listener.onClickSeeAllMoreRecommended(false) }
         )
     }
 }

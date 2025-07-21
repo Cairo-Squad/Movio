@@ -5,11 +5,12 @@ interface HomeInteractionsListener {
     fun onClickTab(tabIndex: Int) //tabType: HomeScreenState.TabType)
     fun onClickMovie(movieId: Long)
     fun onClickSeries(seriesId: Long)
-    fun onClickSeeAllTopRated(isMovie : Boolean )
+    fun onClickSeeAllTopRated(isMovie : Boolean)
     fun onClickSeeAllTrending()
     fun onClickSeeAllFreeToWatch()
     fun onClickSeeAllUpcoming()
     fun onClickSeeAllMoreRecommended(isMovie : Boolean)
     fun onClickSeeAllAiringToday()
     fun onClickSeeAllOnTv()
+    fun onClickBackInSeeAllScreen()
 }

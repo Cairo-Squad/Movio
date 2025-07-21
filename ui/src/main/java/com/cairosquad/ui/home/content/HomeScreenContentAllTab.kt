@@ -1,11 +1,14 @@
 package com.cairosquad.ui.home.content
 
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -24,6 +27,25 @@ fun HomeScreenContentAllTab(
     listener: HomeInteractionsListener,
     scrollState: ScrollState
 ) {
+
+    val listy: List<Any> = listOf(
+        HomeScreenState.MovieUiState(),
+        HomeScreenState.SeriesUiState(),
+    )
+
+    val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+    DisposableEffect(backPressedDispatcher) {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                listener.onClickBackInSeeAllScreen()
+            }
+        }
+        backPressedDispatcher?.addCallback(callback)
+        onDispose {
+            callback.remove()
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -44,7 +66,7 @@ fun HomeScreenContentAllTab(
             onClickMedia = listener::onClickMovie,
             sectionTitle = stringResource(R.string.top_rating),
             mediaSectionLayoutType = MediaSectionLayoutType.LazyRow,
-            seeAllAction = { }
+            seeAllAction = { listener.onClickSeeAllTopRated(true) }
         )
 
         MediaSection(
@@ -53,7 +75,7 @@ fun HomeScreenContentAllTab(
             onClickMedia = listener::onClickMovie,
             sectionTitle = stringResource(R.string.trending),
             mediaSectionLayoutType = MediaSectionLayoutType.LazyHorizontalGrid(3),
-            seeAllAction = { }
+            seeAllAction = listener::onClickSeeAllTrending
         )
 
         MediaSection(
@@ -62,7 +84,7 @@ fun HomeScreenContentAllTab(
             onClickMedia = listener::onClickMovie,
             sectionTitle = stringResource(R.string.free_to_watch),
             mediaSectionLayoutType = MediaSectionLayoutType.LazyRow,
-            seeAllAction = { }
+            seeAllAction = listener::onClickSeeAllFreeToWatch
         )
 
         MediaSection(
@@ -71,7 +93,7 @@ fun HomeScreenContentAllTab(
             onClickMedia = listener::onClickMovie,
             sectionTitle = stringResource(R.string.up_coming),
             mediaSectionLayoutType = MediaSectionLayoutType.LazyRow,
-            seeAllAction = { }
+            seeAllAction = listener::onClickSeeAllUpcoming
         )
 
         MediaSection(
@@ -82,7 +104,7 @@ fun HomeScreenContentAllTab(
             onClickMedia = listener::onClickMovie,
             sectionTitle = stringResource(R.string.more_recommended),
             mediaSectionLayoutType = MediaSectionLayoutType.LazyVerticalGrid(158),
-            seeAllAction = { }
+            seeAllAction = { listener.onClickSeeAllMoreRecommended(true) }
         )
     }
 }
