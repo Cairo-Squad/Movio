@@ -9,4 +9,14 @@
     <string name="reviews">المراجعات</string>
     <string name="user_profile_image">صورة بروفايل المستخدم</string>
     <string name="application_logo">لوجو التطبيق</string>
+    <string name="top_rating">اعلى تقييما</string>
+    <string name="trending">الأكثر رواجًا</string>
+    <string name="free_to_watch">مجاني للمشاهدة</string>
+    <string name="up_coming">قادم</string>
+    <string name="more_recommended">المزيد من الاقتراحات</string>
+    <string name="all">"     الكل     "</string>
+    <string name="movies">الافلام</string>
+    <string name="tv_shows">العروض التلفزيونية</string>
+    <string name="categories">الاصناف</string>
+    <string name="see_all">عرض الكل</string>
 </resources>
