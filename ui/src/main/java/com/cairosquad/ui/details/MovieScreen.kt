@@ -324,6 +324,14 @@ fun MovieContent(
                                         .clip(RoundedCornerShape(8.dp)),
                                     model = BuildConfig.IMAGE_BASE_URL + uiState.movie.posterPath,
                                     contentDescription = "",
+                                    loadingPlaceholder = {
+                                        LoadingMovieImage(
+                                            modifier = Modifier.size(
+                                                height = 260.dp,
+                                                width = 200.dp
+                                            )
+                                        )
+                                    }
                                 )
                             } else {
                                 Box(
