@@ -151,6 +151,15 @@ data class MediaSectionItem(
                 rating = movie.rating,
             )
         }
+
+        fun fromHomeSeriesUiState(movie: HomeScreenState.SeriesUiState): MediaSectionItem {
+            return MediaSectionItem(
+                id = movie.id,
+                title = movie.title,
+                photoPath = movie.posterPath,
+                rating = movie.rating,
+            )
+        }
     }
 }
 

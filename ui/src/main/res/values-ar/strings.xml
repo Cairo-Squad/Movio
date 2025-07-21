@@ -19,4 +19,6 @@
     <string name="tv_shows">العروض التلفزيونية</string>
     <string name="categories">الاصناف</string>
     <string name="see_all">عرض الكل</string>
+    <string name="airing_today">يبث اليوم</string>
+    <string name="on_tv">على التلفزيون</string>
 </resources>

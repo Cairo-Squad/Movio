@@ -20,4 +20,6 @@
     <string name="tv_shows">TV Shows</string>
     <string name="categories">Categories</string>
     <string name="see_all">See all</string>
+    <string name="airing_today">Airing Today</string>
+    <string name="on_tv">On TV</string>
 </resources>
