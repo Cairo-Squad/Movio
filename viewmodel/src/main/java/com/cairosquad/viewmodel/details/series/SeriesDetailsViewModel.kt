@@ -68,7 +68,7 @@ class SeriesDetailsViewModel(
     }
 
     override fun onDismissAddToListBottomSheet() {
-        updateState { it.copy(showAddToListBottomSheet = true) }
+        updateState { it.copy(showAddToListBottomSheet = false) }
     }
 
     override fun onRateChange(rate: Int) {

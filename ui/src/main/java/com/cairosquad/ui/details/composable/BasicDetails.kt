@@ -22,7 +22,8 @@ fun BasicDetails(
     genres: List<String>,
     rating: Float,
     releaseDate: String,
-    seasonsCount: Int,
+    seasonsCount: Int? = null,
+    runtimeMinutes: String? = null,
     onRateClicked: () -> Unit,
     onPlayTrailerClicked: () -> Unit,
     onAddToListClicked: () -> Unit,
@@ -57,13 +58,21 @@ fun BasicDetails(
                 text = rating.toString(),
                 imgRes = R.drawable.review_star,
             )
-            InfoChip(
-                text = stringResource(
-                    R.string.seasons_count,
-                    seasonsCount
-                ),
-                imgRes = R.drawable.ic_media
-            )
+            if (seasonsCount != null) {
+                InfoChip(
+                    text = stringResource(
+                        R.string.seasons_count,
+                        seasonsCount
+                    ),
+                    imgRes = R.drawable.ic_media
+                )
+            }
+            if (runtimeMinutes != null) {
+                InfoChip(
+                    text = runtimeMinutes,
+                    imgRes = R.drawable.time,
+                )
+            }
             InfoChip(
                 text = releaseDate,
                 imgRes = R.drawable.date,

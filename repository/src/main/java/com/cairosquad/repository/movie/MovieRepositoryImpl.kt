@@ -11,6 +11,7 @@ import com.cairosquad.repository.search.data_source.local.dto.toEntity
 import com.cairosquad.repository.search.data_source.remote.RemoteMovieDiscoveryDataSource
 import com.cairosquad.repository.search.data_source.remote.dto.toEntity
 import com.cairosquad.repository.utils.mappers.tryToCall
+import kotlinx.coroutines.delay
 import java.util.Date
 
 class MovieRepositoryImpl(
@@ -19,24 +20,30 @@ class MovieRepositoryImpl(
     private val remoteMovieDataSource: RemoteMovieDataSource
 ) : MoviesRepository {
     override suspend fun getMovie(movieId: Long): Movie {
+        delay(4500)
+
         return tryToCall {
             remoteMovieDataSource.getMovie(movieId).toEntity()
         }
     }
 
     override suspend fun getMovieReviews(movieId: Long, page: Int): List<Review> {
+        delay(2500)
+
         return tryToCall {
             remoteMovieDataSource.getMovieReviews(movieId, page).map { it.toEntity() }
         }
     }
 
     override suspend fun getSimilarMovies(movieId: Long, page: Int): List<Movie> {
+        delay(3500)
         return tryToCall {
             remoteMovieDataSource.getSimilarMovies(movieId, page).map { it.toEntity() }
         }
     }
 
     override suspend fun getMovieTopCast(movieId: Long, page: Int): List<Artist> {
+        delay(4500)
         return tryToCall {
             remoteMovieDataSource.getMovieTopCast(movieId, page).map { it.toEntity() }
         }

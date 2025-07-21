@@ -64,9 +64,7 @@ fun ArtistScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
     artistViewModel: ArtistViewModel = koinViewModel()
-
 ) {
-
     LaunchedEffect(Unit) {
         artistViewModel.loadArtistDetails(artistId)
         artistViewModel.loadArtistMovies(artistId)

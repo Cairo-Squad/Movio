@@ -61,6 +61,7 @@ import com.cairosquad.ui.details.composable.SimilarSeriesSection
 import com.cairosquad.ui.movio_component.LoadingArtistCard
 import com.cairosquad.ui.movio_component.LoadingMovieCard
 import com.cairosquad.ui.movio_component.LoadingMovieImage
+import com.cairosquad.ui.movio_component.LoadingReviewCard
 import com.cairosquad.ui.movio_component.bottom_sheet.ListBottomSheet
 import com.cairosquad.ui.movio_component.bottom_sheet.LoginBottomSheet
 import com.cairosquad.ui.movio_component.bottom_sheet.RateBottomSheet
@@ -269,7 +270,7 @@ private fun SeriesScreenContent(
     val progress = (listState.value / scrollThresholdPx).coerceIn(0f, 1f)
 
     val animatedStartColor = lerp(
-        start = Color.Black,
+        start = Theme.color.surfaces.statusBarShadow,
         stop = Theme.color.surfaces.surface,
         fraction = progress
     )
@@ -495,7 +496,7 @@ private fun SeriesScreenContent(
                         SectionLoading(
                             headerName = stringResource(R.string.reviews),
                             sectionLoadingItem = {
-                                LoadingMovieImage(
+                                LoadingReviewCard(
                                     modifier = Modifier.size(width = 260.dp, height = 137.dp)
                                 )
                             }

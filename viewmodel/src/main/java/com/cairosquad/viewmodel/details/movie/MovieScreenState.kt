@@ -13,11 +13,15 @@ data class MovieScreenState(
     val topCast: List<TopCastUiState> = emptyList(),
     val reviews: List<ReviewUiState> = emptyList(),
     val similarMovies: List<MovieDetailsUiState> = emptyList(),
+
     val isFavorite: Boolean = false,
     val isShareBottomSheetOpen: Boolean = false,
     val isNoAccountBottomSheetOpen: Boolean = false,
     val isRateBottomSheetOpen: Boolean = false,
     val isAddToListBottomSheetOpen: Boolean = false,
+
+    val rate: Int = 0,
+
     val errorStatus: ErrorStatus? = null,
 
     val showSnackBar: Boolean = false,

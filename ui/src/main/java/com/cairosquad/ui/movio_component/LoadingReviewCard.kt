@@ -20,9 +20,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -64,7 +64,7 @@ fun LoadingReviewCard(
             )
             .clip(RoundedCornerShape(8.dp))
             .heightIn(min = 137.dp)
-            .width(258.dp)
+            .fillMaxWidth()
             .background(Theme.color.surfaces.surfaceContainer)
             .padding(12.dp)
     ) {
