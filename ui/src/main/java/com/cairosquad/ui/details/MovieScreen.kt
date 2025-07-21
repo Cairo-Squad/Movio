@@ -322,7 +322,7 @@ fun MovieContent(
                                     modifier = Modifier
                                         .size(height = 260.dp, width = 200.dp)
                                         .clip(RoundedCornerShape(8.dp)),
-                                    model = "https://image.tmdb.org/t/p/w500/${uiState.movie.posterPath}",
+                                    model = BuildConfig.IMAGE_BASE_URL + uiState.movie.posterPath,
                                     contentDescription = "",
                                 )
                             } else {

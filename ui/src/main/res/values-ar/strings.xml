@@ -14,4 +14,5 @@
     <string name="create_list_title">قم بصناعة قائمة جديدة</string>
     <string name="add_to_list_icon">أيكونه أضف إلى القائمة</string>
     <string name="submit">إرسال</string>
+    <string name="episodes">عدد الحلقات %1$s</string>
 </resources>

@@ -18,9 +18,10 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,15 +36,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.basic_component.AppDropDownMenu
+import com.cairosquad.design_system.basic_component.Icon
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import com.cairosquad.ui.BuildConfig
@@ -123,77 +128,166 @@ private fun EpisodesScreenContent(
             .verticalScroll(listState)
     ) {
         Box {
-            if (uiState.season.posterUrl.isNotEmpty()) {
-                SafeImageViewer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(400.dp)
-                        .blur(16.dp)
-                        .offset(y = (-20).dp),
-                    model = BuildConfig.IMAGE_BASE_URL + uiState.season.posterUrl,
-                    contentDescription = "",
-                )
+            when (uiState.basicDetailsSectionState) {
+                EpisodesDetailsScreenState.ScreenStatus.INITIAL -> {}
+                EpisodesDetailsScreenState.ScreenStatus.LOADING -> {}
+                EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
+                    if (uiState.season.posterUrl.isNotEmpty()) {
+                        SafeImageViewer(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(400.dp)
+                                .blur(16.dp)
+                                .offset(y = (-20).dp),
+                            model = BuildConfig.IMAGE_BASE_URL + uiState.season.posterUrl,
+                            contentDescription = "",
+                        )
+                    }
+                }
+
+                EpisodesDetailsScreenState.ScreenStatus.ERROR -> {}
             }
         }
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .windowInsetsPadding(WindowInsets.statusBars)
+                .windowInsetsPadding(WindowInsets.systemBars)
                 .heightIn(max = 10000.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             userScrollEnabled = false,
         ) {
             item {
-                if (uiState.season.posterUrl.isNotEmpty()) {
-                SafeImageViewer(
-                    modifier = Modifier
-                        .padding(top = 56.dp, bottom = 24.dp)
-                        .size(height = 260.dp, width = 200.dp)
-                        .clip(RoundedCornerShape(8.dp)),
-                    model = BuildConfig.IMAGE_BASE_URL + uiState.season.posterUrl,
-                    contentDescription = "",
-                    loadingPlaceholder = {
+                when (uiState.basicDetailsSectionState) {
+                    EpisodesDetailsScreenState.ScreenStatus.INITIAL -> {}
+                    EpisodesDetailsScreenState.ScreenStatus.LOADING -> {
                         LoadingMovieImage(
-                            Modifier.size(height = 260.dp, width = 200.dp)
+                            Modifier
+                                .padding(top = 56.dp, bottom = 24.dp)
+                                .size(height = 260.dp, width = 200.dp)
                         )
                     }
-                )
+
+                    EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
+                        if (uiState.season.posterUrl.isNotEmpty()) {
+                            SafeImageViewer(
+                                modifier = Modifier
+                                    .padding(top = 56.dp, bottom = 24.dp)
+                                    .size(height = 260.dp, width = 200.dp)
+                                    .clip(RoundedCornerShape(8.dp)),
+                                model = BuildConfig.IMAGE_BASE_URL + uiState.season.posterUrl,
+                                contentDescription = "",
+                                loadingPlaceholder = {
+                                    LoadingMovieImage(
+                                        Modifier.size(height = 260.dp, width = 200.dp)
+                                    )
+                                }
+                            )
+                        } else {
+                            Box(
+                                modifier = Modifier
+                                    .padding(top = 56.dp, bottom = 24.dp)
+                                    .size(height = 260.dp, width = 200.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(Theme.color.system.defaultImageBackground),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    modifier = Modifier.size(24.dp),
+                                    imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
+                                    contentDescription = stringResource(R.string.default_image_icon),
+                                    tint = Color(0xFFEFF1F5)
+                                )
+                            }
+                        }
+                    }
+
+                    EpisodesDetailsScreenState.ScreenStatus.ERROR -> {}
                 }
             }
             item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    BasicText(
-                        modifier = Modifier.padding(bottom = 8.dp),
-                        text = "Episodes ${uiState.season.episodesCount}",
-                        style = Theme.textStyle.headline.mediumMedium18.copy(
-                            color = Theme.color.surfaces.onSurface
-                        )
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                    AppDropDownMenu(
-                        selectedText = "Season ${uiState.selectedSeasonNumber}",
-                        options = seasonOptions,
-                        imgRes = R.drawable.drop_down_arrow,
-                        onOptionSelected = { selected ->
-                            val seasonNum = selected.removePrefix("Season ").toIntOrNull() ?: 1
-                            listener.onSeasonSelected(seriesId, seasonNum)
-                        },
-                    )
+                when (uiState.basicDetailsSectionState) {
+                    EpisodesDetailsScreenState.ScreenStatus.INITIAL -> {}
+                    EpisodesDetailsScreenState.ScreenStatus.LOADING -> {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            LoadingMovieImage(
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .size(height = 26.dp, width = 32.dp)
+                            )
+                            Spacer(modifier = Modifier.weight(1f))
+                            LoadingMovieImage(
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .size(height = 26.dp, width = 96.dp)
+                            )
+                        }
+                    }
+
+                    EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            BasicText(
+                                modifier = Modifier.padding(bottom = 8.dp),
+                                text = stringResource(
+                                    com.cairosquad.ui.R.string.episodes,
+                                    uiState.season.episodesCount
+                                ),
+                                style = Theme.textStyle.headline.mediumMedium18.copy(
+                                    color = Theme.color.surfaces.onSurface
+                                )
+                            )
+                            Spacer(modifier = Modifier.weight(1f))
+                            AppDropDownMenu(
+                                selectedText = "Season ${uiState.selectedSeasonNumber}",
+                                options = seasonOptions,
+                                imgRes = R.drawable.drop_down_arrow,
+                                onOptionSelected = { selected ->
+                                    val seasonNum =
+                                        selected.removePrefix("Season ").toIntOrNull() ?: 1
+                                    listener.onSeasonSelected(seriesId, seasonNum)
+                                },
+                            )
+                        }
+                    }
+
+                    EpisodesDetailsScreenState.ScreenStatus.ERROR -> {}
                 }
             }
-            itemsIndexed(uiState.episodes) { index, episode ->
-                EpisodeCard(
-                    episodeNumber = episode.number.toString().padStart(2, '0'),
-                    episodeImageUrl = BuildConfig.IMAGE_BASE_URL + episode.imageUrl,
-                    episodeName = episode.name,
-                    episodeDuration = episode.runtime,
-                    episodeRating = String.format("%.1f", episode.rating),
-                )
+            when (uiState.episodesSectionState) {
+                EpisodesDetailsScreenState.ScreenStatus.INITIAL -> {}
+                EpisodesDetailsScreenState.ScreenStatus.LOADING -> {
+                    items(10) {
+                        LoadingMovieImage(
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp, vertical = 12.dp)
+                                .height(74.dp)
+                                .fillMaxSize(),
+                        )
+                    }
+                }
+
+                EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
+                    items(uiState.episodes) { episode ->
+                        EpisodeCard(
+                            episodeNumber = episode.number.toString().padStart(2, '0'),
+                            episodeImageUrl = BuildConfig.IMAGE_BASE_URL + episode.imageUrl,
+                            episodeName = episode.name,
+                            episodeDuration = episode.runtime,
+                            episodeRating = String.format("%.1f", episode.rating),
+                        )
+                    }
+                }
+
+                EpisodesDetailsScreenState.ScreenStatus.ERROR -> {}
             }
         }
     }
