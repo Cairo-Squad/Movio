@@ -14,6 +14,11 @@ data class ForgetPasswordWebViewRoute(
 )
 
 @Serializable
+data class SignUpWebViewRoute(
+    val url: String
+)
+
+@Serializable
 data object AppRoute
 
 @Serializable

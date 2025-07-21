@@ -36,6 +36,7 @@ import com.cairosquad.ui.R
 import com.cairosquad.ui.movio_component.LoginScreenHeader
 import com.cairosquad.ui.navigation.ForgetPasswordWebViewRoute
 import com.cairosquad.ui.navigation.LocalNavController
+import com.cairosquad.ui.navigation.SignUpWebViewRoute
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.viewmodel.login.LoginEffect
 import com.cairosquad.viewmodel.login.LoginInteractionListener
@@ -60,7 +61,9 @@ fun LoginScreen(
 
             LoginEffect.NavigateToHome -> TODO()
             LoginEffect.NavigateToGuestHome -> TODO()
-            LoginEffect.NavigateToSignUp -> TODO()
+            LoginEffect.NavigateToSignUp -> navController.navigate(
+                SignUpWebViewRoute(url = urlTest)
+            )
         }
     }
 
