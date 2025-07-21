@@ -4,13 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -68,32 +68,31 @@ private fun TopCastContent(
                 .size(230.dp)
                 .background(Theme.color.surfaces.onSurfaceAt5)
         )
-        Column(
+
+        LazyVerticalGrid(
             modifier = Modifier
                 .fillMaxSize()
-                .systemBarsPadding()
+                .padding(top = 56.dp)
+                .navigationBarsPadding(),
+            columns = GridCells.Adaptive(minSize = 101.33.dp),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            AppBar(
-                title = stringResource(R.string.top_cast),
-                onBackButtonClicked = onBackClick,
-            )
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = 101.33.dp),
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(cast) { artist ->
-                    ArtistCard(
-                        name = artist.name,
-                        imgUrl = artist.photoPath,
-                        modifier = Modifier.clickable { onClick(artist.id) }
-                    )
-
-                }
+            items(cast) { artist ->
+                ArtistCard(
+                    name = artist.name,
+                    imgUrl = artist.photoPath,
+                    modifier = Modifier.clickable { onClick(artist.id) }
+                )
             }
         }
     }
+    AppBar(
+        modifier = Modifier
+            .windowInsetsPadding(WindowInsets.statusBars)
+            .background(Theme.color.surfaces.surface),
+        title = stringResource(R.string.top_cast),
+        onBackButtonClicked = onBackClick,
+    )
 }

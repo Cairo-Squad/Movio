@@ -311,7 +311,6 @@ private fun SeriesScreenContent(
 
             SeriesDetailsScreenState.SectionStatus.ERROR -> {}
         }
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()

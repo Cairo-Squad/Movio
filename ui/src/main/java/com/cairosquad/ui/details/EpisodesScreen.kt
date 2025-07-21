@@ -34,8 +34,10 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -44,6 +46,8 @@ import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.basic_component.AppDropDownMenu
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
+import com.cairosquad.ui.BuildConfig
+import com.cairosquad.ui.movio_component.LoadingMovieImage
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.ui.utils.errorStatusToMessageResource
@@ -78,10 +82,10 @@ fun EpisodesScreen(
                 ).show()
             }
 
-            EpisodesDetailEffect.PlayEpisode -> {  }
+            EpisodesDetailEffect.PlayEpisode -> {}
         }
     }
-    EpisodesScreenContent(uiState = uiState, listener = viewModel,seriesId)
+    EpisodesScreenContent(uiState = uiState, listener = viewModel, seriesId)
 }
 
 
@@ -93,33 +97,43 @@ private fun EpisodesScreenContent(
 ) {
     val seasonOptions = uiState.seasons.map { "Season ${it.seasonNumber}" }
 
+    val listState = rememberScrollState()
+    val density = LocalDensity.current
+    val scrollThresholdPx = with(density) { 275.dp.toPx() }
+    val progress = (listState.value / scrollThresholdPx).coerceIn(0f, 1f)
+
+    val animatedStartColor = lerp(
+        start = Theme.color.surfaces.statusBarShadow,
+        stop = Theme.color.surfaces.surface,
+        fraction = progress
+    )
+    val animatedEndColor = lerp(
+        start = Color.Transparent,
+        stop = Theme.color.surfaces.surface,
+        fraction = progress
+    )
+    val animatedBrush = Brush.verticalGradient(
+        colors = listOf(animatedStartColor, animatedEndColor)
+    )
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Theme.color.surfaces.surface)
             .windowInsetsPadding(WindowInsets.navigationBars)
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(listState)
     ) {
         Box {
-            SafeImageViewer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(400.dp)
-                    .blur(16.dp)
-                    .offset(y = (-20).dp),
-                model = "https://image.tmdb.org/t/p/w500/${uiState.season.posterUrl}",
-                contentDescription = "",
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(Color.Black, Color.Transparent)
-                        )
-                    )
-            )
+            if (uiState.season.posterUrl.isNotEmpty()) {
+                SafeImageViewer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(400.dp)
+                        .blur(16.dp)
+                        .offset(y = (-20).dp),
+                    model = BuildConfig.IMAGE_BASE_URL + uiState.season.posterUrl,
+                    contentDescription = "",
+                )
+            }
         }
         LazyColumn(
             modifier = Modifier
@@ -129,22 +143,22 @@ private fun EpisodesScreenContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             userScrollEnabled = false,
         ) {
-            stickyHeader {
-                AppBar(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    onBackButtonClicked = { listener.onBackClick() },
-                )
-            }
             item {
+                if (uiState.season.posterUrl.isNotEmpty()) {
                 SafeImageViewer(
                     modifier = Modifier
-                        .padding(top = 12.dp, bottom = 24.dp)
+                        .padding(top = 56.dp, bottom = 24.dp)
                         .size(height = 260.dp, width = 200.dp)
                         .clip(RoundedCornerShape(8.dp)),
-                    model = "https://image.tmdb.org/t/p/w500/${uiState.season.posterUrl}",
+                    model = BuildConfig.IMAGE_BASE_URL + uiState.season.posterUrl,
                     contentDescription = "",
+                    loadingPlaceholder = {
+                        LoadingMovieImage(
+                            Modifier.size(height = 260.dp, width = 200.dp)
+                        )
+                    }
                 )
+                }
             }
             item {
                 Row(
@@ -174,8 +188,8 @@ private fun EpisodesScreenContent(
             }
             itemsIndexed(uiState.episodes) { index, episode ->
                 EpisodeCard(
-                    episodeNumber =  episode.number.toString().padStart(2, '0'),
-                    episodeImageUrl = "https://image.tmdb.org/t/p/w500/${episode.imageUrl}",
+                    episodeNumber = episode.number.toString().padStart(2, '0'),
+                    episodeImageUrl = BuildConfig.IMAGE_BASE_URL + episode.imageUrl,
                     episodeName = episode.name,
                     episodeDuration = episode.runtime,
                     episodeRating = String.format("%.1f", episode.rating),
@@ -183,6 +197,13 @@ private fun EpisodesScreenContent(
             }
         }
     }
+    AppBar(
+        modifier = Modifier
+            .background(brush = animatedBrush)
+            .windowInsetsPadding(WindowInsets.statusBars)
+            .fillMaxWidth(),
+        onBackButtonClicked = listener::onBackClick,
+    )
 }
 
 @Composable
@@ -280,5 +301,3 @@ fun EpisodeCard(
         }
     }
 }
-
-

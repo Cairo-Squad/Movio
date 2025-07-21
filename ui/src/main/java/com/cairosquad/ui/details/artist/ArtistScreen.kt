@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -23,11 +25,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
 import androidx.compose.ui.graphics.Color
@@ -41,9 +43,11 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.basic_component.ExpandableText
 import com.cairosquad.design_system.basic_component.InfoChip
-import com.cairosquad.design_system.modifier.CustomBrush
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
+import com.cairosquad.ui.BuildConfig
+import com.cairosquad.ui.movio_component.LoadingMovieCard
+import com.cairosquad.ui.movio_component.LoadingMovieImage
 import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.ui.navigation.MovieRoute
 import com.cairosquad.ui.utils.ObserveAsEffect
@@ -53,6 +57,7 @@ import com.cairosquad.viewmodel.details.artist.ArtistInteractionListener
 import com.cairosquad.viewmodel.details.artist.ArtistScreenState
 import com.cairosquad.viewmodel.details.artist.ArtistViewModel
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -63,13 +68,8 @@ fun ArtistScreen(
     artistId: Long,
     navController: NavController,
     modifier: Modifier = Modifier,
-    artistViewModel: ArtistViewModel = koinViewModel()
+    artistViewModel: ArtistViewModel = koinViewModel { parametersOf(artistId) }
 ) {
-    LaunchedEffect(Unit) {
-        artistViewModel.loadArtistDetails(artistId)
-        artistViewModel.loadArtistMovies(artistId)
-        artistViewModel.loadArtistSeries(artistId)
-    }
     val state by artistViewModel.screenState.collectAsState()
     val context = LocalContext.current
     ObserveAsEffect(artistViewModel.effect) { effect ->
@@ -106,15 +106,15 @@ private fun ArtistScreenContent(
     val scrollThresholdPx = with(density) { 250.dp.toPx() }
     val progress = (listScroll.value / scrollThresholdPx).coerceIn(0f, 1f)
 
-    val animatedStartColor = lerp(Color.Black, Theme.color.surfaces.surface, progress)
+    val animatedStartColor =
+        lerp(Theme.color.surfaces.statusBarShadow, Theme.color.surfaces.surface, progress)
     val animatedEndColor = lerp(Color.Transparent, Theme.color.surfaces.surface, progress)
-    val animatedBrush = verticalGradient(
-        colors = listOf(animatedStartColor, animatedEndColor)
-    )
+    val animatedBrush = verticalGradient(colors = listOf(animatedStartColor, animatedEndColor))
     Box(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = modifier
                 .fillMaxSize()
+                .windowInsetsPadding(WindowInsets.navigationBars)
                 .verticalScroll(listScroll),
             horizontalAlignment = Alignment.Start,
         ) {
@@ -124,17 +124,19 @@ private fun ArtistScreenContent(
                     .fillMaxWidth()
                     .height(340.dp)
             ) {
-                SafeImageViewer(
-                    model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
-                    contentDescription = "blured image",
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .height(335.dp)
-                        .offset(y = (-5).dp)
-                        .CustomBrush(0.5f, 16.dp),
-                    nudeThreshold = 0.0,
-                    nonNudeThreshold = 0.0
-                )
+                if (state.artist.photoPath.isNotEmpty()) {
+                    SafeImageViewer(
+                        model = BuildConfig.IMAGE_BASE_URL + state.artist.photoPath,
+                        contentDescription = "blured image",
+                        modifier = Modifier
+                            .blur(16.dp)
+                            .fillMaxSize()
+                            .height(335.dp)
+                            .offset(y = (-5).dp),
+                        nudeThreshold = 0.0,
+                        nonNudeThreshold = 0.0
+                    )
+                }
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -152,112 +154,208 @@ private fun ArtistScreenContent(
                             )
                         )
                 )
-                SafeImageViewer(
-                    model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
-                    modifier = Modifier
-                        .padding(horizontal = 6.67.dp)
-                        .padding(top = 31.dp)
-                        .size(160.dp)
-                        .clip(CircleShape),
-                    contentDescription = stringResource(R.string.artist_image),
-                    nudeThreshold = 0.0,
-                    nonNudeThreshold = 0.0
-                )
-            }
-
-            BasicText(
-                modifier = Modifier.padding(start = 16.dp),
-                text = state.artist.name,
-                style = Theme.textStyle.headline.mediumMedium18
-                    .copy(color = Theme.color.surfaces.onSurface),
-            )
-
-            BasicText(
-                modifier = Modifier.padding(start = 16.dp, top = 4.dp),
-                text = state.artist.department,
-                style = Theme.textStyle.label.smallRegular14
-                    .copy(color = Theme.color.surfaces.onSurfaceVariant),
-            )
-
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.padding(top = 16.dp),
-                contentPadding = PaddingValues(horizontal = 16.dp)
-            ) {
-                val lastWord = state.artist.country
-                    ?.trim()
-                    ?.let { full ->
-                        val partsByComma = full.split(",")
-                        val lastPart = partsByComma.lastOrNull()?.trim().orEmpty()
-
-                        lastPart.split(" ").lastOrNull()?.trim()
-                    }
-                    ?.takeIf { it.isNotBlank() }
-                val birthDate = state.artist.birthDate
-                if (birthDate != null) {
-                    item {
-                        InfoChip(
-                            text = formatBirthDateLegacy(state.artist.birthDate),
-                            imgRes = R.drawable.date,
+                when (state.screenStatus) {
+                    ArtistScreenState.ScreenStatus.LOADING -> {
+                        LoadingMovieImage(
+                            Modifier
+                                .padding(top = 31.dp)
+                                .clip(CircleShape)
+                                .size(160.dp)
                         )
                     }
-                }
-                if (lastWord != null) {
-                    item {
-                        InfoChip(
-                            text = state.artist.country,
-                            imgRes = R.drawable.component_1,
+
+                    ArtistScreenState.ScreenStatus.SUCCESS -> {
+                        SafeImageViewer(
+                            model = BuildConfig.IMAGE_BASE_URL + state.artist.photoPath,
+                            modifier = Modifier
+                                .padding(horizontal = 6.67.dp)
+                                .padding(top = 31.dp)
+                                .size(160.dp)
+                                .clip(CircleShape),
+                            contentDescription = stringResource(R.string.artist_image),
+                            nudeThreshold = 0.0,
+                            nonNudeThreshold = 0.0,
+                            loadingPlaceholder = {
+                                LoadingMovieImage(
+                                    Modifier
+                                        .clip(CircleShape)
+                                        .size(160.dp)
+                                )
+                            }
                         )
                     }
+
+                    ArtistScreenState.ScreenStatus.FAILED -> {}
                 }
             }
-
-            ExpandableText(
-                text = state.artist.biography,
-                color = Theme.color.surfaces.onSurface,
-                style = Theme.textStyle.label.smallRegular14,
-                modifier = Modifier
-                    .padding(vertical = 16.dp)
-                    .padding(horizontal = 16.dp),
-                collapsedMaxLine = 5,
-                showMoreText = "...Read More",
-                showMoreColor = Theme.color.surfaces.onSurfaceVariant,
-                showLessText = "...Read Less"
-            )
-
-            BasicText(
-                modifier = Modifier.padding(start = 16.dp, top = 32.dp, bottom = 12.dp),
-                text = stringResource(R.string.known_for),
-                style = Theme.textStyle.title.mediumMedium16
-                    .copy(color = Theme.color.surfaces.onSurface)
-
-            )
-
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(horizontal = 16.dp)
-            ) {
-                items(state.knownForMovies) { movie ->
-                    MovieCard(
-                        title = movie.title,
-                        vote = movie.rating,
-                        imgUrl = movie.posterPath,
-                        width = 124.dp,
-                        aspectRatio = 0.67f,
-                        modifier = Modifier.clickable { listener.onMovieClick(movie.id) }
+            when (state.screenStatus) {
+                ArtistScreenState.ScreenStatus.LOADING -> {
+                    LoadingMovieImage(
+                        Modifier
+                            .padding(horizontal = 16.dp)
+                            .clip(CircleShape)
+                            .size(width = 60.dp, height = 32.dp)
                     )
                 }
 
-                items(state.KnownForSeries) { series ->
-                    MovieCard(
-                        title = series.title,
-                        vote = series.rating,
-                        imgUrl = series.posterPath,
-                        width = 124.dp,
-                        aspectRatio = 0.67f,
-                        modifier = Modifier.clickable { listener.onMovieClick(series.id) }
+                ArtistScreenState.ScreenStatus.SUCCESS -> {
+                    BasicText(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        text = state.artist.name,
+                        style = Theme.textStyle.headline.mediumMedium18
+                            .copy(color = Theme.color.surfaces.onSurface),
                     )
                 }
+
+                ArtistScreenState.ScreenStatus.FAILED -> {}
+            }
+            when (state.screenStatus) {
+                ArtistScreenState.ScreenStatus.LOADING -> {
+                    LoadingMovieImage(
+                        Modifier
+                            .padding(start = 16.dp, top = 4.dp)
+                            .clip(CircleShape)
+                            .size(width = 60.dp, height = 32.dp)
+                    )
+                }
+
+                ArtistScreenState.ScreenStatus.SUCCESS -> {
+                    BasicText(
+                        modifier = Modifier.padding(start = 16.dp, top = 4.dp),
+                        text = state.artist.department,
+                        style = Theme.textStyle.label.smallRegular14
+                            .copy(color = Theme.color.surfaces.onSurfaceVariant),
+                    )
+                }
+
+                ArtistScreenState.ScreenStatus.FAILED -> {}
+            }
+            when (state.screenStatus) {
+                ArtistScreenState.ScreenStatus.LOADING -> {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        repeat(2) {
+                            LoadingMovieImage(
+                                Modifier
+                                    .padding(top = 16.dp, start = 16.dp)
+                                    .clip(CircleShape)
+                                    .size(width = 60.dp, height = 32.dp)
+                            )
+                        }
+                    }
+                }
+
+                ArtistScreenState.ScreenStatus.SUCCESS -> {
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.padding(top = 16.dp),
+                        contentPadding = PaddingValues(horizontal = 16.dp)
+                    ) {
+                        val lastWord = state.artist.country
+                            .trim()
+                            .let { full ->
+                                val partsByComma = full.split(",")
+                                val lastPart = partsByComma.lastOrNull()?.trim().orEmpty()
+                                lastPart.split(" ").lastOrNull()?.trim()
+                            }
+                            ?.takeIf { it.isNotBlank() }
+                        item {
+                            InfoChip(
+                                text = formatBirthDateLegacy(state.artist.birthDate),
+                                imgRes = R.drawable.date,
+                            )
+                        }
+                        if (lastWord != null) {
+                            item {
+                                InfoChip(
+                                    text = state.artist.country,
+                                    imgRes = R.drawable.component_1,
+                                )
+                            }
+                        }
+                    }
+                }
+
+                ArtistScreenState.ScreenStatus.FAILED -> {}
+            }
+            when (state.screenStatus) {
+                ArtistScreenState.ScreenStatus.LOADING -> {
+                    LoadingMovieImage(
+                        Modifier
+                            .padding(16.dp)
+                            .height(120.dp)
+                            .fillMaxWidth()
+                    )
+                }
+
+                ArtistScreenState.ScreenStatus.SUCCESS -> {
+                    ExpandableText(
+                        text = state.artist.biography,
+                        color = Theme.color.surfaces.onSurface,
+                        style = Theme.textStyle.label.smallRegular14,
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth(),
+                        collapsedMaxLine = 5,
+                        showMoreText = "...Read More",
+                        showMoreColor = Theme.color.surfaces.onSurfaceVariant,
+                        showLessText = "...Read Less"
+                    )
+                }
+
+                ArtistScreenState.ScreenStatus.FAILED -> {}
+            }
+            when (state.screenStatus) {
+                ArtistScreenState.ScreenStatus.LOADING -> {
+                    LoadingMovieImage(
+                        Modifier.size(height = 32.dp, width = 64.dp)
+                    )
+                    LazyRow {
+                        items(10) {
+                            LoadingMovieCard()
+                        }
+                    }
+                }
+
+                ArtistScreenState.ScreenStatus.SUCCESS -> {
+                    if (state.knownForMovies.isNotEmpty() || state.KnownForSeries.isNotEmpty()) {
+                        BasicText(
+                            modifier = Modifier.padding(start = 16.dp, top = 32.dp, bottom = 12.dp),
+                            text = stringResource(R.string.known_for),
+                            style = Theme.textStyle.title.mediumMedium16
+                                .copy(color = Theme.color.surfaces.onSurface)
+                        )
+                        LazyRow(
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            contentPadding = PaddingValues(horizontal = 16.dp)
+                        ) {
+                            items(state.knownForMovies) { movie ->
+                                MovieCard(
+                                    title = movie.title,
+                                    vote = movie.rating,
+                                    imgUrl = movie.posterPath,
+                                    width = 124.dp,
+                                    aspectRatio = 0.67f,
+                                    modifier = Modifier.clickable { listener.onMovieClick(movie.id) }
+                                )
+                            }
+                            items(state.KnownForSeries) { series ->
+                                MovieCard(
+                                    title = series.title,
+                                    vote = series.rating,
+                                    imgUrl = series.posterPath,
+                                    width = 124.dp,
+                                    aspectRatio = 0.67f,
+                                    modifier = Modifier.clickable { listener.onMovieClick(series.id) }
+                                )
+                            }
+                        }
+                    }
+                }
+
+                ArtistScreenState.ScreenStatus.FAILED -> {}
             }
         }
         AppBar(
