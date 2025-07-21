@@ -99,7 +99,7 @@ private fun LoginScreenContent(
             value = uiState.password,
             onValueChange = { interactionListener.onPasswordChange(it) },
             placeholder = stringResource(R.string.password),
-            isPasswordField = true,
+            isPasswordField = !uiState.isPasswordVisible,
             leadingIcon = R.drawable.lock,
             trailingIcon = if (uiState.isPasswordVisible) R.drawable.eye else R.drawable.close_eye,
             onTrailingIconClick = { interactionListener.onPasswordVisibilityIconClick() },
