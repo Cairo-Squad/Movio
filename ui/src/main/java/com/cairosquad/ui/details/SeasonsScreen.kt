@@ -20,13 +20,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.theme.Theme
+import com.cairosquad.ui.movio_component.LoadingMovieImage
 import com.cairosquad.ui.movio_component.SeasonCard
 import com.cairosquad.ui.navigation.EpisodesRoute
 import com.cairosquad.ui.navigation.LocalNavController
@@ -41,8 +41,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun SeasonsScreen(
     seriesId: Long,
-    seasonNumber: Int = 1,
-    viewModel: SeasonsViewModel = koinViewModel{ parametersOf(seriesId, seasonNumber) }
+    viewModel: SeasonsViewModel = koinViewModel { parametersOf(seriesId) }
 ) {
     val uiState by viewModel.screenState.collectAsStateWithLifecycle()
     val navController = LocalNavController.current
@@ -50,7 +49,12 @@ fun SeasonsScreen(
     ObserveAsEffect(viewModel.effect) { effect ->
         when (effect) {
             SeasonDetailEffect.NavigateBack -> navController.popBackStack()
-            is SeasonDetailEffect.NavigateToEpisodesScreen -> navController.navigate(EpisodesRoute(effect.seriesId, effect.seasonNumber))
+            is SeasonDetailEffect.NavigateToEpisodesScreen -> navController.navigate(
+                EpisodesRoute(
+                    effect.seriesId,
+                    effect.seasonNumber
+                )
+            )
 
         }
     }
@@ -65,19 +69,15 @@ fun SeasonsScreen(
 fun SeasonScreenContent(
     uiState: SeasonDetailsScreenState,
     listener: SeasonDetailsInteractionListener
-){
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Theme.color.surfaces.surface)
-    ){
+) {
+    Box {
         Box(
             modifier = Modifier
                 .windowInsetsPadding(WindowInsets.statusBars)
                 .size(230.dp)
                 .blur(264.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
                 .background(
-                    color = Color(0x33734EF8),
+                    color = Theme.color.surfaces.onSurfaceAt5,
                     shape = CircleShape
                 )
                 .align(Alignment.TopEnd)
@@ -92,25 +92,42 @@ fun SeasonScreenContent(
             stickyHeader {
                 AppBar(
                     title = stringResource(R.string.current_season),
-                    onBackButtonClicked = listener::onBackClicked,
-                    modifier = Modifier.background(Theme.color.surfaces.surface)
+                    onBackButtonClicked = listener::onBackClicked
                 )
             }
-            items(uiState.season) { season ->
-                SeasonCard(
-                    seriesName = uiState.seriesTitle,
-                    seasonTitle =season.name,
-                    seasonRate=season.rating,
-                    totalNumberOfEpisodes = season.episodesCount.toString(),
-                    movieImage = season.posterPath,
-                    yearOfPublish = season.airDate,
-                    timeOfPublish = season.timeOfPublish,
-                    currentSeason = "${season.number}",
-                    onClick ={ listener.onSeasonClicked(season.seriesId, season.number)},
-                    modifier=Modifier
-                        .height(100.dp)
-                        .fillMaxWidth(),
-                )
+            when (uiState.seasonSectionState) {
+                SeasonDetailsScreenState.ScreenStatus.INITIAL -> {}
+                SeasonDetailsScreenState.ScreenStatus.LOADING -> {
+                    items(10) {
+                        LoadingMovieImage(
+                            Modifier
+                                .height(100.dp)
+                                .fillMaxWidth()
+                        )
+                    }
+                }
+
+                SeasonDetailsScreenState.ScreenStatus.SUCCESS -> {
+                    items(uiState.season) { season ->
+                        SeasonCard(
+                            seriesName = uiState.seriesTitle,
+                            seasonTitle = season.name,
+                            seasonRate = season.rating,
+                            totalNumberOfEpisodes = season.episodesCount.toString(),
+                            movieImage = season.posterPath,
+                            yearOfPublish = season.airDate,
+                            timeOfPublish = season.timeOfPublish,
+                            currentSeason = "${season.number}",
+                            onClick = { listener.onSeasonClicked(season.seriesId, season.number) },
+                            modifier = Modifier
+                                .height(100.dp)
+                                .fillMaxWidth(),
+                        )
+                    }
+
+                }
+
+                SeasonDetailsScreenState.ScreenStatus.ERROR -> {}
             }
         }
     }

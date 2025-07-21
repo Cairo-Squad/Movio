@@ -59,11 +59,10 @@ val viewModelModule = module {
         SeriesDetailsViewModel(seriesDetailsUseCase = get(), seriesId = seriesId)
     }
 
-    viewModel { (seriesId: Long, seasonNumber: Int) ->
+    viewModel { (seriesId: Long) ->
         SeasonsViewModel(
             seriesDetailsUseCase = get(),
             seriesId = seriesId,
-            seasonNumber = seasonNumber
         )
     }
 
