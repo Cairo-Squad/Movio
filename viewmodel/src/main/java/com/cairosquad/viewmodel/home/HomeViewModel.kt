@@ -1,6 +1,18 @@
 package com.cairosquad.viewmodel.home
 
 import com.cairosquad.domain.exception.MovioException
+import com.cairosquad.domain.usecase.movies.GetFreeToWatchMoviesUseCase
+import com.cairosquad.domain.usecase.movies.GetMoreRecommendedMoviesUseCase
+import com.cairosquad.domain.usecase.movies.GetNowPlayingMoviesUseCase
+import com.cairosquad.domain.usecase.movies.GetRandomMoviesUseCase
+import com.cairosquad.domain.usecase.movies.GetTopRatingMoviesUseCase
+import com.cairosquad.domain.usecase.movies.GetTrendingMoviesUseCase
+import com.cairosquad.domain.usecase.movies.GetUpcomingMoviesUseCase
+import com.cairosquad.domain.usecase.series.GetAiringTodaySeriesUseCase
+import com.cairosquad.domain.usecase.series.GetMoreRecommendedSeriesUseCase
+import com.cairosquad.domain.usecase.series.GetOnTvSeriesUseCase
+import com.cairosquad.domain.usecase.series.GetRandomSeriesUseCase
+import com.cairosquad.domain.usecase.series.GetTopRatingSeriesUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
@@ -16,30 +28,47 @@ class HomeViewModel(
     private val getAiringTodaySeriesUseCase: GetAiringTodaySeriesUseCase,
     private val getMoreRecommendedSeriesUseCase: GetMoreRecommendedSeriesUseCase,
     private val getOnTvSeriesUseCase: GetOnTvSeriesUseCase,
-    private val getTopRatingSeriesUseCase: GetTopRatingSeriesUseCase
+    private val getTopRatingSeriesUseCase: GetTopRatingSeriesUseCase,
+    private val getRandomSeriesUseCase: GetRandomSeriesUseCase,
+    private val getRandomMoviesUseCase: GetRandomMoviesUseCase,
 
 
-)  : BaseViewModel<HomeScreenState,HomeEffect>(HomeScreenState()),
-    HomeInteractionsListener{
+
+) : BaseViewModel<HomeScreenState, HomeEffect>(initialState = HomeScreenState()),
+    HomeInteractionsListener {
+
     init {
         loadHomeData()
     }
 
     private fun loadHomeData() {
+        loadRandomSeries()
+        loadRandomMovies()
         loadTopRatingMovies()
         loadTrendingMovies()
-
+        loadNowPlayingMovies()
+        loadFreeToWatchMovies()
+        loadUpcomingMovies()
+        loadMoreRecommendedMovies()
+        loadTopRatingSeries()
+        loadAiringTodaySeries()
+        loadOnTvSeries()
+        loadMoreRecommendedSeries()
     }
+
     private fun loadTopRatingMovies() {
         tryToCall(
-            onStart = {
-                updateState { it.copy(screenStatus = HomeScreenState.ScreenStatus.LOADING) }
+            block = {
+                updateState { it.copy(
+                    screenStatus = HomeScreenState.ScreenStatus.LOADING
+                ) }
+                 getTopRatingMoviesUseCase.getTopRatingMovies(1).map { it.toHomeMovieUiState() }
+
             },
-            block = { getTopRatingMoviesUseCase() },
             onSuccess = { movies ->
                 updateState {
                     it.copy(
-                        topRatingMovies = movies.map { it.toHomeMovieUiState() },
+                        topRatingMovies = movies,
                         screenStatus = HomeScreenState.ScreenStatus.SUCCESS
                     )
                 }
@@ -53,18 +82,18 @@ class HomeViewModel(
                 }
             },
 
-        )
+            )
     }
-    private fun loadNowPlayingMovies()
-    {
+
+    private fun loadNowPlayingMovies() {
         tryToCall(
-            block = {getNowPlayingMoviesUseCase()},
+            block = { getNowPlayingMoviesUseCase.getNowPlayingMovies(1).map { it.toHomeMovieUiState() } },
             onSuccess = { movies ->
                 updateState {
-                    it.copy(nowPlayingMovies=movies.map{it.toHomeMovieUiState()})
+                    it.copy(nowPlayingMovies = movies)
                 }
             },
-            onError =  { throwable ->
+            onError = { throwable ->
                 updateState {
                     it.copy(errorStatus = handleHomeException(throwable))
                 }
@@ -73,12 +102,13 @@ class HomeViewModel(
 
 
     }
+
     private fun loadTrendingMovies() {
         tryToCall(
-            block = { getTrendingMoviesUseCase() },
+            block = { getTrendingMoviesUseCase .getTrendingMovies(1).map { it.toHomeMovieUiState() }},
             onSuccess = { movies ->
                 updateState {
-                    it.copy(trendingMovies = movies.map { it.toHomeMovieUiState() })
+                    it.copy(trendingMovies = movies)
                 }
             },
             onError = { throwable ->
@@ -91,10 +121,10 @@ class HomeViewModel(
 
     private fun loadFreeToWatchMovies() {
         tryToCall(
-            block = { getFreeToWatchMoviesUseCase() },
+            block = { getFreeToWatchMoviesUseCase.getFreeToWatchMovies(1).map { it.toHomeMovieUiState() }},
             onSuccess = { movies ->
                 updateState {
-                    it.copy(freeToWatchMovies = movies.map { it.toHomeMovieUiState() })
+                    it.copy(freeToWatchMovies = movies)
                 }
             },
             onError = { throwable ->
@@ -107,10 +137,10 @@ class HomeViewModel(
 
     private fun loadUpcomingMovies() {
         tryToCall(
-            block = { getUpcomingMoviesUseCase() },
+            block = { getUpcomingMoviesUseCase.getUpcomingMovies(1).map { it.toHomeMovieUiState() }},
             onSuccess = { movies ->
                 updateState {
-                    it.copy(upcomingMovies = movies.map { it.toHomeMovieUiState() })
+                    it.copy(upcomingMovies = movies)
                 }
             },
             onError = { throwable ->
@@ -123,10 +153,10 @@ class HomeViewModel(
 
     private fun loadMoreRecommendedMovies() {
         tryToCall(
-            block = { getMoreRecommendedMoviesUseCase() },
+            block = { getMoreRecommendedMoviesUseCase.getMoreRecommendedMovies(1).map { it.toHomeMovieUiState() } },
             onSuccess = { movies ->
                 updateState {
-                    it.copy(moreRecommendedMovies = movies.map { it.toHomeMovieUiState() })
+                    it.copy(moreRecommendedMovies = movies)
                 }
             },
             onError = { throwable ->
@@ -134,16 +164,17 @@ class HomeViewModel(
                     it.copy(errorStatus = handleHomeException(throwable))
                 }
             },
-            dispatcher = Dispatchers.IO
         )
     }
 
     private fun loadTopRatingSeries() {
         tryToCall(
-            block = { getTopRatingSeriesUseCase() },
+            block = { getTopRatingSeriesUseCase.getTopRatingSeries(1)
+                .map { it.toHomeSeriesUiState() }
+                  },
             onSuccess = { series ->
                 updateState {
-                    it.copy(topRatingSeries = series.map { it.toHomeSeriesUiState() })
+                    it.copy(topRatingSeries = series)
                 }
             },
             onError = { throwable ->
@@ -156,10 +187,10 @@ class HomeViewModel(
 
     private fun loadAiringTodaySeries() {
         tryToCall(
-            block = { getAiringTodaySeriesUseCase() },
+            block = { getAiringTodaySeriesUseCase.getAiringTodaySeries(1).map { it.toHomeSeriesUiState() }},
             onSuccess = { series ->
                 updateState {
-                    it.copy(airingTodaySeries = series.map { it.toHomeSeriesUiState() })
+                    it.copy(airingTodaySeries = series)
                 }
             },
             onError = { throwable ->
@@ -168,15 +199,15 @@ class HomeViewModel(
                 }
             },
 
-        )
+            )
     }
 
     private fun loadOnTvSeries() {
         tryToCall(
-            block = { getOnTvSeriesUseCase() },
+            block = { getOnTvSeriesUseCase.getOnTvSeries(1).map { it.toHomeSeriesUiState() }},
             onSuccess = { series ->
                 updateState {
-                    it.copy(onTvSeries = series.map { it.toHomeSeriesUiState() })
+                    it.copy(onTvSeries = series)
                 }
             },
             onError = { throwable ->
@@ -184,16 +215,15 @@ class HomeViewModel(
                     it.copy(errorStatus = handleHomeException(throwable))
                 }
             },
-            dispatcher = Dispatchers.IO
         )
     }
 
     private fun loadMoreRecommendedSeries() {
         tryToCall(
-            block = { getMoreRecommendedSeriesUseCase() },
+            block = { getMoreRecommendedSeriesUseCase.getMoreRecommendedSeries(1) .map { it.toHomeSeriesUiState() }},
             onSuccess = { series ->
                 updateState {
-                    it.copy(moreRecommendedSeries = series.map { it.toHomeSeriesUiState() })
+                    it.copy(moreRecommendedSeries = series)
                 }
             },
             onError = { throwable ->
@@ -203,14 +233,50 @@ class HomeViewModel(
             },
         )
     }
+    private fun loadRandomMovies() {
+        tryToCall(
+            block = { getRandomMoviesUseCase.getRandomMovies(1).map { it.toHomeMovieUiState() } },
+            onSuccess = { movies ->
+                updateState {
+                    it.copy(randomMovies = movies)
+                }
+            },
+            onError = { throwable ->
+                updateState {
+                    it.copy(errorStatus = handleHomeException(throwable))
+                }
+            },
+        )
+
+
+    }
+
+    private fun loadRandomSeries() {
+        tryToCall(
+            block = {
+                getRandomSeriesUseCase.getRandomSeries(1).map { it.toHomeSeriesUiState() }
+            },
+            onSuccess = { series ->
+                updateState {
+                    it.copy(randomSeries = series)
+                }
+            },
+            onError = { throwable ->
+                updateState {
+                    it.copy(errorStatus = handleHomeException(throwable))
+                }
+            },
+        )
+    }
+
     override fun onClickProfile() {
         sendEffect(HomeEffect.NavigateToProfile)
     }
 
     override fun onClickTab(tabType: HomeScreenState.TabType) {
-       updateState {
-           it.copy(selectedTap=tabType)
-       }
+        updateState {
+            it.copy(selectedTab = tabType)
+        }
     }
 
     override fun onClickMovie(movieId: Long) {
@@ -221,7 +287,7 @@ class HomeViewModel(
         sendEffect(HomeEffect.NavigateSeries(seriesId))
     }
 
-    override fun onClickSeeAllTopRated(isMovie :Boolean ) {
+    override fun onClickSeeAllTopRated(isMovie: Boolean) {
         sendEffect(HomeEffect.NavigateToSeeAllTopRated(isMovie))
     }
 
@@ -237,7 +303,7 @@ class HomeViewModel(
         sendEffect(HomeEffect.NavigateToSeeAllUpcoming)
     }
 
-    override fun onClickSeeAllMoreRecommended(isMovie:Boolean) {
+    override fun onClickSeeAllMoreRecommended(isMovie: Boolean) {
         sendEffect(HomeEffect.NavigateToSeeAllMoreRecommended(isMovie))
     }
 
@@ -248,6 +314,7 @@ class HomeViewModel(
     override fun onClickSeeAllOnTv() {
         sendEffect(HomeEffect.NavigateToSeeAllOnTv)
     }
+
     private fun handleHomeException(e: Throwable): ErrorStatus {
         return when (e) {
             is MovioException -> {

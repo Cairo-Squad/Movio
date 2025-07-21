@@ -10,6 +10,7 @@ import com.cairosquad.viewmodel.details.series.season.SeasonsViewModel
 import com.cairosquad.viewmodel.details.similar_movies.SimilarMoviesViewModel
 import com.cairosquad.viewmodel.details.similar_series.SimilarSeriesViewModel
 import com.cairosquad.viewmodel.details.top_cast.TopCastViewModel
+import com.cairosquad.viewmodel.home.HomeViewModel
 import com.cairosquad.viewmodel.search.SearchViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
@@ -65,5 +66,6 @@ val viewModelModule = module {
     }
 
     viewModelOf(::SimilarSeriesViewModel)
+    viewModelOf(::HomeViewModel)
 
 }

@@ -3,7 +3,7 @@ package com.cairosquad.viewmodel.home
 import com.cairosquad.entity.Genre
 import com.cairosquad.viewmodel.exception.ErrorStatus
 
-class HomeScreenState (
+data class HomeScreenState (
     val topRatingMovies: List<MovieUiState> = emptyList(),
     val trendingMovies: List<MovieUiState> = emptyList(),
     val freeToWatchMovies: List<MovieUiState> = emptyList(),
@@ -14,6 +14,8 @@ class HomeScreenState (
     val airingTodaySeries: List<SeriesUiState> = emptyList(),
     val onTvSeries: List<SeriesUiState> = emptyList(),
     val moreRecommendedSeries: List<SeriesUiState> = emptyList(),
+    val randomMovies:List<MovieUiState> = emptyList(),
+    val randomSeries: List<SeriesUiState> = emptyList(),
     val screenStatus: HomeScreenState.ScreenStatus = HomeScreenState.ScreenStatus.LOADING,
     val errorStatus: ErrorStatus? = null,
     val selectedTab: TabType = TabType.ALL,
