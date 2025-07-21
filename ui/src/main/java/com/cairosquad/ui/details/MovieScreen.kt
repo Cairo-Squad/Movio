@@ -456,7 +456,7 @@ fun MovieContent(
                     MovieScreenState.ScreenStatus.INITIAL -> {}
                     MovieScreenState.ScreenStatus.LOADING -> {
                         SectionLoading(
-                            headerName = stringResource(R.string.similar_series),
+                            headerName = stringResource(R.string.similar_movies),
                             sectionLoadingItem = {
                                 LoadingMovieCard(
                                     height = 160.dp

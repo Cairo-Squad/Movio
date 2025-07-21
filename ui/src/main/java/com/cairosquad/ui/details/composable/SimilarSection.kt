@@ -63,7 +63,7 @@ fun SimilarMoviesSection(
 ) {
     SectionHeader(
         modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-        title = stringResource(R.string.similar_series),
+        title = stringResource(R.string.similar_movies),
         actionText = stringResource(R.string.see_all),
         actionIcon = ImageVector.vectorResource(R.drawable.arrow),
         onActionClick = onActionClicked
