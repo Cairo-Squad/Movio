@@ -141,7 +141,7 @@ jobs:
           echo "KEY_ALIAS = $KEY_ALIAS" >> secret.properties
           echo "KEY_PASSWORD = $KEYSTORE_PASSWORD" >> secret.properties
           echo "API_KEY = \"$MOVIES_API_KEY\"" >> secret.properties
-          echo "IMAGE_BASE_URL = "$IMAGE_BASE_URL"" >> secret.properties
+          echo "IMAGE_BASE_URL = \"$IMAGE_BASE_URL\"" >> secret.properties
 
           # Build signed release APK
           ./gradlew test koverHtmlReport --build-cache
