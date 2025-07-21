@@ -21,6 +21,7 @@ import com.cairosquad.ui.details.TopCastScreen
 import com.cairosquad.ui.details.artist.ArtistScreen
 import com.cairosquad.ui.details.similar_movies.SimilarMoviesScreen
 import com.cairosquad.ui.details.similar_series.SimilarSeriesScreen
+import com.cairosquad.ui.login.ForgetPasswordWebViewScreen
 import com.cairosquad.ui.login.LoginScreen
 import com.cairosquad.ui.search.ForYouScreen
 import com.cairosquad.ui.splash.SplashScreen
@@ -50,6 +51,11 @@ fun AppNavigation() {
 
             composable<LoginRoute> {
                 LoginScreen()
+            }
+
+            composable<ForgetPasswordWebViewRoute> { backStackEntry ->
+                val route = backStackEntry.toRoute<ForgetPasswordWebViewRoute>()
+                ForgetPasswordWebViewScreen(url = route.url)
             }
 
             composable<AppRoute> {

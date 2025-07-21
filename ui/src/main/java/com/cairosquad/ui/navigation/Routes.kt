@@ -9,6 +9,11 @@ data object SplashRoute
 data object LoginRoute
 
 @Serializable
+data class ForgetPasswordWebViewRoute(
+    val url: String
+)
+
+@Serializable
 data object AppRoute
 
 @Serializable
