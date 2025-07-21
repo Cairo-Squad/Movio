@@ -111,7 +111,7 @@ private fun LoginScreenContent(
             placeholder = stringResource(R.string.password),
             isPasswordField = true,
             leadingIcon = R.drawable.lock,
-            trailingIcon = if (uiState.isPasswordVisible) R.drawable.eye else R.drawable.close_eye,
+            trailingIcon = if (uiState.error != null) R.drawable.eye else R.drawable.close_eye,
             onTrailingIconClick = { interactionListener.onPasswordVisibilityIconClick() },
             modifier = Modifier.padding(bottom = 12.dp)
         )
@@ -120,7 +120,7 @@ private fun LoginScreenContent(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             this@Column.AnimatedVisibility(
-                visible = uiState.isPasswordIncorrect,
+                visible = uiState.error != null,
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
