@@ -76,6 +76,7 @@ dependencies {
     implementation(libs.converter.kotlinx.serialization)
     implementation (libs.okhttp)
     testImplementation(kotlin("test"))
+    testImplementation(libs.mockwebserver)
 
 
     testImplementation(libs.kotlinx.coroutines.test)

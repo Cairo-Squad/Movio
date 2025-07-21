@@ -2,6 +2,7 @@
 agp = "8.5.2"
 
 converterKotlinxSerialization = "3.0.0"
+mockwebserver = "5.1.0"
 okhttp = "5.0.0"
 retrofit = "3.0.0"
 lottieCompose = "6.6.7"
@@ -83,6 +84,7 @@ coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "mockwebserver" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging_version" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
