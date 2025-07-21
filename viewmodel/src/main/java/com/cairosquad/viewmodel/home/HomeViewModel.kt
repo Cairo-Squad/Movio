@@ -1,8 +1,18 @@
 package com.cairosquad.viewmodel.home
 
 import com.cairosquad.domain.exception.MovioException
-import com.cairosquad.domain.usecase.movies.*
-import com.cairosquad.domain.usecase.series.*
+import com.cairosquad.domain.usecase.movies.GetFreeToWatchMoviesUseCase
+import com.cairosquad.domain.usecase.movies.GetMoreRecommendedMoviesUseCase
+import com.cairosquad.domain.usecase.movies.GetNowPlayingMoviesUseCase
+import com.cairosquad.domain.usecase.movies.GetRandomMoviesUseCase
+import com.cairosquad.domain.usecase.movies.GetTopRatingMoviesUseCase
+import com.cairosquad.domain.usecase.movies.GetTrendingMoviesUseCase
+import com.cairosquad.domain.usecase.movies.GetUpcomingMoviesUseCase
+import com.cairosquad.domain.usecase.series.GetAiringTodaySeriesUseCase
+import com.cairosquad.domain.usecase.series.GetMoreRecommendedSeriesUseCase
+import com.cairosquad.domain.usecase.series.GetOnTvSeriesUseCase
+import com.cairosquad.domain.usecase.series.GetRandomSeriesUseCase
+import com.cairosquad.domain.usecase.series.GetTopRatingSeriesUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
@@ -41,7 +51,6 @@ class HomeViewModel(
         loadOnTvSeries()
         loadMoreRecommendedSeries()
     }
-
 
 
     private fun loadTopRatingMovies() {
@@ -203,11 +212,14 @@ class HomeViewModel(
             )
         }
     }
+
     private fun handleHomeException(e: Throwable): ErrorStatus {
         return when (e) {
             is MovioException -> exceptionToErrorStatus(e)
             else -> ErrorStatus.UNKNOWN_ERROR
         }
     }
-
 }
+
+
+
