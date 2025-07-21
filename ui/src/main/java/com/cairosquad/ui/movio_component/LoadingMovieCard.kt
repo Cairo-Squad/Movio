@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.preview.MultiThemePreviews
@@ -31,7 +32,10 @@ import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 
 @Composable
-fun LoadingMovieCard(modifier: Modifier = Modifier) {
+fun LoadingMovieCard(
+    height: Dp = 136.dp,
+    modifier: Modifier = Modifier
+) {
     val infiniteTransition = rememberInfiniteTransition(label = stringResource(R.string.loading_animation))
 
     val shimmerEffectAnimation by infiniteTransition.animateFloat(
@@ -58,7 +62,7 @@ fun LoadingMovieCard(modifier: Modifier = Modifier) {
         ) {
             Box(
                 modifier = Modifier
-                    .height(136.dp)
+                    .height(height)
                     .fillMaxWidth()
                     .background(
                         Theme.color.surfaces.surfaceContainer,

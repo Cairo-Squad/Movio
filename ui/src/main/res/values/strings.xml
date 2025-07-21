@@ -16,4 +16,5 @@
     <string name="create_list_title">Create a new list</string>
     <string name="add_to_list_icon">Add to List Icon</string>
     <string name="create_new_list">Create new list</string>
+    <string name="submit">Submit</string>
 </resources>

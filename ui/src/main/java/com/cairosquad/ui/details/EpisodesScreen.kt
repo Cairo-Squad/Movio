@@ -39,7 +39,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
+import com.cairosquad.design_system.basic_component.AppDropDownMenu
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import com.cairosquad.ui.navigation.LocalNavController
@@ -51,8 +53,6 @@ import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsViewModel
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-import com.cairosquad.design_system.R
-import com.cairosquad.design_system.basic_component.AppDropDownMenu
 
 @Composable
 fun EpisodesScreen(
