@@ -104,6 +104,7 @@ fun SafeImageViewer(
     // UI-related
     placeholder: Painter = painterResource(R.drawable.placeholder),
     error: Painter = painterResource(R.drawable.error),
+    onIsImageSafeChanged: (Boolean) -> Unit = {},
     loadingPlaceholder: @Composable () -> Unit = {},
     onToggleBlur: (@Composable () -> Unit)? = null,
 ) {
@@ -113,6 +114,8 @@ fun SafeImageViewer(
     var hasClassificationCompleted by remember { mutableStateOf(false) }
     var isBlurEnabled by remember { mutableStateOf(true) }
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
+
+    LaunchedEffect(isImageSafe) { onIsImageSafeChanged(isImageSafe) }
 
     LaunchedEffect(model) {
         hasClassificationCompleted = false

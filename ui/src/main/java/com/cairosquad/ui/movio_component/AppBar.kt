@@ -30,20 +30,20 @@ fun AppBar(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 10.dp),
+            .padding(horizontal = 16.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             modifier = Modifier.size(height = 28.dp, width = 25.dp),
             imageVector = ImageVector.vectorResource(R.drawable.logo),
-            contentDescription = stringResource(R.string.more)
+            contentDescription = stringResource(R.string.movio)
         )
         BasicText(
             modifier = Modifier
                 .padding(horizontal = 8.dp)
                 .weight(1f),
             text = stringResource(R.string.movio),
-            style = Theme.textStyle.display.largeBold24.copy(
+            style = Theme.textStyle.display.largeBold18.copy(
                 brush = Brush.verticalGradient(
                     colors = listOf(
                         Theme.color.brand.onPrimary,
@@ -52,8 +52,10 @@ fun AppBar(modifier: Modifier = Modifier) {
                 )
             )
         )
-        Row(
+        Image(
             modifier = Modifier
+                .size(40.dp)
+                .padding(8.dp)
                 .clip(CircleShape)
                 .background(
                     brush = Brush.verticalGradient(
@@ -62,15 +64,11 @@ fun AppBar(modifier: Modifier = Modifier) {
                             Color(0xFFA491E9)
                         )
                     )
-                )
-        ) {
-            Image(
-                painter = painterResource(
-                    com.cairosquad.ui.R.drawable.user_profile
                 ),
-                contentDescription =  stringResource(com.cairosquad.ui.R.string.user_profile_image)
-            )
-        }
+            painter = painterResource(com.cairosquad.ui.R.drawable.user_profile),
+            contentDescription =  stringResource(com.cairosquad.ui.R.string.user_profile_image)
+        )
+
     }
 }
 

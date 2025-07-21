@@ -1,26 +1,16 @@
 package com.cairosquad.ui.home
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import com.cairosquad.design_system.theme.Theme
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import com.cairosquad.ui.home.content.HomeScreenContent
 
 @Composable
 fun HomeScreen() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        BasicText(
-            "Home Screen",
-            style = Theme.textStyle.title.mediumMedium16.copy(
-                color = Theme.color.surfaces.onSurface
-            ),
-        )
-    }
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
+
+    HomeScreenContent(selectedTabIndex, { selectedTabIndex = it })
 }
+
