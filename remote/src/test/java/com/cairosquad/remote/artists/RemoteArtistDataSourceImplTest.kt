@@ -40,7 +40,7 @@ class RemoteArtistDataSourceImplTest {
         // Given
         val artistId = 99L
         val response = MoviesListResponse(
-            cast = listOf(remoteMovies)
+            movies = listOf(remoteMovies)
         )
 
         coEvery { apiService.getMoviesOfArtist(artistId) } returns response
@@ -58,7 +58,7 @@ class RemoteArtistDataSourceImplTest {
         // Given
         val artistId = 7L
         val response = SeriesListResponse(
-            cast = listOf(remoteSeries)
+            series = listOf(remoteSeries)
         )
 
         coEvery { apiService.getSeriesOfArtist(artistId) } returns response

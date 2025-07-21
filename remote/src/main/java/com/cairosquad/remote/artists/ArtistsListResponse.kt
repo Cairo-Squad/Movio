@@ -2,14 +2,17 @@ package com.cairosquad.remote.artists
 
 import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.SeriesRemoteDto
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class MoviesListResponse(
-    val cast: List<MovieRemoteDto> = emptyList()
+    @SerialName("cast")
+    val movies: List<MovieRemoteDto> = emptyList()
 )
 
 @Serializable
 data class SeriesListResponse(
-    val cast: List<SeriesRemoteDto> = emptyList()
+    @SerialName("cast")
+    val series: List<SeriesRemoteDto> = emptyList()
 )
