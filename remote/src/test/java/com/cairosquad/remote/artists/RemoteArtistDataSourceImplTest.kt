@@ -2,7 +2,6 @@ package com.cairosquad.remote.artists
 
 import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.ResultResponse
 import com.cairosquad.repository.search.data_source.remote.dto.SeriesRemoteDto
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
@@ -11,7 +10,6 @@ import io.mockk.spyk
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
-
 
 class RemoteArtistDataSourceImplTest {
 
@@ -41,8 +39,8 @@ class RemoteArtistDataSourceImplTest {
     fun `getMoviesOfArtist should return list with non-null IDs`() = runTest {
         // Given
         val artistId = 99L
-        val response = ResultResponse(
-            results = listOf(remoteMovies)
+        val response = MoviesListResponse(
+            cast = listOf(remoteMovies)
         )
 
         coEvery { apiService.getMoviesOfArtist(artistId) } returns response
@@ -59,9 +57,10 @@ class RemoteArtistDataSourceImplTest {
     fun `getSeriesOfArtist should return list with non-null IDs`() = runTest {
         // Given
         val artistId = 7L
-        val response = ResultResponse(
-            results = listOf(remoteSeries)
+        val response = SeriesListResponse(
+            cast = listOf(remoteSeries)
         )
+
         coEvery { apiService.getSeriesOfArtist(artistId) } returns response
 
         // When
@@ -77,5 +76,4 @@ class RemoteArtistDataSourceImplTest {
         val remoteSeries = SeriesRemoteDto(id = 100, name = "Series A", posterPath = "/a.jpg")
         val expectedArtist = ArtistRemoteDto(id = 42, name = "Jane Doe", profilePath = "/jane.jpg")
     }
-
 }
