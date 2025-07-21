@@ -4,7 +4,7 @@ import com.cairosquad.viewmodel.exception.ErrorStatus
 
 data class SimilarSeriesScreenState(
     val series: List<SimilarSeriesUiState> = emptyList(),
-    val screenStatus: ScreenStatus = ScreenStatus.INITIAL,
+    val screenStatus: ScreenStatus = ScreenStatus.LOADING,
     val errorStatus: ErrorStatus? = null
 ) {
     data class SimilarSeriesUiState(
@@ -15,7 +15,6 @@ data class SimilarSeriesScreenState(
     )
 
     enum class ScreenStatus {
-        INITIAL,
         LOADING,
         ERROR,
         SUCCESS

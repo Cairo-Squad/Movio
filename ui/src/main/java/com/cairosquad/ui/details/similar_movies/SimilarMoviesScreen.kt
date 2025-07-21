@@ -67,7 +67,6 @@ fun SimilarMoviesScreen(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             when (state.screenStatus) {
-                SimilarMoviesScreenState.ScreenStatus.INITIAL -> {}
                 SimilarMoviesScreenState.ScreenStatus.LOADING -> {
                     items(20) {
                         LoadingMovieCard()
@@ -93,7 +92,5 @@ fun SimilarMoviesScreen(
                 SimilarMoviesScreenState.ScreenStatus.ERROR -> {}
             }
         }
-
     }
-
 }

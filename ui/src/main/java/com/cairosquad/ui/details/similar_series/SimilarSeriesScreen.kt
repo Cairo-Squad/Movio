@@ -67,7 +67,6 @@ fun SimilarSeriesScreen(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             when (state.screenStatus) {
-                SimilarSeriesScreenState.ScreenStatus.INITIAL -> {}
                 SimilarSeriesScreenState.ScreenStatus.LOADING -> {
                     items(20) {
                         LoadingMovieCard()

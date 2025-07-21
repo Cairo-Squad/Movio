@@ -129,7 +129,6 @@ private fun EpisodesScreenContent(
     ) {
         Box {
             when (uiState.basicDetailsSectionState) {
-                EpisodesDetailsScreenState.ScreenStatus.INITIAL -> {}
                 EpisodesDetailsScreenState.ScreenStatus.LOADING -> {}
                 EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
                     if (uiState.season.posterUrl.isNotEmpty()) {
@@ -158,7 +157,6 @@ private fun EpisodesScreenContent(
         ) {
             item {
                 when (uiState.basicDetailsSectionState) {
-                    EpisodesDetailsScreenState.ScreenStatus.INITIAL -> {}
                     EpisodesDetailsScreenState.ScreenStatus.LOADING -> {
                         LoadingMovieImage(
                             Modifier
@@ -206,7 +204,6 @@ private fun EpisodesScreenContent(
             }
             item {
                 when (uiState.basicDetailsSectionState) {
-                    EpisodesDetailsScreenState.ScreenStatus.INITIAL -> {}
                     EpisodesDetailsScreenState.ScreenStatus.LOADING -> {
                         Row(
                             modifier = Modifier
@@ -263,7 +260,6 @@ private fun EpisodesScreenContent(
                 }
             }
             when (uiState.episodesSectionState) {
-                EpisodesDetailsScreenState.ScreenStatus.INITIAL -> {}
                 EpisodesDetailsScreenState.ScreenStatus.LOADING -> {
                     items(10) {
                         LoadingMovieImage(

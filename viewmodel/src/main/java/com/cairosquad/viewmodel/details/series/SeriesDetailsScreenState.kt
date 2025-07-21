@@ -3,11 +3,11 @@ package com.cairosquad.viewmodel.details.series
 import com.cairosquad.viewmodel.exception.ErrorStatus
 
 data class SeriesDetailsScreenState(
-    val basicDetailsSectionState: SectionStatus = SectionStatus.INITIAL,
-    val castSectionState: SectionStatus = SectionStatus.INITIAL,
-    val seasonsSectionState: SectionStatus = SectionStatus.INITIAL,
-    val reviewsSectionState: SectionStatus = SectionStatus.INITIAL,
-    val similarSeriesSectionState: SectionStatus = SectionStatus.INITIAL,
+    val basicDetailsSectionState: SectionStatus = SectionStatus.LOADING,
+    val castSectionState: SectionStatus = SectionStatus.LOADING,
+    val seasonsSectionState: SectionStatus = SectionStatus.LOADING,
+    val reviewsSectionState: SectionStatus = SectionStatus.LOADING,
+    val similarSeriesSectionState: SectionStatus = SectionStatus.LOADING,
 
     val errorStatus: ErrorStatus? = null,
 
@@ -66,7 +66,6 @@ data class SeriesDetailsScreenState(
     )
 
     enum class SectionStatus {
-        INITIAL,
         LOADING,
         SUCCESS,
         ERROR

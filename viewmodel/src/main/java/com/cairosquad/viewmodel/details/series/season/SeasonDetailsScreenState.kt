@@ -5,7 +5,7 @@ import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.util.TimeUtil
 data class SeasonDetailsScreenState(
     val seriesTitle: String = "",
-    val seasonSectionState: ScreenStatus = ScreenStatus.INITIAL,
+    val seasonSectionState: ScreenStatus = ScreenStatus.LOADING,
     val errorStatus: ErrorStatus? = null,
     val season: List<SeasonUiState> = emptyList(),
 ) {
@@ -22,7 +22,6 @@ data class SeasonDetailsScreenState(
     )
 
     enum class ScreenStatus {
-        INITIAL,
         LOADING,
         SUCCESS,
         ERROR

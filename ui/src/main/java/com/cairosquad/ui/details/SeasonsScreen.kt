@@ -96,7 +96,6 @@ fun SeasonScreenContent(
                 )
             }
             when (uiState.seasonSectionState) {
-                SeasonDetailsScreenState.ScreenStatus.INITIAL -> {}
                 SeasonDetailsScreenState.ScreenStatus.LOADING -> {
                     items(10) {
                         LoadingMovieImage(

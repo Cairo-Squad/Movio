@@ -290,7 +290,6 @@ private fun SeriesScreenContent(
             .verticalScroll(listState)
     ) {
         when (uiState.basicDetailsSectionState) {
-            SeriesDetailsScreenState.SectionStatus.INITIAL -> {}
             SeriesDetailsScreenState.SectionStatus.LOADING -> {}
             SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
                 if (uiState.series.posterPath.isNotEmpty()) {
@@ -321,7 +320,6 @@ private fun SeriesScreenContent(
         ) {
             item {
                 when (uiState.basicDetailsSectionState) {
-                    SeriesDetailsScreenState.SectionStatus.INITIAL -> {}
                     SeriesDetailsScreenState.SectionStatus.LOADING -> {
                         Column(
                             modifier = Modifier
@@ -381,7 +379,6 @@ private fun SeriesScreenContent(
             }
             item {
                 when (uiState.basicDetailsSectionState) {
-                    SeriesDetailsScreenState.SectionStatus.INITIAL -> {}
                     SeriesDetailsScreenState.SectionStatus.LOADING -> {
                         BasicDetailsLoading()
                     }
@@ -404,7 +401,6 @@ private fun SeriesScreenContent(
             }
             item {
                 when (uiState.basicDetailsSectionState) {
-                    SeriesDetailsScreenState.SectionStatus.INITIAL -> {}
                     SeriesDetailsScreenState.SectionStatus.LOADING -> {
                         LoadingMovieImage(
                             modifier = Modifier
@@ -436,7 +432,6 @@ private fun SeriesScreenContent(
             }
             item {
                 when (uiState.castSectionState) {
-                    SeriesDetailsScreenState.SectionStatus.INITIAL -> {}
                     SeriesDetailsScreenState.SectionStatus.LOADING -> {
                         SectionLoading(
                             headerName = stringResource(R.string.top_cast),
@@ -461,7 +456,6 @@ private fun SeriesScreenContent(
             }
             item {
                 when (uiState.seasonsSectionState) {
-                    SeriesDetailsScreenState.SectionStatus.INITIAL -> {}
                     SeriesDetailsScreenState.SectionStatus.LOADING -> {
                         SectionLoading(
                             headerName = stringResource(R.string.current_seasons),
@@ -490,7 +484,6 @@ private fun SeriesScreenContent(
             }
             item {
                 when (uiState.reviewsSectionState) {
-                    SeriesDetailsScreenState.SectionStatus.INITIAL -> {}
                     SeriesDetailsScreenState.SectionStatus.LOADING -> {
                         SectionLoading(
                             headerName = stringResource(R.string.reviews),
@@ -516,7 +509,6 @@ private fun SeriesScreenContent(
             }
             item {
                 when (uiState.similarSeriesSectionState) {
-                    SeriesDetailsScreenState.SectionStatus.INITIAL -> {}
                     SeriesDetailsScreenState.SectionStatus.LOADING -> {
                         SectionLoading(
                             headerName = stringResource(R.string.similar_series),

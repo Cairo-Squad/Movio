@@ -265,7 +265,6 @@ fun MovieContent(
             .verticalScroll(listState)
     ) {
         when (uiState.basicDetailsSectionState) {
-            MovieScreenState.ScreenStatus.INITIAL -> {}
             MovieScreenState.ScreenStatus.LOADING -> {}
             MovieScreenState.ScreenStatus.SUCCESS -> {
                 if (uiState.movie.posterPath.isNotEmpty()) {
@@ -296,7 +295,6 @@ fun MovieContent(
         ) {
             item {
                 when (uiState.basicDetailsSectionState) {
-                    MovieScreenState.ScreenStatus.INITIAL -> {}
                     MovieScreenState.ScreenStatus.LOADING -> {
                         Column(
                             modifier = Modifier
@@ -357,7 +355,6 @@ fun MovieContent(
             }
             item {
                 when (uiState.basicDetailsSectionState) {
-                    MovieScreenState.ScreenStatus.INITIAL -> {}
                     MovieScreenState.ScreenStatus.LOADING -> {
                         BasicDetailsLoading()
                     }
@@ -380,7 +377,6 @@ fun MovieContent(
             }
             item {
                 when (uiState.basicDetailsSectionState) {
-                    MovieScreenState.ScreenStatus.INITIAL -> {}
                     MovieScreenState.ScreenStatus.LOADING -> {
                         LoadingMovieImage(
                             modifier = Modifier
@@ -410,7 +406,6 @@ fun MovieContent(
             }
             item {
                 when (uiState.castSectionState) {
-                    MovieScreenState.ScreenStatus.INITIAL -> {}
                     MovieScreenState.ScreenStatus.LOADING -> {
                         SectionLoading(
                             headerName = stringResource(R.string.top_cast),
@@ -435,7 +430,6 @@ fun MovieContent(
             }
             item {
                 when (uiState.reviewsSectionState) {
-                    MovieScreenState.ScreenStatus.INITIAL -> {}
                     MovieScreenState.ScreenStatus.LOADING -> {
                         SectionLoading(
                             headerName = stringResource(R.string.reviews),
@@ -461,7 +455,6 @@ fun MovieContent(
             }
             item {
                 when (uiState.similarMoviesSectionState) {
-                    MovieScreenState.ScreenStatus.INITIAL -> {}
                     MovieScreenState.ScreenStatus.LOADING -> {
                         SectionLoading(
                             headerName = stringResource(R.string.similar_movies),

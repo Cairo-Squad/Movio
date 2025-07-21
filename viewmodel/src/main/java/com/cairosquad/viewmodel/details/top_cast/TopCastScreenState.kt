@@ -1,7 +1,7 @@
 package com.cairosquad.viewmodel.details.top_cast
 
 data class TopCastScreenState(
-    val screenStatus: ScreenStatus = ScreenStatus.INITIAL,
+    val screenStatus: ScreenStatus = ScreenStatus.LOADING,
     val cast: List<ArtistUiState> = emptyList(),
     val error: String? = null
 ) {
@@ -12,7 +12,6 @@ data class TopCastScreenState(
     )
 
     enum class ScreenStatus {
-        INITIAL,
         LOADING,
         SUCCESS,
         ERROR

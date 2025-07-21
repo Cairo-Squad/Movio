@@ -81,7 +81,6 @@ private fun TopCastContent(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             when (state.screenStatus) {
-                TopCastScreenState.ScreenStatus.INITIAL -> {}
                 TopCastScreenState.ScreenStatus.LOADING -> {
                     items(20) {
                         LoadingArtistCard()
