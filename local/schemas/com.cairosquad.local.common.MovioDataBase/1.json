@@ -2,21 +2,15 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "1a9add31fc08db735d056b49cb81f4f3",
+    "identityHash": "55e3e3d25dd9ca8420d8df8d06953864",
     "entities": [
       {
         "tableName": "MovieCacheDto",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `page` INTEGER NOT NULL, `title` TEXT, `posterPath` TEXT, `voteAverage` REAL, `queryColumn` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT, `posterPath` TEXT, `voteAverage` REAL, `timestamp` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "page",
-            "columnName": "page",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -36,12 +30,6 @@
             "affinity": "REAL"
           },
           {
-            "fieldPath": "query",
-            "columnName": "queryColumn",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
             "fieldPath": "timestamp",
             "columnName": "timestamp",
             "affinity": "INTEGER",
@@ -57,17 +45,11 @@
       },
       {
         "tableName": "SeriesCacheDto",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `page` INTEGER NOT NULL, `name` TEXT, `posterPath` TEXT, `voteAverage` REAL, `queryColumn` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT, `posterPath` TEXT, `voteAverage` REAL, `timestamp` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "page",
-            "columnName": "page",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -87,12 +69,6 @@
             "affinity": "REAL"
           },
           {
-            "fieldPath": "query",
-            "columnName": "queryColumn",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
             "fieldPath": "timestamp",
             "columnName": "timestamp",
             "affinity": "INTEGER",
@@ -108,17 +84,11 @@
       },
       {
         "tableName": "CachedArtistDto",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `page` INTEGER NOT NULL, `name` TEXT, `photoPath` TEXT, `queryColumn` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT, `photoPath` TEXT, `timestamp` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "page",
-            "columnName": "page",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -131,12 +101,6 @@
             "fieldPath": "photoPath",
             "columnName": "photoPath",
             "affinity": "TEXT"
-          },
-          {
-            "fieldPath": "query",
-            "columnName": "queryColumn",
-            "affinity": "TEXT",
-            "notNull": true
           },
           {
             "fieldPath": "timestamp",
@@ -211,59 +175,11 @@
             "movie_id"
           ]
         }
-      },
-      {
-        "tableName": "ArtistMovieCachedDto",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`artistId` INTEGER NOT NULL, `movieId` INTEGER NOT NULL, PRIMARY KEY(`artistId`))",
-        "fields": [
-          {
-            "fieldPath": "artistId",
-            "columnName": "artistId",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "movieId",
-            "columnName": "movieId",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": false,
-          "columnNames": [
-            "artistId"
-          ]
-        }
-      },
-      {
-        "tableName": "ArtistSeriesCachedDto",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`artistId` INTEGER NOT NULL, `seriesId` INTEGER NOT NULL, PRIMARY KEY(`artistId`))",
-        "fields": [
-          {
-            "fieldPath": "artistId",
-            "columnName": "artistId",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "seriesId",
-            "columnName": "seriesId",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": false,
-          "columnNames": [
-            "artistId"
-          ]
-        }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1a9add31fc08db735d056b49cb81f4f3')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '55e3e3d25dd9ca8420d8df8d06953864')"
     ]
   }
 }

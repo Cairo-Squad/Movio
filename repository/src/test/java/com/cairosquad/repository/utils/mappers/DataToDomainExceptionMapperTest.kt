@@ -1,5 +1,6 @@
 package com.cairosquad.repository.utils.mappers
 
+import com.cairosquad.domain.exception.DUnauthorizedException
 import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.exception.NetworkException
 import com.cairosquad.domain.exception.UnknownException
@@ -61,13 +62,13 @@ class TryToCallTest {
 
     @Test
     fun `should throw NetworkException when UnauthorizedException occurs`() = runTest {
-        val exception = UnauthorizedException("Unauthorized")
+        val exception = UnauthorizedException("You are not authorized to perform this action")
         val result = runCatching {
             tryToCall { throw exception }
         }
 
-        assertThat(result.exceptionOrNull()).isInstanceOf(NetworkException::class.java)
-        assertThat(result.exceptionOrNull()!!.message).isEqualTo("Unauthorized")
+        assertThat(result.exceptionOrNull()).isInstanceOf(DUnauthorizedException::class.java)
+        assertThat(result.exceptionOrNull()!!.message).isEqualTo("You are not authorized to perform this action")
     }
 
     @Test

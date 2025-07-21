@@ -71,4 +71,6 @@
     <string name="read_less">اقرأأقل</string>
     <string name="read_more">اقرأأكثر</string>
     <string name="top_cast">أفضل الممثلين</string>
+    <string name="unauthorized_access">أنت غير مصرح لك بتنفيذ هذا الإجراء</string>
+    <string name="error_parsing_data">حدث خطأ أثناء معالجة البيانات</string>
 </resources>
