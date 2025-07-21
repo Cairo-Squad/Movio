@@ -56,18 +56,27 @@ fun SearchFailContent(
                     ErrorStatus.NETWORK_ERROR -> R.drawable.no_result
                     ErrorStatus.UNKNOWN_ERROR -> R.drawable.no_result
                     null -> R.drawable.no_result
+                    ErrorStatus.UNAUTHORIZED -> TODO()
+                    ErrorStatus.EMPTY -> R.drawable.no_result
+                    ErrorStatus.PARSING_ERROR -> TODO()
                 },
                 titleId = when (state.errorStatus) {
                     ErrorStatus.NO_INTERNET -> R.string.no_internet_connection
                     ErrorStatus.NETWORK_ERROR -> R.string.an_error_occured_while_getting_results
                     ErrorStatus.UNKNOWN_ERROR -> R.string.an_unexpected_error_occurred
                     null -> R.string.an_unexpected_error_occurred
+                    ErrorStatus.UNAUTHORIZED -> R.string.unauthorized_access
+                    ErrorStatus.EMPTY -> R.string.no_results_found
+                    ErrorStatus.PARSING_ERROR -> R.string.error_parsing_data
                 },
                 descriptionId = when (state.errorStatus) {
                     ErrorStatus.NO_INTERNET -> R.string.internet_is_not_available_description
                     ErrorStatus.NETWORK_ERROR -> R.string.internet_is_not_available_description
                     ErrorStatus.UNKNOWN_ERROR -> R.string.an_unexpected_error_occurred_description
                     null -> R.string.an_unexpected_error_occurred_description
+                    ErrorStatus.UNAUTHORIZED -> R.string.unauthorized_access
+                    ErrorStatus.EMPTY -> R.string.no_results_found
+                    ErrorStatus.PARSING_ERROR -> R.string.error_parsing_data
                 }
             )
         }
