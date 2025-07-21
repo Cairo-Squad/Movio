@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -65,13 +66,13 @@ fun HomeScreenContent(
                     .map(MediaHorizontalPagerItem::fromHomeMovieUiState)
                     .take(7),
                 initialPage = 3,
-                onClickMedia = { }
+                onClickMedia = listener::onClickMovie
             )
 
             MediaSection(
                 modifier = Modifier.padding(bottom = 32.dp),
                 mediaList = screenState.topRatingMovies.map(MediaSectionItem::fromHomeMovieUiState),
-                onClickMedia = { },
+                onClickMedia = listener::onClickMovie,
                 sectionTitle = stringResource(R.string.top_rating),
                 mediaSectionLayoutType = MediaSectionLayoutType.LazyRow,
                 seeAllAction = { }
@@ -80,7 +81,7 @@ fun HomeScreenContent(
             MediaSection(
                 modifier = Modifier.padding(bottom = 32.dp),
                 mediaList = screenState.trendingMovies.map(MediaSectionItem::fromHomeMovieUiState),
-                onClickMedia = { },
+                onClickMedia = listener::onClickMovie,
                 sectionTitle = stringResource(R.string.trending),
                 mediaSectionLayoutType = MediaSectionLayoutType.LazyHorizontalGrid(3),
                 seeAllAction = { }
@@ -89,7 +90,7 @@ fun HomeScreenContent(
             MediaSection(
                 modifier = Modifier.padding(bottom = 32.dp),
                 mediaList = screenState.freeToWatchMovies.map(MediaSectionItem::fromHomeMovieUiState),
-                onClickMedia = { },
+                onClickMedia = listener::onClickMovie,
                 sectionTitle = stringResource(R.string.free_to_watch),
                 mediaSectionLayoutType = MediaSectionLayoutType.LazyRow,
                 seeAllAction = { }
@@ -98,7 +99,7 @@ fun HomeScreenContent(
             MediaSection(
                 modifier = Modifier.padding(bottom = 32.dp),
                 mediaList = screenState.upcomingMovies.map(MediaSectionItem::fromHomeMovieUiState),
-                onClickMedia = { },
+                onClickMedia = listener::onClickMovie,
                 sectionTitle = stringResource(R.string.up_coming),
                 mediaSectionLayoutType = MediaSectionLayoutType.LazyRow,
                 seeAllAction = { }
@@ -109,7 +110,7 @@ fun HomeScreenContent(
                 mediaList = screenState.moreRecommendedMovies
                     .map(MediaSectionItem::fromHomeMovieUiState)
                     .take(8),
-                onClickMedia = { },
+                onClickMedia = listener::onClickMovie,
                 sectionTitle = stringResource(R.string.more_recommended),
                 mediaSectionLayoutType = MediaSectionLayoutType.LazyVerticalGrid(158),
                 seeAllAction = { }
@@ -122,14 +123,19 @@ fun HomeScreenContent(
                 .background(animatedBrush)
         ) {
             AppBar(modifier = Modifier.statusBarsPadding())
+
+            val tabsList = remember {
+                listOf(
+                    R.string.all,
+                    R.string.movies,
+                    R.string.tv_shows,
+                    R.string.categories,
+                )
+            }
+
             TabRow(
                 modifier = Modifier,
-                tabs = listOf(
-                    stringResource(R.string.all),
-                    stringResource(R.string.movies),
-                    stringResource(R.string.tv_shows),
-                    stringResource(R.string.categories),
-                ),
+                tabs = tabsList.map { stringResource(it) },
                 selectedTabIndex = screenState.selectedTab.ordinal,
                 onTabSelected = listener::onClickTab
             )

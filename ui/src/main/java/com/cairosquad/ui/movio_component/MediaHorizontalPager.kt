@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -240,12 +241,12 @@ private fun MediaHorizontalPagerCard(
             modifier = Modifier
                 .alpha(lerp(0f, 1f, isCurrentPageFloat))
                 .fillMaxWidth()
-//                .heightIn(min = 51.dp)
                 .wrapContentHeight()
                 .align(Alignment.BottomCenter)
                 .onGloballyPositioned {
                     bottomSectionDp = with(density) { it.size.height.toDp().value.toInt() }
-                },
+                }
+                .heightIn(min = 51.dp),
         ) {
             AnimatedVisibility(
                 visible = isImageSafe,
