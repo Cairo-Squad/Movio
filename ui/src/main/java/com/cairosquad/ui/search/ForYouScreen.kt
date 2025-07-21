@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,8 +33,12 @@ import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.ui.navigation.LocalNavController
+import com.cairosquad.ui.navigation.MovieRoute
+import com.cairosquad.viewmodel.foryou.ForYouEffect
+import com.cairosquad.viewmodel.foryou.ForYouInteractionListener
 import com.cairosquad.viewmodel.foryou.ForYouState
 import com.cairosquad.viewmodel.foryou.ForYouViewModel
+import com.cairosquad.viewmodel.search.SearchEffect
 import com.cairosquad.viewmodel.search.SearchInteractionListener
 import com.cairosquad.viewmodel.search.SearchViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -48,6 +53,16 @@ fun ForYouScreen(
     val navController = LocalNavController.current
     val forYou = forYouViewModel.screenState.collectAsState()
 
+    LaunchedEffect(Unit) {
+        forYouViewModel.effect.collect { effect ->
+            when (effect) {
+                is ForYouEffect.NavigateToMovieDetails -> {
+                    navController.navigate(MovieRoute(effect.movieId))
+                }
+                else -> Unit
+            }
+        }
+    }
     RefreshBox(
         isRefreshing = forYou.value.isRefreshing,
         onRefresh = forYouViewModel::onRefresh,
@@ -72,7 +87,7 @@ fun ForYouScreen(
             MoviesList(
                 modifier = Modifier.padding(16.dp),
                 state = forYou.value,
-                listener = searchViewModel
+                listener = forYouViewModel
             )
 
         }
@@ -82,7 +97,7 @@ fun ForYouScreen(
 @Composable
 private fun MoviesList(
     state: ForYouState,
-    listener: SearchInteractionListener,
+    listener: ForYouInteractionListener,
     modifier: Modifier = Modifier
 ) {
     val movies = state.forYou.collectAsLazyPagingItems()

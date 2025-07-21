@@ -8,8 +8,7 @@ import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
-import com.cairosquad.viewmodel.search.SearchScreenState.ScreenStatus
-import com.cairosquad.viewmodel.search.toUiState
+import com.cairosquad.viewmodel.foryou.ForYouState.ScreenStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -18,7 +17,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class ForYouViewModel(private val forYouPager: ForYouPager) :
-    BaseViewModel<ForYouState, Any>(ForYouState()), ForYouInteractionListener {
+    BaseViewModel<ForYouState, ForYouEffect>(ForYouState()), ForYouInteractionListener {
 
     init {
         getForYouMovies()
@@ -85,5 +84,9 @@ class ForYouViewModel(private val forYouPager: ForYouPager) :
             delay(500L)
             updateState { it.copy(isRefreshing = false) }
         }
+    }
+
+    override fun onMovieClicked(movieId: Long) {
+        sendEffect(ForYouEffect.NavigateToMovieDetails(movieId))
     }
 }
