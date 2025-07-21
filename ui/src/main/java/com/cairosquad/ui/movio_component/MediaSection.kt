@@ -31,6 +31,9 @@ fun MediaSection(
     modifier: Modifier = Modifier,
     seeAllAction: (() -> Unit)? = null,
 ) {
+
+    if (mediaList.isEmpty()) return // TODO: add empty state
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)

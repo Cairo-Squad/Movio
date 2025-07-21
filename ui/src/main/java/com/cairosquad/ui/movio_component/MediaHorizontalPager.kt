@@ -339,7 +339,7 @@ private fun ChipWithNoBackGround(
         text = text,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
-        style = Theme.textStyle.label.mediumMedium12
+        style = Theme.textStyle.body.smallRegular10
             .copy(Theme.color.surfaces.onSurfaceContainer)
     )
 }
