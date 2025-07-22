@@ -1,6 +1,7 @@
 package com.cairosquad.remote.series
 
 import com.cairosquad.repository.movie.data_source.remote.dto.CreditResponse
+import com.cairosquad.repository.movie.data_source.remote.dto.GenreDto
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.ResultResponse
 import com.cairosquad.repository.search.data_source.remote.dto.SeriesRemoteDto
@@ -49,33 +50,40 @@ interface SeriesApiService {
 
     @GET("tv/top_rated")
     suspend fun getTopRatingSeries(
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("with_genres") withGenres: String? = null
     ): ResultResponse<SeriesRemoteDto>
 
-    @GET("tv/popular")
+    @GET("discover/tv")
     suspend fun getMoreRecommendedSeries(
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("sort_by") sortBy: String = "vote_count.desc",
+        @Query("with_genres") withGenres: String? = null
     ): ResultResponse<SeriesRemoteDto>
 
     @GET("tv/on_the_air")
     suspend fun getOnTvSeries(
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("with_genres") withGenres: String? = null
     ): ResultResponse<SeriesRemoteDto>
 
     @GET("tv/airing_today")
     suspend fun getAiringTodaySeries(
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("with_genres") withGenres: String? = null
     ): ResultResponse<SeriesRemoteDto>
 
     @GET("trending/tv/day")
     suspend fun getTrendingSeries(
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("with_genres") withGenres: String? = null
     ): ResultResponse<SeriesRemoteDto>
 
     @GET("discover/tv")
     suspend fun getFreeToWatchSeries(
         @Query("page") page: Int,
-        @Query("with_watch_providers") free: String = "free" // TODO: find better way
+        @Query("with_watch_providers") free: String = "free", // TODO: find better way
+        @Query("with_genres") withGenres: String? = null
     ): ResultResponse<SeriesRemoteDto>
 
     @GET("discover/tv")
@@ -86,7 +94,18 @@ interface SeriesApiService {
 
     @GET("genre/tv/list")
     suspend fun getSeriesGenres(
-        @Query("page") page: Int
+    ): ResultResponse<GenreDto>
+
+    @GET("tv/popular")
+    suspend fun getPopularSeries(
+        @Query("page") page: Int,
+        @Query("with_genres") withGenres: String? = null
+    ): ResultResponse<SeriesRemoteDto>
+
+    @GET("discover/tv")
+    suspend fun getAllSeries(
+        @Query("page") page: Int,
+        @Query("with_genres") withGenres: String? = null
     ): ResultResponse<SeriesRemoteDto>
 
 }

@@ -3,6 +3,7 @@ package com.cairosquad.repository.series
 import com.cairosquad.domain.repository.SeriesRepository
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Episode
+import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Review
 import com.cairosquad.entity.Season
 import com.cairosquad.entity.Series
@@ -40,40 +41,40 @@ class SeriesRepositoryImpl(
         return remoteSeriesDataSource.getSeriesTopCast(seriesId, page).map { it.toEntity() }
     }
 
-    override suspend fun getTopRatingSeries(page: Int): List<Series> {
+    override suspend fun getTopRatingSeries(page: Int,categoryId : String?): List<Series> {
         return tryToCall {
-            remoteSeriesDataSource.getTopRatingSeries(page).map { it.toEntity() }
+            remoteSeriesDataSource.getTopRatingSeries(page,categoryId).map { it.toEntity() }
         }
     }
 
-    override suspend fun getMoreRecommendedSeries(page: Int): List<Series> {
+    override suspend fun getMoreRecommendedSeries(page: Int,categoryId : String?): List<Series> {
         return tryToCall {
-            remoteSeriesDataSource.getMoreRecommendedSeries(page).map { it.toEntity() }
+            remoteSeriesDataSource.getMoreRecommendedSeries(page,categoryId).map { it.toEntity() }
         }
     }
 
-    override suspend fun getOnTvSeries(page: Int): List<Series> {
+    override suspend fun getOnTvSeries(page: Int,categoryId : String?): List<Series> {
         return tryToCall {
-            remoteSeriesDataSource.getOnTvSeries(page).map { it.toEntity() }
+            remoteSeriesDataSource.getOnTvSeries(page,categoryId).map { it.toEntity() }
         }
     }
 
-    override suspend fun getAiringTodaySeries(page: Int): List<Series> {
+    override suspend fun getAiringTodaySeries(page: Int,categoryId : String?): List<Series> {
         return tryToCall {
-            remoteSeriesDataSource.getAiringTodaySeries(page).map { it.toEntity() }
+            remoteSeriesDataSource.getAiringTodaySeries(page,categoryId).map { it.toEntity() }
         }
     }
 
-    override suspend fun getTrendingSeries(page: Int): List<Series> {
+    override suspend fun getTrendingSeries(page: Int,categoryId : String?): List<Series> {
         return tryToCall {
-            remoteSeriesDataSource.getTrendingSeries(page).map { it.toEntity() }
+            remoteSeriesDataSource.getTrendingSeries(page,categoryId).map { it.toEntity() }
         }
     }
 
 
-    override suspend fun getFreeToWatchSeries(page: Int): List<Series> {
+    override suspend fun getFreeToWatchSeries(page: Int,categoryId : String?): List<Series> {
         return tryToCall {
-            remoteSeriesDataSource.getFreeToWatchSeries(page).map { it.toEntity() }
+            remoteSeriesDataSource.getFreeToWatchSeries(page,categoryId).map { it.toEntity() }
         }
     }
 
@@ -86,9 +87,21 @@ class SeriesRepositoryImpl(
         }
     }
 
-    override suspend fun getSeriesGenres(page: Int): List<Series> {
+    override suspend fun getSeriesGenres(): List<Genre> {
         return tryToCall {
-            remoteSeriesDataSource.getSeriesGenres(page).map { it.toEntity() }
+            remoteSeriesDataSource.getSeriesGenres().map { it.toEntity() }
+        }
+    }
+
+    override suspend fun getPopularSeries(page: Int,categoryId : String?): List<Series> {
+        return tryToCall {
+            remoteSeriesDataSource.getPopularSeries(page,categoryId).map { it.toEntity() }
+        }
+    }
+
+    override suspend fun getAllSeries(page: Int,categoryId : String?): List<Series> {
+        return tryToCall {
+            remoteSeriesDataSource.getAllSeries(page,categoryId).map { it.toEntity() }
         }
     }
 }
