@@ -1,10 +1,6 @@
 package com.cairosquad.ui.search
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,7 +26,6 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
-import com.cairosquad.design_system.basic_component.InputField
 import com.cairosquad.design_system.basic_component.RefreshBox
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.LoadingMovieCard
@@ -38,7 +33,6 @@ import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.MovieRoute
-import com.cairosquad.ui.search.content.SearchLoadingContent
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.foryou.ForYouEffect
 import com.cairosquad.viewmodel.foryou.ForYouInteractionListener
@@ -46,9 +40,6 @@ import com.cairosquad.viewmodel.foryou.ForYouState
 import com.cairosquad.viewmodel.foryou.ForYouState.MovieUiState
 import com.cairosquad.viewmodel.foryou.ForYouState.ScreenStatus
 import com.cairosquad.viewmodel.foryou.ForYouViewModel
-import com.cairosquad.viewmodel.search.SearchEffect
-import com.cairosquad.viewmodel.search.SearchInteractionListener
-import com.cairosquad.viewmodel.search.SearchViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -59,6 +50,23 @@ fun ForYouScreen(
 ) {
     val navController = LocalNavController.current
     val forYou = forYouViewModel.screenState.collectAsState()
+    val movies = forYou.value.forYou.collectAsLazyPagingItems()
+
+    LaunchedEffect(movies.loadState) {
+        when (val state = movies.loadState.refresh) {
+            is androidx.paging.LoadState.Loading -> {
+                forYouViewModel.updateScreenStatus(ScreenStatus.LOADING)
+            }
+            is androidx.paging.LoadState.NotLoading -> {
+                forYouViewModel.updateScreenStatus(ScreenStatus.SUCCESS)
+            }
+            is androidx.paging.LoadState.Error -> {
+                forYouViewModel.updateScreenStatus(ScreenStatus.FAILED)
+                val errorStatus = forYouViewModel.handleSearchException(state.error)
+                forYouViewModel.updateErrorStatus(errorStatus)
+            }
+        }
+    }
 
     LaunchedEffect(Unit) {
         forYouViewModel.effect.collect { effect ->
@@ -94,7 +102,8 @@ fun ForYouScreen(
             MoviesList(
                 modifier = Modifier.padding(16.dp),
                 state = forYou.value,
-                listener = forYouViewModel
+                listener = forYouViewModel,
+                movies = movies
             )
 
         }
@@ -105,10 +114,9 @@ fun ForYouScreen(
 private fun MoviesList(
     state: ForYouState,
     listener: ForYouInteractionListener,
+    movies: LazyPagingItems<MovieUiState>,
     modifier: Modifier = Modifier
 ) {
-    val movies = state.forYou.collectAsLazyPagingItems()
-
     Box(modifier = modifier.fillMaxSize()) {
         when {
             state.screenStatus == ScreenStatus.LOADING -> {
@@ -156,25 +164,6 @@ private fun ForYouLoadingContent(
         items(20) {
             LoadingMovieCard()
         }
-    }
-}
-
-@Composable
-private fun ForYouSuccessContent(
-    state: ForYouState,
-    listener: ForYouInteractionListener,
-    modifier: Modifier = Modifier
-) {
-    val movies = state.forYou.collectAsLazyPagingItems()
-
-    if (movies.itemCount == 0) {
-        EmptyMoviesContent(modifier)
-    } else {
-        MoviesGridContent(
-            movies = movies,
-            listener = listener,
-            modifier = modifier
-        )
     }
 }
 
