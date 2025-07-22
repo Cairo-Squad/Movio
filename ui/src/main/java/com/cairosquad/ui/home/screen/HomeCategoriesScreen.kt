@@ -60,17 +60,17 @@ fun HomeCategoriesScreen(
                 topRatingSeries = screenState.topRatingMovies, listener = listener, content = {
                     CategoriesChips(
                         modifier = Modifier.padding(top = 16.dp),
-                        categories = screenState.genres,
-                        selectedChipIndex = screenState.selectedCategoriesChip,
+                        categories = screenState.genres.map { it.name },
+                        selectedChipIndex = screenState.selectedGenreIndex,
                         onChipSelected = { index ->
-                            listener.onClickCategoryChip(index)
+                            listener.onGenreSelected(index)
                         })
                     CategoriesChips(
                         modifier = Modifier.padding(top = 12.dp, bottom = 24.dp),
-                        categories = screenState.options,
-                        selectedChipIndex = screenState.selectedSortChip,
+                        categories = screenState.filters,
+                        selectedChipIndex = screenState.selectedFilter.ordinal,
                         onChipSelected = { index ->
-                            listener.onClickSortChip(index)
+                            listener.onFilterSelected(HomeScreenState.FilterType.entries[index])
                         })
 
                 }

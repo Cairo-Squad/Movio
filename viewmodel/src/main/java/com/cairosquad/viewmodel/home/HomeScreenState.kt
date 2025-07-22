@@ -21,6 +21,7 @@ data class HomeScreenState(
     val selectedTab: TabType = TabType.ALL,
     val genres: List<GenreUiState> = listOf(GenreUiState.defaultGenre),
     val selectedGenreIndex: Int = 0,
+    val filters : List<String> = listOf("All","Popularity","Latest")
 ) {
     data class MovieUiState(
         val id: Long = 0L,

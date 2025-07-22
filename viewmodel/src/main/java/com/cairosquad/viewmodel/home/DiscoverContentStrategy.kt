@@ -6,24 +6,27 @@ interface DiscoverContentStrategy {
 
     fun getItems(state: HomeScreenState): List<Any>
 }
-sealed class MediaType {
-    object Movies : MediaType()
-    object Series : MediaType()
-    object Hybrid : MediaType()
+
+enum class MediaType {
+    Movies,
+    Series,
+    All
 }
+
 fun filterByMediaType(
     movieList: List<HomeScreenState.MovieUiState>,
     seriesList: List<HomeScreenState.SeriesUiState>,
     mediaType: MediaType
 ): List<Any> {
     return when (mediaType) {
-        is MediaType.Movies -> movieList
-        is MediaType.Series -> seriesList
-        is MediaType.Hybrid -> movieList + seriesList
+        MediaType.Movies -> movieList
+        MediaType.Series -> seriesList
+        MediaType.All -> movieList + seriesList
     }
 }
+
 class TopRatedStrategy(override val mediaType: MediaType) : DiscoverContentStrategy {
-    override val title = "Top Rated"
+    override val title = "Top Rating"
 
     override fun getItems(state: HomeScreenState): List<Any> {
         return filterByMediaType(

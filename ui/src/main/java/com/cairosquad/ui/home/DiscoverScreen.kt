@@ -64,10 +64,10 @@ fun DiscoverScreen(
 
             CategoriesChips(
                 modifier = Modifier.padding(top = 16.dp),
-                categories = state.genres,
-                selectedChipIndex = state.selectedCategoriesChip,
+                categories = state.genres.map { it.name },
+                selectedChipIndex = state.selectedGenreIndex,
                 onChipSelected = { index ->
-                    homeViewModel.onClickCategoryChip(index)
+                    homeViewModel.onGenreSelected(index)
                 })
             content()
         }
