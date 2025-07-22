@@ -2,7 +2,7 @@ package com.cairosquad.viewmodel.home
 
 import com.cairosquad.viewmodel.exception.ErrorStatus
 
-data class HomeScreenState (
+data class HomeScreenState(
     val topRatingMovies: List<MovieUiState> = emptyList(),
     val trendingMovies: List<MovieUiState> = emptyList(),
     val freeToWatchMovies: List<MovieUiState> = emptyList(),
@@ -21,6 +21,7 @@ data class HomeScreenState (
     val selectedTab: TabType = TabType.ALL,
     val genres: List<GenreUiState> = listOf(GenreUiState.defaultGenre),
     val selectedGenreIndex: Int = 0,
+    val filters : List<String> = listOf("All","Popularity","Latest")
 ) {
     data class MovieUiState(
         val id: Long = 0L,
@@ -55,6 +56,7 @@ data class HomeScreenState (
         SUCCESS,
         FAILED
     }
+
     enum class TabType {
         ALL,
         MOVIES,

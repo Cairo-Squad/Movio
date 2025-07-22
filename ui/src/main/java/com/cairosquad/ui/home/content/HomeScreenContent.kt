@@ -1,10 +1,12 @@
 package com.cairosquad.ui.home.content
 
+import HomeCategoriesScreen
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
@@ -31,7 +33,7 @@ fun HomeScreenContent(
     val scrollState = rememberScrollState()
 
     Crossfade(screenState.selectedTab) { selectedTab ->
-        when(selectedTab) {
+        when (selectedTab) {
             HomeScreenState.TabType.ALL -> {
                 HomeScreenContentAllTab(
                     screenState = screenState,
@@ -39,6 +41,7 @@ fun HomeScreenContent(
                     scrollState = scrollState
                 )
             }
+
             HomeScreenState.TabType.MOVIES -> {
                 HomeScreenContentMoviesTab(
                     screenState = screenState,
@@ -46,6 +49,7 @@ fun HomeScreenContent(
                     scrollState = scrollState
                 )
             }
+
             HomeScreenState.TabType.TV_SHOWS -> {
                 HomeScreenContentSeriesTab(
                     screenState = screenState,
@@ -53,8 +57,17 @@ fun HomeScreenContent(
                     scrollState = scrollState
                 )
             }
+
             HomeScreenState.TabType.CATEGORIES -> {
-                // TODO
+                HomeCategoriesScreen(
+                    modifier = Modifier
+                        .statusBarsPadding()
+                        .padding(top = 48.dp)
+                        .padding(top = 36.dp),
+                    screenState = screenState,
+                    listener = listener,
+                    scrollState = scrollState
+                )
             }
         }
     }
@@ -110,3 +123,5 @@ private fun TobContent(
         )
     }
 }
+
+

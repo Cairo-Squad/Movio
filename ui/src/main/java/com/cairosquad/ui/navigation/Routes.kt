@@ -59,3 +59,21 @@ data class EpisodesRoute(
 @Serializable
 data object ForYouRoute
 
+@Serializable
+data object TopRatingRoute
+
+@Serializable
+data object TrendingRoute
+
+@Serializable
+data object FreeToWatchRoute
+
+@Serializable
+data object UpComingRoute
+
+@Serializable
+data object MoreRecommendedRoute
+
+
+
+
