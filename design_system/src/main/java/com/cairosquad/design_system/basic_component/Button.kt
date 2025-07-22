@@ -46,7 +46,7 @@ fun Button(
         modifier = modifier
             .fillMaxWidth()
             .clip(CircleShape)
-            .border(1.dp, borderColor)
+            .border(1.dp, borderColor, CircleShape)
             .clickable(onClick = onClick)
             .background(containerColor)
             .padding(horizontal = 12.dp, vertical = 16.dp),
