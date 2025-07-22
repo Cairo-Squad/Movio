@@ -1,5 +1,6 @@
 package com.cairosquad.repository.movie.data_source.remote
 
+import com.cairosquad.repository.movie.data_source.remote.dto.GenreDto
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieDetailsRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
@@ -15,17 +16,23 @@ interface RemoteMovieDataSource {
 
     suspend fun getMovieTopCast(movieId: Long, page: Int): List<ArtistRemoteDto>
 
-    suspend fun getTopRatingMovies(page: Int): List<MovieRemoteDto>
+    suspend fun getTopRatingMovies(page: Int,categoryId: String?): List<MovieRemoteDto>
 
-    suspend fun getUpcomingMovies(page: Int): List<MovieRemoteDto>
+    suspend fun getUpcomingMovies(page: Int,categoryId: String?): List<MovieRemoteDto>
 
-    suspend fun getNowPlayingMovies(page: Int): List<MovieRemoteDto>
+    suspend fun getNowPlayingMovies(page: Int,categoryId: String?): List<MovieRemoteDto>
 
-    suspend fun getTrendingMovies(page: Int): List<MovieRemoteDto>
+    suspend fun getTrendingMovies(page: Int,categoryId: String?): List<MovieRemoteDto>
 
-    suspend fun getMoreRecommendedMovies(page: Int): List<MovieRemoteDto>
+    suspend fun getMoreRecommendedMovies(page: Int,categoryId: String?): List<MovieRemoteDto>
 
-    suspend fun getFreeToWatchMovies(page: Int): List<MovieRemoteDto>
+    suspend fun getFreeToWatchMovies(page: Int,categoryId: String?): List<MovieRemoteDto>
 
     suspend fun getMoviesByCategory(categoryId: String, page: Int): List<MovieRemoteDto>
+
+    suspend fun getMoviesGenres(): List<GenreDto>
+
+    suspend fun getPopularMovies(page: Int,categoryId: String?): List<MovieRemoteDto>
+
+    suspend fun getAllMovies(page: Int,categoryId: String?,sortBy: String?) : List<MovieRemoteDto>
 }

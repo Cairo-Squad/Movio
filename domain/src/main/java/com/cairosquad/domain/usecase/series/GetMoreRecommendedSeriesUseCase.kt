@@ -6,7 +6,7 @@ import com.cairosquad.entity.Series
 class GetMoreRecommendedSeriesUseCase(
     private val seriesRepository: SeriesRepository
 ) {
-    suspend fun getMoreRecommendedSeries(page: Int): List<Series> {
-        return seriesRepository.getMoreRecommendedSeries(page)
+    suspend fun getMoreRecommendedSeries(page: Int,categoryId : String?= null): List<Series> {
+        return seriesRepository.getMoreRecommendedSeries(page,categoryId)
     }
 }

@@ -6,7 +6,7 @@ import com.cairosquad.entity.Movie
 class GetFreeToWatchMoviesUseCase(
     private val moviesRepository: MoviesRepository
 ) {
-    suspend fun getFreeToWatchMovies(page : Int): List<Movie> {
-       return moviesRepository.getFreeToWatchMovies(page)
+    suspend fun getFreeToWatchMovies(page : Int , categoryId: String? = null): List<Movie> {
+       return moviesRepository.getFreeToWatchMovies(page, categoryId)
     }
 }

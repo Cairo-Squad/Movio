@@ -3,10 +3,10 @@ package com.cairosquad.domain.usecase.series
 import com.cairosquad.domain.repository.SeriesRepository
 import com.cairosquad.entity.Series
 
-class GetTrendingSeriesUseCase(
+class GetPopularSeriesUseCase(
     private val seriesRepository: SeriesRepository
 ) {
-    suspend fun getTrendingSeries(page: Int,categoryId : String?= null): List<Series> {
-        return seriesRepository.getTrendingSeries(page,categoryId)
+    suspend fun getPopularSeries(page: Int,categoryId : String?= null) : List<Series>{
+        return seriesRepository.getPopularSeries(page,categoryId)
     }
 }
