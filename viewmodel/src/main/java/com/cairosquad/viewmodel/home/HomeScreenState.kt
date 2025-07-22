@@ -20,7 +20,7 @@ data class HomeScreenState (
     val selectedFilter: FilterType = FilterType.ALL,
     val selectedTab: TabType = TabType.ALL,
     val genres: List<GenreUiState> = listOf(GenreUiState.defaultGenre),
-    val selectedGenre: GenreUiState = GenreUiState.defaultGenre,
+    val selectedGenreIndex: Int = 0,
 
 
     ) {

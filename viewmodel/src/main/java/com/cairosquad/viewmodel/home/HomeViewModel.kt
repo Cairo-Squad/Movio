@@ -195,11 +195,10 @@ class HomeViewModel(
     override fun onClickSeeAllOnTv() {
         sendEffect(HomeEffect.NavigateToSeeAllOnTv)
     }
-    override fun onGenreSelected(genre: String) {
-        val selectedGenre = if (genre == "All") null else genre
-        updateState {
-            it.copy(selectedGenre = selectedGenre)
-        }
+    override fun onGenreSelected(genreIndex:Int) {
+      updateState {
+          it.copy(selectedGenreIndex = genreIndex)
+      }
     }
     override fun onFilterSelected(filter: HomeScreenState.FilterType) {
         updateState {

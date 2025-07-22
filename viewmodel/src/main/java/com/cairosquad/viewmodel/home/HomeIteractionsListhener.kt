@@ -12,6 +12,6 @@ interface HomeInteractionsListener {
     fun onClickSeeAllMoreRecommended(isMovie : Boolean)
     fun onClickSeeAllAiringToday()
     fun onClickSeeAllOnTv()
-    fun onGenreSelected(genre: String)
+    fun onGenreSelected(genreIndex: Int)
     fun onFilterSelected(filter: HomeScreenState.FilterType)
 }
