@@ -15,11 +15,11 @@ data class HomeScreenState (
     val moreRecommendedSeries: List<SeriesUiState> = emptyList(),
     val randomMovies:List<MovieUiState> = emptyList(),
     val randomSeries: List<SeriesUiState> = emptyList(),
-    val screenStatus: HomeScreenState.ScreenStatus = HomeScreenState.ScreenStatus.LOADING,
+    val screenStatus: ScreenStatus = ScreenStatus.LOADING,
     val errorStatus: ErrorStatus? = null,
     val selectedFilter: FilterType = FilterType.ALL,
     val selectedTab: TabType = TabType.ALL,
-    val genres: List<GenreUiState> = listOf(GenreUiState.defaultGenre),
+    val genres: Set<GenreUiState> = setOf(GenreUiState.defaultGenre),
     val selectedGenreIndex: Int = 0,
 
 
@@ -41,14 +41,14 @@ data class HomeScreenState (
     )
 
     data class GenreUiState(
-        val id: Long = 0L,
+        val id: Long? = 0L,
         val name: String = "",
 
     )
     {
         companion object{
             val defaultGenre= GenreUiState(
-                id=0,
+                id=null,
                 name="All"
             )
         }

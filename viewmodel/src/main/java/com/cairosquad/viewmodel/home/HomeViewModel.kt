@@ -36,11 +36,10 @@ class HomeViewModel(
     HomeInteractionsListener {
 
     init {
-        loadHomeData()
-        loadGenres()
+        loadAllData()
     }
 
-    private fun loadHomeData() {
+    private fun loadAllData() {
         loadPopularSeries()
         loadPopularMovies()
         loadTopRatingMovies()
@@ -53,11 +52,7 @@ class HomeViewModel(
         loadAiringTodaySeries()
         loadOnTvSeries()
         loadMoreRecommendedSeries()
-    }
-    private fun loadGenres()
-    {
-        loadMoviesGenres()
-        loadSeriesGenres()
+        loadGenres()
     }
 
 
@@ -74,16 +69,8 @@ class HomeViewModel(
             }
         )
     }
-    private fun loadMoviesGenres()=fetchDate(
-        block={getMoviesGenresUseCase.getMoviesGenres()},
-        mapper={it.toHomeGenreUistate()},
-        updtae={state,result-> state.copy(genres = result )},
-    )
-    private fun loadSeriesGenres()=fetchDate(
-        block={getSeriesGenresUseCase.getSeriesGenres()},
-        mapper={it.toHomeGenreUistate()},
-        updtae={state,result-> state.copy(genres = result )},
-    )
+
+
     private fun loadNowPlayingMovies() = fetchData(
         block = { getNowPlayingMoviesUseCase.getNowPlayingMovies(1) },
         mapper = { it.toHomeMovieUiState() },
@@ -150,6 +137,27 @@ class HomeViewModel(
         update = { state, result -> state.copy(randomSeries = result) }
     )
 
+    private fun loadGenres() {
+        tryToCall(
+            block = {
+                val movieGenres = getMoviesGenresUseCase.getMoviesGenres()
+                val seriesGenres = getSeriesGenresUseCase.getSeriesGenres()
+
+                val combined = buildSet {
+                    add(HomeScreenState.GenreUiState.defaultGenre)
+                    movieGenres.mapTo(this) { it.toHomeGenreUistate() }
+                    seriesGenres.mapTo(this) { it.toHomeGenreUistate() }
+                }
+
+                combined
+            },
+            onSuccess = { genres ->
+                updateState { it.copy(genres = genres) }
+            },
+            onError = ::handleError
+        )
+    }
+
     override fun onClickProfile() {
         sendEffect(HomeEffect.NavigateToProfile)
     }
@@ -195,18 +203,19 @@ class HomeViewModel(
     override fun onClickSeeAllOnTv() {
         sendEffect(HomeEffect.NavigateToSeeAllOnTv)
     }
-    override fun onGenreSelected(genreIndex:Int) {
-      updateState {
-          it.copy(selectedGenreIndex = genreIndex)
-      }
+
+    override fun onGenreSelected(genreIndex: Int) {
+        updateState {
+            it.copy(selectedGenreIndex = genreIndex)
+        }
     }
+
     override fun onFilterSelected(filter: HomeScreenState.FilterType) {
         updateState {
             it.copy(selectedFilter = filter)
         }
 
     }
-
 
 
     private fun <T, R> fetchData(
@@ -248,7 +257,5 @@ class HomeViewModel(
             else -> ErrorStatus.UNKNOWN_ERROR
         }
     }
+
 }
-
-
-
