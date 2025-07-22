@@ -2,7 +2,6 @@ package com.cairosquad.remote.series
 
 import com.cairosquad.remote.utils.retrofit.safeCallApi
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
-import com.cairosquad.repository.movie.data_source.remote.dto.VideoResponse
 import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.SeriesRemoteDto
 import com.cairosquad.repository.series.data_source.remote.RemoteSeriesDataSource
@@ -54,11 +53,7 @@ class RemoteSeriesDataSourceImpl(
             .episodes ?: emptyList()
     }
 
-    override suspend fun getVideoKey(seriesId: Long): String? {
-        return callApi<VideoResponse> {
-            httpClient.get(constructUrl("tv/$seriesId/videos")) {
-                parameter(API_KEY, BuildConfig.API_KEY)
-            }
-        }.getVideoKey()
+    override suspend fun getVideoKey(seriesId: Long): String {
+        return safeCallApi { seriesApiService.getVideoKey(seriesId).getVideoKey() ?: "" }
     }
 }

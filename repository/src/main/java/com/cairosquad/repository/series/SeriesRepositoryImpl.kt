@@ -14,7 +14,7 @@ class SeriesRepositoryImpl(
 ) : SeriesRepository {
     override suspend fun getSeries(seriesId: Long): Series {
         return remoteSeriesDataSource.getSeries(seriesId).toEntity(
-            remoteSeriesDataSource.getVideoKey(seriesId) ?: ""
+            remoteSeriesDataSource.getVideoKey(seriesId)
         )
     }
 

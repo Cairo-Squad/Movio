@@ -21,7 +21,7 @@ class MovieRepositoryImpl(
     override suspend fun getMovie(movieId: Long): Movie {
         return tryToCall {
             remoteMovieDataSource.getMovie(movieId).toEntity(
-                remoteMovieDataSource.getVideoKey(movieId) ?: ""
+                remoteMovieDataSource.getVideoKey(movieId)
             )
         }
     }
