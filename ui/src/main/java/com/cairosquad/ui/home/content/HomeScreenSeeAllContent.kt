@@ -60,15 +60,15 @@ fun SeeAllContent(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
         ) {
-            MediaSection(
-                modifier = Modifier.padding(bottom = 32.dp),
-                mediaList = mediaList,
-                onClickMedia = onClickMedia,
-                mediaSectionLayoutType = MediaSectionLayoutType.LazyVerticalGrid(
-                    minWidthDp = 101,
-                    aspectRatio = 0.743f
-                )
-            )
+//            MediaSection(
+//                modifier = Modifier.padding(bottom = 32.dp),
+//                mediaList = mediaList,
+//                onClickMedia = onClickMedia,
+//                mediaSectionLayoutType = MediaSectionLayoutType.LazyVerticalGrid(
+//                    minWidthDp = 101,
+//                    aspectRatio = 0.743f
+//                )
+//            )
         }
     }
 }

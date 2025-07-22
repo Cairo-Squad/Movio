@@ -23,8 +23,8 @@ fun Chip(
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
     textStyle: TextStyle = Theme.textStyle.label.smallRegular14,
-    onClick: () -> Unit = {},
-    isEnable: Boolean = true
+    isEnable: Boolean = true,
+    onClick: () -> Unit = {}
 ) {
     val backgroundColor =
         if (isSelected) Theme.color.brand.primary else Theme.color.surfaces.onSurfaceAt3
