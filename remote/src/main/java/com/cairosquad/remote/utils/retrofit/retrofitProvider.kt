@@ -1,6 +1,5 @@
 package com.cairosquad.remote.utils.retrofit
 
-import android.util.Log
 import com.cairosquad.remote.BuildConfig
 import com.cairosquad.remote.utils.retrofit.interceptor.ApiKeyInterceptor
 import com.cairosquad.remote.utils.retrofit.interceptor.AuthInterceptor
@@ -29,8 +28,6 @@ fun retrofitProvider(tokenProvider: () -> String?): Retrofit {
         coerceInputValues = true
         isLenient = true
     }
-
-    Log.e("retrofit provider: ", "token: ${tokenProvider()}")
 
     return Retrofit.Builder()
         .baseUrl(BuildConfig.BASE_URL)
