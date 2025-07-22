@@ -1,5 +1,10 @@
 package com.cairosquad.ui.navigation
 
+import FreeToWatchScreen
+import MoreRecommendedScreen
+import TopRatingScreen
+import TrendingScreen
+import UpComingScreen
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -21,7 +26,6 @@ import com.cairosquad.ui.details.TopCastScreen
 import com.cairosquad.ui.details.artist.ArtistScreen
 import com.cairosquad.ui.details.similar_movies.SimilarMoviesScreen
 import com.cairosquad.ui.details.similar_series.SimilarSeriesScreen
-import com.cairosquad.ui.search.ForYouScreen
 import com.cairosquad.ui.splash.SplashScreen
 
 
@@ -100,8 +104,20 @@ fun AppNavigation() {
                     seasonNumber = backStackEntry.toRoute<EpisodesRoute>().seasonNumber
                 )
             }
-            composable<ForYouRoute> {
-                ForYouScreen()
+            composable<TopRatingRoute> {
+                TopRatingScreen()
+            }
+            composable<TrendingRoute> {
+                TrendingScreen()
+            }
+            composable<FreeToWatchRoute> {
+                FreeToWatchScreen()
+            }
+            composable<UpComingRoute> {
+                UpComingScreen()
+            }
+            composable<MoreRecommendedRoute> {
+                MoreRecommendedScreen()
             }
         }
     }
