@@ -1,8 +1,6 @@
 package com.cairosquad.ui.auth
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -141,6 +140,7 @@ private fun LoginScreenContent(
                     LoginScreenState.FormField.PASSWORD
                 )
             ) else "",
+            isErrorMessageShown = false,
             isPasswordField = !uiState.isPasswordVisible,
             leadingIcon = R.drawable.lock,
             trailingIcon = if (uiState.isPasswordVisible) R.drawable.eye else R.drawable.close_eye,
@@ -149,48 +149,53 @@ private fun LoginScreenContent(
                 imeAction = ImeAction.Done
             ),
             onTrailingIconClick = { interactionListener.onPasswordVisibilityIconClick() },
-            modifier = Modifier.padding(bottom = 12.dp)
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.padding(bottom = 24.dp)
+            modifier = Modifier
+                .padding(bottom = 24.dp, top = 12.dp)
+                .fillMaxWidth()
         ) {
-            AnimatedVisibility(
-                visible = uiState.errors[LoginScreenState.FormField.PASSWORD] != null,
-                enter = fadeIn(),
-                exit = fadeOut()
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.weight(1f)
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                AnimatedVisibility(
+                    visible = uiState.errors[LoginScreenState.FormField.PASSWORD] != null,
                 ) {
-                    Icon(
-                        painter = painterResource(R.drawable.info_circle),
-                        contentDescription = stringResource(R.string.icon),
-                        tint = Theme.color.system.errorContainer,
-                        modifier = Modifier.size(16.dp)
-                    )
-                    uiState.errors[LoginScreenState.FormField.PASSWORD]?.let { error ->
-                        Text(
-                            text = stringResource(
-                                validationErrorToStringResource(
-                                    error,
-                                    LoginScreenState.FormField.PASSWORD
-                                )
-                            ),
-                            style = Theme.textStyle.label.smallRegular12,
-                            color = Theme.color.system.errorContainer,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.padding(start = 4.dp)
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.info_circle),
+                            contentDescription = stringResource(R.string.icon),
+                            tint = Theme.color.system.errorContainer,
+                            modifier = Modifier.size(16.dp)
                         )
+                        uiState.errors[LoginScreenState.FormField.PASSWORD]?.let { error ->
+                            Text(
+                                text = stringResource(
+                                    validationErrorToStringResource(
+                                        error,
+                                        LoginScreenState.FormField.PASSWORD
+                                    )
+                                ),
+                                style = Theme.textStyle.label.smallRegular12,
+                                color = Theme.color.system.errorContainer,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.padding(start = 4.dp)
+                            )
+                        }
                     }
                 }
             }
+
             Text(
                 text = stringResource(R.string.forgot_password),
                 modifier = Modifier
-                    .weight(1f)
+                    .width(120.dp)
                     .clickable { interactionListener.onForgetPasswordClick() },
                 style = Theme.textStyle.label.mediumMedium12,
                 color = Theme.color.surfaces.onSurfaceVariant,
