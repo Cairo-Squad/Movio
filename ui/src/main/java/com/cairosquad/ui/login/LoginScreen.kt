@@ -37,6 +37,9 @@ import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.R
 import com.cairosquad.ui.movio_component.LoginScreenHeader
+import com.cairosquad.ui.navigation.ForgetPasswordWebViewRoute
+import com.cairosquad.ui.navigation.LocalNavController
+import com.cairosquad.ui.navigation.SignUpWebViewRoute
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.viewmodel.login.LoginEffect
 import com.cairosquad.viewmodel.login.LoginInteractionListener
@@ -50,14 +53,21 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = koinViewModel()
 ) {
+    val navController = LocalNavController.current
     val uiState by viewModel.screenState.collectAsState()
-
+    val resetPasswordUrl = "https://www.themoviedb.org/reset-password"
+    val signUpUrl = "https://www.themoviedb.org/signup"
     ObserveAsEffect(viewModel.effect) { effect ->
         when (effect) {
-            LoginEffect.NavigateToForgetPassword -> TODO()
+            LoginEffect.NavigateToForgetPassword -> navController.navigate(
+                ForgetPasswordWebViewRoute(url = resetPasswordUrl)
+            )
+
             LoginEffect.NavigateToHome -> TODO()
             LoginEffect.NavigateToGuestHome -> TODO()
-            LoginEffect.NavigateToSignUp -> TODO()
+            LoginEffect.NavigateToSignUp -> navController.navigate(
+                SignUpWebViewRoute(url = signUpUrl)
+            )
         }
     }
 
@@ -121,7 +131,7 @@ private fun LoginScreenContent(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             this@Column.AnimatedVisibility(
-                visible = uiState.isPasswordIncorrect,
+                visible = uiState.error != null,
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {

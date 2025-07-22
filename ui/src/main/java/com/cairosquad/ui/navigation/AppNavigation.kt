@@ -21,7 +21,9 @@ import com.cairosquad.ui.details.TopCastScreen
 import com.cairosquad.ui.details.artist.ArtistScreen
 import com.cairosquad.ui.details.similar_movies.SimilarMoviesScreen
 import com.cairosquad.ui.details.similar_series.SimilarSeriesScreen
+import com.cairosquad.ui.login.ForgetPasswordWebViewScreen
 import com.cairosquad.ui.login.LoginScreen
+import com.cairosquad.ui.login.SignUpWebViewScreen
 import com.cairosquad.ui.search.ForYouScreen
 import com.cairosquad.ui.splash.SplashScreen
 
@@ -52,6 +54,18 @@ fun AppNavigation() {
                 LoginScreen()
             }
 
+            composable<ForgetPasswordWebViewRoute> { backStackEntry ->
+                ForgetPasswordWebViewScreen(
+                    url = backStackEntry.toRoute<ForgetPasswordWebViewRoute>().url
+                )
+            }
+
+            composable<SignUpWebViewRoute> { backStackEntry ->
+                SignUpWebViewScreen(
+                    url = backStackEntry.toRoute<SignUpWebViewRoute>().url
+                )
+            }
+
             composable<AppRoute> {
                 AppScreen()
             }
@@ -68,7 +82,7 @@ fun AppNavigation() {
             composable<ArtistRoute> { backStackEntry ->
                 ArtistScreen(
                     artistId = backStackEntry.toRoute<ArtistRoute>().artistId,
-                    navController=navController
+                    navController = navController
                 )
             }
             composable<SimilarMovieRoute> { backStackEntry ->

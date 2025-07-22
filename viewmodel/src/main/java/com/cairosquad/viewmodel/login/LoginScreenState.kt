@@ -6,7 +6,6 @@ data class LoginScreenState(
     val username: String = "",
     val password: String = "",
     val isPasswordVisible: Boolean = false,
-    val isPasswordIncorrect: Boolean=false,
     val isLoading: Boolean = false,
     val errors: Map<FormField, String> = emptyMap(),
     val error: ErrorStatus? = null
