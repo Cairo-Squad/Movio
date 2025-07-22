@@ -17,8 +17,13 @@ data class HomeScreenState (
     val randomSeries: List<SeriesUiState> = emptyList(),
     val screenStatus: HomeScreenState.ScreenStatus = HomeScreenState.ScreenStatus.LOADING,
     val errorStatus: ErrorStatus? = null,
+    val selectedFilter: FilterType = FilterType.ALL,
     val selectedTab: TabType = TabType.ALL,
-) {
+    val genres: List<GenreUiState> = listOf(GenreUiState.defaultGenre),
+    val selectedGenre: GenreUiState = GenreUiState.defaultGenre,
+
+
+    ) {
     data class MovieUiState(
         val id: Long = 0L,
         val title: String = "",
@@ -37,8 +42,17 @@ data class HomeScreenState (
 
     data class GenreUiState(
         val id: Long = 0L,
-        val name: String = ""
+        val name: String = "",
+
     )
+    {
+        companion object{
+            val defaultGenre= GenreUiState(
+                id=0,
+                name="All"
+            )
+        }
+    }
 
     enum class ScreenStatus {
         LOADING,
@@ -51,4 +65,11 @@ data class HomeScreenState (
         TV_SHOWS,
         CATEGORIES
     }
+    enum class FilterType {
+        ALL,
+        POPULARITY,
+        LATEST
+    }
+
+
 }

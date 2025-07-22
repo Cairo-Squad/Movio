@@ -4,14 +4,12 @@ import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.movies.GetFreeToWatchMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetMoreRecommendedMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetNowPlayingMoviesUseCase
-import com.cairosquad.domain.usecase.movies.GetRandomMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetTopRatingMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetTrendingMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetUpcomingMoviesUseCase
 import com.cairosquad.domain.usecase.series.GetAiringTodaySeriesUseCase
 import com.cairosquad.domain.usecase.series.GetMoreRecommendedSeriesUseCase
 import com.cairosquad.domain.usecase.series.GetOnTvSeriesUseCase
-import com.cairosquad.domain.usecase.series.GetRandomSeriesUseCase
 import com.cairosquad.domain.usecase.series.GetTopRatingSeriesUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
@@ -28,18 +26,23 @@ class HomeViewModel(
     private val getMoreRecommendedSeriesUseCase: GetMoreRecommendedSeriesUseCase,
     private val getOnTvSeriesUseCase: GetOnTvSeriesUseCase,
     private val getTopRatingSeriesUseCase: GetTopRatingSeriesUseCase,
-    private val getRandomSeriesUseCase: GetRandomSeriesUseCase,
-    private val getRandomMoviesUseCase: GetRandomMoviesUseCase,
+    private val getPopularSeriesUseCase: GetPopularSeriesUseCase,
+    private val getPopularMoviesUseCase: GetPopularMoviesUseCase,
+    private val getMoviesGenresUseCase: GetMoviesGenresUseCase,
+    private val getSeriesGenresUseCase: GetSeriesGenresUseCase,
+    private val getMoviesUseCase: GetMoviesUseCase,
+    private val getSeriesUseCase: GetSeriesUseCase,
 ) : BaseViewModel<HomeScreenState, HomeEffect>(initialState = HomeScreenState()),
     HomeInteractionsListener {
 
     init {
         loadHomeData()
+        loadGenres()
     }
 
     private fun loadHomeData() {
-        loadRandomSeries()
-        loadRandomMovies()
+        loadPopularSeries()
+        loadPopularMovies()
         loadTopRatingMovies()
         loadTrendingMovies()
         loadNowPlayingMovies()
@@ -50,6 +53,11 @@ class HomeViewModel(
         loadAiringTodaySeries()
         loadOnTvSeries()
         loadMoreRecommendedSeries()
+    }
+    private fun loadGenres()
+    {
+        loadMoviesGenres()
+        loadSeriesGenres()
     }
 
 
@@ -66,7 +74,16 @@ class HomeViewModel(
             }
         )
     }
-
+    private fun loadMoviesGenres()=fetchDate(
+        block={getMoviesGenresUseCase.getMoviesGenres()},
+        mapper={it.toHomeGenreUistate()},
+        updtae={state,result-> state.copy(genres = result )},
+    )
+    private fun loadSeriesGenres()=fetchDate(
+        block={getSeriesGenresUseCase.getSeriesGenres()},
+        mapper={it.toHomeGenreUistate()},
+        updtae={state,result-> state.copy(genres = result )},
+    )
     private fun loadNowPlayingMovies() = fetchData(
         block = { getNowPlayingMoviesUseCase.getNowPlayingMovies(1) },
         mapper = { it.toHomeMovieUiState() },
@@ -121,14 +138,14 @@ class HomeViewModel(
         update = { state, result -> state.copy(moreRecommendedSeries = result) }
     )
 
-    private fun loadRandomMovies() = fetchData(
-        block = { getRandomMoviesUseCase.getRandomMovies(1) },
+    private fun loadPopularMovies() = fetchData(
+        block = { getPopularMoviesUseCase.getPopularMovies(1) },
         mapper = { it.toHomeMovieUiState() },
         update = { state, result -> state.copy(randomMovies = result) }
     )
 
-    private fun loadRandomSeries() = fetchData(
-        block = { getRandomSeriesUseCase.getRandomSeries(1) },
+    private fun loadPopularSeries() = fetchData(
+        block = { getPopularSeriesUseCase.getPopularSeries(1) },
         mapper = { it.toHomeSeriesUiState() },
         update = { state, result -> state.copy(randomSeries = result) }
     )
@@ -178,6 +195,19 @@ class HomeViewModel(
     override fun onClickSeeAllOnTv() {
         sendEffect(HomeEffect.NavigateToSeeAllOnTv)
     }
+    override fun onGenreSelected(genre: String) {
+        val selectedGenre = if (genre == "All") null else genre
+        updateState {
+            it.copy(selectedGenre = selectedGenre)
+        }
+    }
+    override fun onFilterSelected(filter: HomeScreenState.FilterType) {
+        updateState {
+            it.copy(selectedFilter = filter)
+        }
+
+    }
+
 
 
     private fun <T, R> fetchData(
