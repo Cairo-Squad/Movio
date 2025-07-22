@@ -6,7 +6,7 @@ import com.cairosquad.entity.Series
 class GetTopRatingSeriesUseCase(
     private val seriesRepository: SeriesRepository
 ) {
-    suspend fun getTopRatingSeries(page: Int): List<Series> {
-        return seriesRepository.getTopRatingSeries(page)
+    suspend fun getTopRatingSeries(page: Int,categoryId : String?= null): List<Series> {
+        return seriesRepository.getTopRatingSeries(page,categoryId)
     }
 }

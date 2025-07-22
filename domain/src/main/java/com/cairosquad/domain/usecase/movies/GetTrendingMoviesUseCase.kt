@@ -6,7 +6,7 @@ import com.cairosquad.entity.Movie
 class GetTrendingMoviesUseCase(
     private val moviesRepository: MoviesRepository
 ) {
-    suspend fun getTrendingMovies(page:Int) : List<Movie>{
-        return moviesRepository.getTrendingMovies(page)
+    suspend fun getTrendingMovies(page:Int, categoryId: String? = null) : List<Movie>{
+        return moviesRepository.getTrendingMovies(page,categoryId)
     }
 }

@@ -6,7 +6,7 @@ import com.cairosquad.entity.Series
 class GetFreeToWatchSeriesUseCase(
     private val seriesRepository: SeriesRepository
 ) {
-    suspend fun getFreeToWatchSeries(page: Int): List<Series> {
-        return seriesRepository.getFreeToWatchSeries(page)
+    suspend fun getFreeToWatchSeries(page: Int,categoryId : String?= null): List<Series> {
+        return seriesRepository.getFreeToWatchSeries(page,categoryId)
     }
 }
