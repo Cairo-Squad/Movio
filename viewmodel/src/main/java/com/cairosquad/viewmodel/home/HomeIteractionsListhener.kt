@@ -13,4 +13,6 @@ interface HomeInteractionsListener {
     fun onClickSeeAllAiringToday()
     fun onClickSeeAllOnTv()
     fun onClickBackInSeeAllScreen()
+    fun onClickCategoryChip(categoryChipIndex: Int)
+    fun onClickSortChip(sortChipIndex: Int)
 }

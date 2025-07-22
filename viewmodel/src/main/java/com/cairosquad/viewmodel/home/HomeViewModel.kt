@@ -173,6 +173,14 @@ class HomeViewModel(
         updateState { it.copy(seeAllType = null) }
     }
 
+    override fun onClickCategoryChip(categoryChipIndex: Int) {
+       updateState { it.copy(selectedCategoriesChip =categoryChipIndex ) }
+    }
+
+    override fun onClickSortChip(sortChipIndex: Int) {
+        updateState { it.copy(selectedSortChip =sortChipIndex ) }
+    }
+
 
     private fun <T, R> fetchData(
         block: suspend () -> List<T>,
