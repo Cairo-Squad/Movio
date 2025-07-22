@@ -30,8 +30,8 @@ class HomeViewModel(
     private val getPopularMoviesUseCase: GetPopularMoviesUseCase,
     private val getMoviesGenresUseCase: GetMoviesGenresUseCase,
     private val getSeriesGenresUseCase: GetSeriesGenresUseCase,
-    private val getMoviesUseCase: GetMoviesUseCase,
-    private val getSeriesUseCase: GetSeriesUseCase,
+    private val getAllMoviesUseCase: GetAllMoviesUseCase,
+    private val getAllSeriesUseCase: GetAllSeriesUseCase,
 ) : BaseViewModel<HomeScreenState, HomeEffect>(initialState = HomeScreenState()),
     HomeInteractionsListener {
 
