@@ -25,13 +25,13 @@ fun List<ArtistRemoteDto>.toEntityList(): List<Artist> {
     return map { it.toEntity() }
 }
 
-fun MovieRemoteDto.toEntity(): Movie {
+fun MovieRemoteDto.toEntity(allGenres: List<Genre> = emptyList()): Movie {
     return Movie(
         id = id?.toLong() ?: 0L,
         title = title ?: "",
         rating = voteAverage?.toFloat() ?: 0f,
         posterPath = posterPath ?: "",
-        genres = genreIds?.map { Genre(it.toLong(), "") } ?: emptyList(),
+        genres = allGenres.filter { genreIds?.contains(it.id.toInt()) == true },
         overview = overview.orEmpty(),
         releaseDate = releaseDate?.let { parseDateToMillis(it)  } ?: 0L,
         runtimeMinutes = 0,

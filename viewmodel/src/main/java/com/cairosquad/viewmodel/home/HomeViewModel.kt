@@ -128,7 +128,7 @@ class HomeViewModel(
     )
 
     private fun loadPopularMovies() = fetchData(
-        block = { getPopularMoviesUseCase.getPopularMovies(1) },
+        block = { getPopularMoviesUseCase.getPopularMovies(page = 1) },
         mapper = { it.toHomeMovieUiState() },
         update = { state, result -> state.copy(popularMovies = result) }
     )

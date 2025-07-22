@@ -99,7 +99,8 @@ class MovieRepositoryImpl(
 
     override suspend fun getTrendingMovies(page: Int,categoryId: String?): List<Movie> {
         return tryToCall {
-            remoteMovieDataSource.getTrendingMovies(page,categoryId).map { it.toEntity() }
+            val genres = remoteMovieDataSource.getMoviesGenres().map { it.toEntity() }
+            remoteMovieDataSource.getTrendingMovies(page,categoryId).map { it.toEntity(genres) }
         }
     }
 
@@ -132,14 +133,20 @@ class MovieRepositoryImpl(
 
     override suspend fun getPopularMovies(page: Int,categoryId: String?): List<Movie> {
         return tryToCall {
-            remoteMovieDataSource.getPopularMovies(page,categoryId).map { it.toEntity() }
+            val genres = remoteMovieDataSource.getMoviesGenres().map { it.toEntity() }
+            remoteMovieDataSource.getPopularMovies(page,categoryId).map { it.toEntity(genres) }
         }
     }
 
     override suspend fun getAllMovies(page: Int,categoryId: String?,sortType: SortType?): List<Movie> {
         return tryToCall {
-            val sortBy = sortType?.sortBy
-            remoteMovieDataSource.getAllMovies(page,categoryId,sortBy).map { it.toEntity() }
+            val genres = remoteMovieDataSource.getMoviesGenres().map { it.toEntity() }
+
+            remoteMovieDataSource.getAllMovies(
+                page,
+                categoryId,
+                sortType?.sortBy
+            ).map { it.toEntity(genres) }
         }
     }
 
