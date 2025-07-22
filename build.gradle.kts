@@ -32,6 +32,7 @@ kover {
                     "**.safe_image_viewer.alghorithm.**",
                     "**.safe_image_viewer.safe_image_viewer.**",
                     "**.safe_image_viewer.loader.**",
+                    "**.safe_image_viewer.FastBlurAlgorithmKt",
                 )
             }
         }
@@ -45,12 +46,13 @@ kover {
     }
 }
 
+
 dependencies {
-    kover(project(":remote"))
-    kover(project(":domain"))
-    kover(project(":repository"))
-    kover(project(":viewmodel"))
-    kover(project(":safe_image_viewer"))
+    kover(projects.remote)
+    kover(projects.domain)
+    kover(projects.repository)
+    kover(projects.viewmodel)
+    kover(projects.safeImageViewer)
 }
 configurations.all {
     resolutionStrategy {

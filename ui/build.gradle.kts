@@ -1,11 +1,9 @@
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
-    id("org.jetbrains.kotlin.plugin.compose")
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
@@ -18,22 +16,14 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
-    val properties = Properties()
-    properties.load(rootProject.file("secret.properties").inputStream())
-    properties.getProperty("IMAGE_BASE_URL")
 
     buildTypes {
         release {
-            buildConfigField("String", "IMAGE_BASE_URL", properties.getProperty("IMAGE_BASE_URL"))
-
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-        }
-        debug {
-            buildConfigField("String", "IMAGE_BASE_URL", properties.getProperty("IMAGE_BASE_URL"))
         }
     }
     compileOptions {
@@ -45,7 +35,6 @@ android {
     }
     buildFeatures {
         compose = true
-        buildConfig = true
     }
 }
 
@@ -60,7 +49,6 @@ dependencies {
     implementation(libs.androidx.foundation.layout.android)
     implementation(libs.androidx.foundation)
     implementation(platform(libs.androidx.compose.bom))
-    testImplementation(libs.junit)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     // Koin
@@ -72,7 +60,7 @@ dependencies {
     implementation(libs.navigation.compose)
     // serialization
     implementation(libs.kotlinx.serialization.json)
-    implementation(project(":design_system"))
-    implementation(project(":viewmodel"))
-    implementation(project(":safe_image_viewer"))
+    implementation(projects.designSystem)
+    implementation(projects.viewmodel)
+    implementation(projects.safeImageViewer)
 }

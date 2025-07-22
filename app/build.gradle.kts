@@ -11,7 +11,7 @@ plugins {
     alias(libs.plugins.google.firebase.appdistribution)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
-    id("androidx.room") version "2.7.1"
+    alias(libs.plugins.androidx.room)
 }
 
 android {
@@ -90,7 +90,6 @@ ksp {
 }
 
 dependencies {
-    testImplementation(libs.junit)
     implementation(libs.androidx.ui)
     implementation(libs.firebase.perf)
     implementation(libs.androidx.core.ktx)
@@ -100,9 +99,7 @@ dependencies {
     implementation(libs.firebase.crashlytics)
     implementation(platform(libs.firebase.bom))
     debugImplementation(libs.androidx.ui.tooling)
-    androidTestImplementation(libs.ui.test.junit4)
     implementation(libs.androidx.activity.compose)
-    androidTestImplementation(libs.androidx.junit)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -131,12 +128,12 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
-    implementation(project(":design_system"))
-    implementation(project(":domain"))
-    implementation(project(":entity"))
-    implementation(project(":remote"))
-    implementation(project(":local"))
-    implementation(project(":repository"))
-    implementation(project(":ui"))
-    implementation(project(":viewmodel"))
+    implementation(projects.designSystem)
+    implementation(projects.domain)
+    implementation(projects.entity)
+    implementation(projects.remote)
+    implementation(projects.local)
+    implementation(projects.repository)
+    implementation(projects.ui)
+    implementation(projects.viewmodel)
 }

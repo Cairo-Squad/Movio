@@ -65,18 +65,3 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     implementation(libs.coil.network.okhttp)
 }
-
-kover {
-    reports {
-        filters {
-            excludes {
-                classes(
-                    "**.alghorithm.**",
-                    "**.loader.**",
-                    "**.modifier.**",
-                    "**.FastBlurAlgorithmKt",
-                )
-            }
-        }
-    }
-}

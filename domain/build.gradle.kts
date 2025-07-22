@@ -13,8 +13,10 @@ kotlin {
     }
 }
 dependencies {
+    api(projects.entity)
+
+    //test
     testImplementation(kotlin("test"))
-    api(project(":entity"))
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.junit)

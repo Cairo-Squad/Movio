@@ -62,6 +62,8 @@ android {
     }
 }
 dependencies {
+    implementation(projects.repository)
+
     implementation(platform(libs.androidx.compose.bom))
 
     implementation(libs.androidx.datastore.preferences)
@@ -75,19 +77,16 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.kotlinx.serialization)
     implementation (libs.okhttp)
+
+    implementation(libs.logging.interceptor)
+
+    //test
     testImplementation(kotlin("test"))
-
-
     testImplementation(libs.kotlinx.coroutines.test)
-
     testImplementation(libs.junit.jupiter)
-    testImplementation(libs.junit.junit)
-    testImplementation(libs.junit.junit)
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${libs.versions.junitJupiter.get()}")
     testImplementation(libs.truth)
     testImplementation(libs.koin.test)
     testImplementation(libs.mockk)
-    implementation(libs.logging.interceptor)
 
-    implementation(project(":repository"))
 }

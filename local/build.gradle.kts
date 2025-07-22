@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
-    id("androidx.room") version "2.7.1"
+    alias(libs.plugins.androidx.room)
 }
 
 android {
@@ -50,19 +50,20 @@ android {
 }
 
 dependencies {
+    implementation(projects.repository)
 
     implementation(libs.androidx.core.ktx)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
 
     // Room
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
+    //test
     testImplementation(libs.mockk)
     testImplementation(libs.truth)
+    testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.androidx.junit)
 
-    implementation(project(":repository"))
 }

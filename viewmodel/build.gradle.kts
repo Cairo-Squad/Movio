@@ -46,36 +46,29 @@ android {
 }
 
 dependencies {
+    implementation(projects.domain)
+
     implementation(libs.androidx.core.ktx)
-    testImplementation(libs.junit)
-    testImplementation(libs.junit.junit)
-    androidTestImplementation(libs.androidx.junit)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
-    testImplementation(libs.junit.jupiter)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
     // Paging
     api(libs.androidx.paging.runtime)
     api(libs.paging.compose)
+
     // test
-    androidTestImplementation(libs.androidx.core.testing)
-    androidTestImplementation(libs.androidx.junit.ktx)
+    testImplementation(kotlin("test"))
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.androidx.paging.testing)
-    // google truth
-    testImplementation(libs.truth)
-    androidTestImplementation(libs.truth)
-
-    // mockk
-    testImplementation(libs.mockk)
-    androidTestImplementation(libs.mockk)
-
     testImplementation(libs.androidx.core.testing)
     testImplementation(libs.turbine)
-
-
-    implementation(project(":domain"))
-    testImplementation(kotlin("test"))
+    testImplementation(libs.truth)
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.junit.jupiter)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.truth)
+    androidTestImplementation(libs.mockk)
 }
