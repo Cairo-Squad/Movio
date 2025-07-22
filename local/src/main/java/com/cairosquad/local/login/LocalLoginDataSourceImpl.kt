@@ -11,5 +11,5 @@ class LocalLoginDataSourceImpl(
         sessionId = SessionIdDto(sessionId = sessionId)
     )
 
-    override suspend fun getSessionId() = loginDao.getSessionId()?.sessionId ?: ""
+    override suspend fun getSessionId() = loginDao.getSessionId().getOrNull(0)?.sessionId ?: ""
 }

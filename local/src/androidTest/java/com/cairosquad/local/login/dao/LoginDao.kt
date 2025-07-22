@@ -32,7 +32,7 @@ class UserDaoTest {
             ApplicationProvider.getApplicationContext(),
             MovioDataBase::class.java
         )
-            .allowMainThreadQueries()  // simplify threading in tests
+            .allowMainThreadQueries()
             .build()
         dao = db.loginDao()
     }
@@ -48,7 +48,7 @@ class UserDaoTest {
         dao.saveSessionId(dto)
 
         val loaded = dao.getSessionId()
-        assertThat(loaded?.sessionId).isEqualTo("abc123")
+        assertThat(loaded.first().sessionId).isEqualTo("abc123")
     }
 
     @Test
@@ -57,13 +57,13 @@ class UserDaoTest {
         dao.saveSessionId(SessionIdDto(sessionId = "second"))
 
         val loaded = dao.getSessionId()
-        assertThat(loaded?.sessionId).isEqualTo("second")
+        assertThat(loaded.first().sessionId).isEqualTo("second")
     }
 
     @Test
-    fun default_sessionId_is_null() = runTest {
+    fun default_sessionId_is_empty_list() = runTest {
         val loaded = dao.getSessionId()
-        assertThat(loaded?.sessionId).isNull()
+        assertThat(loaded).isEmpty()
     }
 
     @Test
@@ -72,6 +72,6 @@ class UserDaoTest {
         dao.saveSessionId(SessionIdDto(sessionId = ""))
 
         val loaded = dao.getSessionId()
-        assertThat(loaded?.sessionId).isEqualTo("")
+        assertThat(loaded.first().sessionId).isEqualTo("")
     }
 }

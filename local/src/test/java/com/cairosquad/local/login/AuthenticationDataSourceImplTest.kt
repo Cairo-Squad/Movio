@@ -42,7 +42,7 @@ class AuthenticationDataSourceImplTest {
 
     @Test
     fun `getSessionId SHOULD call dao and return plain sessionId`() = runTest {
-        coEvery { loginDao.getSessionId() } returns sampleDto
+        coEvery { loginDao.getSessionId() } returns listOf(sampleDto)
 
         val result = authDataSource.getSessionId()
 
@@ -73,8 +73,8 @@ class AuthenticationDataSourceImplTest {
     }
 
     @Test
-    fun `getSessionId SHOULD return empty string when dao returns null`() = runTest {
-        coEvery { loginDao.getSessionId() } returns null
+    fun `getSessionId SHOULD return empty string when dao returns empty list`() = runTest {
+        coEvery { loginDao.getSessionId() } returns emptyList()
 
         val result = authDataSource.getSessionId()
 
