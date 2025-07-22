@@ -54,9 +54,7 @@ fun DiscoverScreen(
                 modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars),
                 title = discoverContentStrategy.title,
                 onBackButtonClicked = {
-                    println("Before popBackStack")
-                    val result = navController.popBackStack()
-                    println("Result = $result")
+                    navController.popBackStack()
                 },
                 onShareButtonClicked = null,
                 onFavoriteButtonClicked = null

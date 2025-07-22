@@ -60,14 +60,14 @@ fun DiscoverMediaItems(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
-            items(items) { moreRecommended ->
+            items(items) { item ->
                 MovieCard(
                     modifier = Modifier.clickable {
-                        listener.onClickMovie(moreRecommended.id)
+                        listener.onClickMovie(item.id)
                     },
-                    title = moreRecommended.title,
-                    vote = moreRecommended.rating,
-                    imgUrl = moreRecommended.posterPath,
+                    title = item.title,
+                    vote = item.rating,
+                    imgUrl = item.posterPath,
                     width = null,
                     aspectRatio = 0.743f
                 )
