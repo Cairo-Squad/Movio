@@ -1,7 +1,9 @@
 package com.cairosquad.domain.repository
 
+import com.cairosquad.domain.model.SortType
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Episode
+import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Review
 import com.cairosquad.entity.Season
 import com.cairosquad.entity.Series
@@ -19,18 +21,24 @@ interface SeriesRepository {
 
     suspend fun getSeriesTopCast(seriesId: Long, page: Int): List<Artist>
 
-    suspend fun getTopRatingSeries(page: Int): List<Series>
+    suspend fun getTopRatingSeries(page: Int,categoryId : String?): List<Series>
 
-    suspend fun getMoreRecommendedSeries(page: Int): List<Series>
+    suspend fun getMoreRecommendedSeries(page: Int,categoryId : String?): List<Series>
 
-    suspend fun getOnTvSeries(page: Int): List<Series>
+    suspend fun getOnTvSeries(page: Int,categoryId : String?): List<Series>
 
-    suspend fun getAiringTodaySeries(page: Int): List<Series>
+    suspend fun getAiringTodaySeries(page: Int,categoryId : String?): List<Series>
 
-    suspend fun getTrendingSeries(page: Int): List<Series>
+    suspend fun getTrendingSeries(page: Int,categoryId : String?): List<Series>
 
-    suspend fun getFreeToWatchSeries(page: Int): List<Series>
+    suspend fun getFreeToWatchSeries(page: Int,categoryId : String?): List<Series>
 
     suspend fun getSeriesByCategory(category: String, page: Int): List<Series>
+
+    suspend fun getSeriesGenres(): List<Genre>
+
+    suspend fun getPopularSeries(page: Int,categoryId : String?): List<Series>
+
+    suspend fun getAllSeries(page: Int,categoryId : String?,sortType: SortType?): List<Series>
 
 }

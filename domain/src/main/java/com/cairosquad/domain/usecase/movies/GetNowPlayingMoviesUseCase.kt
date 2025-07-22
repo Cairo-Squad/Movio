@@ -6,7 +6,7 @@ import com.cairosquad.entity.Movie
 class GetNowPlayingMoviesUseCase(
     private val moviesRepository: MoviesRepository
 ) {
-    suspend fun getNowPlayingMovies(page: Int) : List<Movie>{
-        return moviesRepository.getNowPlayingMovies(page)
+    suspend fun getNowPlayingMovies(page: Int, categoryId : String?  =null ) : List<Movie>{
+        return moviesRepository.getNowPlayingMovies(page,categoryId)
     }
 }

@@ -1,7 +1,9 @@
 package com.cairosquad.repository.movie
 
+import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.repository.MoviesRepository
 import com.cairosquad.entity.Artist
+import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Review
 import com.cairosquad.repository.movie.data_source.remote.RemoteMovieDataSource
@@ -77,50 +79,70 @@ class MovieRepositoryImpl(
         }
     }
 
-    override suspend fun getTopRatingMovies(page: Int): List<Movie> {
+    override suspend fun getTopRatingMovies(page: Int,categoryId: String?): List<Movie> {
         return tryToCall {
-            remoteMovieDataSource.getTopRatingMovies(page).map { it.toEntity() }
+            remoteMovieDataSource.getTopRatingMovies(page,categoryId).map { it.toEntity() }
         }
     }
 
-    override suspend fun getUpcomingMovies(page: Int): List<Movie> {
+    override suspend fun getUpcomingMovies(page: Int,categoryId: String?): List<Movie> {
         return tryToCall {
-            remoteMovieDataSource.getUpcomingMovies(page).map { it.toEntity() }
+            remoteMovieDataSource.getUpcomingMovies(page,categoryId).map { it.toEntity() }
         }
     }
 
-    override suspend fun getNowPlayingMovies(page: Int): List<Movie> {
+    override suspend fun getNowPlayingMovies(page: Int,categoryId: String?): List<Movie> {
         return tryToCall {
-            remoteMovieDataSource.getNowPlayingMovies(page).map { it.toEntity() }
+            remoteMovieDataSource.getNowPlayingMovies(page,categoryId).map { it.toEntity() }
         }
     }
 
-    override suspend fun getTrendingMovies(page: Int): List<Movie> {
+    override suspend fun getTrendingMovies(page: Int,categoryId: String?): List<Movie> {
         return tryToCall {
-            remoteMovieDataSource.getTrendingMovies(page).map { it.toEntity() }
+            remoteMovieDataSource.getTrendingMovies(page,categoryId).map { it.toEntity() }
         }
     }
 
-    override suspend fun getMoreRecommendedMovies(page: Int): List<Movie> {
+    override suspend fun getMoreRecommendedMovies(page: Int,categoryId: String?): List<Movie> {
         return tryToCall {
-            remoteMovieDataSource.getMoreRecommendedMovies(page).map { it.toEntity() }
+            remoteMovieDataSource.getMoreRecommendedMovies(page,categoryId).map { it.toEntity() }
         }
     }
 
-    override suspend fun getFreeToWatchMovies(page: Int): List<Movie> {
+    override suspend fun getFreeToWatchMovies(page: Int,categoryId: String?): List<Movie> {
         return tryToCall {
-            remoteMovieDataSource.getFreeToWatchMovies(page).map { it.toEntity() }
+            remoteMovieDataSource.getFreeToWatchMovies(page,categoryId).map { it.toEntity() }
         }
     }
 
     override suspend fun getMoviesByCategory(
-        categoryId: String,
-        page: Int
+        page: Int,
+        categoryId: String
     ): List<Movie> {
         return tryToCall {
             remoteMovieDataSource.getMoviesByCategory(categoryId,page).map { it.toEntity() }
         }
     }
+
+    override suspend fun getMoviesGenres(): List<Genre> {
+        return tryToCall {
+            remoteMovieDataSource.getMoviesGenres().map { it.toEntity() }
+        }
+    }
+
+    override suspend fun getPopularMovies(page: Int,categoryId: String?): List<Movie> {
+        return tryToCall {
+            remoteMovieDataSource.getPopularMovies(page,categoryId).map { it.toEntity() }
+        }
+    }
+
+    override suspend fun getAllMovies(page: Int,categoryId: String?,sortType: SortType?): List<Movie> {
+        return tryToCall {
+            val sortBy = sortType?.sortBy
+            remoteMovieDataSource.getAllMovies(page,categoryId,sortBy).map { it.toEntity() }
+        }
+    }
+
 
     private companion object {
         private const val CACHE_EXPIRATION_MILLIS = 3_600_000
