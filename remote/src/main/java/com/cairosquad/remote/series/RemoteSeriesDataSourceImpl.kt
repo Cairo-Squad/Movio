@@ -94,7 +94,7 @@ class RemoteSeriesDataSourceImpl(
 
     override suspend fun getSeriesGenres(): List<GenreDto> {
         return safeCallApi { seriesApiService.getSeriesGenres() }
-            .results?.filterNotNull().orEmpty()
+            .genres?.filterNotNull().orEmpty()
     }
 
     override suspend fun getPopularSeries(page: Int,categoryId : String?): List<SeriesRemoteDto> {
