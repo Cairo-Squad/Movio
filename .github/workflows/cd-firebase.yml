@@ -52,6 +52,8 @@ jobs:
           MOVIES_API_KEY: ${{ secrets.MOVIES_API_KEY }}
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
           FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
+          IMAGE_BASE_URL: ${{secrets.IMAGE_BASE_URL}}
+
         run: |
           rm -f app/movio-cairo.jks secret.properties release_notes.txt
           echo "$KEYSTORE" | base64 -d > app/movio-cairo.jks
@@ -60,6 +62,7 @@ jobs:
           echo "KEY_ALIAS = $KEY_ALIAS" >> secret.properties
           echo "KEY_PASSWORD = $KEY_PASSWORD" >> secret.properties
           echo "API_KEY = \"$MOVIES_API_KEY\"" >> secret.properties
+          echo "IMAGE_BASE_URL = \"$IMAGE_BASE_URL\"" >> secret.properties
 
       - name: Generate Signed APK
         env:
