@@ -18,18 +18,22 @@ import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.CategoriesChips
+import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.viewmodel.home.HomeViewModel
 
 @Composable
 fun DiscoverScreen(
     discoverContentStrategy: DiscoverContentStrategy,
+    navController: NavController,
     homeViewModel: HomeViewModel,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
+
     val state by homeViewModel.screenState.collectAsState()
     Box(modifier = Modifier.background(Theme.color.surfaces.surface)) {
 
@@ -41,7 +45,7 @@ fun DiscoverScreen(
                 .blur(263.85.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
                 .background(Color(0x33734EF8), shape = CircleShape)
         )
-        Column (
+        Column(
             modifier = modifier
                 .fillMaxSize()
                 .windowInsetsPadding(WindowInsets.navigationBars)
@@ -50,7 +54,9 @@ fun DiscoverScreen(
                 modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars),
                 title = discoverContentStrategy.title,
                 onBackButtonClicked = {
-                   // navController.popBackStack()
+                    println("Before popBackStack")
+                    val result = navController.popBackStack()
+                    println("Result = $result")
                 },
                 onShareButtonClicked = null,
                 onFavoriteButtonClicked = null
@@ -58,10 +64,10 @@ fun DiscoverScreen(
 
             CategoriesChips(
                 modifier = Modifier.padding(top = 16.dp),
-                categories =state.genres ,
+                categories = state.genres,
                 selectedChipIndex = state.selectedCategoriesChip,
                 onChipSelected = { index ->
-                   homeViewModel.onClickCategoryChip(index)
+                    homeViewModel.onClickCategoryChip(index)
                 })
             content()
         }

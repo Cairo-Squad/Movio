@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.ui.movio_component.TrendingMovieCard
+import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.viewmodel.home.HomeScreenState
 import com.cairosquad.viewmodel.home.HomeViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -30,21 +31,23 @@ fun TrendingScreen(
 
     val homeViewModel: HomeViewModel = koinViewModel()
     val state by homeViewModel.screenState.collectAsState()
+    val strategy = TrendingStrategy(mediaType = MediaType.Movies)
 
+    val navController = LocalNavController.current
     DiscoverScreen(
-        discoverContentStrategy = TrendingStrategy(mediaType = MediaType.Movies),
+        discoverContentStrategy = strategy,
+        navController = navController,
         homeViewModel = homeViewModel
     ) {
         TrendingContentList(
             modifier = Modifier
                 .padding(top = 24.dp, bottom = 16.dp)
                 .padding(horizontal = 16.dp),
-            discoverContentStrategy = TrendingStrategy(mediaType = MediaType.Movies),
+            discoverContentStrategy = strategy,
             state = state,
         )
 
     }
-
 
 
 }

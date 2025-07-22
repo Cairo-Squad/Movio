@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.cairosquad.ui.home.composable.DiscoverMediaItems
+import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.viewmodel.home.HomeViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -13,8 +14,10 @@ fun FreeToWatchScreen(modifier: Modifier = Modifier) {
     val homeViewModel: HomeViewModel = koinViewModel()
     val state by homeViewModel.screenState.collectAsState()
     val strategy=FreeToWatchStrategy(mediaType = MediaType.Movies)
+    val navController= LocalNavController.current
     DiscoverScreen(
         discoverContentStrategy = strategy,
+        navController = navController,
         homeViewModel = homeViewModel
     ) {
         DiscoverMediaItems(

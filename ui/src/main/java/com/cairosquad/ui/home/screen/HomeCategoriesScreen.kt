@@ -62,7 +62,6 @@ fun HomeCategoriesScreen(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.navigationBars)
         ) {
             com.cairosquad.ui.movio_component.AppBar(modifier = Modifier.statusBarsPadding())
             TabRow(
