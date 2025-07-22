@@ -46,34 +46,6 @@ class LoginViewModel(
                 )
             },
             onSuccess = {
-                saveToken(it)
-            },
-            onError = {
-                handleError(it)
-            },
-            onStart = {
-                updateState {
-                    it.copy(
-                        isLoading = true
-                    )
-                }
-            },
-            onEnd = {
-                updateState {
-                    it.copy(
-                        isLoading = false
-                    )
-                }
-            }
-        )
-    }
-
-    private fun saveToken(token: String) {
-        tryToCall(
-            block = {
-                loginUseCase.saveToken(token)
-            },
-            onSuccess = {
                 sendEffect(LoginEffect.NavigateToHome)
             },
             onError = {

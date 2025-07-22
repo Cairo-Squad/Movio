@@ -1,14 +1,20 @@
 package com.cairosquad.domain.usecase.authentication
 
-class LoginUseCase {
+import com.cairosquad.domain.repository.LoginRepository
 
-    suspend fun login(username: String, password: String): String {
-        // TODO
-        return ""
+class LoginUseCase(
+    private val loginRepository: LoginRepository
+) {
+
+    suspend fun login(username: String, password: String) {
+        loginRepository.login(username, password)
     }
 
-    suspend fun saveToken(token: String) {
-        // TODO
-        return
+    suspend fun isUserLoggedIn(): Boolean {
+        return loginRepository.isUserLoggedIn()
+    }
+
+    suspend fun logout() {
+        loginRepository.logout()
     }
 }
