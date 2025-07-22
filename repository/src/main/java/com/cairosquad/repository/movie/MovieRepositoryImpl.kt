@@ -122,12 +122,6 @@ class MovieRepositoryImpl(
         }
     }
 
-    override suspend fun getRandomMoviesUseCase(page: Int): List<Movie> {
-        return tryToCall {
-            remoteMovieDataSource.getRandomMoviesUseCase(page).map { it.toEntity() }
-        }
-    }
-
     private companion object {
         private const val CACHE_EXPIRATION_MILLIS = 3_600_000
         private const val PAGE_SIZE = 20

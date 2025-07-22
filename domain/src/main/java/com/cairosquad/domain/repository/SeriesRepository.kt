@@ -29,11 +29,8 @@ interface SeriesRepository {
 
     suspend fun getTrendingSeries(page: Int): List<Series>
 
-
     suspend fun getFreeToWatchSeries(page: Int): List<Series>
 
     suspend fun getSeriesByCategory(category: String, page: Int): List<Series>
-
-    suspend fun getRandomSeries(page: Int): List<Series>
 
 }

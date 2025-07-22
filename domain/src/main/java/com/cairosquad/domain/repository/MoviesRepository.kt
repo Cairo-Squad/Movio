@@ -30,7 +30,4 @@ interface MoviesRepository {
     suspend fun getFreeToWatchMovies(page: Int): List<Movie>
 
     suspend fun getMoviesByCategory(categoryId: String, page: Int): List<Movie>
-
-    suspend fun getRandomMoviesUseCase(page: Int): List<Movie>
-
 }
