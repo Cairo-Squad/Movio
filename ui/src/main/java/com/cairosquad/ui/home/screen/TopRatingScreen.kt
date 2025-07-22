@@ -8,11 +8,12 @@ import com.cairosquad.ui.home.composable.DiscoverMediaItems
 import com.cairosquad.viewmodel.home.HomeViewModel
 import org.koin.androidx.compose.koinViewModel
 
+
 @Composable
-fun MoreRecommendedScreen(modifier: Modifier = Modifier) {
+fun TopRatingScreen(modifier: Modifier = Modifier) {
     val homeViewModel: HomeViewModel = koinViewModel()
     val state by homeViewModel.screenState.collectAsState()
-val strategy=MoreRecommendedStrategy(mediaType = MediaType.Movies)
+    val strategy=TopRatedStrategy(mediaType = MediaType.Movies)
     DiscoverScreen(
         discoverContentStrategy = strategy,
         homeViewModel = homeViewModel
@@ -28,5 +29,3 @@ val strategy=MoreRecommendedStrategy(mediaType = MediaType.Movies)
 
     }
 }
-
-
