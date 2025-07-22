@@ -17,5 +17,8 @@
     <string name="dont_have_an_account">لا تمتلك حساب؟</string>
     <string name="signup">إنشاء حساب</string>
     <string name="password">كلمة السر</string>
+    <string name="this_field_cannot_be_empty">هذا الحقل مطلوب</string>
+    <string name="username_must_be_at_least_2_characters_long">اسم المستخدم لا بد أن يكون حرفان على الأقل</string>
+    <string name="password_must_be_at_least_8_characters_long">كلمة المرور لا بد أن تكون 8 حروف على الأقل</string>
 
 </resources>

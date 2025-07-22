@@ -44,6 +44,7 @@ import com.cairosquad.ui.navigation.ForgetPasswordWebViewRoute
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.SignUpWebViewRoute
 import com.cairosquad.ui.utils.ObserveAsEffect
+import com.cairosquad.ui.utils.validationErrorToStringResource
 import com.cairosquad.viewmodel.login.LoginEffect
 import com.cairosquad.viewmodel.login.LoginInteractionListener
 import com.cairosquad.viewmodel.login.LoginScreenState
@@ -106,11 +107,18 @@ private fun LoginScreenContent(
                 .padding(top = 74.dp, bottom = 48.dp)
         )
 
+        val usernameError = uiState.errors[LoginScreenState.FormField.USERNAME]
+
         InputField(
             value = uiState.username,
             onValueChange = { interactionListener.onUsernameChange(it) },
             placeholder = stringResource(R.string.user_name),
-            error = uiState.errors[LoginScreenState.FormField.USERNAME] ?: "",
+            error = if (usernameError != null) stringResource(
+                validationErrorToStringResource(
+                    usernameError,
+                    LoginScreenState.FormField.USERNAME
+                )
+            ) else "",
             isErrorMessageShown = true,
             isPasswordField = false,
             leadingIcon = R.drawable.profile_login,
@@ -121,11 +129,18 @@ private fun LoginScreenContent(
             modifier = Modifier.padding(bottom = 12.dp)
         )
 
+        val passwordError = uiState.errors[LoginScreenState.FormField.PASSWORD]
+
         InputField(
             value = uiState.password,
             onValueChange = { interactionListener.onPasswordChange(it) },
             placeholder = stringResource(R.string.password),
-            error = uiState.errors[LoginScreenState.FormField.PASSWORD] ?: "",
+            error = if (passwordError != null) stringResource(
+                validationErrorToStringResource(
+                    passwordError,
+                    LoginScreenState.FormField.PASSWORD
+                )
+            ) else "",
             isPasswordField = !uiState.isPasswordVisible,
             leadingIcon = R.drawable.lock,
             trailingIcon = if (uiState.isPasswordVisible) R.drawable.eye else R.drawable.close_eye,
@@ -142,7 +157,7 @@ private fun LoginScreenContent(
             modifier = Modifier.padding(bottom = 24.dp)
         ) {
             AnimatedVisibility(
-                visible = uiState.error != null,
+                visible = uiState.errors[LoginScreenState.FormField.PASSWORD] != null,
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
@@ -156,13 +171,20 @@ private fun LoginScreenContent(
                         tint = Theme.color.system.errorContainer,
                         modifier = Modifier.size(16.dp)
                     )
-                    Text(
-                        text = uiState.errors[LoginScreenState.FormField.PASSWORD] ?: "",
-                        style = Theme.textStyle.label.smallRegular12,
-                        color = Theme.color.system.errorContainer,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(start = 4.dp)
-                    )
+                    uiState.errors[LoginScreenState.FormField.PASSWORD]?.let { error ->
+                        Text(
+                            text = stringResource(
+                                validationErrorToStringResource(
+                                    error,
+                                    LoginScreenState.FormField.PASSWORD
+                                )
+                            ),
+                            style = Theme.textStyle.label.smallRegular12,
+                            color = Theme.color.system.errorContainer,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(start = 4.dp)
+                        )
+                    }
                 }
             }
             Text(
