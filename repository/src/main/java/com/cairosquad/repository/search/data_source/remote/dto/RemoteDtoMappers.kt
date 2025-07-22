@@ -1,6 +1,7 @@
 package com.cairosquad.repository.search.data_source.remote.dto
 
 import com.cairosquad.entity.Artist
+import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import java.time.LocalDate
@@ -30,9 +31,9 @@ fun MovieRemoteDto.toEntity(): Movie {
         title = title ?: "",
         rating = voteAverage?.toFloat() ?: 0f,
         posterPath = posterPath ?: "",
-        genres = emptyList(),
-        overview = "",
-        releaseDate = 0L,
+        genres = genreIds?.map { Genre(it.toLong(), "") } ?: emptyList(),
+        overview = overview.orEmpty(),
+        releaseDate = releaseDate?.let { parseDateToMillis(it)  } ?: 0L,
         runtimeMinutes = 0,
         trailerPath = "",
     )
@@ -65,4 +66,12 @@ fun List<SeriesRemoteDto>.toEntityList(): List<Series> {
 private fun String.toMillisFromDate(): Long {
     val localDate = LocalDate.parse(this) // Assumes input format yyyy-mm-dd
     return localDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+}
+private fun parseDateToMillis(dateStr: String): Long {
+    return try {
+        val formatter = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+        formatter.parse(dateStr)?.time ?: 0L
+    } catch (e: Exception) {
+        0L
+    }
 }
