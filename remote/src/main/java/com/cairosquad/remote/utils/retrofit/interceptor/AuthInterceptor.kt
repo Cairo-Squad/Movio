@@ -7,10 +7,17 @@ class AuthInterceptor(
     private val tokenProvider: () -> String?
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val request = chain.request().newBuilder()
-        tokenProvider()?.let { token ->
-            request.addHeader("Authorization", "Bearer $token")
-        }
-        return chain.proceed(request.build())
+        val originalRequest = chain.request()
+        val originalUrl = originalRequest.url
+
+        val urlSessionId = originalUrl.newBuilder()
+            .addQueryParameter("session_id", tokenProvider())
+            .build()
+
+        val newRequest = originalRequest.newBuilder()
+            .url(urlSessionId)
+            .build()
+
+        return chain.proceed(newRequest)
     }
 }
