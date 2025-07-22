@@ -135,42 +135,31 @@ class HomeViewModel(
     }
 
     override fun onClickSeeAllTopRated(isMovie: Boolean) {
-        updateState { it.copy(seeAllType = "Top Rated") }
         sendEffect(HomeEffect.NavigateToSeeAllTopRated(isMovie))
     }
 
     override fun onClickSeeAllTrending() {
-        updateState { it.copy(seeAllType = "Trending") }
         sendEffect(HomeEffect.NavigateToSeeAllTrending)
     }
 
     override fun onClickSeeAllFreeToWatch() {
-        updateState { it.copy(seeAllType = "Free To Watch") }
         sendEffect(HomeEffect.NavigateToSeeAllFreeToWatch)
     }
 
     override fun onClickSeeAllUpcoming() {
-        updateState { it.copy(seeAllType = "Upcoming") }
         sendEffect(HomeEffect.NavigateToSeeAllUpcoming)
     }
 
     override fun onClickSeeAllMoreRecommended(isMovie: Boolean) {
-        updateState { it.copy(seeAllType = "More Recommended") }
         sendEffect(HomeEffect.NavigateToSeeAllMoreRecommended(isMovie))
     }
 
     override fun onClickSeeAllAiringToday() {
-        updateState { it.copy(seeAllType = "Airing Today") }
         sendEffect(HomeEffect.NavigateToSeeAllAiringToday)
     }
 
     override fun onClickSeeAllOnTv() {
-        updateState { it.copy(seeAllType = "On Tv") }
         sendEffect(HomeEffect.NavigateToSeeAllOnTv)
-    }
-
-    override fun onClickBackInSeeAllScreen(){
-        updateState { it.copy(seeAllType = null) }
     }
 
     override fun onClickCategoryChip(categoryChipIndex: Int) {

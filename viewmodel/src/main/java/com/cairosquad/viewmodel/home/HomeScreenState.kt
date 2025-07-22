@@ -15,10 +15,9 @@ data class HomeScreenState(
     val moreRecommendedSeries: List<SeriesUiState> = emptyList(),
     val randomMovies: List<MovieUiState> = emptyList(),
     val randomSeries: List<SeriesUiState> = emptyList(),
-    val screenStatus: HomeScreenState.ScreenStatus = HomeScreenState.ScreenStatus.LOADING,
+    val screenStatus: ScreenStatus = ScreenStatus.LOADING,
     val errorStatus: ErrorStatus? = null,
     val selectedTab: TabType = TabType.ALL,
-    val seeAllType: String? = null,
     val genres: List<String> = listOf(
         "All",
         "Action",

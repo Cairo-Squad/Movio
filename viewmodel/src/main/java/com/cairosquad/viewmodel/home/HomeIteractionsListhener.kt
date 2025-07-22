@@ -12,7 +12,6 @@ interface HomeInteractionsListener {
     fun onClickSeeAllMoreRecommended(isMovie : Boolean)
     fun onClickSeeAllAiringToday()
     fun onClickSeeAllOnTv()
-    fun onClickBackInSeeAllScreen()
     fun onClickCategoryChip(categoryChipIndex: Int)
     fun onClickSortChip(sortChipIndex: Int)
 }
