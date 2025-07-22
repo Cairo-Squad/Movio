@@ -76,11 +76,16 @@ fun Button(
                 )
             }
         }
-
-        BasicText(
-            text = text,
-            style = textStyle.copy(color = textColor)
-        )
+        AnimatedVisibility(
+            visible = !isLoading,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            BasicText(
+                text = text,
+                style = textStyle.copy(color = textColor)
+            )
+        }
     }
 }
 

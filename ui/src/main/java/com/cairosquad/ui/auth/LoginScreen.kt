@@ -1,4 +1,4 @@
-package com.cairosquad.ui.login
+package com.cairosquad.ui.auth
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -17,7 +17,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -66,6 +68,7 @@ fun LoginScreen(
             LoginEffect.NavigateToHome -> {
                 // TODO()
             }
+
             LoginEffect.NavigateToGuestHome -> TODO()
             LoginEffect.NavigateToSignUp -> navController.navigate(
                 SignUpWebViewRoute(url = signUpUrl)
@@ -91,7 +94,8 @@ private fun LoginScreenContent(
             .systemBarsPadding()
             .fillMaxSize()
             .background(color = Theme.color.surfaces.surface)
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
 
         ) {
@@ -148,7 +152,7 @@ private fun LoginScreenContent(
                         modifier = Modifier.size(16.dp)
                     )
                     Text(
-                        text = stringResource(R.string.password_you_entered_is_incorrect),
+                        text = uiState.errors[LoginScreenState.FormField.PASSWORD].toString(),
                         style = Theme.textStyle.label.smallRegular12,
                         color = Theme.color.system.errorContainer,
                         modifier = Modifier.padding(start = 4.dp)

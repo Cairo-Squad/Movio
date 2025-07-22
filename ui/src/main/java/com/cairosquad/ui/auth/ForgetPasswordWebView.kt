@@ -1,4 +1,4 @@
-package com.cairosquad.ui.login
+package com.cairosquad.ui.auth
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
