@@ -27,7 +27,8 @@ class ForYouViewModel(private val forYouPager: ForYouPager) :
         updateState {
             it.copy(
                 screenStatus = ScreenStatus.LOADING,
-                errorStatus = null
+                errorStatus = null,
+                isEmpty = false
             )
         }
         tryToCall(
@@ -37,13 +38,14 @@ class ForYouViewModel(private val forYouPager: ForYouPager) :
                     fetch = { forYouPager.movies() },
                     map = { it.toUiState() }
                 )
-
                 forYouMovies
             },
             onSuccess = { forYouMovies ->
                 updateState {
                     it.copy(
-                        forYou = forYouMovies
+                        forYou = forYouMovies,
+                        screenStatus = ScreenStatus.SUCCESS,
+                        //isRefreshing = false
                     )
                 }
             },

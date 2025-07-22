@@ -2,6 +2,7 @@ package com.cairosquad.ui.search
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
@@ -25,18 +26,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
+import com.cairosquad.design_system.basic_component.InputField
 import com.cairosquad.design_system.basic_component.RefreshBox
 import com.cairosquad.design_system.theme.Theme
+import com.cairosquad.ui.movio_component.LoadingMovieCard
 import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.MovieRoute
+import com.cairosquad.ui.search.content.SearchLoadingContent
+import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.foryou.ForYouEffect
 import com.cairosquad.viewmodel.foryou.ForYouInteractionListener
 import com.cairosquad.viewmodel.foryou.ForYouState
+import com.cairosquad.viewmodel.foryou.ForYouState.MovieUiState
+import com.cairosquad.viewmodel.foryou.ForYouState.ScreenStatus
 import com.cairosquad.viewmodel.foryou.ForYouViewModel
 import com.cairosquad.viewmodel.search.SearchEffect
 import com.cairosquad.viewmodel.search.SearchInteractionListener
@@ -48,7 +56,6 @@ import org.koin.androidx.compose.koinViewModel
 fun ForYouScreen(
     modifier: Modifier = Modifier,
     forYouViewModel: ForYouViewModel = koinViewModel(),
-    searchViewModel: SearchViewModel = koinViewModel(),
 ) {
     val navController = LocalNavController.current
     val forYou = forYouViewModel.screenState.collectAsState()
@@ -101,50 +108,155 @@ private fun MoviesList(
     modifier: Modifier = Modifier
 ) {
     val movies = state.forYou.collectAsLazyPagingItems()
-    AnimatedVisibility(
-        visible = movies.itemCount == 0,
-        enter = fadeIn(),
-        exit = fadeOut()
-    ) {
-        Box(
-            modifier = modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            StateMessage(
-                imageDrawable = R.drawable.no_result,
-                titleId = R.string.no_results_found,
-                descriptionId = R.string.no_results_found_description
-            )
+
+    Box(modifier = modifier.fillMaxSize()) {
+        when {
+            state.screenStatus == ScreenStatus.LOADING -> {
+                ForYouLoadingContent(
+                    state = state,
+                    listener = listener,
+                    modifier = modifier
+                )
+            }
+            state.isEmpty -> {
+                EmptyMoviesContent(modifier)
+            }
+            state.screenStatus == ScreenStatus.FAILED -> {
+                ForYouFailedContent(
+                    state = state,
+                    listener = listener,
+                    errorStatus = state.errorStatus,
+                    modifier = modifier
+                )
+            }
+            else -> {
+                MoviesGridContent(
+                    movies = movies,
+                    listener = listener,
+                    modifier = modifier
+                )
+            }
         }
     }
+}
 
-    AnimatedVisibility(
-        visible = movies.itemCount > 0,
-        enter = fadeIn(),
-        exit = fadeOut()
+@Composable
+private fun ForYouLoadingContent(
+    state: ForYouState,
+    listener: ForYouInteractionListener,
+    modifier: Modifier = Modifier
+) {
+    LazyVerticalGrid(
+        modifier = modifier.background(Theme.color.surfaces.surface),
+        columns = GridCells.Adaptive(minSize = 100.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
     ) {
-        LazyVerticalGrid(
+        items(20) {
+            LoadingMovieCard()
+        }
+    }
+}
+
+@Composable
+private fun ForYouSuccessContent(
+    state: ForYouState,
+    listener: ForYouInteractionListener,
+    modifier: Modifier = Modifier
+) {
+    val movies = state.forYou.collectAsLazyPagingItems()
+
+    if (movies.itemCount == 0) {
+        EmptyMoviesContent(modifier)
+    } else {
+        MoviesGridContent(
+            movies = movies,
+            listener = listener,
             modifier = modifier
-                .fillMaxSize(),
-            columns = GridCells.Adaptive(minSize = 101.33.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(bottom = 16.dp)
-        ) {
-            items(movies.itemCount) { index ->
-                movies[index]?.let { movie ->
-                    MovieCard(
-                        modifier = Modifier.clickable {
-                            listener.onMovieClicked(movie.id)
-                        },
-                        title = movie.title,
-                        vote = movie.rating,
-                        imgUrl = movie.posterPath,
-                        width = null,
-                        aspectRatio = 0.743f
-                    )
-                }
+        )
+    }
+}
+
+@Composable
+private fun EmptyMoviesContent(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        StateMessage(
+            imageDrawable = R.drawable.no_result,
+            titleId = R.string.no_results_found,
+            descriptionId = R.string.no_results_found_description
+        )
+    }
+}
+
+@Composable
+private fun MoviesGridContent(
+    movies: LazyPagingItems<MovieUiState>,
+    listener: ForYouInteractionListener,
+    modifier: Modifier = Modifier
+) {
+    LazyVerticalGrid(
+        modifier = modifier.fillMaxSize(),
+        columns = GridCells.Adaptive(minSize = 101.33.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(bottom = 16.dp)
+    ) {
+        items(movies.itemCount) { index ->
+            movies[index]?.let { movie ->
+                MovieCard(
+                    modifier = Modifier.clickable {
+                        listener.onMovieClicked(movie.id)
+                    },
+                    title = movie.title,
+                    vote = movie.rating,
+                    imgUrl = movie.posterPath,
+                    width = null,
+                    aspectRatio = 0.743f
+                )
             }
+        }
+    }
+}
+
+@Composable
+private fun ForYouFailedContent(
+    state: ForYouState,
+    listener: ForYouInteractionListener,
+    errorStatus: ErrorStatus?,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        when (errorStatus) {
+            ErrorStatus.NO_INTERNET -> StateMessage(
+                imageDrawable = R.drawable.no_internet,
+                titleId = R.string.no_internet_connection,
+                descriptionId = R.string.no_internet_connection
+            )
+
+//            ErrorStatus.NETWORK_ERROR -> StateMessage(
+//                imageDrawable = R.drawable.error_state,
+//                titleId = R.string.network_error,
+//                descriptionId = R.string.network_error_description
+//            )
+//
+//            else -> StateMessage(
+//                imageDrawable = R.drawable.error_state,
+//                titleId = R.string.error_occurred,
+//                descriptionId = R.string.please_try_again_later
+//            )
+            ErrorStatus.NETWORK_ERROR -> TODO()
+            ErrorStatus.UNKNOWN_ERROR -> TODO()
+            ErrorStatus.UNAUTHORIZED -> TODO()
+            ErrorStatus.EMPTY -> TODO()
+            ErrorStatus.PARSING_ERROR -> TODO()
+            null -> TODO()
         }
     }
 }
