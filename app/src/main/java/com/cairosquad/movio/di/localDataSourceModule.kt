@@ -1,7 +1,7 @@
 package com.cairosquad.movio.di
 
 import androidx.room.Room
-import com.cairosquad.local.login.LocalLoginDataSourceImpl
+import com.cairosquad.local.login.LocalAuthenticationDataSourceImpl
 import com.cairosquad.local.login.dao.LoginDao
 import com.cairosquad.local.search.cache.CacheDataSourceImpl
 import com.cairosquad.local.search.cache.dao.CacheDao
@@ -10,7 +10,7 @@ import com.cairosquad.local.search.discovery.dao.DiscoveryDao
 import com.cairosquad.local.search.recent.LocalRecentSearchDataSourceImpl
 import com.cairosquad.local.search.recent.dao.LocalRecentSearchDao
 import com.cairosquad.local.utils.MovioDataBase
-import com.cairosquad.repository.login.data_source.local.LocalLoginDataSource
+import com.cairosquad.repository.login.data_source.local.LocalAuthenticationDataSource
 import com.cairosquad.repository.search.data_source.local.CacheDataSource
 import com.cairosquad.repository.search.data_source.local.DiscoveryDataSource
 import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
@@ -39,8 +39,8 @@ val localDataSourceModule = module {
         get<MovioDataBase>().discoveryDao()
     }
 
-    single<LocalLoginDataSource> {
-        LocalLoginDataSourceImpl(get())
+    single<LocalAuthenticationDataSource> {
+        LocalAuthenticationDataSourceImpl(get())
     }
 
     single<CacheDataSource> {

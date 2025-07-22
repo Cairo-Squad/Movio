@@ -3,7 +3,7 @@ package com.cairosquad.repository.login
 import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.exception.UnknownException
 import com.cairosquad.domain.repository.LoginRepository
-import com.cairosquad.repository.login.data_source.local.LocalLoginDataSource
+import com.cairosquad.repository.login.data_source.local.LocalAuthenticationDataSource
 import com.cairosquad.repository.login.data_source.remote.RemoteLoginDataSource
 import com.cairosquad.repository.login.data_source.remote.dto.RequestTokenResponse
 import com.cairosquad.repository.login.data_source.remote.dto.SessionIdResponse
@@ -19,13 +19,13 @@ import kotlin.test.assertFailsWith
 
 class LoginRepositoryImplTest {
     private val remoteLoginDataSource: RemoteLoginDataSource = mockk(relaxed = true)
-    private val localLoginDataSource: LocalLoginDataSource = mockk(relaxed = true)
+    private val localAuthenticationDataSource: LocalAuthenticationDataSource = mockk(relaxed = true)
 
     private lateinit var loginRepository: LoginRepository
 
     @Before
     fun setup() {
-        loginRepository = LoginRepositoryImpl(remoteLoginDataSource, localLoginDataSource)
+        loginRepository = LoginRepositoryImpl(remoteLoginDataSource, localAuthenticationDataSource)
     }
 
     @Test
@@ -150,7 +150,7 @@ class LoginRepositoryImplTest {
 
         loginRepository.login(USERNAME, PASSWORD)
         coVerify(exactly = 1) {
-            localLoginDataSource.saveSessionId(
+            localAuthenticationDataSource.saveSessionId(
                 requestTokenResponse.requestToken ?: ""
             )
         }
@@ -174,7 +174,7 @@ class LoginRepositoryImplTest {
                 )
             } returns sessionId
 
-            coEvery { localLoginDataSource.saveSessionId(any()) } throws Exception()
+            coEvery { localAuthenticationDataSource.saveSessionId(any()) } throws Exception()
 
             assertFailsWith<UnknownException> {
                 loginRepository.login(USERNAME, PASSWORD)
@@ -183,14 +183,14 @@ class LoginRepositoryImplTest {
 
     @Test
     fun `isUserLoggedIn SHOULD return true when session id is not empty`() = runTest {
-        coEvery { localLoginDataSource.getSessionId() } returns "testSessionId"
+        coEvery { localAuthenticationDataSource.getSessionId() } returns "testSessionId"
         val result = loginRepository.isUserLoggedIn()
         assertThat(result).isTrue()
     }
 
     @Test
     fun `isUserLoggedIn SHOULD return false when session id is empty`() = runTest {
-        coEvery { localLoginDataSource.getSessionId() } returns ""
+        coEvery { localAuthenticationDataSource.getSessionId() } returns ""
         val result = loginRepository.isUserLoggedIn()
         assertThat(result).isFalse()
     }
@@ -198,7 +198,7 @@ class LoginRepositoryImplTest {
     @Test
     fun `logout SHOULD call local data source with empty string`() = runTest {
         loginRepository.logout()
-        coVerify(exactly = 1) { localLoginDataSource.saveSessionId("") }
+        coVerify(exactly = 1) { localAuthenticationDataSource.saveSessionId("") }
     }
 
     companion object {
@@ -211,7 +211,7 @@ class LoginRepositoryImplTest {
     @Test
     fun `logout SHOULD map exception to correct domain exception when save session id fails`() =
         runTest {
-            coEvery { localLoginDataSource.saveSessionId("") } throws NoInternetException()
+            coEvery { localAuthenticationDataSource.saveSessionId("") } throws NoInternetException()
             assertFailsWith<InternetConnectionException> {
                 loginRepository.logout()
             }

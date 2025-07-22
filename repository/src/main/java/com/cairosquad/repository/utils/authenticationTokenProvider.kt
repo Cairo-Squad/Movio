@@ -1,14 +1,14 @@
 package com.cairosquad.repository.utils
 
-import com.cairosquad.repository.login.data_source.local.LocalLoginDataSource
+import com.cairosquad.repository.login.data_source.local.LocalAuthenticationDataSource
 import kotlinx.coroutines.runBlocking
 
 fun authenticationTokenProvider(
-    localLoginDataSource: LocalLoginDataSource,
+    localAuthenticationDataSource: LocalAuthenticationDataSource,
 ): String? {
     return runBlocking {
         try {
-            localLoginDataSource.getSessionId().ifBlank { null }
+            localAuthenticationDataSource.getSessionId().ifBlank { null }
         } catch (_: Exception) {
             null
         }

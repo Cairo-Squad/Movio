@@ -1,7 +1,7 @@
 package com.cairosquad.local.login
 
 import com.cairosquad.local.login.dao.LoginDao
-import com.cairosquad.repository.login.data_source.local.LocalLoginDataSource
+import com.cairosquad.repository.login.data_source.local.LocalAuthenticationDataSource
 import com.cairosquad.repository.login.data_source.local.dto.SessionIdDto
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -14,17 +14,17 @@ import org.junit.Test
 import kotlin.test.assertFailsWith
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class AuthenticationDataSourceImplTest {
+class LocalAuthenticationDataSourceImplTest {
 
     private val loginDao: LoginDao = mockk()
-    private lateinit var authDataSource: LocalLoginDataSource
+    private lateinit var authDataSource: LocalAuthenticationDataSource
 
     private val sampleSession = "abc123"
     private val sampleDto = SessionIdDto(sessionId = sampleSession)
 
     @Before
     fun setup() {
-        authDataSource = LocalLoginDataSourceImpl(loginDao)
+        authDataSource = LocalAuthenticationDataSourceImpl(loginDao)
     }
 
     @Test

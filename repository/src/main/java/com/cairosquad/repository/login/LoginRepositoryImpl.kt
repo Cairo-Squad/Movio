@@ -1,13 +1,13 @@
 package com.cairosquad.repository.login
 
 import com.cairosquad.domain.repository.LoginRepository
-import com.cairosquad.repository.login.data_source.local.LocalLoginDataSource
+import com.cairosquad.repository.login.data_source.local.LocalAuthenticationDataSource
 import com.cairosquad.repository.login.data_source.remote.RemoteLoginDataSource
 import com.cairosquad.repository.utils.mappers.tryToCall
 
 class LoginRepositoryImpl(
     private val remoteLoginDataSource: RemoteLoginDataSource,
-    private val localLoginDataSource: LocalLoginDataSource
+    private val localAuthenticationDataSource: LocalAuthenticationDataSource
 ) : LoginRepository {
     override suspend fun login(username: String, password: String) {
         tryToCall {
@@ -18,20 +18,20 @@ class LoginRepositoryImpl(
                 requestToken = requestTokenResponse.toEntity()
             )
             remoteLoginDataSource.createSessionId(requestTokenResponse.toEntity())
-            localLoginDataSource.saveSessionId(requestTokenResponse.toEntity())
+            localAuthenticationDataSource.saveSessionId(requestTokenResponse.toEntity())
         }
 
     }
 
     override suspend fun isUserLoggedIn(): Boolean {
         return tryToCall {
-            localLoginDataSource.getSessionId().isNotEmpty()
+            localAuthenticationDataSource.getSessionId().isNotEmpty()
         }
     }
 
     override suspend fun logout() {
         tryToCall {
-            localLoginDataSource.saveSessionId("")
+            localAuthenticationDataSource.saveSessionId("")
         }
     }
 }
