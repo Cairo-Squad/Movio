@@ -1,5 +1,6 @@
 package com.cairosquad.domain.repository
 
+import com.cairosquad.domain.model.SortType
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Episode
 import com.cairosquad.entity.Genre
@@ -38,6 +39,6 @@ interface SeriesRepository {
 
     suspend fun getPopularSeries(page: Int,categoryId : String?): List<Series>
 
-    suspend fun getAllSeries(page: Int,categoryId : String?): List<Series>
+    suspend fun getAllSeries(page: Int,categoryId : String?,sortType: SortType?): List<Series>
 
 }

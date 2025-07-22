@@ -102,8 +102,8 @@ class RemoteSeriesDataSourceImpl(
             .results?.filterNotNull().orEmpty()
     }
 
-    override suspend fun getAllSeries(page: Int,categoryId : String?): List<SeriesRemoteDto> {
-        return safeCallApi { seriesApiService.getAllSeries(page,categoryId) }
+    override suspend fun getAllSeries(page: Int,categoryId : String?,sortBy : String?): List<SeriesRemoteDto> {
+        return safeCallApi { seriesApiService.getAllSeries(page,categoryId,sortBy) }
             .results?.filterNotNull().orEmpty()
     }
 }

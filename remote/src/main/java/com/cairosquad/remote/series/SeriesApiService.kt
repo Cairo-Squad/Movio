@@ -105,7 +105,8 @@ interface SeriesApiService {
     @GET("discover/tv")
     suspend fun getAllSeries(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String? = null
+        @Query("with_genres") withGenres: String? = null,
+        @Query("sort_by") sortBy: String? = null
     ): ResultResponse<SeriesRemoteDto>
 
 }

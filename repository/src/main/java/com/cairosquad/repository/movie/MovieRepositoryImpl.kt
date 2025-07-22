@@ -1,5 +1,6 @@
 package com.cairosquad.repository.movie
 
+import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.repository.MoviesRepository
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Genre
@@ -135,9 +136,10 @@ class MovieRepositoryImpl(
         }
     }
 
-    override suspend fun getAllMovies(page: Int,categoryId: String?): List<Movie> {
+    override suspend fun getAllMovies(page: Int,categoryId: String?,sortType: SortType?): List<Movie> {
         return tryToCall {
-            remoteMovieDataSource.getAllMovies(page,categoryId).map { it.toEntity() }
+            val sortBy = sortType?.sortBy
+            remoteMovieDataSource.getAllMovies(page,categoryId,sortBy).map { it.toEntity() }
         }
     }
 

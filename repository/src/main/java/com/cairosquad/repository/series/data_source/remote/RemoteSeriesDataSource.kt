@@ -39,5 +39,5 @@ interface RemoteSeriesDataSource {
 
     suspend fun getPopularSeries(page: Int,categoryId : String?): List<SeriesRemoteDto>
 
-    suspend fun getAllSeries(page: Int,categoryId : String?): List<SeriesRemoteDto>
+    suspend fun getAllSeries(page: Int,categoryId : String?,sortBy: String?): List<SeriesRemoteDto>
 }

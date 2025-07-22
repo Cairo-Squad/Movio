@@ -79,8 +79,8 @@ class RemoteMovieDataSourceImpl(
             .results?.filterNotNull().orEmpty()
     }
 
-    override suspend fun getAllMovies(page: Int,categoryId: String?): List<MovieRemoteDto> {
-        return safeCallApi { apiService.getAllMovies(page,categoryId) }
+    override suspend fun getAllMovies(page: Int,categoryId: String?,sortBy : String?): List<MovieRemoteDto> {
+        return safeCallApi { apiService.getAllMovies(page,categoryId,sortBy) }
             .results?.filterNotNull().orEmpty()
     }
 

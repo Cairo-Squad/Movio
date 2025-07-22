@@ -34,5 +34,5 @@ interface RemoteMovieDataSource {
 
     suspend fun getPopularMovies(page: Int,categoryId: String?): List<MovieRemoteDto>
 
-    suspend fun getAllMovies(page: Int,categoryId: String?) : List<MovieRemoteDto>
+    suspend fun getAllMovies(page: Int,categoryId: String?,sortBy: String?) : List<MovieRemoteDto>
 }

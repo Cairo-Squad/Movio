@@ -1,5 +1,6 @@
 package com.cairosquad.repository.series
 
+import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.repository.SeriesRepository
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Episode
@@ -99,9 +100,10 @@ class SeriesRepositoryImpl(
         }
     }
 
-    override suspend fun getAllSeries(page: Int,categoryId : String?): List<Series> {
+    override suspend fun getAllSeries(page: Int,categoryId : String?,sortType: SortType?): List<Series> {
         return tryToCall {
-            remoteSeriesDataSource.getAllSeries(page,categoryId).map { it.toEntity() }
+            val sortBy = sortType?.sortBy
+            remoteSeriesDataSource.getAllSeries(page,categoryId,sortBy).map { it.toEntity() }
         }
     }
 }

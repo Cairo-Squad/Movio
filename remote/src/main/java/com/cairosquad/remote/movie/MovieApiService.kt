@@ -96,6 +96,7 @@ interface MovieApiService {
     @GET("discover/movie")
     suspend fun getAllMovies(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String? = null
+        @Query("with_genres") withGenres: String? = null,
+        @Query("sort_by") sortBy: String? = null
     ): ResultResponse<MovieRemoteDto>
 }
