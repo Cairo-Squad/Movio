@@ -17,6 +17,7 @@ val darkThemeColors = MovioColors(
         surfaceVariant = Color(0xFF232940),
         onSurfaceVariant = Color(0xFF999DB3),
         outline = Color(0xFF434246),
+        statusBarShadow = Color(0xFF000000),
         outlineVariant = Color(0xFF2F2E34),
         onSurfaceAt1 = Color(0xDEFFFFFF),
         onSurfaceAt2 = Color(0x61FFFFFF),

@@ -10,12 +10,8 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,17 +22,11 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -56,18 +46,26 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.basic_component.ExpandableText
-import com.cairosquad.design_system.basic_component.InfoChip
+import com.cairosquad.design_system.basic_component.Icon
 import com.cairosquad.design_system.basic_component.SnackBar
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
-import com.cairosquad.ui.movio_component.ActionBar
-import com.cairosquad.ui.movio_component.LoginBottomSheet
-import com.cairosquad.ui.movio_component.MovieCard
-import com.cairosquad.ui.movio_component.ReviewCard
-import com.cairosquad.ui.movio_component.SeasonCard
-import com.cairosquad.ui.movio_component.SectionHeader
-import com.cairosquad.ui.movio_component.ShareBottomSheet
-import com.cairosquad.ui.movio_component.SmallArtistCard
+import com.cairosquad.ui.BuildConfig
+import com.cairosquad.ui.details.composable.BasicDetails
+import com.cairosquad.ui.details.composable.BasicDetailsLoading
+import com.cairosquad.ui.details.composable.SeasonSection
+import com.cairosquad.ui.details.composable.SectionLoading
+import com.cairosquad.ui.details.composable.SeriesReviewSection
+import com.cairosquad.ui.details.composable.SeriesTopCastSection
+import com.cairosquad.ui.details.composable.SimilarSeriesSection
+import com.cairosquad.ui.movio_component.LoadingArtistCard
+import com.cairosquad.ui.movio_component.LoadingMovieCard
+import com.cairosquad.ui.movio_component.LoadingMovieImage
+import com.cairosquad.ui.movio_component.LoadingReviewCard
+import com.cairosquad.ui.movio_component.bottom_sheet.ListBottomSheet
+import com.cairosquad.ui.movio_component.bottom_sheet.LoginBottomSheet
+import com.cairosquad.ui.movio_component.bottom_sheet.RateBottomSheet
+import com.cairosquad.ui.movio_component.bottom_sheet.ShareBottomSheet
 import com.cairosquad.ui.navigation.ArtistRoute
 import com.cairosquad.ui.navigation.EpisodesRoute
 import com.cairosquad.ui.navigation.LocalNavController
@@ -106,7 +104,15 @@ fun SeriesScreen(
             }
 
             SeriesDetailEffect.PlayTrailer -> {
-                ShareUtil.playOnYoutube(videoId = "bjqEWgDVPe0", context = context)
+                if (uiState.series.trailerPath.isNullOrBlank()) {
+                    Toast.makeText(
+                        context,
+                        "There is no trailer for this",
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                }
+                ShareUtil.playOnYoutube(videoId = uiState.series.trailerPath, context = context)
             }
 
             is SeriesDetailEffect.ErrorHappened -> {
@@ -201,6 +207,35 @@ fun SeriesScreen(
             )
         }
         AnimatedVisibility(
+            visible = uiState.showAddToListBottomSheet,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            ListBottomSheet(
+                isVisible = uiState.showAddToListBottomSheet,
+                onDismiss = viewModel::onDismissAddToListBottomSheet,
+                lists = emptyList(),
+                onListClicked = {},
+                onCreateNewList = {}
+            )
+        }
+        AnimatedVisibility(
+            visible = uiState.showRateBottomSheet,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            RateBottomSheet(
+                isVisible = uiState.showRateBottomSheet,
+                onDismiss = viewModel::onDismissRateBottomSheet,
+                rating = uiState.rating,
+                imageUrl = BuildConfig.IMAGE_BASE_URL + uiState.series.posterPath,
+                name = uiState.series.title,
+                isMovie = false,
+                onRatingChange = viewModel::onRateChange,
+                onSubmitClicked = viewModel::onSubmitRateClicked,
+            )
+        }
+        AnimatedVisibility(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .windowInsetsPadding(WindowInsets.navigationBars)
@@ -231,13 +266,11 @@ private fun SeriesScreenContent(
 ) {
     val listState = rememberScrollState()
     val density = LocalDensity.current
-
     val scrollThresholdPx = with(density) { 275.dp.toPx() }
-
     val progress = (listState.value / scrollThresholdPx).coerceIn(0f, 1f)
 
     val animatedStartColor = lerp(
-        start = Color.Black,
+        start = Theme.color.surfaces.statusBarShadow,
         stop = Theme.color.surfaces.surface,
         fraction = progress
     )
@@ -257,9 +290,8 @@ private fun SeriesScreenContent(
             .verticalScroll(listState)
     ) {
         when (uiState.basicDetailsSectionState) {
-            SeriesDetailsScreenState.ScreenStatus.INITIAL -> {}
-            SeriesDetailsScreenState.ScreenStatus.LOADING -> {}
-            SeriesDetailsScreenState.ScreenStatus.SUCCESS -> {
+            SeriesDetailsScreenState.SectionStatus.LOADING -> {}
+            SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
                 if (uiState.series.posterPath.isNotEmpty()) {
                     SafeImageViewer(
                         modifier = Modifier
@@ -267,7 +299,7 @@ private fun SeriesScreenContent(
                             .fillMaxWidth()
                             .height(400.dp)
                             .offset(y = (-28).dp),
-                        model = "https://image.tmdb.org/t/p/w500/${uiState.series.posterPath}",
+                        model = BuildConfig.IMAGE_BASE_URL + uiState.series.posterPath,
                         contentDescription = "",
                         blur = 0,
                         nudeThreshold = 0.0,
@@ -276,9 +308,8 @@ private fun SeriesScreenContent(
                 }
             }
 
-            SeriesDetailsScreenState.ScreenStatus.ERROR -> {}
+            SeriesDetailsScreenState.SectionStatus.ERROR -> {}
         }
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -289,9 +320,20 @@ private fun SeriesScreenContent(
         ) {
             item {
                 when (uiState.basicDetailsSectionState) {
-                    SeriesDetailsScreenState.ScreenStatus.INITIAL -> {}
-                    SeriesDetailsScreenState.ScreenStatus.LOADING -> {}
-                    SeriesDetailsScreenState.ScreenStatus.SUCCESS -> {
+                    SeriesDetailsScreenState.SectionStatus.LOADING -> {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 56.dp, bottom = 24.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            LoadingMovieImage(
+                                modifier = Modifier.size(height = 260.dp, width = 200.dp)
+                            )
+                        }
+                    }
+
+                    SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -303,8 +345,16 @@ private fun SeriesScreenContent(
                                     modifier = Modifier
                                         .size(height = 260.dp, width = 200.dp)
                                         .clip(RoundedCornerShape(8.dp)),
-                                    model = "https://image.tmdb.org/t/p/w500/${uiState.series.posterPath}",
+                                    model = BuildConfig.IMAGE_BASE_URL + uiState.series.posterPath,
                                     contentDescription = "",
+                                    loadingPlaceholder = {
+                                        LoadingMovieImage(
+                                            modifier = Modifier.size(
+                                                height = 260.dp,
+                                                width = 200.dp
+                                            )
+                                        )
+                                    }
                                 )
                             else
                                 Box(
@@ -324,229 +374,163 @@ private fun SeriesScreenContent(
                         }
                     }
 
-                    SeriesDetailsScreenState.ScreenStatus.ERROR -> {}
+                    SeriesDetailsScreenState.SectionStatus.ERROR -> {}
                 }
-
             }
             item {
                 when (uiState.basicDetailsSectionState) {
-                    SeriesDetailsScreenState.ScreenStatus.INITIAL -> {}
-                    SeriesDetailsScreenState.ScreenStatus.LOADING -> {}
-                    SeriesDetailsScreenState.ScreenStatus.SUCCESS -> {
-                        Column(
+                    SeriesDetailsScreenState.SectionStatus.LOADING -> {
+                        BasicDetailsLoading()
+                    }
+
+                    SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
+                        BasicDetails(
+                            title = uiState.series.title,
+                            genres = uiState.series.genres,
+                            rating = uiState.series.rating,
+                            releaseDate = uiState.series.releaseDate,
+                            seasonsCount = uiState.series.seasonsCount,
+                            onRateClicked = listener::onRateClicked,
+                            onPlayTrailerClicked = listener::onPlayTrailerClicked,
+                            onAddToListClicked = listener::onAddToListClicked
+                        )
+                    }
+
+                    SeriesDetailsScreenState.SectionStatus.ERROR -> {}
+                }
+            }
+            item {
+                when (uiState.basicDetailsSectionState) {
+                    SeriesDetailsScreenState.SectionStatus.LOADING -> {
+                        LoadingMovieImage(
                             modifier = Modifier
+                                .padding(horizontal = 16.dp)
                                 .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                            horizontalAlignment = Alignment.Start
-                        ) {
-                            BasicText(
-                                modifier = Modifier.padding(bottom = 8.dp),
-                                text = uiState.series.title,
-                                style = Theme.textStyle.headline.mediumMedium18.copy(
-                                    color = Theme.color.surfaces.onSurface
-                                )
-                            )
-                            BasicText(
-                                modifier = Modifier.padding(bottom = 12.dp),
-                                text = uiState.series.genres.joinToString(", "),
-                                style = Theme.textStyle.label.smallRegular14.copy(
-                                    color = Theme.color.surfaces.onSurfaceVariant
-                                )
-                            )
-                            Row(
+                                .height(height = 200.dp)
+                                .padding(bottom = 32.dp)
+                        )
+                    }
+
+                    SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
+                        if (uiState.series.overview.isNotEmpty()) {
+                            ExpandableText(
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 16.dp),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            ) {
-                                InfoChip(
-                                    text = uiState.series.rating.toString(),
-                                    imgRes = R.drawable.review_star,
-                                )
-                                InfoChip(
-                                    text = stringResource(
-                                        R.string.seasons_count,
-                                        uiState.series.seasonsCount
-                                    ),
-                                    imgRes = R.drawable.ic_media
-                                )
-                                InfoChip(
-                                    text = uiState.series.releaseDate,
-                                    imgRes = R.drawable.date,
-                                )
-                            }
-                            ActionBar(
-                                onRateClicked = listener::onRateClicked,
-                                onPlayClicked = listener::onPlayTrailerClicked,
-                                onAddToListClicked = listener::onAddToListClicked
+                                    .padding(horizontal = 16.dp)
+                                    .padding(top = 16.dp),
+                                text = uiState.series.overview,
+                                color = Theme.color.surfaces.onSurface,
+                                style = Theme.textStyle.label.smallRegular14,
+                                showMoreStyle = Theme.textStyle.label.smallRegular14,
+                                showMoreColor = Theme.color.surfaces.onSurfaceVariant,
+                                showLessColor = Theme.color.surfaces.onSurfaceVariant,
                             )
                         }
                     }
 
-                    SeriesDetailsScreenState.ScreenStatus.ERROR -> {}
+                    SeriesDetailsScreenState.SectionStatus.ERROR -> {}
                 }
-            }
-            item {
-                when (uiState.basicDetailsSectionState) {
-                    SeriesDetailsScreenState.ScreenStatus.INITIAL -> {}
-                    SeriesDetailsScreenState.ScreenStatus.LOADING -> {}
-                    SeriesDetailsScreenState.ScreenStatus.SUCCESS -> {
-                        ExpandableText(
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp)
-                                .padding(top = 16.dp),
-                            text = uiState.series.overview,
-                            color = Theme.color.surfaces.onSurface,
-                            style = Theme.textStyle.label.smallRegular14,
-                            showMoreStyle = Theme.textStyle.label.smallRegular14,
-                            showMoreColor = Theme.color.surfaces.onSurfaceVariant,
-                            showLessColor = Theme.color.surfaces.onSurfaceVariant,
-                        )
-                    }
-
-                    SeriesDetailsScreenState.ScreenStatus.ERROR -> {}
-                }
-
             }
             item {
                 when (uiState.castSectionState) {
-                    SeriesDetailsScreenState.ScreenStatus.INITIAL -> {}
-                    SeriesDetailsScreenState.ScreenStatus.LOADING -> {}
-                    SeriesDetailsScreenState.ScreenStatus.SUCCESS -> {
-                        SectionHeader(
-                            modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                            title = stringResource(R.string.top_cast),
-                            actionText = stringResource(R.string.see_all),
-                            actionIcon = ImageVector.vectorResource(R.drawable.arrow),
-                            onActionClick = { listener.onSeeAllArtistsClicked(seriesId = uiState.series.id) }
-                        )
-                        LazyRow(
-                            contentPadding = PaddingValues(horizontal = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.Start)
-                        ) {
-                            items(uiState.cast) {
-                                SmallArtistCard(
-                                    modifier = Modifier.clickable {
-                                        listener.onArtistClicked(it.id)
-                                    },
-                                    name = it.name,
-                                    imgUrl = "https://image.tmdb.org/t/p/w500/${it.photoPath}"
-                                )
+                    SeriesDetailsScreenState.SectionStatus.LOADING -> {
+                        SectionLoading(
+                            headerName = stringResource(R.string.top_cast),
+                            sectionLoadingItem = {
+                                LoadingArtistCard()
                             }
+                        )
+                    }
+
+                    SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
+                        if (uiState.cast.isNotEmpty()) {
+                            SeriesTopCastSection(
+                                onActionClicked = { listener.onSeeAllArtistsClicked(uiState.series.id) },
+                                onArtistClicked = listener::onArtistClicked,
+                                cast = uiState.cast
+                            )
                         }
                     }
 
-                    SeriesDetailsScreenState.ScreenStatus.ERROR -> {}
+                    SeriesDetailsScreenState.SectionStatus.ERROR -> {}
                 }
             }
             item {
                 when (uiState.seasonsSectionState) {
-                    SeriesDetailsScreenState.ScreenStatus.INITIAL -> {}
-                    SeriesDetailsScreenState.ScreenStatus.LOADING -> {}
-                    SeriesDetailsScreenState.ScreenStatus.SUCCESS -> {
-                        SectionHeader(
-                            modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                            title = stringResource(R.string.current_seasons),
-                            actionText = stringResource(R.string.see_all),
-                            actionIcon = ImageVector.vectorResource(R.drawable.arrow),
-                            onActionClick = { listener.onSeeAllSeasonsClicked(seriesId = uiState.series.id) }
-                        )
-                        LazyRow(
-                            contentPadding = PaddingValues(horizontal = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start)
-                        ) {
-                            itemsIndexed(uiState.seasons) { index, season ->
-                                SeasonCard(
-                                    modifier = Modifier.width(260.dp),
-                                    seriesName = uiState.series.title,
-                                    seasonTitle = season.name,
-                                    seasonRate = season.rating,
-                                    totalNumberOfEpisodes = season.episodesCount.toString(),
-                                    movieImage = "https://image.tmdb.org/t/p/w500/${season.posterPath}",
-                                    yearOfPublish = season.airDate,
-                                    timeOfPublish = season.airDate,
-                                    currentSeason = season.number.toString(),
-                                    onClick = {
-                                        listener.onSeasonClicked(
-                                            seriesId = uiState.series.id,
-                                            seasonNumber = season.number
-                                        )
-                                    }
+                    SeriesDetailsScreenState.SectionStatus.LOADING -> {
+                        SectionLoading(
+                            headerName = stringResource(R.string.current_seasons),
+                            sectionLoadingItem = {
+                                LoadingMovieImage(
+                                    modifier = Modifier.size(width = 260.dp, height = 137.dp)
                                 )
                             }
+                        )
+                    }
+
+                    SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
+                        if (uiState.seasons.isNotEmpty()) {
+                            SeasonSection(
+                                seriesName = uiState.series.title,
+                                seriesId = uiState.series.id,
+                                seasons = uiState.seasons,
+                                onActionClicked = { listener.onSeeAllSeasonsClicked(seriesId = uiState.series.id) },
+                                onSeasonClicked = listener::onSeasonClicked
+                            )
                         }
                     }
 
-                    SeriesDetailsScreenState.ScreenStatus.ERROR -> {}
+                    SeriesDetailsScreenState.SectionStatus.ERROR -> {}
                 }
             }
             item {
                 when (uiState.reviewsSectionState) {
-                    SeriesDetailsScreenState.ScreenStatus.INITIAL -> {}
-                    SeriesDetailsScreenState.ScreenStatus.LOADING -> {}
-                    SeriesDetailsScreenState.ScreenStatus.SUCCESS -> {
-                        SectionHeader(
-                            modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                            title = stringResource(R.string.reviews),
-                            actionText = stringResource(R.string.see_all),
-                            actionIcon = ImageVector.vectorResource(R.drawable.arrow),
-                            onActionClick = { listener.onSeeAllReviewsClicked(seriesId = uiState.series.id) }
-                        )
-                        LazyRow(
-                            contentPadding = PaddingValues(horizontal = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start)
-                        ) {
-                            items(uiState.reviews) {
-                                ReviewCard(
-                                    imgUrl = "https://image.tmdb.org/t/p/w500/${it.authorPhotoPath}",
-                                    reviewerName = it.author,
-                                    rating = it.rating.toString(),
-                                    reviewDate = it.date,
-                                    reviewText = it.description,
-                                    isExpandable = false
+                    SeriesDetailsScreenState.SectionStatus.LOADING -> {
+                        SectionLoading(
+                            headerName = stringResource(R.string.reviews),
+                            sectionLoadingItem = {
+                                LoadingReviewCard(
+                                    modifier = Modifier.size(width = 260.dp, height = 137.dp)
                                 )
                             }
+                        )
+                    }
+
+                    SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
+                        if (uiState.reviews.isNotEmpty()) {
+                            SeriesReviewSection(
+                                reviews = uiState.reviews,
+                                onActionClicked = { listener.onSeeAllReviewsClicked(seriesId = uiState.series.id) }
+                            )
                         }
                     }
 
-                    SeriesDetailsScreenState.ScreenStatus.ERROR -> {}
+                    SeriesDetailsScreenState.SectionStatus.ERROR -> {}
                 }
-
             }
             item {
                 when (uiState.similarSeriesSectionState) {
-                    SeriesDetailsScreenState.ScreenStatus.INITIAL -> {}
-                    SeriesDetailsScreenState.ScreenStatus.LOADING -> {}
-                    SeriesDetailsScreenState.ScreenStatus.SUCCESS -> {
-                        SectionHeader(
-                            modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                            title = stringResource(R.string.similar_series),
-                            actionText = stringResource(R.string.see_all),
-                            actionIcon = ImageVector.vectorResource(R.drawable.arrow),
-                            onActionClick = { listener.onSeeAllSimilarClicked(seriesId = uiState.series.id) }
-                        )
-                        LazyRow(
-                            contentPadding = PaddingValues(horizontal = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start)
-                        ) {
-                            items(uiState.similarSeries) {
-                                MovieCard(
-                                    modifier = Modifier
-                                        .width(124.dp)
-                                        .clickable {
-                                            listener.onSeriesClicked(it.id)
-                                        },
-                                    imgUrl = "https://image.tmdb.org/t/p/w500/${it.posterPath}",
-                                    title = it.title,
-                                    vote = it.rating,
-                                    width = 124.dp,
-                                    aspectRatio = 0.775f,
+                    SeriesDetailsScreenState.SectionStatus.LOADING -> {
+                        SectionLoading(
+                            headerName = stringResource(R.string.similar_series),
+                            sectionLoadingItem = {
+                                LoadingMovieCard(
+                                    height = 160.dp
                                 )
                             }
+                        )
+                    }
+
+                    SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
+                        if (uiState.similarSeries.isNotEmpty()) {
+                            SimilarSeriesSection(
+                                similarSeries = uiState.similarSeries,
+                                onSeriesClicked = listener::onSeriesClicked,
+                                onActionClicked = { listener.onSeeAllSimilarClicked(seriesId = uiState.series.id) }
+                            )
                         }
                     }
 
-                    SeriesDetailsScreenState.ScreenStatus.ERROR -> {}
+                    SeriesDetailsScreenState.SectionStatus.ERROR -> {}
                 }
             }
         }

@@ -9,12 +9,8 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,16 +21,11 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -54,17 +45,25 @@ import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.basic_component.ExpandableText
-import com.cairosquad.design_system.basic_component.InfoChip
+import com.cairosquad.design_system.basic_component.Icon
 import com.cairosquad.design_system.basic_component.SnackBar
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
-import com.cairosquad.ui.movio_component.ActionBar
-import com.cairosquad.ui.movio_component.ArtistCard
-import com.cairosquad.ui.movio_component.LoginBottomSheet
-import com.cairosquad.ui.movio_component.MovieCard
-import com.cairosquad.ui.movio_component.ReviewCard
-import com.cairosquad.ui.movio_component.SectionHeader
-import com.cairosquad.ui.movio_component.ShareBottomSheet
+import com.cairosquad.ui.BuildConfig
+import com.cairosquad.ui.details.composable.BasicDetails
+import com.cairosquad.ui.details.composable.BasicDetailsLoading
+import com.cairosquad.ui.details.composable.MovieReviewSection
+import com.cairosquad.ui.details.composable.MovieTopCastSection
+import com.cairosquad.ui.details.composable.SectionLoading
+import com.cairosquad.ui.details.composable.SimilarMoviesSection
+import com.cairosquad.ui.movio_component.LoadingArtistCard
+import com.cairosquad.ui.movio_component.LoadingMovieCard
+import com.cairosquad.ui.movio_component.LoadingMovieImage
+import com.cairosquad.ui.movio_component.LoadingReviewCard
+import com.cairosquad.ui.movio_component.bottom_sheet.ListBottomSheet
+import com.cairosquad.ui.movio_component.bottom_sheet.LoginBottomSheet
+import com.cairosquad.ui.movio_component.bottom_sheet.RateBottomSheet
+import com.cairosquad.ui.movio_component.bottom_sheet.ShareBottomSheet
 import com.cairosquad.ui.navigation.ArtistRoute
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.MovieRoute
@@ -181,6 +180,35 @@ fun MovieScreen(
             )
         }
         AnimatedVisibility(
+            visible = state.isAddToListBottomSheetOpen,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            ListBottomSheet(
+                isVisible = state.isAddToListBottomSheetOpen,
+                onDismiss = viewModel::onDismissAddToListBottomSheet,
+                lists = emptyList(),
+                onListClicked = {},
+                onCreateNewList = {}
+            )
+        }
+        AnimatedVisibility(
+            visible = state.isRateBottomSheetOpen,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            RateBottomSheet(
+                isVisible = state.isRateBottomSheetOpen,
+                onDismiss = viewModel::onDismissRateBottomSheet,
+                rating = state.rate,
+                imageUrl = BuildConfig.IMAGE_BASE_URL + state.movie.posterPath,
+                name = state.movie.title,
+                isMovie = true,
+                onRatingChange = viewModel::onRateChange,
+                onSubmitClicked = viewModel::onSubmitRateClicked,
+            )
+        }
+        AnimatedVisibility(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .windowInsetsPadding(WindowInsets.navigationBars)
@@ -217,7 +245,7 @@ fun MovieContent(
     val progress = (listState.value / scrollThresholdPx).coerceIn(0f, 1f)
 
     val animatedStartColor = lerp(
-        start = Color.Black,
+        start = Theme.color.surfaces.statusBarShadow,
         stop = Theme.color.surfaces.surface,
         fraction = progress
     )
@@ -237,21 +265,22 @@ fun MovieContent(
             .verticalScroll(listState)
     ) {
         when (uiState.basicDetailsSectionState) {
-            MovieScreenState.ScreenStatus.INITIAL -> {}
             MovieScreenState.ScreenStatus.LOADING -> {}
             MovieScreenState.ScreenStatus.SUCCESS -> {
-                SafeImageViewer(
-                    modifier = Modifier
-                        .blur(16.dp)
-                        .fillMaxWidth()
-                        .height(400.dp)
-                        .offset(y = (-28).dp),
-                    model = "https://image.tmdb.org/t/p/w500/${uiState.movie.posterPath}",
-                    contentDescription = "",
-                    blur = 0,
-                    nudeThreshold = 0.0,
-                    nonNudeThreshold = 0.0
-                )
+                if (uiState.movie.posterPath.isNotEmpty()) {
+                    SafeImageViewer(
+                        modifier = Modifier
+                            .blur(16.dp)
+                            .fillMaxWidth()
+                            .height(400.dp)
+                            .offset(y = (-28).dp),
+                        model = BuildConfig.IMAGE_BASE_URL + uiState.movie.posterPath,
+                        contentDescription = "",
+                        blur = 0,
+                        nudeThreshold = 0.0,
+                        nonNudeThreshold = 0.0
+                    )
+                }
             }
 
             MovieScreenState.ScreenStatus.ERROR -> {}
@@ -266,8 +295,19 @@ fun MovieContent(
         ) {
             item {
                 when (uiState.basicDetailsSectionState) {
-                    MovieScreenState.ScreenStatus.INITIAL -> {}
-                    MovieScreenState.ScreenStatus.LOADING -> {}
+                    MovieScreenState.ScreenStatus.LOADING -> {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 56.dp, bottom = 24.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            LoadingMovieImage(
+                                modifier = Modifier.size(height = 260.dp, width = 200.dp)
+                            )
+                        }
+                    }
+
                     MovieScreenState.ScreenStatus.SUCCESS -> {
                         Column(
                             modifier = Modifier
@@ -280,8 +320,16 @@ fun MovieContent(
                                     modifier = Modifier
                                         .size(height = 260.dp, width = 200.dp)
                                         .clip(RoundedCornerShape(8.dp)),
-                                    model = "https://image.tmdb.org/t/p/w500/${uiState.movie.posterPath}",
+                                    model = BuildConfig.IMAGE_BASE_URL + uiState.movie.posterPath,
                                     contentDescription = "",
+                                    loadingPlaceholder = {
+                                        LoadingMovieImage(
+                                            modifier = Modifier.size(
+                                                height = 260.dp,
+                                                width = 200.dp
+                                            )
+                                        )
+                                    }
                                 )
                             } else {
                                 Box(
@@ -307,54 +355,21 @@ fun MovieContent(
             }
             item {
                 when (uiState.basicDetailsSectionState) {
-                    MovieScreenState.ScreenStatus.INITIAL -> {}
-                    MovieScreenState.ScreenStatus.LOADING -> {}
+                    MovieScreenState.ScreenStatus.LOADING -> {
+                        BasicDetailsLoading()
+                    }
+
                     MovieScreenState.ScreenStatus.SUCCESS -> {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                            horizontalAlignment = Alignment.Start
-                        ) {
-                            BasicText(
-                                modifier = Modifier.padding(bottom = 8.dp),
-                                text = uiState.movie.title,
-                                style = Theme.textStyle.headline.mediumMedium18.copy(
-                                    color = Theme.color.surfaces.onSurface
-                                )
-                            )
-                            BasicText(
-                                modifier = Modifier.padding(bottom = 12.dp),
-                                text = uiState.movie.genres.joinToString(", "),
-                                style = Theme.textStyle.label.smallRegular14.copy(
-                                    color = Theme.color.surfaces.onSurfaceVariant
-                                )
-                            )
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 16.dp),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            ) {
-                                InfoChip(
-                                    text = uiState.movie.rating.toString(),
-                                    imgRes = R.drawable.review_star,
-                                )
-                                InfoChip(
-                                    text = uiState.movie.runtimeMinutes,
-                                    imgRes = R.drawable.time,
-                                )
-                                InfoChip(
-                                    text = uiState.movie.releaseDate,
-                                    imgRes = R.drawable.date,
-                                )
-                            }
-                            ActionBar(
-                                onRateClicked = interactionListener::onRateItClick,
-                                onPlayClicked = interactionListener::onPlayClick,
-                                onAddToListClicked = interactionListener::onAddToListClick
-                            )
-                        }
+                        BasicDetails(
+                            title = uiState.movie.title,
+                            genres = uiState.movie.genres,
+                            rating = uiState.movie.rating,
+                            releaseDate = uiState.movie.releaseDate,
+                            runtimeMinutes = uiState.movie.runtimeMinutes,
+                            onRateClicked = interactionListener::onRateItClick,
+                            onPlayTrailerClicked = interactionListener::onPlayClick,
+                            onAddToListClicked = interactionListener::onAddToListClick
+                        )
                     }
 
                     MovieScreenState.ScreenStatus.ERROR -> {}
@@ -362,8 +377,16 @@ fun MovieContent(
             }
             item {
                 when (uiState.basicDetailsSectionState) {
-                    MovieScreenState.ScreenStatus.INITIAL -> {}
-                    MovieScreenState.ScreenStatus.LOADING -> {}
+                    MovieScreenState.ScreenStatus.LOADING -> {
+                        LoadingMovieImage(
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .fillMaxWidth()
+                                .height(height = 200.dp)
+                                .padding(bottom = 32.dp)
+                        )
+                    }
+
                     MovieScreenState.ScreenStatus.SUCCESS -> {
                         ExpandableText(
                             modifier = Modifier
@@ -383,29 +406,22 @@ fun MovieContent(
             }
             item {
                 when (uiState.castSectionState) {
-                    MovieScreenState.ScreenStatus.INITIAL -> {}
-                    MovieScreenState.ScreenStatus.LOADING -> {}
-                    MovieScreenState.ScreenStatus.SUCCESS -> {
-                        SectionHeader(
-                            modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                            title = "Top Cast",
-                            actionText = stringResource(R.string.see_all),
-                            actionIcon = ImageVector.vectorResource(R.drawable.arrow),
-                            onActionClick = { interactionListener.onSeeAllCastClick(uiState.movie.id) }
-                        )
-                        LazyRow(
-                            contentPadding = PaddingValues(horizontal = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            items(uiState.topCast) {
-                                ArtistCard(
-                                    modifier = Modifier.clickable {
-                                        interactionListener.onActorClick(it.id)
-                                    },
-                                    name = it.name,
-                                    imgUrl = "https://image.tmdb.org/t/p/w500/${it.photoPath}"
-                                )
+                    MovieScreenState.ScreenStatus.LOADING -> {
+                        SectionLoading(
+                            headerName = stringResource(R.string.top_cast),
+                            sectionLoadingItem = {
+                                LoadingArtistCard()
                             }
+                        )
+                    }
+
+                    MovieScreenState.ScreenStatus.SUCCESS -> {
+                        if (uiState.topCast.isNotEmpty()) {
+                            MovieTopCastSection(
+                                onActionClicked = { interactionListener.onSeeAllCastClick(uiState.movie.id) },
+                                onArtistClicked = interactionListener::onActorClick,
+                                cast = uiState.topCast,
+                            )
                         }
                     }
 
@@ -414,30 +430,23 @@ fun MovieContent(
             }
             item {
                 when (uiState.reviewsSectionState) {
-                    MovieScreenState.ScreenStatus.INITIAL -> {}
-                    MovieScreenState.ScreenStatus.LOADING -> {}
-                    MovieScreenState.ScreenStatus.SUCCESS -> {
-                        SectionHeader(
-                            modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                            title = "Reviews",
-                            actionText = stringResource(R.string.see_all),
-                            actionIcon = ImageVector.vectorResource(R.drawable.arrow),
-                            onActionClick = { interactionListener.onSeeAllReviewsClick(uiState.movie.id) }
-                        )
-                        LazyRow(
-                            contentPadding = PaddingValues(horizontal = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            items(uiState.reviews) {
-                                ReviewCard(
-                                    imgUrl = "https://image.tmdb.org/t/p/w500/${it.authorPhotoPath}",
-                                    reviewerName = it.author,
-                                    rating = it.rating.toString(),
-                                    reviewDate = it.date,
-                                    reviewText = it.description,
-                                    isExpandable = false
+                    MovieScreenState.ScreenStatus.LOADING -> {
+                        SectionLoading(
+                            headerName = stringResource(R.string.reviews),
+                            sectionLoadingItem = {
+                                LoadingReviewCard(
+                                    modifier = Modifier.size(width = 260.dp, height = 137.dp)
                                 )
                             }
+                        )
+                    }
+
+                    MovieScreenState.ScreenStatus.SUCCESS -> {
+                        if (uiState.reviews.isNotEmpty()) {
+                            MovieReviewSection(
+                                reviews = uiState.reviews,
+                                onActionClicked = { interactionListener.onSeeAllReviewsClick(uiState.movie.id) }
+                            )
                         }
                     }
 
@@ -446,35 +455,28 @@ fun MovieContent(
             }
             item {
                 when (uiState.similarMoviesSectionState) {
-                    MovieScreenState.ScreenStatus.INITIAL -> {}
-                    MovieScreenState.ScreenStatus.LOADING -> {}
-                    MovieScreenState.ScreenStatus.SUCCESS -> {
-                        SectionHeader(
-                            modifier = Modifier.padding(top = 32.dp, bottom = 12.dp),
-                            title = "Similar Movies",
-                            actionText = stringResource(R.string.see_all),
-                            actionIcon = ImageVector.vectorResource(R.drawable.arrow),
-                            onActionClick = { interactionListener.onSeeAllSimilarMoviesClick(uiState.movie.id) }
-                        )
-                        LazyRow(
-                            contentPadding = PaddingValues(horizontal = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-
-                            items(uiState.similarMovies) {
-                                MovieCard(
-                                    modifier = Modifier
-                                        .width(124.dp)
-                                        .clickable {
-                                            interactionListener.onMovieClick(it.id)
-                                        },
-                                    imgUrl = "https://image.tmdb.org/t/p/w500/${it.posterPath}",
-                                    title = it.title,
-                                    vote = it.rating,
-                                    width = 124.dp,
-                                    aspectRatio = 0.775f,
+                    MovieScreenState.ScreenStatus.LOADING -> {
+                        SectionLoading(
+                            headerName = stringResource(R.string.similar_movies),
+                            sectionLoadingItem = {
+                                LoadingMovieCard(
+                                    height = 160.dp
                                 )
                             }
+                        )
+                    }
+
+                    MovieScreenState.ScreenStatus.SUCCESS -> {
+                        if (uiState.similarMovies.isNotEmpty()) {
+                            SimilarMoviesSection(
+                                similarMovies = uiState.similarMovies,
+                                onMovieClicked = interactionListener::onMovieClick,
+                                onActionClicked = {
+                                    interactionListener.onSeeAllSimilarMoviesClick(
+                                        uiState.movie.id
+                                    )
+                                }
+                            )
                         }
                     }
 

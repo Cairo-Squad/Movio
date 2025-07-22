@@ -4,6 +4,7 @@ import com.cairosquad.domain.usecase.movies.GetMovieDetailsUseCase
 import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.viewmodel.base.BaseViewModel
+import com.cairosquad.viewmodel.details.top_cast.TopCastScreenState.ScreenStatus
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
@@ -20,12 +21,21 @@ class TopCastViewModel(
 
     fun getTopCast() {
         tryToCall(
-            block = { getTopCastByMediaType() },
+            block = {
+                updateState { it.copy(screenStatus = ScreenStatus.LOADING) }
+                getTopCastByMediaType()
+            },
             onSuccess = ::handleSuccess,
-            onError = { throwable -> updateState { it.copy(isLoading = false, error = throwable.message) } },
+            onError = { throwable ->
+                updateState {
+                    it.copy(
+                        screenStatus = ScreenStatus.ERROR,
+                        error = throwable.message
+                    )
+                }
+            },
             dispatcher = dispatcher
         )
-
     }
 
     private suspend fun getTopCastByMediaType(): List<Artist> {
@@ -37,6 +47,10 @@ class TopCastViewModel(
     }
 
     private fun handleSuccess(cast: List<Artist>) {
-        updateState { it.copy(isLoading = false, cast = cast.map { it.toTopCastUiState() }) }
+        updateState {
+            it.copy(
+                screenStatus = ScreenStatus.SUCCESS,
+                cast = cast.map { it.toTopCastUiState() })
+        }
     }
 }

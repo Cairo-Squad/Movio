@@ -64,7 +64,6 @@ android {
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
 
-    implementation(libs.bundles.ktor)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.datastore)
 
@@ -72,9 +71,12 @@ dependencies {
     implementation(libs.androidx.runtime)
     implementation(libs.logging.interceptor)
 
+    // --- Retrofit 3 ---
+    implementation(libs.retrofit)
+    implementation(libs.converter.kotlinx.serialization)
+    implementation (libs.okhttp)
     testImplementation(kotlin("test"))
 
-    testImplementation(libs.ktor.client.mock)
 
     testImplementation(libs.kotlinx.coroutines.test)
 
