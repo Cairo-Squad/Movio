@@ -176,6 +176,7 @@ data class MediaHorizontalPagerItem(
     val title: String,
     val photoPath: String,
     val genres: List<String>,
+    val isMovie: Boolean
 ) {
 
     companion object {
@@ -185,7 +186,8 @@ data class MediaHorizontalPagerItem(
                 id = movie.id,
                 title = movie.title,
                 photoPath = movie.posterPath,
-                genres = movie.genres.map { it.name }
+                genres = movie.genres.map { it.name },
+                isMovie = true
             )
         }
 
@@ -194,8 +196,24 @@ data class MediaHorizontalPagerItem(
                 id = series.id,
                 title = series.title,
                 photoPath = series.posterPath,
-                genres = series.genres.map { it.name }
+                genres = series.genres.map { it.name },
+                isMovie = false
             )
+        }
+
+        fun fromHomeMoviesAndSeriesUiState(
+            movies: List<HomeScreenState.MovieUiState>,
+            series: List<HomeScreenState.SeriesUiState>
+        ): List<MediaSectionItem> {
+            val mergedList = mutableListOf<MediaSectionItem>()
+            val moviesIterator = movies.iterator()
+            val seriesIterator = series.iterator()
+
+            while (moviesIterator.hasNext() || seriesIterator.hasNext()) {
+                if (moviesIterator.hasNext()) mergedList.add(MediaSectionItem.Companion.fromHomeMovieUiState(moviesIterator.next()))
+                if (seriesIterator.hasNext()) mergedList.add(MediaSectionItem.Companion.fromHomeSeriesUiState(seriesIterator.next()))
+            }
+            return mergedList
         }
     }
 }

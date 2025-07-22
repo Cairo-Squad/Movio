@@ -41,16 +41,22 @@ fun HomeScreenContentMoviesTab(
         MediaSection(
             modifier = Modifier.padding(bottom = 32.dp),
             mediaList = screenState.topRatingMovies.map(MediaSectionItem::fromHomeMovieUiState),
-            onClickMedia = listener::onClickMovie,
+            onClickMedia = {id, isMovie ->
+                if (isMovie) listener.onClickMovie(id)
+                else listener.onClickSeries(id)
+            },
             sectionTitle = stringResource(R.string.top_rating),
             mediaSectionLayoutType = MediaSectionLayoutType.LazyRow,
-            seeAllAction = { listener.onClickSeeAllTopRated(true) }
+            seeAllAction = { listener.onClickSeeAllTopRated(isMovie = true) }
         )
 
         MediaSection(
             modifier = Modifier.padding(bottom = 32.dp),
             mediaList = screenState.freeToWatchMovies.map(MediaSectionItem::fromHomeMovieUiState),
-            onClickMedia = listener::onClickMovie,
+            onClickMedia = {id, isMovie ->
+                if (isMovie) listener.onClickMovie(id)
+                else listener.onClickSeries(id)
+            },
             sectionTitle = stringResource(R.string.free_to_watch),
             mediaSectionLayoutType = MediaSectionLayoutType.LazyRow,
             seeAllAction = { listener.onClickSeeAllFreeToWatch() }
@@ -59,7 +65,10 @@ fun HomeScreenContentMoviesTab(
         MediaSection(
             modifier = Modifier.padding(bottom = 32.dp),
             mediaList = screenState.upcomingMovies.map(MediaSectionItem::fromHomeMovieUiState),
-            onClickMedia = listener::onClickMovie,
+            onClickMedia = {id, isMovie ->
+                if (isMovie) listener.onClickMovie(id)
+                else listener.onClickSeries(id)
+            },
             sectionTitle = stringResource(R.string.up_coming),
             mediaSectionLayoutType = MediaSectionLayoutType.LazyRow,
             seeAllAction = { listener.onClickSeeAllUpcoming() }
@@ -70,10 +79,13 @@ fun HomeScreenContentMoviesTab(
             mediaList = screenState.moreRecommendedMovies
                 .map(MediaSectionItem::fromHomeMovieUiState)
                 .take(8),
-            onClickMedia = listener::onClickMovie,
+            onClickMedia = {id, isMovie ->
+                if (isMovie) listener.onClickMovie(id)
+                else listener.onClickSeries(id)
+            },
             sectionTitle = stringResource(R.string.more_recommended),
             mediaSectionLayoutType = MediaSectionLayoutType.LazyVerticalGrid(158),
-            seeAllAction = { listener.onClickSeeAllMoreRecommended(true) }
+            seeAllAction = { listener.onClickSeeAllMoreRecommended(isMovie = true) }
         )
     }
 }

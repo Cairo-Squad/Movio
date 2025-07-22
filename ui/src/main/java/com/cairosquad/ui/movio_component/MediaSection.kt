@@ -26,10 +26,10 @@ import com.cairosquad.viewmodel.home.HomeScreenState
 @Composable
 fun MediaSection(
     mediaList: List<MediaSectionItem>,
-    onClickMedia: (Long) -> Unit,
+    onClickMedia: (mediaId: Long, isMovie: Boolean) -> Unit,
+    sectionTitle: String,
     mediaSectionLayoutType: MediaSectionLayoutType,
     modifier: Modifier = Modifier,
-    sectionTitle: String? = null,
     seeAllAction: (() -> Unit)? = null,
 ) {
 
@@ -39,15 +39,13 @@ fun MediaSection(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        if (sectionTitle != null) {
-            SectionHeader(
-                title = sectionTitle,
-                modifier = Modifier,
-                actionText = stringResource(com.cairosquad.ui.R.string.see_all).takeIf { seeAllAction != null },
-                actionIcon = ImageVector.vectorResource(R.drawable.arrow),
-                onActionClick = { seeAllAction?.invoke() }
-            )
-        }
+        SectionHeader(
+            title = sectionTitle,
+            modifier = Modifier,
+            actionText = stringResource(com.cairosquad.ui.R.string.see_all).takeIf { seeAllAction != null },
+            actionIcon = ImageVector.vectorResource(R.drawable.arrow),
+            onActionClick = { seeAllAction?.invoke() }
+        )
 
         when (mediaSectionLayoutType) {
             is MediaSectionLayoutType.LazyHorizontalGrid -> {
@@ -62,7 +60,7 @@ fun MediaSection(
                         TrendingMovieCard(
                             modifier = Modifier
                                 .width(240.dp)
-                                .clickable { onClickMedia(media.id) },
+                                .clickable { onClickMedia(media.id, media.isMovie) },
                             imgUrl = media.photoPath,
                             movieTitle = media.title,
                             movieCategory = "Documentary",
@@ -83,11 +81,11 @@ fun MediaSection(
                     items(mediaList) { media ->
                         MovieCard(
                             modifier = Modifier
-                                .clickable { onClickMedia(media.id) },
+                                .clickable { onClickMedia(media.id, media.isMovie) },
                             imgUrl = media.photoPath,
                             title = media.title,
                             vote = media.rating,
-                            aspectRatio = mediaSectionLayoutType.aspectRatio,
+                            aspectRatio = 0.877f,
                             width = null
                         )
                     }
@@ -103,7 +101,7 @@ fun MediaSection(
                         MovieCard(
                             modifier = Modifier
                                 .width(158.dp)
-                                .clickable { onClickMedia(media.id) },
+                                .clickable { onClickMedia(media.id, media.isMovie) },
                             imgUrl = media.photoPath,
                             title = media.title,
                             vote = media.rating,
@@ -123,7 +121,7 @@ fun MediaSection(
                         MovieCard(
                             modifier = Modifier
                                 .width(124.dp)
-                                .clickable { onClickMedia(media.id) },
+                                .clickable { onClickMedia(media.id, media.isMovie) },
                             imgUrl = media.photoPath,
                             title = media.title,
                             vote = media.rating,
@@ -142,6 +140,7 @@ data class MediaSectionItem(
     val title: String,
     val photoPath: String,
     val rating: Float,
+    val isMovie: Boolean
 ){
     companion object {
 
@@ -151,6 +150,7 @@ data class MediaSectionItem(
                 title = movie.title,
                 photoPath = movie.posterPath,
                 rating = movie.rating,
+                isMovie = true
             )
         }
 
@@ -160,17 +160,30 @@ data class MediaSectionItem(
                 title = movie.title,
                 photoPath = movie.posterPath,
                 rating = movie.rating,
+                isMovie = false
             )
+        }
+
+        fun fromHomeMoviesAndSeriesUiState(
+            movies: List<HomeScreenState.MovieUiState>,
+            series: List<HomeScreenState.SeriesUiState>
+        ): List<MediaSectionItem> {
+            val mergedList = mutableListOf<MediaSectionItem>()
+            val moviesIterator = movies.iterator()
+            val seriesIterator = series.iterator()
+
+            while (moviesIterator.hasNext() || seriesIterator.hasNext()) {
+                if (moviesIterator.hasNext()) mergedList.add(fromHomeMovieUiState(moviesIterator.next()))
+                if (seriesIterator.hasNext()) mergedList.add(fromHomeSeriesUiState(seriesIterator.next()))
+            }
+            return mergedList
         }
     }
 }
 
 sealed class MediaSectionLayoutType {
     data class LazyHorizontalGrid(val rowsCount: Int) : MediaSectionLayoutType()
-    data class LazyVerticalGrid(
-        val minWidthDp: Int,
-        val aspectRatio: Float = 0.877f
-    ) : MediaSectionLayoutType()
+    data class LazyVerticalGrid(val minWidthDp: Int) : MediaSectionLayoutType()
     object LazyRow: MediaSectionLayoutType()
     object LazyColumn: MediaSectionLayoutType()
 }

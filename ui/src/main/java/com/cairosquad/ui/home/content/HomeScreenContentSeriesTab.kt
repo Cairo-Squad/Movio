@@ -35,22 +35,28 @@ fun HomeScreenContentSeriesTab(
                 .map(MediaHorizontalPagerItem::fromHomeSeriesUiState)
                 .take(7),
             initialPage = 3,
-            onClickMedia = listener::onClickMovie
+            onClickMedia = listener::onClickSeries
         )
 
         MediaSection(
             modifier = Modifier.padding(bottom = 32.dp),
             mediaList = screenState.topRatingSeries.map(MediaSectionItem::fromHomeSeriesUiState),
-            onClickMedia = listener::onClickMovie,
+            onClickMedia = {id, isMovie ->
+                if (isMovie) listener.onClickMovie(id)
+                else listener.onClickSeries(id)
+            },
             sectionTitle = stringResource(R.string.top_rating),
             mediaSectionLayoutType = MediaSectionLayoutType.LazyRow,
-            seeAllAction = { listener.onClickSeeAllTopRated(true) }
+            seeAllAction = { listener.onClickSeeAllTopRated(isMovie = false) }
         )
 
         MediaSection(
             modifier = Modifier.padding(bottom = 32.dp),
             mediaList = screenState.airingTodaySeries.map(MediaSectionItem::fromHomeSeriesUiState),
-            onClickMedia = listener::onClickMovie,
+            onClickMedia = {id, isMovie ->
+                if (isMovie) listener.onClickMovie(id)
+                else listener.onClickSeries(id)
+            },
             sectionTitle = stringResource(R.string.airing_today),
             mediaSectionLayoutType = MediaSectionLayoutType.LazyRow,
             seeAllAction = { listener.onClickSeeAllAiringToday() }
@@ -59,7 +65,10 @@ fun HomeScreenContentSeriesTab(
         MediaSection(
             modifier = Modifier.padding(bottom = 32.dp),
             mediaList = screenState.onTvSeries.map(MediaSectionItem::fromHomeSeriesUiState),
-            onClickMedia = listener::onClickMovie,
+            onClickMedia = {id, isMovie ->
+                if (isMovie) listener.onClickMovie(id)
+                else listener.onClickSeries(id)
+            },
             sectionTitle = stringResource(R.string.on_tv),
             mediaSectionLayoutType = MediaSectionLayoutType.LazyRow,
             seeAllAction = { listener.onClickSeeAllOnTv() }
@@ -70,10 +79,13 @@ fun HomeScreenContentSeriesTab(
             mediaList = screenState.moreRecommendedSeries
                 .map(MediaSectionItem::fromHomeSeriesUiState)
                 .take(8),
-            onClickMedia = listener::onClickMovie,
+            onClickMedia = {id, isMovie ->
+                if (isMovie) listener.onClickMovie(id)
+                else listener.onClickSeries(id)
+            },
             sectionTitle = stringResource(R.string.more_recommended),
             mediaSectionLayoutType = MediaSectionLayoutType.LazyVerticalGrid(158),
-            seeAllAction = { listener.onClickSeeAllMoreRecommended(false) }
+            seeAllAction = { listener.onClickSeeAllMoreRecommended(isMovie = false) }
         )
     }
 }
