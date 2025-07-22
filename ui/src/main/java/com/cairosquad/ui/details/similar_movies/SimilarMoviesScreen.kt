@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -22,10 +22,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
+import com.cairosquad.ui.movio_component.LoadingMovieCard
 import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.ui.navigation.MovieRoute
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.viewmodel.details.similar_movies.SimilarMoviesEffect
+import com.cairosquad.viewmodel.details.similar_movies.SimilarMoviesScreenState
 import com.cairosquad.viewmodel.details.similar_movies.SimilarMoviesViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -51,7 +53,7 @@ fun SimilarMoviesScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
+            .windowInsetsPadding(WindowInsets.systemBars)
     ){
         AppBar(
             title = stringResource(R.string.similar_movies),
@@ -64,22 +66,31 @@ fun SimilarMoviesScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            items(state.movies) { movie ->
-                MovieCard(
-                    title = movie.title,
-                    vote = movie.rating,
-                    imgUrl = movie.posterUrl,
-                    modifier = Modifier
-                        .clickable {
-                        viewModel.onMovieClicked(movieId)
-                    },
-                    width = null,
-                    aspectRatio = 0.745F,
-                )
+            when (state.screenStatus) {
+                SimilarMoviesScreenState.ScreenStatus.LOADING -> {
+                    items(20) {
+                        LoadingMovieCard()
+                    }
+                }
+
+                SimilarMoviesScreenState.ScreenStatus.SUCCESS -> {
+                    items(state.movies) { movie ->
+                        MovieCard(
+                            title = movie.title,
+                            vote = movie.rating,
+                            imgUrl = movie.posterUrl,
+                            modifier = Modifier
+                                .clickable {
+                                    viewModel.onMovieClicked(movie.id)
+                                },
+                            width = null,
+                            aspectRatio = 0.745F,
+                        )
+                    }
+                }
+
+                SimilarMoviesScreenState.ScreenStatus.ERROR -> {}
             }
-
         }
-
     }
-
 }

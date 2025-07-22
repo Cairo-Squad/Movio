@@ -5,7 +5,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -22,12 +21,13 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
-import com.cairosquad.design_system.basic_component.Icon
 import com.cairosquad.design_system.basic_component.ExpandableText
+import com.cairosquad.design_system.basic_component.Icon
 import com.cairosquad.design_system.basic_component.Text
 import com.cairosquad.design_system.theme.Theme.color
 import com.cairosquad.design_system.theme.Theme.textStyle
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
+import com.cairosquad.ui.BuildConfig
 
 @Composable
 fun ReviewCard(
@@ -39,7 +39,6 @@ fun ReviewCard(
     modifier: Modifier = Modifier,
     isExpandable: Boolean = true
 ) {
-
     Column(
         modifier = modifier
             .border(
@@ -48,7 +47,6 @@ fun ReviewCard(
                 shape = RoundedCornerShape(8.dp)
             )
             .clip(RoundedCornerShape(8.dp))
-            .heightIn(min = 137.dp)
             .width(258.dp)
             .background(color.surfaces.surfaceContainer)
             .padding(12.dp)
@@ -56,7 +54,7 @@ fun ReviewCard(
         Row {
             if (imgUrl?.isNotEmpty() == true) {
                 SafeImageViewer(
-                    model = "https://image.tmdb.org/t/p/w500$imgUrl",
+                    model = BuildConfig.IMAGE_BASE_URL + imgUrl,
                     modifier = Modifier
                         .size(32.dp)
                         .clip(CircleShape)
@@ -83,7 +81,7 @@ fun ReviewCard(
             }
             Column(
                 modifier = Modifier
-                    .padding(start = 8.dp)
+                    .padding(horizontal = 8.dp)
                     .weight(1f)
             ) {
                 Text(
@@ -129,6 +127,7 @@ fun ReviewCard(
             )
         } else {
             Text(
+                modifier = Modifier.padding(top = 12.dp),
                 text = reviewText,
                 color = color.surfaces.onSurfaceVariant,
                 style = textStyle.label.smallRegular12,

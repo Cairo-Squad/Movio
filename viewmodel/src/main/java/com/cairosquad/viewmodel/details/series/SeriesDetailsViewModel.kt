@@ -7,7 +7,7 @@ import com.cairosquad.entity.Review
 import com.cairosquad.entity.Season
 import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.base.BaseViewModel
-import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState.ScreenStatus
+import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState.SectionStatus
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import kotlinx.coroutines.Dispatchers
@@ -44,7 +44,7 @@ class SeriesDetailsViewModel(
     }
 
     override fun onRateClicked() {
-        updateState { it.copy(showLoginBottomSheet = true) }
+        updateState { it.copy(showRateBottomSheet = true) }
     }
 
     override fun onPlayTrailerClicked() {
@@ -52,7 +52,7 @@ class SeriesDetailsViewModel(
     }
 
     override fun onAddToListClicked() {
-        updateState { it.copy(showLoginBottomSheet = true) }
+        updateState { it.copy(showAddToListBottomSheet = true) }
     }
 
     override fun onDismissShareBottomSheet() {
@@ -61,6 +61,22 @@ class SeriesDetailsViewModel(
 
     override fun onDismissLoginBottomSheet() {
         updateState { it.copy(showLoginBottomSheet = false) }
+    }
+
+    override fun onDismissRateBottomSheet() {
+        updateState { it.copy(showRateBottomSheet = false) }
+    }
+
+    override fun onDismissAddToListBottomSheet() {
+        updateState { it.copy(showAddToListBottomSheet = false) }
+    }
+
+    override fun onRateChange(rate: Int) {
+        updateState { it.copy(rating = rate) }
+    }
+
+    override fun onSubmitRateClicked(rate: Int) {
+        updateState { it.copy(showRateBottomSheet = false) }
     }
 
     override fun onCopy(message: String, isSuccessful: Boolean) {
@@ -119,12 +135,12 @@ class SeriesDetailsViewModel(
     private fun getSeriesDetails(seriesId: Long) {
         tryToCall(
             onStart = {
-                updateState { it.copy(basicDetailsSectionState = ScreenStatus.LOADING) }
+                updateState { it.copy(basicDetailsSectionState = SectionStatus.LOADING) }
             },
             block = { seriesDetailsUseCase.getSeries(seriesId) },
             onSuccess = ::setBasicSeriesDetailsToUiState,
             onError = { throwable ->
-                setError(throwable) { copy(basicDetailsSectionState = ScreenStatus.ERROR) }
+                setError(throwable) { copy(basicDetailsSectionState = SectionStatus.ERROR) }
             },
             dispatcher = Dispatchers.IO
         )
@@ -133,7 +149,7 @@ class SeriesDetailsViewModel(
     private fun setBasicSeriesDetailsToUiState(series: Series) {
         updateState {
             it.copy(
-                basicDetailsSectionState = ScreenStatus.SUCCESS,
+                basicDetailsSectionState = SectionStatus.SUCCESS,
                 series = series.toUiState()
             )
         }
@@ -142,12 +158,12 @@ class SeriesDetailsViewModel(
     private fun getTopCast(seriesId: Long) {
         tryToCall(
             onStart = {
-                updateState { it.copy(castSectionState = ScreenStatus.LOADING) }
+                updateState { it.copy(castSectionState = SectionStatus.LOADING) }
             },
             block = { seriesDetailsUseCase.getSeriesTopCast(seriesId, 1) },
             onSuccess = ::setTopCastToUiState,
             onError = { throwable ->
-                setError(throwable) { copy(castSectionState = ScreenStatus.ERROR) }
+                setError(throwable) { copy(castSectionState = SectionStatus.ERROR) }
             },
             dispatcher = Dispatchers.IO
         )
@@ -156,7 +172,7 @@ class SeriesDetailsViewModel(
     private fun setTopCastToUiState(cast: List<Artist>) {
         updateState {
             it.copy(
-                castSectionState = ScreenStatus.SUCCESS,
+                castSectionState = SectionStatus.SUCCESS,
                 cast = cast.map { it.toUiState() }
             )
         }
@@ -165,12 +181,12 @@ class SeriesDetailsViewModel(
     private fun getSeasons(seriesId: Long) {
         tryToCall(
             onStart = {
-                updateState { it.copy(seasonsSectionState = ScreenStatus.LOADING) }
+                updateState { it.copy(seasonsSectionState = SectionStatus.LOADING) }
             },
             block = { seriesDetailsUseCase.getSeriesSeasons(seriesId) },
             onSuccess = ::setSeasonToUiState,
             onError = { throwable ->
-                setError(throwable) { copy(seasonsSectionState = ScreenStatus.ERROR) }
+                setError(throwable) { copy(seasonsSectionState = SectionStatus.ERROR) }
             },
             dispatcher = Dispatchers.IO
         )
@@ -179,7 +195,7 @@ class SeriesDetailsViewModel(
     private fun setSeasonToUiState(seasons: List<Season>) {
         updateState {
             it.copy(
-                seasonsSectionState = ScreenStatus.SUCCESS,
+                seasonsSectionState = SectionStatus.SUCCESS,
                 seasons = seasons.map { it.toUiState() }.reversed()
             )
         }
@@ -188,12 +204,12 @@ class SeriesDetailsViewModel(
     private fun getReviews(seriesId: Long) {
         tryToCall(
             onStart = {
-                updateState { it.copy(reviewsSectionState = ScreenStatus.LOADING) }
+                updateState { it.copy(reviewsSectionState = SectionStatus.LOADING) }
             },
             block = { seriesDetailsUseCase.getSeriesReviews(seriesId, 1) },
             onSuccess = ::setReviewsToUiState,
             onError = { throwable ->
-                setError(throwable) { copy(reviewsSectionState = ScreenStatus.ERROR) }
+                setError(throwable) { copy(reviewsSectionState = SectionStatus.ERROR) }
             },
             dispatcher = Dispatchers.IO
         )
@@ -202,7 +218,7 @@ class SeriesDetailsViewModel(
     private fun setReviewsToUiState(reviews: List<Review>) {
         updateState {
             it.copy(
-                reviewsSectionState = ScreenStatus.SUCCESS,
+                reviewsSectionState = SectionStatus.SUCCESS,
                 reviews = reviews.map { it.toUiState() }
             )
         }
@@ -211,12 +227,12 @@ class SeriesDetailsViewModel(
     private fun getSimilarSeries(seriesId: Long) {
         tryToCall(
             onStart = {
-                updateState { it.copy(similarSeriesSectionState = ScreenStatus.LOADING) }
+                updateState { it.copy(similarSeriesSectionState = SectionStatus.LOADING) }
             },
             block = { seriesDetailsUseCase.getSimilarSeries(seriesId, 1) },
             onSuccess = ::setSimilarSeriesToUiState,
             onError = { throwable ->
-                setError(throwable) { copy(similarSeriesSectionState = ScreenStatus.ERROR) }
+                setError(throwable) { copy(similarSeriesSectionState = SectionStatus.ERROR) }
             },
             dispatcher = Dispatchers.IO
         )
@@ -225,7 +241,7 @@ class SeriesDetailsViewModel(
     private fun setSimilarSeriesToUiState(similarSeries: List<Series>) {
         updateState {
             it.copy(
-                similarSeriesSectionState = ScreenStatus.SUCCESS,
+                similarSeriesSectionState = SectionStatus.SUCCESS,
                 similarSeries = similarSeries.map { it.toUiState() }
             )
         }

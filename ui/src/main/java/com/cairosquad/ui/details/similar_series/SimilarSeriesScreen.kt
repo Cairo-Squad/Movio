@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -22,10 +22,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
+import com.cairosquad.ui.movio_component.LoadingMovieCard
 import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.ui.navigation.SeriesRoute
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.viewmodel.details.similar_series.SimilarSeriesEffect
+import com.cairosquad.viewmodel.details.similar_series.SimilarSeriesScreenState
 import com.cairosquad.viewmodel.details.similar_series.SimilarSeriesViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -51,7 +53,7 @@ fun SimilarSeriesScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
+            .windowInsetsPadding(WindowInsets.systemBars)
     ) {
         AppBar(
             title = stringResource(R.string.similar_series),
@@ -64,17 +66,29 @@ fun SimilarSeriesScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            items(state.series) { series ->
-                MovieCard(
-                    title = series.title,
-                    vote = series.rating,
-                    imgUrl = series.posterUrl,
-                    modifier = Modifier.clickable {
-                        viewModel.onSeriesClicked(series.id)
-                    },
-                    width = null,
-                    aspectRatio = 0.745F,
-                )
+            when (state.screenStatus) {
+                SimilarSeriesScreenState.ScreenStatus.LOADING -> {
+                    items(20) {
+                        LoadingMovieCard()
+                    }
+                }
+
+                SimilarSeriesScreenState.ScreenStatus.SUCCESS -> {
+                    items(state.series) { series ->
+                        MovieCard(
+                            title = series.title,
+                            vote = series.rating,
+                            imgUrl = series.posterUrl,
+                            modifier = Modifier.clickable {
+                                viewModel.onSeriesClicked(series.id)
+                            },
+                            width = null,
+                            aspectRatio = 0.745F,
+                        )
+                    }
+                }
+
+                SimilarSeriesScreenState.ScreenStatus.ERROR -> {}
             }
         }
     }

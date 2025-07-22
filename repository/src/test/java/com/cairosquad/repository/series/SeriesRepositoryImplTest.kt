@@ -32,6 +32,6 @@ class SeriesRepositoryImplTest {
 
         val result = seriesRepository.getSeries(1399L)
 
-        assertThat(result.id).isEqualTo(SeriesDetailsRemoteDto().toEntity().id)
+        assertThat(result.id).isEqualTo(SeriesDetailsRemoteDto().toEntity("").id)
     }
 }
