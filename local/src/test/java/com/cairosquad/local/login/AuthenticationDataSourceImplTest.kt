@@ -29,13 +29,10 @@ class AuthenticationDataSourceImplTest {
 
     @Test
     fun `saveSessionId SHOULD call dao with correct SessionIdDto`() = runTest {
-        // arrange
         coEvery { loginDao.saveSessionId(any()) } returns Unit
 
-        // act
         authDataSource.saveSessionId(sampleSession)
 
-        // assert
         coVerify(exactly = 1) {
             loginDao.saveSessionId(
                 match { dto -> dto.sessionId == sampleSession }
@@ -45,24 +42,19 @@ class AuthenticationDataSourceImplTest {
 
     @Test
     fun `getSessionId SHOULD call dao and return plain sessionId`() = runTest {
-        // arrange
         coEvery { loginDao.getSessionId() } returns sampleDto
 
-        // act
         val result = authDataSource.getSessionId()
 
-        // assert
         assertEquals(sampleSession, result)
         coVerify(exactly = 1) { loginDao.getSessionId() }
     }
 
     @Test
     fun `saveSessionId SHOULD propagate exceptions from dao`() = runTest {
-        // arrange
         val ex = IllegalStateException("db write error")
         coEvery { loginDao.saveSessionId(any()) } throws ex
 
-        // act & assert
         val thrown = assertFailsWith<IllegalStateException> {
             authDataSource.saveSessionId(sampleSession)
         }
@@ -71,14 +63,21 @@ class AuthenticationDataSourceImplTest {
 
     @Test
     fun `getSessionId SHOULD propagate exceptions from dao`() = runTest {
-        // arrange
         val ex = RuntimeException("db read error")
         coEvery { loginDao.getSessionId() } throws ex
 
-        // act & assert
         val thrown = assertFailsWith<RuntimeException> {
             authDataSource.getSessionId()
         }
         assertEquals("db read error", thrown.message)
+    }
+
+    @Test
+    fun `getSessionId SHOULD return empty string when dao returns null`() = runTest {
+        coEvery { loginDao.getSessionId() } returns null
+
+        val result = authDataSource.getSessionId()
+
+        assertEquals("", result)
     }
 }

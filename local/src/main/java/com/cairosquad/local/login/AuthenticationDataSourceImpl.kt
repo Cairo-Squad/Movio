@@ -11,5 +11,5 @@ class AuthenticationDataSourceImpl(
         sessionId = SessionIdDto(sessionId = sessionId)
     )
 
-    override suspend fun getSessionId() = loginDao.getSessionId().sessionId
+    override suspend fun getSessionId() = loginDao.getSessionId()?.sessionId ?: ""
 }

@@ -48,7 +48,7 @@ class UserDaoTest {
         dao.saveSessionId(dto)
 
         val loaded = dao.getSessionId()
-        assertThat(loaded.sessionId).isEqualTo("abc123")
+        assertThat(loaded?.sessionId).isEqualTo("abc123")
     }
 
     @Test
@@ -57,6 +57,21 @@ class UserDaoTest {
         dao.saveSessionId(SessionIdDto(sessionId = "second"))
 
         val loaded = dao.getSessionId()
-        assertThat(loaded.sessionId).isEqualTo("second")
+        assertThat(loaded?.sessionId).isEqualTo("second")
+    }
+
+    @Test
+    fun default_sessionId_is_null() = runTest {
+        val loaded = dao.getSessionId()
+        assertThat(loaded?.sessionId).isNull()
+    }
+
+    @Test
+    fun insert_and_remove_sessionId() = runTest {
+        dao.saveSessionId(SessionIdDto(sessionId = "first"))
+        dao.saveSessionId(SessionIdDto(sessionId = ""))
+
+        val loaded = dao.getSessionId()
+        assertThat(loaded?.sessionId).isEqualTo("")
     }
 }

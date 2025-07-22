@@ -13,5 +13,5 @@ interface LoginDao {
     suspend fun saveSessionId(sessionId: SessionIdDto)
 
     @Query("SELECT sessionId FROM SessionIdDto")
-    suspend fun getSessionId(): SessionIdDto
+    suspend fun getSessionId(): SessionIdDto?
 }
