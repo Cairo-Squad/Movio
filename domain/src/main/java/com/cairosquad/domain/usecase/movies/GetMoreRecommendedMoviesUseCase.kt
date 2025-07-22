@@ -6,7 +6,9 @@ import com.cairosquad.entity.Movie
 class GetMoreRecommendedMoviesUseCase(
     private val movieRepository: MoviesRepository
 ) {
-    suspend fun getMoreRecommendedMovies(page:Int) : List<Movie>{
-        return movieRepository.getMoreRecommendedMovies(page)
+    suspend fun getMoreRecommendedMovies(page:Int, categoryId: String? = null ) : List<Movie>{
+        return movieRepository.getMoreRecommendedMovies(page,categoryId)
     }
+
+
 }

@@ -5,6 +5,6 @@ import com.cairosquad.domain.repository.MoviesRepository
 class GetMoviesByCategoryUseCase(
     private val moviesRepository: MoviesRepository
 ) {
-    suspend fun getMoviesByCategory(categoryId : String , page : Int) =
-        moviesRepository.getMoviesByCategory(categoryId, page)
+    suspend fun getMoviesByCategory( page : Int,categoryId : String) =
+        moviesRepository.getMoviesByCategory(page,categoryId)
 }

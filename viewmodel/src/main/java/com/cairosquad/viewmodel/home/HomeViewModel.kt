@@ -3,13 +3,17 @@ package com.cairosquad.viewmodel.home
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.movies.GetFreeToWatchMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetMoreRecommendedMoviesUseCase
+import com.cairosquad.domain.usecase.movies.GetMoviesGenresUseCase
 import com.cairosquad.domain.usecase.movies.GetNowPlayingMoviesUseCase
+import com.cairosquad.domain.usecase.movies.GetPopularMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetTopRatingMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetTrendingMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetUpcomingMoviesUseCase
 import com.cairosquad.domain.usecase.series.GetAiringTodaySeriesUseCase
 import com.cairosquad.domain.usecase.series.GetMoreRecommendedSeriesUseCase
 import com.cairosquad.domain.usecase.series.GetOnTvSeriesUseCase
+import com.cairosquad.domain.usecase.series.GetPopularSeriesUseCase
+import com.cairosquad.domain.usecase.series.GetSeriesGenresUseCase
 import com.cairosquad.domain.usecase.series.GetTopRatingSeriesUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
@@ -26,14 +30,20 @@ class HomeViewModel(
     private val getMoreRecommendedSeriesUseCase: GetMoreRecommendedSeriesUseCase,
     private val getOnTvSeriesUseCase: GetOnTvSeriesUseCase,
     private val getTopRatingSeriesUseCase: GetTopRatingSeriesUseCase,
+    private val getPopularSeriesUseCase: GetPopularSeriesUseCase,
+    private val getPopularMoviesUseCase: GetPopularMoviesUseCase,
+    private val getMoviesGenresUseCase: GetMoviesGenresUseCase,
+    private val getSeriesGenresUseCase: GetSeriesGenresUseCase,
 ) : BaseViewModel<HomeScreenState, HomeEffect>(initialState = HomeScreenState()),
     HomeInteractionsListener {
 
     init {
-        loadHomeData()
+        loadAllData()
     }
 
-    private fun loadHomeData() {
+    private fun loadAllData() {
+        loadPopularSeries()
+        loadPopularMovies()
         loadTopRatingMovies()
         loadTrendingMovies()
         loadNowPlayingMovies()
@@ -44,6 +54,7 @@ class HomeViewModel(
         loadAiringTodaySeries()
         loadOnTvSeries()
         loadMoreRecommendedSeries()
+        loadGenres()
     }
 
 
@@ -60,6 +71,7 @@ class HomeViewModel(
             }
         )
     }
+
 
     private fun loadNowPlayingMovies() = fetchData(
         block = { getNowPlayingMoviesUseCase.getNowPlayingMovies(1) },
@@ -115,6 +127,38 @@ class HomeViewModel(
         update = { state, result -> state.copy(moreRecommendedSeries = result) }
     )
 
+    private fun loadPopularMovies() = fetchData(
+        block = { getPopularMoviesUseCase.getPopularMovies(1) },
+        mapper = { it.toHomeMovieUiState() },
+        update = { state, result -> state.copy(popularMovies = result) }
+    )
+
+    private fun loadPopularSeries() = fetchData(
+        block = { getPopularSeriesUseCase.getPopularSeries(1) },
+        mapper = { it.toHomeSeriesUiState() },
+        update = { state, result -> state.copy(popularSeries = result) }
+    )
+
+    private fun loadGenres() {
+        tryToCall(
+            block = {
+                val movieGenres = getMoviesGenresUseCase.getMoviesGenres()
+                val seriesGenres = getSeriesGenresUseCase.getSeriesGenres()
+
+                val combined = buildSet {
+                    add(HomeScreenState.GenreUiState.defaultGenre)
+                    movieGenres.mapTo(this) { it.toHomeGenreUiState() }
+                    seriesGenres.mapTo(this) { it.toHomeGenreUiState() }
+                }
+
+                combined
+            },
+            onSuccess = { genres ->
+                updateState { it.copy(genres = genres.toList()) }
+            },
+            onError = ::handleError
+        )
+    }
 
     override fun onClickProfile() {
         sendEffect(HomeEffect.NavigateToProfile)
@@ -162,12 +206,17 @@ class HomeViewModel(
         sendEffect(HomeEffect.NavigateToSeeAllOnTv)
     }
 
-    override fun onClickCategoryChip(categoryChipIndex: Int) {
-       updateState { it.copy(selectedCategoriesChip =categoryChipIndex ) }
+    override fun onGenreSelected(genreIndex: Int) {
+        updateState {
+            it.copy(selectedGenreIndex = genreIndex)
+        }
     }
 
-    override fun onClickSortChip(sortChipIndex: Int) {
-        updateState { it.copy(selectedSortChip =sortChipIndex ) }
+    override fun onFilterSelected(filter: HomeScreenState.FilterType) {
+        updateState {
+            it.copy(selectedFilter = filter)
+        }
+
     }
 
 
@@ -210,4 +259,5 @@ class HomeViewModel(
             else -> ErrorStatus.UNKNOWN_ERROR
         }
     }
+
 }
