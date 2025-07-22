@@ -5,9 +5,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
 import com.cairosquad.ui.home.content.HomeScreenContent
+import com.cairosquad.ui.navigation.FreeToWatchRoute
 import com.cairosquad.ui.navigation.LocalNavController
+import com.cairosquad.ui.navigation.MoreRecommendedRoute
 import com.cairosquad.ui.navigation.MovieRoute
 import com.cairosquad.ui.navigation.SeriesRoute
+import com.cairosquad.ui.navigation.TopRatingRoute
+import com.cairosquad.ui.navigation.TrendingRoute
+import com.cairosquad.ui.navigation.UpComingRoute
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.viewmodel.home.HomeEffect
 import com.cairosquad.viewmodel.home.HomeViewModel
@@ -38,11 +43,12 @@ private fun effectHandler(
         is HomeEffect.NavigateSeries -> { navController.navigate(SeriesRoute(effect.seriesId)) }
         HomeEffect.NavigateToProfile -> { /* TODO: Navigate to profile */ }
         HomeEffect.NavigateToSeeAllAiringToday -> {  }
-        HomeEffect.NavigateToSeeAllFreeToWatch -> {  }
-        is HomeEffect.NavigateToSeeAllMoreRecommended -> {  }
+        HomeEffect.NavigateToSeeAllFreeToWatch -> {  navController.navigate(FreeToWatchRoute) }
+        is HomeEffect.NavigateToSeeAllMoreRecommended -> {  navController.navigate(
+            MoreRecommendedRoute) }
         HomeEffect.NavigateToSeeAllOnTv -> {  }
-        is HomeEffect.NavigateToSeeAllTopRated -> {  }
-        HomeEffect.NavigateToSeeAllTrending -> {  }
-        HomeEffect.NavigateToSeeAllUpcoming -> {  }
+        is HomeEffect.NavigateToSeeAllTopRated -> {  navController.navigate(TopRatingRoute)}
+        HomeEffect.NavigateToSeeAllTrending -> {navController.navigate(TrendingRoute)  }
+        HomeEffect.NavigateToSeeAllUpcoming -> { navController.navigate(UpComingRoute) }
     }
 }
