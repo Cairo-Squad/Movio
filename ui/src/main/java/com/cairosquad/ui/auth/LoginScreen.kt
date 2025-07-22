@@ -185,7 +185,7 @@ private fun LoginScreenContent(
                                 style = Theme.textStyle.label.smallRegular12,
                                 color = Theme.color.system.errorContainer,
                                 overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier.padding(start = 4.dp)
+                                maxLines = 2
                             )
                         }
                     }

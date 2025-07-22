@@ -74,25 +74,43 @@ fun InputField(
     var textFieldValue by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue(text = value, selection = TextRange(value.length)))
     }
-
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
-    val hasFocusGradient = listOf(
+
+
+    val hasFocusGradientColors = listOf(
         Theme.color.brand.onPrimary,
         Theme.color.brand.primary
     )
-    val borderColor = if (error.isBlank())
-        if (hasFocus) {
-            Brush.horizontalGradient(
-                if (isRtl) {
-                    hasFocusGradient.reversed()
-                } else {
-                    hasFocusGradient
-                }
-            )
+    val hasFocusGradient = Brush.horizontalGradient(
+        if (isRtl) {
+            hasFocusGradientColors.reversed()
         } else {
-            SolidColor(Color.Transparent)
+            hasFocusGradientColors
         }
-    else SolidColor(Theme.color.system.errorContainer)
+    )
+    val noErrorBorder = if (hasFocus) {
+        hasFocusGradient
+    } else {
+        SolidColor(Color.Transparent)
+    }
+
+    val errorGradientColors = listOf(
+        Theme.color.system.onError,
+        Theme.color.system.errorContainer
+    )
+    val errorBorder = Brush.horizontalGradient(
+        if (isRtl) {
+            errorGradientColors.reversed()
+        } else {
+            errorGradientColors
+        }
+    )
+
+    val borderColor = if (error.isBlank()) {
+        noErrorBorder
+    } else {
+        errorBorder
+    }
 
     Column(
         modifier = modifier
@@ -137,6 +155,7 @@ fun InputField(
                     TextFieldIcon(
                         leadingIcon,
                         hasFocus,
+                        error = error.isNotBlank(),
                         modifier = Modifier.padding(end = 8.dp)
                     )
                     Box(
@@ -157,6 +176,7 @@ fun InputField(
                         trailingIcon,
                         hasFocus,
                         modifier = Modifier.padding(start = 8.dp),
+                        error = error.isNotBlank(),
                         onTrailingIconClick,
                     )
                 }
@@ -186,8 +206,7 @@ fun InputField(
                     style = Theme.textStyle.label.smallRegular12,
                     color = Theme.color.system.errorContainer,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier
-                        .padding(start = 4.dp)
+                    maxLines = 2
                 )
             }
         }
@@ -199,8 +218,15 @@ private fun TextFieldIcon(
     @DrawableRes icon: Int?,
     isFocused: Boolean,
     modifier: Modifier = Modifier,
+    error: Boolean = false,
     onClick: (() -> Unit)? = null
 ) {
+    val tintColor = if (error) {
+        Theme.color.system.onError
+    } else {
+        if (isFocused) Theme.color.surfaces.onSurface else Theme.color.surfaces.onSurfaceContainer
+    }
+
     if (icon != null) {
         AnimatedContent(
             targetState = icon,
@@ -211,7 +237,7 @@ private fun TextFieldIcon(
             Icon(
                 imageVector = ImageVector.vectorResource(it),
                 contentDescription = null,
-                tint = if (isFocused) Theme.color.surfaces.onSurface else Theme.color.surfaces.onSurfaceContainer,
+                tint = tintColor,
                 modifier = modifier
                     .size(20.dp)
                     .then(
