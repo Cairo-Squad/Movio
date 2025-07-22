@@ -1,13 +1,13 @@
 package com.cairosquad.remote.login
 
 import com.cairosquad.remote.utils.retrofit.safeCallApi
-import com.cairosquad.repository.login.data_source.remote.LoginDataSource
+import com.cairosquad.repository.login.data_source.remote.RemoteLoginDataSource
 import com.cairosquad.repository.login.data_source.remote.dto.RequestTokenResponse
 import com.cairosquad.repository.login.data_source.remote.dto.SessionIdResponse
 
-class LoginDataSourceImpl(
+class RemoteLoginDataSourceImpl(
     private val loginApiService: LoginApiService
-) : LoginDataSource {
+) : RemoteLoginDataSource {
     override suspend fun createRequestToken(): RequestTokenResponse {
         return safeCallApi { loginApiService.createRequestToken() }
     }

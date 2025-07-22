@@ -3,7 +3,7 @@ package com.cairosquad.repository.login.data_source.remote
 import com.cairosquad.repository.login.data_source.remote.dto.RequestTokenResponse
 import com.cairosquad.repository.login.data_source.remote.dto.SessionIdResponse
 
-interface LoginDataSource {
+interface RemoteLoginDataSource {
     suspend fun createRequestToken(): RequestTokenResponse
 
     suspend fun authenticateRequestToken(
