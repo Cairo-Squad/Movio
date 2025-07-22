@@ -28,3 +28,7 @@ const val CACHED_SERIES_VOTE_AVERAGE_COLUMN_NAME = "voteAverage"
 
 // Details
 const val CASHED_MOVIE_DETAILS_TABLE_NAME = "MovieDetailsTable"
+
+// Authentication
+const val CACHED_SESSION_ID_TABLE_NAME = "SessionIdDto"
+const val CACHED_SESSION_ID_COLUMN_NAME = "sessionId"

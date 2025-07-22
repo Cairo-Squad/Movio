@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -24,6 +25,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.basic_component.Button
@@ -102,6 +105,10 @@ private fun LoginScreenContent(
             placeholder = stringResource(R.string.user_name),
             isPasswordField = false,
             leadingIcon = R.drawable.profile_login,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            ),
             modifier = Modifier.padding(bottom = 12.dp)
         )
 
@@ -109,9 +116,13 @@ private fun LoginScreenContent(
             value = uiState.password,
             onValueChange = { interactionListener.onPasswordChange(it) },
             placeholder = stringResource(R.string.password),
-            isPasswordField = true,
+            isPasswordField = !uiState.isPasswordVisible,
             leadingIcon = R.drawable.lock,
-            trailingIcon = if (uiState.error != null) R.drawable.eye else R.drawable.close_eye,
+            trailingIcon = if (uiState.isPasswordVisible) R.drawable.eye else R.drawable.close_eye,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done
+            ),
             onTrailingIconClick = { interactionListener.onPasswordVisibilityIconClick() },
             modifier = Modifier.padding(bottom = 12.dp)
         )

@@ -1,6 +1,11 @@
 package com.cairosquad.design_system.basic_component
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -178,20 +183,27 @@ private fun TextFieldIcon(
     onClick: (() -> Unit)? = null
 ) {
     if (icon != null) {
-        Icon(
-            imageVector = ImageVector.vectorResource(icon),
-            contentDescription = null,
-            tint = if (isFocused) Theme.color.surfaces.onSurface else Theme.color.surfaces.onSurfaceContainer,
-            modifier = modifier
-                .size(20.dp)
-                .then(
-                    if (onClick != null) {
-                        Modifier.clickable(onClick = onClick)
-                    } else {
-                        Modifier
-                    }
-                )
-        )
+        AnimatedContent(
+            targetState = icon,
+            transitionSpec = {
+                scaleIn(animationSpec = tween(300)).togetherWith(scaleOut(animationSpec = tween(300)))
+            }
+        ) {
+            Icon(
+                imageVector = ImageVector.vectorResource(it),
+                contentDescription = null,
+                tint = if (isFocused) Theme.color.surfaces.onSurface else Theme.color.surfaces.onSurfaceContainer,
+                modifier = modifier
+                    .size(20.dp)
+                    .then(
+                        if (onClick != null) {
+                            Modifier.clickable(onClick = onClick)
+                        } else {
+                            Modifier
+                        }
+                    )
+            )
+        }
     }
 }
 
