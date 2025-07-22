@@ -108,12 +108,10 @@ class LoginViewModelTest {
     @Test
     fun `loading indicator SHOULD hide after login`() = runTest {
         viewModel.onLoginClick()
-        // after start suspended the loading should be true
         advanceUntilIdle()
         assertThat(viewModel.screenState.value.isLoading).isFalse()
     }
 
-    // Rule to wrap Main dispatcher for coroutines test
     class MainDispatcherRule(
         private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
     ) : TestWatcher() {

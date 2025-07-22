@@ -46,6 +46,11 @@ class LoginViewModel(
                 )
             },
             onSuccess = {
+                updateState {
+                    it.copy(
+                        error = null
+                    )
+                }
                 sendEffect(LoginEffect.NavigateToHome)
             },
             onError = {
