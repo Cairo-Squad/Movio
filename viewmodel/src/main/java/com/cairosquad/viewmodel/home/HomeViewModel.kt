@@ -3,13 +3,17 @@ package com.cairosquad.viewmodel.home
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.movies.GetFreeToWatchMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetMoreRecommendedMoviesUseCase
+import com.cairosquad.domain.usecase.movies.GetMoviesGenresUseCase
 import com.cairosquad.domain.usecase.movies.GetNowPlayingMoviesUseCase
+import com.cairosquad.domain.usecase.movies.GetPopularMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetTopRatingMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetTrendingMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetUpcomingMoviesUseCase
 import com.cairosquad.domain.usecase.series.GetAiringTodaySeriesUseCase
 import com.cairosquad.domain.usecase.series.GetMoreRecommendedSeriesUseCase
 import com.cairosquad.domain.usecase.series.GetOnTvSeriesUseCase
+import com.cairosquad.domain.usecase.series.GetPopularSeriesUseCase
+import com.cairosquad.domain.usecase.series.GetSeriesGenresUseCase
 import com.cairosquad.domain.usecase.series.GetTopRatingSeriesUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
@@ -30,8 +34,6 @@ class HomeViewModel(
     private val getPopularMoviesUseCase: GetPopularMoviesUseCase,
     private val getMoviesGenresUseCase: GetMoviesGenresUseCase,
     private val getSeriesGenresUseCase: GetSeriesGenresUseCase,
-    private val getAllMoviesUseCase: GetAllMoviesUseCase,
-    private val getAllSeriesUseCase: GetAllSeriesUseCase,
 ) : BaseViewModel<HomeScreenState, HomeEffect>(initialState = HomeScreenState()),
     HomeInteractionsListener {
 
@@ -128,13 +130,13 @@ class HomeViewModel(
     private fun loadPopularMovies() = fetchData(
         block = { getPopularMoviesUseCase.getPopularMovies(1) },
         mapper = { it.toHomeMovieUiState() },
-        update = { state, result -> state.copy(randomMovies = result) }
+        update = { state, result -> state.copy(popularMovies = result) }
     )
 
     private fun loadPopularSeries() = fetchData(
         block = { getPopularSeriesUseCase.getPopularSeries(1) },
         mapper = { it.toHomeSeriesUiState() },
-        update = { state, result -> state.copy(randomSeries = result) }
+        update = { state, result -> state.copy(popularSeries = result) }
     )
 
     private fun loadGenres() {
@@ -145,8 +147,8 @@ class HomeViewModel(
 
                 val combined = buildSet {
                     add(HomeScreenState.GenreUiState.defaultGenre)
-                    movieGenres.mapTo(this) { it.toHomeGenreUistate() }
-                    seriesGenres.mapTo(this) { it.toHomeGenreUistate() }
+                    movieGenres.mapTo(this) { it.toHomeGenreUiState() }
+                    seriesGenres.mapTo(this) { it.toHomeGenreUiState() }
                 }
 
                 combined
