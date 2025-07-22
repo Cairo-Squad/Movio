@@ -9,7 +9,7 @@ import com.cairosquad.repository.search.data_source.local.dto.CACHED_SESSION_ID_
 @Entity(tableName = CACHED_SESSION_ID_TABLE_NAME)
 data class SessionIdDto(
     @PrimaryKey
-    val id: Long? = null,
+    val id: Long? = 0L,
     @ColumnInfo(name = CACHED_SESSION_ID_COLUMN_NAME)
     val sessionId: String
 )
