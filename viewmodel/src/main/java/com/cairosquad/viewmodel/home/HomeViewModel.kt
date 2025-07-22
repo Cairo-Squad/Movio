@@ -152,7 +152,7 @@ class HomeViewModel(
                 combined
             },
             onSuccess = { genres ->
-                updateState { it.copy(genres = genres) }
+                updateState { it.copy(genres = genres.toList()) }
             },
             onError = ::handleError
         )
