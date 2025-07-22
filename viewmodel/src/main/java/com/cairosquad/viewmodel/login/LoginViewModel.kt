@@ -1,13 +1,10 @@
 package com.cairosquad.viewmodel.login
 
-import android.util.Log
-import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.authentication.LoginUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
-import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val loginUseCase: LoginUseCase
@@ -50,11 +47,6 @@ class LoginViewModel(
             },
             onSuccess = {
                 sendEffect(LoginEffect.NavigateToHome)
-                viewModelScope.launch {
-                    Log.e("TAG", "onLoginClick: ${loginUseCase.isUserLoggedIn()}")
-                    loginUseCase.logout()
-                    Log.e("TAG", "onLoginClick: ${loginUseCase.isUserLoggedIn()}")
-                }
             },
             onError = {
                 handleError(it)

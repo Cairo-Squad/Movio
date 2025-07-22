@@ -18,6 +18,7 @@ class LoginRepositoryImpl(
                 requestToken = requestTokenResponse.toEntity()
             )
             remoteLoginDataSource.createSessionId(requestTokenResponse.toEntity())
+            localLoginDataSource.saveSessionId(requestTokenResponse.toEntity())
         }
 
     }

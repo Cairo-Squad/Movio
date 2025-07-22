@@ -1,10 +1,12 @@
 package com.cairosquad.repository.login
 
 import com.cairosquad.domain.exception.InternetConnectionException
+import com.cairosquad.domain.exception.UnknownException
 import com.cairosquad.domain.repository.LoginRepository
 import com.cairosquad.repository.login.data_source.local.LocalLoginDataSource
 import com.cairosquad.repository.login.data_source.remote.RemoteLoginDataSource
 import com.cairosquad.repository.login.data_source.remote.dto.RequestTokenResponse
+import com.cairosquad.repository.login.data_source.remote.dto.SessionIdResponse
 import com.cairosquad.repository.utils.exception.NoInternetException
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
@@ -130,6 +132,56 @@ class LoginRepositoryImplTest {
         }
 
     @Test
+    fun `login SHOULD save session id to local data source`() = runTest {
+        coEvery { remoteLoginDataSource.createRequestToken() } returns requestTokenResponse
+        coEvery {
+            remoteLoginDataSource.authenticateRequestToken(
+                USERNAME,
+                PASSWORD,
+                requestTokenResponse.requestToken ?: ""
+            )
+        } returns requestTokenResponse
+
+        coEvery {
+            remoteLoginDataSource.createSessionId(
+                requestTokenResponse.requestToken ?: ""
+            )
+        } returns sessionId
+
+        loginRepository.login(USERNAME, PASSWORD)
+        coVerify(exactly = 1) {
+            localLoginDataSource.saveSessionId(
+                requestTokenResponse.requestToken ?: ""
+            )
+        }
+    }
+
+    @Test
+    fun `login SHOULD map exception to correct domain exception when save session id fails`() =
+        runTest {
+            coEvery { remoteLoginDataSource.createRequestToken() } returns requestTokenResponse
+            coEvery {
+                remoteLoginDataSource.authenticateRequestToken(
+                    USERNAME,
+                    PASSWORD,
+                    requestTokenResponse.requestToken ?: ""
+                )
+            } returns requestTokenResponse
+
+            coEvery {
+                remoteLoginDataSource.createSessionId(
+                    requestTokenResponse.requestToken ?: ""
+                )
+            } returns sessionId
+
+            coEvery { localLoginDataSource.saveSessionId(any()) } throws Exception()
+
+            assertFailsWith<UnknownException> {
+                loginRepository.login(USERNAME, PASSWORD)
+            }
+        }
+
+    @Test
     fun `isUserLoggedIn SHOULD return true when session id is not empty`() = runTest {
         coEvery { localLoginDataSource.getSessionId() } returns "testSessionId"
         val result = loginRepository.isUserLoggedIn()
@@ -153,6 +205,7 @@ class LoginRepositoryImplTest {
         private const val USERNAME = "testUser"
         private const val PASSWORD = "testPassword"
         private val requestTokenResponse = RequestTokenResponse("testToken")
+        private val sessionId = SessionIdResponse(sessionId = "testSessionId")
     }
 
     @Test
