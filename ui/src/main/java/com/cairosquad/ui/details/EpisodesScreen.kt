@@ -18,9 +18,10 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,14 +35,24 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
+import com.cairosquad.design_system.basic_component.AppDropDownMenu
+import com.cairosquad.design_system.basic_component.Icon
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
+import com.cairosquad.ui.BuildConfig
+import com.cairosquad.ui.movio_component.LoadingMovieImage
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.ui.utils.errorStatusToMessageResource
@@ -51,8 +62,6 @@ import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsViewModel
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-import com.cairosquad.design_system.R
-import com.cairosquad.design_system.basic_component.AppDropDownMenu
 
 @Composable
 fun EpisodesScreen(
@@ -78,10 +87,10 @@ fun EpisodesScreen(
                 ).show()
             }
 
-            EpisodesDetailEffect.PlayEpisode -> {  }
+            EpisodesDetailEffect.PlayEpisode -> {}
         }
     }
-    EpisodesScreenContent(uiState = uiState, listener = viewModel,seriesId)
+    EpisodesScreenContent(uiState = uiState, listener = viewModel, seriesId)
 }
 
 
@@ -93,96 +102,198 @@ private fun EpisodesScreenContent(
 ) {
     val seasonOptions = uiState.seasons.map { "Season ${it.seasonNumber}" }
 
+    val listState = rememberScrollState()
+    val density = LocalDensity.current
+    val scrollThresholdPx = with(density) { 275.dp.toPx() }
+    val progress = (listState.value / scrollThresholdPx).coerceIn(0f, 1f)
+
+    val animatedStartColor = lerp(
+        start = Theme.color.surfaces.statusBarShadow,
+        stop = Theme.color.surfaces.surface,
+        fraction = progress
+    )
+    val animatedEndColor = lerp(
+        start = Color.Transparent,
+        stop = Theme.color.surfaces.surface,
+        fraction = progress
+    )
+    val animatedBrush = Brush.verticalGradient(
+        colors = listOf(animatedStartColor, animatedEndColor)
+    )
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Theme.color.surfaces.surface)
             .windowInsetsPadding(WindowInsets.navigationBars)
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(listState)
     ) {
         Box {
-            SafeImageViewer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(400.dp)
-                    .blur(16.dp)
-                    .offset(y = (-20).dp),
-                model = "https://image.tmdb.org/t/p/w500/${uiState.season.posterUrl}",
-                contentDescription = "",
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(Color.Black, Color.Transparent)
+            when (uiState.basicDetailsSectionState) {
+                EpisodesDetailsScreenState.ScreenStatus.LOADING -> {}
+                EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
+                    if (uiState.season.posterUrl.isNotEmpty()) {
+                        SafeImageViewer(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(400.dp)
+                                .blur(16.dp)
+                                .offset(y = (-20).dp),
+                            model = BuildConfig.IMAGE_BASE_URL + uiState.season.posterUrl,
+                            contentDescription = "",
                         )
-                    )
-            )
+                    }
+                }
+
+                EpisodesDetailsScreenState.ScreenStatus.ERROR -> {}
+            }
         }
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .windowInsetsPadding(WindowInsets.statusBars)
+                .windowInsetsPadding(WindowInsets.systemBars)
                 .heightIn(max = 10000.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             userScrollEnabled = false,
         ) {
-            stickyHeader {
-                AppBar(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    onBackButtonClicked = { listener.onBackClick() },
-                )
-            }
             item {
-                SafeImageViewer(
-                    modifier = Modifier
-                        .padding(top = 12.dp, bottom = 24.dp)
-                        .size(height = 260.dp, width = 200.dp)
-                        .clip(RoundedCornerShape(8.dp)),
-                    model = "https://image.tmdb.org/t/p/w500/${uiState.season.posterUrl}",
-                    contentDescription = "",
-                )
-            }
-            item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    BasicText(
-                        modifier = Modifier.padding(bottom = 8.dp),
-                        text = "Episodes ${uiState.season.episodesCount}",
-                        style = Theme.textStyle.headline.mediumMedium18.copy(
-                            color = Theme.color.surfaces.onSurface
+                when (uiState.basicDetailsSectionState) {
+                    EpisodesDetailsScreenState.ScreenStatus.LOADING -> {
+                        LoadingMovieImage(
+                            Modifier
+                                .padding(top = 56.dp, bottom = 24.dp)
+                                .size(height = 260.dp, width = 200.dp)
                         )
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                    AppDropDownMenu(
-                        selectedText = "Season ${uiState.selectedSeasonNumber}",
-                        options = seasonOptions,
-                        imgRes = R.drawable.drop_down_arrow,
-                        onOptionSelected = { selected ->
-                            val seasonNum = selected.removePrefix("Season ").toIntOrNull() ?: 1
-                            listener.onSeasonSelected(seriesId, seasonNum)
-                        },
-                    )
+                    }
+
+                    EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
+                        if (uiState.season.posterUrl.isNotEmpty()) {
+                            SafeImageViewer(
+                                modifier = Modifier
+                                    .padding(top = 56.dp, bottom = 24.dp)
+                                    .size(height = 260.dp, width = 200.dp)
+                                    .clip(RoundedCornerShape(8.dp)),
+                                model = BuildConfig.IMAGE_BASE_URL + uiState.season.posterUrl,
+                                contentDescription = "",
+                                loadingPlaceholder = {
+                                    LoadingMovieImage(
+                                        Modifier.size(height = 260.dp, width = 200.dp)
+                                    )
+                                }
+                            )
+                        } else {
+                            Box(
+                                modifier = Modifier
+                                    .padding(top = 56.dp, bottom = 24.dp)
+                                    .size(height = 260.dp, width = 200.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(Theme.color.system.defaultImageBackground),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    modifier = Modifier.size(24.dp),
+                                    imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
+                                    contentDescription = stringResource(R.string.default_image_icon),
+                                    tint = Color(0xFFEFF1F5)
+                                )
+                            }
+                        }
+                    }
+
+                    EpisodesDetailsScreenState.ScreenStatus.ERROR -> {}
                 }
             }
-            itemsIndexed(uiState.episodes) { index, episode ->
-                EpisodeCard(
-                    episodeNumber =  episode.number.toString().padStart(2, '0'),
-                    episodeImageUrl = "https://image.tmdb.org/t/p/w500/${episode.imageUrl}",
-                    episodeName = episode.name,
-                    episodeDuration = episode.runtime,
-                    episodeRating = String.format("%.1f", episode.rating),
-                )
+            item {
+                when (uiState.basicDetailsSectionState) {
+                    EpisodesDetailsScreenState.ScreenStatus.LOADING -> {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            LoadingMovieImage(
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .size(height = 26.dp, width = 32.dp)
+                            )
+                            Spacer(modifier = Modifier.weight(1f))
+                            LoadingMovieImage(
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .size(height = 26.dp, width = 96.dp)
+                            )
+                        }
+                    }
+
+                    EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            BasicText(
+                                modifier = Modifier.padding(bottom = 8.dp),
+                                text = stringResource(
+                                    com.cairosquad.ui.R.string.episodes,
+                                    uiState.season.episodesCount
+                                ),
+                                style = Theme.textStyle.headline.mediumMedium18.copy(
+                                    color = Theme.color.surfaces.onSurface
+                                )
+                            )
+                            Spacer(modifier = Modifier.weight(1f))
+                            AppDropDownMenu(
+                                selectedText = "Season ${uiState.selectedSeasonNumber}",
+                                options = seasonOptions,
+                                imgRes = R.drawable.drop_down_arrow,
+                                onOptionSelected = { selected ->
+                                    val seasonNum =
+                                        selected.removePrefix("Season ").toIntOrNull() ?: 1
+                                    listener.onSeasonSelected(seriesId, seasonNum)
+                                },
+                            )
+                        }
+                    }
+
+                    EpisodesDetailsScreenState.ScreenStatus.ERROR -> {}
+                }
+            }
+            when (uiState.episodesSectionState) {
+                EpisodesDetailsScreenState.ScreenStatus.LOADING -> {
+                    items(10) {
+                        LoadingMovieImage(
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp, vertical = 12.dp)
+                                .height(74.dp)
+                                .fillMaxSize(),
+                        )
+                    }
+                }
+
+                EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
+                    items(uiState.episodes) { episode ->
+                        EpisodeCard(
+                            episodeNumber = episode.number.toString().padStart(2, '0'),
+                            episodeImageUrl = BuildConfig.IMAGE_BASE_URL + episode.imageUrl,
+                            episodeName = episode.name,
+                            episodeDuration = episode.runtime,
+                            episodeRating = String.format("%.1f", episode.rating),
+                        )
+                    }
+                }
+
+                EpisodesDetailsScreenState.ScreenStatus.ERROR -> {}
             }
         }
     }
+    AppBar(
+        modifier = Modifier
+            .background(brush = animatedBrush)
+            .windowInsetsPadding(WindowInsets.statusBars)
+            .fillMaxWidth(),
+        onBackButtonClicked = listener::onBackClick,
+    )
 }
 
 @Composable
@@ -280,5 +391,3 @@ fun EpisodeCard(
         }
     }
 }
-
-
