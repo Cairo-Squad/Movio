@@ -50,9 +50,23 @@ class LoginViewModelTest {
     }
 
     @Test
+    fun `WHEN username changed SHOULD reset validation`() = runTest {
+        viewModel.updateState { it.copy(errors = mapOf(LoginScreenState.FormField.USERNAME to LoginScreenState.ValidationError.EMPTY_FIELD)) }
+        viewModel.onUsernameChange("newUser")
+        assertThat(viewModel.screenState.value.errors[LoginScreenState.FormField.USERNAME]).isNull()
+    }
+
+    @Test
     fun `WHEN password changed SHOULD update state`() = runTest {
         viewModel.onPasswordChange("secret")
         assertThat(viewModel.screenState.value.password).isEqualTo("secret")
+    }
+
+    @Test
+    fun `WHEN password changed SHOULD reset validation`() = runTest {
+        viewModel.updateState { it.copy(errors = mapOf(LoginScreenState.FormField.PASSWORD to LoginScreenState.ValidationError.EMPTY_FIELD)) }
+        viewModel.onPasswordChange("secret")
+        assertThat(viewModel.screenState.value.errors[LoginScreenState.FormField.PASSWORD]).isNull()
     }
 
     @Test
@@ -90,16 +104,58 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `WHEN login successful SHOULD call login and saveToken THEN navigate to home`() = runTest {
+    fun `WHEN login clicked SHOULD validate fields`() = runTest {
+        viewModel.onLoginClick()
+        advanceUntilIdle()
+        assertThat(viewModel.screenState.value.errors[LoginScreenState.FormField.USERNAME]).isEqualTo(
+            LoginScreenState.ValidationError.EMPTY_FIELD
+        )
+        assertThat(viewModel.screenState.value.errors[LoginScreenState.FormField.PASSWORD]).isEqualTo(
+            LoginScreenState.ValidationError.EMPTY_FIELD
+        )
+    }
+
+    @Test
+    fun `WHEN login clicked with short username SHOULD validate username`() = runTest {
+        viewModel.onUsernameChange("a")
+        viewModel.onLoginClick()
+        advanceUntilIdle()
+        assertThat(viewModel.screenState.value.errors[LoginScreenState.FormField.USERNAME]).isEqualTo(
+            LoginScreenState.ValidationError.TOO_SHORT_FIELD
+        )
+    }
+
+    @Test
+    fun `WHEN login clicked with short password SHOULD validate password`() = runTest {
+        viewModel.onPasswordChange("1234567")
+        viewModel.onLoginClick()
+        advanceUntilIdle()
+        assertThat(viewModel.screenState.value.errors[LoginScreenState.FormField.PASSWORD]).isEqualTo(
+            LoginScreenState.ValidationError.TOO_SHORT_FIELD
+        )
+    }
+
+    @Test
+    fun `WHEN login clicked with valid fields SHOULD reset validation`() = runTest {
+        viewModel.onUsernameChange("user")
+        viewModel.onPasswordChange("password")
+        viewModel.onLoginClick()
+        advanceUntilIdle()
+        assertThat(viewModel.screenState.value.errors[LoginScreenState.FormField.USERNAME]).isNull()
+        assertThat(viewModel.screenState.value.errors[LoginScreenState.FormField.PASSWORD]).isNull()
+    }
+
+    @Test
+    fun `WHEN login successful SHOULD call login THEN navigate to home`() = runTest {
         coEvery { loginUseCase.login(any(), any()) } returns Unit
 
         viewModel.effect.test {
-            viewModel.onUsernameChange("u")
-            viewModel.onPasswordChange("p")
+            viewModel.onUsernameChange("user")
+            viewModel.onPasswordChange("password")
             viewModel.onLoginClick()
             advanceUntilIdle()
 
-            coVerify(exactly = 1) { loginUseCase.login("u", "p") }
+            coVerify(exactly = 1) { loginUseCase.login("user", "password") }
             assertThat(awaitItem()).isEqualTo(LoginEffect.NavigateToHome)
             cancelAndIgnoreRemainingEvents()
         }

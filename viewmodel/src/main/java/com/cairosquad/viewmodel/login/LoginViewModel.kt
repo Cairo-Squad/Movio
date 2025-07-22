@@ -15,6 +15,8 @@ class LoginViewModel(
                 username = username
             )
         }
+
+        resetUsernameValidation()
     }
 
     override fun onPasswordChange(password: String) {
@@ -23,6 +25,8 @@ class LoginViewModel(
                 password = password
             )
         }
+
+        resetPasswordValidation()
     }
 
     override fun onPasswordVisibilityIconClick() {
@@ -38,6 +42,7 @@ class LoginViewModel(
     }
 
     override fun onLoginClick() {
+        validateFields()
         tryToCall(
             block = {
                 loginUseCase.login(
@@ -97,6 +102,85 @@ class LoginViewModel(
                     error = ErrorStatus.UNKNOWN_ERROR
                 )
             }
+        }
+    }
+
+    private fun validateFields() {
+        resetUsernameValidation()
+        resetPasswordValidation()
+
+        validateUsername()
+        validatePassword()
+    }
+
+    private fun validateUsername() {
+        val username = screenState.value.username
+        if (username.isEmpty()) {
+            updateState {
+                it.copy(
+                    errors = it.errors.toMutableMap().apply {
+                        this[LoginScreenState.FormField.USERNAME] =
+                            LoginScreenState.ValidationError.EMPTY_FIELD
+                    }
+                )
+            }
+        } else if (username.length < 2) {
+            updateState {
+                it.copy(
+                    errors = it.errors.toMutableMap().apply {
+                        this[LoginScreenState.FormField.USERNAME] =
+                            LoginScreenState.ValidationError.TOO_SHORT_FIELD
+                    }
+                )
+            }
+        } else {
+            resetUsernameValidation()
+        }
+    }
+
+    private fun validatePassword() {
+        val password = screenState.value.password
+
+        if (password.isEmpty()) {
+            updateState {
+                it.copy(
+                    errors = it.errors.toMutableMap().apply {
+                        this[LoginScreenState.FormField.PASSWORD] =
+                            LoginScreenState.ValidationError.EMPTY_FIELD
+                    }
+                )
+            }
+        } else if (password.length < 8) {
+            updateState {
+                it.copy(
+                    errors = it.errors.toMutableMap().apply {
+                        this[LoginScreenState.FormField.PASSWORD] =
+                            LoginScreenState.ValidationError.TOO_SHORT_FIELD
+                    }
+                )
+            }
+        } else {
+            resetPasswordValidation()
+        }
+    }
+
+    private fun resetUsernameValidation() {
+        updateState {
+            it.copy(
+                errors = it.errors.toMutableMap().apply {
+                    this[LoginScreenState.FormField.USERNAME] = null
+                }
+            )
+        }
+    }
+
+    private fun resetPasswordValidation() {
+        updateState {
+            it.copy(
+                errors = it.errors.toMutableMap().apply {
+                    this[LoginScreenState.FormField.PASSWORD] = null
+                }
+            )
         }
     }
 }

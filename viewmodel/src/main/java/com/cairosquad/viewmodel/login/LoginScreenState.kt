@@ -7,7 +7,7 @@ data class LoginScreenState(
     val password: String = "",
     val isPasswordVisible: Boolean = false,
     val isLoading: Boolean = false,
-    val errors: Map<FormField, ValidationError> = emptyMap(),
+    val errors: Map<FormField, ValidationError?> = emptyMap(),
     val error: ErrorStatus? = null
 ) {
     enum class FormField {
