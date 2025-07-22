@@ -2,7 +2,7 @@ package com.cairosquad.viewmodel.home
 
 interface HomeInteractionsListener {
     fun onClickProfile()
-    fun onClickTab(tabIndex: Int) //tabType: HomeScreenState.TabType)
+    fun onClickTab(tabIndex: Int)
     fun onClickMovie(movieId: Long)
     fun onClickSeries(seriesId: Long)
     fun onClickSeeAllTopRated(isMovie : Boolean )
@@ -12,4 +12,6 @@ interface HomeInteractionsListener {
     fun onClickSeeAllMoreRecommended(isMovie : Boolean)
     fun onClickSeeAllAiringToday()
     fun onClickSeeAllOnTv()
+    fun onGenreSelected(genreIndex: Int)
+    fun onFilterSelected(filter: HomeScreenState.FilterType)
 }

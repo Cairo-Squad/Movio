@@ -21,4 +21,7 @@ fun Series.toHomeSeriesUiState() = HomeScreenState.SeriesUiState(
     genres = genres.map(Genre::toHomeGenreUiState)
 )
 
-fun Genre.toHomeGenreUiState() = HomeScreenState.GenreUiState(id, name)
+fun Genre.toHomeGenreUiState() = HomeScreenState.GenreUiState(
+    id = id,
+    name = name
+)
