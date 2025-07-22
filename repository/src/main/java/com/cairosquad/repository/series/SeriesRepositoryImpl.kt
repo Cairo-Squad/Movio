@@ -13,7 +13,9 @@ class SeriesRepositoryImpl(
     private val remoteSeriesDataSource: RemoteSeriesDataSource
 ) : SeriesRepository {
     override suspend fun getSeries(seriesId: Long): Series {
-        return remoteSeriesDataSource.getSeries(seriesId).toEntity()
+        return remoteSeriesDataSource.getSeries(seriesId).toEntity(
+            remoteSeriesDataSource.getVideoKey(seriesId)
+        )
     }
 
     override suspend fun getSeriesReviews(seriesId: Long, page: Int): List<Review> {

@@ -28,6 +28,9 @@ class RemoteMovieDataSourceImpl(
     override suspend fun getMovieTopCast(movieId: Long, page: Int): List<ArtistRemoteDto> {
         return safeCallApi { apiService.getMovieTopCast(movieId, page) }
             .cast?.filterNotNull().orEmpty()
+    }
 
+    override suspend fun getVideoKey(movieId: Long): String {
+        return safeCallApi { apiService.getVideoKey(movieId).getVideoKey() ?: "" }
     }
 }

@@ -12,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 
 class EpisodesDetailsViewModel(
     private val seriesDetailsUseCase: GetSeriesDetailsUseCase,
-    private val seriesId: Long,
+    seriesId: Long,
     private var seasonNumber: Int
 ) : BaseViewModel<EpisodesDetailsScreenState, EpisodesDetailEffect>(EpisodesDetailsScreenState()),
     EpisodesDetailsInteractionListener {
@@ -59,10 +59,14 @@ class EpisodesDetailsViewModel(
     private fun getSeasons(seriesId: Long) {
         tryToCall(
             onStart = {},
-            block = { seriesDetailsUseCase.getSeriesSeasons(seriesId) },
+            block = {
+                updateState { it.copy(basicDetailsSectionState = ScreenStatus.LOADING) }
+                seriesDetailsUseCase.getSeriesSeasons(seriesId)
+            },
             onSuccess = { seasons ->
                 updateState {
                     it.copy(
+                        basicDetailsSectionState = ScreenStatus.SUCCESS,
                         seasons = seasons.map { season ->
                             EpisodesDetailsScreenState.SeasonUiState(
                                 seasonNumber = season.seasonNumber,

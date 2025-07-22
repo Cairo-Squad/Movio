@@ -48,7 +48,6 @@ object ShareUtil {
     }
 
     fun playOnYoutube(videoId: String, context: Context) {
-        val videoId = "bjqEWgDVPe0"
         val deepLinkUri = "vnd.youtube:$videoId".toUri()
         val webUri = "https://www.youtube.com/watch?v=$videoId".toUri()
 

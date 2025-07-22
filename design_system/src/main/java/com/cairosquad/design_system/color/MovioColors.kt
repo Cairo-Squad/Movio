@@ -19,6 +19,7 @@ data class Surfaces(
     val surfaceVariant: Color,
     val onSurfaceVariant: Color,
     val outline: Color,
+    val statusBarShadow: Color,
     val outlineVariant: Color,
     val onSurfaceAt1: Color,
     val onSurfaceAt2: Color,

@@ -21,6 +21,14 @@
     <string name="this_field_cannot_be_empty">This field is required</string>
     <string name="username_must_be_at_least_2_characters_long">Username must be at least 2 characters long</string>
     <string name="password_must_be_at_least_8_characters_long">Password must be at least 8 characters long</string>
-
-
+    <string name="create">Create</string>
+    <string name="list_name">List name</string>
+    <string name="movie">Movie</string>
+    <string name="series">Series</string>
+    <string name="create_list_description">Create a new list and keep track of your %1$s that you want to access easily.</string>
+    <string name="create_list_title">Create a new list</string>
+    <string name="add_to_list_icon">Add to List Icon</string>
+    <string name="create_new_list">Create new list</string>
+    <string name="submit">Submit</string>
+    <string name="episodes">Episodes %1$s</string>
 </resources>
