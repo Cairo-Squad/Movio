@@ -6,6 +6,7 @@ import com.cairosquad.repository.login.data_source.local.LocalLoginDataSource
 import com.cairosquad.repository.login.data_source.remote.RemoteLoginDataSource
 import com.cairosquad.repository.login.data_source.remote.dto.RequestTokenResponse
 import com.cairosquad.repository.utils.exception.NoInternetException
+import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -129,11 +130,18 @@ class LoginRepositoryImplTest {
         }
 
     @Test
-    fun `login SHOULD call remote data source with correct username, password`() = runTest {
-        val username = "testUser"
-        val password = "testPassword"
+    fun `isUserLoggedIn SHOULD return true when session id is not empty`() = runTest {
+        coEvery { localLoginDataSource.getSessionId() } returns "testSessionId"
+        val result = loginRepository.isUserLoggedIn()
+        assertThat(result).isTrue()
     }
 
+    @Test
+    fun `isUserLoggedIn SHOULD return false when session id is empty`() = runTest {
+        coEvery { localLoginDataSource.getSessionId() } returns ""
+        val result = loginRepository.isUserLoggedIn()
+        assertThat(result).isFalse()
+    }
 
     @Test
     fun `logout SHOULD call local data source with empty string`() = runTest {

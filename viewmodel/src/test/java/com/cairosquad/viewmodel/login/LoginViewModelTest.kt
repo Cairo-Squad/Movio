@@ -91,9 +91,7 @@ class LoginViewModelTest {
 
     @Test
     fun `WHEN login successful SHOULD call login and saveToken THEN navigate to home`() = runTest {
-        val fakeToken = "token123"
-        coEvery { loginUseCase.login(any(), any()) } returns fakeToken
-        coEvery { loginUseCase.saveToken(fakeToken) } returns Unit
+        coEvery { loginUseCase.login(any(), any()) } returns Unit
 
         viewModel.effect.test {
             viewModel.onUsernameChange("u")
@@ -102,7 +100,6 @@ class LoginViewModelTest {
             advanceUntilIdle()
 
             coVerify(exactly = 1) { loginUseCase.login("u", "p") }
-            coVerify(exactly = 1) { loginUseCase.saveToken(fakeToken) }
             assertThat(awaitItem()).isEqualTo(LoginEffect.NavigateToHome)
             cancelAndIgnoreRemainingEvents()
         }
@@ -110,10 +107,6 @@ class LoginViewModelTest {
 
     @Test
     fun `loading indicator SHOULD hide after login`() = runTest {
-        val fakeToken = "t"
-        coEvery { loginUseCase.login(any(), any()) } returns fakeToken
-        coEvery { loginUseCase.saveToken(fakeToken) } returns Unit
-
         viewModel.onLoginClick()
         // after start suspended the loading should be true
         advanceUntilIdle()

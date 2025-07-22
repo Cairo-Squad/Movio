@@ -23,7 +23,9 @@ class LoginRepositoryImpl(
     }
 
     override suspend fun isUserLoggedIn(): Boolean {
-        TODO("Not yet implemented")
+        return tryToCall {
+            localLoginDataSource.getSessionId().isNotEmpty()
+        }
     }
 
     override suspend fun logout() {
