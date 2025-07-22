@@ -30,4 +30,6 @@ interface MoviesRepository {
     suspend fun getFreeToWatchMovies(page: Int): List<Movie>
 
     suspend fun getMoviesByCategory(categoryId: String, page: Int): List<Movie>
+
+    suspend fun getMoviesGenres(page : Int): List<Movie>
 }

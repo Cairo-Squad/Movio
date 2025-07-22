@@ -71,4 +71,9 @@ interface MovieApiService {
         @Query("with_genres") categoryId: String,
         @Query("page") page: Int,
     ): ResultResponse<MovieRemoteDto>
+
+    @GET("genre/movie/list")
+    suspend fun getMoviesGenres(
+        @Query("page") page: Int
+    ): ResultResponse<MovieRemoteDto>
 }

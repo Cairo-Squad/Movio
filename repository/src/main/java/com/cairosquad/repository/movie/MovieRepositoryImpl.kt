@@ -122,6 +122,12 @@ class MovieRepositoryImpl(
         }
     }
 
+    override suspend fun getMoviesGenres(page: Int): List<Movie> {
+        return tryToCall {
+            remoteMovieDataSource.getMoviesGenres(page).map { it.toEntity() }
+        }
+    }
+
     private companion object {
         private const val CACHE_EXPIRATION_MILLIS = 3_600_000
         private const val PAGE_SIZE = 20

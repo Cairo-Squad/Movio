@@ -28,4 +28,6 @@ interface RemoteMovieDataSource {
     suspend fun getFreeToWatchMovies(page: Int): List<MovieRemoteDto>
 
     suspend fun getMoviesByCategory(categoryId: String, page: Int): List<MovieRemoteDto>
+
+    suspend fun getMoviesGenres(page: Int): List<MovieRemoteDto>
 }

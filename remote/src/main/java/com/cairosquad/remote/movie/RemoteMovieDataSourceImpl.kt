@@ -67,4 +67,9 @@ class RemoteMovieDataSourceImpl(
         return safeCallApi { apiService.getMoviesByCategory(categoryId, page) }
             .results?.filterNotNull().orEmpty()
     }
+
+    override suspend fun getMoviesGenres(page: Int): List<MovieRemoteDto> {
+        return safeCallApi { apiService.getMoviesGenres(page) }
+            .results?.filterNotNull().orEmpty()
+    }
 }
