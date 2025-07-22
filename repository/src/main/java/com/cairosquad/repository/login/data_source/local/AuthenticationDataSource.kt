@@ -1,7 +1,7 @@
 package com.cairosquad.repository.login.data_source.local
 
 interface AuthenticationDataSource {
-    fun saveSessionId(sessionId: String)
+    suspend fun saveSessionId(sessionId: String)
 
-    fun getSessionId(): String
+    suspend fun getSessionId(): String
 }
