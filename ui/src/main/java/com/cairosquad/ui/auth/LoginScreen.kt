@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,6 +28,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.basic_component.Button
@@ -109,6 +110,8 @@ private fun LoginScreenContent(
             value = uiState.username,
             onValueChange = { interactionListener.onUsernameChange(it) },
             placeholder = stringResource(R.string.user_name),
+            error = uiState.errors[LoginScreenState.FormField.USERNAME] ?: "",
+            isErrorMessageShown = true,
             isPasswordField = false,
             leadingIcon = R.drawable.profile_login,
             keyboardOptions = KeyboardOptions(
@@ -122,6 +125,7 @@ private fun LoginScreenContent(
             value = uiState.password,
             onValueChange = { interactionListener.onPasswordChange(it) },
             placeholder = stringResource(R.string.password),
+            error = uiState.errors[LoginScreenState.FormField.PASSWORD] ?: "",
             isPasswordField = !uiState.isPasswordVisible,
             leadingIcon = R.drawable.lock,
             trailingIcon = if (uiState.isPasswordVisible) R.drawable.eye else R.drawable.close_eye,
@@ -134,16 +138,17 @@ private fun LoginScreenContent(
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.padding(bottom = 24.dp)
         ) {
-            this@Column.AnimatedVisibility(
+            AnimatedVisibility(
                 visible = uiState.error != null,
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.info_circle),
@@ -152,21 +157,22 @@ private fun LoginScreenContent(
                         modifier = Modifier.size(16.dp)
                     )
                     Text(
-                        text = uiState.errors[LoginScreenState.FormField.PASSWORD].toString(),
+                        text = uiState.errors[LoginScreenState.FormField.PASSWORD] ?: "",
                         style = Theme.textStyle.label.smallRegular12,
                         color = Theme.color.system.errorContainer,
+                        overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.padding(start = 4.dp)
                     )
                 }
             }
-            Spacer(modifier = Modifier.weight(1f))
             Text(
                 text = stringResource(R.string.forgot_password),
                 modifier = Modifier
-                    .clickable { interactionListener.onForgetPasswordClick() }
-                    .padding(bottom = 24.dp),
+                    .weight(1f)
+                    .clickable { interactionListener.onForgetPasswordClick() },
                 style = Theme.textStyle.label.mediumMedium12,
                 color = Theme.color.surfaces.onSurfaceVariant,
+                textAlign = TextAlign.End
             )
         }
 

@@ -2,6 +2,7 @@ package com.cairosquad.design_system.basic_component
 
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
@@ -56,6 +57,7 @@ fun InputField(
     modifier: Modifier = Modifier,
     placeholder: String = "",
     error: String = "",
+    isErrorMessageShown: Boolean = true,
     isSingleLine: Boolean = true,
     isPasswordField: Boolean = false,
     readOnly: Boolean = false,
@@ -163,7 +165,7 @@ fun InputField(
             visualTransformation = if (isPasswordField) PasswordVisualTransformation() else VisualTransformation.None,
         )
 
-        if (error.isNotBlank()) {
+        AnimatedVisibility(error.isNotBlank() && isErrorMessageShown) {
             BasicText(
                 text = "* $error",
                 style = Theme.textStyle.label.smallRegular12.copy(
