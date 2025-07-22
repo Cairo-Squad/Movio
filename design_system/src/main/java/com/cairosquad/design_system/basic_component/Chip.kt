@@ -23,7 +23,8 @@ fun Chip(
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
     textStyle: TextStyle = Theme.textStyle.label.smallRegular14,
-    onClick: () -> Unit = {},
+    isEnable: Boolean = true,
+    onClick: () -> Unit = {}
 ) {
     val backgroundColor =
         if (isSelected) Theme.color.brand.primary else Theme.color.surfaces.onSurfaceAt3
@@ -34,7 +35,7 @@ fun Chip(
             .height(32.dp)
             .background(color = backgroundColor, shape = CircleShape)
             .clip(CircleShape)
-            .clickable(onClick = onClick)
+            .clickable(onClick = onClick, enabled = isEnable)
             .padding(horizontal = 12.dp),
         contentAlignment = Alignment.Center
     ) {
