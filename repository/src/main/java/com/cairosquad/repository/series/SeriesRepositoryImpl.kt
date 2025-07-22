@@ -85,4 +85,10 @@ class SeriesRepositoryImpl(
             remoteSeriesDataSource.getSeriesByCategory(category,page).map { it.toEntity() }
         }
     }
+
+    override suspend fun getSeriesGenres(page: Int): List<Series> {
+        return tryToCall {
+            remoteSeriesDataSource.getSeriesGenres(page).map { it.toEntity() }
+        }
+    }
 }

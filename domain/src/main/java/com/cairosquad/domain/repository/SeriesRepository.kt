@@ -33,4 +33,6 @@ interface SeriesRepository {
 
     suspend fun getSeriesByCategory(category: String, page: Int): List<Series>
 
+    suspend fun getSeriesGenres(page: Int): List<Series>
+
 }

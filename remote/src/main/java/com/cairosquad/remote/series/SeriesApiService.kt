@@ -84,4 +84,9 @@ interface SeriesApiService {
         @Query("page") page: Int,
     ): ResultResponse<SeriesRemoteDto>
 
+    @GET("genre/tv/list")
+    suspend fun getSeriesGenres(
+        @Query("page") page: Int
+    ): ResultResponse<SeriesRemoteDto>
+
 }

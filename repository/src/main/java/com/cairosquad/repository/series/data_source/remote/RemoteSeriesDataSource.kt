@@ -33,4 +33,6 @@ interface RemoteSeriesDataSource {
     suspend fun getFreeToWatchSeries(page: Int): List<SeriesRemoteDto>
 
     suspend fun getSeriesByCategory(category: String, page: Int): List<SeriesRemoteDto>
+
+    suspend fun getSeriesGenres(page: Int): List<SeriesRemoteDto>
 }
