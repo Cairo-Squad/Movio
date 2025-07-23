@@ -32,7 +32,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -525,6 +524,89 @@ class SearchViewModelTest {
             viewModel.onSeeAllForYouClicked()
             assertThat(awaitItem()).isEqualTo(SearchEffect.NavigateToSeeAllForYouScreen)
             cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `should update selected tab index when tab is selected`() = runTest {
+        viewModel.onTabSelected(2)
+        assertThat(viewModel.screenState.value.selectedTabIndex).isEqualTo(2)
+    }
+
+    @Test
+    fun `should set FAILED and UNKNOWN_ERROR when search fails with exception`() = runTest {
+        val query = "test query"
+
+        coEvery { searchPager.movies(query) } throws IOException()
+        coEvery { searchPager.series(query) } returns flowOf(PagingData.empty())
+        coEvery { searchPager.artists(query) } returns flowOf(PagingData.empty())
+
+        viewModel.onQueryTextChanged(query)
+        advanceUntilIdle()
+
+        viewModel.onSearch()
+        advanceUntilIdle()
+
+        waitUntil {
+            viewModel.screenState.value.screenStatus == SearchScreenState.ScreenStatus.FAILED
+        }
+
+        val state = viewModel.screenState.value
+        assertThat(state.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
+        assertThat(state.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
+    }
+
+    @Test
+    fun `onRecentSearchItemClicked should update query and trigger search`() = runTest {
+
+        val testQuery = "batman"
+
+        every { searchPager.movies(any()) } returns flowOf(PagingData.empty())
+        every { searchPager.series(any()) } returns flowOf(PagingData.empty())
+        every { searchPager.artists(any()) } returns flowOf(PagingData.empty())
+
+        viewModel.onRecentSearchItemClicked(testQuery)
+        advanceUntilIdle()
+        waitUntil {
+            viewModel.screenState.value.screenStatus == SearchScreenState.ScreenStatus.RESULT
+        }
+
+        val state = viewModel.screenState.value
+        assertThat(state.query).isEqualTo(testQuery)
+        assertThat(state.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.RESULT)
+
+        assertThat(state.errorStatus).isNull()
+    }
+
+    @Test
+    fun `onClearHistory should set FAILED and UNKNOWN_ERROR when exception occurs`() = runTest {
+
+        coEvery { clearSearchHistoryUseCase.clearAllHistory() }  throws IOException()
+
+        viewModel.onClearHistory()
+        advanceUntilIdle()
+        waitUntil {
+            viewModel.screenState.value.screenStatus == SearchScreenState.ScreenStatus.FAILED
+        }
+
+        val state = viewModel.screenState.value
+        assertThat(state.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
+        assertThat(state.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
+    }
+
+
+
+    suspend fun waitUntil(
+        timeoutMillis: Long = 3000,
+        intervalMillis: Long = 50,
+        condition: () -> Boolean
+    ) {
+        val start = System.currentTimeMillis()
+        while (!condition()) {
+            if (System.currentTimeMillis() - start > timeoutMillis) {
+                throw AssertionError("Condition wasn't met within timeout")
+            }
+            delay(intervalMillis)
         }
     }
 
