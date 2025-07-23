@@ -8,8 +8,7 @@ import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
-import com.cairosquad.viewmodel.search.SearchScreenState.ScreenStatus
-import com.cairosquad.viewmodel.search.toUiState
+import com.cairosquad.viewmodel.foryou.ForYouState.ScreenStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -18,19 +17,25 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class ForYouViewModel(private val forYouPager: ForYouPager) :
-    BaseViewModel<ForYouState, Any>(ForYouState()), ForYouInteractionListener {
+    BaseViewModel<ForYouState, ForYouEffect>(ForYouState()), ForYouInteractionListener {
 
     init {
         getForYouMovies()
     }
 
+    fun updateScreenStatus(status: ScreenStatus) {
+        updateState { it.copy(screenStatus = status) }
+    }
+
+    fun updateErrorStatus(errorStatus: ErrorStatus?) {
+        updateState { it.copy(errorStatus = errorStatus) }
+    }
+
     private fun getForYouMovies() {
-        updateState {
-            it.copy(
-                screenStatus = ScreenStatus.LOADING,
-                errorStatus = null
-            )
-        }
+        updateScreenStatus(ScreenStatus.LOADING)
+        updateErrorStatus(null)
+        updateState { it.copy(isEmpty = false) }
+
         tryToCall(
             block = {
                 val forYouMovies = cacheMappedPagingData(
@@ -38,28 +43,19 @@ class ForYouViewModel(private val forYouPager: ForYouPager) :
                     fetch = { forYouPager.movies() },
                     map = { it.toUiState() }
                 )
-
                 forYouMovies
             },
             onSuccess = { forYouMovies ->
-                updateState {
-                    it.copy(
-                        forYou = forYouMovies
-                    )
-                }
+                updateState { it.copy(forYou = forYouMovies) }
+                updateScreenStatus(ScreenStatus.SUCCESS)
             },
             onError = { e ->
-                updateState {
-                    it.copy(
-                        screenStatus = ScreenStatus.FAILED,
-                        errorStatus = handleSearchException(e)
-                    )
-                }
+                updateScreenStatus(ScreenStatus.FAILED)
+                updateErrorStatus(handleSearchException(e))
             },
             dispatcher = Dispatchers.IO
         )
     }
-
     private fun <T : Any, R : Any> cacheMappedPagingData(
         scope: CoroutineScope,
         fetch: () -> Flow<PagingData<T>>,
@@ -85,5 +81,9 @@ class ForYouViewModel(private val forYouPager: ForYouPager) :
             delay(500L)
             updateState { it.copy(isRefreshing = false) }
         }
+    }
+
+    override fun onMovieClicked(movieId: Long) {
+        sendEffect(ForYouEffect.NavigateToMovieDetails(movieId))
     }
 }
