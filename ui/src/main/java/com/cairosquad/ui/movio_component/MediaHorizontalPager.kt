@@ -59,6 +59,7 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.Icon
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
+import com.cairosquad.ui.BuildConfig
 import com.cairosquad.viewmodel.home.HomeScreenState
 import kotlinx.coroutines.delay
 import kotlin.math.absoluteValue
@@ -110,7 +111,7 @@ fun MediaHorizontalPager(
                         .fillMaxSize()
                         .blur(20.dp)
                         .offset(y = (-28).dp),
-                    model = "https://image.tmdb.org/t/p/w500${mediaList[pageIndex].photoPath}",
+                    model = BuildConfig.IMAGE_BASE_URL + mediaList[pageIndex].photoPath,
                     contentDescription = stringResource(R.string.movie_poster),
                     loadingPlaceholder = { },
                     nonNudeThreshold = 0.0
@@ -226,7 +227,7 @@ private fun MediaHorizontalPagerCard(
         SafeImageViewer(
             modifier = Modifier.fillMaxSize(),
             onIsImageSafeChanged = { isImageSafe = it },
-            model = "https://image.tmdb.org/t/p/w500${imgUrl}",
+            model = BuildConfig.IMAGE_BASE_URL + imgUrl,
             contentDescription = stringResource(R.string.movie_poster),
             loadingPlaceholder = { LoadingMovieImage(Modifier.fillMaxSize()) },
         )
@@ -265,7 +266,7 @@ private fun MediaHorizontalPagerCard(
                         .height(bottomSectionDp.dp)
                         .blur(25.dp),
                     alignment = Alignment.BottomCenter,
-                    model = "https://image.tmdb.org/t/p/w500${imgUrl}",
+                    model = BuildConfig.IMAGE_BASE_URL + imgUrl,
                     contentDescription = stringResource(R.string.movie_poster),
                     loadingPlaceholder = { },
                     nonNudeThreshold = 0.0
