@@ -46,32 +46,26 @@ class LoginViewModelTest {
     @Test
     fun `WHEN username changed SHOULD update state`() = runTest {
         viewModel.onUsernameChange("newUser")
-        advanceUntilIdle()
         assertThat(viewModel.screenState.value.username).isEqualTo("newUser")
     }
 
     @Test
     fun `WHEN username changed SHOULD reset validation`() = runTest {
         viewModel.updateState { it.copy(errors = mapOf(LoginScreenState.FormField.USERNAME to LoginScreenState.ValidationError.EMPTY_FIELD)) }
-        advanceUntilIdle()
         viewModel.onUsernameChange("newUser")
-        advanceUntilIdle()
         assertThat(viewModel.screenState.value.errors[LoginScreenState.FormField.USERNAME]).isNull()
     }
 
     @Test
     fun `WHEN password changed SHOULD update state`() = runTest {
         viewModel.onPasswordChange("secret")
-        advanceUntilIdle()
         assertThat(viewModel.screenState.value.password).isEqualTo("secret")
     }
 
     @Test
     fun `WHEN password changed SHOULD reset validation`() = runTest {
         viewModel.updateState { it.copy(errors = mapOf(LoginScreenState.FormField.PASSWORD to LoginScreenState.ValidationError.EMPTY_FIELD)) }
-        advanceUntilIdle()
         viewModel.onPasswordChange("secret")
-        advanceUntilIdle()
         assertThat(viewModel.screenState.value.errors[LoginScreenState.FormField.PASSWORD]).isNull()
     }
 
@@ -79,7 +73,6 @@ class LoginViewModelTest {
     fun `WHEN password visibility icon clicked SHOULD toggle visibility`() = runTest {
         val initial = viewModel.screenState.value.isPasswordVisible
         viewModel.onPasswordVisibilityIconClick()
-        advanceUntilIdle()
         assertThat(viewModel.screenState.value.isPasswordVisible).isEqualTo(!initial)
     }
 
@@ -87,7 +80,6 @@ class LoginViewModelTest {
     fun `WHEN forget password clicked SHOULD send NavigateToForgetPassword effect`() = runTest {
         viewModel.effect.test {
             viewModel.onForgetPasswordClick()
-            advanceUntilIdle()
             assertThat(awaitItem()).isEqualTo(LoginEffect.NavigateToForgetPassword)
             cancelAndIgnoreRemainingEvents()
         }
@@ -97,7 +89,6 @@ class LoginViewModelTest {
     fun `WHEN continue as guest clicked SHOULD send NavigateToGuestHome effect`() = runTest {
         viewModel.effect.test {
             viewModel.onContinueAsAGuestClick()
-            advanceUntilIdle()
             assertThat(awaitItem()).isEqualTo(LoginEffect.NavigateToGuestHome)
             cancelAndIgnoreRemainingEvents()
         }
@@ -107,7 +98,6 @@ class LoginViewModelTest {
     fun `WHEN sign up clicked SHOULD send NavigateToSignUp effect`() = runTest {
         viewModel.effect.test {
             viewModel.onSignUpClick()
-            advanceUntilIdle()
             assertThat(awaitItem()).isEqualTo(LoginEffect.NavigateToSignUp)
             cancelAndIgnoreRemainingEvents()
         }
@@ -128,7 +118,6 @@ class LoginViewModelTest {
     @Test
     fun `WHEN login clicked with short username SHOULD validate username`() = runTest {
         viewModel.onUsernameChange("a")
-        advanceUntilIdle()
         viewModel.onLoginClick()
         advanceUntilIdle()
         assertThat(viewModel.screenState.value.errors[LoginScreenState.FormField.USERNAME]).isEqualTo(
@@ -139,7 +128,6 @@ class LoginViewModelTest {
     @Test
     fun `WHEN login clicked with short password SHOULD validate password`() = runTest {
         viewModel.onPasswordChange("1234567")
-        advanceUntilIdle()
         viewModel.onLoginClick()
         advanceUntilIdle()
         assertThat(viewModel.screenState.value.errors[LoginScreenState.FormField.PASSWORD]).isEqualTo(
@@ -150,9 +138,7 @@ class LoginViewModelTest {
     @Test
     fun `WHEN login clicked with valid fields SHOULD reset validation`() = runTest {
         viewModel.onUsernameChange("user")
-        advanceUntilIdle()
         viewModel.onPasswordChange("password")
-        advanceUntilIdle()
         viewModel.onLoginClick()
         advanceUntilIdle()
         assertThat(viewModel.screenState.value.errors[LoginScreenState.FormField.USERNAME]).isNull()
@@ -165,9 +151,7 @@ class LoginViewModelTest {
 
         viewModel.effect.test {
             viewModel.onUsernameChange("user")
-            advanceUntilIdle()
             viewModel.onPasswordChange("password")
-            advanceUntilIdle()
             viewModel.onLoginClick()
             advanceUntilIdle()
 
