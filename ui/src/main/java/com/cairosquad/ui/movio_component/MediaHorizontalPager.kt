@@ -103,7 +103,7 @@ fun MediaHorizontalPager(
             .fillMaxWidth()
     ) {
 
-        if (mediaList.size > initialPage) {
+        if (mediaList.size > pagerState.currentPage) {
             AnimatedContent(pagerState.currentPage) { pageIndex ->
                 SafeImageViewer(
                     modifier = Modifier
