@@ -15,13 +15,16 @@ import com.cairosquad.ui.movio_component.MediaHorizontalPagerItem
 import com.cairosquad.ui.movio_component.MediaSection
 import com.cairosquad.ui.movio_component.MediaSectionItem
 import com.cairosquad.ui.movio_component.MediaSectionLayoutType
-import com.cairosquad.viewmodel.home.HomeInteractionsListener
-import com.cairosquad.viewmodel.home.HomeScreenState
+import com.cairosquad.viewmodel.home.listner.DiscoverInteractionsListener
+import com.cairosquad.viewmodel.home.listner.HomeInteractionsListener
+import com.cairosquad.viewmodel.home.state.HomeScreenState
+import com.cairosquad.viewmodel.home.model.MediaType
 
 @Composable
 fun HomeScreenContentSeriesTab(
     screenState: HomeScreenState,
     listener: HomeInteractionsListener,
+    discoverInteractionsListener: DiscoverInteractionsListener,
     scrollState: ScrollState
 ) {
     Column(
@@ -47,7 +50,7 @@ fun HomeScreenContentSeriesTab(
             },
             sectionTitle = stringResource(R.string.top_rating),
             mediaSectionLayoutType = MediaSectionLayoutType.LazyRow,
-            seeAllAction = { listener.onClickSeeAllTopRated(isMovie = false) }
+            seeAllAction = { discoverInteractionsListener.onClickSeeAllTopRated(MediaType.Movies) }
         )
 
         MediaSection(
@@ -85,7 +88,7 @@ fun HomeScreenContentSeriesTab(
             },
             sectionTitle = stringResource(R.string.more_recommended),
             mediaSectionLayoutType = MediaSectionLayoutType.LazyVerticalGrid(158),
-            seeAllAction = { listener.onClickSeeAllMoreRecommended(isMovie = false) }
+            seeAllAction = { discoverInteractionsListener.onClickSeeAllMoreRecommended(MediaType.Movies) }
         )
     }
 }

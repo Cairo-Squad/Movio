@@ -22,13 +22,15 @@ import com.cairosquad.design_system.basic_component.TabRow
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.R
 import com.cairosquad.ui.movio_component.AppBar
-import com.cairosquad.viewmodel.home.HomeInteractionsListener
-import com.cairosquad.viewmodel.home.HomeScreenState
+import com.cairosquad.viewmodel.home.listner.DiscoverInteractionsListener
+import com.cairosquad.viewmodel.home.listner.HomeInteractionsListener
+import com.cairosquad.viewmodel.home.state.HomeScreenState
 
 @Composable
 fun HomeScreenContent(
     screenState: HomeScreenState,
     listener: HomeInteractionsListener,
+    discoverInteractionsListener: DiscoverInteractionsListener
 ) {
     val scrollState = rememberScrollState()
 
@@ -38,6 +40,7 @@ fun HomeScreenContent(
                 HomeScreenContentAllTab(
                     screenState = screenState,
                     listener = listener,
+                    discoverInteractionsListener = discoverInteractionsListener,
                     scrollState = scrollState
                 )
             }
@@ -46,6 +49,7 @@ fun HomeScreenContent(
                 HomeScreenContentMoviesTab(
                     screenState = screenState,
                     listener = listener,
+                    discoverInteractionsListener = discoverInteractionsListener,
                     scrollState = scrollState
                 )
             }
@@ -54,6 +58,7 @@ fun HomeScreenContent(
                 HomeScreenContentSeriesTab(
                     screenState = screenState,
                     listener = listener,
+                    discoverInteractionsListener = discoverInteractionsListener,
                     scrollState = scrollState
                 )
             }
