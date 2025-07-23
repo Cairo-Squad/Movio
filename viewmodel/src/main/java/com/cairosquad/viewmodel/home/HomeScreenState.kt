@@ -1,73 +1,72 @@
 package com.cairosquad.viewmodel.home
 
+import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.exception.ErrorStatus
+import com.cairosquad.viewmodel.util.MediaContentType
 
 data class HomeScreenState(
-    val topRatingMovies: List<MovieUiState> = emptyList(),
-    val trendingMovies: List<MovieUiState> = emptyList(),
-    val freeToWatchMovies: List<MovieUiState> = emptyList(),
-    val upcomingMovies: List<MovieUiState> = emptyList(),
-    val nowPlayingMovies: List<MovieUiState> = emptyList(),
-    val moreRecommendedMovies: List<MovieUiState> = emptyList(),
-    val topRatingSeries: List<SeriesUiState> = emptyList(),
-    val airingTodaySeries: List<SeriesUiState> = emptyList(),
-    val onTvSeries: List<SeriesUiState> = emptyList(),
-    val moreRecommendedSeries: List<SeriesUiState> = emptyList(),
-    val popularMovies:List<MovieUiState> = emptyList(),
-    val popularSeries: List<SeriesUiState> = emptyList(),
+
+    val popularMovies: List<MediaUiState> = emptyList(),
+    val popularSeries: List<MediaUiState> = emptyList(),
+
+    val categoriesMedia: List<MediaUiState> = emptyList(),
+
+    val sections: Map<MediaContentType, SectionUiState> = mapOf(),
+
     val screenStatus: ScreenStatus = ScreenStatus.LOADING,
     val errorStatus: ErrorStatus? = null,
-    val selectedFilter: FilterType = FilterType.ALL,
-    val selectedTab: TabType = TabType.ALL,
-    val genres: List<GenreUiState> = listOf(GenreUiState.defaultGenre),
+
     val selectedGenreIndex: Int = 0,
-    val filters : List<String> = listOf("All","Popularity","Latest")
+    val genres: List<GenreUiState> = listOf(GenreUiState.defaultGenre),
+
+    val selectedSortingType: SortingType = SortingType.ALL,
+    val selectedTab: Tab = Tab.ALL,
 ) {
-    data class MovieUiState(
-        val id: Long = 0L,
-        val title: String = "",
-        val rating: Float = 0f,
-        val posterPath: String = "",
-        val genres: List<GenreUiState> = emptyList()
+
+    data class SectionUiState(
+        val movies: List<MediaUiState> = emptyList(),
+        val series: List<MediaUiState> = emptyList(),
     )
 
-    data class SeriesUiState(
-        val id: Long = 0L,
-        val title: String = "",
-        val rating: Float = 0f,
-        val posterPath: String = "",
-        val genres: List<GenreUiState> = emptyList()
+    data class MediaUiState(
+        val id: Long,
+        val title: String,
+        val rating: Float,
+        val posterPath: String,
+        val genres: List<GenreUiState>,
+        val isMovie: Boolean
     )
 
     data class GenreUiState(
-        val id: Long? = 0L,
-        val name: String = "",
+        val id: Long?,
+        val name: String,
     ) {
-        companion object{
-            val defaultGenre= GenreUiState(
-                id=null,
-                name="All"
+        companion object {
+            val defaultGenre = GenreUiState(
+                id = null,
+                name = "All"
             )
         }
     }
 
-    enum class ScreenStatus {
-        LOADING,
-        SUCCESS,
-        FAILED
-    }
+        enum class ScreenStatus {
+            LOADING,
+            SUCCESS,
+            FAILED
+        }
 
-    enum class TabType {
-        ALL,
-        MOVIES,
-        TV_SHOWS,
-        CATEGORIES
-    }
-    enum class FilterType {
-        ALL,
-        POPULARITY,
-        LATEST
-    }
+        enum class Tab {
+            ALL,
+            MOVIES,
+            TV_SHOWS,
+            CATEGORIES
+        }
+
+    enum class SortingType(val titleId: Int) {
+            ALL(R.string.all),
+            POPULARITY(R.string.popularity),
+            LATEST(R.string.latest)
+        }
 
 
 }

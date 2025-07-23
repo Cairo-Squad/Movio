@@ -144,37 +144,26 @@ data class MediaSectionItem(
 ){
     companion object {
 
-        fun fromHomeMovieUiState(movie: HomeScreenState.MovieUiState): MediaSectionItem {
+        fun fromHomeMediaUiState(media: HomeScreenState.MediaUiState): MediaSectionItem {
             return MediaSectionItem(
-                id = movie.id,
-                title = movie.title,
-                photoPath = movie.posterPath,
-                rating = movie.rating,
-                isMovie = true
+                id = media.id,
+                title = media.title,
+                photoPath = media.posterPath,
+                rating = media.rating,
+                isMovie = media.isMovie
             )
         }
 
-        fun fromHomeSeriesUiState(movie: HomeScreenState.SeriesUiState): MediaSectionItem {
-            return MediaSectionItem(
-                id = movie.id,
-                title = movie.title,
-                photoPath = movie.posterPath,
-                rating = movie.rating,
-                isMovie = false
-            )
-        }
-
-        fun fromHomeMoviesAndSeriesUiState(
-            movies: List<HomeScreenState.MovieUiState>,
-            series: List<HomeScreenState.SeriesUiState>
+        fun fromHomeSectionUiState(
+            sectionUiState: HomeScreenState.SectionUiState?
         ): List<MediaSectionItem> {
             val mergedList = mutableListOf<MediaSectionItem>()
-            val moviesIterator = movies.iterator()
-            val seriesIterator = series.iterator()
+            val moviesIterator = sectionUiState?.movies?.iterator() ?: return emptyList()
+            val seriesIterator = sectionUiState?.series?.iterator() ?: return emptyList()
 
             while (moviesIterator.hasNext() || seriesIterator.hasNext()) {
-                if (moviesIterator.hasNext()) mergedList.add(fromHomeMovieUiState(moviesIterator.next()))
-                if (seriesIterator.hasNext()) mergedList.add(fromHomeSeriesUiState(seriesIterator.next()))
+                if (moviesIterator.hasNext()) mergedList.add(fromHomeMediaUiState(moviesIterator.next()))
+                if (seriesIterator.hasNext()) mergedList.add(fromHomeMediaUiState(seriesIterator.next()))
             }
             return mergedList
         }

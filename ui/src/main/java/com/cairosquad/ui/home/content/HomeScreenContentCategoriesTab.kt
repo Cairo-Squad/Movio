@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.CategoriesChips
@@ -34,10 +35,10 @@ import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.viewmodel.home.HomeInteractionsListener
 import com.cairosquad.viewmodel.home.HomeScreenState
-import com.cairosquad.viewmodel.home.HomeScreenState.MovieUiState
+import com.cairosquad.viewmodel.home.HomeScreenState.MediaUiState
 
 @Composable
-fun HomeCategoriesScreen(
+fun HomeScreenContentCategoriesTab(
     screenState: HomeScreenState,
     listener: HomeInteractionsListener,
     scrollState: ScrollState,
@@ -57,7 +58,8 @@ fun HomeCategoriesScreen(
                 .fillMaxSize()
         ) {
             TopRatingMoviesList(
-                topRatingSeries = screenState.topRatingMovies, listener = listener, content = {
+                topRatingSeries = screenState.categoriesMedia,
+                listener = listener, content = {
                     CategoriesChips(
                         modifier = Modifier.padding(top = 16.dp),
                         categories = screenState.genres.map { it.name },
@@ -67,12 +69,11 @@ fun HomeCategoriesScreen(
                         })
                     CategoriesChips(
                         modifier = Modifier.padding(top = 12.dp, bottom = 24.dp),
-                        categories = screenState.filters,
-                        selectedChipIndex = screenState.selectedFilter.ordinal,
+                        categories = HomeScreenState.SortingType.entries.map { stringResource(it.titleId) },
+                        selectedChipIndex = screenState.selectedSortingType.ordinal,
                         onChipSelected = { index ->
-                            listener.onFilterSelected(HomeScreenState.FilterType.entries[index])
+                            listener.onSortingSelected(HomeScreenState.SortingType.entries[index])
                         })
-
                 }
             )
         }
@@ -82,7 +83,7 @@ fun HomeCategoriesScreen(
 @Composable
 fun TopRatingMoviesList(
     content: @Composable () -> Unit,
-    topRatingSeries: List<MovieUiState>,
+    topRatingSeries: List<MediaUiState>,
     listener: HomeInteractionsListener,
     modifier: Modifier = Modifier
 ) {
@@ -116,7 +117,8 @@ fun TopRatingMoviesList(
                 LazyVerticalGrid(
                     modifier = modifier
                         .heightIn(max = 10000.dp)
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
                     columns = GridCells.Adaptive(minSize = 101.33.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -126,7 +128,7 @@ fun TopRatingMoviesList(
                     items(topRatingSeries) { moreRecommended ->
                         MovieCard(
                             modifier = Modifier.clickable {
-                                listener.onClickMovie(moreRecommended.id)
+                                listener.onClickMedia(moreRecommended.id, moreRecommended.isMovie)
                             },
                             title = moreRecommended.title,
                             vote = moreRecommended.rating,

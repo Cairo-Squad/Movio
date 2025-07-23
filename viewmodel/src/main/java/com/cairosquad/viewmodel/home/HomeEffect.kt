@@ -1,14 +1,14 @@
 package com.cairosquad.viewmodel.home
 
+import com.cairosquad.viewmodel.util.MediaContentType
+import com.cairosquad.viewmodel.util.MediaType
+
+
 sealed class HomeEffect {
     data object NavigateToProfile: HomeEffect()
-    data class NavigateMovie(val movieId :Long) : HomeEffect()
-    data class NavigateSeries(val seriesId :Long) : HomeEffect()
-    data class NavigateToSeeAllTopRated(val isMovie :Boolean): HomeEffect()
-    data object NavigateToSeeAllTrending: HomeEffect()
-    data object NavigateToSeeAllFreeToWatch: HomeEffect()
-    data object NavigateToSeeAllUpcoming: HomeEffect()
-    data class NavigateToSeeAllMoreRecommended(val isMovie :Boolean): HomeEffect()
-    data object NavigateToSeeAllAiringToday: HomeEffect()
-    data object NavigateToSeeAllOnTv: HomeEffect()
+    data class NavigateMediaDetails(val mediaId :Long, val isMovie: Boolean) : HomeEffect()
+    data class NavigateToSeeAllScreen(
+        val mediaContentType: MediaContentType,
+        val mediaType: MediaType
+    ): HomeEffect()
 }

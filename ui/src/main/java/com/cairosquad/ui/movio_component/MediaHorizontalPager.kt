@@ -1,6 +1,7 @@
 package com.cairosquad.ui.movio_component
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
@@ -67,7 +68,7 @@ import kotlin.math.absoluteValue
 fun MediaHorizontalPager(
     mediaList: List<MediaHorizontalPagerItem>,
     initialPage: Int,
-    onClickMedia: (Long) -> Unit,
+    onClickMedia: (Long, Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val pagerState = rememberPagerState(
@@ -101,21 +102,20 @@ fun MediaHorizontalPager(
             .height(430.dp)
             .fillMaxWidth()
     ) {
-        mediaList.forEachIndexed { pageIndex, media ->
-            val pageOffset =
-                (pageIndex - pagerState.currentPage - pagerState.currentPageOffsetFraction)
-            val isCurrentPageFloat = 1f - pageOffset.absoluteValue.coerceIn(0f, 1f)
-            SafeImageViewer(
-                modifier = Modifier
-                    .alpha(isCurrentPageFloat)
-                    .fillMaxSize()
-                    .blur(20.dp)
-                    .offset(y = (-28).dp),
-                model = "https://image.tmdb.org/t/p/w500${media.photoPath}",
-                contentDescription = stringResource(R.string.movie_poster),
-                loadingPlaceholder = { },
-                nonNudeThreshold = 0.0
-            )
+
+        if (mediaList.isNotEmpty()) {
+            AnimatedContent(pagerState.currentPage) { pageIndex ->
+                SafeImageViewer(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .blur(20.dp)
+                        .offset(y = (-28).dp),
+                    model = "https://image.tmdb.org/t/p/w500${mediaList[pageIndex].photoPath}",
+                    contentDescription = stringResource(R.string.movie_poster),
+                    loadingPlaceholder = { },
+                    nonNudeThreshold = 0.0
+                )
+            }
         }
         Column(
             modifier = Modifier
@@ -157,7 +157,7 @@ fun MediaHorizontalPager(
                         imgUrl = media.photoPath,
                         genres = media.genres,
                         isCurrentPageFloat = isCurrentPageFloat,
-                        onClick = { onClickMedia(media.id) }
+                        onClick = { onClickMedia(media.id, media.isMovie) }
                     )
                 }
             }
@@ -181,37 +181,26 @@ data class MediaHorizontalPagerItem(
 
     companion object {
 
-        fun fromHomeMovieUiState(movie: HomeScreenState.MovieUiState): MediaHorizontalPagerItem {
+        fun fromHomeMediaUiState(media: HomeScreenState.MediaUiState): MediaHorizontalPagerItem {
             return MediaHorizontalPagerItem(
-                id = movie.id,
-                title = movie.title,
-                photoPath = movie.posterPath,
-                genres = movie.genres.map { it.name },
-                isMovie = true
+                id = media.id,
+                title = media.title,
+                photoPath = media.posterPath,
+                genres = media.genres.map { it.name },
+                isMovie = media.isMovie
             )
         }
 
-        fun fromHomeSeriesUiState(series: HomeScreenState.SeriesUiState): MediaHorizontalPagerItem {
-            return MediaHorizontalPagerItem(
-                id = series.id,
-                title = series.title,
-                photoPath = series.posterPath,
-                genres = series.genres.map { it.name },
-                isMovie = false
-            )
-        }
-
-        fun fromHomeMoviesAndSeriesUiState(
-            movies: List<HomeScreenState.MovieUiState>,
-            series: List<HomeScreenState.SeriesUiState>
-        ): List<MediaSectionItem> {
-            val mergedList = mutableListOf<MediaSectionItem>()
-            val moviesIterator = movies.iterator()
-            val seriesIterator = series.iterator()
+        fun fromHomeSectionUiState(
+            sectionUiState: HomeScreenState.SectionUiState?
+        ): List<MediaHorizontalPagerItem> {
+            val mergedList = mutableListOf<MediaHorizontalPagerItem>()
+            val moviesIterator = sectionUiState?.movies?.iterator() ?: return emptyList()
+            val seriesIterator = sectionUiState?.series?.iterator() ?: return emptyList()
 
             while (moviesIterator.hasNext() || seriesIterator.hasNext()) {
-                if (moviesIterator.hasNext()) mergedList.add(MediaSectionItem.Companion.fromHomeMovieUiState(moviesIterator.next()))
-                if (seriesIterator.hasNext()) mergedList.add(MediaSectionItem.Companion.fromHomeSeriesUiState(seriesIterator.next()))
+                if (moviesIterator.hasNext()) mergedList.add(fromHomeMediaUiState(moviesIterator.next()))
+                if (seriesIterator.hasNext()) mergedList.add(fromHomeMediaUiState(seriesIterator.next()))
             }
             return mergedList
         }

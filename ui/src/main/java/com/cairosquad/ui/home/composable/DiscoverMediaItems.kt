@@ -29,7 +29,7 @@ fun DiscoverMediaItems(
     listener: HomeInteractionsListener,
     modifier: Modifier = Modifier
 ) {
-    val items =   discoverContentStrategy.getItems(state).filterIsInstance<HomeScreenState.MovieUiState>()
+    val items =   discoverContentStrategy.getItems(state).filterIsInstance<HomeScreenState.MediaUiState>()
     AnimatedVisibility(
         visible = items.isEmpty(),
         enter = fadeIn(),
@@ -63,7 +63,7 @@ fun DiscoverMediaItems(
             items(items) { item ->
                 MovieCard(
                     modifier = Modifier.clickable {
-                        listener.onClickMovie(item.id)
+                        listener.onClickMedia(item.id, item.isMovie)
                     },
                     title = item.title,
                     vote = item.rating,

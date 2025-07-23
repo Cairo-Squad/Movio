@@ -5,20 +5,22 @@ import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 
 
-fun Movie.toHomeMovieUiState() = HomeScreenState.MovieUiState(
+fun Movie.toHomeMediaUiState() = HomeScreenState.MediaUiState(
     id = id,
     title = title,
     rating = rating,
     posterPath = posterPath,
-    genres = genres.map(Genre::toHomeGenreUiState)
+    genres = genres.map(Genre::toHomeGenreUiState),
+    isMovie = true
 )
 
-fun Series.toHomeSeriesUiState() = HomeScreenState.SeriesUiState(
+fun Series.toHomeMediaUiState() = HomeScreenState.MediaUiState(
     id = id,
     title = title,
     rating = rating,
     posterPath = posterPath,
-    genres = genres.map(Genre::toHomeGenreUiState)
+    genres = genres.map(Genre::toHomeGenreUiState),
+    isMovie = false
 )
 
 fun Genre.toHomeGenreUiState() = HomeScreenState.GenreUiState(

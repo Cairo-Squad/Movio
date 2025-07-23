@@ -1,4 +1,5 @@
 import com.cairosquad.viewmodel.home.HomeScreenState
+import com.cairosquad.viewmodel.util.MediaType
 
 interface DiscoverContentStrategy {
     val title: String
@@ -7,22 +8,17 @@ interface DiscoverContentStrategy {
     fun getItems(state: HomeScreenState): List<Any>
 }
 
-enum class MediaType {
-    Movies,
-    Series,
-    All
-}
-
 fun filterByMediaType(
-    movieList: List<HomeScreenState.MovieUiState>,
-    seriesList: List<HomeScreenState.SeriesUiState>,
+    movieList: List<HomeScreenState.MediaUiState>,
+    seriesList: List<HomeScreenState.MediaUiState>,
     mediaType: MediaType
 ): List<Any> {
-    return when (mediaType) {
-        MediaType.Movies -> movieList
-        MediaType.Series -> seriesList
-        MediaType.All -> movieList + seriesList
-    }
+    return movieList
+//    when (mediaType) {
+//        MediaType.Movies -> movieList
+//        MediaType.Series -> seriesList
+//        MediaType.All -> movieList + seriesList
+//    }
 }
 
 class TopRatedStrategy(override val mediaType: MediaType) : DiscoverContentStrategy {
@@ -30,8 +26,8 @@ class TopRatedStrategy(override val mediaType: MediaType) : DiscoverContentStrat
 
     override fun getItems(state: HomeScreenState): List<Any> {
         return filterByMediaType(
-            movieList = state.topRatingMovies,
-            seriesList = state.topRatingSeries,
+            movieList = emptyList(),// state.topRatingMovies,
+            seriesList = emptyList(),// state.topRatingSeries,
             mediaType = mediaType
         )
     }
@@ -42,8 +38,8 @@ class TrendingStrategy(override val mediaType: MediaType) : DiscoverContentStrat
 
     override fun getItems(state: HomeScreenState): List<Any> {
         return filterByMediaType(
-            movieList = state.trendingMovies,
-            seriesList = state.airingTodaySeries,
+            movieList = emptyList(),// state.trendingMovies,
+            seriesList = emptyList(),// state.airingTodaySeries,
             mediaType = mediaType
         )
     }
@@ -54,8 +50,8 @@ class MoreRecommendedStrategy(override val mediaType: MediaType) : DiscoverConte
 
     override fun getItems(state: HomeScreenState): List<Any> {
         return filterByMediaType(
-            movieList = state.moreRecommendedMovies,
-            seriesList = state.moreRecommendedSeries,
+            movieList = emptyList(),// state.moreRecommendedMovies,
+            seriesList = emptyList(),// state.moreRecommendedSeries,
             mediaType = mediaType
         )
     }
@@ -66,8 +62,8 @@ class FreeToWatchStrategy(override val mediaType: MediaType) : DiscoverContentSt
 
     override fun getItems(state: HomeScreenState): List<Any> {
         return filterByMediaType(
-            movieList = state.freeToWatchMovies,
-            seriesList = state.onTvSeries,
+            movieList = emptyList(),// state.freeToWatchMovies,
+            seriesList = emptyList(),// state.onTvSeries,
             mediaType = mediaType
         )
     }
@@ -78,8 +74,8 @@ class UpComingStrategy(override val mediaType: MediaType) : DiscoverContentStrat
 
     override fun getItems(state: HomeScreenState): List<Any> {
         return filterByMediaType(
-            movieList = state.upcomingMovies,
-            seriesList = state.onTvSeries,
+            movieList = emptyList(),// state.upcomingMovies,
+            seriesList = emptyList(),// state.onTvSeries,
             mediaType = mediaType
         )
     }

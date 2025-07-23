@@ -1,6 +1,6 @@
 package com.cairosquad.ui.home.content
 
-import HomeCategoriesScreen
+import HomeScreenContentCategoriesTab
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -22,8 +22,10 @@ import com.cairosquad.design_system.basic_component.TabRow
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.R
 import com.cairosquad.ui.movio_component.AppBar
+import com.cairosquad.ui.movio_component.MediaSectionLayoutType
 import com.cairosquad.viewmodel.home.HomeInteractionsListener
 import com.cairosquad.viewmodel.home.HomeScreenState
+import com.cairosquad.viewmodel.util.MediaContentType
 
 @Composable
 fun HomeScreenContent(
@@ -34,7 +36,7 @@ fun HomeScreenContent(
 
     Crossfade(screenState.selectedTab) { selectedTab ->
         when (selectedTab) {
-            HomeScreenState.TabType.ALL -> {
+            HomeScreenState.Tab.ALL -> {
                 HomeScreenContentAllTab(
                     screenState = screenState,
                     listener = listener,
@@ -42,7 +44,7 @@ fun HomeScreenContent(
                 )
             }
 
-            HomeScreenState.TabType.MOVIES -> {
+            HomeScreenState.Tab.MOVIES -> {
                 HomeScreenContentMoviesTab(
                     screenState = screenState,
                     listener = listener,
@@ -50,7 +52,7 @@ fun HomeScreenContent(
                 )
             }
 
-            HomeScreenState.TabType.TV_SHOWS -> {
+            HomeScreenState.Tab.TV_SHOWS -> {
                 HomeScreenContentSeriesTab(
                     screenState = screenState,
                     listener = listener,
@@ -58,8 +60,8 @@ fun HomeScreenContent(
                 )
             }
 
-            HomeScreenState.TabType.CATEGORIES -> {
-                HomeCategoriesScreen(
+            HomeScreenState.Tab.CATEGORIES -> {
+                HomeScreenContentCategoriesTab(
                     modifier = Modifier
                         .statusBarsPadding()
                         .padding(top = 48.dp)
@@ -77,7 +79,6 @@ fun HomeScreenContent(
         listener = listener,
         scrollState = scrollState
     )
-
 }
 
 @Composable
@@ -124,4 +125,15 @@ private fun TobContent(
     }
 }
 
-
+fun getMediaSectionLayout(mediaContentType: MediaContentType): MediaSectionLayoutType {
+    return when (mediaContentType) {
+        MediaContentType.TOP_RATING -> MediaSectionLayoutType.LazyRow
+        MediaContentType.TRENDING -> MediaSectionLayoutType.LazyHorizontalGrid(3)
+        MediaContentType.FREE_TO_WATCH -> MediaSectionLayoutType.LazyRow
+        MediaContentType.UPCOMING -> MediaSectionLayoutType.LazyRow
+        MediaContentType.NOW_PLAYING -> MediaSectionLayoutType.LazyRow
+        MediaContentType.MORE_RECOMMENDED -> MediaSectionLayoutType.LazyVerticalGrid(158)
+        MediaContentType.AIRING_TODAY -> MediaSectionLayoutType.LazyRow
+        MediaContentType.ON_TV -> MediaSectionLayoutType.LazyRow
+    }
+}
