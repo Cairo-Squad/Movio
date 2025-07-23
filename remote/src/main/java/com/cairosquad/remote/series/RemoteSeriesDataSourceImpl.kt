@@ -9,6 +9,7 @@ import com.cairosquad.repository.series.data_source.remote.RemoteSeriesDataSourc
 import com.cairosquad.repository.series.data_source.remote.dto.EpisodeRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeasonRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesDetailsRemoteDto
+import java.time.LocalDate
 
 class RemoteSeriesDataSourceImpl(
     private val seriesApiService: SeriesApiService
@@ -65,17 +66,32 @@ class RemoteSeriesDataSourceImpl(
     }
 
     override suspend fun getOnTvSeries(page: Int,categoryId : String?): List<SeriesRemoteDto> {
-        return safeCallApi { seriesApiService.getOnTvSeries(page,categoryId) }
+        val today = LocalDate.now()
+        val oneWeekAgo = today.minusDays(7)
+        return safeCallApi { seriesApiService.getOnTvSeries(page,categoryId,
+            minDate = oneWeekAgo.toString(), maxDate = today.toString()
+            ) }
             .results?.filterNotNull().orEmpty()
     }
 
     override suspend fun getAiringTodaySeries(page: Int,categoryId : String?): List<SeriesRemoteDto> {
-        return safeCallApi { seriesApiService.getAiringTodaySeries(page,categoryId) }
+        val today = LocalDate.now()
+
+        val minDate = today.toString()
+        val maxDate = today.toString()
+        return safeCallApi { seriesApiService.getAiringTodaySeries(page,categoryId,
+            minDate = minDate,maxDate = maxDate
+            ) }
             .results?.filterNotNull().orEmpty()
     }
 
     override suspend fun getTrendingSeries(page: Int,categoryId : String?): List<SeriesRemoteDto> {
-        return safeCallApi { seriesApiService.getTrendingSeries(page,categoryId) }
+        val today = LocalDate.now()
+        val thirtyDaysAgo = today.minusDays(30)
+        return safeCallApi { seriesApiService.getTrendingSeries(page,categoryId,
+            minDate = thirtyDaysAgo.toString(),
+            maxDate = today.toString()
+        ) }
             .results?.filterNotNull().orEmpty()
     }
 
