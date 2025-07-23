@@ -353,10 +353,7 @@ private fun PageIndication(
 
             Box(
                 modifier = Modifier
-                    .size(
-                        width = width,
-                        height = 5.dp
-                    )
+                    .size(width = width, height = 5.dp)
                     .clip(CircleShape)
                     .background(color)
             )

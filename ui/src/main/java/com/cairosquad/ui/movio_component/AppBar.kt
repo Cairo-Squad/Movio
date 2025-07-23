@@ -12,8 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -53,12 +51,7 @@ fun AppBar(modifier: Modifier = Modifier) {
                 .padding(8.dp)
                 .clip(CircleShape)
                 .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Theme.color.brand.primary,
-                            Color(0xFFA491E9)
-                        )
-                    )
+                    brush = Theme.color.gradiant.logo
                 ),
             painter = painterResource(com.cairosquad.ui.R.drawable.user_profile),
             contentDescription =  stringResource(com.cairosquad.ui.R.string.user_profile_image)
