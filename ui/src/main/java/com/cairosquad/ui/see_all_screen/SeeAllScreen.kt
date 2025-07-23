@@ -63,7 +63,7 @@ fun SeeAllScreen(
 
     val navController = LocalNavController.current
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(contentType, mediaType) {
         viewModel.loadData(
             contentType = contentType,
             mediaType = mediaType
