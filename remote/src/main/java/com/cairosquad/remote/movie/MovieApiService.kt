@@ -37,28 +37,55 @@ interface MovieApiService {
         @Query("page") page: Int
     ): CreditResponse
 
-    @GET("movie/top_rated")
+    @GET("discover/movie")
     suspend fun getTopRatingMovies(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String? = null
+        @Query("with_genres") withGenres: String? = null,
+        @Query("sort_by") sortBy: String = "vote_average.desc",
+        @Query("vote_count.gte") voteCountGte: Int = 200,
+        @Query("without_genres") withoutGenres: String = "99,10755",
+        @Query("include_adult") includeAdult: Boolean = false,
+        @Query("include_video") includeVideo: Boolean = false,
+        @Query("language") language: String = "en-US"
     ): ResultResponse<MovieRemoteDto>
 
-    @GET("movie/upcoming")
+    @GET("discover/movie")
     suspend fun getUpcomingMovies(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String? = null
+        @Query("with_genres") withGenres: String? = null,
+        @Query("sort_by") sortBy: String = "popularity.desc",
+        @Query("include_adult") includeAdult: Boolean = false,
+        @Query("include_video") includeVideo: Boolean = false,
+        @Query("language") language: String = "en-US",
+        @Query("with_release_type") releaseType: String = "2|3",
+        @Query("release_date.gte") minDate: String? = null,
+        @Query("release_date.lte") maxDate: String? = null
     ): ResultResponse<MovieRemoteDto>
 
-    @GET("movie/now_playing")
+    @GET("discover/movie")
     suspend fun getNowPlayingMovies(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String? = null
+        @Query("with_genres") withGenres: String? = null,
+        @Query("sort_by") sortBy: String = "popularity.desc",
+        @Query("include_adult") includeAdult: Boolean = false,
+        @Query("include_video") includeVideo: Boolean = false,
+        @Query("language") language: String = "en-US",
+        @Query("with_release_type") releaseType: String = "2|3",
+        @Query("release_date.gte") minDate: String? = null,
+        @Query("release_date.lte") maxDate: String? = null
     ): ResultResponse<MovieRemoteDto>
 
-    @GET("trending/movie/day")
+    @GET("discover/movie")
     suspend fun getTrendingMovies(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String? = null
+        @Query("with_genres") withGenres: String? = null,
+        @Query("sort_by") sortBy: String = "popularity.desc",
+        @Query("vote_count.gte") voteCountGte: Int = 50,
+        @Query("release_date.gte") minDate: String? = null,
+        @Query("release_date.lte") maxDate: String? = null,
+        @Query("include_adult") includeAdult: Boolean = false,
+        @Query("include_video") includeVideo: Boolean = false,
+        @Query("language") language: String = "en-US"
     ): ResultResponse<MovieRemoteDto>
 
 
