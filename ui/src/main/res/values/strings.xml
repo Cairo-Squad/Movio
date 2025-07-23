@@ -23,4 +23,5 @@
     <string name="airing_today">Airing Today</string>
     <string name="on_tv">On TV</string>
     <string name="now_playing">Now Playing</string>
+    <string name="genre_all">All</string>
 </resources>

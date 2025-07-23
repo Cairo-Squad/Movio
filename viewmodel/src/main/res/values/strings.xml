@@ -9,7 +9,7 @@
     <string name="airing_today">Airing Today</string>
     <string name="on_tv">On TV</string>
     <string name="now_playing">Now Playing</string>
-    <string name="all">All</string>
+    <string name="sorting_type_all">All</string>
     <string name="popularity">Popularity</string>
     <string name="latest">Latest</string>
 </resources>

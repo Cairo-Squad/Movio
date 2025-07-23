@@ -83,6 +83,4 @@ class RemoteMovieDataSourceImpl(
         return safeCallApi { apiService.getAllMovies(page,categoryId,sortBy) }
             .results?.filterNotNull().orEmpty()
     }
-
-
 }

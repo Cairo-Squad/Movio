@@ -26,6 +26,7 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.cairosquad.ui.R
 import com.cairosquad.ui.movio_component.CategoriesChips
 import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.viewmodel.home.HomeInteractionsListener
@@ -54,7 +55,8 @@ fun HomeScreenContentCategoriesTab(
         ) {
             CategoriesChips(
                 modifier = Modifier.padding(top = 16.dp),
-                categories = screenState.genres.map { it.name },
+                categories = listOf(stringResource(R.string.genre_all))
+                        + screenState.genres.drop(1).map { it.name },
                 selectedChipIndex = screenState.selectedGenreIndex,
                 onChipSelected = { index ->
                     listener.onGenreSelected(index)

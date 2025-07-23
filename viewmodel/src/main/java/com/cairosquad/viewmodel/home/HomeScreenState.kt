@@ -1,4 +1,4 @@
-package com.cairosquad.viewmodel.home.state
+package com.cairosquad.viewmodel.home
 
 import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.exception.ErrorStatus
@@ -44,29 +44,29 @@ data class HomeScreenState(
         companion object {
             val defaultGenre = GenreUiState(
                 id = null,
-                name = "All"
+                name = "ALL GENRES"
             )
         }
     }
 
-        enum class ScreenStatus {
-            LOADING,
-            SUCCESS,
-            FAILED
-        }
+    enum class ScreenStatus {
+        LOADING,
+        SUCCESS,
+        FAILED
+    }
 
-        enum class Tab {
-            ALL,
-            MOVIES,
-            TV_SHOWS,
-            CATEGORIES
-        }
+    enum class Tab {
+        ALL,
+        MOVIES,
+        TV_SHOWS,
+        CATEGORIES
+    }
 
     enum class SortingType(val titleId: Int) {
-            ALL(R.string.all),
-            POPULARITY(R.string.popularity),
-            LATEST(R.string.latest)
-        }
+        ALL(R.string.sorting_type_all),
+        POPULARITY(R.string.popularity),
+        LATEST(R.string.latest)
+    }
 
 
 }
