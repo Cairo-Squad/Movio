@@ -20,6 +20,8 @@ import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import com.cairosquad.viewmodel.home.effect.HomeEffect
 import com.cairosquad.viewmodel.home.listner.HomeInteractionsListener
+import com.cairosquad.viewmodel.home.model.DiscoverType
+import com.cairosquad.viewmodel.home.model.MediaType
 import com.cairosquad.viewmodel.home.state.HomeScreenState
 
 class HomeViewModel(
@@ -202,6 +204,26 @@ class HomeViewModel(
             it.copy(selectedFilter = filter)
         }
 
+    }
+
+    override fun onClickSeeAllTopRated(mediaType: MediaType) {
+        sendEffect(HomeEffect.NavigateToSeeAllTopRating(DiscoverType.TRENDING, mediaType))
+    }
+
+    override fun onClickSeeAllTrending(mediaType: MediaType) {
+        sendEffect(HomeEffect.NavigateToSeeAllTrending(DiscoverType.TRENDING, mediaType))
+    }
+
+    override fun onClickSeeAllFreeToWatch(mediaType: MediaType) {
+        sendEffect(HomeEffect.NavigateToSeeAllFreeToWatch(DiscoverType.TRENDING, mediaType))
+    }
+
+    override fun onClickSeeAllUpcoming(mediaType: MediaType) {
+        sendEffect(HomeEffect.NavigateToSeeAllUpcoming(DiscoverType.TRENDING, mediaType))
+    }
+
+    override fun onClickSeeAllMoreRecommended(mediaType: MediaType) {
+        sendEffect(HomeEffect.NavigateToDiscover(DiscoverType.TRENDING, mediaType))
     }
 
 

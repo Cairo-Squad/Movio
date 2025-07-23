@@ -40,7 +40,6 @@ fun HomeScreenContent(
                 HomeScreenContentAllTab(
                     screenState = screenState,
                     listener = listener,
-                    discoverInteractionsListener = discoverInteractionsListener,
                     scrollState = scrollState
                 )
             }
@@ -49,7 +48,6 @@ fun HomeScreenContent(
                 HomeScreenContentMoviesTab(
                     screenState = screenState,
                     listener = listener,
-                    discoverInteractionsListener = discoverInteractionsListener,
                     scrollState = scrollState
                 )
             }
@@ -58,7 +56,6 @@ fun HomeScreenContent(
                 HomeScreenContentSeriesTab(
                     screenState = screenState,
                     listener = listener,
-                    discoverInteractionsListener = discoverInteractionsListener,
                     scrollState = scrollState
                 )
             }

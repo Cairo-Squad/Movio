@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.home.listner
 
+import com.cairosquad.viewmodel.home.model.MediaType
 import com.cairosquad.viewmodel.home.state.HomeScreenState
 
 interface HomeInteractionsListener {
@@ -11,4 +12,9 @@ interface HomeInteractionsListener {
     fun onClickSeeAllOnTv()
     fun onGenreSelected(genreIndex: Int)
     fun onFilterSelected(filter: HomeScreenState.FilterType)
+    fun onClickSeeAllTopRated(mediaType: MediaType)
+    fun onClickSeeAllTrending(mediaType: MediaType)
+    fun onClickSeeAllFreeToWatch(mediaType: MediaType)
+    fun onClickSeeAllUpcoming(mediaType: MediaType)
+    fun onClickSeeAllMoreRecommended(mediaType: MediaType)
 }

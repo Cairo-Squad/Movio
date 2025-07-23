@@ -68,26 +68,6 @@ private val getSeriesGenresUseCase: GetSeriesGenresUseCase,
         sendEffect(DiscoverEffect.NavigateSeries(seriesId))
     }
 
-    override fun onClickSeeAllTopRated(mediaType: MediaType) {
-        sendEffect(DiscoverEffect.NavigateToSeeAllTopRating(DiscoverType.TRENDING, mediaType))
-    }
-
-    override fun onClickSeeAllTrending(mediaType: MediaType) {
-        sendEffect(DiscoverEffect.NavigateToSeeAllTrending(DiscoverType.TRENDING, mediaType))
-    }
-
-    override fun onClickSeeAllFreeToWatch(mediaType: MediaType) {
-        sendEffect(DiscoverEffect.NavigateToSeeAllFreeToWatch(DiscoverType.TRENDING, mediaType))
-    }
-
-    override fun onClickSeeAllUpcoming(mediaType: MediaType) {
-        sendEffect(DiscoverEffect.NavigateToSeeAllUpcoming(DiscoverType.TRENDING, mediaType))
-    }
-
-    override fun onClickSeeAllMoreRecommended(mediaType: MediaType) {
-        sendEffect(DiscoverEffect.NavigateToDiscover(DiscoverType.TRENDING, mediaType))
-    }
-
     fun loadDiscoverContent(type: DiscoverType, mediaType: MediaType) {
         when (type) {
             DiscoverType.TRENDING -> {

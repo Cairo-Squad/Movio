@@ -15,16 +15,14 @@ import com.cairosquad.ui.movio_component.MediaHorizontalPagerItem
 import com.cairosquad.ui.movio_component.MediaSection
 import com.cairosquad.ui.movio_component.MediaSectionItem
 import com.cairosquad.ui.movio_component.MediaSectionLayoutType
-import com.cairosquad.viewmodel.home.listner.DiscoverInteractionsListener
 import com.cairosquad.viewmodel.home.listner.HomeInteractionsListener
-import com.cairosquad.viewmodel.home.state.HomeScreenState
 import com.cairosquad.viewmodel.home.model.MediaType
+import com.cairosquad.viewmodel.home.state.HomeScreenState
 
 @Composable
 fun HomeScreenContentMoviesTab(
     screenState: HomeScreenState,
     listener: HomeInteractionsListener,
-    discoverInteractionsListener: DiscoverInteractionsListener,
     scrollState: ScrollState
 ) {
     Column(
@@ -50,7 +48,7 @@ fun HomeScreenContentMoviesTab(
             },
             sectionTitle = stringResource(R.string.top_rating),
             mediaSectionLayoutType = MediaSectionLayoutType.LazyRow,
-            seeAllAction = { discoverInteractionsListener.onClickSeeAllTopRated(MediaType.Movies) }
+            seeAllAction = { listener.onClickSeeAllTopRated(MediaType.Movies) }
         )
 
         MediaSection(
@@ -62,7 +60,7 @@ fun HomeScreenContentMoviesTab(
             },
             sectionTitle = stringResource(R.string.free_to_watch),
             mediaSectionLayoutType = MediaSectionLayoutType.LazyRow,
-            seeAllAction = { discoverInteractionsListener.onClickSeeAllFreeToWatch(MediaType.Movies) }
+            seeAllAction = { listener.onClickSeeAllFreeToWatch(MediaType.Movies) }
         )
 
         MediaSection(
@@ -74,7 +72,7 @@ fun HomeScreenContentMoviesTab(
             },
             sectionTitle = stringResource(R.string.up_coming),
             mediaSectionLayoutType = MediaSectionLayoutType.LazyRow,
-            seeAllAction = { discoverInteractionsListener.onClickSeeAllUpcoming(MediaType.Movies) }
+            seeAllAction = { listener.onClickSeeAllUpcoming(MediaType.Movies) }
         )
 
         MediaSection(
@@ -88,7 +86,7 @@ fun HomeScreenContentMoviesTab(
             },
             sectionTitle = stringResource(R.string.more_recommended),
             mediaSectionLayoutType = MediaSectionLayoutType.LazyVerticalGrid(158),
-            seeAllAction = { discoverInteractionsListener.onClickSeeAllMoreRecommended(MediaType.Movies) }
+            seeAllAction = { listener.onClickSeeAllMoreRecommended(MediaType.Movies) }
         )
     }
 }
