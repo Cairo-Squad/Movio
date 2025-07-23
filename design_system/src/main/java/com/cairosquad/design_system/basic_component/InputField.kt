@@ -1,9 +1,16 @@
 package com.cairosquad.design_system.basic_component
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,7 +18,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -31,12 +37,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
@@ -51,6 +59,7 @@ fun InputField(
     modifier: Modifier = Modifier,
     placeholder: String = "",
     error: String = "",
+    isErrorMessageShown: Boolean = true,
     isSingleLine: Boolean = true,
     isPasswordField: Boolean = false,
     readOnly: Boolean = false,
@@ -65,25 +74,43 @@ fun InputField(
     var textFieldValue by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue(text = value, selection = TextRange(value.length)))
     }
-
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
-    val hasFocusGradient = listOf(
+
+
+    val hasFocusGradientColors = listOf(
         Theme.color.brand.onPrimary,
         Theme.color.brand.primary
     )
-    val borderColor = if (error.isBlank())
-        if (hasFocus) {
-            Brush.horizontalGradient(
-                if (isRtl) {
-                    hasFocusGradient.reversed()
-                } else {
-                    hasFocusGradient
-                }
-            )
+    val hasFocusGradient = Brush.horizontalGradient(
+        if (isRtl) {
+            hasFocusGradientColors.reversed()
         } else {
-            SolidColor(Color.Transparent)
+            hasFocusGradientColors
         }
-    else SolidColor(Theme.color.system.errorContainer)
+    )
+    val noErrorBorder = if (hasFocus) {
+        hasFocusGradient
+    } else {
+        SolidColor(Color.Transparent)
+    }
+
+    val errorGradientColors = listOf(
+        Theme.color.system.onError,
+        Theme.color.system.errorContainer
+    )
+    val errorBorder = Brush.horizontalGradient(
+        if (isRtl) {
+            errorGradientColors.reversed()
+        } else {
+            errorGradientColors
+        }
+    )
+
+    val borderColor = if (error.isBlank()) {
+        noErrorBorder
+    } else {
+        errorBorder
+    }
 
     Column(
         modifier = modifier
@@ -128,6 +155,7 @@ fun InputField(
                     TextFieldIcon(
                         leadingIcon,
                         hasFocus,
+                        error = error.isNotBlank(),
                         modifier = Modifier.padding(end = 8.dp)
                     )
                     Box(
@@ -148,6 +176,7 @@ fun InputField(
                         trailingIcon,
                         hasFocus,
                         modifier = Modifier.padding(start = 8.dp),
+                        error = error.isNotBlank(),
                         onTrailingIconClick,
                     )
                 }
@@ -158,14 +187,28 @@ fun InputField(
             visualTransformation = if (isPasswordField) PasswordVisualTransformation() else VisualTransformation.None,
         )
 
-        if (error.isNotBlank()) {
-            BasicText(
-                text = "* $error",
-                style = Theme.textStyle.label.smallRegular12.copy(
-                    color = Theme.color.system.onErrorContainer
-                ),
-                modifier = Modifier.padding(top = 4.dp)
-            )
+        AnimatedVisibility(
+            error.isNotBlank() && isErrorMessageShown,
+            modifier = Modifier.padding(top = 12.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.info_circle),
+                    contentDescription = stringResource(R.string.icon),
+                    tint = Theme.color.system.errorContainer,
+                    modifier = Modifier.size(16.dp)
+                )
+                Text(
+                    text = error,
+                    style = Theme.textStyle.label.smallRegular12,
+                    color = Theme.color.system.errorContainer,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 2
+                )
+            }
         }
     }
 }
@@ -175,23 +218,37 @@ private fun TextFieldIcon(
     @DrawableRes icon: Int?,
     isFocused: Boolean,
     modifier: Modifier = Modifier,
+    error: Boolean = false,
     onClick: (() -> Unit)? = null
 ) {
+    val tintColor = if (error) {
+        Theme.color.system.onError
+    } else {
+        if (isFocused) Theme.color.surfaces.onSurface else Theme.color.surfaces.onSurfaceContainer
+    }
+
     if (icon != null) {
-        Icon(
-            imageVector = ImageVector.vectorResource(icon),
-            contentDescription = null,
-            tint = if (isFocused) Theme.color.surfaces.onSurface else Theme.color.surfaces.onSurfaceContainer,
-            modifier = modifier
-                .size(20.dp)
-                .then(
-                    if (onClick != null) {
-                        Modifier.clickable(onClick = onClick)
-                    } else {
-                        Modifier
-                    }
-                )
-        )
+        AnimatedContent(
+            targetState = icon,
+            transitionSpec = {
+                scaleIn(animationSpec = tween(300)).togetherWith(scaleOut(animationSpec = tween(300)))
+            }
+        ) {
+            Icon(
+                imageVector = ImageVector.vectorResource(it),
+                contentDescription = null,
+                tint = tintColor,
+                modifier = modifier
+                    .size(20.dp)
+                    .then(
+                        if (onClick != null) {
+                            Modifier.clickable(onClick = onClick)
+                        } else {
+                            Modifier
+                        }
+                    )
+            )
+        }
     }
 }
 
