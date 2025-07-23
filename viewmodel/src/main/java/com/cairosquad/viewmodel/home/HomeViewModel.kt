@@ -227,25 +227,6 @@ class HomeViewModel(
         )
     }
 
-    private fun fetchMediaByCategory(genreId: Long? = null) {
-        tryToCall(
-            block = {
-                Pair(
-                    getAllMoviesUseCase.getAllMovies(page = 1, categoryId = genreId?.toString()),
-                    getAllSeriesUseCase.getAllSeries(page = 1, categoryId = genreId?.toString())
-                )
-            },
-            onSuccess = { (movies, series) ->
-                updateState {
-                    it.copy(
-                        categoriesMedia = movies.map(Movie::toHomeMediaUiState) + series.map(Series::toHomeMediaUiState)
-                    )
-                }
-            },
-            onError = ::handleError
-        )
-    }
-
 
     override fun onClickTab(tabIndex: Int) {
 
@@ -267,6 +248,26 @@ class HomeViewModel(
                 selectedGenreIndex = genreIndex
             )
         }
+    }
+
+    private fun fetchMediaByCategory(genreId: Long? = null) {
+        // TODO: need to manage the loading state
+        tryToCall(
+            block = {
+                Pair(
+                    getAllMoviesUseCase.getAllMovies(page = 1, categoryId = genreId?.toString()),
+                    getAllSeriesUseCase.getAllSeries(page = 1, categoryId = genreId?.toString())
+                )
+            },
+            onSuccess = { (movies, series) ->
+                updateState {
+                    it.copy(
+                        categoriesMedia = movies.map(Movie::toHomeMediaUiState) + series.map(Series::toHomeMediaUiState)
+                    )
+                }
+            },
+            onError = ::handleError
+        )
     }
 
     override fun onSortingSelected(filter: HomeScreenState.SortingType) {
