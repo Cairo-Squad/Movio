@@ -6,6 +6,19 @@ import kotlinx.serialization.Serializable
 data object SplashRoute
 
 @Serializable
+data object LoginRoute
+
+@Serializable
+data class ForgetPasswordWebViewRoute(
+    val url: String
+)
+
+@Serializable
+data class SignUpWebViewRoute(
+    val url: String
+)
+
+@Serializable
 data object AppRoute
 
 @Serializable

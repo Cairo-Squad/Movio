@@ -1,6 +1,5 @@
 package com.cairosquad.remote.utils.retrofit.interceptor
 
-import com.google.common.net.HttpHeaders.AUTHORIZATION
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
@@ -15,27 +14,28 @@ import org.junit.Test
 
 class AuthInterceptorTest {
 
+    private lateinit var interceptor: AuthInterceptor
     private lateinit var chain: Interceptor.Chain
 
     @Before
     fun setup() {
+        interceptor = AuthInterceptor("test-id")
         chain = mockk(relaxed = true)
     }
 
     @Test
     fun `interceptor should add Authorization header if token is provided`() {
         // Given
-        val token = "test"
-        val interceptor = AuthInterceptor { token }
-
+        val originalUrl = "https://api.example.com/resource".toHttpUrl()
         val originalRequest = Request.Builder()
-            .url(URL.toHttpUrl())
+            .url(originalUrl)
             .build()
 
         every { chain.request() } returns originalRequest
         every { chain.proceed(any()) } answers {
             val request = firstArg<Request>()
-            assertThat(request.header(AUTHORIZATION)).isEqualTo("Bearer $token")
+            val url = request.url
+            assertThat(url.queryParameter("session_id")).isEqualTo("test-id")
             mockk<Response>(relaxed = true)
         }
 
@@ -45,34 +45,8 @@ class AuthInterceptorTest {
         // Then
         verify(exactly = 1) {
             chain.proceed(withArg {
-                assertThat(it.header(AUTHORIZATION)).isEqualTo("Bearer $token")
-            })
-        }
-    }
-
-    @Test
-    fun `interceptor should NOT add Authorization header if token is null`() {
-        // Given
-        val interceptor = AuthInterceptor { null }
-
-        val originalRequest = Request.Builder()
-            .url(URL.toHttpUrl())
-            .build()
-
-        every { chain.request() } returns originalRequest
-        every { chain.proceed(any()) } answers {
-            val request = firstArg<Request>()
-            assertThat(request.header(AUTHORIZATION)).isNull()
-            mockk<Response>(relaxed = true)
-        }
-
-        // When
-        interceptor.intercept(chain)
-
-        // Then
-        verify(exactly = 1) {
-            chain.proceed(withArg {
-                assertThat(it.header(AUTHORIZATION)).isNull()
+                assertThat(it.url.queryParameter("session_id")).isEqualTo("test-id")
+                assertThat(it.url.encodedPath).isEqualTo("/resource")
             })
         }
     }

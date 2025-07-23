@@ -2,8 +2,8 @@ package com.cairosquad.repository.utils.mappers
 
 import com.cairosquad.domain.exception.DUnauthorizedException
 import com.cairosquad.domain.exception.DomainEmptyResponseException
-import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.exception.DomainJsonParsingException
+import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.exception.NetworkException
 import com.cairosquad.domain.exception.UnknownException
@@ -19,14 +19,16 @@ import com.cairosquad.repository.utils.exception.RepoJsonParsingException
 import com.cairosquad.repository.utils.exception.RequestTimeoutException
 import com.cairosquad.repository.utils.exception.ServerException
 import com.cairosquad.repository.utils.exception.TooManyRequestsException
-import com.cairosquad.repository.utils.exception.UnknownDataSourceException
 import com.cairosquad.repository.utils.exception.UnauthorizedException
+import com.cairosquad.repository.utils.exception.UnknownDataSourceException
 
 suspend fun <T> tryToCall(execute: suspend () -> T): T {
     return try {
         execute()
     } catch (exception: DataSourceException) {
         throw getDomainExceptionFromDataException(exception)
+    } catch (exception: Exception) {
+        throw UnknownException(exception.message ?: "")
     }
 }
 
