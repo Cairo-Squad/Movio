@@ -35,16 +35,12 @@ import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.TestWatcher
-import org.junit.runner.Description
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
@@ -54,9 +50,6 @@ import kotlin.test.assertTrue
 class SeeAllViewModelTest {
 
     private lateinit var viewModel: SeeAllViewModel
-
-    @get:Rule
-    val testDispatcherRule = TestDispatcherRule()
 
     private val testDispatcher = StandardTestDispatcher()
     private val getFreeToWatchMoviesUseCase = mockk<GetFreeToWatchMoviesUseCase>()
@@ -526,19 +519,5 @@ class SeeAllViewModelTest {
             val (_, seriesFetcher) = viewModel.getDataFetcher(type)
             assertEquals(testSeries, seriesFetcher(testPage, null))
         }
-    }
-}
-
-@OptIn(ExperimentalCoroutinesApi::class)
-class TestDispatcherRule(
-    val testDispatcher: TestDispatcher = StandardTestDispatcher()
-) : TestWatcher() {
-
-    override fun starting(description: Description) {
-        Dispatchers.setMain(testDispatcher)
-    }
-
-    override fun finished(description: Description) {
-        Dispatchers.resetMain()
     }
 }

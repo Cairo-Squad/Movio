@@ -1,5 +1,7 @@
 package com.cairosquad.viewmodel.base
 
+import io.mockk.every
+import io.mockk.mockkStatic
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -70,6 +72,10 @@ class BaseViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
+
+        mockkStatic(Dispatchers::class)
+        every { Dispatchers.IO } returns testDispatcher
+
         viewModel = TestViewModel(TestState(), testDispatcher)
     }
 
