@@ -7,25 +7,21 @@ import com.cairosquad.domain.exception.NetworkException
 import com.cairosquad.domain.exception.UnknownException
 import com.cairosquad.entity.Movie
 import com.cairosquad.viewmodel.exception.ErrorStatus
-import com.cairosquad.viewmodel.search.SearchScreenState
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlinx.coroutines.test.*
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
 
@@ -70,7 +66,7 @@ class ForYouViewModelTest {
         advanceUntilIdle()
 
         assertNotNull(viewModel.screenState.value.forYou)
-        assertEquals(ForYouState.ScreenStatus.LOADING, viewModel.screenState.value.screenStatus)
+        assertEquals(ForYouState.ScreenStatus.SUCCESS, viewModel.screenState.value.screenStatus)
     }
 
     @Test
@@ -103,7 +99,7 @@ class ForYouViewModelTest {
         advanceUntilIdle()
 
         assertNotNull(viewModel.screenState.value.forYou)
-        assertEquals(ForYouState.ScreenStatus.LOADING, viewModel.screenState.value.screenStatus)
+        assertEquals(ForYouState.ScreenStatus.SUCCESS, viewModel.screenState.value.screenStatus)
     }
 
     @Test
