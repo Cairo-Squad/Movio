@@ -22,7 +22,6 @@ import com.cairosquad.viewmodel.search.toUiState
 import com.google.common.truth.Truth.assertThat
 import io.mockk.Runs
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -593,8 +592,6 @@ class SearchViewModelTest {
         assertThat(state.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
         assertThat(state.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
     }
-
-
 
     suspend fun waitUntil(
         timeoutMillis: Long = 3000,
