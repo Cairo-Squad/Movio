@@ -1,6 +1,7 @@
 package com.cairosquad.viewmodel.home
 
 import com.cairosquad.domain.exception.MovioException
+import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.usecase.movies.GetAllMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetFreeToWatchMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetMoreRecommendedMoviesUseCase
@@ -251,7 +252,6 @@ class HomeViewModel(
     }
 
     private fun fetchMediaByCategory(genreId: Long? = null) {
-        // TODO: need to manage the loading state
         tryToCall(
             block = {
                 Pair(
@@ -278,12 +278,46 @@ class HomeViewModel(
     }
 
     private fun sortCategoriesMedia() {
-        if (screenState.value.selectedGenreIndex == 0) return
-        when (screenState.value.selectedSortingType) {
-            HomeScreenState.SortingType.ALL -> {} // TODO
-            HomeScreenState.SortingType.POPULARITY -> {} // TODO
-            HomeScreenState.SortingType.LATEST -> {} // TODO
-        }
+        val genre = screenState.value.genres[screenState.value.selectedGenreIndex]
+        tryToCall(
+            block = { when (screenState.value.selectedSortingType) {
+                HomeScreenState.SortingType.ALL -> {
+                     Pair(
+                        getAllMoviesUseCase.getAllMovies(page = 1, categoryId = genre.id?.toString()),
+                        getAllSeriesUseCase.getAllSeries(page = 1, categoryId = genre.id?.toString())
+                    )
+                }
+                HomeScreenState.SortingType.POPULARITY -> {
+                    Pair(
+                        getAllMoviesUseCase.getAllMovies(page = 1, categoryId = genre.id?.toString(),
+                            SortType.POPULAR),
+                        getAllSeriesUseCase.getAllSeries(page = 1, categoryId = genre.id?.toString(),
+                            SortType.POPULAR)
+                    )
+                }
+                HomeScreenState.SortingType.LATEST -> {
+                    Pair(
+                        getAllMoviesUseCase.getAllMovies(page = 1, categoryId = genre.id?.toString(),
+                            SortType.LATEST),
+                        getAllSeriesUseCase.getAllSeries(page = 1, categoryId = genre.id?.toString(),
+                            SortType.LATEST)
+                    )
+                }
+            } },
+            onSuccess = { (movies, series) ->
+                updateState {
+                    it.copy(
+                        categoriesMedia = combineTwoList(
+                            list1 = movies.map(Movie::toHomeMediaUiState),
+                            list2 = series.map(Series::toHomeMediaUiState)
+                        ),
+
+                    )
+                }
+            },
+            onError = ::handleError
+        )
+
     }
 
     private fun fetchSectionData(
@@ -328,4 +362,20 @@ class HomeViewModel(
             else -> ErrorStatus.UNKNOWN_ERROR
         }
     }
+    private fun <T> combineTwoList(
+        list1: List<T>,
+        list2: List<T>,
+    ): List<T> {
+        val mergedList = mutableListOf<T>()
+        val iterator1 = list1.iterator()
+        val iterator2 = list2.iterator()
+
+        while (iterator1.hasNext() || iterator2.hasNext()) {
+            if (iterator1.hasNext()) mergedList.add(iterator1.next())
+            if (iterator2.hasNext()) mergedList.add(iterator2.next())
+        }
+        return mergedList
+    }
+
+
 }
