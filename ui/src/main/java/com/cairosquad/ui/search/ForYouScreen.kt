@@ -28,6 +28,7 @@ import com.cairosquad.ui.search.content.for_you.EmptyMoviesContent
 import com.cairosquad.ui.search.content.for_you.ForYouFailedContent
 import com.cairosquad.ui.search.content.for_you.ForYouLoadingContent
 import com.cairosquad.ui.search.content.for_you.MoviesGridContent
+import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.viewmodel.foryou.ForYouEffect
 import com.cairosquad.viewmodel.foryou.ForYouInteractionListener
 import com.cairosquad.viewmodel.foryou.ForYouState
@@ -64,17 +65,15 @@ fun ForYouScreen(
         }
     }
 
-    LaunchedEffect(Unit) {
-        forYouViewModel.effect.collect { effect ->
-            when (effect) {
-                is ForYouEffect.NavigateToMovieDetails -> {
-                    navController.navigate(MovieRoute(effect.movieId))
-                }
-
-                else -> Unit
+    ObserveAsEffect(forYouViewModel.effect) { effect ->
+        when (effect) {
+            is ForYouEffect.NavigateToMovieDetails -> {
+                navController.navigate(MovieRoute(effect.movieId))
             }
+            // Add other effects if needed
         }
     }
+
     RefreshBox(
         isRefreshing = forYou.value.isRefreshing,
         onRefresh = forYouViewModel::onRefresh,
