@@ -212,7 +212,7 @@ private fun TrendingContentList(
                     imgUrl = mediaItem.posterPath,
                     rating = String.format(Locale.getDefault(), "%.1f", mediaItem.rating),
                     movieTitle = mediaItem.title,
-                    movieCategory = mediaItem.genres[0].name
+                    movieCategory = mediaItem.genres.firstOrNull()?.name ?: ""
                 )
             }
         }

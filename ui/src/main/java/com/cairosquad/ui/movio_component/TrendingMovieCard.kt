@@ -102,14 +102,16 @@ fun TrendingMovieCard(
                 }
 
             }
-            Chip(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .height(24.dp),
-                title = movieCategory,
-                textStyle = Theme.textStyle.label.smallRegular12,
-                isEnable = false
-            )
+            if (movieCategory.isNotEmpty()) {
+                Chip(
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .height(24.dp),
+                    title = movieCategory,
+                    textStyle = Theme.textStyle.label.smallRegular12,
+                    isEnable = false
+                )
+            }
         }
     }
 }
