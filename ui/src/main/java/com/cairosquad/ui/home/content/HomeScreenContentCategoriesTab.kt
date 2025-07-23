@@ -23,9 +23,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.R
 import com.cairosquad.ui.movio_component.CategoriesChips
 import com.cairosquad.ui.movio_component.MovieCard
@@ -46,7 +46,7 @@ fun HomeScreenContentCategoriesTab(
                 .align(Alignment.TopEnd)
                 .size(230.dp)
                 .blur(263.85.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
-                .background(Color(0x33734EF8), shape = CircleShape)
+                .background(Theme.color.surfaces.onSurfaceAt5, shape = CircleShape)
         )
         Column(
             modifier = Modifier

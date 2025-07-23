@@ -76,7 +76,7 @@ fun SplashScreen(
                     .scale(scaleBlurAnimation)
                     .size(200.dp)
                     .blur(radius = 263.85.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
-                    .background(Color(0x33734EF8), CircleShape)
+                    .background(Theme.color.surfaces.onSurfaceAt5, CircleShape)
             )
             Column(
                 modifier = Modifier.scale(scaleLogoAnimation),
