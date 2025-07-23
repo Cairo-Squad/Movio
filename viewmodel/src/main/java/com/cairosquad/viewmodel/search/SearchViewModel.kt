@@ -269,4 +269,5 @@ class SearchViewModel(
             else -> ErrorStatus.UNKNOWN_ERROR
         }
     }
+
 }
