@@ -35,10 +35,14 @@ fun SearchLoadingContent(
                 modifier = Modifier
                     .background(Theme.color.surfaces.surface),
                 value = state.query,
-                onValueChange = {  },
+                onValueChange = { },
                 placeholder = stringResource(R.string.search),
                 leadingIcon = R.drawable.search_bottom_nav,
-                onFocusChanged = { if (it) { listener.onClickSearchTextField() } },
+                onFocusChanged = {
+                    if (it) {
+                        listener.onClickSearchTextField()
+                    }
+                },
                 readOnly = true
             )
         }
