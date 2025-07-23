@@ -67,11 +67,10 @@ fun LoginScreen(
                 ForgetPasswordWebViewRoute(url = resetPasswordUrl)
             )
 
-            LoginEffect.NavigateToHome -> {
-                // TODO()
-            }
+            LoginEffect.NavigateToHome -> { navController.navigate(AppRoute) }
 
             LoginEffect.NavigateToGuestHome -> { navController.navigate(AppRoute) }
+
             LoginEffect.NavigateToSignUp -> navController.navigate(
                 SignUpWebViewRoute(url = signUpUrl)
             )
