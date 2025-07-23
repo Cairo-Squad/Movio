@@ -134,7 +134,7 @@ class MovieViewModel(
     }
 
     override fun onRateItClick() {
-        updateState { it.copy(isNoAccountBottomSheetOpen = true) }
+        updateState { it.copy(isRateBottomSheetOpen = true) }
     }
 
     override fun onPlayClick() {
@@ -142,7 +142,7 @@ class MovieViewModel(
     }
 
     override fun onAddToListClick() {
-        updateState { it.copy(isNoAccountBottomSheetOpen = true) }
+        updateState { it.copy(isAddToListBottomSheetOpen = true) }
     }
 
     override fun onSeeAllCastClick(movieId: Long) {
@@ -190,6 +190,22 @@ class MovieViewModel(
 
     override fun onDismissLoginBottomSheet() {
         updateState { it.copy(isNoAccountBottomSheetOpen = false) }
+    }
+
+    override fun onDismissRateBottomSheet() {
+        updateState { it.copy(isRateBottomSheetOpen = false) }
+    }
+
+    override fun onDismissAddToListBottomSheet() {
+        updateState { it.copy(isAddToListBottomSheetOpen = false) }
+    }
+
+    override fun onRateChange(rate: Int) {
+        updateState { it.copy(rate = rate) }
+    }
+
+    override fun onSubmitRateClicked(rate: Int) {
+        updateState { it.copy(isRateBottomSheetOpen = false) }
     }
 
     private fun setError(

@@ -31,7 +31,7 @@ data class MovieDetailsRemoteDto(
     @SerialName("vote_count")
     val voteCount: Int? = null
 ) {
-    fun toEntity() = Movie(
+    fun toEntity(trailerPath: String) = Movie(
         id = id,
         title = title.orEmpty(),
         rating = voteAverage?.toFloat() ?: 0f,
@@ -40,6 +40,6 @@ data class MovieDetailsRemoteDto(
         overview = overview.orEmpty(),
         releaseDate = TimeUtils.dateToLong(releaseDate ?: ""),
         runtimeMinutes = runtime ?: 0,
-        trailerPath = "" // TODO
+        trailerPath = trailerPath
     )
 }

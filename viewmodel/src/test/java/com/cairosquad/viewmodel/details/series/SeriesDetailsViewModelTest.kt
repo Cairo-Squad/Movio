@@ -93,15 +93,15 @@ class SeriesDetailsViewModelTest {
     }
 
     @Test
-    fun `oWHEN nAddToListClicked WHEN not logged in SHOULD show login bottom sheet`() = runTest {
+    fun `WHEN AddToListClicked WHEN not logged in SHOULD show login bottom sheet`() = runTest {
         viewModel.onAddToListClicked()
-        assertThat(viewModel.screenState.value.showLoginBottomSheet).isTrue()
+        assertThat(viewModel.screenState.value.showAddToListBottomSheet).isTrue()
     }
 
     @Test
     fun `onRateClicked WHEN not logged in SHOULD show login bottom sheet`() = runTest {
         viewModel.onRateClicked()
-        assertThat(viewModel.screenState.value.showLoginBottomSheet).isTrue()
+        assertThat(viewModel.screenState.value.showRateBottomSheet).isTrue()
     }
 
     @Test

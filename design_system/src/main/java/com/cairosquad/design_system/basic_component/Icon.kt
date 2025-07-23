@@ -29,7 +29,7 @@ fun Icon(
     modifier: Modifier = Modifier,
     tint: Color = Color.Unspecified
 ) {
-   Icon(
+    Icon(
         painter = painter,
         contentDescription = contentDescription,
         modifier = modifier,

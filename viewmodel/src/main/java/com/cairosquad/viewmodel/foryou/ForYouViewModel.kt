@@ -23,13 +23,19 @@ class ForYouViewModel(private val forYouPager: ForYouPager) :
         getForYouMovies()
     }
 
+    fun updateScreenStatus(status: ScreenStatus) {
+        updateState { it.copy(screenStatus = status) }
+    }
+
+    fun updateErrorStatus(errorStatus: ErrorStatus?) {
+        updateState { it.copy(errorStatus = errorStatus) }
+    }
+
     private fun getForYouMovies() {
-        updateState {
-            it.copy(
-                screenStatus = ScreenStatus.LOADING,
-                errorStatus = null
-            )
-        }
+        updateScreenStatus(ScreenStatus.LOADING)
+        updateErrorStatus(null)
+        updateState { it.copy(isEmpty = false) }
+
         tryToCall(
             block = {
                 val forYouMovies = cacheMappedPagingData(
@@ -37,28 +43,19 @@ class ForYouViewModel(private val forYouPager: ForYouPager) :
                     fetch = { forYouPager.movies() },
                     map = { it.toUiState() }
                 )
-
                 forYouMovies
             },
             onSuccess = { forYouMovies ->
-                updateState {
-                    it.copy(
-                        forYou = forYouMovies
-                    )
-                }
+                updateState { it.copy(forYou = forYouMovies) }
+                updateScreenStatus(ScreenStatus.SUCCESS)
             },
             onError = { e ->
-                updateState {
-                    it.copy(
-                        screenStatus = ScreenStatus.FAILED,
-                        errorStatus = handleSearchException(e)
-                    )
-                }
+                updateScreenStatus(ScreenStatus.FAILED)
+                updateErrorStatus(handleSearchException(e))
             },
             dispatcher = Dispatchers.IO
         )
     }
-
     private fun <T : Any, R : Any> cacheMappedPagingData(
         scope: CoroutineScope,
         fetch: () -> Flow<PagingData<T>>,
