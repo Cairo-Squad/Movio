@@ -54,9 +54,7 @@ class SeeAllViewModel(
             genreId = genreId
         )
 
-        updateState {
-            it.copy(selectedGenreIndex = genreIndex)
-        }
+        updateState { it.copy(selectedGenreIndex = genreIndex) }
     }
 
     override fun onClickMedia(mediaId: Long, isMovie: Boolean) {
@@ -83,31 +81,37 @@ class SeeAllViewModel(
 
         loadGenres()
 
-        val (moviesFetcher, seriesFetcher) = getDataFetcher(contentType)
-
         tryToCall(
-            block = {
-                when (mediaType) {
-                    MediaType.MOVIES -> {
-                        moviesFetcher(page, genreId).map(Movie::toSeeAllMediaUiState)
-                    }
-                    MediaType.SERIES -> {
-                        seriesFetcher(page, genreId).map(Series::toSeeAllMediaUiState)
-                    }
-                    MediaType.BOTH -> {
-                        combineTwoList(
-                            moviesFetcher(page, genreId).map(Movie::toSeeAllMediaUiState),
-                            seriesFetcher(page, genreId).map(Series::toSeeAllMediaUiState)
-                        )
-                    }
-                }
-            },
+            block = { loadDataBlock(page, genreId) },
             onSuccess = { result -> updateState { it.copy(mediaList = result) } },
             onError = ::handleError
         )
     }
 
-    fun <T> combineTwoList(
+    private suspend fun loadDataBlock(
+        page: Int = 1,
+        genreId: Long? = null
+    ): List<SeeAllScreenState.MediaUiState> {
+
+        val (moviesFetcher, seriesFetcher) = getDataFetcher(contentType)
+
+        return when (mediaType) {
+            MediaType.MOVIES -> {
+                moviesFetcher(page, genreId).map(Movie::toSeeAllMediaUiState)
+            }
+            MediaType.SERIES -> {
+                seriesFetcher(page, genreId).map(Series::toSeeAllMediaUiState)
+            }
+            MediaType.BOTH -> {
+                combineTwoList(
+                    moviesFetcher(page, genreId).map(Movie::toSeeAllMediaUiState),
+                    seriesFetcher(page, genreId).map(Series::toSeeAllMediaUiState)
+                )
+            }
+        }
+    }
+
+    private fun <T> combineTwoList(
         list1: List<T>,
         list2: List<T>,
     ): List<T> {
@@ -235,33 +239,33 @@ class SeeAllViewModel(
 
     fun loadGenres() {
         tryToCall(
-            block = {
-                when (mediaType) {
-                    MediaType.MOVIES -> {
-                        getMoviesGenresUseCase.getMoviesGenres()
-                            .map(Genre::toSeeAllGenreUiState)
-                    }
-                    MediaType.SERIES -> {
-                        getSeriesGenresUseCase.getSeriesGenres()
-                            .map(Genre::toSeeAllGenreUiState)
-                    }
-                    MediaType.BOTH -> {
-                        val movieGenres = getMoviesGenresUseCase.getMoviesGenres()
-                        val seriesGenres = getSeriesGenresUseCase.getSeriesGenres()
-
-                        buildSet {
-                            add(SeeAllScreenState.GenreUiState.defaultGenre)
-                            movieGenres.mapTo(this) { it.toSeeAllGenreUiState() }
-                            seriesGenres.mapTo(this) { it.toSeeAllGenreUiState() }
-                        }
-                    }
-                }
-            },
-            onSuccess = { genres ->
-                updateState { it.copy(genres = genres.toList()) }
-            },
+            block = ::loadGenresBlock,
+            onSuccess = { genres -> updateState { it.copy(genres = genres) } },
             onError = ::handleError
         )
+    }
+
+    private suspend fun loadGenresBlock(): List<SeeAllScreenState.GenreUiState> {
+        return when (mediaType) {
+            MediaType.MOVIES -> {
+                getMoviesGenresUseCase.getMoviesGenres()
+                    .map(Genre::toSeeAllGenreUiState)
+            }
+            MediaType.SERIES -> {
+                getSeriesGenresUseCase.getSeriesGenres()
+                    .map(Genre::toSeeAllGenreUiState)
+            }
+            MediaType.BOTH -> {
+                val movieGenres = getMoviesGenresUseCase.getMoviesGenres()
+                val seriesGenres = getSeriesGenresUseCase.getSeriesGenres()
+
+                buildSet {
+                    add(SeeAllScreenState.GenreUiState.defaultGenre)
+                    movieGenres.mapTo(this) { it.toSeeAllGenreUiState() }
+                    seriesGenres.mapTo(this) { it.toSeeAllGenreUiState() }
+                }.toList()
+            }
+        }
     }
 
     fun handleError(throwable: Throwable) {
