@@ -265,7 +265,6 @@ class SearchViewModel(
             is MovioException -> {
                 exceptionToErrorStatus(e)
             }
-
             else -> ErrorStatus.UNKNOWN_ERROR
         }
     }
