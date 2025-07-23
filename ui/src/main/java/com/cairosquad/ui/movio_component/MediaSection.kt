@@ -63,7 +63,7 @@ fun MediaSection(
                                 .clickable { onClickMedia(media.id, media.isMovie) },
                             imgUrl = media.photoPath,
                             movieTitle = media.title,
-                            movieCategory = "Documentary",
+                            movieCategory = media.genres.firstOrNull() ?: "",
                             rating = media.rating.toString()
                         )
                     }
@@ -140,7 +140,8 @@ data class MediaSectionItem(
     val title: String,
     val photoPath: String,
     val rating: Float,
-    val isMovie: Boolean
+    val isMovie: Boolean,
+    val genres: List<String>
 ){
     companion object {
 
@@ -150,7 +151,8 @@ data class MediaSectionItem(
                 title = media.title,
                 photoPath = media.posterPath,
                 rating = media.rating,
-                isMovie = media.isMovie
+                isMovie = media.isMovie,
+                genres = media.genres.map { it.name }
             )
         }
 
