@@ -256,7 +256,7 @@ class SearchViewModel(
 
     private fun setLoading() {
         updateState {
-            it.copy(screenStatus = SearchScreenState.ScreenStatus.LOADING, errorStatus = null)
+            it.copy(screenStatus = SearchScreenState.ScreenStatus.LOADING)
         }
     }
 
@@ -265,6 +265,7 @@ class SearchViewModel(
             is MovioException -> {
                 exceptionToErrorStatus(e)
             }
+
             else -> ErrorStatus.UNKNOWN_ERROR
         }
     }
