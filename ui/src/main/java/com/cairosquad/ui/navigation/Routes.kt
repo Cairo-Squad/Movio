@@ -1,5 +1,7 @@
 package com.cairosquad.ui.navigation
 
+import com.cairosquad.viewmodel.home.model.DiscoverType
+import com.cairosquad.viewmodel.home.model.MediaType
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -60,19 +62,12 @@ data class EpisodesRoute(
 data object ForYouRoute
 
 @Serializable
-data object TopRatingRoute
+data class DiscoverRoute(
+    val type: DiscoverType,
+    val mediaType: MediaType
+)
 
-@Serializable
-data object TrendingRoute
 
-@Serializable
-data object FreeToWatchRoute
-
-@Serializable
-data object UpComingRoute
-
-@Serializable
-data object MoreRecommendedRoute
 
 
 

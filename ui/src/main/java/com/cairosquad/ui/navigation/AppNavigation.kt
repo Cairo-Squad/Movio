@@ -1,19 +1,16 @@
 package com.cairosquad.ui.navigation
 
-import FreeToWatchScreen
-import MoreRecommendedScreen
-import TopRatingScreen
-import TrendingScreen
-import UpComingScreen
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.navigation.toRoute
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.AppScreen
@@ -26,7 +23,10 @@ import com.cairosquad.ui.details.TopCastScreen
 import com.cairosquad.ui.details.artist.ArtistScreen
 import com.cairosquad.ui.details.similar_movies.SimilarMoviesScreen
 import com.cairosquad.ui.details.similar_series.SimilarSeriesScreen
+import com.cairosquad.ui.home.screen.DiscoverScreen
 import com.cairosquad.ui.splash.SplashScreen
+import com.cairosquad.viewmodel.home.model.DiscoverType
+import com.cairosquad.viewmodel.home.model.MediaType
 
 
 @Composable
@@ -104,24 +104,20 @@ fun AppNavigation() {
                     seasonNumber = backStackEntry.toRoute<EpisodesRoute>().seasonNumber
                 )
             }
-            composable<TopRatingRoute> {
-                TopRatingScreen()
-            }
-            composable<TrendingRoute> {
-                TrendingScreen()
-            }
-            composable<FreeToWatchRoute> {
-                FreeToWatchScreen()
-            }
-            composable<UpComingRoute> {
-                UpComingScreen()
-            }
-            composable<MoreRecommendedRoute> {
-                MoreRecommendedScreen()
+            composable(
+                "discover/{type}/{mediaType}",
+                arguments = listOf(
+                    navArgument("type") { type = NavType.StringType },
+                    navArgument("mediaType") { type = NavType.StringType }
+                )
+            ) { backStackEntry ->
+                val type = DiscoverType.valueOf(backStackEntry.arguments?.getString("type")!!)
+                val mediaType = MediaType.valueOf(backStackEntry.arguments?.getString("mediaType")!!)
+                val route = DiscoverRoute(type, mediaType)
+                DiscoverScreen(route)
             }
         }
     }
 }
-
 val LocalNavController =
     staticCompositionLocalOf<NavHostController> { error("No nav controller provided") }

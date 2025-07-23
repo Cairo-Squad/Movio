@@ -58,7 +58,7 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.Icon
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
-import com.cairosquad.viewmodel.home.HomeScreenState
+import com.cairosquad.viewmodel.home.state.HomeScreenState
 import kotlinx.coroutines.delay
 import kotlin.math.absoluteValue
 

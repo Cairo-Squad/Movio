@@ -18,6 +18,9 @@ import com.cairosquad.domain.usecase.series.GetTopRatingSeriesUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
+import com.cairosquad.viewmodel.home.effect.HomeEffect
+import com.cairosquad.viewmodel.home.listner.HomeInteractionsListener
+import com.cairosquad.viewmodel.home.state.HomeScreenState
 
 class HomeViewModel(
     private val getFreeToWatchMoviesUseCase: GetFreeToWatchMoviesUseCase,
@@ -44,17 +47,19 @@ class HomeViewModel(
     private fun loadAllData() {
         loadPopularSeries()
         loadPopularMovies()
+
         loadTopRatingMovies()
         loadTrendingMovies()
-        loadNowPlayingMovies()
-        loadFreeToWatchMovies()
-        loadUpcomingMovies()
-        loadMoreRecommendedMovies()
-        loadTopRatingSeries()
-        loadAiringTodaySeries()
-        loadOnTvSeries()
-        loadMoreRecommendedSeries()
-        loadGenres()
+
+//        loadNowPlayingMovies()
+//        loadFreeToWatchMovies()
+//        loadUpcomingMovies()
+//        loadMoreRecommendedMovies()
+//        loadTopRatingSeries()
+//        loadAiringTodaySeries()
+//        loadOnTvSeries()
+//        loadMoreRecommendedSeries()
+       loadGenres()
     }
 
 
@@ -176,26 +181,6 @@ class HomeViewModel(
 
     override fun onClickSeries(seriesId: Long) {
         sendEffect(HomeEffect.NavigateSeries(seriesId))
-    }
-
-    override fun onClickSeeAllTopRated(isMovie: Boolean) {
-        sendEffect(HomeEffect.NavigateToSeeAllTopRated(isMovie))
-    }
-
-    override fun onClickSeeAllTrending() {
-        sendEffect(HomeEffect.NavigateToSeeAllTrending)
-    }
-
-    override fun onClickSeeAllFreeToWatch() {
-        sendEffect(HomeEffect.NavigateToSeeAllFreeToWatch)
-    }
-
-    override fun onClickSeeAllUpcoming() {
-        sendEffect(HomeEffect.NavigateToSeeAllUpcoming)
-    }
-
-    override fun onClickSeeAllMoreRecommended(isMovie: Boolean) {
-        sendEffect(HomeEffect.NavigateToSeeAllMoreRecommended(isMovie))
     }
 
     override fun onClickSeeAllAiringToday() {

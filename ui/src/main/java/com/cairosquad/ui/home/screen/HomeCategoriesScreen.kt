@@ -32,9 +32,9 @@ import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.CategoriesChips
 import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.ui.movio_component.StateMessage
-import com.cairosquad.viewmodel.home.HomeInteractionsListener
-import com.cairosquad.viewmodel.home.HomeScreenState
-import com.cairosquad.viewmodel.home.HomeScreenState.MovieUiState
+import com.cairosquad.viewmodel.home.listner.HomeInteractionsListener
+import com.cairosquad.viewmodel.home.state.HomeScreenState
+import com.cairosquad.viewmodel.home.state.HomeScreenState.MovieUiState
 
 @Composable
 fun HomeCategoriesScreen(
