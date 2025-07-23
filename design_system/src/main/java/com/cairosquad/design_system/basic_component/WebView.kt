@@ -11,14 +11,14 @@ import androidx.compose.ui.viewinterop.AndroidView
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun WebView(url: String, modifier: Modifier = Modifier) {
+fun WebView(webPageUrl: String, modifier: Modifier = Modifier) {
     AndroidView(
         factory = { context ->
             WebView(context).apply {
                 settings.javaScriptEnabled = true
                 settings.domStorageEnabled = true
                 webViewClient = WebViewClient()
-                loadUrl(url)
+                loadUrl(webPageUrl)
             }
         },
         modifier = modifier
