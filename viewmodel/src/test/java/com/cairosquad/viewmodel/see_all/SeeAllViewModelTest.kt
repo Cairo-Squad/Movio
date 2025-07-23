@@ -28,7 +28,9 @@ import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.util.MediaContentType
 import com.cairosquad.viewmodel.util.MediaType
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -78,6 +80,10 @@ class SeeAllViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
+
+        mockkStatic(Dispatchers::class)
+        every { Dispatchers.IO } returns testDispatcher
+
         viewModel = SeeAllViewModel(
             getFreeToWatchMoviesUseCase,
             getMoreRecommendedMoviesUseCase,

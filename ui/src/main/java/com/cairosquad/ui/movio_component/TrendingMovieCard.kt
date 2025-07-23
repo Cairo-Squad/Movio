@@ -29,6 +29,7 @@ import com.cairosquad.design_system.basic_component.Text
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
+import com.cairosquad.ui.BuildConfig
 import com.cairosquad.ui.R
 @Composable
 fun TrendingMovieCard(
@@ -49,7 +50,7 @@ fun TrendingMovieCard(
                     .fillMaxHeight()
                     .width(76.dp)
                     .clip(RoundedCornerShape(8.dp)),
-                model = "https://image.tmdb.org/t/p/w500$imgUrl",
+                model = BuildConfig.IMAGE_BASE_URL + imgUrl,
                 contentDescription = stringResource(com.cairosquad.design_system.R.string.movie_poster),
                 loadingPlaceholder = { LoadingMovieImage(Modifier.fillMaxSize()) }
             )

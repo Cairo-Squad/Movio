@@ -20,9 +20,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.Icon
 import com.cairosquad.design_system.theme.MovioTheme
-import com.cairosquad.design_system.R
 import com.cairosquad.design_system.theme.Theme
 
 @Composable
@@ -44,12 +44,7 @@ fun AppBar(modifier: Modifier = Modifier) {
                 .weight(1f),
             text = stringResource(R.string.movio),
             style = Theme.textStyle.display.largeBold18.copy(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Theme.color.brand.onPrimary,
-                        Color(0xFF7C5DF6)
-                    )
-                )
+                brush = Theme.color.gradiant.logo
             )
         )
         Image(

@@ -36,9 +36,10 @@ fun Chip(
     val textColor =
         if (isSelected) Theme.color.brand.onPrimary else Theme.color.surfaces.onSurfaceVariant
     val fontScale = LocalConfiguration.current.fontScale
+    val chipHeight = (32 - 15) * fontScale + 15 // 15 is the total vertical padding of 7.5
     Box(
         modifier = modifier
-            .height((32 * fontScale).dp)
+            .height(chipHeight.dp)
             .clip(CircleShape)
             .clickable(onClick = onClick, enabled = isEnable)
             .background(color = backgroundColor, shape = CircleShape)

@@ -54,6 +54,12 @@ val darkThemeColors = MovioColors(
         ),
         primaryGradient = Brush.horizontalGradient(
             colors = listOf(Color(0xFFB7A4FB), Color(0xFF724CF8))
+        ),
+        logo = Brush.verticalGradient(
+            colors = listOf(
+                Color(0xFFEBE6FE),
+                Color(0xFF7C5DF6)
+            )
         )
     )
 )
