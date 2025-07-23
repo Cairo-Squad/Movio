@@ -3,6 +3,7 @@ accompanistWebview = "0.36.0"
 agp = "8.5.2"
 
 converterKotlinxSerialization = "3.0.0"
+coreSplashscreen = "1.0.1"
 espressoCore = "3.6.1"
 mockwebserver = "5.1.0"
 okhttp = "5.0.0"
@@ -56,6 +57,7 @@ paging_version = "3.3.6"
 accompanist-webview = { module = "com.google.accompanist:accompanist-webview", version.ref = "accompanistWebview" }
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
 androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging_version" }
