@@ -107,7 +107,7 @@ class SeeAllViewModel(
         )
     }
 
-    private fun <T> combineTwoList(
+    fun <T> combineTwoList(
         list1: List<T>,
         list2: List<T>,
     ): List<T> {
@@ -233,7 +233,7 @@ class SeeAllViewModel(
     }
 
 
-    private fun loadGenres() {
+    fun loadGenres() {
         tryToCall(
             block = {
                 when (mediaType) {
@@ -264,7 +264,7 @@ class SeeAllViewModel(
         )
     }
 
-    private fun handleError(throwable: Throwable) {
+    fun handleError(throwable: Throwable) {
         updateState {
             it.copy(
                 errorStatus = handleHomeException(throwable),
