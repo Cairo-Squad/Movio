@@ -24,8 +24,6 @@ import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -91,12 +89,7 @@ fun SplashScreen(
                 BasicText(
                     text = stringResource(R.string.movio),
                     style = Theme.textStyle.display.largeBold24.copy(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                Theme.color.brand.onPrimary,
-                                Color(0xFF7C5DF6)
-                            )
-                        )
+                        brush = Theme.color.gradiant.logo
                     )
                 )
             }
