@@ -43,68 +43,47 @@ interface MovieApiService {
         @Path("movieId") movieId: Long
     ): VideoResponse
 
-    @GET("discover/movie")
+    @GET("discover/movie?sort_by=vote_average.desc&vote_count.gte=200&include_adult=false&include_video=false")
     suspend fun getTopRatingMovies(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String? = null,
-        @Query("sort_by") sortBy: String = "vote_average.desc",
-        @Query("vote_count.gte") voteCountGte: Int = 200,
-        @Query("without_genres") withoutGenres: String = "99,10755",
-        @Query("include_adult") includeAdult: Boolean = false,
-        @Query("include_video") includeVideo: Boolean = false,
+        @Query("with_genres") withGenres: String?,
     ): ResultResponse<MovieRemoteDto>
 
-    @GET("discover/movie")
+    @GET("discover/movie?sort_by=popularity.desc&include_adult=false&include_video=false&with_release_type=2|3")
     suspend fun getUpcomingMovies(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String? = null,
-        @Query("sort_by") sortBy: String = "popularity.desc",
-        @Query("include_adult") includeAdult: Boolean = false,
-        @Query("include_video") includeVideo: Boolean = false,
-        @Query("language") language: String = "en-US",
-        @Query("with_release_type") releaseType: String = "2|3",
-        @Query("release_date.gte") minDate: String? = null,
-        @Query("release_date.lte") maxDate: String? = null
+        @Query("with_genres") withGenres: String?,
+        @Query("release_date.gte") minDate: String?,
+        @Query("release_date.lte") maxDate: String?,
     ): ResultResponse<MovieRemoteDto>
 
-    @GET("discover/movie")
+    @GET("discover/movie?sort_by=popularity.desc&include_adult=false&include_video=false&with_release_type=2|3")
     suspend fun getNowPlayingMovies(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String? = null,
-        @Query("sort_by") sortBy: String = "popularity.desc",
-        @Query("include_adult") includeAdult: Boolean = false,
-        @Query("include_video") includeVideo: Boolean = false,
-        @Query("language") language: String = "en-US",
-        @Query("with_release_type") releaseType: String = "2|3",
-        @Query("release_date.gte") minDate: String? = null,
-        @Query("release_date.lte") maxDate: String? = null
+        @Query("with_genres") withGenres: String?,
+        @Query("release_date.gte") minDate: String?,
+        @Query("release_date.lte") maxDate: String?,
     ): ResultResponse<MovieRemoteDto>
 
-    @GET("discover/movie")
+    @GET("discover/movie?sort_by=popularity.desc&include_adult=false&include_video=false&vote_count.gte=50")
     suspend fun getTrendingMovies(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String? = null,
-        @Query("sort_by") sortBy: String = "popularity.desc",
-        @Query("vote_count.gte") voteCountGte: Int = 50,
-        @Query("release_date.gte") minDate: String? = null,
-        @Query("release_date.lte") maxDate: String? = null,
-        @Query("include_adult") includeAdult: Boolean = false,
-        @Query("include_video") includeVideo: Boolean = false,
+        @Query("with_genres") withGenres: String?,
+        @Query("release_date.lte") maxDate: String?,
+        @Query("release_date.gte") minDate: String?,
     ): ResultResponse<MovieRemoteDto>
 
 
-    @GET("discover/movie")
+    @GET("discover/movie?sort_by=vote_count.desc")
     suspend fun getMoreRecommendedMovies(
         @Query("page") page: Int,
-        @Query("sort_by") sortBy: String = "vote_count.desc",
-        @Query("with_genres") withGenres: String? = null,
+        @Query("with_genres") withGenres: String?,
     ): ResultResponse<MovieRemoteDto>
 
-    @GET("discover/movie")
+    @GET("discover/movie?with_watch_providers=free")
     suspend fun getFreeToWatchMovies(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String? = null,
-        @Query("with_watch_providers") free: String = "free" // TODO: find better way
+        @Query("with_genres") withGenres: String?,
     ): ResultResponse<MovieRemoteDto>
 
     @GET("discover/movie")

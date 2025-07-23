@@ -408,10 +408,6 @@ class RemoteMovieDataSourceImplTest {
             apiService.getUpcomingMovies(
                 page = page,
                 withGenres = categoryId,
-                sortBy = any(),
-                includeAdult = any(),
-                includeVideo = any(),
-                language = any(),
                 minDate = today.toString(),
                 maxDate = thirtyDaysFromNow.toString()
             )
@@ -427,10 +423,6 @@ class RemoteMovieDataSourceImplTest {
             apiService.getUpcomingMovies(
                 page = page,
                 withGenres = categoryId,
-                sortBy = any(),
-                includeAdult = any(),
-                includeVideo = any(),
-                language = any(),
                 minDate = today.toString(),
                 maxDate = thirtyDaysFromNow.toString()
             )
@@ -451,10 +443,6 @@ class RemoteMovieDataSourceImplTest {
             apiService.getNowPlayingMovies(
                 page = page,
                 withGenres = categoryId,
-                sortBy = any(),
-                includeAdult = any(),
-                includeVideo = any(),
-                language = any(),
                 minDate = twoWeeksAgo.toString(),
                 maxDate = today.toString()
             )
@@ -489,9 +477,6 @@ class RemoteMovieDataSourceImplTest {
             apiService.getTrendingMovies(
                 page = page,
                 withGenres = categoryId,
-                sortBy = any(),
-                includeAdult = any(),
-                includeVideo = any(),
                 minDate = lastMonth.toString(),
                 maxDate = today.toString()
             )
