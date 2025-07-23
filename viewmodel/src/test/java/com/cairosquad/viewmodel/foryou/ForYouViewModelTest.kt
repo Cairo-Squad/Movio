@@ -9,11 +9,13 @@ import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.search.SearchScreenState
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -33,6 +35,10 @@ class ForYouViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
+
+        mockkStatic(Dispatchers::class)
+        every { Dispatchers.IO } returns testDispatcher
+
         forYouPager = mockk()
         viewModel = ForYouViewModel(forYouPager)
     }
@@ -43,20 +49,20 @@ class ForYouViewModelTest {
     }
 
     @Test
-    fun `onRefresh should set isRefreshing true then false`() = runTest(testDispatcher) {
+    fun `onRefresh should set isRefreshing true then false`() = runTest {
         // Given
         every { forYouPager.movies() } returns flowOf(PagingData.empty())
 
         // When
         viewModel.onRefresh()
-        testDispatcher.scheduler.advanceUntilIdle()
+        advanceUntilIdle()
 
         // Then
         assertEquals(false, viewModel.screenState.value.isRefreshing)
     }
 
     @Test
-    fun `getForYouMovies should update forYou on success`() = runTest(testDispatcher) {
+    fun `getForYouMovies should update forYou on success`() = runTest {
         // Given
         val dummyMovies = listOf(
             Movie(id = 1, title = "A", rating = 8f, posterPath = "a.jpg",
@@ -77,7 +83,7 @@ class ForYouViewModelTest {
 
         // When
         viewModel = ForYouViewModel(forYouPager)
-        testDispatcher.scheduler.advanceUntilIdle()
+        advanceUntilIdle()
 
         // Then
         assertEquals(
@@ -122,7 +128,7 @@ class ForYouViewModelTest {
     }
 
     @Test
-    fun `cacheMappedPagingData should map Movie to UiState correctly`() = runTest(testDispatcher) {
+    fun `cacheMappedPagingData should map Movie to UiState correctly`() = runTest {
         // Given
         val originalMovies = listOf(
             Movie(id = 1, title = "Movie 1", rating = 8.5f, posterPath = "/poster1.jpg",
@@ -143,20 +149,20 @@ class ForYouViewModelTest {
 
         // When
         viewModel = ForYouViewModel(forYouPager)
-        testDispatcher.scheduler.advanceUntilIdle()
+        advanceUntilIdle()
 
         // Then
         assertNotNull(viewModel.screenState.value.forYou)
     }
 
     @Test
-    fun `cacheMappedPagingData should handle empty PagingData`() = runTest(testDispatcher) {
+    fun `cacheMappedPagingData should handle empty PagingData`() = runTest {
         // Given
         every { forYouPager.movies() } returns flowOf(PagingData.empty())
 
         // When
         viewModel = ForYouViewModel(forYouPager)
-        testDispatcher.scheduler.advanceUntilIdle()
+        advanceUntilIdle()
 
         // Then
         assertNotNull(viewModel.screenState.value.forYou)
@@ -167,7 +173,7 @@ class ForYouViewModelTest {
     }
 
     @Test
-    fun `cacheMappedPagingData should cache data in viewModelScope`() = runTest(testDispatcher) {
+    fun `cacheMappedPagingData should cache data in viewModelScope`() = runTest {
         // Given
         val movies = listOf(movie1)
         val pagingData = PagingData.from(movies)
@@ -175,7 +181,7 @@ class ForYouViewModelTest {
 
         // When
         viewModel = ForYouViewModel(forYouPager)
-        testDispatcher.scheduler.advanceUntilIdle()
+        advanceUntilIdle()
 
         // Then
         val cachedFlow = viewModel.screenState.value.forYou
