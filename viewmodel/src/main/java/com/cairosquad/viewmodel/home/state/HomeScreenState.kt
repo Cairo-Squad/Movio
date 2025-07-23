@@ -1,4 +1,4 @@
-package com.cairosquad.viewmodel.home
+package com.cairosquad.viewmodel.home.state
 
 import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.exception.ErrorStatus

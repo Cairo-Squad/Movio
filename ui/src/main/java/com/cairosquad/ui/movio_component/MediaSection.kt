@@ -21,7 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
-import com.cairosquad.viewmodel.home.HomeScreenState
+import com.cairosquad.viewmodel.home.state.HomeScreenState
 
 @Composable
 fun MediaSection(

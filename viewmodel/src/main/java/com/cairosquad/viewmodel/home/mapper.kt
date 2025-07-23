@@ -3,6 +3,7 @@ package com.cairosquad.viewmodel.home
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
+import com.cairosquad.viewmodel.home.state.HomeScreenState
 
 
 fun Movie.toHomeMediaUiState() = HomeScreenState.MediaUiState(
