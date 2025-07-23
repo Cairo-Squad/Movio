@@ -37,8 +37,8 @@ class LoginUseCaseTest {
         coVerify(exactly = 1) { loginRepository.logout() }
     }
 
-    companion object {
-        private const val USERNAME = "testUser"
-        private const val PASSWORD = "testPassword"
+    private companion object {
+        const val USERNAME = "testUser"
+        const val PASSWORD = "testPassword"
     }
 }

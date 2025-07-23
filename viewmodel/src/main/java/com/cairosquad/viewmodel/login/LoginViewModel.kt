@@ -50,32 +50,36 @@ class LoginViewModel(
                     password = screenState.value.password
                 )
             },
-            onSuccess = {
-                updateState {
-                    it.copy(
-                        error = null
-                    )
-                }
-                sendEffect(LoginEffect.NavigateToHome)
-            },
-            onError = {
-                handleError(it)
-            },
-            onStart = {
-                updateState {
-                    it.copy(
-                        isLoading = true
-                    )
-                }
-            },
-            onEnd = {
-                updateState {
-                    it.copy(
-                        isLoading = false
-                    )
-                }
-            }
+            onSuccess = ::onLoginSuccess,
+            onError = ::handleError,
+            onStart = ::startLoading,
+            onEnd = ::endLoading
         )
+    }
+
+    private fun endLoading() {
+        updateState {
+            it.copy(
+                isLoading = false
+            )
+        }
+    }
+
+    private fun startLoading() {
+        updateState {
+            it.copy(
+                isLoading = true
+            )
+        }
+    }
+
+    private fun onLoginSuccess(response: Unit) {
+        updateState {
+            it.copy(
+                error = null
+            )
+        }
+        sendEffect(LoginEffect.NavigateToHome)
     }
 
     override fun onContinueAsAGuestClick() {
