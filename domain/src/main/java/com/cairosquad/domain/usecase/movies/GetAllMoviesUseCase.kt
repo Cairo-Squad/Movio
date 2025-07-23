@@ -4,10 +4,14 @@ import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.repository.MoviesRepository
 import com.cairosquad.entity.Movie
 
-class GetAllMoviesUseCase (
+class GetAllMoviesUseCase(
     private val moviesRepository: MoviesRepository
-){
-    suspend fun getAllMovies(page: Int, categoryId: String? = null,sortType : SortType? = null) : List<Movie> {
-        return moviesRepository.getAllMovies(page,categoryId,sortType)
+) {
+    suspend fun getAllMovies(
+        page: Int,
+        categoryId: String? = null,
+        sortType: SortType? = null
+    ): List<Movie> {
+        return moviesRepository.getAllMovies(page, categoryId, sortType)
     }
 }

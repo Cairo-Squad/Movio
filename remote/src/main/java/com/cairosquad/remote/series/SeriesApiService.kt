@@ -48,34 +48,55 @@ interface SeriesApiService {
         @Path("seasonNumber") seasonNumber: Int
     ): SeasonResponse
 
-    @GET("tv/top_rated")
+    @GET("discover/tv")
     suspend fun getTopRatingSeries(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String? = null
+        @Query("with_genres") withGenres: String? = null,
+        @Query("sort_by") sortBy: String = "vote_average.desc",
+        @Query("vote_count.gte") voteCountGte: Int = 200,
+        @Query("include_adult") includeAdult: Boolean = false,
+        @Query("language") language: String = "en-US"
+    ): ResultResponse<SeriesRemoteDto>
+
+    @GET("discover/tv")
+    suspend fun getOnTvSeries(
+        @Query("page") page: Int,
+        @Query("with_genres") withGenres: String? = null,
+        @Query("sort_by") sortBy: String = "popularity.desc",
+        @Query("air_date.gte") minDate: String? = null,
+        @Query("air_date.lte") maxDate: String? = null,
+        @Query("include_adult") includeAdult: Boolean = false,
+        @Query("language") language: String = "en-US"
+    ): ResultResponse<SeriesRemoteDto>
+
+    @GET("discover/tv")
+    suspend fun getAiringTodaySeries(
+        @Query("page") page: Int,
+        @Query("with_genres") withGenres: String? = null,
+        @Query("sort_by") sortBy: String = "popularity.desc",
+        @Query("air_date.gte") minDate: String? = null,
+        @Query("air_date.lte") maxDate: String? = null,
+        @Query("include_adult") includeAdult: Boolean = false,
+        @Query("language") language: String = "en-US"
+    ): ResultResponse<SeriesRemoteDto>
+
+
+    @GET("discover/tv")
+    suspend fun getTrendingSeries(
+        @Query("page") page: Int,
+        @Query("with_genres") withGenres: String? = null,
+        @Query("sort_by") sortBy: String = "popularity.desc",
+        @Query("vote_count.gte") voteCountGte: Int = 50,
+        @Query("air_date.gte") minDate: String? = null,
+        @Query("air_date.lte") maxDate: String? = null,
+        @Query("include_adult") includeAdult: Boolean = false,
+        @Query("language") language: String = "en-US"
     ): ResultResponse<SeriesRemoteDto>
 
     @GET("discover/tv")
     suspend fun getMoreRecommendedSeries(
         @Query("page") page: Int,
         @Query("sort_by") sortBy: String = "vote_count.desc",
-        @Query("with_genres") withGenres: String? = null
-    ): ResultResponse<SeriesRemoteDto>
-
-    @GET("tv/on_the_air")
-    suspend fun getOnTvSeries(
-        @Query("page") page: Int,
-        @Query("with_genres") withGenres: String? = null
-    ): ResultResponse<SeriesRemoteDto>
-
-    @GET("tv/airing_today")
-    suspend fun getAiringTodaySeries(
-        @Query("page") page: Int,
-        @Query("with_genres") withGenres: String? = null
-    ): ResultResponse<SeriesRemoteDto>
-
-    @GET("trending/tv/day")
-    suspend fun getTrendingSeries(
-        @Query("page") page: Int,
         @Query("with_genres") withGenres: String? = null
     ): ResultResponse<SeriesRemoteDto>
 

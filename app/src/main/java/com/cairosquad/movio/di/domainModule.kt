@@ -1,6 +1,7 @@
 package com.cairosquad.movio.di
 
 import com.cairosquad.domain.usecase.artists.GetArtistDetailsUseCase
+import com.cairosquad.domain.usecase.movies.GetAllMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetFreeToWatchMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetMoreRecommendedMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetMovieDetailsUseCase
@@ -16,12 +17,14 @@ import com.cairosquad.domain.usecase.search.ClearSearchHistoryUseCase
 import com.cairosquad.domain.usecase.search.GetLocalSearchHistoryUseCase
 import com.cairosquad.domain.usecase.search.SearchUseCase
 import com.cairosquad.domain.usecase.series.GetAiringTodaySeriesUseCase
+import com.cairosquad.domain.usecase.series.GetAllSeriesUseCase
 import com.cairosquad.domain.usecase.series.GetMoreRecommendedSeriesUseCase
 import com.cairosquad.domain.usecase.series.GetOnTvSeriesUseCase
 import com.cairosquad.domain.usecase.series.GetPopularSeriesUseCase
 import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
 import com.cairosquad.domain.usecase.series.GetSeriesGenresUseCase
 import com.cairosquad.domain.usecase.series.GetTopRatingSeriesUseCase
+import com.cairosquad.domain.usecase.series.GetTrendingSeriesUseCase
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
@@ -50,4 +53,8 @@ val domainModule = module {
     singleOf(::GetPopularMoviesUseCase)
     singleOf(::GetMoviesGenresUseCase)
     singleOf(::GetSeriesGenresUseCase)
+    singleOf(::GetTrendingSeriesUseCase)
+    singleOf(::GetAllMoviesUseCase)
+    singleOf(::GetAllSeriesUseCase)
+
 }

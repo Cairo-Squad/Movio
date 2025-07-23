@@ -7,6 +7,7 @@ import com.cairosquad.repository.movie.data_source.remote.dto.MovieDetailsRemote
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
+import java.time.LocalDate
 
 class RemoteMovieDataSourceImpl(
     private val apiService: MovieApiService,
@@ -37,17 +38,28 @@ class RemoteMovieDataSourceImpl(
     }
 
     override suspend fun getUpcomingMovies(page: Int,categoryId: String?): List<MovieRemoteDto> {
-        return safeCallApi { apiService.getUpcomingMovies(page,categoryId) }
+        val today = LocalDate.now()
+        val thirtyDaysFromNow = today.plusDays(30)
+        return safeCallApi { apiService.getUpcomingMovies(page,categoryId,
+            minDate = today.toString(), maxDate = thirtyDaysFromNow.toString()
+        ) }
             .results?.filterNotNull().orEmpty()
     }
 
     override suspend fun getNowPlayingMovies(page: Int,categoryId: String?): List<MovieRemoteDto> {
-        return safeCallApi { apiService.getNowPlayingMovies(page,categoryId) }
+        val today = LocalDate.now()
+        val twoWeeksAgo = today.minusWeeks(2)
+        return safeCallApi { apiService.getNowPlayingMovies(page,categoryId,
+            minDate = twoWeeksAgo.toString(), maxDate = today.toString()) }
             .results?.filterNotNull().orEmpty()
     }
 
     override suspend fun getTrendingMovies(page: Int,categoryId: String?): List<MovieRemoteDto> {
-        return safeCallApi { apiService.getTrendingMovies(page,categoryId) }
+        val today = LocalDate.now()
+        val lastMonth = today.minusDays(30)
+        return safeCallApi { apiService.getTrendingMovies(page,categoryId,
+            minDate = lastMonth.toString(), maxDate = today.toString()
+            ) }
             .results?.filterNotNull().orEmpty()
     }
 
@@ -83,6 +95,4 @@ class RemoteMovieDataSourceImpl(
         return safeCallApi { apiService.getAllMovies(page,categoryId,sortBy) }
             .results?.filterNotNull().orEmpty()
     }
-
-
 }
