@@ -1,6 +1,5 @@
 package com.cairosquad.viewmodel.see_all
 
-import android.util.Log
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.movies.GetFreeToWatchMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetMoreRecommendedMoviesUseCase
@@ -15,6 +14,7 @@ import com.cairosquad.domain.usecase.series.GetOnTvSeriesUseCase
 import com.cairosquad.domain.usecase.series.GetSeriesGenresUseCase
 import com.cairosquad.domain.usecase.series.GetTopRatingSeriesUseCase
 import com.cairosquad.domain.usecase.series.GetTrendingSeriesUseCase
+import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.base.BaseViewModel
@@ -43,15 +43,9 @@ class SeeAllViewModel(
     var contentType: MediaContentType = MediaContentType.TOP_RATING
     var mediaType: MediaType = MediaType.MOVIES
 
-    init {
-        loadGenres()
-    }
-
     override fun onGenreSelected(genreIndex: Int) {
 
         val genreId = screenState.value.genres.getOrNull(genreIndex)?.id
-
-        Log.d("asdasd", "onGenreSelected: $genreId")
 
         loadData(
             contentType = contentType,
@@ -86,6 +80,8 @@ class SeeAllViewModel(
     ) {
         this.mediaType = mediaType
         this.contentType = contentType
+
+        loadGenres()
 
         val (moviesFetcher, seriesFetcher) = getDataFetcher(contentType)
 
@@ -240,16 +236,26 @@ class SeeAllViewModel(
     private fun loadGenres() {
         tryToCall(
             block = {
-                val movieGenres = getMoviesGenresUseCase.getMoviesGenres()
-                val seriesGenres = getSeriesGenresUseCase.getSeriesGenres()
+                when (mediaType) {
+                    MediaType.MOVIES -> {
+                        getMoviesGenresUseCase.getMoviesGenres()
+                            .map(Genre::toSeeAllGenreUiState)
+                    }
+                    MediaType.SERIES -> {
+                        getSeriesGenresUseCase.getSeriesGenres()
+                            .map(Genre::toSeeAllGenreUiState)
+                    }
+                    MediaType.BOTH -> {
+                        val movieGenres = getMoviesGenresUseCase.getMoviesGenres()
+                        val seriesGenres = getSeriesGenresUseCase.getSeriesGenres()
 
-                val combined = buildSet {
-                    add(SeeAllScreenState.GenreUiState.defaultGenre)
-                    movieGenres.mapTo(this) { it.toSeeAllGenreUiState() }
-                    seriesGenres.mapTo(this) { it.toSeeAllGenreUiState() }
+                        buildSet {
+                            add(SeeAllScreenState.GenreUiState.defaultGenre)
+                            movieGenres.mapTo(this) { it.toSeeAllGenreUiState() }
+                            seriesGenres.mapTo(this) { it.toSeeAllGenreUiState() }
+                        }
+                    }
                 }
-
-                combined
             },
             onSuccess = { genres ->
                 updateState { it.copy(genres = genres.toList()) }
