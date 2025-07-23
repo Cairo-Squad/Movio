@@ -11,6 +11,7 @@ import com.cairosquad.viewmodel.details.similar_series.SimilarSeriesViewModel
 import com.cairosquad.viewmodel.details.top_cast.TopCastViewModel
 import com.cairosquad.viewmodel.foryou.ForYouViewModel
 import com.cairosquad.viewmodel.home.HomeViewModel
+import com.cairosquad.viewmodel.login.LoginViewModel
 import com.cairosquad.viewmodel.search.SearchViewModel
 import com.cairosquad.viewmodel.see_all.SeeAllViewModel
 import org.koin.core.module.dsl.viewModel
@@ -53,20 +54,23 @@ val viewModelModule = module {
         )
     }
 
-    viewModelOf(::ArtistViewModel)
+    viewModel { (artistId: Long) ->
+        ArtistViewModel(getArtistDetailsUseCase = get(), artistId = artistId)
+    }
+
     viewModel { (seriesId: Long) ->
         SeriesDetailsViewModel(seriesDetailsUseCase = get(), seriesId = seriesId)
     }
 
-    viewModel { (seriesId: Long, seasonNumber: Int) ->
+    viewModel { (seriesId: Long) ->
         SeasonsViewModel(
             seriesDetailsUseCase = get(),
             seriesId = seriesId,
-            seasonNumber = seasonNumber
         )
     }
 
     viewModelOf(::SimilarSeriesViewModel)
+    viewModelOf(::LoginViewModel)
     viewModelOf(::HomeViewModel)
     viewModelOf(::SeeAllViewModel)
 

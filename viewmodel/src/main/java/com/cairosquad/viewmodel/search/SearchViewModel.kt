@@ -151,6 +151,7 @@ class SearchViewModel(
                         errorStatus = null
                     )
                 }
+                sendEffect(SearchEffect.HideKeyboard)
             },
             onError = { e ->
                 updateState {

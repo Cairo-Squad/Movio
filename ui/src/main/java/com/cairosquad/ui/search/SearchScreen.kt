@@ -9,6 +9,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import com.cairosquad.ui.navigation.ArtistRoute
 import com.cairosquad.ui.navigation.ForYouRoute
 import com.cairosquad.ui.navigation.LocalNavController
@@ -29,6 +30,8 @@ fun SearchScreen(
     val context = LocalContext.current
 
     val navController = LocalNavController.current
+
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     val state by viewModel.screenState.collectAsState()
 
@@ -56,6 +59,10 @@ fun SearchScreen(
 
             is SearchEffect.NavigateToSeriesDetails -> {
                 navController.navigate(SeriesRoute(effect.seriesId))
+            }
+
+            is SearchEffect.HideKeyboard -> {
+                keyboardController?.hide()
             }
         }
     }

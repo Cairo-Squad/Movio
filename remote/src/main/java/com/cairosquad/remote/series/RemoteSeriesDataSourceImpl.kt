@@ -55,6 +55,10 @@ class RemoteSeriesDataSourceImpl(
             .episodes ?: emptyList()
     }
 
+    override suspend fun getVideoKey(seriesId: Long): String {
+        return safeCallApi { seriesApiService.getVideoKey(seriesId).getVideoKey() ?: "" }
+    }
+
     override suspend fun getTopRatingSeries(page: Int,categoryId : String?): List<SeriesRemoteDto> {
         return safeCallApi { seriesApiService.getTopRatingSeries(page,categoryId) }
             .results?.filterNotNull().orEmpty()

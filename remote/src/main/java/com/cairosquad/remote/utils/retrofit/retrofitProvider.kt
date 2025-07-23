@@ -16,7 +16,7 @@ fun retrofitProvider(tokenProvider: () -> String?): Retrofit {
 
     val client = OkHttpClient.Builder()
         .addInterceptor(ApiKeyInterceptor(BuildConfig.API_KEY))
-        .addInterceptor(AuthInterceptor(tokenProvider))
+        .addInterceptor(AuthInterceptor(tokenProvider() ?: ""))
         .addInterceptor(LanguageInterceptor())
         .addInterceptor(HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY

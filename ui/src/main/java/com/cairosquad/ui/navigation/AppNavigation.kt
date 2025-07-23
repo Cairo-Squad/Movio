@@ -21,6 +21,10 @@ import com.cairosquad.ui.details.TopCastScreen
 import com.cairosquad.ui.details.artist.ArtistScreen
 import com.cairosquad.ui.details.similar_movies.SimilarMoviesScreen
 import com.cairosquad.ui.details.similar_series.SimilarSeriesScreen
+import com.cairosquad.ui.auth.ForgetPasswordWebViewScreen
+import com.cairosquad.ui.auth.LoginScreen
+import com.cairosquad.ui.auth.SignUpWebViewScreen
+import com.cairosquad.ui.search.ForYouScreen
 import com.cairosquad.ui.see_all_screen.SeeAllScreen
 import com.cairosquad.ui.splash.SplashScreen
 
@@ -36,7 +40,7 @@ fun AppNavigation() {
         NavHost(
             modifier = Modifier.background(Theme.color.surfaces.surface),
             navController = navController,
-            startDestination = SplashRoute
+            startDestination = LoginRoute // TODO: Change back to splash after finishing the feature
         ) {
             composable<SplashRoute> {
                 SplashScreen(
@@ -46,6 +50,23 @@ fun AppNavigation() {
                     }
                 )
             }
+
+            composable<LoginRoute> {
+                LoginScreen()
+            }
+
+            composable<ForgetPasswordWebViewRoute> { backStackEntry ->
+                ForgetPasswordWebViewScreen(
+                    url = backStackEntry.toRoute<ForgetPasswordWebViewRoute>().url
+                )
+            }
+
+            composable<SignUpWebViewRoute> { backStackEntry ->
+                SignUpWebViewScreen(
+                    url = backStackEntry.toRoute<SignUpWebViewRoute>().url
+                )
+            }
+
             composable<AppRoute> {
                 AppScreen()
             }
@@ -62,7 +83,7 @@ fun AppNavigation() {
             composable<ArtistRoute> { backStackEntry ->
                 ArtistScreen(
                     artistId = backStackEntry.toRoute<ArtistRoute>().artistId,
-                    navController=navController
+                    navController = navController
                 )
             }
             composable<SimilarMovieRoute> { backStackEntry ->
@@ -99,6 +120,9 @@ fun AppNavigation() {
                     seriesId = backStackEntry.toRoute<EpisodesRoute>().seriesId,
                     seasonNumber = backStackEntry.toRoute<EpisodesRoute>().seasonNumber
                 )
+            }
+            composable<ForYouRoute> {
+                ForYouScreen()
             }
             composable<SeeAllScreenRoute> { backStackEntry ->
                 SeeAllScreen(

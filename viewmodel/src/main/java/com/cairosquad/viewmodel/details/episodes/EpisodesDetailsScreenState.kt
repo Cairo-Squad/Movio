@@ -3,8 +3,8 @@ package com.cairosquad.viewmodel.details.episodes
 import com.cairosquad.viewmodel.exception.ErrorStatus
 
 data class EpisodesDetailsScreenState(
-    val basicDetailsSectionState: ScreenStatus = ScreenStatus.INITIAL,
-    val episodesSectionState: ScreenStatus = ScreenStatus.INITIAL,
+    val basicDetailsSectionState: ScreenStatus = ScreenStatus.LOADING,
+    val episodesSectionState: ScreenStatus = ScreenStatus.LOADING,
     val errorStatus: ErrorStatus? = null,
     val season: SeasonUiState = SeasonUiState(),
     val episodes: List<EpisodeUiState> = emptyList(),
@@ -30,7 +30,6 @@ data class EpisodesDetailsScreenState(
     )
 
     enum class ScreenStatus {
-        INITIAL,
         LOADING,
         SUCCESS,
         ERROR

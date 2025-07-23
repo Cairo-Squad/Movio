@@ -3,21 +3,25 @@ package com.cairosquad.viewmodel.details.movie
 import com.cairosquad.viewmodel.exception.ErrorStatus
 
 data class MovieScreenState(
-    val basicDetailsSectionState: ScreenStatus = ScreenStatus.INITIAL,
-    val castSectionState: ScreenStatus = ScreenStatus.INITIAL,
-    val reviewsSectionState: ScreenStatus = ScreenStatus.INITIAL,
-    val similarMoviesSectionState: ScreenStatus = ScreenStatus.INITIAL,
+    val basicDetailsSectionState: ScreenStatus = ScreenStatus.LOADING,
+    val castSectionState: ScreenStatus = ScreenStatus.LOADING,
+    val reviewsSectionState: ScreenStatus = ScreenStatus.LOADING,
+    val similarMoviesSectionState: ScreenStatus = ScreenStatus.LOADING,
 
     val isLoading: Boolean = true,
     val movie: MovieDetailsUiState = MovieDetailsUiState(),
     val topCast: List<TopCastUiState> = emptyList(),
     val reviews: List<ReviewUiState> = emptyList(),
     val similarMovies: List<MovieDetailsUiState> = emptyList(),
+
     val isFavorite: Boolean = false,
     val isShareBottomSheetOpen: Boolean = false,
     val isNoAccountBottomSheetOpen: Boolean = false,
     val isRateBottomSheetOpen: Boolean = false,
     val isAddToListBottomSheetOpen: Boolean = false,
+
+    val rate: Int = 0,
+
     val errorStatus: ErrorStatus? = null,
 
     val showSnackBar: Boolean = false,
@@ -52,7 +56,6 @@ data class MovieScreenState(
     )
 
     enum class ScreenStatus {
-        INITIAL,
         LOADING,
         SUCCESS,
         ERROR

@@ -33,7 +33,7 @@ class RemoteDtoTest {
             releaseDate = "2023-01-01",
         )
 
-        val movieEntity = movieDetailsRemoteDto.toEntity()
+        val movieEntity = movieDetailsRemoteDto.toEntity("")
 
         assertEquals(1, movieEntity.id)
         assertEquals("Movie 1", movieEntity.title)

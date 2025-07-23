@@ -3,6 +3,7 @@ package com.cairosquad.remote.series
 import com.cairosquad.repository.movie.data_source.remote.dto.CreditResponse
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.GenreResponse
+import com.cairosquad.repository.movie.data_source.remote.dto.VideoResponse
 import com.cairosquad.repository.search.data_source.remote.dto.ResultResponse
 import com.cairosquad.repository.search.data_source.remote.dto.SeriesRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeasonResponse
@@ -47,6 +48,11 @@ interface SeriesApiService {
         @Path("seriesId") seriesId: Long,
         @Path("seasonNumber") seasonNumber: Int
     ): SeasonResponse
+
+    @GET("movie/{seriesId}/videos")
+    suspend fun getVideoKey(
+        @Path("seriesId") seriesId: Long
+    ): VideoResponse
 
     @GET("discover/tv")
     suspend fun getTopRatingSeries(
@@ -129,5 +135,4 @@ interface SeriesApiService {
         @Query("with_genres") withGenres: String? = null,
         @Query("sort_by") sortBy: String? = null
     ): ResultResponse<SeriesRemoteDto>
-
 }

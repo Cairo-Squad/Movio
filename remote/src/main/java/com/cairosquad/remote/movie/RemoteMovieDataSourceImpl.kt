@@ -37,6 +37,10 @@ class RemoteMovieDataSourceImpl(
             .results?.filterNotNull().orEmpty()
     }
 
+    override suspend fun getVideoKey(movieId: Long): String {
+        return safeCallApi { apiService.getVideoKey(movieId).getVideoKey() ?: "" }
+    }
+
     override suspend fun getUpcomingMovies(page: Int,categoryId: String?): List<MovieRemoteDto> {
         val today = LocalDate.now()
         val thirtyDaysFromNow = today.plusDays(30)

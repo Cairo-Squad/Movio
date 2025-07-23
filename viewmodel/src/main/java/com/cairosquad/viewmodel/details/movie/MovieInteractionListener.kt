@@ -22,4 +22,9 @@ interface MovieInteractionListener {
 
     fun onDismissShareBottomSheet()
     fun onDismissLoginBottomSheet()
+    fun onDismissRateBottomSheet()
+    fun onDismissAddToListBottomSheet()
+
+    fun onRateChange(rate: Int)
+    fun onSubmitRateClicked(rate: Int)
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="explore_more">استكشف المزيد</string>
     <string name="icon">ايقونة</string>
     <string name="reviewer_image">صورة المراجع</string>
     <string name="rating_star">نجمة التقييم</string>
@@ -7,6 +8,28 @@
     <string name="add_to_list">أضف إلى القائمة</string>
     <string name="play">تشغيل</string>
     <string name="reviews">المراجعات</string>
+    <string name="welcome_back">مرحبا من جديد</string>
+    <string name="user_name">اسم المستخدم</string>
+    <string name="password_you_entered_is_incorrect">كلمة المرور التي أدخلتها غير صحيحة</string>
+    <string name="forgot_password">نسيت كلمة المرور؟</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="or">أو</string>
+    <string name="continue_as_a_guest">المتابعة كضيف</string>
+    <string name="dont_have_an_account">لا تمتلك حساب؟</string>
+    <string name="signup">إنشاء حساب</string>
+    <string name="password">كلمة السر</string>
+    <string name="this_field_cannot_be_empty">هذا الحقل مطلوب</string>
+    <string name="username_must_be_at_least_2_characters_long">اسم المستخدم لا بد أن يكون حرفان على الأقل</string>
+    <string name="password_must_be_at_least_8_characters_long">كلمة المرور لا بد أن تكون 8 حروف على الأقل</string>
+    <string name="create">إنشاء</string>
+    <string name="list_name">إسم القائمة</string>
+    <string name="movie">فيلم</string>
+    <string name="create_list_description">قم بصناعة قائمة جديدة لكي تتابع %1$s التي تريد الوصول إليها بسهولة</string>
+    <string name="create_list_title">أضف عنوان للقائمة</string>
+    <string name="create_new_list">أضف قائمة جديدة</string>
+    <string name="add_to_list_icon">أيكونه أضف إلى القائمة</string>
+    <string name="submit">إرسال</string>
+    <string name="episodes">عدد الحلقات %1$s</string>
     <string name="user_profile_image">صورة بروفايل المستخدم</string>
     <string name="application_logo">لوجو التطبيق</string>
     <string name="top_rating">اعلى تقييما</string>

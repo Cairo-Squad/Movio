@@ -5,6 +5,7 @@ import com.cairosquad.repository.movie.data_source.remote.dto.CreditResponse
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieDetailsRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.GenreResponse
+import com.cairosquad.repository.movie.data_source.remote.dto.VideoResponse
 import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.ResultResponse
 import retrofit2.http.GET
@@ -36,6 +37,11 @@ interface MovieApiService {
         @Path("movieId") movieId: Long,
         @Query("page") page: Int
     ): CreditResponse
+
+    @GET("movie/{movieId}/videos")
+    suspend fun getVideoKey(
+        @Path("movieId") movieId: Long
+    ): VideoResponse
 
     @GET("discover/movie")
     suspend fun getTopRatingMovies(
@@ -127,4 +133,3 @@ interface MovieApiService {
         @Query("sort_by") sortBy: String? = null
     ): ResultResponse<MovieRemoteDto>
 }
-

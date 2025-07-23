@@ -45,7 +45,7 @@ class SeriesDetailsRemoteDtoTest {
             voteCount = 100
         )
 
-        val entity = dto.toEntity()
+        val entity = dto.toEntity("")
 
         assertThat(entity.id).isEqualTo(10L)
         assertThat(entity.title).isEqualTo("Test Series")
@@ -64,7 +64,7 @@ class SeriesDetailsRemoteDtoTest {
 
         val dto = SeriesDetailsRemoteDto()
 
-        val entity = dto.toEntity()
+        val entity = dto.toEntity("")
 
         assertThat(entity.id).isEqualTo(0L)
         assertThat(entity.title).isEmpty()
@@ -81,7 +81,7 @@ class SeriesDetailsRemoteDtoTest {
     fun `toEntity handles null genres list`() {
         val dto = SeriesDetailsRemoteDto(genres = null, id = 50L, name = "No Genres")
 
-        val entity = dto.toEntity()
+        val entity = dto.toEntity("")
 
         assertThat(entity.genres).isEmpty()
         assertThat(entity.title).isEqualTo("No Genres")

@@ -75,6 +75,7 @@ class EpisodesDetailsViewModelTest {
         advanceUntilIdle()
 
         val state = viewModel.screenState.value
+        advanceUntilIdle()
         assertEquals(ScreenStatus.SUCCESS, state.episodesSectionState)
         assertEquals(2, state.episodes.size)
         assertEquals(2, state.seasons.size)

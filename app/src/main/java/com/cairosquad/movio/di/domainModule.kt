@@ -1,6 +1,7 @@
 package com.cairosquad.movio.di
 
 import com.cairosquad.domain.usecase.artists.GetArtistDetailsUseCase
+import com.cairosquad.domain.usecase.authentication.LoginUseCase
 import com.cairosquad.domain.usecase.movies.GetAllMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetFreeToWatchMoviesUseCase
 import com.cairosquad.domain.usecase.movies.GetMoreRecommendedMoviesUseCase
@@ -37,6 +38,7 @@ val domainModule = module {
     singleOf(::GetSeriesDetailsUseCase)
     singleOf(::GetArtistDetailsUseCase)
     singleOf(::GetMovieDetailsUseCase)
+    singleOf(::LoginUseCase)
 
     // home
     singleOf(::GetFreeToWatchMoviesUseCase)
