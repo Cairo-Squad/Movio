@@ -5,8 +5,10 @@
 
     <style name="Theme.Movio.Splash" parent="Theme.SplashScreen">
         <item name="android:windowSplashScreenBackground">@color/splash_background</item>
-        <item name="android:windowSplashScreenAnimatedIcon">@drawable/logo</item>
-        <item name="android:windowSplashScreenIconBackgroundColor">@color/icon_bg</item>
+<!--        <item name="android:windowSplashScreenAnimatedIcon">@drawable/logo</item>-->
+<!--        <item name="android:windowSplashScreenIconBackgroundColor">@color/icon_bg</item>-->
+<!--        <item name="android:windowSplashScreenAnimationDuration">1000</item>-->
+        <item name="android:windowBackground">@color/splash_background</item>
         <item name="postSplashScreenTheme">@style/Theme.Movio</item>
     </style>
 </resources>
