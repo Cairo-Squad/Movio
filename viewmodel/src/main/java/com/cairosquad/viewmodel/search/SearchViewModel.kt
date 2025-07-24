@@ -35,33 +35,58 @@ class SearchViewModel(
         loadDiscoverMovies()
     }
 
-    fun loadDiscoverMovies() = tryToCall(
-        block = {
-            setLoading()
-            val forYou =
-                getPersonalizedMoviesUseCase.getPersonalizedMovies(1).map { it.toUiState() }
-            val exploreMore = getSuggestedMoviesUseCase.getSuggestedMovies().map { it.toUiState() }
-            forYou to exploreMore
-        },
-        onSuccess = { (forYou, exploreMore) ->
-            updateState {
-                it.copy(
-                    screenStatus = SearchScreenState.ScreenStatus.EXPLORE,
-                    forYou = forYou,
-                    exploreMore = exploreMore,
-                    errorStatus = null
-                )
+    fun loadDiscoverMovies() {
+        setLoading()
+        getPersonalizedMovies()
+        getSuggestedMovies()
+    }
+
+    fun getPersonalizedMovies(){
+
+        tryToCall(
+            block = {
+                val forYou = getPersonalizedMoviesUseCase.getPersonalizedMovies(1).map { it.toUiState() }
+                forYou
+            },
+            onSuccess = { forYou ->
+                updateState { it.copy(forYou = forYou) }
+            },
+            onError = { e ->
+                updateState {
+                    it.copy(
+                        screenStatus = SearchScreenState.ScreenStatus.FAILED,
+                        errorStatus = handleSearchException(e)
+                    )
+                }
             }
-        },
-        onError = { e ->
-            updateState {
-                it.copy(
-                    screenStatus = SearchScreenState.ScreenStatus.FAILED,
-                    errorStatus = handleSearchException(e)
-                )
+        )
+    }
+
+    fun getSuggestedMovies(){
+        tryToCall(
+            block = {
+                val exploreMore = getSuggestedMoviesUseCase.getSuggestedMovies().map { it.toUiState() }
+                exploreMore
+            },
+            onSuccess = { exploreMore ->
+                updateState {
+                    it.copy(
+                        screenStatus = SearchScreenState.ScreenStatus.EXPLORE,
+                        exploreMore = exploreMore,
+                        errorStatus = null
+                    )
+                }
+            },
+            onError = { e ->
+                updateState {
+                    it.copy(
+                        screenStatus = SearchScreenState.ScreenStatus.FAILED,
+                        errorStatus = handleSearchException(e)
+                    )
+                }
             }
-        }, dispatcher = Dispatchers.IO
-    )
+        )
+    }
 
     override fun onQueryTextChanged(query: String) {
         enterSearchMode(query)
