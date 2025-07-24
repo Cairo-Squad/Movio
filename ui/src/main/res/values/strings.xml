@@ -31,4 +31,20 @@
     <string name="create_new_list">Create new list</string>
     <string name="submit">Submit</string>
     <string name="episodes">Episodes %1$s</string>
+    <string name="user_profile_image">User Profile Image</string>
+    <string name="application_logo">Application Logo</string>
+    <string name="top_rating">Top Rating</string>
+    <string name="trending">Trending</string>
+    <string name="free_to_watch">Free To Watch</string>
+    <string name="up_coming">Upcoming</string>
+    <string name="more_recommended">More Recommended</string>
+    <string name="all">"     All     "</string>
+    <string name="movies">Movies</string>
+    <string name="tv_shows">TV Shows</string>
+    <string name="categories">Categories</string>
+    <string name="see_all">See all</string>
+    <string name="airing_today">Airing Today</string>
+    <string name="on_tv">On TV</string>
+    <string name="now_playing">Now Playing</string>
+    <string name="genre_all">All</string>
 </resources>

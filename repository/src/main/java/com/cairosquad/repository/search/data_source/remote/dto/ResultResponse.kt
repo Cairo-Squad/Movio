@@ -1,6 +1,7 @@
 package com.cairosquad.repository.search.data_source.remote.dto
 
 
+import com.cairosquad.repository.movie.data_source.remote.dto.GenreDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -14,4 +15,10 @@ data class ResultResponse<T>(
     val totalPages: Int? = null,
     @SerialName("total_results")
     val totalResults: Int? = null
+)
+
+@Serializable
+data class GenreResponse(
+    @SerialName("genres")
+    val genres: List<GenreDto>? = null,
 )

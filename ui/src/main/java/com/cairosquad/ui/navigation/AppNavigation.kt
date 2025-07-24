@@ -25,6 +25,7 @@ import com.cairosquad.ui.auth.ForgetPasswordWebViewScreen
 import com.cairosquad.ui.auth.LoginScreen
 import com.cairosquad.ui.auth.SignUpWebViewScreen
 import com.cairosquad.ui.search.ForYouScreen
+import com.cairosquad.ui.see_all_screen.SeeAllScreen
 import com.cairosquad.ui.splash.SplashScreen
 
 
@@ -122,6 +123,12 @@ fun AppNavigation() {
             }
             composable<ForYouRoute> {
                 ForYouScreen()
+            }
+            composable<SeeAllScreenRoute> { backStackEntry ->
+                SeeAllScreen(
+                    contentType = backStackEntry.toRoute<SeeAllScreenRoute>().contentType,
+                    mediaType = backStackEntry.toRoute<SeeAllScreenRoute>().mediaType
+                )
             }
         }
     }

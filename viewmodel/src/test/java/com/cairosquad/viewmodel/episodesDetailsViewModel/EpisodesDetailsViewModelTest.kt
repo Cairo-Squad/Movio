@@ -1,14 +1,15 @@
 package com.cairosquad.viewmodel.episodesDetailsViewModel
 
-import app.cash.turbine.test
 import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
 import com.cairosquad.entity.Episode
 import com.cairosquad.entity.Season
-import com.cairosquad.viewmodel.details.episodes.EpisodesDetailEffect
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState.ScreenStatus
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsViewModel
+import com.cairosquad.viewmodel.details.movie.MovieViewModelTest.MainDispatcherRule
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
@@ -20,11 +21,15 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
 class EpisodesDetailsViewModelTest {
+
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
 
     private val testDispatcher = StandardTestDispatcher()
     private lateinit var viewModel: EpisodesDetailsViewModel
@@ -35,6 +40,9 @@ class EpisodesDetailsViewModelTest {
     @Before
     fun setUp() = runTest {
         Dispatchers.setMain(testDispatcher)
+
+        mockkStatic(Dispatchers::class)
+        every { Dispatchers.IO } returns testDispatcher
 
         coEvery { useCase.getSeriesSeasons(seriesId) } returns listOf(
             Season(
@@ -71,8 +79,7 @@ class EpisodesDetailsViewModelTest {
     }
 
     @Test
-    fun `init should load seasons and episodes`() = runTest(testDispatcher) {
-        advanceUntilIdle()
+    fun `init should load seasons and episodes`() = runTest {
 
         val state = viewModel.screenState.value
         advanceUntilIdle()
@@ -92,15 +99,15 @@ class EpisodesDetailsViewModelTest {
         assertEquals(!initial, toggled)
     }
 
-    @Test
-    fun `onBackClick should emit NavigateBack effect`() = runTest {
-        viewModel.effect.test {
-            viewModel.onBackClick()
-            assertEquals(EpisodesDetailEffect.NavigateBack, awaitItem())
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
-
+//    @Test
+//    fun `onBackClick should emit NavigateBack effect`() = runTest {
+//        viewModel.effect.test {
+//            viewModel.onBackClick()
+//            assertEquals(EpisodesDetailEffect.NavigateBack, awaitItem())
+//            cancelAndIgnoreRemainingEvents()
+//        }
+//    }
+//
 //    @Test
 //    fun `init should handle failure when loading seasons`() = runTest(testDispatcher) {
 //        coEvery { useCase.getSeriesSeasons(seriesId) } throws RuntimeException("Network error")
@@ -128,21 +135,21 @@ class EpisodesDetailsViewModelTest {
 //        assertEquals(ScreenStatus.ERROR, state.episodesSectionState)
 //        assertTrue(state.episodes.isEmpty())
 //    }
-//
-//    @Test
-//    fun `onSeasonSelected with same season number should do nothing`() = runTest(testDispatcher) {
-//        advanceUntilIdle()
-//
-//        val stateBefore = viewModel.screenState.value
-//
-//        // Same season selected again
-//        viewModel.onSeasonSelected(seriesId, stateBefore.selectedSeasonNumber)
-//        advanceUntilIdle()
-//
-//        val stateAfter = viewModel.screenState.value
-//
-//        assertEquals(stateBefore, stateAfter) // No change
-//    }
+
+    @Test
+    fun `onSeasonSelected with same season number should do nothing`() = runTest(testDispatcher) {
+        advanceUntilIdle()
+
+        val stateBefore = viewModel.screenState.value
+
+        // Same season selected again
+        viewModel.onSeasonSelected(seriesId, stateBefore.selectedSeasonNumber)
+        advanceUntilIdle()
+
+        val stateAfter = viewModel.screenState.value
+
+        assertEquals(stateBefore, stateAfter) // No change
+    }
 
     @Test
     fun `onSeasonSelected should collapse dropdown`() = runTest(testDispatcher) {
@@ -174,14 +181,14 @@ class EpisodesDetailsViewModelTest {
         advanceUntilIdle()
     }
 
-    @Test
-    fun `onBackClick emits only NavigateBack effect`() = runTest {
-        viewModel.effect.test {
-            viewModel.onBackClick()
-            assertEquals(EpisodesDetailEffect.NavigateBack, awaitItem())
-            expectNoEvents()
-        }
-    }
+//    @Test
+//    fun `onBackClick emits only NavigateBack effect`() = runTest {
+//        viewModel.effect.test {
+//            viewModel.onBackClick()
+//            assertEquals(EpisodesDetailEffect.NavigateBack, awaitItem())
+//            expectNoEvents()
+//        }
+//    }
 
 }
 

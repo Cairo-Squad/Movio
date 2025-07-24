@@ -33,6 +33,7 @@ import com.cairosquad.design_system.basic_component.Text
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
+import com.cairosquad.ui.BuildConfig
 import java.util.Locale
 
 /**
@@ -63,7 +64,7 @@ fun MovieCard(
         ) {
             if (imgUrl?.isNotEmpty() == true) {
                 SafeImageViewer(
-                    model = "https://image.tmdb.org/t/p/w500$imgUrl",
+                    model = BuildConfig.IMAGE_BASE_URL + imgUrl,
                     contentDescription = stringResource(R.string.movie_poster),
                     modifier = Modifier
                         .fillMaxSize()
