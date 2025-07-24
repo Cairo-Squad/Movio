@@ -13,7 +13,6 @@ import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import com.cairosquad.viewmodel.search.paging.SearchPager
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -38,12 +37,9 @@ class SearchViewModel(
 
     fun loadDiscoverMovies() = tryToCall(
         block = {
-            updateState {
-                it.copy(
-                    screenStatus = SearchScreenState.ScreenStatus.LOADING,
-                )
-            }
-            val forYou = getPersonalizedMoviesUseCase.getPersonalizedMovies(1).map { it.toUiState() }
+            setLoading()
+            val forYou =
+                getPersonalizedMoviesUseCase.getPersonalizedMovies(1).map { it.toUiState() }
             val exploreMore = getSuggestedMoviesUseCase.getSuggestedMovies().map { it.toUiState() }
             forYou to exploreMore
         },
@@ -57,7 +53,6 @@ class SearchViewModel(
                 )
             }
         },
-
         onError = { e ->
             updateState {
                 it.copy(
@@ -65,33 +60,35 @@ class SearchViewModel(
                     errorStatus = handleSearchException(e)
                 )
             }
-        },
-        dispatcher = Dispatchers.IO
+        }, dispatcher = Dispatchers.IO
     )
 
     override fun onQueryTextChanged(query: String) {
+        enterSearchMode(query)
+        debounceSearchSuggestions(query)
+    }
+
+    private fun enterSearchMode(query: String) {
         updateState {
-            it.copy(
-                screenStatus = SearchScreenState.ScreenStatus.SEARCH,
-                query = query
-            )
+            it.copy(screenStatus = SearchScreenState.ScreenStatus.SEARCH, query = query)
         }
+    }
+
+    private fun debounceSearchSuggestions(query: String) {
         searchJob?.cancel()
         searchJob = tryToCall(
             block = {
                 delay(300)
                 getLocalSearchHistoryUseCase.getByQuery(query)
             },
-            onSuccess = { suggestions ->
-                updateState {
-                    it.copy(
-                        recentSearch = suggestions
-                    )
-                }
-            },
+            onSuccess = ::updateSuggestions,
             onError = {},
             dispatcher = Dispatchers.IO
         )
+    }
+
+    private fun updateSuggestions(suggestions: List<String>) {
+        updateState { it.copy(recentSearch = suggestions) }
     }
 
     override fun onCancelSearch() {
@@ -107,38 +104,16 @@ class SearchViewModel(
     }
 
     override fun onSearch() {
-
         val query = screenState.value.query
-
         if (query.isBlank()) return
 
-        updateState {
-            it.copy(
-                screenStatus = SearchScreenState.ScreenStatus.LOADING,
-                errorStatus = null
-            )
-        }
+        setLoading()
 
         tryToCall(
             block = {
-                val movies = cacheMappedPagingData(
-                    query = query,
-                    scope = viewModelScope,
-                    fetch = { searchPager.movies(it) },
-                    map = { it.toUiState() }
-                )
-                val series = cacheMappedPagingData(
-                    query = query,
-                    scope = viewModelScope,
-                    fetch = { searchPager.series(it) },
-                    map = { it.toUiState() }
-                )
-                val artists = cacheMappedPagingData(
-                    query = query,
-                    scope = viewModelScope,
-                    fetch = { searchPager.artists(it) },
-                    map = { it.toUiState() }
-                )
+                val movies = cacheMappedPagingData(query, searchPager::movies) { it.toUiState() }
+                val series = cacheMappedPagingData(query, searchPager::series) { it.toUiState() }
+                val artists = cacheMappedPagingData(query, searchPager::artists) { it.toUiState() }
                 Triple(movies, series, artists)
             },
             onSuccess = { (movies, series, artists) ->
@@ -151,7 +126,6 @@ class SearchViewModel(
                         errorStatus = null
                     )
                 }
-                sendEffect(SearchEffect.HideKeyboard)
             },
             onError = { e ->
                 updateState {
@@ -167,12 +141,14 @@ class SearchViewModel(
 
     private fun <T : Any, R : Any> cacheMappedPagingData(
         query: String,
-        scope: CoroutineScope,
         fetch: (String) -> Flow<PagingData<T>>,
         map: (T) -> R
-    ): Flow<PagingData<R>> = fetch(query)
-        .map { pagingData -> pagingData.map(map) }
-        .cachedIn(scope)
+    ): Flow<PagingData<R>> {
+        return fetch(query)
+            .map { it.map(map) }
+            .cachedIn(viewModelScope)
+    }
+
 
     override fun onRecentSearchItemClicked(query: String) {
         updateState { it.copy(query = query) }
@@ -181,12 +157,8 @@ class SearchViewModel(
 
     override fun onClearHistory() {
         tryToCall(
-            block = {
-                clearSearchHistoryUseCase.clearAllHistory()
-            },
-            onSuccess = { suggestions ->
-                updateState { it.copy(recentSearch = emptyList(), errorStatus = null) }
-            },
+            block = { clearSearchHistoryUseCase.clearAllHistory() },
+            onSuccess = { updateState { it.copy(recentSearch = emptyList(), errorStatus = null) } },
             onError = { e ->
                 updateState {
                     it.copy(
@@ -194,20 +166,17 @@ class SearchViewModel(
                         errorStatus = handleSearchException(e)
                     )
                 }
-            },
-            dispatcher = Dispatchers.IO
+            }, dispatcher = Dispatchers.IO
         )
     }
 
     override fun onRemoveHistoryItem(query: String) {
         tryToCall(
-            block = {
-                clearSearchHistoryUseCase.removeQueryFromHistory(query)
-            },
+            block = { clearSearchHistoryUseCase.removeQueryFromHistory(query) },
             onSuccess = {
                 updateState {
                     it.copy(
-                        recentSearch = it.recentSearch.filterNot { q -> q == query },
+                        recentSearch = it.recentSearch.filterNot { item -> item == query },
                         errorStatus = null
                     )
                 }
@@ -224,62 +193,45 @@ class SearchViewModel(
         )
     }
 
-
     override fun onBackClicked() {
         updateState {
             when (it.screenStatus) {
                 SearchScreenState.ScreenStatus.SEARCH -> it.copy(
                     screenStatus = SearchScreenState.ScreenStatus.EXPLORE,
                     query = "",
-                    recentSearch = emptyList(),
+                    recentSearch = emptyList()
                 )
 
-                SearchScreenState.ScreenStatus.RESULT -> it.copy(
-                    screenStatus = SearchScreenState.ScreenStatus.SEARCH,
-                )
-
+                SearchScreenState.ScreenStatus.RESULT -> it.copy(screenStatus = SearchScreenState.ScreenStatus.SEARCH)
                 else -> it
             }
         }
     }
 
     override fun onClickSearchTextField() {
-        val previousSearch = screenState.value.recentSearch
+        val query = screenState.value.query
+        val prev = screenState.value.recentSearch
+
         tryToCall(
             block = {
-                if (screenState.value.query.isBlank()) {
-                    getLocalSearchHistoryUseCase.getAll()
-                } else {
-                    getLocalSearchHistoryUseCase.getByQuery(screenState.value.query)
-                }
+                if (query.isBlank()) getLocalSearchHistoryUseCase.getAll()
+                else getLocalSearchHistoryUseCase.getByQuery(query)
             },
-            onSuccess = { suggestions ->
-                updateState {
-                    it.copy(
-                        screenStatus = SearchScreenState.ScreenStatus.SEARCH,
-                    )
-                }
-                updateState { it.copy(recentSearch = suggestions) }
-            },
-            onError = { e ->
-                updateState {
-                    it.copy(
-                        screenStatus = SearchScreenState.ScreenStatus.SEARCH,
-                        recentSearch = previousSearch
-                    )
-                }
+            onSuccess = ::updateSuggestions,
+            onError = {
+                updateState { it.copy(recentSearch = prev) }
             }
         )
+        updateState { it.copy(screenStatus = SearchScreenState.ScreenStatus.SEARCH) }
     }
 
     override fun onRefresh() {
         viewModelScope.launch {
             updateState { it.copy(isRefreshing = true) }
-            delay(500L)
+            delay(500)
             updateState { it.copy(isRefreshing = false) }
         }
-        if (screenState.value.query.isBlank()) loadDiscoverMovies()
-        else onSearch()
+        if (screenState.value.query.isBlank()) loadDiscoverMovies() else onSearch()
     }
 
     override fun onMovieClicked(movieId: Long) {
@@ -302,6 +254,12 @@ class SearchViewModel(
         updateState { it.copy(selectedTabIndex = index) }
     }
 
+    private fun setLoading() {
+        updateState {
+            it.copy(screenStatus = SearchScreenState.ScreenStatus.LOADING)
+        }
+    }
+
     private fun handleSearchException(e: Throwable): ErrorStatus {
         return when (e) {
             is MovioException -> {
@@ -311,4 +269,5 @@ class SearchViewModel(
             else -> ErrorStatus.UNKNOWN_ERROR
         }
     }
+
 }
