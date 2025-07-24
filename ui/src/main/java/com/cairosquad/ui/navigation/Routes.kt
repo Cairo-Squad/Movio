@@ -1,5 +1,7 @@
 package com.cairosquad.ui.navigation
 
+import com.cairosquad.viewmodel.util.MediaContentType
+import com.cairosquad.viewmodel.util.MediaType
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -72,3 +74,8 @@ data class EpisodesRoute(
 @Serializable
 data object ForYouRoute
 
+@Serializable
+data class SeeAllScreenRoute(
+    val contentType: MediaContentType,
+    val mediaType: MediaType
+)

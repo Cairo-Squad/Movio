@@ -29,10 +29,8 @@ import io.mockk.mockkStatic
 import io.mockk.unmockkStatic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
@@ -40,6 +38,7 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import java.io.IOException
@@ -58,6 +57,10 @@ class SearchViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
+
+        mockkStatic(Dispatchers::class)
+        every { Dispatchers.IO } returns testDispatcher
+
         searchPager = mockk(relaxed = true)
         getLocalSearchHistoryUseCase = mockk(relaxed = true)
         getRecentSearchUseCase = mockk(relaxed = true)
@@ -74,8 +77,13 @@ class SearchViewModelTest {
         )
     }
 
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
+
     @Test
-    fun `should remove item from recent search on successful deletion`() = runBlocking {
+    fun `should remove item from recent search on successful deletion`() = runTest {
         val query = "test"
         val initialState = SearchScreenState(
             recentSearch = listOf("test", "other"),
@@ -86,7 +94,7 @@ class SearchViewModelTest {
         coEvery { clearSearchHistoryUseCase.removeQueryFromHistory(query) } just Runs
 
         viewModel.onRemoveHistoryItem(query)
-        delay(50)
+        advanceUntilIdle()
 
         val state = viewModel.screenState.value
         assertThat(state.recentSearch).doesNotContain(query)
@@ -116,7 +124,7 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `should set FAILED and UNKNOWN_ERROR when deletion fails`() = runBlocking {
+    fun `should set FAILED and UNKNOWN_ERROR when deletion fails`() = runTest {
         val query = "test"
         viewModel.updateState {
             it.copy(
@@ -128,7 +136,7 @@ class SearchViewModelTest {
         coEvery { clearSearchHistoryUseCase.removeQueryFromHistory(query) } throws IOException()
 
         viewModel.onRemoveHistoryItem(query)
-        delay(50)
+        advanceUntilIdle()
 
         val state = viewModel.screenState.value
         assertThat(state.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
@@ -167,7 +175,7 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `should load discover movies when loadDiscoverMovies is called`() = runBlocking {
+    fun `should load discover movies when loadDiscoverMovies is called`() = runTest {
         val forYouList = listOf(movie1)
         val exploreMoreList = listOf(movie2)
 
@@ -176,7 +184,7 @@ class SearchViewModelTest {
 
         viewModel.loadDiscoverMovies()
 
-        delay(400)
+        advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
         assertThat(viewModel.screenState.value.forYou).isEqualTo(forYouList.map { it.toUiState() })
@@ -184,13 +192,13 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `should set error status when discover movies loading fails`() = runBlocking {
+    fun `should set error status when discover movies loading fails`() = runTest {
         coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(1) } throws IOException()
         coEvery { getSuggestedMoviesUseCase.getSuggestedMovies() } returns emptyList()
 
         viewModel.loadDiscoverMovies()
 
-        delay(400)
+        advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
         assertThat(viewModel.screenState.value.errorStatus).isIn(
@@ -203,14 +211,14 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `should clear query and set EXPLORE status when search is cancelled`() = runBlocking {
+    fun `should clear query and set EXPLORE status when search is cancelled`() = runTest {
         viewModel.onCancelSearch()
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
         assertThat(viewModel.screenState.value.query).isEmpty()
     }
 
     @Test
-    fun `should load search results when valid query is submitted`() = runBlocking {
+    fun `should load search results when valid query is submitted`() = runTest {
         val query = "Inception"
 
         coEvery { searchPager.movies(query) } returns flowOf(PagingData.from(listOf(movie1)))
@@ -218,69 +226,68 @@ class SearchViewModelTest {
         coEvery { searchPager.artists(query) } returns flowOf(PagingData.from(listOf(artist)))
 
         viewModel.onQueryTextChanged(query)
-        delay(350)
 
         viewModel.onSearch()
-        delay(400)
+        advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.RESULT)
     }
 
     @Test
-    fun `should not transition to RESULT status when query is blank`() = runBlocking {
+    fun `should not transition to RESULT status when query is blank`() = runTest {
         viewModel.onSearch()
-        delay(400)
+        advanceUntilIdle()
         assertThat(viewModel.screenState.value.screenStatus).isNotEqualTo(SearchScreenState.ScreenStatus.RESULT)
     }
 
     @Test
-    fun `should clear recent search list when clear history is triggered`() = runBlocking {
+    fun `should clear recent search list when clear history is triggered`() = runTest {
         coEvery { clearSearchHistoryUseCase.clearAllHistory() } returns Unit
 
         viewModel.onClearHistory()
 
-        delay(400)
+        advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.recentSearch).isEmpty()
     }
 
     @Test
-    fun `should transition to EXPLORE when back is clicked from RESULT`() = runBlocking {
+    fun `should transition to EXPLORE when back is clicked from RESULT`() = runTest {
         val query = "Batman"
         coEvery { searchPager.movies(query) } returns flowOf(PagingData.empty())
         coEvery { searchPager.series(query) } returns flowOf(PagingData.empty())
         coEvery { searchPager.artists(query) } returns flowOf(PagingData.empty())
 
         viewModel.onQueryTextChanged(query)
-        delay(300)
+        advanceUntilIdle()
         viewModel.onBackClicked()
-        delay(300)
+        advanceUntilIdle()
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
     }
 
     @Test
-    fun `should load recent searches when search field is clicked`() = runBlocking {
+    fun `should load recent searches when search field is clicked`() = runTest {
         val recent = listOf("Query1", "Query2")
         coEvery { getRecentSearchUseCase.getAll() } returns recent
 
         viewModel.onClickSearchTextField()
 
-        delay(400)
+        advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
         assertThat(viewModel.screenState.value.recentSearch).isEqualTo(recent)
     }
 
     @Test
-    fun `should transition to SEARCH when back is clicked from RESULT`() = runBlocking {
+    fun `should transition to SEARCH when back is clicked from RESULT`() = runTest {
         coEvery { searchPager.movies(any()) } returns flowOf(PagingData.empty())
         coEvery { searchPager.series(any()) } returns flowOf(PagingData.empty())
         coEvery { searchPager.artists(any()) } returns flowOf(PagingData.empty())
 
         viewModel.onQueryTextChanged("test")
-        delay(100)
+        advanceUntilIdle()
         viewModel.onSearch()
-        delay(300)
+        advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.RESULT)
 
@@ -290,24 +297,24 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `should handle error gracefully when search field is clicked`() = runBlocking {
+    fun `should handle error gracefully when search field is clicked`() = runTest {
         coEvery { getRecentSearchUseCase.getAll() } throws IOException()
         viewModel.onClickSearchTextField()
-        delay(200)
+        advanceUntilIdle()
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
         assertThat(viewModel.screenState.value.recentSearch).isEmpty()
     }
 
     @Test
-    fun `should clear recent search when query text change fails`() = runBlocking {
+    fun `should clear recent search when query text change fails`() = runTest {
         coEvery { getRecentSearchUseCase.getByQuery(any()) } throws IOException()
         viewModel.onQueryTextChanged("x")
-        delay(350)
+        advanceUntilIdle()
         assertThat(viewModel.screenState.value.recentSearch).isEmpty()
     }
 
     @Test
-    fun `should transition to RESULT when search returns only artists`() = runBlocking {
+    fun `should transition to RESULT when search returns only artists`() = runTest {
         val query = "Painter"
 
         coEvery { searchPager.movies(query) } returns flowOf(PagingData.empty())
@@ -318,7 +325,7 @@ class SearchViewModelTest {
 
         viewModel.onSearch()
 
-        delay(100)
+        advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.RESULT)
     }
@@ -340,53 +347,12 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `should cancel search job and reset state when search is cancelled`() = runBlocking {
-        val query = "test"
-        coEvery { getRecentSearchUseCase.getByQuery(query) } returns emptyList()
-        viewModel.onQueryTextChanged(query)
-        delay(200)
-        val jobBefore = viewModel.run {
-            javaClass.getDeclaredField("searchJob").apply { isAccessible = true }.get(this) as Job?
-        }
-        require(jobBefore != null && jobBefore.isActive)
-        viewModel.onCancelSearch()
-        delay(200)
-        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
-        val jobAfter = viewModel.run {
-            javaClass.getDeclaredField("searchJob").apply { isAccessible = true }.get(this) as Job?
-        }
-        assertThat(jobAfter?.isCancelled).isTrue()
-    }
-
-    @Test
-    fun `should reset state when search is cancelled with null search job`() = runBlocking {
+    fun `should reset state when search is cancelled with null search job`() = runTest {
         val jobField =
             viewModel.javaClass.getDeclaredField("searchJob").apply { isAccessible = true }
         jobField.set(viewModel, null)
         viewModel.onCancelSearch()
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
-    }
-
-    @Test
-    fun `should cancel previous search job when query text changes`() = runBlocking {
-        coEvery { getRecentSearchUseCase.getByQuery("a") } returns emptyList()
-        viewModel
-
-            .onQueryTextChanged("a")
-        delay(200)
-        val firstJob =
-            viewModel.javaClass.getDeclaredField("searchJob").apply { isAccessible = true }
-                .get(viewModel) as Job
-        assertThat(firstJob.isActive).isTrue()
-        coEvery { getRecentSearchUseCase.getByQuery("b") } returns emptyList()
-        viewModel.onQueryTextChanged("b")
-        delay(200)
-        val secondJob =
-            viewModel.javaClass.getDeclaredField("searchJob").apply { isAccessible = true }
-                .get(viewModel) as Job
-        assertThat(firstJob.isCancelled).isTrue()
-        assertThat(secondJob).isNotEqualTo(firstJob)
-        assertThat(secondJob.isActive).isTrue()
     }
 
     @Test

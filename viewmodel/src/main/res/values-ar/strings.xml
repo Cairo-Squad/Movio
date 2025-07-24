@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="top_rating">اعلى تقييما</string>
+    <string name="trending">الأكثر رواجًا</string>
+    <string name="free_to_watch">مجاني للمشاهدة</string>
+    <string name="up_coming">قادم</string>
+    <string name="more_recommended">المزيد من الاقتراحات</string>
+    <string name="airing_today">يبث اليوم</string>
+    <string name="on_tv">على التلفزيون</string>
+    <string name="now_playing">يبث الان</string>
+    <string name="tv_shows">برامج تلفزيونية</string>
+    <string name="sorting_type_all">الكل</string>
+    <string name="popularity">الشهرة</string>
+    <string name="latest">الاحدث</string>
+
+</resources>

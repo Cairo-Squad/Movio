@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="top_rating">Top Rating</string>
+    <string name="trending">Trending</string>
+    <string name="free_to_watch">Free To Watch</string>
+    <string name="up_coming">Upcoming</string>
+    <string name="more_recommended">More Recommended</string>
+    <string name="tv_shows">TV Shows</string>
+    <string name="airing_today">Airing Today</string>
+    <string name="on_tv">On TV</string>
+    <string name="now_playing">Now Playing</string>
+    <string name="sorting_type_all">All</string>
+    <string name="popularity">Popularity</string>
+    <string name="latest">Latest</string>
+</resources>

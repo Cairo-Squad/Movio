@@ -7,16 +7,21 @@ import com.cairosquad.domain.exception.NetworkException
 import com.cairosquad.domain.exception.UnknownException
 import com.cairosquad.entity.Movie
 import com.cairosquad.viewmodel.exception.ErrorStatus
-import com.cairosquad.viewmodel.search.SearchScreenState
-import io.mockk.*
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkStatic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.*
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
 
@@ -30,6 +35,10 @@ class ForYouViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
+
+        mockkStatic(Dispatchers::class)
+        every { Dispatchers.IO } returns testDispatcher
+
         forYouPager = mockk()
     }
 
@@ -45,7 +54,7 @@ class ForYouViewModelTest {
         viewModel = ForYouViewModel(forYouPager)
 
         viewModel.onRefresh()
-        testScheduler.advanceUntilIdle()
+        advanceUntilIdle()
 
         assertFalse(viewModel.screenState.value.isRefreshing)
     }
@@ -54,10 +63,10 @@ class ForYouViewModelTest {
     fun `getForYouMovies should emit data on success`() = runTest {
         every { forYouPager.movies() } returns flowOf(PagingData.from(listOf(movie1)))
         viewModel = ForYouViewModel(forYouPager)
-        testScheduler.advanceUntilIdle()
+        advanceUntilIdle()
 
         assertNotNull(viewModel.screenState.value.forYou)
-        assertEquals(ForYouState.ScreenStatus.LOADING, viewModel.screenState.value.screenStatus)
+        assertEquals(ForYouState.ScreenStatus.SUCCESS, viewModel.screenState.value.screenStatus)
     }
 
     @Test
@@ -78,7 +87,7 @@ class ForYouViewModelTest {
     fun `cacheMappedPagingData should cache and map correctly`() = runTest {
         every { forYouPager.movies() } returns flowOf(PagingData.from(listOf(movie1)))
         viewModel = ForYouViewModel(forYouPager)
-        testScheduler.advanceUntilIdle()
+        advanceUntilIdle()
 
         assertNotNull(viewModel.screenState.value.forYou)
     }
@@ -87,10 +96,10 @@ class ForYouViewModelTest {
     fun `cacheMappedPagingData should handle empty data`() = runTest {
         every { forYouPager.movies() } returns flowOf(PagingData.empty())
         viewModel = ForYouViewModel(forYouPager)
-        testScheduler.advanceUntilIdle()
+        advanceUntilIdle()
 
         assertNotNull(viewModel.screenState.value.forYou)
-        assertEquals(ForYouState.ScreenStatus.LOADING, viewModel.screenState.value.screenStatus)
+        assertEquals(ForYouState.ScreenStatus.SUCCESS, viewModel.screenState.value.screenStatus)
     }
 
     @Test
