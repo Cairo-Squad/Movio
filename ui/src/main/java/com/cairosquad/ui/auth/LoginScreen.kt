@@ -42,6 +42,7 @@ import com.cairosquad.ui.movio_component.LoginScreenHeader
 import com.cairosquad.ui.navigation.AppRoute
 import com.cairosquad.ui.navigation.ForgetPasswordWebViewRoute
 import com.cairosquad.ui.navigation.LocalNavController
+import com.cairosquad.ui.navigation.LoginRoute
 import com.cairosquad.ui.navigation.SignUpWebViewRoute
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.ui.utils.validationErrorToStringResource
@@ -67,9 +68,21 @@ fun LoginScreen(
                 ForgetPasswordWebViewRoute(url = resetPasswordUrl)
             )
 
-            LoginEffect.NavigateToHome -> { navController.navigate(AppRoute) }
+            LoginEffect.NavigateToHome -> {
+                navController.navigate(AppRoute) {
+                    popUpTo(LoginRoute) {
+                        inclusive = true
+                    }
+                }
+            }
 
-            LoginEffect.NavigateToGuestHome -> { navController.navigate(AppRoute) }
+            LoginEffect.NavigateToGuestHome -> {
+                navController.navigate(AppRoute) {
+                    popUpTo(LoginRoute) {
+                        inclusive = true
+                    }
+                }
+            }
 
             LoginEffect.NavigateToSignUp -> navController.navigate(
                 SignUpWebViewRoute(url = signUpUrl)
