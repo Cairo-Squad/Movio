@@ -3,6 +3,7 @@ package com.cairosquad.ui.navigation
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -28,6 +29,8 @@ import com.cairosquad.ui.search.ForYouScreen
 import com.cairosquad.ui.see_all_screen.SeeAllScreen
 import com.cairosquad.ui.splash.SplashScreen
 import com.cairosquad.viewmodel.auth_gate.AuthGate
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import org.koin.compose.getKoin
 
 
@@ -37,6 +40,8 @@ fun AppNavigation(
 ) {
 
     val navController = rememberNavController()
+
+    val coroutineScope = rememberCoroutineScope()
 
     CompositionLocalProvider(
         LocalNavController provides navController
@@ -49,13 +54,19 @@ fun AppNavigation(
             composable<SplashRoute> {
                 SplashScreen(
                     onNavigateNext = {
-                        val route = if (authGate.isUserLoggedIn()) AppRoute else LoginRoute
-                        navController.navigate(route) {
-                            popUpTo(SplashRoute) {
-                                inclusive = true
+                        coroutineScope.launch {
+                            val isUserLoggedIn = coroutineScope.async {
+                                authGate.isUserLoggedIn()
                             }
 
-                            launchSingleTop = true
+                            val route = if (isUserLoggedIn.await()) AppRoute else LoginRoute
+                            navController.navigate(route) {
+                                popUpTo(SplashRoute) {
+                                    inclusive = true
+                                }
+
+                                launchSingleTop = true
+                            }
                         }
                     }
                 )
