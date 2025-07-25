@@ -62,7 +62,7 @@ fun SearchScreenContent(
                     modifier = modifier
                         .fillMaxSize()
                 ) {
-                    SearchLoadingContent(
+                    SearchLoadingContentWithStickyHeader(
                         modifier = modifier,
                         state = state,
                         listener = listener

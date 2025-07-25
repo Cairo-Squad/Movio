@@ -17,6 +17,7 @@ val darkThemeColors = MovioColors(
         surfaceVariant = Color(0xFF232940),
         onSurfaceVariant = Color(0xFF999DB3),
         outline = Color(0xFF434246),
+        statusBarShadow = Color(0xFF000000),
         outlineVariant = Color(0xFF2F2E34),
         onSurfaceAt1 = Color(0xDEFFFFFF),
         onSurfaceAt2 = Color(0x61FFFFFF),
@@ -53,6 +54,12 @@ val darkThemeColors = MovioColors(
         ),
         primaryGradient = Brush.horizontalGradient(
             colors = listOf(Color(0xFFB7A4FB), Color(0xFF724CF8))
+        ),
+        logo = Brush.verticalGradient(
+            colors = listOf(
+                Color(0xFFEBE6FE),
+                Color(0xFF7C5DF6)
+            )
         )
     )
 )

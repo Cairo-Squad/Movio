@@ -12,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 
 class EpisodesDetailsViewModel(
     private val seriesDetailsUseCase: GetSeriesDetailsUseCase,
-    private val seriesId: Long,
+    seriesId: Long,
     private var seasonNumber: Int
 ) : BaseViewModel<EpisodesDetailsScreenState, EpisodesDetailEffect>(EpisodesDetailsScreenState()),
     EpisodesDetailsInteractionListener {
@@ -38,7 +38,8 @@ class EpisodesDetailsViewModel(
 
     private fun setEpisodesToUiState(episodes: List<Episode>) {
         updateState { currentState ->
-            val selectedSeason = currentState.seasons.firstOrNull { it.seasonNumber == seasonNumber }
+            val selectedSeason =
+                currentState.seasons.firstOrNull { it.seasonNumber == seasonNumber }
 
             currentState.copy(
                 episodesSectionState = ScreenStatus.SUCCESS,
@@ -55,14 +56,16 @@ class EpisodesDetailsViewModel(
     }
 
 
-
     private fun getSeasons(seriesId: Long) {
         tryToCall(
-            onStart = {},
-            block = { seriesDetailsUseCase.getSeriesSeasons(seriesId) },
+            onStart = { updateState { it.copy(basicDetailsSectionState = ScreenStatus.LOADING) } },
+            block = {
+                seriesDetailsUseCase.getSeriesSeasons(seriesId)
+            },
             onSuccess = { seasons ->
                 updateState {
                     it.copy(
+                        basicDetailsSectionState = ScreenStatus.SUCCESS,
                         seasons = seasons.map { season ->
                             EpisodesDetailsScreenState.SeasonUiState(
                                 seasonNumber = season.seasonNumber,
@@ -73,10 +76,7 @@ class EpisodesDetailsViewModel(
                     )
                 }
             },
-            onError = {
-                // Optional: Handle error for season list
-                Log.d("asdas", "getSeasons: $it")
-            },
+            onError = {},
             dispatcher = Dispatchers.IO
         )
     }

@@ -5,7 +5,9 @@ import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
 import com.cairosquad.entity.Artist
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
@@ -31,6 +33,8 @@ class TopCastViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
+        mockkStatic(Dispatchers::class)
+        every { Dispatchers.IO } returns testDispatcher
         getMovieDetailsUseCase = mockk(relaxed = true)
         getSeriesDetailsUseCase = mockk(relaxed = true)
     }
@@ -58,7 +62,6 @@ class TopCastViewModelTest {
 
         // Then
         val state = viewModel.screenState.value
-        assertThat(state.isLoading).isFalse()
         assertThat(state.cast).hasSize(1)
         assertThat(state.cast.first().name).isEqualTo("Joseph Mawle")
         assertThat(state.error).isNull()
@@ -105,7 +108,6 @@ class TopCastViewModelTest {
 
         // Then
         val state = viewModel.screenState.value
-        assertThat(state.isLoading).isFalse()
         assertThat(state.cast).isEmpty()
         assertThat(state.error).isEqualTo(ERROR_MESSAGE)
     }

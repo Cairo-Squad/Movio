@@ -19,6 +19,7 @@ data class Surfaces(
     val surfaceVariant: Color,
     val onSurfaceVariant: Color,
     val outline: Color,
+    val statusBarShadow: Color,
     val outlineVariant: Color,
     val onSurfaceAt1: Color,
     val onSurfaceAt2: Color,
@@ -53,7 +54,8 @@ data class System(
 data class Gradiant(
     val horizontalGradient: Brush,
     val shimmerGradientColors: List<Color>,
-    val primaryGradient: Brush
+    val primaryGradient: Brush,
+    val logo: Brush
 )
 
 internal val LocalMovioColor = staticCompositionLocalOf { lightThemeColors }

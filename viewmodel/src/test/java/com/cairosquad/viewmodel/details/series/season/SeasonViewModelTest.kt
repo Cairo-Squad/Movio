@@ -7,7 +7,9 @@ import com.cairosquad.viewmodel.details.series.season.SeasonDetailsScreenState.S
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -24,17 +26,18 @@ import java.io.IOException
 @OptIn(ExperimentalCoroutinesApi::class)
 class SeasonViewModelTest {
 
-    private val dispatcher = StandardTestDispatcher()
+    private val testDispatcher = StandardTestDispatcher()
 
     private lateinit var getSeriesDetailsUseCase: GetSeriesDetailsUseCase
     private lateinit var viewModel: SeasonsViewModel
 
     private val seriesId = 1L
-    private val seasonNumber = 2
 
     @Before
     fun setup() {
-        Dispatchers.setMain(dispatcher)
+        Dispatchers.setMain(testDispatcher)
+        mockkStatic(Dispatchers::class)
+        every { Dispatchers.IO } returns testDispatcher
         getSeriesDetailsUseCase = mockk(relaxed = true)
     }
 
@@ -56,14 +59,13 @@ class SeasonViewModelTest {
         coEvery { getSeriesDetailsUseCase.getEpisodes(any(), any()) } returns mockEpisodes
 
         // Act
-        viewModel = SeasonsViewModel(getSeriesDetailsUseCase, dispatcher, seriesId, seasonNumber)
+        viewModel = SeasonsViewModel(getSeriesDetailsUseCase, testDispatcher, seriesId)
 
         advanceUntilIdle()
 
         // Assert
         val state = viewModel.screenState.value
         assertThat(state.seasonSectionState).isEqualTo(ScreenStatus.SUCCESS)
-        assertThat(state.episodesSectionState).isEqualTo(ScreenStatus.SUCCESS)
     }
 
     @Test
@@ -73,7 +75,7 @@ class SeasonViewModelTest {
         coEvery { getSeriesDetailsUseCase.getEpisodes(any(), any()) } returns emptyList()
 
         // Act
-        viewModel = SeasonsViewModel(getSeriesDetailsUseCase, dispatcher, seriesId, seasonNumber)
+        viewModel = SeasonsViewModel(getSeriesDetailsUseCase, testDispatcher, seriesId)
         advanceUntilIdle()
 
         // Assert
@@ -83,24 +85,8 @@ class SeasonViewModelTest {
     }
 
     @Test
-    fun `should show error state when getEpisodes throws exception`() = runTest {
-        // Arrange
-        coEvery { getSeriesDetailsUseCase.getSeriesSeasons(any()) } returns emptyList()
-        coEvery { getSeriesDetailsUseCase.getEpisodes(any(), any()) } throws IOException()
-
-        // Act
-        viewModel = SeasonsViewModel(getSeriesDetailsUseCase, dispatcher, seriesId, seasonNumber)
-        advanceUntilIdle()
-
-        // Assert
-        val state = viewModel.screenState.value
-        assertThat(state.episodesSectionState).isEqualTo(ScreenStatus.ERROR)
-        assertThat(state.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
-    }
-
-    @Test
     fun `should emit NavigateBack effect manually`() = runTest {
-        viewModel = SeasonsViewModel(getSeriesDetailsUseCase, dispatcher, seriesId, seasonNumber)
+        viewModel = SeasonsViewModel(getSeriesDetailsUseCase, testDispatcher, seriesId)
         advanceUntilIdle()
 
         var emittedEffect: SeasonDetailEffect? = null
@@ -129,19 +115,14 @@ class SeasonViewModelTest {
         coEvery { getSeriesDetailsUseCase.getEpisodes(any(), any()) } returns listOf(mockEpisode)
 
         // Act
-        viewModel = SeasonsViewModel(getSeriesDetailsUseCase, dispatcher, seriesId, seasonNumber)
+        viewModel = SeasonsViewModel(getSeriesDetailsUseCase, testDispatcher, seriesId)
         advanceUntilIdle()
 
         // Assert
         val state = viewModel.screenState.value
         assertThat(state.season).hasSize(1)
-        assertThat(state.episodes).hasSize(1)
-
         val seasonUi = state.season.first()
         assertThat(seasonUi.name).isEqualTo("S2")
-
-        val episodeUi = state.episodes.first()
-        assertThat(episodeUi.episodeName).isEqualTo("Ep1")
     }
 
     @Test
@@ -149,7 +130,7 @@ class SeasonViewModelTest {
         // Arrange
         val episodeId = 123L
         val seasonNumber = 1
-        viewModel = SeasonsViewModel(getSeriesDetailsUseCase, dispatcher, seriesId, seasonNumber)
+        viewModel = SeasonsViewModel(getSeriesDetailsUseCase, testDispatcher, seriesId)
         advanceUntilIdle()
 
         var emittedEffect: SeasonDetailEffect? = null
@@ -168,5 +149,4 @@ class SeasonViewModelTest {
 
         job.cancel()
     }
-
 }

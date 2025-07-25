@@ -18,6 +18,7 @@ val lightThemeColors = MovioColors(
         surfaceVariant = Color(0xFFE7E7EE),
         onSurfaceVariant = Color(0xFF929292),
         outline = Color(0xFFF9F8FA),
+        statusBarShadow = Color(0x52C2BDBD),
         outlineVariant = Color(0xFFF3F3F3),
         onSurfaceAt1 = Color(0xDEACABAC),
         onSurfaceAt2 = Color(0x61ACABAC),
@@ -55,6 +56,12 @@ val lightThemeColors = MovioColors(
         ),
         primaryGradient = Brush.horizontalGradient(
             colors = listOf(Color(0xFFB7A4FB), Color(0xFF663EF6))
+        ),
+        logo = Brush.verticalGradient(
+            colors = listOf(
+                Color(0xFFE6DFFF),
+                Color(0xFF7C5DF6)
+            )
         )
     ),
 )

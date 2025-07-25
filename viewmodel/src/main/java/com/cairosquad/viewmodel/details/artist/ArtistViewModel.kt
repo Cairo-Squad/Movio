@@ -7,77 +7,78 @@ import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 
 class ArtistViewModel(
-    private val getArtistDetailsUseCase: GetArtistDetailsUseCase
-
-
+    private val getArtistDetailsUseCase: GetArtistDetailsUseCase,
+    artistId: Long
 ) : BaseViewModel<ArtistScreenState, ArtistEffect>(initialState = ArtistScreenState()),
     ArtistInteractionListener {
 
-    fun loadArtistDetails(artistID: Long) {
-        tryToCall(
+    init {
+        loadArtistDetails(artistId)
+        loadArtistMovies(artistId)
+        loadArtistSeries(artistId)
+    }
 
-            block = {
-                updateState {
-                    it.copy(
-                        screenStatus = ArtistScreenState.ScreenStatus.LOADING,
-                    )
-                }
-                val artist = getArtistDetailsUseCase.getArtist(artistID).toArtistUiState()
-                artist
+    fun loadArtistDetails(artistId: Long) {
+        tryToCall(
+            onStart = {
+                updateState { it.copy(screenStatus = ArtistScreenState.ScreenStatus.LOADING) }
             },
-            onSuccess = {artist->
+            block = {
+                getArtistDetailsUseCase.getArtist(artistId).toArtistUiState()
+            },
+            onSuccess = { artist ->
                 updateState {
-                    it.copy(artist=artist)
+                    it.copy(artist = artist, screenStatus = ArtistScreenState.ScreenStatus.SUCCESS)
                 }
-            }
-            , onError = {e->
+            }, onError = { e ->
                 updateState {
                     it.copy(
                         screenStatus = ArtistScreenState.ScreenStatus.FAILED,
                         errorStatus = handleArtistException(e)
                     )
                 }
-
-
             }
-
-
         )
     }
-    fun loadArtistMovies(artistID: Long) {
+
+    fun loadArtistMovies(artistId: Long) {
         tryToCall(
+            onStart = {
+                updateState { it.copy(screenStatus = ArtistScreenState.ScreenStatus.LOADING) }
+            },
             block = {
-               val movies = getArtistDetailsUseCase.getMoviesOfArtist(artistID)
-                    .map{it.toArtistMovieUiState() }
-                movies
+                getArtistDetailsUseCase.getMoviesOfArtist(artistId)
             },
             onSuccess = { movies ->
                 updateState {
-                    it.copy(knownForMovies = movies)
+                    it.copy(knownForMovies = movies.map { it.toArtistMovieUiState() })
                 }
             },
             onError = { e ->
                 updateState {
                     it.copy(
                         screenStatus = ArtistScreenState.ScreenStatus.FAILED,
-                         errorStatus = handleArtistException(e)
+                        errorStatus = handleArtistException(e)
                     )
                 }
             }
         )
     }
-    fun loadArtistSeries(artistID: Long) {
-        tryToCall(
-            block = {
-                val series =getArtistDetailsUseCase
-                    .getSeriesOfArtist(artistID)
-                    .map{it.toArtistSeriesUiState() }
-                series
 
+    fun loadArtistSeries(artistId: Long) {
+        tryToCall(
+            onStart = {
+                updateState { it.copy(screenStatus = ArtistScreenState.ScreenStatus.LOADING) }
+            },
+            block = {
+                val series = getArtistDetailsUseCase
+                    .getSeriesOfArtist(artistId)
+                    .map { it.toArtistSeriesUiState() }
+                series
             },
             onSuccess = { series ->
                 updateState {
-                    it.copy(KnownForSeries= series)
+                    it.copy(KnownForSeries = series)
                 }
             },
             onError = { e ->
@@ -93,12 +94,12 @@ class ArtistViewModel(
 
     override fun onClickBack() {
         sendEffect(ArtistEffect.NavigateBack)
-
     }
 
-    override fun onMovieClick(movieID : Long) {
+    override fun onMovieClick(movieID: Long) {
         sendEffect(ArtistEffect.NavigateToMovieDetails(movieID))
     }
+
     private fun handleArtistException(e: Throwable): ErrorStatus {
         return when (e) {
             is MovioException -> {
@@ -108,7 +109,6 @@ class ArtistViewModel(
             else -> ErrorStatus.UNKNOWN_ERROR
         }
     }
-
 }
 
 
