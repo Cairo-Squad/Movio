@@ -9,7 +9,7 @@ fun MovieCacheDto.toPersonalizedMoviesIdsDto(): PersonalizedMoviesIdsDto {
     return PersonalizedMoviesIdsDto(id)
 }
 
-fun List<MovieCacheDto>.toPersonalizedMoviesIdsDto(): List<PersonalizedMoviesIdsDto> {
+fun List<MovieCacheDto>.toPersonalizedMoviesIdsDtoList(): List<PersonalizedMoviesIdsDto> {
     return map { it.toPersonalizedMoviesIdsDto() }
 }
 
@@ -17,6 +17,6 @@ fun MovieCacheDto.toSuggestedMoviesIds(): SuggestedMoviesIdsDto {
     return SuggestedMoviesIdsDto(id)
 }
 
-fun List<MovieCacheDto>.toSuggestedMoviesIds(): List<SuggestedMoviesIdsDto> {
+fun List<MovieCacheDto>.toSuggestedMoviesIdsList(): List<SuggestedMoviesIdsDto> {
     return map { it.toSuggestedMoviesIds() }
 }
