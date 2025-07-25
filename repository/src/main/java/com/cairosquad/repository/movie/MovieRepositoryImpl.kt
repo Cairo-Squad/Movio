@@ -6,6 +6,9 @@ import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Review
+import com.cairosquad.repository.movie.data_source.local.MoviesCacheDataSource
+import com.cairosquad.repository.movie.data_source.local.dto.toEntityList
+import com.cairosquad.repository.movie.data_source.local.dto.toRequestWithMoviesCacheDto
 import com.cairosquad.repository.movie.data_source.remote.RemoteMovieDataSource
 import com.cairosquad.repository.search.data_source.local.DiscoveryDataSource
 import com.cairosquad.repository.search.data_source.local.dto.toCacheDto
@@ -18,14 +21,24 @@ import java.util.Date
 class MovieRepositoryImpl(
     private val remoteMovieDiscoveryDataSource: RemoteMovieDiscoveryDataSource,
     private val discoveryDataSource: DiscoveryDataSource,
-    private val remoteMovieDataSource: RemoteMovieDataSource
+    private val remoteMovieDataSource: RemoteMovieDataSource,
+    private val moviesCacheDataSource: MoviesCacheDataSource
 ) : MoviesRepository {
     override suspend fun getMovie(movieId: Long): Movie {
-        return tryToCall {
-            remoteMovieDataSource.getMovie(movieId).toEntity(
-                remoteMovieDataSource.getVideoKey(movieId)
-            )
-        }
+        moviesCacheDataSource.deleteExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
+        return moviesCacheDataSource
+            .getMoviesByRequest(request = getRequestOfMovieCache(movieId))
+            .toEntityList()
+            .firstOrNull()
+            ?: tryToCall {
+                remoteMovieDataSource.getMovie(movieId).toEntity(
+                    remoteMovieDataSource.getVideoKey(movieId)
+                )
+            }.also { movie ->
+                moviesCacheDataSource.cacheRequestWithMovies(
+                    listOf(movie).toRequestWithMoviesCacheDto(request = "movie/${movieId}")
+                )
+            }
     }
 
     override suspend fun getMovieReviews(movieId: Long, page: Int): List<Review> {
@@ -35,9 +48,22 @@ class MovieRepositoryImpl(
     }
 
     override suspend fun getSimilarMovies(movieId: Long, page: Int): List<Movie> {
-        return tryToCall {
-            remoteMovieDataSource.getSimilarMovies(movieId, page).map { it.toEntity() }
-        }
+        moviesCacheDataSource.deleteExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
+        return moviesCacheDataSource
+            .getMoviesByRequest(request = getRequestOfSimilarMoviesCache(movieId, page))
+            .toEntityList()
+            .takeIf { it.isNotEmpty() }
+            ?: tryToCall {
+                remoteMovieDataSource.getSimilarMovies(movieId, page)
+                    .map { it.toEntity() }
+                    .also { movies ->
+                        moviesCacheDataSource.cacheRequestWithMovies(
+                            movies.toRequestWithMoviesCacheDto(
+                                request = getRequestOfSimilarMoviesCache(movieId, page)
+                            )
+                        )
+                    }
+            }
     }
 
     override suspend fun getMovieTopCast(movieId: Long, page: Int): List<Artist> {
@@ -81,10 +107,23 @@ class MovieRepositoryImpl(
         }
     }
 
-    override suspend fun getTopRatingMovies(page: Int,categoryId: String?): List<Movie> {
-        return tryToCall {
-            remoteMovieDataSource.getTopRatingMovies(page,categoryId).map { it.toEntity() }
-        }
+    override suspend fun getTopRatingMovies(page: Int, genreId: String?): List<Movie> {
+        moviesCacheDataSource.deleteExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
+        return moviesCacheDataSource
+            .getMoviesByRequest(request = getRequestOfTopRatedMoviesCache(page, genreId))
+            .toEntityList()
+            .takeIf { it.isNotEmpty() }
+            ?: tryToCall {
+                remoteMovieDataSource.getTopRatingMovies(page,genreId)
+                    .map { it.toEntity() }
+                    .also { movies ->
+                        moviesCacheDataSource.cacheRequestWithMovies(
+                            movies.toRequestWithMoviesCacheDto(
+                                request = getRequestOfTopRatedMoviesCache(page, genreId)
+                            )
+                        )
+                    }
+            }
     }
 
     override suspend fun getUpcomingMovies(page: Int,categoryId: String?): List<Movie> {
@@ -152,9 +191,11 @@ class MovieRepositoryImpl(
         }
     }
 
-
     private companion object {
         private const val CACHE_EXPIRATION_MILLIS = 3_600_000
         private const val PAGE_SIZE = 20
+        private fun getRequestOfMovieCache(movieId: Long) = "movies/movieId = $movieId"
+        private fun getRequestOfTopRatedMoviesCache(page: Int, genreId: String?) = "movies/tobRated/page = $page/genreId = $genreId"
+        private fun getRequestOfSimilarMoviesCache(movieId: Long, page: Int) = "movies/tobRated/movieId = $movieId/page = $page"
     }
 }

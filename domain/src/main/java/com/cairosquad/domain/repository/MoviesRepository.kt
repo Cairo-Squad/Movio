@@ -19,7 +19,7 @@ interface MoviesRepository {
 
     suspend fun getSuggestedMovies(): List<Movie>
 
-    suspend fun getTopRatingMovies(page: Int,categoryId: String?): List<Movie>
+    suspend fun getTopRatingMovies(page: Int, genreId: String?): List<Movie>
 
     suspend fun getUpcomingMovies(page: Int,categoryId: String?): List<Movie>
 
