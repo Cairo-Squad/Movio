@@ -9,7 +9,7 @@ import com.cairosquad.entity.Review
 import com.cairosquad.repository.movie.data_source.remote.RemoteMovieDataSource
 import com.cairosquad.repository.search.data_source.local.DiscoveryDataSource
 import com.cairosquad.repository.search.data_source.local.dto.toCacheDto
-import com.cairosquad.repository.search.data_source.local.dto.toEntityList
+import com.cairosquad.repository.search.data_source.local.dto.toEntity
 import com.cairosquad.repository.search.data_source.remote.RemoteMovieDiscoveryDataSource
 import com.cairosquad.repository.search.data_source.remote.dto.toEntity
 import com.cairosquad.repository.utils.mappers.tryToCall
@@ -50,7 +50,7 @@ class MovieRepositoryImpl(
         return tryToCall {
             discoveryDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
             discoveryDataSource.getPersonalizedMovies(page)
-                .takeIf { it.size >= PAGE_SIZE }?.map { it.toEntityList() }
+                .takeIf { it.size >= PAGE_SIZE }?.map { it.toEntity() }
                 ?: remoteMovieDiscoveryDataSource.getPersonalizedMovies(page).map { it.toEntity() }
                     .also { result ->
                         discoveryDataSource.cachePersonalizedMovies(
@@ -68,7 +68,7 @@ class MovieRepositoryImpl(
         return tryToCall {
             discoveryDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
             discoveryDataSource.getSuggestedMovies()
-                .takeIf { it.size >= PAGE_SIZE }?.map { it.toEntityList() }
+                .takeIf { it.size >= PAGE_SIZE }?.map { it.toEntity() }
                 ?: remoteMovieDiscoveryDataSource.getSuggestedMovies().map { it.toEntity() }
                     .also { result ->
                         discoveryDataSource.cacheSuggestedMovies(

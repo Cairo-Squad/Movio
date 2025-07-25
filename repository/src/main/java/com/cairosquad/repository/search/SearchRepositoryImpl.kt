@@ -7,6 +7,7 @@ import com.cairosquad.entity.Series
 import com.cairosquad.repository.search.data_source.local.CacheDataSource
 import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
 import com.cairosquad.repository.search.data_source.local.dto.toCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.toEntity
 import com.cairosquad.repository.search.data_source.local.dto.toEntityList
 import com.cairosquad.repository.search.data_source.remote.RemoteSearchDataSource
 import com.cairosquad.repository.search.data_source.remote.dto.toEntityList
@@ -22,7 +23,7 @@ class SearchRepositoryImpl(
         return tryToCall {
             cacheDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
             cacheDataSource.getCachedSeries(query, page)
-                .takeIf { it.isNotEmpty() }?.toEntityList()
+                .takeIf { it.isNotEmpty() }?.toEntity()
                 ?: remoteSearchDataSource.getSeries(query, page).toEntityList()
                     .also { result -> cacheDataSource.cacheSeries(result.toCacheDto(query, page)) }
         }
@@ -32,7 +33,7 @@ class SearchRepositoryImpl(
         return tryToCall {
             cacheDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
             cacheDataSource.getCachedMovies(query, page)
-                .takeIf { it.isNotEmpty() }?.toEntityList()
+                .takeIf { it.isNotEmpty() }?.toEntity()
                 ?: remoteSearchDataSource.getMovies(query, page).toEntityList()
                     .also { result -> cacheDataSource.cacheMovies(result.toCacheDto(query, page)) }
         }
