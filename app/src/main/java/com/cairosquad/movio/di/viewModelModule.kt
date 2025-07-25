@@ -1,5 +1,6 @@
 package com.cairosquad.movio.di
 
+import com.cairosquad.viewmodel.auth_gate.AuthGate
 import com.cairosquad.viewmodel.details.artist.ArtistViewModel
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsViewModel
 import com.cairosquad.viewmodel.details.movie.MovieViewModel
@@ -14,9 +15,11 @@ import com.cairosquad.viewmodel.home.HomeViewModel
 import com.cairosquad.viewmodel.login.LoginViewModel
 import com.cairosquad.viewmodel.search.SearchViewModel
 import com.cairosquad.viewmodel.see_all.SeeAllViewModel
+import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
+
 
 val viewModelModule = module {
     viewModelOf(::SearchViewModel)
@@ -74,4 +77,6 @@ val viewModelModule = module {
     viewModelOf(::HomeViewModel)
     viewModelOf(::SeeAllViewModel)
 
+
+    singleOf(::AuthGate)
 }
