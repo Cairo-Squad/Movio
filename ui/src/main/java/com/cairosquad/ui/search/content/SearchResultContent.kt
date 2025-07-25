@@ -2,9 +2,6 @@ package com.cairosquad.ui.search.content
 
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -101,22 +97,22 @@ fun SearchResultContent(
         when (selectedTabIndex) {
             0 -> {
                 SearchResultText(noOfResults = movies.itemCount)
-                AllResultsTabContent(movies = movies, listener = listener)
+                AllResultsTabContent(movies = movies, listener = listener, state = state)
             }
 
             1 -> {
                 SearchResultText(noOfResults = movies.itemCount)
-                MoviesTabContent(movies = movies, listener = listener)
+                MoviesTabContent(movies = movies, listener = listener, state = state)
             }
 
             2 -> {
                 SearchResultText(noOfResults = series.itemCount)
-                SeriesTabContent(series = series, listener = listener)
+                SeriesTabContent(series = series, listener = listener, state = state)
             }
 
             3 -> {
                 SearchResultText(noOfResults = artists.itemCount)
-                ArtistsTabContent(artist = artists, listener = listener)
+                ArtistsTabContent(artist = artists, listener = listener, state = state)
             }
         }
     }
@@ -125,158 +121,176 @@ fun SearchResultContent(
 @Composable
 private fun AllResultsTabContent(
     movies: LazyPagingItems<SearchScreenState.MovieUiState>,
+    state: SearchScreenState,
     listener: SearchInteractionListener,
     modifier: Modifier = Modifier
 ) {
-    AnimatedVisibility(
-        visible = movies.itemCount == 0,
-        enter = fadeIn(),
-        exit = fadeOut()
-    ) {
-        Box(
-            modifier = modifier
-                .fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            StateMessage(
-                imageDrawable = R.drawable.no_result,
-                titleId = R.string.no_results_found,
-                descriptionId = R.string.no_results_found_description
+    val isLoading = movies.loadState.refresh is LoadState.Loading
+    val isError = movies.loadState.refresh is LoadState.Error
+    val isEmpty = movies.itemCount == 0 && !isLoading && !isError
+
+    when {
+        isLoading -> {
+            SearchLoadingContent(
+                state = state,
+                listener = listener,
+                modifier = modifier
             )
         }
-    }
 
-    AnimatedVisibility(
-        visible = movies.itemCount > 0,
-        enter = fadeIn(),
-        exit = fadeOut()
-    ) {
-        LazyVerticalGrid(
-            modifier = modifier
-                .fillMaxSize(),
-            columns = GridCells.Adaptive(minSize = 101.33.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(bottom = 16.dp)
-        ) {
-            items(movies.itemCount) { index ->
-                movies[index]?.let { result ->
-                    MovieCard(
-                        modifier = Modifier
-                            .clickable(onClick = { listener.onMovieClicked(result.id) }),
-                        title = result.title,
-                        vote = result.rating,
-                        imgUrl = result.posterPath,
-                        width = null,
-                        aspectRatio = 0.743f
-                    )
+        isEmpty -> {
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                StateMessage(
+                    imageDrawable = R.drawable.no_result,
+                    titleId = R.string.no_results_found,
+                    descriptionId = R.string.no_results_found_description
+                )
+            }
+        }
+
+        else -> {
+            LazyVerticalGrid(
+                modifier = modifier.fillMaxSize(),
+                columns = GridCells.Adaptive(minSize = 101.33.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(bottom = 16.dp)
+            ) {
+                items(movies.itemCount) { index ->
+                    movies[index]?.let { result ->
+                        MovieCard(
+                            modifier = Modifier
+                                .clickable(onClick = { listener.onMovieClicked(result.id) }),
+                            title = result.title,
+                            vote = result.rating,
+                            imgUrl = result.posterPath,
+                            width = null,
+                            aspectRatio = 0.743f
+                        )
+                    }
                 }
             }
         }
     }
 }
+
 
 @Composable
 private fun MoviesTabContent(
     movies: LazyPagingItems<SearchScreenState.MovieUiState>,
     listener: SearchInteractionListener,
+    state: SearchScreenState,
     modifier: Modifier = Modifier
 ) {
-    AnimatedVisibility(
-        visible = movies.itemCount == 0,
-        enter = fadeIn(),
-        exit = fadeOut()
-    ) {
-        Box(
-            modifier = modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            StateMessage(
-                imageDrawable = R.drawable.no_result,
-                titleId = R.string.no_results_found,
-                descriptionId = R.string.no_results_found_description
+    val isLoading = movies.loadState.refresh is LoadState.Loading
+    val isError = movies.loadState.refresh is LoadState.Error
+    val isEmpty = movies.itemCount == 0 && !isLoading && !isError
+
+    when {
+        isLoading -> {
+            SearchLoadingContent(
+                state = state,
+                listener = listener,
+                modifier = modifier
             )
         }
-    }
+        isEmpty -> {
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                StateMessage(
+                    imageDrawable = R.drawable.no_result,
+                    titleId = R.string.no_results_found,
+                    descriptionId = R.string.no_results_found_description
+                )
+            }
+        }
 
-    AnimatedVisibility(
-        visible = movies.itemCount > 0,
-        enter = fadeIn(),
-        exit = fadeOut()
-    ) {
-        LazyVerticalGrid(
-            modifier = modifier
-                .fillMaxSize(),
-            columns = GridCells.Adaptive(minSize = 101.33.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(bottom = 16.dp)
-        ) {
-            items(movies.itemCount) { index ->
-                movies[index]?.let { movie ->
-                    MovieCard(
-                        modifier = Modifier.clickable {
-                            listener.onMovieClicked(movie.id)
-                        },
-                        title = movie.title,
-                        vote = movie.rating,
-                        imgUrl = movie.posterPath,
-                        width = null,
-                        aspectRatio = 0.743f
-                    )
+        else -> {
+            LazyVerticalGrid(
+                modifier = modifier.fillMaxSize(),
+                columns = GridCells.Adaptive(minSize = 101.33.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(bottom = 16.dp)
+            ) {
+                items(movies.itemCount) { index ->
+                    movies[index]?.let { movie ->
+                        MovieCard(
+                            modifier = Modifier.clickable {
+                                listener.onMovieClicked(movie.id)
+                            },
+                            title = movie.title,
+                            vote = movie.rating,
+                            imgUrl = movie.posterPath,
+                            width = null,
+                            aspectRatio = 0.743f
+                        )
+                    }
                 }
             }
         }
     }
 }
 
+
 @Composable
 private fun SeriesTabContent(
     series: LazyPagingItems<SearchScreenState.SeriesUiState>,
+    state: SearchScreenState,
     listener: SearchInteractionListener,
     modifier: Modifier = Modifier
 ) {
-    AnimatedVisibility(
-        visible = series.itemCount == 0,
-        enter = fadeIn(),
-        exit = fadeOut()
-    ) {
-        Box(
-            modifier = modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            StateMessage(
-                imageDrawable = R.drawable.no_result,
-                titleId = R.string.no_results_found,
-                descriptionId = R.string.no_results_found_description
+    val isLoading = series.loadState.refresh is LoadState.Loading
+    val isError = series.loadState.refresh is LoadState.Error
+    val isEmpty = series.itemCount == 0 && !isLoading && !isError
+
+    when {
+        isLoading -> {
+            SearchLoadingContent(
+                state = state,
+                listener = listener,
+                modifier = modifier
             )
         }
-    }
 
-    AnimatedVisibility(
-        visible = series.itemCount > 0,
-        enter = fadeIn(),
-        exit = fadeOut()
-    ) {
-        LazyVerticalGrid(
-            modifier = modifier
-                .fillMaxSize(),
-            columns = GridCells.Adaptive(minSize = 101.33.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(bottom = 16.dp)
-        ) {
-            items(series.itemCount) { index ->
-                series[index]?.let { series ->
-                    MovieCard(
-                        modifier = Modifier
-                            .clickable(onClick = { listener.onSeriesClicked(series.id) }),
-                        title = series.title,
-                        vote = series.rating,
-                        imgUrl = series.posterPath,
-                        width = null,
-                        aspectRatio = 0.743f
-                    )
+        isEmpty -> {
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                StateMessage(
+                    imageDrawable = R.drawable.no_result,
+                    titleId = R.string.no_results_found,
+                    descriptionId = R.string.no_results_found_description
+                )
+            }
+        }
+
+        else -> {
+            LazyVerticalGrid(
+                modifier = modifier.fillMaxSize(),
+                columns = GridCells.Adaptive(minSize = 101.33.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(bottom = 16.dp)
+            ) {
+                items(series.itemCount) { index ->
+                    series[index]?.let { series ->
+                        MovieCard(
+                            modifier = Modifier
+                                .clickable(onClick = { listener.onSeriesClicked(series.id) }),
+                            title = series.title,
+                            vote = series.rating,
+                            imgUrl = series.posterPath,
+                            width = null,
+                            aspectRatio = 0.743f
+                        )
+                    }
                 }
             }
         }
@@ -286,52 +300,59 @@ private fun SeriesTabContent(
 @Composable
 private fun ArtistsTabContent(
     artist: LazyPagingItems<SearchScreenState.ArtistUiState>,
+    state: SearchScreenState,
     listener: SearchInteractionListener,
     modifier: Modifier = Modifier
 ) {
-    AnimatedVisibility(
-        visible = artist.itemCount == 0,
-        enter = fadeIn(),
-        exit = fadeOut()
-    ) {
-        Box(
-            modifier = modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            StateMessage(
-                imageDrawable = R.drawable.no_result,
-                titleId = R.string.no_results_found,
-                descriptionId = R.string.no_results_found_description
+    val isLoading = artist.loadState.refresh is LoadState.Loading
+    val isError = artist.loadState.refresh is LoadState.Error
+    val isEmpty = artist.itemCount == 0 && !isLoading && !isError
+
+    when {
+        isLoading -> {
+            SearchLoadingContent(
+                state = state,
+                listener = listener,
+                modifier = modifier
             )
         }
-    }
 
-    AnimatedVisibility(
-        visible = artist.itemCount > 0,
-        enter = fadeIn(),
-        exit = fadeOut()
-    ) {
-        LazyVerticalGrid(
-            modifier = modifier
-                .fillMaxSize(),
-            columns = GridCells.Adaptive(minSize = 101.33.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(bottom = 16.dp)
-        ) {
-            items(artist.itemCount) { index ->
-                artist[index]?.let { artist ->
-                    ArtistCard(
-                        modifier = Modifier
-                            .clickable(onClick = { listener.onArtistClicked(artist.id) }),
-                        name = artist.name,
-                        imgUrl = artist.photoPath,
-                    )
+        isEmpty -> {
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                StateMessage(
+                    imageDrawable = R.drawable.no_result,
+                    titleId = R.string.no_results_found,
+                    descriptionId = R.string.no_results_found_description
+                )
+            }
+        }
+
+        else -> {
+            LazyVerticalGrid(
+                modifier = modifier.fillMaxSize(),
+                columns = GridCells.Adaptive(minSize = 101.33.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(bottom = 16.dp)
+            ) {
+                items(artist.itemCount) { index ->
+                    artist[index]?.let { artist ->
+                        ArtistCard(
+                            modifier = Modifier
+                                .clickable(onClick = { listener.onArtistClicked(artist.id) }),
+                            name = artist.name,
+                            imgUrl = artist.photoPath,
+                        )
+                    }
                 }
             }
         }
     }
 }
+
 
 @Composable
 fun SearchResultText(

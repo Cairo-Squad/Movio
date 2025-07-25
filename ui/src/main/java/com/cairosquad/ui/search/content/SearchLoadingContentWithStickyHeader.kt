@@ -17,7 +17,7 @@ import com.cairosquad.viewmodel.search.SearchInteractionListener
 import com.cairosquad.viewmodel.search.SearchScreenState
 
 @Composable
-fun SearchLoadingContent(
+fun SearchLoadingContentWithStickyHeader(
     state: SearchScreenState,
     listener: SearchInteractionListener,
     modifier: Modifier = Modifier
@@ -30,6 +30,22 @@ fun SearchLoadingContent(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
     ) {
+        stickyHeader {
+            InputField(
+                modifier = Modifier
+                    .background(Theme.color.surfaces.surface),
+                value = state.query,
+                onValueChange = { },
+                placeholder = stringResource(R.string.search),
+                leadingIcon = R.drawable.search_bottom_nav,
+                onFocusChanged = {
+                    if (it) {
+                        listener.onClickSearchTextField()
+                    }
+                },
+                readOnly = true
+            )
+        }
         items(20) {
             LoadingMovieCard()
         }
