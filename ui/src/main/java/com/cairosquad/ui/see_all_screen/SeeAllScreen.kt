@@ -127,46 +127,55 @@ fun SeeAllScreen(
         }
     }
 }
-
 @Composable
 private fun SeeAllMediaItems(
     state: SeeAllScreenState,
     listener: SeeAllInteractionsListener,
     modifier: Modifier = Modifier
 ) {
-    AnimatedVisibility(visible = state.mediaList.isEmpty(), enter = fadeIn(), exit = fadeOut()) {
-        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            StateMessage(
-                imageDrawable = R.drawable.no_result,
-                titleId = R.string.no_results_found,
-                descriptionId = R.string.no_results_found_description
-            )
+    when {
+        state.isLoading -> {
+            SeeAllLoadingScreen(modifier)
         }
-    }
 
-    AnimatedVisibility(visible = state.mediaList.isNotEmpty(), enter = fadeIn(), exit = fadeOut()) {
-        LazyVerticalGrid(
-            modifier = modifier.fillMaxSize(),
-            columns = GridCells.Adaptive(minSize = 101.33.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(bottom = 16.dp)
-        ) {
+        !state.isLoading && state.mediaList.isEmpty() -> {
+            AnimatedVisibility(visible = true, enter = fadeIn(), exit = fadeOut()) {
+                Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    StateMessage(
+                        imageDrawable = R.drawable.no_result,
+                        titleId = R.string.no_results_found,
+                        descriptionId = R.string.no_results_found_description
+                    )
+                }
+            }
+        }
 
-            items(state.mediaList) { item ->
-                MovieCard(
-                    modifier = Modifier.clickable { listener.onClickMedia(item.id, item.isMovie) },
-                    title = item.title,
-                    vote = item.rating,
-                    imgUrl = item.posterPath,
-                    width = null,
-                    aspectRatio = 0.743f
-                )
+        else -> {
+            AnimatedVisibility(visible = true, enter = fadeIn(), exit = fadeOut()) {
+                LazyVerticalGrid(
+                    modifier = modifier.fillMaxSize(),
+                    columns = GridCells.Adaptive(minSize = 101.33.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(bottom = 16.dp)
+                ) {
+                    items(state.mediaList) { item ->
+                        MovieCard(
+                            modifier = Modifier.clickable {
+                                listener.onClickMedia(item.id, item.isMovie)
+                            },
+                            title = item.title,
+                            vote = item.rating,
+                            imgUrl = item.posterPath,
+                            width = null,
+                            aspectRatio = 0.743f
+                        )
+                    }
+                }
             }
         }
     }
 }
-
 
 @Composable
 private fun TrendingContentList(
@@ -174,51 +183,49 @@ private fun TrendingContentList(
     state: SeeAllScreenState,
     modifier: Modifier = Modifier
 ) {
-
-    AnimatedVisibility(
-        visible = state.mediaList.isEmpty(),
-        enter = fadeIn(),
-        exit = fadeOut()
-    ) {
-        Box(
-            modifier = modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            StateMessage(
-                imageDrawable = R.drawable.no_result,
-                titleId = R.string.no_results_found,
-                descriptionId = R.string.no_results_found_description
-            )
+    when {
+        state.isLoading -> {
+            SeeAllLoadingScreen(modifier)
         }
-    }
 
-    AnimatedVisibility(
-        visible = state.mediaList.isNotEmpty(),
-        enter = fadeIn(),
-        exit = fadeOut()
-    ) {
-        LazyColumn(
-            modifier = modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(bottom = 16.dp)
-        ) {
-            items(state.mediaList) { mediaItem ->
-                TrendingMovieCard(
-                    modifier = Modifier.clickable {
-                        listener.onClickMedia(mediaItem.id, mediaItem.isMovie)
-                    },
-                    imgUrl = mediaItem.posterPath,
-                    rating = String.format(Locale.getDefault(), "%.1f", mediaItem.rating),
-                    movieTitle = mediaItem.title,
-                    movieCategory = mediaItem.genres.firstOrNull()?.name ?: ""
-                )
+        !state.isLoading && state.mediaList.isEmpty() -> {
+            AnimatedVisibility(visible = true, enter = fadeIn(), exit = fadeOut()) {
+                Box(
+                    modifier = modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    StateMessage(
+                        imageDrawable = R.drawable.no_result,
+                        titleId = R.string.no_results_found,
+                        descriptionId = R.string.no_results_found_description
+                    )
+                }
             }
         }
 
+        else -> {
+            AnimatedVisibility(visible = true, enter = fadeIn(), exit = fadeOut()) {
+                LazyColumn(
+                    modifier = modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(bottom = 16.dp)
+                ) {
+                    items(state.mediaList) { mediaItem ->
+                        TrendingMovieCard(
+                            modifier = Modifier.clickable {
+                                listener.onClickMedia(mediaItem.id, mediaItem.isMovie)
+                            },
+                            imgUrl = mediaItem.posterPath,
+                            rating = String.format(Locale.getDefault(), "%.1f", mediaItem.rating),
+                            movieTitle = mediaItem.title,
+                            movieCategory = mediaItem.genres.firstOrNull()?.name.orEmpty()
+                        )
+                    }
+                }
+            }
+        }
     }
 }
-
 
 private fun effectDiscoverHandler(
     effect: SeeAllEffect, navController: NavController
