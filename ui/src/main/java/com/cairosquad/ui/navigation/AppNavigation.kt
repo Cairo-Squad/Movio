@@ -3,6 +3,7 @@ package com.cairosquad.ui.navigation
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -12,6 +13,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.AppScreen
+import com.cairosquad.ui.auth.ForgetPasswordWebViewScreen
+import com.cairosquad.ui.auth.LoginScreen
+import com.cairosquad.ui.auth.SignUpWebViewScreen
 import com.cairosquad.ui.details.EpisodesScreen
 import com.cairosquad.ui.details.MovieScreen
 import com.cairosquad.ui.details.ReviewsScreen
@@ -21,12 +25,12 @@ import com.cairosquad.ui.details.TopCastScreen
 import com.cairosquad.ui.details.artist.ArtistScreen
 import com.cairosquad.ui.details.similar_movies.SimilarMoviesScreen
 import com.cairosquad.ui.details.similar_series.SimilarSeriesScreen
-import com.cairosquad.ui.auth.ForgetPasswordWebViewScreen
-import com.cairosquad.ui.auth.LoginScreen
-import com.cairosquad.ui.auth.SignUpWebViewScreen
 import com.cairosquad.ui.search.ForYouScreen
 import com.cairosquad.ui.see_all_screen.SeeAllScreen
 import com.cairosquad.ui.splash.SplashScreen
+import com.cairosquad.viewmodel.auth_gate.AuthGate
+import kotlinx.coroutines.launch
+import org.koin.mp.KoinPlatform.getKoin
 
 
 @Composable
