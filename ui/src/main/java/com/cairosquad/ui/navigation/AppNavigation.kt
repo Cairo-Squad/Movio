@@ -25,6 +25,8 @@ import com.cairosquad.ui.details.artist.ArtistScreen
 import com.cairosquad.ui.details.similar_movies.SimilarMoviesScreen
 import com.cairosquad.ui.details.similar_series.SimilarSeriesScreen
 import com.cairosquad.ui.search.ForYouScreen
+import com.cairosquad.ui.see_all_screen.SeeAllScreen
+import com.cairosquad.ui.splash.SplashScreen
 
 
 @Composable
@@ -113,6 +115,12 @@ fun AppNavigation() {
             }
             composable<ForYouRoute> {
                 ForYouScreen()
+            }
+            composable<SeeAllScreenRoute> { backStackEntry ->
+                SeeAllScreen(
+                    contentType = backStackEntry.toRoute<SeeAllScreenRoute>().contentType,
+                    mediaType = backStackEntry.toRoute<SeeAllScreenRoute>().mediaType
+                )
             }
         }
     }

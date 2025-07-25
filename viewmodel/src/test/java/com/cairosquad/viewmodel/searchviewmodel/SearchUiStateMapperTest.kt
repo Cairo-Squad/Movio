@@ -88,4 +88,5 @@ class SearchUiStateMapperTest {
             photoPath = "/emma.jpg"
         )
     }
+
 }

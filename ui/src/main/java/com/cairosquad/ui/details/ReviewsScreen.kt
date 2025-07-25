@@ -23,11 +23,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.basic_component.AppBar
+import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.R
 import com.cairosquad.ui.movio_component.LoadingReviewCard
 import com.cairosquad.ui.movio_component.ReviewCard
@@ -97,7 +97,7 @@ private fun ReviewsContent(
                     .size(230.dp)
                     .blur(264.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
                     .background(
-                        color = Color(0x33734EF8),
+                        color = Theme.color.surfaces.onSurfaceAt5,
                         shape = CircleShape
                     )
                     .align(Alignment.TopEnd)
