@@ -49,8 +49,14 @@ fun AppNavigation(
             composable<SplashRoute> {
                 SplashScreen(
                     onNavigateNext = {
-                        navController.popBackStack()
-                        navController.navigate(AppRoute)
+                        val route = if (authGate.isUserLoggedIn()) AppRoute else LoginRoute
+                        navController.navigate(route) {
+                            popUpTo(SplashRoute) {
+                                inclusive = true
+                            }
+
+                            launchSingleTop = true
+                        }
                     }
                 )
             }
