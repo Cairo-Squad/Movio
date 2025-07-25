@@ -20,8 +20,10 @@ class ArtistViewModel(
 
     fun loadArtistDetails(artistId: Long) {
         tryToCall(
-            block = {
+            onStart = {
                 updateState { it.copy(screenStatus = ArtistScreenState.ScreenStatus.LOADING) }
+            },
+            block = {
                 getArtistDetailsUseCase.getArtist(artistId).toArtistUiState()
             },
             onSuccess = { artist ->
@@ -41,6 +43,9 @@ class ArtistViewModel(
 
     fun loadArtistMovies(artistId: Long) {
         tryToCall(
+            onStart = {
+                updateState { it.copy(screenStatus = ArtistScreenState.ScreenStatus.LOADING) }
+            },
             block = {
                 getArtistDetailsUseCase.getMoviesOfArtist(artistId)
             },
@@ -62,6 +67,9 @@ class ArtistViewModel(
 
     fun loadArtistSeries(artistId: Long) {
         tryToCall(
+            onStart = {
+                updateState { it.copy(screenStatus = ArtistScreenState.ScreenStatus.LOADING) }
+            },
             block = {
                 val series = getArtistDetailsUseCase
                     .getSeriesOfArtist(artistId)

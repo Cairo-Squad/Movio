@@ -2,6 +2,7 @@ package com.cairosquad.viewmodel.searchviewmodel
 
 import androidx.paging.PagingData
 import app.cash.turbine.test
+import app.cash.turbine.testIn
 import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.exception.NetworkException
 import com.cairosquad.domain.exception.UnknownException
@@ -192,11 +193,10 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `should set error status when discover movies loading fails`() = runTest {
+    fun `should set error status when personalized movies loading fails`() = runTest {
         coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(1) } throws IOException()
-        coEvery { getSuggestedMoviesUseCase.getSuggestedMovies() } returns emptyList()
 
-        viewModel.loadDiscoverMovies()
+        viewModel.getPersonalizedMovies()
 
         advanceUntilIdle()
 
@@ -208,6 +208,20 @@ class SearchViewModelTest {
                 ErrorStatus.UNKNOWN_ERROR
             )
         )
+    }
+
+    @Test
+    fun `should set error status when discover movies loading fails`() = runTest {
+        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(1) } throws IOException()
+        coEvery { getSuggestedMoviesUseCase.getSuggestedMovies() } throws IOException() // Make both fail
+
+        viewModel.loadDiscoverMovies()
+
+        // Wait for both operations to complete
+        advanceUntilIdle()
+
+        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
+        assertThat(viewModel.screenState.value.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
     }
 
     @Test
@@ -557,6 +571,34 @@ class SearchViewModelTest {
         val state = viewModel.screenState.value
         assertThat(state.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
         assertThat(state.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
+    }
+
+    @Test
+    fun `should show failed status when both personalized and suggested fail`() = runTest {
+        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(1) } throws IOException()
+        coEvery { getSuggestedMoviesUseCase.getSuggestedMovies() } throws IOException()
+
+        viewModel.loadDiscoverMovies()
+
+        advanceUntilIdle()
+
+        val state = viewModel.screenState.value
+        assertThat(state.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.FAILED)
+    }
+
+    @Test
+    fun `should show explore screen when both personalized and suggested succeed`() = runTest {
+        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(1) } returns listOf(movie1)
+        coEvery { getSuggestedMoviesUseCase.getSuggestedMovies() } returns listOf(movie1)
+
+        viewModel.loadDiscoverMovies()
+
+        advanceUntilIdle()
+
+        val state = viewModel.screenState.value
+        assertThat(state.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
+        assertThat(state.forYou).isNotEmpty()
+        assertThat(state.exploreMore).isNotEmpty()
     }
 
     suspend fun waitUntil(
