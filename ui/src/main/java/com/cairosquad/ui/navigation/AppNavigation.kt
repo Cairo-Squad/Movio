@@ -29,7 +29,6 @@ import com.cairosquad.ui.search.ForYouScreen
 import com.cairosquad.ui.see_all_screen.SeeAllScreen
 import com.cairosquad.ui.splash.SplashScreen
 import com.cairosquad.viewmodel.auth_gate.AuthGate
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import org.koin.compose.getKoin
 
@@ -55,11 +54,7 @@ fun AppNavigation(
                 SplashScreen(
                     onNavigateNext = {
                         coroutineScope.launch {
-                            val isUserLoggedIn = coroutineScope.async {
-                                authGate.isUserLoggedIn()
-                            }
-
-                            val route = if (isUserLoggedIn.await()) AppRoute else LoginRoute
+                            val route = if (authGate.isUserLoggedIn()) AppRoute else LoginRoute
                             navController.navigate(route) {
                                 popUpTo(SplashRoute) {
                                     inclusive = true
