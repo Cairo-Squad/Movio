@@ -24,6 +24,7 @@ import com.cairosquad.design_system.basic_component.Icon
 import com.cairosquad.design_system.basic_component.Text
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
+import com.cairosquad.ui.BuildConfig
 
 @Composable
 fun ArtistCard(
@@ -39,7 +40,7 @@ fun ArtistCard(
     ) {
         if (imgUrl?.isNotEmpty() == true) {
             SafeImageViewer(
-                model = "https://image.tmdb.org/t/p/w500$imgUrl",
+                model = BuildConfig.IMAGE_BASE_URL + imgUrl,
                 modifier = Modifier
                     .padding(horizontal = 6.67.dp)
                     .size(88.dp)

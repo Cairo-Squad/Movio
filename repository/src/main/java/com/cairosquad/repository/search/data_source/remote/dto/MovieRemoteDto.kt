@@ -14,4 +14,10 @@ data class MovieRemoteDto(
     val title: String? = null,
     @SerialName("vote_average")
     val voteAverage: Double? = null,
+    @SerialName("overview")
+    val overview: String? = null,
+    @SerialName("release_date")
+    val releaseDate: String? = null,
+    @SerialName("genre_ids")
+    val genreIds: List<Int>? = null,
 )

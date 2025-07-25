@@ -47,4 +47,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     debugImplementation(libs.androidx.ui.tooling)
     implementation(libs.androidx.constraintlayout.compose)
+    implementation(libs.lottie.compose)
+    implementation(libs.accompanist.webview)
+
 }

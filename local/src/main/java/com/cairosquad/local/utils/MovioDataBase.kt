@@ -2,17 +2,19 @@ package com.cairosquad.local.utils
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.cairosquad.local.login.dao.LoginDao
 import com.cairosquad.local.search.cache.dao.CacheDao
 import com.cairosquad.local.search.discovery.dao.DiscoveryDao
-import com.cairosquad.repository.search.data_source.local.dto.PersonalizedMoviesIdsDto
-import com.cairosquad.repository.search.data_source.local.dto.SuggestedMoviesIdsDto
 import com.cairosquad.local.search.recent.dao.LocalRecentSearchDao
 import com.cairosquad.repository.artists.dto.ArtistMovieCachedDto
 import com.cairosquad.repository.artists.dto.ArtistSeriesCachedDto
-import com.cairosquad.repository.search.data_source.local.dto.RecentSearchEntity
+import com.cairosquad.repository.login.data_source.local.dto.SessionIdDto
 import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.PersonalizedMoviesIdsDto
+import com.cairosquad.repository.search.data_source.local.dto.RecentSearchEntity
 import com.cairosquad.repository.search.data_source.local.dto.SeriesCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.SuggestedMoviesIdsDto
 
 @Database(
     entities = [
@@ -23,7 +25,8 @@ import com.cairosquad.repository.search.data_source.local.dto.SeriesCacheDto
         PersonalizedMoviesIdsDto::class,
         SuggestedMoviesIdsDto::class,
         ArtistMovieCachedDto::class,
-        ArtistSeriesCachedDto::class
+        ArtistSeriesCachedDto::class,
+        SessionIdDto::class
     ],
     version = 1,
     exportSchema = true,
@@ -35,5 +38,8 @@ abstract class MovioDataBase : RoomDatabase() {
     abstract fun recentSearchDao(): LocalRecentSearchDao
 
     abstract fun discoveryDao(): DiscoveryDao
+
+    abstract fun loginDao(): LoginDao
+
 
 }

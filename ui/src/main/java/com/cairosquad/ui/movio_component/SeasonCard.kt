@@ -29,6 +29,7 @@ import com.cairosquad.design_system.preview.MultiThemePreviews
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
+import com.cairosquad.ui.BuildConfig
 
 @Composable
 fun SeasonCard(
@@ -53,7 +54,7 @@ fun SeasonCard(
     ) {
         if (movieImage?.isNotEmpty() == true) {
             SafeImageViewer(
-                model = "https://image.tmdb.org/t/p/w500$movieImage",
+                model = BuildConfig.IMAGE_BASE_URL + movieImage,
                 contentDescription = stringResource(R.string.movie_poster),
                 modifier = Modifier
                     .size(width = 76.dp, height = 100.dp)

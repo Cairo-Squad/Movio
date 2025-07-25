@@ -49,6 +49,11 @@ dependencies {
     implementation(projects.domain)
 
     implementation(libs.androidx.core.ktx)
+    testImplementation(libs.junit)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.jupiter)
+    androidTestImplementation(libs.androidx.junit)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
