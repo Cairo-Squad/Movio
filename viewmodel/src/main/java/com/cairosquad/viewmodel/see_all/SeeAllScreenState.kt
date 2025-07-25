@@ -7,7 +7,7 @@ data class SeeAllScreenState(
 
     val screenStatus: ScreenStatus = ScreenStatus.LOADING,
     val errorStatus: ErrorStatus? = null,
-
+    val isLoading: Boolean = false,
     val genres: List<GenreUiState> = listOf(GenreUiState.defaultGenre),
     val selectedGenreIndex: Int = 0,
 ) {

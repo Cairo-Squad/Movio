@@ -21,8 +21,10 @@ class TopCastViewModel(
 
     fun getTopCast() {
         tryToCall(
-            block = {
+            onStart = {
                 updateState { it.copy(screenStatus = ScreenStatus.LOADING) }
+            },
+            block = {
                 getTopCastByMediaType()
             },
             onSuccess = ::handleSuccess,
