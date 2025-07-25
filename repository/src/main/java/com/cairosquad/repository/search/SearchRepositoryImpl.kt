@@ -7,7 +7,7 @@ import com.cairosquad.entity.Series
 import com.cairosquad.repository.search.data_source.local.CacheDataSource
 import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
 import com.cairosquad.repository.search.data_source.local.dto.toCacheDto
-import com.cairosquad.repository.search.data_source.local.dto.toEntity
+import com.cairosquad.repository.search.data_source.local.dto.toEntityList
 import com.cairosquad.repository.search.data_source.remote.RemoteSearchDataSource
 import com.cairosquad.repository.search.data_source.remote.dto.toEntityList
 import com.cairosquad.repository.utils.mappers.tryToCall
@@ -22,7 +22,7 @@ class SearchRepositoryImpl(
         return tryToCall {
             cacheDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
             cacheDataSource.getCachedSeries(query, page)
-                .takeIf { it.isNotEmpty() }?.toEntity()
+                .takeIf { it.isNotEmpty() }?.toEntityList()
                 ?: remoteSearchDataSource.getSeries(query, page).toEntityList()
                     .also { result -> cacheDataSource.cacheSeries(result.toCacheDto(query, page)) }
         }
@@ -32,7 +32,7 @@ class SearchRepositoryImpl(
         return tryToCall {
             cacheDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
             cacheDataSource.getCachedMovies(query, page)
-                .takeIf { it.isNotEmpty() }?.toEntity()
+                .takeIf { it.isNotEmpty() }?.toEntityList()
                 ?: remoteSearchDataSource.getMovies(query, page).toEntityList()
                     .also { result -> cacheDataSource.cacheMovies(result.toCacheDto(query, page)) }
         }
@@ -42,7 +42,7 @@ class SearchRepositoryImpl(
         return tryToCall {
             cacheDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
             cacheDataSource.getCachedArtists(query, page)
-                .takeIf { it.isNotEmpty() }?.toEntity()
+                .takeIf { it.isNotEmpty() }?.toEntityList()
                 ?: remoteSearchDataSource.getArtists(query, page).toEntityList()
                     .also { result -> cacheDataSource.cacheArtist(result.toCacheDto(query, page)) }
         }

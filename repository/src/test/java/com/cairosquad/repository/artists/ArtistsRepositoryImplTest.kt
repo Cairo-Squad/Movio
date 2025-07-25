@@ -7,7 +7,7 @@ import com.cairosquad.repository.artists.data_source.ArtistsRemoteDataSource
 import com.cairosquad.repository.search.data_source.local.CacheDataSource
 import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
-import com.cairosquad.repository.search.data_source.local.dto.toEntity
+import com.cairosquad.repository.search.data_source.local.dto.toEntityList
 import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.SeriesRemoteDto
@@ -63,7 +63,7 @@ class ArtistsRepositoryImplTest {
     fun `getArtist returns cached artist if available`() = runTest {
         val artistId = 1L
 
-        val expected = cachedDto.toEntity()
+        val expected = cachedDto.toEntityList()
 
         coEvery { cacheDataSource.clearExpiredCache(any()) } just Runs
         coEvery { cacheDataSource.getCachedArtists(artistId) } returns cachedDto

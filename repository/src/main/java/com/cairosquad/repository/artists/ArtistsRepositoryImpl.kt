@@ -7,7 +7,7 @@ import com.cairosquad.entity.Series
 import com.cairosquad.repository.artists.data_source.ArtistsRemoteDataSource
 import com.cairosquad.repository.search.data_source.local.CacheDataSource
 import com.cairosquad.repository.search.data_source.local.dto.toCacheDto
-import com.cairosquad.repository.search.data_source.local.dto.toEntity
+import com.cairosquad.repository.search.data_source.local.dto.toEntityList
 import com.cairosquad.repository.search.data_source.remote.dto.toEntity
 import com.cairosquad.repository.search.data_source.remote.dto.toEntityList
 import com.cairosquad.repository.utils.mappers.tryToCall
@@ -20,7 +20,7 @@ class ArtistsRepositoryImpl(
     override suspend fun getArtist(artistId: Long): Artist {
         return try {
             cacheDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
-            cacheDataSource.getCachedArtists(id = artistId).toEntity()
+            cacheDataSource.getCachedArtists(id = artistId).toEntityList()
         } catch (_: IllegalStateException) {
             tryToCall {
                 artistsRemoteDataSource.getArtist(artistId).toEntity()
@@ -38,7 +38,7 @@ class ArtistsRepositoryImpl(
         return tryToCall {
             cacheDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
             cacheDataSource.getCachedArtistMovies(artistId = artistId)
-                .takeIf { it.isNotEmpty() }?.toEntity()
+                .takeIf { it.isNotEmpty() }?.toEntityList()
                 ?: artistsRemoteDataSource.getMoviesOfArtist(artistId).toEntityList()
                     .also { cacheDataSource.cacheMovies(it.toCacheDto(
                         "ELSAYEDMAGDY",
@@ -52,7 +52,7 @@ class ArtistsRepositoryImpl(
         return tryToCall {
             cacheDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
             cacheDataSource.getCachedArtistSeries(artistId = artistId)
-                .takeIf { it.isNotEmpty() }?.toEntity()
+                .takeIf { it.isNotEmpty() }?.toEntityList()
                 ?: artistsRemoteDataSource.getSeriesOfArtist(artistId).toEntityList()
                     .also { cacheDataSource.cacheSeries(it.toCacheDto(
                         "ELSAYEDMAGDY",

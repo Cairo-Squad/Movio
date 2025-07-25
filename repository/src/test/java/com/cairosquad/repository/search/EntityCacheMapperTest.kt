@@ -7,7 +7,7 @@ import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.SeriesCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.toCacheDto
-import com.cairosquad.repository.search.data_source.local.dto.toEntity
+import com.cairosquad.repository.search.data_source.local.dto.toEntityList
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import java.time.Instant
@@ -52,7 +52,7 @@ class EntityCacheMapperTest {
             releaseDate = 0L,
             seasonsCount = 1
         )
-        assertThat(seriesCacheWithNulls.toEntity()).isEqualTo(expected)
+        assertThat(seriesCacheWithNulls.toEntityList()).isEqualTo(expected)
     }
 
     @Test
@@ -80,7 +80,7 @@ class EntityCacheMapperTest {
             runtimeMinutes = 0,
             trailerPath = ""
         )
-        assertThat(movieCacheWithNulls.toEntity()).isEqualTo(expected)
+        assertThat(movieCacheWithNulls.toEntityList()).isEqualTo(expected)
     }
 
     @Test
@@ -106,7 +106,7 @@ class EntityCacheMapperTest {
     @Test
     fun `Should ArtistCacheDto maps to Artist correctly`() {
         val expected = Artist(id = 5L, name = "", photoPath = "")
-        assertThat(artistCacheWithNulls.toEntity()).isEqualTo(expected)
+        assertThat(artistCacheWithNulls.toEntityList()).isEqualTo(expected)
     }
 
     @Test
