@@ -26,7 +26,6 @@ import com.cairosquad.ui.details.similar_movies.SimilarMoviesScreen
 import com.cairosquad.ui.details.similar_series.SimilarSeriesScreen
 import com.cairosquad.ui.search.ForYouScreen
 import com.cairosquad.ui.see_all_screen.SeeAllScreen
-import com.cairosquad.ui.splash.SplashScreen
 
 
 @Composable
@@ -42,6 +41,15 @@ fun AppNavigation() {
             navController = navController,
             startDestination = AppRoute
         ) {
+
+//            composable<SplashRoute> {
+//                SplashScreen(
+//                    onNavigateNext = {
+//                        navController.popBackStack()
+//                        navController.navigate(AppRoute)
+//                    }
+//                )
+//            }
 
             composable<LoginRoute> {
                 LoginScreen()
