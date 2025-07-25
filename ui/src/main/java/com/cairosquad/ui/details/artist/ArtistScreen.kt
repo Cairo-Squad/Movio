@@ -25,6 +25,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -43,6 +44,7 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.basic_component.ExpandableText
 import com.cairosquad.design_system.basic_component.InfoChip
+import com.cairosquad.design_system.modifier.CustomBrush
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import com.cairosquad.ui.BuildConfig
@@ -124,15 +126,23 @@ private fun ArtistScreenContent(
                     .fillMaxWidth()
                     .height(340.dp)
             ) {
-                if (state.artist.photoPath.isNotEmpty()) {
-                    SafeImageViewer(
-                        model = BuildConfig.IMAGE_BASE_URL + state.artist.photoPath,
-                        contentDescription = "blured image",
+                if (state.artist.photoPath.isBlank()) {
+                    Box(
                         modifier = Modifier
-                            .blur(16.dp)
                             .fillMaxSize()
                             .height(335.dp)
-                            .offset(y = (-5).dp),
+                            .offset(y = (-5).dp)
+                            .CustomBrush(0.5f, 16.dp),
+                    )
+                } else {
+                    SafeImageViewer(
+                        model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
+                        contentDescription = "blured image",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .height(335.dp)
+                            .offset(y = (-5).dp)
+                            .CustomBrush(0.5f, 16.dp),
                         nudeThreshold = 0.0,
                         nonNudeThreshold = 0.0
                     )
