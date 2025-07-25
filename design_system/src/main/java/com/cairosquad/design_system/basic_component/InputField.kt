@@ -63,6 +63,7 @@ fun InputField(
     isSingleLine: Boolean = true,
     isPasswordField: Boolean = false,
     readOnly: Boolean = false,
+    maxCharacters: Int? = 100,
     @DrawableRes leadingIcon: Int? = null,
     @DrawableRes trailingIcon: Int? = null,
     onTrailingIconClick: () -> Unit = {},
@@ -75,7 +76,6 @@ fun InputField(
         mutableStateOf(TextFieldValue(text = value, selection = TextRange(value.length)))
     }
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
-
 
     val hasFocusGradientColors = listOf(
         Theme.color.brand.onPrimary,
@@ -119,8 +119,18 @@ fun InputField(
             value = textFieldValue,
             readOnly = readOnly,
             onValueChange = { newValue ->
-                textFieldValue = newValue
-                onValueChange(newValue.text)
+                val filteredValue = if (maxCharacters != null && newValue.text.length > maxCharacters) {
+                    val truncatedText = newValue.text.take(maxCharacters)
+                    newValue.copy(
+                        text = truncatedText,
+                        selection = TextRange(truncatedText.length.coerceAtMost(newValue.selection.start))
+                    )
+                } else {
+                    newValue
+                }
+
+                textFieldValue = filteredValue
+                onValueChange(filteredValue.text)
             },
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
@@ -187,6 +197,26 @@ fun InputField(
             visualTransformation = if (isPasswordField) PasswordVisualTransformation() else VisualTransformation.None,
         )
 
+        // عرض عداد الحروف (اختياري)
+        if (maxCharacters != null) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 4.dp),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Text(
+                    text = "${textFieldValue.text.length}/$maxCharacters",
+                    style = Theme.textStyle.label.smallRegular12,
+                    color = if (textFieldValue.text.length >= maxCharacters) {
+                        Theme.color.system.errorContainer
+                    } else {
+                        Theme.color.surfaces.onSurfaceContainer
+                    }
+                )
+            }
+        }
+
         AnimatedVisibility(
             error.isNotBlank() && isErrorMessageShown,
             modifier = Modifier.padding(top = 12.dp)
@@ -212,7 +242,6 @@ fun InputField(
         }
     }
 }
-
 @Composable
 private fun TextFieldIcon(
     @DrawableRes icon: Int?,
