@@ -1,6 +1,5 @@
 package com.cairosquad.repository.series
 
-import android.util.Log
 import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.repository.SeriesRepository
 import com.cairosquad.entity.Artist
@@ -130,11 +129,11 @@ class SeriesRepositoryImpl(
         return seriesLocalDataSource
             .getSeriesByRequest(request = requestCache)
             .toEntityList()
-            .takeIf { it.isNotEmpty() } ?. also { Log.d("asdasd", "getSeries: cache $requestCache ${it.size} ") }
+            .takeIf { it.isNotEmpty() }
             ?: tryToCall {
                 val genres = seriesRemoteDataSource.getSeriesGenres().map { it.toEntity() }
                 remoteFetcher()
-                    .map { it.toEntity(genres) } . also { Log.d("asdasd", "getSeries: api $requestCache ${it.size} ") }
+                    .map { it.toEntity(genres) }
                     .also { series ->
                         seriesLocalDataSource.insertRequestWithSeries(
                             series.toRequestWithSeriesCacheDto(

@@ -1,7 +1,6 @@
 package com.cairosquad.ui.details
 
 import android.net.Uri
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -154,7 +153,6 @@ fun SeriesScreen(
             }
 
             is SeriesDetailEffect.NavigateToSeriesDetails -> {
-                Log.d("Series ASDASD ", "SeriesScreen: ${effect.seriesId}")
                 navController.navigate(SeriesRoute(effect.seriesId))
             }
         }
