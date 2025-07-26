@@ -4,14 +4,17 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.cairosquad.repository.movie.data_source.local.dto.GenreCacheDtoNew
+import com.cairosquad.repository.movie.data_source.local.dto.MovieGenreCacheDto
 
 @Dao
 interface GenreDao {
      @Insert(onConflict = OnConflictStrategy.REPLACE)
-     suspend fun insertGenres(genres: List<GenreCacheDtoNew>)
+     suspend fun insertMovieGenres(genres: List<MovieGenreCacheDto>)
 
-     @Query("Delete from GenreCacheDtoNew where timestamp < :expirationTime")
-     suspend fun deleteExpiredGenreCache(expirationTime: Long)
+     @Query("Delete from MovieGenreCacheDto where timestamp < :expirationTime")
+     suspend fun deleteExpiredMovieGenreCache(expirationTime: Long)
+
+     @Query("Select * From MovieGenreCacheDto")
+     suspend fun getMovieGenres(): List<MovieGenreCacheDto>
 
 }

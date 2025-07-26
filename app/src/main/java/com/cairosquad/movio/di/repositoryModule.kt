@@ -18,11 +18,11 @@ val repositoryModule = module {
     }
 
     single<SearchRepository> {
-        SearchRepositoryImpl(get(), get(), get())
+        SearchRepositoryImpl(get(), get())
     }
 
     single<MoviesRepository> {
-        MovieRepositoryImpl(get(), get(), get(), get())
+        MovieRepositoryImpl(get(), get())
     }
 
     single<SeriesRepository> {
@@ -30,7 +30,6 @@ val repositoryModule = module {
     }
 
     single<ArtistsRepository> {
-        ArtistsRepositoryImpl(get(), get())
+        ArtistsRepositoryImpl(get())
     }
-
 }

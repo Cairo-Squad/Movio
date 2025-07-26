@@ -4,47 +4,30 @@ import com.cairosquad.domain.repository.SearchRepository
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
-import com.cairosquad.repository.search.data_source.local.CacheDataSource
 import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
-import com.cairosquad.repository.search.data_source.local.dto.toCacheDto
-import com.cairosquad.repository.search.data_source.local.dto.toEntity
 import com.cairosquad.repository.search.data_source.remote.RemoteSearchDataSource
 import com.cairosquad.repository.search.data_source.remote.dto.toEntityList
 import com.cairosquad.repository.utils.mappers.tryToCall
-import java.util.Date
 
 class SearchRepositoryImpl(
     private val remoteSearchDataSource: RemoteSearchDataSource,
-    private val cacheDataSource: CacheDataSource,
     private val dataSource: LocalRecentSearchDataSource
 ) : SearchRepository {
     override suspend fun getSeries(query: String, page: Int): List<Series> {
         return tryToCall {
-            cacheDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
-            cacheDataSource.getCachedSeries(query, page)
-                .takeIf { it.isNotEmpty() }?.toEntity()
-                ?: remoteSearchDataSource.getSeries(query, page).toEntityList()
-                    .also { result -> cacheDataSource.cacheSeries(result.toCacheDto(query, page)) }
+            remoteSearchDataSource.getSeries(query, page).toEntityList()
         }
     }
 
     override suspend fun getMovies(query: String, page: Int): List<Movie> {
         return tryToCall {
-            cacheDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
-            cacheDataSource.getCachedMovies(query, page)
-                .takeIf { it.isNotEmpty() }?.toEntity()
-                ?: remoteSearchDataSource.getMovies(query, page).toEntityList()
-                    .also { result -> cacheDataSource.cacheMovies(result.toCacheDto(query, page)) }
+            remoteSearchDataSource.getMovies(query, page).toEntityList()
         }
     }
 
     override suspend fun getArtists(query: String, page: Int): List<Artist> {
         return tryToCall {
-            cacheDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
-            cacheDataSource.getCachedArtists(query, page)
-                .takeIf { it.isNotEmpty() }?.toEntity()
-                ?: remoteSearchDataSource.getArtists(query, page).toEntityList()
-                    .also { result -> cacheDataSource.cacheArtist(result.toCacheDto(query, page)) }
+            remoteSearchDataSource.getArtists(query, page).toEntityList()
         }
     }
 

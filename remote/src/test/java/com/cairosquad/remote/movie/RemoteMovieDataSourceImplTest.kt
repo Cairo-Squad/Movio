@@ -40,9 +40,9 @@ class RemoteMovieDataSourceImplTest {
             releaseDate = "2023-07-21",
             voteAverage = 9.2
         )
-        coEvery { apiService.getMovie(movieId) } returns expected
+        coEvery { apiService.getMovieById(movieId) } returns expected
 
-        val result = dataSource.getMovie(movieId)
+        val result = dataSource.getMovieById(movieId)
 
         assertThat(result.id).isEqualTo(10)
         assertThat(result.title).isEqualTo("Oppenheimer")

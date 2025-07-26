@@ -1,7 +1,6 @@
 package com.cairosquad.repository.search.data_source.local.dto
 
 import com.cairosquad.entity.Artist
-import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import java.util.Date
 
@@ -41,41 +40,6 @@ fun List<SeriesCacheDto>.toEntity(): List<Series> {
     return map { it.toEntity() }
 }
 
-fun Movie.toCacheDto(query: String,page:Int): MovieCacheDto {
-    return MovieCacheDto(
-        id = id.toInt(),
-        page = page,
-        title = title,
-        posterPath = posterPath,
-        voteAverage = rating.toDouble(),
-        query = query,
-        timestamp = Date().time
-    )
-}
-
-@JvmName("toCacheMovieDto")
-fun List<Movie>.toCacheDto(query: String,page: Int): List<MovieCacheDto> {
-    return map { it.toCacheDto(query,page) }
-}
-
-fun MovieCacheDto.toEntity(): Movie {
-    return Movie(
-        id = id.toLong(),
-        title = title ?: "",
-        posterPath = posterPath ?: "",
-        rating = voteAverage?.toFloat() ?: 0f,
-        trailerPath = "",
-        genres = emptyList(),
-        overview = "",
-        releaseDate = 0L,
-        runtimeMinutes = 0,
-    )
-}
-
-@JvmName("toEntityMovie")
-fun List<MovieCacheDto>.toEntity(): List<Movie> {
-    return map { it.toEntity() }
-}
 
 fun Artist.toCacheDto(query: String,page: Int): ArtistCacheDto {
     return ArtistCacheDto(

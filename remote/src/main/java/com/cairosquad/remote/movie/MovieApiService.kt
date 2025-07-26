@@ -15,7 +15,7 @@ import retrofit2.http.Query
 interface MovieApiService {
 
     @GET("movie/{movieId}")
-    suspend fun getMovie(
+    suspend fun getMovieById(
         @Path("movieId") movieId: Long
     ): MovieDetailsRemoteDto
 
@@ -109,4 +109,12 @@ interface MovieApiService {
         @Query("with_genres") withGenres: String? = null,
         @Query("sort_by") sortBy: String? = null
     ): ResultResponse<MovieRemoteDto>
+
+    @GET("movie/top_rated")
+    suspend fun getPersonalizedMovies(
+        @Query("page") page: Int
+    ): ResultResponse<MovieRemoteDto>
+
+    @GET("movie/now_playing")
+    suspend fun getSuggestedMovies(): ResultResponse<MovieRemoteDto>
 }

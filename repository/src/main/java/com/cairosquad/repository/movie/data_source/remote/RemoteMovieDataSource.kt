@@ -8,7 +8,7 @@ import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
 
 
 interface RemoteMovieDataSource {
-    suspend fun getMovie(movieId: Long): MovieDetailsRemoteDto
+    suspend fun getMovieById(movieId: Long): MovieDetailsRemoteDto
 
     suspend fun getMovieReviews(movieId: Long, page: Int): List<ReviewRemoteDto>
 
@@ -37,4 +37,8 @@ interface RemoteMovieDataSource {
     suspend fun getPopularMovies(page: Int,categoryId: String?): List<MovieRemoteDto>
 
     suspend fun getAllMovies(page: Int,categoryId: String?,sortBy: String?) : List<MovieRemoteDto>
+
+    suspend fun getPersonalizedMovies(page : Int): List<MovieRemoteDto>
+
+    suspend fun getSuggestedMovies(): List<MovieRemoteDto>
 }

@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.cairosquad.repository.utils.RequestCacheDto
+import com.cairosquad.repository.utils.sharedDto.local.RequestCacheDto
 
 @Dao
 interface RequestCachedDao {

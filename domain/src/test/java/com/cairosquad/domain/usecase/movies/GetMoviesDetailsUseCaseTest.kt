@@ -25,12 +25,12 @@ class GetMoviesDetailsUseCaseTest {
 
     @Test
     fun `getMovie SHOULD return movie from repository`() = runTest {
-        coEvery { moviesRepository.getMovie(123L) } returns movie
+        coEvery { moviesRepository.getMovieById(123L) } returns movie
 
         val result = useCase.getMovie(123L)
 
         assertThat(result).isEqualTo(movie)
-        coVerify(exactly = 1) { moviesRepository.getMovie(123L) }
+        coVerify(exactly = 1) { moviesRepository.getMovieById(123L) }
     }
 
     @Test
@@ -65,7 +65,7 @@ class GetMoviesDetailsUseCaseTest {
 
     @Test
     fun `getMovie SHOULD throw exception when repository fails`() = runTest {
-        coEvery { moviesRepository.getMovie(123L) } throws RuntimeException("Failed to fetch")
+        coEvery { moviesRepository.getMovieById(123L) } throws RuntimeException("Failed to fetch")
 
         assertThrows<RuntimeException> {
             useCase.getMovie(123L)

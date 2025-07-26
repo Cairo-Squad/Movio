@@ -1,15 +1,9 @@
 package com.cairosquad.repository.search
 
-import com.cairosquad.entity.Artist
-import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
-import com.cairosquad.entity.Review
 import com.cairosquad.repository.movie.MovieRepositoryImpl
 import com.cairosquad.repository.movie.data_source.remote.RemoteMovieDataSource
-import com.cairosquad.repository.search.data_source.local.DiscoveryDataSource
-import com.cairosquad.repository.search.data_source.remote.RemoteMovieDiscoveryDataSource
 import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.toEntity
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.mockk

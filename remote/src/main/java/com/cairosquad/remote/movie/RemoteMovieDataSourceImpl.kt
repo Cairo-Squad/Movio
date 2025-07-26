@@ -13,8 +13,8 @@ class RemoteMovieDataSourceImpl(
     private val apiService: MovieApiService,
 ) : RemoteMovieDataSource {
 
-    override suspend fun getMovie(movieId: Long): MovieDetailsRemoteDto {
-        return safeCallApi { apiService.getMovie(movieId) }
+    override suspend fun getMovieById(movieId: Long): MovieDetailsRemoteDto {
+        return safeCallApi { apiService.getMovieById(movieId) }
     }
 
     override suspend fun getMovieReviews(movieId: Long, page: Int): List<ReviewRemoteDto> {
@@ -98,5 +98,15 @@ class RemoteMovieDataSourceImpl(
     override suspend fun getAllMovies(page: Int,categoryId: String?,sortBy : String?): List<MovieRemoteDto> {
         return safeCallApi { apiService.getAllMovies(page,categoryId,sortBy) }
             .results?.filterNotNull().orEmpty()
+    }
+
+    override suspend fun getPersonalizedMovies(page: Int): List<MovieRemoteDto> {
+        return safeCallApi { apiService.getPersonalizedMovies(page) }
+            .results?.filterNotNull()?.filter { it.id != null } ?: emptyList()
+    }
+
+    override suspend fun getSuggestedMovies(): List<MovieRemoteDto> {
+        return safeCallApi { apiService.getSuggestedMovies() }
+            .results?.filterNotNull()?.filter { it.id != null } ?: emptyList()
     }
 }

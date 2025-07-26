@@ -5,19 +5,14 @@ import com.cairosquad.local.cache.genre.GenreDao
 import com.cairosquad.local.cache.movie.MoviesCacheDao
 import com.cairosquad.local.cache.movie.MoviesCacheDataSourceImpl
 import com.cairosquad.local.cache.request.RequestCachedDao
+import com.cairosquad.local.cache.reviews.ReviewDao
 import com.cairosquad.local.login.LocalAuthenticationDataSourceImpl
 import com.cairosquad.local.login.dao.LoginDao
-import com.cairosquad.local.search.cache.CacheDataSourceImpl
-import com.cairosquad.local.search.cache.dao.CacheDao
-import com.cairosquad.local.search.discovery.DiscoveryDataSourceImpl
-import com.cairosquad.local.search.discovery.dao.DiscoveryDao
 import com.cairosquad.local.search.recent.LocalRecentSearchDataSourceImpl
 import com.cairosquad.local.search.recent.dao.LocalRecentSearchDao
 import com.cairosquad.local.utils.MovioDataBase
 import com.cairosquad.repository.login.data_source.local.LocalAuthenticationDataSource
 import com.cairosquad.repository.movie.data_source.local.MoviesCacheDataSource
-import com.cairosquad.repository.search.data_source.local.CacheDataSource
-import com.cairosquad.repository.search.data_source.local.DiscoveryDataSource
 import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -32,10 +27,6 @@ val localDataSourceModule = module {
         get<MovioDataBase>().loginDao()
     }
 
-    single<CacheDao> {
-        get<MovioDataBase>().cacheDao()
-    }
-
     single<MoviesCacheDao> {
         get<MovioDataBase>().moviesCacheDao()
     }
@@ -48,31 +39,23 @@ val localDataSourceModule = module {
         get<MovioDataBase>().requestCachedDao()
     }
 
-    single<LocalRecentSearchDao> {
-        get<MovioDataBase>().recentSearchDao()
+    single<ReviewDao> {
+        get<MovioDataBase>().reviewDao()
     }
 
-    single<DiscoveryDao> {
-        get<MovioDataBase>().discoveryDao()
+    single<LocalRecentSearchDao> {
+        get<MovioDataBase>().recentSearchDao()
     }
 
     single<LocalAuthenticationDataSource> {
         LocalAuthenticationDataSourceImpl(get())
     }
 
-    single<CacheDataSource> {
-        CacheDataSourceImpl(get())
-    }
-
     single<LocalRecentSearchDataSource> {
         LocalRecentSearchDataSourceImpl(get())
     }
 
-    single<DiscoveryDataSource> {
-        DiscoveryDataSourceImpl(get(), get())
-    }
-
     single<MoviesCacheDataSource> {
-        MoviesCacheDataSourceImpl(get(), get(), get())
+        MoviesCacheDataSourceImpl(get(), get(), get(), get())
     }
 }

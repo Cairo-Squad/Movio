@@ -1,4 +1,4 @@
-package com.cairosquad.repository.utils
+package com.cairosquad.repository.utils.sharedDto.local
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

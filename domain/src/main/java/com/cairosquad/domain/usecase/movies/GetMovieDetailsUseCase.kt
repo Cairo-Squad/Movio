@@ -10,7 +10,7 @@ class GetMovieDetailsUseCase(
 ) {
 
     suspend fun getMovie(movieId: Long): Movie {
-        return moviesRepository.getMovie(movieId)
+        return moviesRepository.getMovieById(movieId)
     }
 
     suspend fun getMovieReviews(movieId: Long, page: Int = 1): List<Review> {
