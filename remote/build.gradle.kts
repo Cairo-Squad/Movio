@@ -64,9 +64,6 @@ android {
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
 
-    implementation(libs.androidx.datastore.preferences)
-    implementation(libs.androidx.datastore)
-
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.runtime)
     implementation(libs.logging.interceptor)
