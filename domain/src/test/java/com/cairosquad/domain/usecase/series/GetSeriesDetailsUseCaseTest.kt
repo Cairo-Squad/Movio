@@ -28,12 +28,12 @@ class GetSeriesDetailsUseCaseTest {
 
     @Test
     fun `getSeries SHOULD return series from repository`() = runTest {
-        coEvery { seriesRepository.getSeries(1L) } returns series1
+        coEvery { seriesRepository.getSeriesById(1L) } returns series1
 
         val result = useCase.getSeries(1L)
 
         assertThat(result).isEqualTo(series1)
-        coVerify(exactly = 1) { seriesRepository.getSeries(1L) }
+        coVerify(exactly = 1) { seriesRepository.getSeriesById(1L) }
     }
 
     @Test
@@ -88,7 +88,7 @@ class GetSeriesDetailsUseCaseTest {
 
     @Test
     fun `getSeries SHOULD throw exception when repository fails`() = runTest {
-        coEvery { seriesRepository.getSeries(1L) } throws RuntimeException("Failed to fetch")
+        coEvery { seriesRepository.getSeriesById(1L) } throws RuntimeException("Failed to fetch")
 
         assertThrows<RuntimeException> {
             useCase.getSeries(1L)

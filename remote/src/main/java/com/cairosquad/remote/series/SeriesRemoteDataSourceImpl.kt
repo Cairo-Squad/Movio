@@ -4,18 +4,18 @@ import com.cairosquad.remote.utils.retrofit.safeCallApi
 import com.cairosquad.repository.movie.data_source.remote.dto.GenreDto
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
-import com.cairosquad.repository.series.data_source.remote.RemoteSeriesDataSource
+import com.cairosquad.repository.series.data_source.remote.SeriesRemoteDataSource
 import com.cairosquad.repository.series.data_source.remote.dto.EpisodeRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeasonRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesDetailsRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 import java.time.LocalDate
 
-class RemoteSeriesDataSourceImpl(
+class SeriesRemoteDataSourceImpl(
     private val seriesApiService: SeriesApiService
-) : RemoteSeriesDataSource {
-    override suspend fun getSeries(seriesId: Long): SeriesDetailsRemoteDto {
-        return safeCallApi { seriesApiService.getSeries(seriesId) }
+) : SeriesRemoteDataSource {
+    override suspend fun getSeriesById(seriesId: Long): SeriesDetailsRemoteDto {
+        return safeCallApi { seriesApiService.getSeriesById(seriesId) }
     }
 
     override suspend fun getSeriesReviews(
@@ -105,10 +105,10 @@ class RemoteSeriesDataSourceImpl(
     }
 
     override suspend fun getSeriesByCategory(
-        categoryId: String,
+        genreId: String,
         page: Int
     ): List<SeriesRemoteDto> {
-        return safeCallApi { seriesApiService.getSeriesByCategory(categoryId, page) }
+        return safeCallApi { seriesApiService.getSeriesByCategory(genreId, page) }
             .results?.filterNotNull().orEmpty()
     }
 
@@ -125,5 +125,10 @@ class RemoteSeriesDataSourceImpl(
     override suspend fun getAllSeries(page: Int,categoryId : String?,sortBy : String?): List<SeriesRemoteDto> {
         return safeCallApi { seriesApiService.getAllSeries(page,categoryId,sortBy) }
             .results?.filterNotNull().orEmpty()
+    }
+
+    override suspend fun getSeriesByQuery(query: String, page: Int): List<SeriesRemoteDto> {
+        return safeCallApi { seriesApiService.getSeriesByQuery(query, page) }
+            .results?.filterNotNull()?.filter { it.id != null } ?: emptyList()
     }
 }

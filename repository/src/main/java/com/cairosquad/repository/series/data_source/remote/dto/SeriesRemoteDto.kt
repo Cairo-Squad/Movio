@@ -13,4 +13,10 @@ data class SeriesRemoteDto(
     val voteAverage: Float? = null,
     @SerialName("poster_path")
     val posterPath: String? = null,
+    @SerialName("genre_ids")
+    val genreIds: List<Long>? = null,
+    @SerialName("overview")
+    val overview: String? = null,
+    @SerialName("first_air_date")
+    val releaseDate: String? = null,
 )

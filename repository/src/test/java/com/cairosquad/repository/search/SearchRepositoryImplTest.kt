@@ -3,12 +3,12 @@ package com.cairosquad.repository.search
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
+import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
 import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
-import com.cairosquad.repository.search.data_source.local.dto.SeriesCacheDto
 import com.cairosquad.repository.search.data_source.remote.RemoteSearchDataSource
 import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
+import com.cairosquad.repository.series.data_source.local.dto.SeriesWithoutGenreCacheDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -195,14 +195,14 @@ class SearchRepositoryImplTest {
     private companion object {
         const val QUERY1 = "dark"
         val page = 1
-        val cacheDto1 = SeriesCacheDto(
+        val cacheDto1 = SeriesWithoutGenreCacheDto(
             id = 42,
             page = page,
-            name = "Dark",
+            title = "Dark",
             query = QUERY1,
             posterPath = "/dark.jpg",
             voteAverage = 8.8,
-            timestamp = Date().time
+            cachingTimestamp = Date().time
         )
         const val QUERY2 = "lost"
         val remoteDto2 = SeriesRemoteDto(

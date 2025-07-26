@@ -1,7 +1,11 @@
-package com.cairosquad.repository.movie.data_source.local.dto
+package com.cairosquad.repository.movie.data_source.local
 
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
+import com.cairosquad.repository.movie.data_source.local.dto.GenreOfMovieCacheDto
+import com.cairosquad.repository.movie.data_source.local.dto.MovieCacheDto
+import com.cairosquad.repository.movie.data_source.local.dto.MovieWithoutGenreCacheDto
+import com.cairosquad.repository.movie.data_source.local.dto.RequestWithMoviesCacheDto
 import com.cairosquad.repository.utils.sharedDto.local.RequestCacheDto
 
 

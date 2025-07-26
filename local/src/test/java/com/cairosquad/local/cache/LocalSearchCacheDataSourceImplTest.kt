@@ -3,7 +3,7 @@ package com.cairosquad.local.cache
 import com.cairosquad.local.search.cache.CacheDataSourceImpl
 import com.cairosquad.local.search.cache.dao.CacheDao
 import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
-import com.cairosquad.repository.search.data_source.local.dto.SeriesCacheDto
+import com.cairosquad.repository.series.data_source.local.dto.SeriesWithoutGenreCacheDto
 import com.google.common.truth.Truth.assertThat
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -73,13 +73,13 @@ class LocalSearchCacheDataSourceImplTest {
         // Given
         val query = "friends"
         val page = 1
-        val entity = SeriesCacheDto(
+        val entity = SeriesWithoutGenreCacheDto(
             id = 0,
             page = 1,
             query = query,
-            timestamp = 0,
+            cachingTimestamp = 0,
             posterPath = "poster",
-            name = "Friends",
+            title = "Friends",
             voteAverage = 9.0
         )
         coEvery { cacheDao.getCachedSeries(query,page) } returns listOf(entity)
@@ -93,12 +93,12 @@ class LocalSearchCacheDataSourceImplTest {
     fun `should insert mapped series entities into DAO when cacheSeries is called`() = runTest {
         // Given
         val query = "friends"
-        val dto = SeriesCacheDto(
+        val dto = SeriesWithoutGenreCacheDto(
             id = 1,
             page = 1,
             "Friends", posterPath = null,
             query = "batman",
-            timestamp = Instant.now().toEpochMilli(),
+            cachingTimestamp = Instant.now().toEpochMilli(),
             voteAverage = 9.0
         )
         //When

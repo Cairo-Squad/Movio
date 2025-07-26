@@ -1,6 +1,6 @@
 package com.cairosquad.remote.artists
 
-import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
+import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

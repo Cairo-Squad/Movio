@@ -14,7 +14,3 @@ data class RequestWithReviewsCacheDto(
     )
     val reviews: List<ReviewCacheDto>,
 )
-
-fun getRequestOfMovieReviews(page: Int, movieId: Long): String {
-    return "movies/tobRated/page = $page/movieId = $movieId"
-}

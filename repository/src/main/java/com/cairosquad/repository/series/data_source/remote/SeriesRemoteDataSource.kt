@@ -8,9 +8,9 @@ import com.cairosquad.repository.series.data_source.remote.dto.SeasonRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesDetailsRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 
-interface RemoteSeriesDataSource {
+interface SeriesRemoteDataSource {
 
-    suspend fun getSeries(seriesId: Long): SeriesDetailsRemoteDto
+    suspend fun getSeriesById(seriesId: Long): SeriesDetailsRemoteDto
 
     suspend fun getSeriesReviews(seriesId: Long, page: Int): List<ReviewRemoteDto>
 
@@ -36,11 +36,13 @@ interface RemoteSeriesDataSource {
 
     suspend fun getFreeToWatchSeries(page: Int,categoryId : String?): List<SeriesRemoteDto>
 
-    suspend fun getSeriesByCategory(category: String, page: Int): List<SeriesRemoteDto>
+    suspend fun getSeriesByCategory(genreId: String, page: Int): List<SeriesRemoteDto>
 
     suspend fun getSeriesGenres(): List<GenreDto>
 
     suspend fun getPopularSeries(page: Int,categoryId : String?): List<SeriesRemoteDto>
 
     suspend fun getAllSeries(page: Int,categoryId : String?,sortBy: String?): List<SeriesRemoteDto>
+
+    suspend fun getSeriesByQuery(query: String, page: Int): List<SeriesRemoteDto>
 }

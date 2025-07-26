@@ -22,12 +22,12 @@ import org.junit.Test
 class RemoteSeriesDataSourceImplTest {
 
     private lateinit var apiService: SeriesApiService
-    private lateinit var remoteSeriesDataSource: RemoteSeriesDataSourceImpl
+    private lateinit var remoteSeriesDataSource: SeriesRemoteDataSourceImpl
 
     @Before
     fun setup() {
         apiService = mockk()
-        remoteSeriesDataSource = spyk(RemoteSeriesDataSourceImpl(apiService))
+        remoteSeriesDataSource = spyk(SeriesRemoteDataSourceImpl(apiService))
     }
 
     @Test
@@ -44,9 +44,9 @@ class RemoteSeriesDataSourceImplTest {
             numberOfSeasons = 5,
             numberOfEpisodes = 62
         )
-        coEvery { apiService.getSeries(seriesId) } returns seriesDetails
+        coEvery { apiService.getSeriesById(seriesId) } returns seriesDetails
 
-        val result = remoteSeriesDataSource.getSeries(seriesId)
+        val result = remoteSeriesDataSource.getSeriesById(seriesId)
 
         assertThat(result.id).isEqualTo(seriesId)
         assertThat(result.name).isEqualTo("Breaking Bad")

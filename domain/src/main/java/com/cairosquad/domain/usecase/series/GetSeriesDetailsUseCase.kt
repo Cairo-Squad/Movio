@@ -12,7 +12,7 @@ class GetSeriesDetailsUseCase(
 ) {
 
     suspend fun getSeries(seriesId: Long): Series {
-        return seriesRepository.getSeries(seriesId)
+        return seriesRepository.getSeriesById(seriesId)
     }
 
     suspend fun getSeriesReviews(seriesId: Long, page: Int): List<Review> {

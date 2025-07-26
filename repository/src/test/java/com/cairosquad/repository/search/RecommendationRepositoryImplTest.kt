@@ -2,8 +2,8 @@ package com.cairosquad.repository.search
 
 import com.cairosquad.entity.Movie
 import com.cairosquad.repository.movie.MovieRepositoryImpl
-import com.cairosquad.repository.movie.data_source.remote.RemoteMovieDataSource
-import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
+import com.cairosquad.repository.movie.data_source.remote.MoviesRemoteDataSource
+import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -15,17 +15,17 @@ class RecommendationRepositoryImplTest {
     private lateinit var remoteMovieDiscoveryDataSource: RemoteMovieDiscoveryDataSource
     private lateinit var discoveryDataSource: DiscoveryDataSource
     private lateinit var recommendationRepository: MovieRepositoryImpl
-    private lateinit var remoteMovieDataSource: RemoteMovieDataSource
+    private lateinit var moviesRemoteDataSource: MoviesRemoteDataSource
 
     @Before
     fun setUp() {
         discoveryDataSource = mockk(relaxed = true)
         remoteMovieDiscoveryDataSource = mockk(relaxed = true)
-        remoteMovieDataSource = mockk(relaxed = true)
+        moviesRemoteDataSource = mockk(relaxed = true)
         recommendationRepository = MovieRepositoryImpl(
             remoteMovieDiscoveryDataSource = remoteMovieDiscoveryDataSource,
             discoveryDataSource = discoveryDataSource,
-            remoteMovieDataSource = remoteMovieDataSource
+            moviesRemoteDataSource = moviesRemoteDataSource
         )
     }
 
@@ -47,7 +47,7 @@ class RecommendationRepositoryImplTest {
     @Test
     fun `should return list of 10 fake movies when getSimilarMovies is called`() = runTest {
 
-        coEvery { remoteMovieDataSource.getSimilarMovies(1L, 1)} returns List(10) { fakeMovieRemote }
+        coEvery { moviesRemoteDataSource.getSimilarMovies(1L, 1)} returns List(10) { fakeMovieRemote }
 
         val result = recommendationRepository.getSimilarMovies(1L, 1)
 

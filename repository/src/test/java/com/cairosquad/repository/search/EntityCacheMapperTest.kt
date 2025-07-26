@@ -4,9 +4,9 @@ import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
-import com.cairosquad.repository.search.data_source.local.dto.SeriesCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.toCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.toEntity
+import com.cairosquad.repository.series.data_source.local.dto.SeriesWithoutGenreCacheDto
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import java.time.Instant
@@ -25,19 +25,19 @@ class EntityCacheMapperTest {
         val cache = series.toCacheDto(query, page)
 
         assertThat(cache).isEqualTo(
-            SeriesCacheDto(
+            SeriesWithoutGenreCacheDto(
                 id = series.id.toInt(),
                 page = page,
                 query = query,
-                name = series.title,
+                title = series.title,
                 posterPath = series.posterPath,
                 voteAverage = series.rating.toDouble(),
-                timestamp = cache.timestamp
+                cachingTimestamp = cache.cachingTimestamp
             )
         )
 
-        val delta = (Instant.now().toEpochMilli() - cache.timestamp).absoluteValue
-        assertThat(cache.timestamp).isAtLeast(before)
+        val delta = (Instant.now().toEpochMilli() - cache.cachingTimestamp).absoluteValue
+        assertThat(cache.cachingTimestamp).isAtLeast(before)
         assertThat(delta).isAtMost(tolerance)
     }
 
@@ -181,14 +181,14 @@ class EntityCacheMapperTest {
             timestamp = 0L
         )
 
-        val seriesCacheWithNulls = SeriesCacheDto(
+        val seriesCacheWithNulls = SeriesWithoutGenreCacheDto(
             id = 7,
-            name = null,
+            title = null,
             query = query,
             page = page,
             posterPath = null,
             voteAverage = null,
-            timestamp = 1L
+            cachingTimestamp = 1L
         )
 
         val artistCacheWithNulls = ArtistCacheDto(

@@ -5,17 +5,17 @@ import com.cairosquad.remote.artists.RemoteArtistDataSourceImpl
 import com.cairosquad.remote.login.LoginApiService
 import com.cairosquad.remote.login.RemoteLoginDataSourceImpl
 import com.cairosquad.remote.movie.MovieApiService
-import com.cairosquad.remote.movie.RemoteMovieDataSourceImpl
+import com.cairosquad.remote.movie.MoviesRemoteDataSourceImpl
 import com.cairosquad.remote.search.RemoteSearchDataSourceImpl
 import com.cairosquad.remote.search.SearchApiService
-import com.cairosquad.remote.series.RemoteSeriesDataSourceImpl
 import com.cairosquad.remote.series.SeriesApiService
+import com.cairosquad.remote.series.SeriesRemoteDataSourceImpl
 import com.cairosquad.remote.utils.retrofit.retrofitProvider
 import com.cairosquad.repository.artists.data_source.ArtistsRemoteDataSource
 import com.cairosquad.repository.login.data_source.remote.RemoteLoginDataSource
-import com.cairosquad.repository.movie.data_source.remote.RemoteMovieDataSource
+import com.cairosquad.repository.movie.data_source.remote.MoviesRemoteDataSource
 import com.cairosquad.repository.search.data_source.remote.RemoteSearchDataSource
-import com.cairosquad.repository.series.data_source.remote.RemoteSeriesDataSource
+import com.cairosquad.repository.series.data_source.remote.SeriesRemoteDataSource
 import com.cairosquad.repository.utils.authenticationTokenProvider
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -51,12 +51,12 @@ val remoteDataSourceModule = module {
         RemoteArtistDataSourceImpl(get())
     }
 
-    single<RemoteMovieDataSource> {
-        RemoteMovieDataSourceImpl(get())
+    single<MoviesRemoteDataSource> {
+        MoviesRemoteDataSourceImpl(get())
     }
 
-    single<RemoteSeriesDataSource> {
-        RemoteSeriesDataSourceImpl(get())
+    single<SeriesRemoteDataSource> {
+        SeriesRemoteDataSourceImpl(get())
     }
 
     single<ArtistsApiService> {

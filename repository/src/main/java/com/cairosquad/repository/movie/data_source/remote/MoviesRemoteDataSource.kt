@@ -2,12 +2,12 @@ package com.cairosquad.repository.movie.data_source.remote
 
 import com.cairosquad.repository.movie.data_source.remote.dto.GenreDto
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieDetailsRemoteDto
+import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
 
 
-interface RemoteMovieDataSource {
+interface MoviesRemoteDataSource {
     suspend fun getMovieById(movieId: Long): MovieDetailsRemoteDto
 
     suspend fun getMovieReviews(movieId: Long, page: Int): List<ReviewRemoteDto>

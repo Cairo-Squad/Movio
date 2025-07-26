@@ -1,5 +1,4 @@
-package com.cairosquad.repository.search.data_source.remote.dto
-
+package com.cairosquad.repository.movie.data_source.remote.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -19,5 +18,5 @@ data class MovieRemoteDto(
     @SerialName("release_date")
     val releaseDate: String? = null,
     @SerialName("genre_ids")
-    val genreIds: List<Int>? = null,
+    val genreIds: List<Long>? = null,
 )

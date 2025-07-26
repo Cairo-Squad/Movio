@@ -1,7 +1,7 @@
 package com.cairosquad.repository.artists.data_source
 
+import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 
 interface ArtistsRemoteDataSource {

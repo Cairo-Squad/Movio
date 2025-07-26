@@ -1,17 +1,17 @@
 package com.cairosquad.remote.movie
 
 import com.cairosquad.remote.utils.retrofit.safeCallApi
-import com.cairosquad.repository.movie.data_source.remote.RemoteMovieDataSource
+import com.cairosquad.repository.movie.data_source.remote.MoviesRemoteDataSource
 import com.cairosquad.repository.movie.data_source.remote.dto.GenreDto
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieDetailsRemoteDto
+import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
 import java.time.LocalDate
 
-class RemoteMovieDataSourceImpl(
+class MoviesRemoteDataSourceImpl(
     private val apiService: MovieApiService,
-) : RemoteMovieDataSource {
+) : MoviesRemoteDataSource {
 
     override suspend fun getMovieById(movieId: Long): MovieDetailsRemoteDto {
         return safeCallApi { apiService.getMovieById(movieId) }

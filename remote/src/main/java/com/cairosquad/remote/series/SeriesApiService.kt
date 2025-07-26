@@ -16,7 +16,7 @@ import retrofit2.http.Query
 interface SeriesApiService {
 
     @GET("tv/{seriesId}")
-    suspend fun getSeries(
+    suspend fun getSeriesById(
         @Path("seriesId") seriesId: Long
     ): SeriesDetailsRemoteDto
 
@@ -134,5 +134,11 @@ interface SeriesApiService {
         @Query("page") page: Int,
         @Query("with_genres") withGenres: String? = null,
         @Query("sort_by") sortBy: String? = null
+    ): ResultResponse<SeriesRemoteDto>
+
+    @GET("search/tv")
+    suspend fun getSeriesByQuery(
+        @Query("query") query: String,
+        @Query("page") page: Int
     ): ResultResponse<SeriesRemoteDto>
 }

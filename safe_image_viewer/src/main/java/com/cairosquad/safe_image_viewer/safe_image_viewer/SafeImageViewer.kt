@@ -108,8 +108,6 @@ fun SafeImageViewer(
     loadingPlaceholder: @Composable () -> Unit = {},
     onToggleBlur: (@Composable () -> Unit)? = null,
 ) {
-    val nonNudeThreshold = 0.0
-
     val context = LocalContext.current
 
     var isImageSafe by remember { mutableStateOf(true) }

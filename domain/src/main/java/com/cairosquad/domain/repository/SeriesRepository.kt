@@ -9,7 +9,7 @@ import com.cairosquad.entity.Season
 import com.cairosquad.entity.Series
 
 interface SeriesRepository {
-    suspend fun getSeries(seriesId: Long): Series
+    suspend fun getSeriesById(seriesId: Long): Series
 
     suspend fun getSeriesReviews(seriesId: Long, page: Int): List<Review>
 
@@ -33,7 +33,7 @@ interface SeriesRepository {
 
     suspend fun getFreeToWatchSeries(page: Int,categoryId : String?): List<Series>
 
-    suspend fun getSeriesByCategory(category: String, page: Int): List<Series>
+    suspend fun getSeriesByCategory(genreId: String, page: Int): List<Series>
 
     suspend fun getSeriesGenres(): List<Genre>
 
@@ -41,4 +41,5 @@ interface SeriesRepository {
 
     suspend fun getAllSeries(page: Int,categoryId : String?,sortType: SortType?): List<Series>
 
+    suspend fun getSeriesByQuery(query: String, page: Int): List<Series>
 }

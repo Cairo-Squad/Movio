@@ -5,7 +5,6 @@ import androidx.room.Junction
 import androidx.room.Relation
 import com.cairosquad.repository.utils.sharedDto.local.RequestCacheDto
 
-
 data class RequestWithMoviesCacheDto(
     @Embedded
     val request: RequestCacheDto,

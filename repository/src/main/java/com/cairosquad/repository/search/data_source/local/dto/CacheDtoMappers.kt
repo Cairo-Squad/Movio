@@ -1,45 +1,7 @@
 package com.cairosquad.repository.search.data_source.local.dto
 
 import com.cairosquad.entity.Artist
-import com.cairosquad.entity.Series
 import java.util.Date
-
-fun Series.toCacheDto(query: String,page: Int): SeriesCacheDto {
-    return SeriesCacheDto(
-        id = id.toInt(),
-        page = page,
-        name = title,
-        posterPath = posterPath,
-        voteAverage = rating.toDouble(),
-        query = query,
-        timestamp = Date().time
-    )
-}
-
-@JvmName("toCacheSeriesDto")
-fun List<Series>.toCacheDto(query: String,page: Int): List<SeriesCacheDto> {
-    return map { it.toCacheDto(query,page) }
-}
-
-fun SeriesCacheDto.toEntity(): Series {
-    return Series(
-        id = id.toLong(),
-        title = name ?: "",
-        posterPath = posterPath ?: "",
-        rating = voteAverage?.toFloat() ?: 0f,
-        trailerPath = "",
-        genres = emptyList(),
-        overview = "",
-        releaseDate = 0L,
-        seasonsCount = 1,
-    )
-}
-
-@JvmName("toEntitySeries")
-fun List<SeriesCacheDto>.toEntity(): List<Series> {
-    return map { it.toEntity() }
-}
-
 
 fun Artist.toCacheDto(query: String,page: Int): ArtistCacheDto {
     return ArtistCacheDto(

@@ -1,6 +1,6 @@
 package com.cairosquad.repository.series
 
-import com.cairosquad.repository.series.data_source.remote.RemoteSeriesDataSource
+import com.cairosquad.repository.series.data_source.remote.SeriesRemoteDataSource
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesDetailsRemoteDto
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
@@ -14,23 +14,23 @@ import org.junit.Test
 class SeriesRepositoryImplTest {
 
     private lateinit var seriesRepository: SeriesRepositoryImpl
-    private lateinit var remoteSeriesDataSource: RemoteSeriesDataSource
+    private lateinit var seriesRemoteDataSource: SeriesRemoteDataSource
 
     @Before
     fun setUp() {
 
-        remoteSeriesDataSource = mockk(relaxed = true)
+        seriesRemoteDataSource = mockk(relaxed = true)
 
         seriesRepository = SeriesRepositoryImpl(
-            remoteSeriesDataSource = remoteSeriesDataSource
+            seriesRemoteDataSource = seriesRemoteDataSource
         )
     }
 
     @Test
     fun `should return fake series when getSeries is called`() = runTest {
-        coEvery { remoteSeriesDataSource.getSeries(1399L) } returns SeriesDetailsRemoteDto()
+        coEvery { seriesRemoteDataSource.getSeriesById(1399L) } returns SeriesDetailsRemoteDto()
 
-        val result = seriesRepository.getSeries(1399L)
+        val result = seriesRepository.getSeriesById(1399L)
 
         assertThat(result.id).isEqualTo(SeriesDetailsRemoteDto().toEntity("").id)
     }

@@ -1,6 +1,6 @@
 package com.cairosquad.remote.search
 
-import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
+import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.ResultResponse
 import com.cairosquad.repository.utils.exception.ServerException
 import com.cairosquad.repository.utils.exception.UnauthorizedException

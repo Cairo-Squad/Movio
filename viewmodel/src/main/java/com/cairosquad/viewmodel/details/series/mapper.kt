@@ -1,6 +1,5 @@
 package com.cairosquad.viewmodel.details.series
 
-import android.util.Log
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Review
 import com.cairosquad.entity.Season

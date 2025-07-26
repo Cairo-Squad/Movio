@@ -4,6 +4,7 @@ import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
+import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -32,7 +33,7 @@ fun MovieRemoteDto.toEntity(allGenres: List<Genre> = emptyList()): Movie {
         title = title ?: "",
         rating = voteAverage?.toFloat() ?: 0f,
         posterPath = posterPath ?: "",
-        genres = allGenres.filter { genreIds?.contains(it.id.toInt()) == true },
+        genres = allGenres.filter { genreIds?.contains(it.id) == true },
         overview = overview.orEmpty(),
         releaseDate = releaseDate?.let { parseDateToMillis(it)  } ?: 0L,
         runtimeMinutes = 0,
@@ -45,16 +46,16 @@ fun List<MovieRemoteDto>.toEntityList(): List<Movie> {
     return map { it.toEntity() }
 }
 
-fun SeriesRemoteDto.toEntity(): Series {
+fun SeriesRemoteDto.toEntity(allGenres: List<Genre> = emptyList()): Series {
     return Series(
         id = id ?: 0L,
         title = name ?: "",
         rating = voteAverage?.toFloat() ?: 0f,
         posterPath = posterPath ?: "",
         trailerPath = "",
-        genres = emptyList(),
-        overview = "",
-        releaseDate = 0L,
+        genres = allGenres.filter { genreIds?.contains(it.id) == true },
+        overview = overview ?: "",
+        releaseDate = releaseDate?.let { parseDateToMillis(it)  } ?: 0L,
         seasonsCount = 1,
     )
 }

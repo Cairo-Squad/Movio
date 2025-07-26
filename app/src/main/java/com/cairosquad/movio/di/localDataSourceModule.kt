@@ -6,6 +6,8 @@ import com.cairosquad.local.cache.movie.MoviesCacheDao
 import com.cairosquad.local.cache.movie.MoviesLocalDataSourceImpl
 import com.cairosquad.local.cache.request.RequestCachedDao
 import com.cairosquad.local.cache.reviews.ReviewDao
+import com.cairosquad.local.cache.series.SeriesCacheDao
+import com.cairosquad.local.cache.series.SeriesLocalDataSourceImpl
 import com.cairosquad.local.login.LocalAuthenticationDataSourceImpl
 import com.cairosquad.local.login.dao.LoginDao
 import com.cairosquad.local.search.recent.LocalRecentSearchDataSourceImpl
@@ -14,6 +16,7 @@ import com.cairosquad.local.utils.MovioDataBase
 import com.cairosquad.repository.login.data_source.local.LocalAuthenticationDataSource
 import com.cairosquad.repository.movie.data_source.local.MoviesLocalDataSource
 import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
+import com.cairosquad.repository.series.data_source.local.SeriesLocalDataSource
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -29,6 +32,10 @@ val localDataSourceModule = module {
 
     single<MoviesCacheDao> {
         get<MovioDataBase>().moviesCacheDao()
+    }
+
+    single<SeriesCacheDao> {
+        get<MovioDataBase>().seriesCacheDao()
     }
 
     single<GenreDao> {
@@ -57,5 +64,9 @@ val localDataSourceModule = module {
 
     single<MoviesLocalDataSource> {
         MoviesLocalDataSourceImpl(get(), get(), get(), get())
+    }
+
+    single<SeriesLocalDataSource> {
+        SeriesLocalDataSourceImpl(get(), get(), get(), get())
     }
 }

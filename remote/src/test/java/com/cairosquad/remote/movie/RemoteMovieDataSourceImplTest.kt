@@ -3,10 +3,10 @@ package com.cairosquad.remote.movie
 import com.cairosquad.repository.movie.data_source.remote.dto.CreditResponse
 import com.cairosquad.repository.movie.data_source.remote.dto.GenreDto
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieDetailsRemoteDto
+import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.GenreResponse
-import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.ResultResponse
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
@@ -21,12 +21,12 @@ import java.time.LocalDate
 class RemoteMovieDataSourceImplTest {
 
     private lateinit var apiService: MovieApiService
-    private lateinit var dataSource: RemoteMovieDataSourceImpl
+    private lateinit var dataSource: MoviesRemoteDataSourceImpl
 
     @Before
     fun setUp() {
         apiService = mockk(relaxed = true)
-        dataSource = spyk(RemoteMovieDataSourceImpl(apiService))
+        dataSource = spyk(MoviesRemoteDataSourceImpl(apiService))
     }
 
     @Test
