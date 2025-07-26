@@ -104,6 +104,10 @@ class SearchUseCaseTest {
         val artists = listOf(
             Artist(
                 id = 1, name = "Leonardo DiCaprio", photoPath = "/leo.jpg",
+                country = "US",
+                birthDate = 0L,
+                biography = "",
+                department = ""
             )
         )
         val page = 1
