@@ -2,7 +2,6 @@ package com.cairosquad.repository.movie.data_source.local.dto
 
 import com.cairosquad.domain.model.SortType
 
-
 fun getRequestOfMovie(movieId: Long): String {
     return "movies/movieId = $movieId"
 }
@@ -41,4 +40,7 @@ fun getRequestOfPopularMovies(page: Int, genreId: String?): String {
 }
 fun getRequestOfAllMovies(page: Int, genreId: String?, sortType: SortType?): String {
     return "movies/all/page=$page/genreId=$genreId/sortType=${sortType?.sortBy}"
+}
+fun getRequestOfSearchedMovies(query: String, page: Int): String {
+    return "search/movie/page=$page/query=$query"
 }

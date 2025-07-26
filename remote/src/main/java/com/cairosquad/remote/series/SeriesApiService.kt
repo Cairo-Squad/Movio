@@ -2,12 +2,12 @@ package com.cairosquad.remote.series
 
 import com.cairosquad.repository.movie.data_source.remote.dto.CreditResponse
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.GenreResponse
 import com.cairosquad.repository.movie.data_source.remote.dto.VideoResponse
+import com.cairosquad.repository.search.data_source.remote.dto.GenreResponse
 import com.cairosquad.repository.search.data_source.remote.dto.ResultResponse
-import com.cairosquad.repository.search.data_source.remote.dto.SeriesRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeasonResponse
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesDetailsRemoteDto
+import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesResponse
 import retrofit2.http.GET
 import retrofit2.http.Path

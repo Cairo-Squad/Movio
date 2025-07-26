@@ -92,6 +92,12 @@ interface MovieApiService {
         @Query("page") page: Int,
     ): ResultResponse<MovieRemoteDto>
 
+    @GET("search/movie")
+    suspend fun getMoviesByQuery(
+        @Query("query") query: String,
+        @Query("page") page: Int
+    ): ResultResponse<MovieRemoteDto>
+
     @GET("genre/movie/list")
     suspend fun getMoviesGenres(
     ): GenreResponse

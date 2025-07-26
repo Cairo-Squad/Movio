@@ -6,7 +6,7 @@ import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Review
-import com.cairosquad.repository.movie.data_source.local.MoviesCacheDataSource
+import com.cairosquad.repository.movie.data_source.local.MoviesLocalDataSource
 import com.cairosquad.repository.movie.data_source.local.dto.getRequestOfAllMovies
 import com.cairosquad.repository.movie.data_source.local.dto.getRequestOfFreeToWatchMovies
 import com.cairosquad.repository.movie.data_source.local.dto.getRequestOfMoreRecommendedMovies
@@ -15,6 +15,7 @@ import com.cairosquad.repository.movie.data_source.local.dto.getRequestOfMoviesB
 import com.cairosquad.repository.movie.data_source.local.dto.getRequestOfNowPlayingMovies
 import com.cairosquad.repository.movie.data_source.local.dto.getRequestOfPersonalizedMovies
 import com.cairosquad.repository.movie.data_source.local.dto.getRequestOfPopularMovies
+import com.cairosquad.repository.movie.data_source.local.dto.getRequestOfSearchedMovies
 import com.cairosquad.repository.movie.data_source.local.dto.getRequestOfSimilarMovies
 import com.cairosquad.repository.movie.data_source.local.dto.getRequestOfSuggestedMovies
 import com.cairosquad.repository.movie.data_source.local.dto.getRequestOfTopRatedMovies
@@ -34,7 +35,7 @@ import java.util.Date
 
 class MovieRepositoryImpl(
     private val remoteMovieDataSource: RemoteMovieDataSource,
-    private val moviesCacheDataSource: MoviesCacheDataSource
+    private val moviesLocalDataSource: MoviesLocalDataSource
 ) : MoviesRepository {
 
     override suspend fun getSimilarMovies(movieId: Long, page: Int): List<Movie> {
@@ -121,12 +122,19 @@ class MovieRepositoryImpl(
         )
     }
 
+    override suspend fun getMoviesByQuery(query: String, page: Int): List<Movie> {
+        return getMovies(
+            remoteFetcher = { remoteMovieDataSource.getMoviesByQuery(query, page) },
+            requestCache = getRequestOfSearchedMovies(query, page)
+        )
+    }
+
     private suspend fun getMovies(
         remoteFetcher: suspend () -> List<MovieRemoteDto>,
         requestCache: String
     ):List<Movie> {
-        moviesCacheDataSource.deleteExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
-        return moviesCacheDataSource
+        moviesLocalDataSource.deleteExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
+        return moviesLocalDataSource
             .getMoviesByRequest(request = requestCache)
             .toEntityList()
             .takeIf { it.isNotEmpty() }
@@ -135,7 +143,7 @@ class MovieRepositoryImpl(
                 remoteFetcher()
                     .map { it.toEntity(genres) }
                     .also { movies ->
-                        moviesCacheDataSource.cacheRequestWithMovies(
+                        moviesLocalDataSource.insertRequestWithMovies(
                             movies.toRequestWithMoviesCacheDto(
                                 request = requestCache
                             )
@@ -145,8 +153,8 @@ class MovieRepositoryImpl(
     }
 
     override suspend fun getMovieById(movieId: Long): Movie {
-        moviesCacheDataSource.deleteExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
-        return moviesCacheDataSource
+        moviesLocalDataSource.deleteExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
+        return moviesLocalDataSource
             .getMoviesByRequest(request = getRequestOfMovie(movieId))
             .toEntityList()
             .firstOrNull()
@@ -155,21 +163,21 @@ class MovieRepositoryImpl(
                     remoteMovieDataSource.getVideoKey(movieId)
                 )
             }.also { movie ->
-                moviesCacheDataSource.cacheRequestWithMovies(
+                moviesLocalDataSource.insertRequestWithMovies(
                     listOf(movie).toRequestWithMoviesCacheDto(request = "movie/${movieId}")
                 )
             }
     }
 
     override suspend fun getMovieReviews(movieId: Long, page: Int): List<Review> {
-        return moviesCacheDataSource
+        return moviesLocalDataSource
             .getMovieReviewsByRequest(getRequestOfMovieReviews(page, movieId))
             .toEntityList()
             .takeIf { it.isNotEmpty() }
             ?:tryToCall {
                 remoteMovieDataSource.getMovieReviews(movieId, page).map { it.toEntity() }
             }.also {
-                moviesCacheDataSource.cacheRequestWithReviews(
+                moviesLocalDataSource.insertRequestWithReviews(
                     it.toRequestWithReviewsCacheDto(
                         getRequestOfMovieReviews(page, movieId)
                     )
@@ -184,7 +192,7 @@ class MovieRepositoryImpl(
     }
 
     override suspend fun getMoviesGenres(): List<Genre> {
-        return moviesCacheDataSource
+        return moviesLocalDataSource
             .getMovieGenres()
             .toEntityList()
             .takeIf { it.isNotEmpty() }
@@ -192,7 +200,7 @@ class MovieRepositoryImpl(
                 remoteMovieDataSource.getMoviesGenres()
                     .map { it.toEntity() }
                     .also {
-                        moviesCacheDataSource.cacheMovieGenres(it.toCacheDtoList())
+                        moviesLocalDataSource.insertMovieGenres(it.toCacheDtoList())
                     }
             }
     }

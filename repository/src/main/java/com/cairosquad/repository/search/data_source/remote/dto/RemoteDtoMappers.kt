@@ -4,6 +4,7 @@ import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
+import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 import java.time.LocalDate
 import java.time.ZoneOffset
 

@@ -5,13 +5,13 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.Date
 
-@Entity(tableName = "MovieGenreCacheDto")
-data class MovieGenreCacheDto(
+@Entity(tableName = "GenreOfMovieCacheDto")
+data class GenreOfMovieCacheDto(
     @ColumnInfo(name = "genre_id")
     @PrimaryKey
     val id: Long,
     @ColumnInfo(name = "name")
     val name: String,
     @ColumnInfo(name = "timestamp")
-    val timestamp: Long = Date().time,
+    val cachingTimestamp: Long = Date().time,
 )

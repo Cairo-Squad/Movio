@@ -2,7 +2,6 @@ package com.cairosquad.repository.search
 
 import com.cairosquad.domain.repository.SearchRepository
 import com.cairosquad.entity.Artist
-import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
 import com.cairosquad.repository.search.data_source.remote.RemoteSearchDataSource
@@ -16,12 +15,6 @@ class SearchRepositoryImpl(
     override suspend fun getSeries(query: String, page: Int): List<Series> {
         return tryToCall {
             remoteSearchDataSource.getSeries(query, page).toEntityList()
-        }
-    }
-
-    override suspend fun getMovies(query: String, page: Int): List<Movie> {
-        return tryToCall {
-            remoteSearchDataSource.getMovies(query, page).toEntityList()
         }
     }
 
@@ -40,12 +33,12 @@ class SearchRepositoryImpl(
             query.takeIf { it.isNotBlank() }
                 ?.let {
                     val series = remoteSearchDataSource.getSeries(query, 1)
-                    val movies = remoteSearchDataSource.getMovies(query, 1)
+//                    val movies = remoteSearchDataSource.getMovies(query, 1)
                     val artist = remoteSearchDataSource.getArtists(query, 1)
                     val local = dataSource.getByQuery(it)
                     val merged = buildList {
                         addAll(local)
-                        addAll(movies.map { it.title ?: "" })
+//                        addAll(movies.map { it.title ?: "" })
                         addAll(artist.map { it.name ?: "" })
                         addAll(series.map { it.name ?: "" })
                     }

@@ -25,5 +25,5 @@ data class MovieWithoutGenreCacheDto(
     @ColumnInfo(name = "vote_average")
     val voteAverage: Float,
     @ColumnInfo(name = "timestamp")
-    val timestamp: Long = Date().time,
+    val cachingTimestamp: Long = Date().time,
 )

@@ -1,5 +1,6 @@
 package com.cairosquad.domain.usecase.search
 
+import com.cairosquad.domain.repository.MoviesRepository
 import com.cairosquad.domain.repository.SearchRepository
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
@@ -7,6 +8,7 @@ import com.cairosquad.entity.Series
 
 class SearchUseCase(
     private val searchRepository: SearchRepository,
+    private val moviesRepository: MoviesRepository
 ) {
     suspend fun getSeries(query: String, page: Int): List<Series> {
         return searchRepository.getSeries(query,page).also {
@@ -15,7 +17,7 @@ class SearchUseCase(
     }
 
     suspend fun getMovies(query: String, page: Int ): List<Movie> {
-        return searchRepository.getMovies(query,page).also {
+        return moviesRepository.getMoviesByQuery(query,page).also {
             searchRepository.addQuery(query)
         }
     }

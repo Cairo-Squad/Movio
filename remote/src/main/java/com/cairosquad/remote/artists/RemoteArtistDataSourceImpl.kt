@@ -4,7 +4,7 @@ import com.cairosquad.remote.utils.retrofit.safeCallApi
 import com.cairosquad.repository.artists.data_source.ArtistsRemoteDataSource
 import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.SeriesRemoteDto
+import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 
 class RemoteArtistDataSourceImpl(
     private val apiService: ArtistsApiService

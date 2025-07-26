@@ -31,6 +31,8 @@ interface MoviesRepository {
 
     suspend fun getAllMovies(page:Int,categoryId: String?,sortType: SortType?) : List<Movie>
 
+    suspend fun getMoviesByQuery(query: String, page: Int): List<Movie>
+
     suspend fun getMovieById(movieId: Long): Movie
 
     suspend fun getMovieReviews(movieId: Long, page: Int): List<Review>

@@ -85,6 +85,11 @@ class RemoteMovieDataSourceImpl(
             .results?.filterNotNull().orEmpty()
     }
 
+    override suspend fun getMoviesByQuery(query: String, page: Int): List<MovieRemoteDto> {
+        return safeCallApi { apiService.getMoviesByQuery(query, page) }
+            .results?.filterNotNull().orEmpty()
+    }
+
     override suspend fun getMoviesGenres(): List<GenreDto> {
         return safeCallApi { apiService.getMoviesGenres() }
             .genres?.filterNotNull().orEmpty()

@@ -3,7 +3,7 @@ package com.cairosquad.movio.di
 import androidx.room.Room
 import com.cairosquad.local.cache.genre.GenreDao
 import com.cairosquad.local.cache.movie.MoviesCacheDao
-import com.cairosquad.local.cache.movie.MoviesCacheDataSourceImpl
+import com.cairosquad.local.cache.movie.MoviesLocalDataSourceImpl
 import com.cairosquad.local.cache.request.RequestCachedDao
 import com.cairosquad.local.cache.reviews.ReviewDao
 import com.cairosquad.local.login.LocalAuthenticationDataSourceImpl
@@ -12,7 +12,7 @@ import com.cairosquad.local.search.recent.LocalRecentSearchDataSourceImpl
 import com.cairosquad.local.search.recent.dao.LocalRecentSearchDao
 import com.cairosquad.local.utils.MovioDataBase
 import com.cairosquad.repository.login.data_source.local.LocalAuthenticationDataSource
-import com.cairosquad.repository.movie.data_source.local.MoviesCacheDataSource
+import com.cairosquad.repository.movie.data_source.local.MoviesLocalDataSource
 import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -55,7 +55,7 @@ val localDataSourceModule = module {
         LocalRecentSearchDataSourceImpl(get())
     }
 
-    single<MoviesCacheDataSource> {
-        MoviesCacheDataSourceImpl(get(), get(), get(), get())
+    single<MoviesLocalDataSource> {
+        MoviesLocalDataSourceImpl(get(), get(), get(), get())
     }
 }

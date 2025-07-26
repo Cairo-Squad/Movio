@@ -9,7 +9,7 @@ import com.cairosquad.repository.search.data_source.local.dto.SeriesCacheDto
 import com.cairosquad.repository.search.data_source.remote.RemoteSearchDataSource
 import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.SeriesRemoteDto
+import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.just

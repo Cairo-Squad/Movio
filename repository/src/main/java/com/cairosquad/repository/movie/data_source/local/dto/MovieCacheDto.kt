@@ -13,5 +13,5 @@ data class MovieCacheDto(
         entityColumn = "genre_id",
         associateBy = Junction(MovieGenreCacheCrossRef::class)
     )
-    val genres: List<MovieGenreCacheDto>
+    val genres: List<GenreOfMovieCacheDto>
 )

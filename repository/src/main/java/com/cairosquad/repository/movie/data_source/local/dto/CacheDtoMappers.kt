@@ -48,7 +48,7 @@ fun Movie.toCacheDto(): MovieCacheDto {
     )
 }
 
-fun MovieGenreCacheDto.toEntity(): Genre {
+fun GenreOfMovieCacheDto.toEntity(): Genre {
     return Genre(
         id = id,
         name = name
@@ -56,18 +56,18 @@ fun MovieGenreCacheDto.toEntity(): Genre {
 }
 
 @JvmName("toEntityGenre")
-fun List<MovieGenreCacheDto>.toEntityList(): List<Genre> {
+fun List<GenreOfMovieCacheDto>.toEntityList(): List<Genre> {
     return map { it.toEntity() }
 }
 
-fun Genre.toCacheDto(): MovieGenreCacheDto {
-    return MovieGenreCacheDto(
+fun Genre.toCacheDto(): GenreOfMovieCacheDto {
+    return GenreOfMovieCacheDto(
         id = id,
         name = name
     )
 }
 
 @JvmName("toCacheGenre")
-fun List<Genre>.toCacheDtoList(): List<MovieGenreCacheDto> {
+fun List<Genre>.toCacheDtoList(): List<GenreOfMovieCacheDto> {
     return map { it.toCacheDto() }
 }

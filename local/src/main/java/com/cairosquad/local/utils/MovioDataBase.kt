@@ -9,8 +9,8 @@ import com.cairosquad.local.cache.reviews.ReviewDao
 import com.cairosquad.local.login.dao.LoginDao
 import com.cairosquad.local.search.recent.dao.LocalRecentSearchDao
 import com.cairosquad.repository.login.data_source.local.dto.SessionIdDto
+import com.cairosquad.repository.movie.data_source.local.dto.GenreOfMovieCacheDto
 import com.cairosquad.repository.movie.data_source.local.dto.MovieGenreCacheCrossRef
-import com.cairosquad.repository.movie.data_source.local.dto.MovieGenreCacheDto
 import com.cairosquad.repository.movie.data_source.local.dto.MovieWithoutGenreCacheDto
 import com.cairosquad.repository.movie.data_source.local.dto.RequestMovieCacheCrossRef
 import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
@@ -33,7 +33,7 @@ import com.cairosquad.repository.utils.sharedDto.local.ReviewCacheDto
         MovieWithoutGenreCacheDto::class,
         RequestMovieCacheCrossRef::class,
 
-        MovieGenreCacheDto::class,
+        GenreOfMovieCacheDto::class,
         MovieGenreCacheCrossRef::class,
 
         ReviewCacheDto::class,
