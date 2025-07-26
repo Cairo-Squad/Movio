@@ -49,7 +49,7 @@ interface SeriesApiService {
         @Path("seasonNumber") seasonNumber: Int
     ): SeasonResponse
 
-    @GET("movie/{seriesId}/videos")
+    @GET("tv/{seriesId}/videos")
     suspend fun getVideoKey(
         @Path("seriesId") seriesId: Long
     ): VideoResponse
