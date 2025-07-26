@@ -164,7 +164,7 @@ class MovieRepositoryImpl(
                 )
             }.also { movie ->
                 moviesLocalDataSource.insertRequestWithMovies(
-                    listOf(movie).toRequestWithMoviesCacheDto(request = "movie/${movieId}")
+                    listOf(movie).toRequestWithMoviesCacheDto(request = getRequestOfMovie(movieId))
                 )
             }
     }
