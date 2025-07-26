@@ -1,15 +1,16 @@
 package com.cairosquad.remote.login
 
+import com.cairosquad.remote.utils.retrofit.ApiServiceProvider
 import com.cairosquad.remote.utils.retrofit.safeCallApi
 import com.cairosquad.repository.login.data_source.remote.RemoteLoginDataSource
 import com.cairosquad.repository.login.data_source.remote.dto.RequestTokenResponse
 import com.cairosquad.repository.login.data_source.remote.dto.SessionIdResponse
 
 class RemoteLoginDataSourceImpl(
-    private val loginApiService: LoginApiService
+    private val apiServiceProvider: ApiServiceProvider
 ) : RemoteLoginDataSource {
     override suspend fun createRequestToken(): RequestTokenResponse {
-        return safeCallApi { loginApiService.createRequestToken() }
+        return safeCallApi { apiServiceProvider.getLoginApiService().createRequestToken() }
     }
 
     override suspend fun authenticateRequestToken(
@@ -18,7 +19,7 @@ class RemoteLoginDataSourceImpl(
         requestToken: String
     ): RequestTokenResponse {
         return safeCallApi {
-            loginApiService.authenticateRequestToken(
+            apiServiceProvider.getLoginApiService().authenticateRequestToken(
                 username,
                 password,
                 requestToken
@@ -27,6 +28,15 @@ class RemoteLoginDataSourceImpl(
     }
 
     override suspend fun createSessionId(requestToken: String): SessionIdResponse {
-        return safeCallApi { loginApiService.createSessionId(requestToken) }
+        return safeCallApi {
+            apiServiceProvider.getLoginApiService().createSessionId(requestToken)
+        }
     }
+
+
+    override suspend fun updateInterceptorToken(token: String) {
+        apiServiceProvider.updateToken(token)
+    }
+
+
 }

@@ -3,7 +3,7 @@ package com.cairosquad.domain.usecase.authentication
 import com.cairosquad.domain.repository.LoginRepository
 
 class LoginUseCase(
-    private val loginRepository: LoginRepository
+    private val loginRepository: LoginRepository,
 ) {
 
     suspend fun login(username: String, password: String) {

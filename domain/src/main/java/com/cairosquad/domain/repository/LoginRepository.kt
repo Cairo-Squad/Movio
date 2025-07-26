@@ -6,5 +6,4 @@ interface LoginRepository {
     suspend fun isUserLoggedIn(): Boolean
 
     suspend fun logout()
-
 }
