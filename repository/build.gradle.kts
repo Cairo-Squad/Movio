@@ -40,6 +40,7 @@ android {
 }
 
 dependencies {
+    // Project Modules
     implementation(projects.domain)
     implementation(libs.kotlinx.serialization.json)
 

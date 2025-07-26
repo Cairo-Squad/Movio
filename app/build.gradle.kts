@@ -90,50 +90,55 @@ ksp {
 }
 
 dependencies {
-    implementation(libs.androidx.ui)
-    implementation(libs.firebase.perf)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.firebase.analytics)
-    implementation(libs.androidx.foundation)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.firebase.crashlytics)
-    implementation(platform(libs.firebase.bom))
-    debugImplementation(libs.androidx.ui.tooling)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    debugImplementation(libs.androidx.ui.test.manifest)
-    implementation(libs.androidx.foundation.layout.android)
-
-    // koin
-    implementation(libs.koin.androidx.compose)
-    implementation(libs.koin.android)
-    implementation(libs.koin.test)
-    implementation(libs.koin.annotations)
-    ksp(libs.koin.ksp)
-    implementation(libs.logging.interceptor)
-    implementation(libs.logging.interceptor)
-
-    // --- Retrofit 3 ---
-    implementation(libs.retrofit)
-    implementation(libs.converter.kotlinx.serialization)
-
-    implementation(libs.kotlinx.serialization.json)
-
-    implementation (libs.okhttp)
-
-    // Room
-    implementation(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.ktx)
-
+    // Project Modules
     implementation(projects.designSystem)
     implementation(projects.domain)
     implementation(projects.entity)
-    implementation(projects.remote)
     implementation(projects.local)
+    implementation(projects.remote)
     implementation(projects.repository)
     implementation(projects.ui)
     implementation(projects.viewmodel)
+
+    // AndroidX Compose
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.foundation)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.ui.tooling.preview)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Core and Lifecycle
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.perf)
+
+    // Dependency Injection
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.annotations)
+    implementation(libs.koin.test)
+    ksp(libs.koin.ksp)
+
+    // Retrofit and Networking
+    implementation(libs.retrofit)
+    implementation(libs.converter.kotlinx.serialization)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
+
+    // Serialization
+    implementation(libs.kotlinx.serialization.json)
+
+    // Room Database
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 }

@@ -48,30 +48,38 @@ android {
         buildConfig = true
     }
 }
-
 dependencies {
+    // Project Modules
+    implementation(projects.designSystem)
+    implementation(projects.viewmodel)
+    implementation(projects.safeImageViewer)
+
+    // Compose
+    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     debugImplementation(libs.androidx.ui.tooling)
+    implementation(libs.androidx.foundation)
+    implementation(libs.androidx.foundation.layout.android)
+
+    // Core and Lifecycle
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.foundation.layout.android)
-    implementation(libs.androidx.foundation)
-    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    // Koin
-    implementation(libs.koin.androidx.compose)
+
+    // Dependency Injection
     implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
     implementation(libs.koin.annotations)
     ksp(libs.koin.ksp)
-    // navigation
+
+    // Navigation
     implementation(libs.navigation.compose)
-    // serialization
+
+    // Serialization
     implementation(libs.kotlinx.serialization.json)
-    implementation(projects.designSystem)
-    implementation(projects.viewmodel)
-    implementation(projects.safeImageViewer)
+
 }

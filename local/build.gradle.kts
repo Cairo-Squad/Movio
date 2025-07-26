@@ -50,6 +50,7 @@ android {
 }
 
 dependencies {
+    //Project Module
     implementation(projects.repository)
 
     implementation(libs.androidx.core.ktx)

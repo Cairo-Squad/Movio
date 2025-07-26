@@ -49,19 +49,27 @@ android {
 }
 
 dependencies {
-
+    // Core
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.junit.ktx)
+
+    // Coil Image Loading
     implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
+    // TensorFlow Lite
     implementation(libs.tensorflow.lite)
     implementation(libs.tensorflow.lite.task.vision)
-    implementation(libs.androidx.junit.ktx)
+
+    // Unit Testing
     testImplementation(kotlin("test"))
+    testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.mockk)
     testImplementation(libs.truth)
+    testImplementation(libs.kotlinx.coroutines.test)
+
+    // Android Testing
     androidTestImplementation(libs.mockk)
     androidTestImplementation(libs.truth)
-    testImplementation(libs.junit)
-    testImplementation(libs.kotlinx.coroutines.test)
-    implementation(libs.coil.network.okhttp)
 }

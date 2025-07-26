@@ -13,6 +13,7 @@ kotlin {
     }
 }
 dependencies {
+    // Project Module
     api(projects.entity)
 
     //test
