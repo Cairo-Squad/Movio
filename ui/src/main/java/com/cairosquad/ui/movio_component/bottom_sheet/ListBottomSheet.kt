@@ -48,7 +48,9 @@ fun ListBottomSheet(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp))
-                    .clickable(onClick = onCreateNewList)
+                    .clickable(onClick = onCreateNewList),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Icon(
                     modifier = Modifier
