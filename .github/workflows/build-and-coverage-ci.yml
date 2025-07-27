@@ -4,8 +4,8 @@ on:
   pull_request:
     types: [ opened, edited, synchronize, reopened ]
     branches:
-    - develop
-    - feature/details/main
+      - main
+      - develop
 
 permissions:
   contents: read
