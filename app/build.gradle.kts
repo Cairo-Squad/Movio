@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -76,7 +77,7 @@ android {
     }
     kotlin {
         compilerOptions {
-            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_11)
         }
     }
     buildFeatures {
@@ -118,7 +119,6 @@ dependencies {
     implementation(libs.bundles.network)
 
     implementation(libs.kotlinx.serialization.json)
-
     implementation(libs.bundles.room)
     ksp(libs.androidx.room.compiler)
 }

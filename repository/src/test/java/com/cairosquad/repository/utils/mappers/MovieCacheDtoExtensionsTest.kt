@@ -56,7 +56,7 @@ class MovieCacheDtoExtensionsTest {
             )
         )
 
-        val result = movieCacheList.toPersonalizedMoviesIdsDto()
+        val result = movieCacheList.toPersonalizedMoviesIdsDtoList()
 
         assertThat(result).containsExactly(
             PersonalizedMoviesIdsDto(1),
@@ -114,7 +114,7 @@ class MovieCacheDtoExtensionsTest {
             )
         )
 
-        val result = movieCacheList.toSuggestedMoviesIds()
+        val result = movieCacheList.toSuggestedMoviesIdsList()
 
         assertThat(result).containsExactly(
             SuggestedMoviesIdsDto(7),

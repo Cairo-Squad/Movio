@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
@@ -30,7 +32,7 @@ android {
     }
     kotlin {
         compilerOptions {
-            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_11)
         }
     }
     buildFeatures {
@@ -47,8 +49,6 @@ dependencies {
     implementation(libs.bundles.composeUi)
     implementation(libs.bundles.composeMaterial3)
     debugImplementation(libs.bundles.composedebug)
-    implementation(libs.androidx.constraintlayout.compose)
-
     implementation(libs.lottie.compose)
     implementation(libs.accompanist.webview)
 }

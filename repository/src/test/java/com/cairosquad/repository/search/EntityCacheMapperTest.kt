@@ -8,6 +8,7 @@ import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.SeriesCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.toCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.toEntity
+import com.cairosquad.repository.search.data_source.local.dto.toEntityList
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import java.time.Instant
