@@ -60,9 +60,9 @@ fun SimilarSeriesScreen(
             onBackButtonClicked = { viewModel.onClickBack() },
         )
         LazyVerticalGrid(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(horizontal = 16.dp),
             columns = GridCells.Adaptive(minSize = 101.33.dp),
-            contentPadding = PaddingValues(bottom = 16.dp),
+            contentPadding = PaddingValues(vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {

@@ -197,26 +197,6 @@ fun InputField(
             visualTransformation = if (isPasswordField) PasswordVisualTransformation() else VisualTransformation.None,
         )
 
-        // عرض عداد الحروف (اختياري)
-        if (maxCharacters != null) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 4.dp),
-                horizontalArrangement = Arrangement.End
-            ) {
-                Text(
-                    text = "${textFieldValue.text.length}/$maxCharacters",
-                    style = Theme.textStyle.label.smallRegular12,
-                    color = if (textFieldValue.text.length >= maxCharacters) {
-                        Theme.color.system.errorContainer
-                    } else {
-                        Theme.color.surfaces.onSurfaceContainer
-                    }
-                )
-            }
-        }
-
         AnimatedVisibility(
             error.isNotBlank() && isErrorMessageShown,
             modifier = Modifier.padding(top = 12.dp)

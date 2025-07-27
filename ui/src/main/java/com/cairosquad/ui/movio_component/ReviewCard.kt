@@ -52,7 +52,7 @@ fun ReviewCard(
             .padding(12.dp)
     ) {
         Row {
-            if (imgUrl?.isNotEmpty() == true) {
+            if (imgUrl?.isNotBlank() == true) {
                 SafeImageViewer(
                     model = BuildConfig.IMAGE_BASE_URL + imgUrl,
                     modifier = Modifier
@@ -131,6 +131,7 @@ fun ReviewCard(
                 text = reviewText,
                 color = color.surfaces.onSurfaceVariant,
                 style = textStyle.label.smallRegular12,
+                minLines = 4,
                 maxLines = 4,
                 overflow = TextOverflow.Ellipsis
             )

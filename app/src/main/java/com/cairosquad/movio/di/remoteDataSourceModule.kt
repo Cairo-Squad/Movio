@@ -18,16 +18,13 @@ import com.cairosquad.repository.movie.data_source.remote.RemoteMovieDataSource
 import com.cairosquad.repository.search.data_source.remote.RemoteMovieDiscoveryDataSource
 import com.cairosquad.repository.search.data_source.remote.RemoteSearchDataSource
 import com.cairosquad.repository.series.data_source.remote.RemoteSeriesDataSource
-import com.cairosquad.repository.utils.authenticationTokenProvider
 import org.koin.dsl.module
 import retrofit2.Retrofit
 
 val remoteDataSourceModule = module {
 
     single {
-        retrofitProvider (
-            tokenProvider = { authenticationTokenProvider(get()) }
-        )
+        retrofitProvider()
     }
 
     single<LoginApiService> {
