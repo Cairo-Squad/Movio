@@ -4,13 +4,13 @@ import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
 
-data class RequestWithReviewsCacheDto(
+data class CacheCodeWithReviewsCacheDto(
     @Embedded
-    val request: RequestCacheDto,
+    val cacheCode: CacheCodeDto,
     @Relation(
-        parentColumn = "request",
+        parentColumn = "cacheCode",
         entityColumn = "review_id",
-        associateBy = Junction(RequestReviewCacheCrossRef::class)
+        associateBy = Junction(CacheCodeReviewCacheCrossRef::class)
     )
     val reviews: List<ReviewCacheDto>,
 )

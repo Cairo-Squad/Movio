@@ -1,45 +1,53 @@
 package com.cairosquad.local.cache.series
 
+import com.cairosquad.local.cache.cacheCode.CacheCodeDao
 import com.cairosquad.local.cache.genre.GenreDao
-import com.cairosquad.local.cache.request.RequestCachedDao
 import com.cairosquad.local.cache.reviews.ReviewDao
 import com.cairosquad.repository.series.data_source.local.SeriesLocalDataSource
+import com.cairosquad.repository.series.data_source.local.dto.CacheCodeSeriesCacheCrossRef
+import com.cairosquad.repository.series.data_source.local.dto.CacheCodeWithSeriesCacheDto
 import com.cairosquad.repository.series.data_source.local.dto.GenreOfSeriesCacheDto
-import com.cairosquad.repository.series.data_source.local.dto.RequestSeriesCacheCrossRef
-import com.cairosquad.repository.series.data_source.local.dto.RequestWithSeriesCacheDto
 import com.cairosquad.repository.series.data_source.local.dto.SeriesCacheDto
 import com.cairosquad.repository.series.data_source.local.dto.SeriesGenreCacheCrossRef
-import com.cairosquad.repository.utils.sharedDto.local.RequestReviewCacheCrossRef
-import com.cairosquad.repository.utils.sharedDto.local.RequestWithReviewsCacheDto
+import com.cairosquad.repository.utils.sharedDto.local.CacheCodeReviewCacheCrossRef
+import com.cairosquad.repository.utils.sharedDto.local.CacheCodeWithReviewsCacheDto
 import com.cairosquad.repository.utils.sharedDto.local.ReviewCacheDto
 
 class SeriesLocalDataSourceImpl(
     private val seriesCacheDao: SeriesCacheDao,
-    private val requestCachedDao: RequestCachedDao,
+    private val cacheCodeDao: CacheCodeDao,
     private val genreDao: GenreDao,
     private val reviewDao: ReviewDao
-): SeriesLocalDataSource {
-    override suspend fun insertRequestWithSeries(requestWithSeries: RequestWithSeriesCacheDto) {
-        seriesCacheDao.insertSeriesWithoutGenre(requestWithSeries.series.map { it.seriesWithoutGenre })
-        genreDao.insertSeriesGenres(genres = requestWithSeries.series.map { it.genres }.flatten().toSet().toList())
+) : SeriesLocalDataSource {
+    override suspend fun insertCacheCodeWithSeries(cacheCodeWithSeries: CacheCodeWithSeriesCacheDto) {
+        seriesCacheDao.insertSeriesWithoutGenre(
+            cacheCodeWithSeries.series
+                .map { it.seriesWithoutGenre }
+        )
+        genreDao.insertSeriesGenres(
+            genres = cacheCodeWithSeries.series
+                .map { it.genres }
+                .flatten()
+                .distinctBy { it.id }
+        )
         seriesCacheDao.insertCrossRefForSeriesAndGenreCache(
-            requestWithSeries.series.map { series ->
-                series.genres.map { genre ->
-                    SeriesGenreCacheCrossRef(series.seriesWithoutGenre.id, genre.id)
-                }
+            cacheCodeWithSeries.series.map { series ->
+                SeriesGenreCacheCrossRef.fromSeries(series)
             }.flatten()
         )
-        requestCachedDao.insertRequestCache(requestWithSeries.request)
-        seriesCacheDao.insertCrossRefForRequestAndSeriesCache(
-            RequestSeriesCacheCrossRef.fromRequestAndSeriesList(
-                request = requestWithSeries.request,
-                seriesList = requestWithSeries.series
+        cacheCodeDao.insertCacheCode(
+            cacheCodeWithSeries.cacheCode
+        )
+        seriesCacheDao.insertCrossRefForCacheCodeAndSeriesCache(
+            CacheCodeSeriesCacheCrossRef.fromRequestAndSeriesList(
+                cacheCode = cacheCodeWithSeries.cacheCode,
+                seriesList = cacheCodeWithSeries.series
             )
         )
     }
 
-    override suspend fun getSeriesByRequest(request: String): List<SeriesCacheDto> {
-        return seriesCacheDao.getSeriesByRequest(request)?.series ?: emptyList()
+    override suspend fun getSeriesByCacheCode(cacheCode: String): List<SeriesCacheDto> {
+        return seriesCacheDao.getSeriesByCacheCode(cacheCode)?.series ?: emptyList()
     }
 
     override suspend fun insertSeriesGenres(genres: List<GenreOfSeriesCacheDto>) {
@@ -50,31 +58,31 @@ class SeriesLocalDataSourceImpl(
         return genreDao.getSeriesGenres()
     }
 
-    override suspend fun getSeriesReviewsByRequest(request: String): List<ReviewCacheDto> {
-        return reviewDao.getReviewsByRequest(request)?.reviews ?: emptyList()
+    override suspend fun getSeriesReviewsByCacheCode(cacheCode: String): List<ReviewCacheDto> {
+        return reviewDao.getReviewsByCacheCode(cacheCode)?.reviews ?: emptyList()
     }
 
-    override suspend fun insertRequestWithReviews(requestWithReviewsCacheDto: RequestWithReviewsCacheDto) {
-        requestCachedDao.insertRequestCache(requestWithReviewsCacheDto.request)
-        reviewDao.insertReviews(requestWithReviewsCacheDto.reviews)
+    override suspend fun insertCacheCodeWithReviews(cacheCodeWithReviewsCacheDto: CacheCodeWithReviewsCacheDto) {
+        cacheCodeDao.insertCacheCode(cacheCodeWithReviewsCacheDto.cacheCode)
+        reviewDao.insertReviews(cacheCodeWithReviewsCacheDto.reviews)
         reviewDao.insertRequestReviewCacheCrossRef(
-            RequestReviewCacheCrossRef.fromRequestAndReviewList(
-                request = requestWithReviewsCacheDto.request,
-                reviews = requestWithReviewsCacheDto.reviews
+            CacheCodeReviewCacheCrossRef.fromRequestAndReviewList(
+                cacheCode = cacheCodeWithReviewsCacheDto.cacheCode,
+                reviews = cacheCodeWithReviewsCacheDto.reviews
             )
         )
     }
 
     override suspend fun deleteExpiredCache(timestamp: Long) {
-        requestCachedDao.deleteExpiredRequestCache(timestamp)
+        cacheCodeDao.deleteExpiredCacheCode(timestamp)
 
         seriesCacheDao.deleteExpiredSeriesWithoutGenreCache(timestamp)
-        seriesCacheDao.deleteCrossRefForNonExistingRequestAndSeriesCache()
+        seriesCacheDao.deleteCrossRefForNonExistingCacheCodeAndSeriesCache()
 
-        genreDao.deleteExpiredSeriesGenreCache(timestamp)
+        genreDao.deleteExpiredGenreOfSeriesCache(timestamp)
         seriesCacheDao.deleteCrossRefForNonExistingSeriesAndGenreCache()
 
         reviewDao.deleteExpiredReviewCache(timestamp)
-        reviewDao.deleteUnwantedRequestReviewCacheCrossRef()
+        reviewDao.deleteCrossRefForNonexistingRequestReviewCache()
     }
 }

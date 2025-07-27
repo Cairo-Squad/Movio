@@ -5,32 +5,32 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import com.cairosquad.repository.movie.data_source.local.dto.CacheCodeMovieCrossRef
+import com.cairosquad.repository.movie.data_source.local.dto.CacheCodeWithMoviesCacheDto
 import com.cairosquad.repository.movie.data_source.local.dto.MovieGenreCacheCrossRef
 import com.cairosquad.repository.movie.data_source.local.dto.MovieWithoutGenreCacheDto
-import com.cairosquad.repository.movie.data_source.local.dto.RequestMovieCacheCrossRef
-import com.cairosquad.repository.movie.data_source.local.dto.RequestWithMoviesCacheDto
 
 @Dao
 interface MoviesCacheDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCrossRefForRequestAndMovieCache(mappings: List<RequestMovieCacheCrossRef>)
+    suspend fun insertCrossRefForCacheCodeAndMovieCache(crossRef: List<CacheCodeMovieCrossRef>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCrossRefForMovieAndGenreCache(mappings: List<MovieGenreCacheCrossRef>)
+    suspend fun insertCrossRefForMovieAndGenreCache(crossRef: List<MovieGenreCacheCrossRef>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMoviesWithoutGenre(movies: List<MovieWithoutGenreCacheDto>)
 
-    @Query("Delete from MovieWithoutGenreCacheDto where timestamp < :expirationTime")
+    @Query("Delete from MovieWithoutGenreCacheDto where cachingTimestamp < :expirationTime")
     suspend fun deleteExpiredMovieWithoutGenreCache(expirationTime: Long)
 
-    @Query("Delete from RequestMovieCacheCrossRef " +
+    @Query("Delete from CacheCodeMovieCrossRef " +
             "where " +
                 "Not movie_id in (Select movie_id from MovieWithoutGenreCacheDto) " +
              "OR " +
-                "Not request in (Select request from RequestCacheDto)")
-    suspend fun deleteCrossRefForNonExistingRequestAndMovieCache()
+                "Not cacheCode in (Select cacheCode from CacheCodeDto)")
+    suspend fun deleteCrossRefForNonExistingCacheCodeAndMovieCache()
 
     @Query("Delete from MovieGenreCacheCrossRef " +
             "where " +
@@ -40,6 +40,6 @@ interface MoviesCacheDao {
     suspend fun deleteCrossRefForNonExistingMovieAndGenreCache()
 
     @Transaction
-    @Query("Select * From RequestCacheDto where request = :request")
-    suspend fun getMoviesByRequest(request: String): RequestWithMoviesCacheDto?
+    @Query("Select * From CacheCodeDto where cacheCode = :cacheCode")
+    suspend fun getMoviesByCacheCode(cacheCode: String): CacheCodeWithMoviesCacheDto?
 }

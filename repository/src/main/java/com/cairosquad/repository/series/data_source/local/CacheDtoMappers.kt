@@ -2,16 +2,16 @@ package com.cairosquad.repository.series.data_source.local
 
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Series
+import com.cairosquad.repository.series.data_source.local.dto.CacheCodeWithSeriesCacheDto
 import com.cairosquad.repository.series.data_source.local.dto.GenreOfSeriesCacheDto
-import com.cairosquad.repository.series.data_source.local.dto.RequestWithSeriesCacheDto
 import com.cairosquad.repository.series.data_source.local.dto.SeriesCacheDto
 import com.cairosquad.repository.series.data_source.local.dto.SeriesWithoutGenreCacheDto
-import com.cairosquad.repository.utils.sharedDto.local.RequestCacheDto
+import com.cairosquad.repository.utils.sharedDto.local.CacheCodeDto
 
 
-fun List<Series>.toRequestWithSeriesCacheDto(request: String): RequestWithSeriesCacheDto {
-    return RequestWithSeriesCacheDto(
-        request = RequestCacheDto(request = request),
+fun List<Series>.toRequestWithSeriesCacheDto(request: String): CacheCodeWithSeriesCacheDto {
+    return CacheCodeWithSeriesCacheDto(
+        cacheCode = CacheCodeDto(cacheCode = request),
         series = this.map { it.toCacheDto() }
     )
 }

@@ -1,46 +1,56 @@
 package com.cairosquad.local.cache.movie
 
+import com.cairosquad.local.cache.cacheCode.CacheCodeDao
 import com.cairosquad.local.cache.genre.GenreDao
-import com.cairosquad.local.cache.request.RequestCachedDao
 import com.cairosquad.local.cache.reviews.ReviewDao
 import com.cairosquad.repository.movie.data_source.local.MoviesLocalDataSource
+import com.cairosquad.repository.movie.data_source.local.dto.CacheCodeMovieCrossRef
+import com.cairosquad.repository.movie.data_source.local.dto.CacheCodeWithMoviesCacheDto
 import com.cairosquad.repository.movie.data_source.local.dto.GenreOfMovieCacheDto
 import com.cairosquad.repository.movie.data_source.local.dto.MovieCacheDto
 import com.cairosquad.repository.movie.data_source.local.dto.MovieGenreCacheCrossRef
-import com.cairosquad.repository.movie.data_source.local.dto.RequestMovieCacheCrossRef
-import com.cairosquad.repository.movie.data_source.local.dto.RequestWithMoviesCacheDto
-import com.cairosquad.repository.utils.sharedDto.local.RequestReviewCacheCrossRef
-import com.cairosquad.repository.utils.sharedDto.local.RequestWithReviewsCacheDto
+import com.cairosquad.repository.utils.sharedDto.local.CacheCodeReviewCacheCrossRef
+import com.cairosquad.repository.utils.sharedDto.local.CacheCodeWithReviewsCacheDto
 import com.cairosquad.repository.utils.sharedDto.local.ReviewCacheDto
 
 class MoviesLocalDataSourceImpl(
     private val moviesCacheDao: MoviesCacheDao,
-    private val requestCachedDao: RequestCachedDao,
+    private val cacheCodeDao: CacheCodeDao,
     private val genreDao: GenreDao,
     private val reviewDao: ReviewDao
-): MoviesLocalDataSource {
-    override suspend fun insertRequestWithMovies(requestWithMovies: RequestWithMoviesCacheDto) {
-        moviesCacheDao.insertMoviesWithoutGenre(requestWithMovies.movies.map { it.movieWithoutGenre })
-        genreDao.insertMovieGenres(genres = requestWithMovies.movies.map { it.genres }.flatten().toSet().toList())
-        moviesCacheDao.insertCrossRefForMovieAndGenreCache(
-            requestWithMovies.movies.map { movie ->
-                movie.genres.map { genre ->
-                    MovieGenreCacheCrossRef(movie.movieWithoutGenre.id, genre.id)
-                }
-            }.flatten()
+) : MoviesLocalDataSource {
+    override suspend fun insertCacheCodeWithMovies(cacheCodeWithMovies: CacheCodeWithMoviesCacheDto) {
+        moviesCacheDao
+            .insertMoviesWithoutGenre(
+                cacheCodeWithMovies.movies
+                    .map { it.movieWithoutGenre }
+            )
+
+        genreDao.insertMovieGenres(
+            genres = cacheCodeWithMovies.movies
+                .map { it.genres }
+                .flatten()
+                .distinctBy { it.id }
         )
-        requestCachedDao.insertRequestCache(requestWithMovies.request)
-        moviesCacheDao.insertCrossRefForRequestAndMovieCache(
-            RequestMovieCacheCrossRef.fromRequestAndMovieList(
-                request = requestWithMovies.request,
-                movies = requestWithMovies.movies
+        moviesCacheDao.insertCrossRefForMovieAndGenreCache(
+            cacheCodeWithMovies.movies
+                .map { movie ->
+                    MovieGenreCacheCrossRef.fromMovie(movie)
+                }.flatten()
+        )
+        cacheCodeDao.insertCacheCode(
+            cacheCodeWithMovies.cacheCode
+        )
+        moviesCacheDao.insertCrossRefForCacheCodeAndMovieCache(
+            CacheCodeMovieCrossRef.fromCacheCodeAndMovieList(
+                cacheCode = cacheCodeWithMovies.cacheCode,
+                movies = cacheCodeWithMovies.movies
             )
         )
     }
 
-    override suspend fun getMoviesByRequest(request: String): List<MovieCacheDto> {
-
-        return moviesCacheDao.getMoviesByRequest(request)?.movies ?: emptyList()
+    override suspend fun getMoviesByCacheCode(cacheCode: String): List<MovieCacheDto> {
+        return moviesCacheDao.getMoviesByCacheCode(cacheCode)?.movies ?: emptyList()
     }
 
     override suspend fun insertMovieGenres(genres: List<GenreOfMovieCacheDto>) {
@@ -51,32 +61,32 @@ class MoviesLocalDataSourceImpl(
         return genreDao.getMovieGenres()
     }
 
-    override suspend fun getMovieReviewsByRequest(request: String): List<ReviewCacheDto> {
-        return reviewDao.getReviewsByRequest(request)?.reviews ?: emptyList()
+    override suspend fun getMovieReviewsByCacheCode(cacheCode: String): List<ReviewCacheDto> {
+        return reviewDao.getReviewsByCacheCode(cacheCode)?.reviews ?: emptyList()
     }
 
-    override suspend fun insertRequestWithReviews(requestWithReviewsCacheDto: RequestWithReviewsCacheDto) {
-        requestCachedDao.insertRequestCache(requestWithReviewsCacheDto.request)
-        reviewDao.insertReviews(requestWithReviewsCacheDto.reviews)
+    override suspend fun insertCacheCodeWithReviews(cacheCodeWithReviewsCacheDto: CacheCodeWithReviewsCacheDto) {
+        cacheCodeDao.insertCacheCode(cacheCodeWithReviewsCacheDto.cacheCode)
+        reviewDao.insertReviews(cacheCodeWithReviewsCacheDto.reviews)
         reviewDao.insertRequestReviewCacheCrossRef(
-            RequestReviewCacheCrossRef.fromRequestAndReviewList(
-                request = requestWithReviewsCacheDto.request,
-                reviews = requestWithReviewsCacheDto.reviews
+            CacheCodeReviewCacheCrossRef.fromRequestAndReviewList(
+                cacheCode = cacheCodeWithReviewsCacheDto.cacheCode,
+                reviews = cacheCodeWithReviewsCacheDto.reviews
             )
         )
     }
 
     override suspend fun deleteExpiredCache(timestamp: Long) {
-        requestCachedDao.deleteExpiredRequestCache(timestamp)
+        cacheCodeDao.deleteExpiredCacheCode(timestamp)
 
         moviesCacheDao.deleteExpiredMovieWithoutGenreCache(timestamp)
-        moviesCacheDao.deleteCrossRefForNonExistingRequestAndMovieCache()
+        moviesCacheDao.deleteCrossRefForNonExistingCacheCodeAndMovieCache()
 
-        genreDao.deleteExpiredMovieGenreCache(timestamp)
+        genreDao.deleteExpiredGenreOfMovieCache(timestamp)
         moviesCacheDao.deleteCrossRefForNonExistingMovieAndGenreCache()
 
         reviewDao.deleteExpiredReviewCache(timestamp)
-        reviewDao.deleteUnwantedRequestReviewCacheCrossRef()
+        reviewDao.deleteCrossRefForNonexistingRequestReviewCache()
     }
 
 }

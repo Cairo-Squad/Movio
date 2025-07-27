@@ -3,16 +3,16 @@ package com.cairosquad.repository.movie.data_source.local.dto
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
-import com.cairosquad.repository.utils.sharedDto.local.RequestCacheDto
+import com.cairosquad.repository.utils.sharedDto.local.CacheCodeDto
 
-data class RequestWithMoviesCacheDto(
+data class CacheCodeWithMoviesCacheDto(
     @Embedded
-    val request: RequestCacheDto,
+    val cacheCode: CacheCodeDto,
     @Relation(
-        parentColumn = "request",
+        parentColumn = "cacheCode",
         entity = MovieWithoutGenreCacheDto::class,
         entityColumn = "movie_id",
-        associateBy = Junction(RequestMovieCacheCrossRef::class)
+        associateBy = Junction(CacheCodeMovieCrossRef::class)
     )
     val movies: List<MovieCacheDto>,
 )

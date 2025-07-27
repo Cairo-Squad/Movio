@@ -15,21 +15,21 @@ import com.cairosquad.repository.movie.data_source.remote.MoviesRemoteDataSource
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.toEntity
 import com.cairosquad.repository.utils.mappers.tryToCall
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfAllMovies
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfFreeToWatchMovies
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfMoreRecommendedMovies
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfMovie
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfMovieReviews
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfMoviesByCategory
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfNowPlayingMovies
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfPersonalizedMovies
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfPopularMovies
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfSearchedMovies
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfSimilarMovies
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfSuggestedMovies
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfTopRatedMovies
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfTrendingMovies
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfUpcomingMovies
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfAllMovies
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfFreeToWatchMovies
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfMoreRecommendedMovies
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfMovie
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfMovieReviews
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfMoviesByCategory
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfNowPlayingMovies
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfPersonalizedMovies
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfPopularMovies
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSearchedMovies
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSimilarMovies
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSuggestedMovies
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfTopRatedMovies
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfTrendingMovies
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfUpcomingMovies
 import com.cairosquad.repository.utils.sharedDto.local.toEntityList
 import com.cairosquad.repository.utils.sharedDto.local.toRequestWithReviewsCacheDto
 import java.util.Date
@@ -42,77 +42,77 @@ class MovieRepositoryImpl(
     override suspend fun getSimilarMovies(movieId: Long, page: Int): List<Movie> {
         return getMovies(
             remoteFetcher = { moviesRemoteDataSource.getSimilarMovies(movieId, page) },
-            requestCache = getRequestOfSimilarMovies(movieId, page)
+            cacheCode = getCacheCodeOfSimilarMovies(movieId, page)
         )
     }
 
     override suspend fun getPersonalizedMovies(page: Int): List<Movie> {
         return getMovies(
             remoteFetcher = { moviesRemoteDataSource.getPersonalizedMovies(page) },
-            requestCache = getRequestOfPersonalizedMovies(page)
+            cacheCode = getCacheCodeOfPersonalizedMovies(page)
         )
     }
 
     override suspend fun getSuggestedMovies(): List<Movie> {
         return getMovies(
             remoteFetcher = { moviesRemoteDataSource.getSuggestedMovies() },
-            requestCache = getRequestOfSuggestedMovies()
+            cacheCode = getCacheCodeOfSuggestedMovies()
         )
     }
 
     override suspend fun getTopRatingMovies(page: Int, genreId: Long?): List<Movie> {
         return getMovies(
             remoteFetcher = { moviesRemoteDataSource.getTopRatingMovies(page, genreId) },
-            requestCache = getRequestOfTopRatedMovies(page, genreId)
+            cacheCode = getCacheCodeOfTopRatedMovies(page, genreId)
         )
     }
 
     override suspend fun getUpcomingMovies(page: Int, genreId: Long?): List<Movie> {
         return getMovies(
             remoteFetcher = { moviesRemoteDataSource.getUpcomingMovies(page, genreId) },
-            requestCache = getRequestOfUpcomingMovies(page, genreId)
+            cacheCode = getCacheCodeOfUpcomingMovies(page, genreId)
         )
     }
 
     override suspend fun getNowPlayingMovies(page: Int, genreId: Long?): List<Movie> {
         return getMovies(
             remoteFetcher = { moviesRemoteDataSource.getNowPlayingMovies(page, genreId) },
-            requestCache = getRequestOfNowPlayingMovies(page, genreId)
+            cacheCode = getCacheCodeOfNowPlayingMovies(page, genreId)
         )
     }
 
     override suspend fun getTrendingMovies(page: Int, genreId: Long?): List<Movie> {
         return getMovies(
             remoteFetcher = { moviesRemoteDataSource.getTrendingMovies(page, genreId) },
-            requestCache = getRequestOfTrendingMovies(page, genreId)
+            cacheCode = getCacheCodeOfTrendingMovies(page, genreId)
         )
     }
 
     override suspend fun getMoreRecommendedMovies(page: Int, genreId: Long?): List<Movie> {
         return getMovies(
             remoteFetcher = { moviesRemoteDataSource.getMoreRecommendedMovies(page, genreId) },
-            requestCache = getRequestOfMoreRecommendedMovies(page, genreId)
+            cacheCode = getCacheCodeOfMoreRecommendedMovies(page, genreId)
         )
     }
 
     override suspend fun getFreeToWatchMovies(page: Int, genreId: Long?): List<Movie> {
         return getMovies(
             remoteFetcher = { moviesRemoteDataSource.getFreeToWatchMovies(page, genreId) },
-            requestCache = getRequestOfFreeToWatchMovies(page, genreId)
+            cacheCode = getCacheCodeOfFreeToWatchMovies(page, genreId)
         )
     }
 
     override suspend fun getMoviesByCategory(page: Int, genreId: Long): List<Movie> {
         return getMovies(
             remoteFetcher = { moviesRemoteDataSource.getMoviesByCategory(genreId, page) },
-            requestCache = getRequestOfMoviesByCategory(page, genreId)
+            cacheCode = getCacheCodeOfMoviesByCategory(page, genreId)
         )
     }
 
     override suspend fun getPopularMovies(page: Int, genreId: Long?): List<Movie> {
         return getMovies(
             remoteFetcher = { moviesRemoteDataSource.getPopularMovies(page, genreId) },
-            requestCache = getRequestOfPopularMovies(page, genreId)
+            cacheCode = getCacheCodeOfPopularMovies(page, genreId)
         )
     }
 
@@ -129,24 +129,23 @@ class MovieRepositoryImpl(
                     sortType?.sortBy
                 )
             },
-            requestCache = getRequestOfAllMovies(page, genreId, sortType)
+            cacheCode = getCacheCodeOfAllMovies(page, genreId, sortType)
         )
     }
 
     override suspend fun getMoviesByQuery(query: String, page: Int): List<Movie> {
         return getMovies(
             remoteFetcher = { moviesRemoteDataSource.getMoviesByQuery(query, page) },
-            requestCache = getRequestOfSearchedMovies(query, page)
+            cacheCode = getCacheCodeOfSearchedMovies(query, page)
         )
     }
 
     private suspend fun getMovies(
         remoteFetcher: suspend () -> List<MovieRemoteDto>,
-        requestCache: String
+        cacheCode: String
     ): List<Movie> {
         moviesLocalDataSource.deleteExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
-        return moviesLocalDataSource
-            .getMoviesByRequest(request = requestCache)
+        return moviesLocalDataSource.getMoviesByCacheCode(cacheCode = cacheCode)
             .toEntityList()
             .takeIf { it.isNotEmpty() }
             ?: tryToCall {
@@ -154,9 +153,9 @@ class MovieRepositoryImpl(
                 remoteFetcher()
                     .map { it.toEntity(genres) }
                     .also { movies ->
-                        moviesLocalDataSource.insertRequestWithMovies(
+                        moviesLocalDataSource.insertCacheCodeWithMovies(
                             movies.toRequestWithMoviesCacheDto(
-                                request = requestCache
+                                request = cacheCode
                             )
                         )
                     }
@@ -166,7 +165,7 @@ class MovieRepositoryImpl(
     override suspend fun getMovieById(id: Long): Movie {
         moviesLocalDataSource.deleteExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
         return moviesLocalDataSource
-            .getMoviesByRequest(request = getRequestOfMovie(id))
+            .getMoviesByCacheCode(cacheCode = getCacheCodeOfMovie(id))
             .toEntityList()
             .firstOrNull()
             ?: tryToCall {
@@ -174,23 +173,23 @@ class MovieRepositoryImpl(
                     moviesRemoteDataSource.getVideoKey(id)
                 )
             }.also { movie ->
-                moviesLocalDataSource.insertRequestWithMovies(
-                    listOf(movie).toRequestWithMoviesCacheDto(request = getRequestOfMovie(id))
+                moviesLocalDataSource.insertCacheCodeWithMovies(
+                    listOf(movie).toRequestWithMoviesCacheDto(request = getCacheCodeOfMovie(id))
                 )
             }
     }
 
     override suspend fun getMovieReviews(movieId: Long, page: Int): List<Review> {
         return moviesLocalDataSource
-            .getMovieReviewsByRequest(getRequestOfMovieReviews(page, movieId))
+            .getMovieReviewsByCacheCode(getCacheCodeOfMovieReviews(page, movieId))
             .toEntityList()
             .takeIf { it.isNotEmpty() }
             ?: tryToCall {
                 moviesRemoteDataSource.getMovieReviews(movieId, page).map { it.toEntity() }
             }.also {
-                moviesLocalDataSource.insertRequestWithReviews(
+                moviesLocalDataSource.insertCacheCodeWithReviews(
                     it.toRequestWithReviewsCacheDto(
-                        getRequestOfMovieReviews(page, movieId)
+                        getCacheCodeOfMovieReviews(page, movieId)
                     )
                 )
             }

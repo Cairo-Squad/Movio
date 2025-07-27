@@ -20,5 +20,5 @@ data class ResultResponse<T>(
 @Serializable
 data class GenreResponse(
     @SerialName("genres")
-    val genres: List<GenreDto>? = null,
+    val genres: List<GenreDto?>? = null,
 )

@@ -2,27 +2,27 @@ package com.cairosquad.repository.series.data_source.local.dto
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import com.cairosquad.repository.utils.sharedDto.local.RequestCacheDto
+import com.cairosquad.repository.utils.sharedDto.local.CacheCodeDto
 
 
 @Entity(
-    tableName = "RequestSeriesCacheCrossRef",
-    primaryKeys = ["request", "series_id"]
+    tableName = "CacheCodeSeriesCacheCrossRef",
+    primaryKeys = ["cacheCode", "series_id"]
 )
-data class RequestSeriesCacheCrossRef(
-    @ColumnInfo(name = "request")
-    val request: String,
+data class CacheCodeSeriesCacheCrossRef(
+    @ColumnInfo(name = "cacheCode")
+    val cacheCode: String,
     @ColumnInfo(name = "series_id")
     val seriesId: Long,
 ) {
     companion object{
         fun fromRequestAndSeriesList(
-            request: RequestCacheDto,
+            cacheCode: CacheCodeDto,
             seriesList: List<SeriesCacheDto>
-        ): List<RequestSeriesCacheCrossRef> {
+        ): List<CacheCodeSeriesCacheCrossRef> {
             return seriesList.map { series ->
-                RequestSeriesCacheCrossRef(
-                    request.request,
+                CacheCodeSeriesCacheCrossRef(
+                    cacheCode.cacheCode,
                     series.seriesWithoutGenre.id
                 )
             }

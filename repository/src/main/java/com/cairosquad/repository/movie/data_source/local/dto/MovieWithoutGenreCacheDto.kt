@@ -22,8 +22,8 @@ data class MovieWithoutGenreCacheDto(
     val runtime: Int?,
     @ColumnInfo(name = "trailerPath")
     val trailerPath: String,
-    @ColumnInfo(name = "vote_average")
-    val voteAverage: Float,
-    @ColumnInfo(name = "timestamp")
+    @ColumnInfo(name = "rating")
+    val rating: Float,
+    @ColumnInfo(name = "cachingTimestamp")
     val cachingTimestamp: Long = Date().time,
 )

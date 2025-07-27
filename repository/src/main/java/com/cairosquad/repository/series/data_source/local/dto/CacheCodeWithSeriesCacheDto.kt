@@ -3,16 +3,16 @@ package com.cairosquad.repository.series.data_source.local.dto
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
-import com.cairosquad.repository.utils.sharedDto.local.RequestCacheDto
+import com.cairosquad.repository.utils.sharedDto.local.CacheCodeDto
 
-data class RequestWithSeriesCacheDto(
+data class CacheCodeWithSeriesCacheDto(
     @Embedded
-    val request: RequestCacheDto,
+    val cacheCode: CacheCodeDto,
     @Relation(
-        parentColumn = "request",
+        parentColumn = "cacheCode",
         entity = SeriesWithoutGenreCacheDto::class,
         entityColumn = "series_id",
-        associateBy = Junction(RequestSeriesCacheCrossRef::class)
+        associateBy = Junction(CacheCodeSeriesCacheCrossRef::class)
     )
     val series: List<SeriesCacheDto>,
 )

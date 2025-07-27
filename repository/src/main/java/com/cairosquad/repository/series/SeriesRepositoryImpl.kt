@@ -17,19 +17,19 @@ import com.cairosquad.repository.series.data_source.remote.SeriesRemoteDataSourc
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 import com.cairosquad.repository.series.data_source.remote.toEntity
 import com.cairosquad.repository.utils.mappers.tryToCall
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfAiringTodaySeries
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfAllSeries
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfFreeToWatchSeries
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfMoreRecommendedSeries
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfOnTvSeries
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfPopularSeries
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfSearchedSeries
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfSeries
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfSeriesByCategory
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfSeriesReviews
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfSimilarSeries
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfTopRatedSeries
-import com.cairosquad.repository.utils.sharedDto.local.getRequestOfTrendingSeries
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfAiringTodaySeries
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfAllSeries
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfFreeToWatchSeries
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfMoreRecommendedSeries
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfOnTvSeries
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfPopularSeries
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSearchedSeries
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSeries
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSeriesByCategory
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSeriesReviews
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSimilarSeries
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfTopRatedSeries
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfTrendingSeries
 import com.cairosquad.repository.utils.sharedDto.local.toEntityList
 import com.cairosquad.repository.utils.sharedDto.local.toRequestWithReviewsCacheDto
 import java.util.Date
@@ -42,28 +42,28 @@ class SeriesRepositoryImpl(
     override suspend fun getSimilarSeries(seriesId: Long, page: Int): List<Series> {
         return getSeries(
             remoteFetcher = { seriesRemoteDataSource.getSimilarSeries(seriesId, page) },
-            requestCache = getRequestOfSimilarSeries(seriesId, page)
+            cacheCode = getCacheCodeOfSimilarSeries(seriesId, page)
         )
     }
 
     override suspend fun getTopRatingSeries(page: Int, genreId: Long?): List<Series> {
         return getSeries(
             remoteFetcher = { seriesRemoteDataSource.getTopRatingSeries(page,genreId) },
-            requestCache = getRequestOfTopRatedSeries(page, genreId)
+            cacheCode = getCacheCodeOfTopRatedSeries(page, genreId)
         )
     }
 
     override suspend fun getTrendingSeries(page: Int, genreId: Long?): List<Series> {
         return getSeries(
             remoteFetcher = { seriesRemoteDataSource.getTrendingSeries(page, genreId) },
-            requestCache = getRequestOfTrendingSeries(page, genreId)
+            cacheCode = getCacheCodeOfTrendingSeries(page, genreId)
         )
     }
 
     override suspend fun getMoreRecommendedSeries(page: Int, genreId: Long?): List<Series> {
         return getSeries(
             remoteFetcher = { seriesRemoteDataSource.getMoreRecommendedSeries(page, genreId) },
-            requestCache = getRequestOfMoreRecommendedSeries(page, genreId)
+            cacheCode = getCacheCodeOfMoreRecommendedSeries(page, genreId)
         )
     }
 
@@ -73,7 +73,7 @@ class SeriesRepositoryImpl(
     ): List<Series> {
         return getSeries(
             remoteFetcher = { seriesRemoteDataSource.getOnTvSeries(page,genreId) },
-            requestCache = getRequestOfOnTvSeries(page, genreId)
+            cacheCode = getCacheCodeOfOnTvSeries(page, genreId)
         )
     }
 
@@ -83,52 +83,52 @@ class SeriesRepositoryImpl(
     ): List<Series> {
         return getSeries(
             remoteFetcher = { seriesRemoteDataSource.getAiringTodaySeries(page,genreId) },
-            requestCache = getRequestOfAiringTodaySeries(page, genreId)
+            cacheCode = getCacheCodeOfAiringTodaySeries(page, genreId)
         )
     }
 
     override suspend fun getFreeToWatchSeries(page: Int, genreId: Long?): List<Series> {
         return getSeries(
             remoteFetcher = { seriesRemoteDataSource.getFreeToWatchSeries(page, genreId) },
-            requestCache = getRequestOfFreeToWatchSeries(page, genreId)
+            cacheCode = getCacheCodeOfFreeToWatchSeries(page, genreId)
         )
     }
 
     override suspend fun getSeriesByCategory(genreId: Long, page: Int): List<Series> {
         return getSeries(
             remoteFetcher = { seriesRemoteDataSource.getSeriesByCategory(genreId, page) },
-            requestCache = getRequestOfSeriesByCategory(page, genreId)
+            cacheCode = getCacheCodeOfSeriesByCategory(page, genreId)
         )
     }
 
     override suspend fun getPopularSeries(page: Int, genreId: Long?): List<Series> {
         return getSeries(
             remoteFetcher = { seriesRemoteDataSource.getPopularSeries(page, genreId) },
-            requestCache = getRequestOfPopularSeries(page, genreId)
+            cacheCode = getCacheCodeOfPopularSeries(page, genreId)
         )
     }
 
     override suspend fun getAllSeries(page: Int, genreId: Long?, sortType: SortType?): List<Series> {
         return getSeries(
             remoteFetcher = { seriesRemoteDataSource.getAllSeries(page, genreId, sortType?.sortBy) },
-            requestCache = getRequestOfAllSeries(page, genreId, sortType)
+            cacheCode = getCacheCodeOfAllSeries(page, genreId, sortType)
         )
     }
 
     override suspend fun getSeriesByQuery(query: String, page: Int): List<Series> {
         return getSeries(
             remoteFetcher = { seriesRemoteDataSource.getSeriesByQuery(query, page) },
-            requestCache = getRequestOfSearchedSeries(query, page)
+            cacheCode = getCacheCodeOfSearchedSeries(query, page)
         )
     }
 
     private suspend fun getSeries(
         remoteFetcher: suspend () -> List<SeriesRemoteDto>,
-        requestCache: String
+        cacheCode: String
     ):List<Series> {
         seriesLocalDataSource.deleteExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
         return seriesLocalDataSource
-            .getSeriesByRequest(request = requestCache)
+            .getSeriesByCacheCode(cacheCode = cacheCode)
             .toEntityList()
             .takeIf { it.isNotEmpty() }
             ?: tryToCall {
@@ -136,9 +136,9 @@ class SeriesRepositoryImpl(
                 remoteFetcher()
                     .map { it.toEntity(genres) }
                     .also { series ->
-                        seriesLocalDataSource.insertRequestWithSeries(
+                        seriesLocalDataSource.insertCacheCodeWithSeries(
                             series.toRequestWithSeriesCacheDto(
-                                request = requestCache
+                                request = cacheCode
                             )
                         )
                     }
@@ -148,7 +148,7 @@ class SeriesRepositoryImpl(
     override suspend fun getSeriesById(id: Long): Series {
         seriesLocalDataSource.deleteExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
         return seriesLocalDataSource
-            .getSeriesByRequest(request = getRequestOfSeries(id))
+            .getSeriesByCacheCode(cacheCode = getCacheCodeOfSeries(id))
             .toEntityList()
             .firstOrNull()
             ?: tryToCall {
@@ -156,22 +156,22 @@ class SeriesRepositoryImpl(
                     seriesRemoteDataSource.getVideoKey(id)
                 )
             }.also { series ->
-                seriesLocalDataSource.insertRequestWithSeries(
+                seriesLocalDataSource.insertCacheCodeWithSeries(
                     listOf(series).toRequestWithSeriesCacheDto(request = "series/${id}")
                 )
             }
     }
     override suspend fun getSeriesReviews(seriesId: Long, page: Int): List<Review> {
         return seriesLocalDataSource
-            .getSeriesReviewsByRequest(getRequestOfSeriesReviews(page, seriesId))
+            .getSeriesReviewsByCacheCode(getCacheCodeOfSeriesReviews(page, seriesId))
             .toEntityList()
             .takeIf { it.isNotEmpty() }
             ?:tryToCall {
                 seriesRemoteDataSource.getSeriesReviews(seriesId, page).map { it.toEntity() }
             }.also {
-                seriesLocalDataSource.insertRequestWithReviews(
+                seriesLocalDataSource.insertCacheCodeWithReviews(
                     it.toRequestWithReviewsCacheDto(
-                        getRequestOfSeriesReviews(page, seriesId)
+                        getCacheCodeOfSeriesReviews(page, seriesId)
                     )
                 )
             }

@@ -4,8 +4,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.cairosquad.repository.utils.sharedDto.local.RequestReviewCacheCrossRef
-import com.cairosquad.repository.utils.sharedDto.local.RequestWithReviewsCacheDto
+import com.cairosquad.repository.utils.sharedDto.local.CacheCodeReviewCacheCrossRef
+import com.cairosquad.repository.utils.sharedDto.local.CacheCodeWithReviewsCacheDto
 import com.cairosquad.repository.utils.sharedDto.local.ReviewCacheDto
 
 @Dao
@@ -16,18 +16,18 @@ interface ReviewDao {
     @Query("Delete from ReviewCacheDto where cachingTimestamp < :expirationTime")
     suspend fun deleteExpiredReviewCache(expirationTime: Long)
 
-    @Query("Select * From RequestCacheDto where request = :request")
-    suspend fun getReviewsByRequest(request: String): RequestWithReviewsCacheDto?
+    @Query("Select * From CacheCodeDto where cacheCode = :cacheCode")
+    suspend fun getReviewsByCacheCode(cacheCode: String): CacheCodeWithReviewsCacheDto?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertRequestReviewCacheCrossRef(mappings: List<RequestReviewCacheCrossRef>)
+    suspend fun insertRequestReviewCacheCrossRef(crossRef: List<CacheCodeReviewCacheCrossRef>)
 
     @Query(
-        "Delete from RequestReviewCacheCrossRef " +
+        "Delete from CacheCodeReviewCacheCrossRef " +
         "where " +
                 "Not review_id in (Select review_id from ReviewCacheDto) " +
             "OR " +
-                "Not request in (Select request from RequestCacheDto)"
+                "Not cacheCode in (Select cacheCode from CacheCodeDto)"
     )
-    suspend fun deleteUnwantedRequestReviewCacheCrossRef()
+    suspend fun deleteCrossRefForNonexistingRequestReviewCache()
 }

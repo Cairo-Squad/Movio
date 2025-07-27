@@ -1,10 +1,10 @@
 package com.cairosquad.movio.di
 
 import androidx.room.Room
+import com.cairosquad.local.cache.cacheCode.CacheCodeDao
 import com.cairosquad.local.cache.genre.GenreDao
 import com.cairosquad.local.cache.movie.MoviesCacheDao
 import com.cairosquad.local.cache.movie.MoviesLocalDataSourceImpl
-import com.cairosquad.local.cache.request.RequestCachedDao
 import com.cairosquad.local.cache.reviews.ReviewDao
 import com.cairosquad.local.cache.series.SeriesCacheDao
 import com.cairosquad.local.cache.series.SeriesLocalDataSourceImpl
@@ -42,8 +42,8 @@ val localDataSourceModule = module {
         get<MovioDataBase>().genreDao()
     }
 
-    single<RequestCachedDao> {
-        get<MovioDataBase>().requestCachedDao()
+    single<CacheCodeDao> {
+        get<MovioDataBase>().cacheCodeDao()
     }
 
     single<ReviewDao> {

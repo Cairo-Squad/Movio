@@ -28,9 +28,9 @@ fun Review.toCacheDto(): ReviewCacheDto {
     )
 }
 
-fun List<Review>.toRequestWithReviewsCacheDto(request: String): RequestWithReviewsCacheDto {
-    return RequestWithReviewsCacheDto(
-        request = RequestCacheDto(request = request),
+fun List<Review>.toRequestWithReviewsCacheDto(request: String): CacheCodeWithReviewsCacheDto {
+    return CacheCodeWithReviewsCacheDto(
+        cacheCode = CacheCodeDto(cacheCode = request),
         reviews = this.map { it.toCacheDto() }
     )
 }

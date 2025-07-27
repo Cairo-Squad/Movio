@@ -13,4 +13,17 @@ data class MovieGenreCacheCrossRef(
     val movieId: Long,
     @ColumnInfo(name = "genre_id")
     val genreId: Long
-)
+){
+    companion object{
+        fun fromMovie(
+            movie: MovieCacheDto
+        ): List<MovieGenreCacheCrossRef> {
+            return movie.genres.map { genre ->
+                MovieGenreCacheCrossRef(
+                    movie.movieWithoutGenre.id,
+                    genre.id
+                )
+            }
+        }
+    }
+}

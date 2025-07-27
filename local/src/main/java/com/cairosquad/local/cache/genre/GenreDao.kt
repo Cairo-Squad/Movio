@@ -16,10 +16,10 @@ interface GenreDao {
      suspend fun insertSeriesGenres(genres: List<GenreOfSeriesCacheDto>)
 
      @Query("Delete from GenreOfMovieCacheDto where cachingTimestamp < :expirationTime")
-     suspend fun deleteExpiredMovieGenreCache(expirationTime: Long)
+     suspend fun deleteExpiredGenreOfMovieCache(expirationTime: Long)
 
      @Query("Delete from GenreOfSeriesCacheDto where cachingTimestamp < :expirationTime")
-     suspend fun deleteExpiredSeriesGenreCache(expirationTime: Long)
+     suspend fun deleteExpiredGenreOfSeriesCache(expirationTime: Long)
 
      @Query("Select * From GenreOfMovieCacheDto")
      suspend fun getMovieGenres(): List<GenreOfMovieCacheDto>

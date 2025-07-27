@@ -5,8 +5,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.cairosquad.repository.series.data_source.local.dto.RequestSeriesCacheCrossRef
-import com.cairosquad.repository.series.data_source.local.dto.RequestWithSeriesCacheDto
+import com.cairosquad.repository.series.data_source.local.dto.CacheCodeSeriesCacheCrossRef
+import com.cairosquad.repository.series.data_source.local.dto.CacheCodeWithSeriesCacheDto
 import com.cairosquad.repository.series.data_source.local.dto.SeriesGenreCacheCrossRef
 import com.cairosquad.repository.series.data_source.local.dto.SeriesWithoutGenreCacheDto
 
@@ -14,10 +14,10 @@ import com.cairosquad.repository.series.data_source.local.dto.SeriesWithoutGenre
 interface SeriesCacheDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCrossRefForRequestAndSeriesCache(mappings: List<RequestSeriesCacheCrossRef>)
+    suspend fun insertCrossRefForCacheCodeAndSeriesCache(crossRef: List<CacheCodeSeriesCacheCrossRef>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCrossRefForSeriesAndGenreCache(mappings: List<SeriesGenreCacheCrossRef>)
+    suspend fun insertCrossRefForSeriesAndGenreCache(crossRef: List<SeriesGenreCacheCrossRef>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSeriesWithoutGenre(series: List<SeriesWithoutGenreCacheDto>)
@@ -25,12 +25,12 @@ interface SeriesCacheDao {
     @Query("Delete from SeriesWithoutGenreCacheDto where cachingTimestamp < :expirationTime")
     suspend fun deleteExpiredSeriesWithoutGenreCache(expirationTime: Long)
 
-    @Query("Delete from RequestSeriesCacheCrossRef " +
+    @Query("Delete from CacheCodeSeriesCacheCrossRef " +
             "where " +
                 "Not series_id in (Select series_id from SeriesWithoutGenreCacheDto) " +
              "OR " +
-                "Not request in (Select request from RequestCacheDto)")
-    suspend fun deleteCrossRefForNonExistingRequestAndSeriesCache()
+                "Not cacheCode in (Select cacheCode from CacheCodeDto)")
+    suspend fun deleteCrossRefForNonExistingCacheCodeAndSeriesCache()
 
     @Query("Delete from SeriesGenreCacheCrossRef " +
             "where " +
@@ -40,6 +40,6 @@ interface SeriesCacheDao {
     suspend fun deleteCrossRefForNonExistingSeriesAndGenreCache()
 
     @Transaction
-    @Query("Select * From RequestCacheDto where request = :request")
-    suspend fun getSeriesByRequest(request: String): RequestWithSeriesCacheDto?
+    @Query("Select * From CacheCodeDto where cacheCode = :cacheCode")
+    suspend fun getSeriesByCacheCode(cacheCode: String): CacheCodeWithSeriesCacheDto?
 }
