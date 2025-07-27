@@ -2,18 +2,17 @@ package com.cairosquad.remote.utils.retrofit.interceptor
 
 import okhttp3.Interceptor
 import okhttp3.Response
-import java.util.concurrent.atomic.AtomicReference
 
 class AuthInterceptor : Interceptor {
     companion object {
-        private val token = AtomicReference<String>("")
+        private var token = ""
         fun updateToken(newToken: String) {
-            token.set(newToken)
+            token = newToken
         }
     }
     override fun intercept(chain: Interceptor.Chain): Response {
 
-        val currentToken = token.get()
+        val currentToken = token
         if (currentToken == "") return chain.proceed(chain.request())
 
         val originalRequest = chain.request()
