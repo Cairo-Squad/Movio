@@ -198,7 +198,8 @@ network = [
 koin = [
     "koin-android",
     "koin-androidx-compose",
-    "koin-annotations"
+    "koin-annotations",
+    "koin-test"
 ]
 
 unittest = [

@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -12,7 +11,7 @@ plugins {
     alias(libs.plugins.google.firebase.appdistribution)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.androidx.room)
+    id("androidx.room") version "2.7.1"
 }
 
 android {
@@ -75,10 +74,8 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
+    kotlinOptions {
+        jvmTarget = "11"
     }
     buildFeatures {
         compose = true
@@ -93,32 +90,42 @@ ksp {
 }
 
 dependencies {
-    implementation(projects.designSystem)
-    implementation(projects.domain)
-    implementation(projects.entity)
-    implementation(projects.local)
-    implementation(projects.remote)
-    implementation(projects.repository)
-    implementation(projects.ui)
-    implementation(projects.viewmodel)
-
-    implementation(libs.bundles.androidcore)
-
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.bundles.composeUi)
-    implementation(libs.bundles.composeMaterial3)
-    debugImplementation(libs.bundles.composedebug)
-
+    implementation(libs.androidx.ui)
+    implementation(libs.firebase.perf)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.firebase.analytics)
+    implementation(libs.androidx.foundation)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.firebase.crashlytics)
     implementation(platform(libs.firebase.bom))
-    implementation(libs.bundles.firebase)
-
-    implementation(libs.bundles.koin)
-    implementation(libs.koin.test)
-    ksp(libs.koin.ksp)
+    debugImplementation(libs.androidx.ui.tooling)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.androidx.foundation.layout.android)
 
     implementation(libs.bundles.network)
 
+    implementation(libs.bundles.koin)
+    ksp(libs.koin.ksp)
+    implementation(libs.logging.interceptor)
+    implementation(libs.logging.interceptor)
+
+
     implementation(libs.kotlinx.serialization.json)
+
+
     implementation(libs.bundles.room)
     ksp(libs.androidx.room.compiler)
+
+    implementation(projects.designSystem)
+    implementation(projects.domain)
+    implementation(projects.entity)
+    implementation(projects.remote)
+    implementation(projects.local)
+    implementation(projects.repository)
+    implementation(projects.ui)
+    implementation(projects.viewmodel)
 }
