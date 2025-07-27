@@ -3,7 +3,11 @@ accompanistWebview = "0.36.0"
 agp = "8.5.2"
 
 converterKotlinxSerialization = "3.0.0"
+daggerCompiler = "2.57"
 espressoCore = "3.6.1"
+hiltCompiler = "2.57"
+hiltCompilerVersion = "1.2.0"
+hiltLifecycleViewmodel = "1.0.0-alpha03"
 mockwebserver = "5.1.0"
 okhttp = "5.0.0"
 retrofit = "3.0.0"
@@ -58,6 +62,9 @@ androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constr
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
 androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
+androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltCompilerVersion" }
+androidx-hilt-lifecycle-viewmodel = { module = "androidx.hilt:hilt-lifecycle-viewmodel", version.ref = "hiltLifecycleViewmodel" }
+androidx-hilt-navigation-fragment = { module = "androidx.hilt:hilt-navigation-fragment", version.ref = "hiltCompilerVersion" }
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging_version" }
 androidx-paging-testing = { module = "androidx.paging:paging-testing", version.ref = "paging_version" }
 androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "roomTesting" }
@@ -65,8 +72,12 @@ androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
 androidx-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "runtime" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleRuntimeKtx" }
 converter-kotlinx-serialization = { module = "com.squareup.retrofit2:converter-kotlinx-serialization", version.ref = "converterKotlinxSerialization" }
+dagger = { module = "com.google.dagger:dagger", version.ref = "daggerCompiler" }
+dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "daggerCompiler" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-perf = { module = "com.google.firebase:firebase-perf" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "daggerCompiler" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltCompiler" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitKtx" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }

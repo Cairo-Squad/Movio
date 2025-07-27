@@ -13,6 +13,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
     id("androidx.room") version "2.7.1"
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -130,6 +131,22 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+
+    // Dagger & Hilt
+    // Hilt Core
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+
+    // (Optional) Hilt ViewModel support
+    implementation(libs.androidx.hilt.lifecycle.viewmodel) // Deprecated
+    ksp(libs.androidx.hilt.compiler) // Use this instead for ViewModels
+
+    // (Optional) For Hilt & Jetpack Navigation integration
+    implementation(libs.androidx.hilt.navigation.fragment)
+
+    // Optional Dagger 2 core (if needed in pure modules like domain/entity)
+    implementation(libs.dagger)
+    ksp(libs.dagger.compiler)
 
     implementation(project(":design_system"))
     implementation(project(":domain"))
