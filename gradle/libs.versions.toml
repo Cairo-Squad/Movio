@@ -148,6 +148,97 @@ lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "
 tensorflow-lite = { module = "org.tensorflow:tensorflow-lite", version.ref = "tensorflowLite" }
 tensorflow-lite-task-vision = { module = "org.tensorflow:tensorflow-lite-task-vision", version.ref = "tensorflowLiteTaskVision" }
 
+[bundles]
+androidx-core = [
+    "androidx-core-ktx",
+    "androidx-appcompat",
+    "androidx-activity-compose",
+    "androidx-lifecycle-runtime-ktx",
+    "androidx-lifecycle-viewmodel-ktx",
+    "androidx-lifecycle-viewmodel-compose",
+    "androidx-constraintlayout-compose"
+]
+
+compose = [
+    "androidx-ui",
+    "androidx-ui-tooling",
+    "androidx-ui-tooling-preview",
+    "androidx-ui-test-manifest",
+    "androidx-ui-test-junit4",
+    "androidx-material3",
+    "androidx-runtime",
+    "androidx-foundation",
+    "androidx-foundation-layout-android",
+    "accompanist-webview",
+    "androidx-constraintlayout-compose",
+    "navigation-compose",
+    "lottie-compose"
+]
+
+
+room = [
+    "androidx-room-runtime",
+    "androidx-room-ktx",
+    "androidx-room-compiler",
+    "androidx-room-testing"
+]
+
+paging = [
+    "androidx-paging-runtime",
+    "androidx-paging-testing",
+    "paging-compose"
+]
+
+koin = [
+    "koin-android",
+    "koin-androidx-compose",
+    "koin-test",
+    "koin-annotations",
+    "koin-ksp"
+]
+
+firebase = [
+    "firebase-bom",
+    "firebase-analytics",
+    "firebase-crashlytics",
+    "firebase-perf"
+]
+
+network = [
+    "okhttp",
+    "retrofit",
+    "logging-interceptor",
+    "mockwebserver",
+    "converter-kotlinx-serialization"
+]
+
+kotlinx = [
+    "kotlinx-coroutines-core",
+    "kotlinx-coroutines-test",
+    "kotlinx-serialization-json"
+]
+
+testing = [
+    "junit",
+    "junit-jupiter",
+    "androidx-junit",
+    "androidx-junit-ktx",
+    "androidx-espresso-core",
+    "androidx-runner",
+    "androidx-core-testing",
+    "truth",
+    "mockk",
+    "turbine"
+]
+
+media = [
+    "coil-network-okhttp",
+    "coil-compose",
+    "lottie-compose",
+    "tensorflow-lite",
+    "tensorflow-lite-task-vision"
+]
+
 [plugins]
 # Android
 android-application = { id = "com.android.application", version.ref = "agp" }

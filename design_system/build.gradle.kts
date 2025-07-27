@@ -28,8 +28,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+        }
     }
     buildFeatures {
         compose = true
@@ -37,6 +39,7 @@ android {
 }
 
 dependencies {
+
     implementation(libs.navigation.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.material3)
