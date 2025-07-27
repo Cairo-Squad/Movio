@@ -62,6 +62,7 @@ import com.cairosquad.ui.movio_component.LoadingArtistCard
 import com.cairosquad.ui.movio_component.LoadingMovieCard
 import com.cairosquad.ui.movio_component.LoadingMovieImage
 import com.cairosquad.ui.movio_component.LoadingReviewCard
+import com.cairosquad.ui.movio_component.bottom_sheet.CreateListBottomSheet
 import com.cairosquad.ui.movio_component.bottom_sheet.ListBottomSheet
 import com.cairosquad.ui.movio_component.bottom_sheet.LoginBottomSheet
 import com.cairosquad.ui.movio_component.bottom_sheet.RateBottomSheet
@@ -208,7 +209,7 @@ fun SeriesScreen(
 			LoginBottomSheet(
 				isVisible = uiState.showLoginBottomSheet,
 				onDismiss = viewModel::onDismissLoginBottomSheet,
-				onLoginClick = {}
+				onLoginClick = viewModel::onNavigateToLogin
 			)
 		}
 		AnimatedVisibility(
@@ -221,7 +222,21 @@ fun SeriesScreen(
 				onDismiss = viewModel::onDismissAddToListBottomSheet,
 				lists = emptyList(),
 				onListClicked = {},
-				onCreateNewList = {}
+				onCreateNewList = viewModel::onCreateListClicked
+			)
+		}
+		AnimatedVisibility(
+			visible = uiState.showCreateListBottomSheet,
+			enter = fadeIn(),
+			exit = fadeOut()
+		) {
+			CreateListBottomSheet(
+				isVisible = uiState.showCreateListBottomSheet,
+				onDismiss = viewModel::onDismissCreateListBottomSheet,
+				isMovie = false,
+				value = uiState.listName,
+				onValueChange = viewModel::onValueChange,
+				onSubmit = { viewModel.onDismissCreateListBottomSheet() }
 			)
 		}
 		AnimatedVisibility(

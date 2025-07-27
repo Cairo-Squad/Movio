@@ -404,7 +404,6 @@ private fun ArtistScreenContent(
 			modifier = Modifier
 					.background(animatedBrush)
 					.windowInsetsPadding(WindowInsets.statusBars)
-					.padding(top = 4.dp)
 		)
 	}
 }

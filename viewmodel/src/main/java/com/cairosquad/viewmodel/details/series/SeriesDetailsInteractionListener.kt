@@ -8,11 +8,15 @@ interface SeriesDetailsInteractionListener {
     fun onRateClicked()
     fun onPlayTrailerClicked()
     fun onAddToListClicked()
+    fun onCreateListClicked()
 
     fun onDismissShareBottomSheet()
     fun onDismissLoginBottomSheet()
     fun onDismissRateBottomSheet()
     fun onDismissAddToListBottomSheet()
+    fun onDismissCreateListBottomSheet()
+
+    fun onValueChange(listName: String)
 
     fun onRateChange(rate: Int)
     fun onSubmitRateClicked(rate: Int)
