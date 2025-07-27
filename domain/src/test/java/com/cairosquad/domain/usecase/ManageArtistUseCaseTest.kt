@@ -1,12 +1,12 @@
-package com.cairosquad.domain.usecase.artists
+package com.cairosquad.domain.usecase
 
 import com.cairosquad.domain.repository.ArtistsRepository
-import com.cairosquad.domain.usecase.ManageArtistUseCase
+import com.cairosquad.domain.repository.SearchRepository
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
-import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -14,13 +14,14 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
-class GetArtistDetailsUseCaseTest {
+class ManageArtistUseCaseTest {
     private val artistsRepository: ArtistsRepository = mockk(relaxed = true)
+    private val searchRepository: SearchRepository = mockk(relaxed = true)
     private lateinit var useCase: ManageArtistUseCase
 
     @Before
     fun setUp() {
-        useCase = ManageArtistUseCase(artistsRepository)
+        useCase = ManageArtistUseCase(artistsRepository, searchRepository)
     }
 
     @Test
@@ -29,7 +30,7 @@ class GetArtistDetailsUseCaseTest {
 
         val result = useCase.getArtistById(312L)
 
-        assertThat(result).isEqualTo(actor)
+        Truth.assertThat(result).isEqualTo(actor)
         coVerify(exactly = 1) { artistsRepository.getArtistById(312L) }
     }
 
@@ -39,7 +40,7 @@ class GetArtistDetailsUseCaseTest {
 
         val result = useCase.getMoviesOfArtist(312L)
 
-        assertThat(result).containsExactly(movie)
+        Truth.assertThat(result).containsExactly(movie)
         coVerify(exactly = 1) { artistsRepository.getMoviesOfArtist(312L) }
     }
 
@@ -49,7 +50,7 @@ class GetArtistDetailsUseCaseTest {
 
         val result = useCase.getSeriesOfArtist(312L)
 
-        assertThat(result).containsExactly(series1, series2)
+        Truth.assertThat(result).containsExactly(series1, series2)
         coVerify(exactly = 1) { artistsRepository.getSeriesOfArtist(312L) }
     }
 

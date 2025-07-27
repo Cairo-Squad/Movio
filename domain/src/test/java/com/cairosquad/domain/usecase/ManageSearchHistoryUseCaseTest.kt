@@ -1,4 +1,4 @@
-package com.cairosquad.domain.usecase.search
+package com.cairosquad.domain.usecase
 
 import com.cairosquad.domain.repository.SearchRepository
 import io.mockk.coEvery
@@ -9,16 +9,31 @@ import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertEquals
 
-class GetLocalSearchHistoryUseCaseTest {
+class ManageSearchHistoryUseCaseTest {
 
-    private lateinit var searchHistoryUseCase: GetLocalSearchHistoryUseCase
     private lateinit var searchRepository: SearchRepository
+    private lateinit var manageSearchHistoryUseCase: ManageSearchHistoryUseCase
 
     @Before
     fun setUp() {
         searchRepository = mockk(relaxed = true)
-        searchHistoryUseCase = GetLocalSearchHistoryUseCase(searchRepository)
+        manageSearchHistoryUseCase = ManageSearchHistoryUseCase(searchRepository)
     }
+
+    @Test
+    fun `should call clearAll on repository when clearAll is invoked`() = runTest {
+        manageSearchHistoryUseCase.clearAllHistory()
+        coVerify(exactly = 1) { searchRepository.clearAll() }
+    }
+
+    @Test
+    fun `should call removeQuery on repository with correct argument when removeQuery is invoked`() =
+        runTest {
+            // Given
+            val testQuery = "Movie"
+            manageSearchHistoryUseCase.removeQueryFromHistory(testQuery)
+            coVerify(exactly = 1) { searchRepository.removeQuery(testQuery) }
+        }
 
     @Test
     fun `should call repository getByQuery when getByQuery is invoked`() = runTest {
@@ -26,7 +41,7 @@ class GetLocalSearchHistoryUseCaseTest {
         val searchQuery = "A"
 
         // When
-        searchHistoryUseCase.getByQuery(searchQuery)
+        manageSearchHistoryUseCase.getByQuery(searchQuery)
 
         // Then
         coVerify(exactly = 1) { searchRepository.getAllHistoryByQuery(searchQuery) }
@@ -40,7 +55,7 @@ class GetLocalSearchHistoryUseCaseTest {
         coEvery { searchRepository.getAllHistoryByQuery(searchQuery) } returns expectedResults
 
         //When
-        val result = searchHistoryUseCase.getByQuery(searchQuery)
+        val result = manageSearchHistoryUseCase.getByQuery(searchQuery)
 
         //Then
         assertEquals(expectedResults, result)
@@ -53,7 +68,7 @@ class GetLocalSearchHistoryUseCaseTest {
         coEvery { searchRepository.getAllHistory() } returns expectedResults
 
         //When
-        val result = searchHistoryUseCase.getAll()
+        val result = manageSearchHistoryUseCase.getAll()
 
         //Then
         assertEquals(expectedResults, result)

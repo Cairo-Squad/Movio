@@ -1,7 +1,6 @@
-package com.cairosquad.domain.usecase.authentication
+package com.cairosquad.domain.usecase
 
 import com.cairosquad.domain.repository.LoginRepository
-import com.cairosquad.domain.usecase.LoginUseCase
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
