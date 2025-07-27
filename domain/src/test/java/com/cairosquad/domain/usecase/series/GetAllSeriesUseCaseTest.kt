@@ -1,6 +1,5 @@
 import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.repository.SeriesRepository
-import com.cairosquad.domain.usecase.series.GetAllSeriesUseCase
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Series
 import io.mockk.coEvery

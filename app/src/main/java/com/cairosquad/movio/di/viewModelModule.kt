@@ -26,7 +26,7 @@ val viewModelModule = module {
     viewModelOf(::ForYouViewModel)
     viewModel { (seriesId: Long, seasonNumber: Int) ->
         EpisodesDetailsViewModel(
-            seriesDetailsUseCase = get(),
+            manageSeriesUseCase = get(),
             seriesId = seriesId,
             seasonNumber = seasonNumber
         )
@@ -37,14 +37,14 @@ val viewModelModule = module {
     }
 
     viewModel { (seriesId: Long) ->
-        SeriesDetailsViewModel(seriesDetailsUseCase = get(), seriesId = seriesId)
+        SeriesDetailsViewModel(manageSeriesUseCase = get(), seriesId = seriesId)
     }
     viewModel { (mediaId: Long, isMovie: Boolean) ->
         TopCastViewModel(
             mediaId = mediaId,
             isMovie = isMovie,
-            getMovieDetailsUseCase = get(),
-            getSeriesDetailsUseCase = get()
+            manageMoviesUseCase = get(),
+            manageSeriesUseCase = get()
         )
     }
 
@@ -52,22 +52,22 @@ val viewModelModule = module {
         ReviewsViewModel(
             mediaId = mediaId,
             isMovie = isMovie,
-            getMovieDetailsUseCase = get(),
-            getSeriesDetailsUseCase = get()
+            manageMoviesUseCase = get(),
+            manageSeriesUseCase = get()
         )
     }
 
     viewModel { (artistId: Long) ->
-        ArtistViewModel(getArtistDetailsUseCase = get(), artistId = artistId)
+        ArtistViewModel(manageArtistUseCase = get(), artistId = artistId)
     }
 
     viewModel { (seriesId: Long) ->
-        SeriesDetailsViewModel(seriesDetailsUseCase = get(), seriesId = seriesId)
+        SeriesDetailsViewModel(manageSeriesUseCase = get(), seriesId = seriesId)
     }
 
     viewModel { (seriesId: Long) ->
         SeasonsViewModel(
-            seriesDetailsUseCase = get(),
+            manageSeriesUseCase = get(),
             seriesId = seriesId,
         )
     }

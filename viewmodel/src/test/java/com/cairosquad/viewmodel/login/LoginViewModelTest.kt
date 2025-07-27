@@ -1,7 +1,7 @@
 package com.cairosquad.viewmodel.login
 
 import app.cash.turbine.test
-import com.cairosquad.domain.usecase.authentication.LoginUseCase
+import com.cairosquad.domain.usecase.LoginUseCase
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk

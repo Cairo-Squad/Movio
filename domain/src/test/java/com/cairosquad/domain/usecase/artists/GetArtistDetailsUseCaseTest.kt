@@ -1,6 +1,7 @@
 package com.cairosquad.domain.usecase.artists
 
 import com.cairosquad.domain.repository.ArtistsRepository
+import com.cairosquad.domain.usecase.ManageArtistUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
@@ -15,11 +16,11 @@ import org.junit.Test
 
 class GetArtistDetailsUseCaseTest {
     private val artistsRepository: ArtistsRepository = mockk(relaxed = true)
-    private lateinit var useCase: GetArtistDetailsUseCase
+    private lateinit var useCase: ManageArtistUseCase
 
     @Before
     fun setUp() {
-        useCase = GetArtistDetailsUseCase(artistsRepository)
+        useCase = ManageArtistUseCase(artistsRepository)
     }
 
     @Test

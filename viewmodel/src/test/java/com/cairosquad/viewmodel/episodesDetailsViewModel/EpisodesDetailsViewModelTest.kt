@@ -1,6 +1,5 @@
 package com.cairosquad.viewmodel.episodesDetailsViewModel
 
-import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
 import com.cairosquad.entity.Episode
 import com.cairosquad.entity.Season
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState.ScreenStatus

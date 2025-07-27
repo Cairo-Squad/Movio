@@ -1,7 +1,7 @@
 package com.cairosquad.viewmodel.details.series
 
 import com.cairosquad.domain.exception.MovioException
-import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
+import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Review
 import com.cairosquad.entity.Season
@@ -14,7 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 
 class SeriesDetailsViewModel(
-    private val seriesDetailsUseCase: GetSeriesDetailsUseCase,
+    private val manageSeriesUseCase: ManageSeriesUseCase,
     seriesId: Long
 ) : BaseViewModel<SeriesDetailsScreenState, SeriesDetailEffect>(SeriesDetailsScreenState()),
     SeriesDetailsInteractionListener {
@@ -137,7 +137,7 @@ class SeriesDetailsViewModel(
             onStart = {
                 updateState { it.copy(basicDetailsSectionState = SectionStatus.LOADING) }
             },
-            block = { seriesDetailsUseCase.getSeries(seriesId) },
+            block = { manageSeriesUseCase.getSeries(seriesId) },
             onSuccess = ::setBasicSeriesDetailsToUiState,
             onError = { throwable ->
                 setError(throwable) { copy(basicDetailsSectionState = SectionStatus.ERROR) }
@@ -160,7 +160,7 @@ class SeriesDetailsViewModel(
             onStart = {
                 updateState { it.copy(castSectionState = SectionStatus.LOADING) }
             },
-            block = { seriesDetailsUseCase.getSeriesTopCast(seriesId, 1) },
+            block = { manageSeriesUseCase.getSeriesTopCast(seriesId, 1) },
             onSuccess = ::setTopCastToUiState,
             onError = { throwable ->
                 setError(throwable) { copy(castSectionState = SectionStatus.ERROR) }
@@ -183,7 +183,7 @@ class SeriesDetailsViewModel(
             onStart = {
                 updateState { it.copy(seasonsSectionState = SectionStatus.LOADING) }
             },
-            block = { seriesDetailsUseCase.getSeriesSeasons(seriesId) },
+            block = { manageSeriesUseCase.getSeriesSeasons(seriesId) },
             onSuccess = ::setSeasonToUiState,
             onError = { throwable ->
                 setError(throwable) { copy(seasonsSectionState = SectionStatus.ERROR) }
@@ -206,7 +206,7 @@ class SeriesDetailsViewModel(
             onStart = {
                 updateState { it.copy(reviewsSectionState = SectionStatus.LOADING) }
             },
-            block = { seriesDetailsUseCase.getSeriesReviews(seriesId, 1) },
+            block = { manageSeriesUseCase.getSeriesReviews(seriesId, 1) },
             onSuccess = ::setReviewsToUiState,
             onError = { throwable ->
                 setError(throwable) { copy(reviewsSectionState = SectionStatus.ERROR) }
@@ -229,7 +229,7 @@ class SeriesDetailsViewModel(
             onStart = {
                 updateState { it.copy(similarSeriesSectionState = SectionStatus.LOADING) }
             },
-            block = { seriesDetailsUseCase.getSimilarSeries(seriesId, 1) },
+            block = { manageSeriesUseCase.getSimilarSeries(seriesId, 1) },
             onSuccess = ::setSimilarSeriesToUiState,
             onError = { throwable ->
                 setError(throwable) { copy(similarSeriesSectionState = SectionStatus.ERROR) }

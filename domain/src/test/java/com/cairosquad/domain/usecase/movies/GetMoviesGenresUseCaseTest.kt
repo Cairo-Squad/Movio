@@ -1,5 +1,4 @@
 import com.cairosquad.domain.repository.MoviesRepository
-import com.cairosquad.domain.usecase.movies.GetMoviesGenresUseCase
 import com.cairosquad.entity.Genre
 import io.mockk.coEvery
 import io.mockk.coVerify

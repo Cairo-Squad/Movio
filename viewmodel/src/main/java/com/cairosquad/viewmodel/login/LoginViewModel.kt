@@ -1,7 +1,7 @@
 package com.cairosquad.viewmodel.login
 
 import com.cairosquad.domain.exception.MovioException
-import com.cairosquad.domain.usecase.authentication.LoginUseCase
+import com.cairosquad.domain.usecase.LoginUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus

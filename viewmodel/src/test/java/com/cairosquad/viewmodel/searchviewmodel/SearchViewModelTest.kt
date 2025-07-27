@@ -2,14 +2,10 @@ package com.cairosquad.viewmodel.searchviewmodel
 
 import androidx.paging.PagingData
 import app.cash.turbine.test
-import app.cash.turbine.testIn
 import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.exception.NetworkException
 import com.cairosquad.domain.exception.UnknownException
-import com.cairosquad.domain.usecase.movies.GetPersonalizedMoviesUseCase
-import com.cairosquad.domain.usecase.movies.GetSuggestedMoviesUseCase
-import com.cairosquad.domain.usecase.search.ClearSearchHistoryUseCase
-import com.cairosquad.domain.usecase.search.GetLocalSearchHistoryUseCase
+import com.cairosquad.domain.usecase.ManageSearchHistoryUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
@@ -50,7 +46,7 @@ class SearchViewModelTest {
     private lateinit var getLocalSearchHistoryUseCase: GetLocalSearchHistoryUseCase
     private lateinit var searchPager: SearchPager
     private lateinit var getRecentSearchUseCase: GetLocalSearchHistoryUseCase
-    private lateinit var clearSearchHistoryUseCase: ClearSearchHistoryUseCase
+    private lateinit var manageSearchHistoryUseCase: ManageSearchHistoryUseCase
     private lateinit var getSuggestedMoviesUseCase: GetSuggestedMoviesUseCase
     private lateinit var getPersonalizedMoviesUseCase: GetPersonalizedMoviesUseCase
     private lateinit var viewModel: SearchViewModel
@@ -65,14 +61,14 @@ class SearchViewModelTest {
         searchPager = mockk(relaxed = true)
         getLocalSearchHistoryUseCase = mockk(relaxed = true)
         getRecentSearchUseCase = mockk(relaxed = true)
-        clearSearchHistoryUseCase = mockk(relaxed = true)
+        manageSearchHistoryUseCase = mockk(relaxed = true)
         getSuggestedMoviesUseCase = mockk(relaxed = true)
         getPersonalizedMoviesUseCase = mockk(relaxed = true)
 
         viewModel = SearchViewModel(
             searchPager,
             getRecentSearchUseCase,
-            clearSearchHistoryUseCase,
+            manageSearchHistoryUseCase,
             getSuggestedMoviesUseCase,
             getPersonalizedMoviesUseCase
         )
@@ -92,7 +88,7 @@ class SearchViewModelTest {
         )
         viewModel.updateState { initialState }
 
-        coEvery { clearSearchHistoryUseCase.removeQueryFromHistory(query) } just Runs
+        coEvery { manageSearchHistoryUseCase.removeQueryFromHistory(query) } just Runs
 
         viewModel.onRemoveHistoryItem(query)
         advanceUntilIdle()
@@ -134,7 +130,7 @@ class SearchViewModelTest {
             )
         }
 
-        coEvery { clearSearchHistoryUseCase.removeQueryFromHistory(query) } throws IOException()
+        coEvery { manageSearchHistoryUseCase.removeQueryFromHistory(query) } throws IOException()
 
         viewModel.onRemoveHistoryItem(query)
         advanceUntilIdle()
@@ -148,7 +144,7 @@ class SearchViewModelTest {
     fun `should remove query from recentSearch when removal succeeds`() = runTest {
         val initial = listOf("Batman", "Spiderman", "Superman")
         coEvery { getLocalSearchHistoryUseCase.getAll() } returns initial
-        coEvery { clearSearchHistoryUseCase.removeQueryFromHistory("Batman") } returns Unit
+        coEvery { manageSearchHistoryUseCase.removeQueryFromHistory("Batman") } returns Unit
 
         viewModel.onClickSearchTextField()
         advanceUntilIdle()
@@ -162,7 +158,7 @@ class SearchViewModelTest {
     @Test
     fun `should not modify recentSearch if query does not exist`() = runTest {
         val query = "Ironman"
-        coEvery { clearSearchHistoryUseCase.removeQueryFromHistory(query) } just Runs
+        coEvery { manageSearchHistoryUseCase.removeQueryFromHistory(query) } just Runs
 
         val initialSearchList = listOf("Batman", "Spiderman")
         viewModel.updateState {
@@ -256,7 +252,7 @@ class SearchViewModelTest {
 
     @Test
     fun `should clear recent search list when clear history is triggered`() = runTest {
-        coEvery { clearSearchHistoryUseCase.clearAllHistory() } returns Unit
+        coEvery { manageSearchHistoryUseCase.clearAllHistory() } returns Unit
 
         viewModel.onClearHistory()
 
@@ -560,7 +556,7 @@ class SearchViewModelTest {
     @Test
     fun `onClearHistory should set FAILED and UNKNOWN_ERROR when exception occurs`() = runTest {
 
-        coEvery { clearSearchHistoryUseCase.clearAllHistory() }  throws IOException()
+        coEvery { manageSearchHistoryUseCase.clearAllHistory() }  throws IOException()
 
         viewModel.onClearHistory()
         advanceUntilIdle()

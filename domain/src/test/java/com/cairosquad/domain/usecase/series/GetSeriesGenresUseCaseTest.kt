@@ -1,5 +1,4 @@
 import com.cairosquad.domain.repository.SeriesRepository
-import com.cairosquad.domain.usecase.series.GetSeriesGenresUseCase
 import com.cairosquad.entity.Genre
 import io.mockk.coEvery
 import io.mockk.coVerify

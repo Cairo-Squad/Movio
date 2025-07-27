@@ -1,6 +1,7 @@
 package com.cairosquad.domain.usecase.search
 
 import com.cairosquad.domain.repository.SearchRepository
+import com.cairosquad.domain.usecase.ManageSearchHistoryUseCase
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -10,12 +11,12 @@ import org.junit.Test
 class ClearSearchHistoryUseCaseTest {
 
     private lateinit var searchRepository: SearchRepository
-    private lateinit var clearRecentSearchUseCase: ClearSearchHistoryUseCase
+    private lateinit var clearRecentSearchUseCase: ManageSearchHistoryUseCase
 
     @Before
     fun setUp() {
         searchRepository = mockk(relaxed = true)
-        clearRecentSearchUseCase = ClearSearchHistoryUseCase(searchRepository)
+        clearRecentSearchUseCase = ManageSearchHistoryUseCase(searchRepository)
     }
 
     @Test

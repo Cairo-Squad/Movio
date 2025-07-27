@@ -5,10 +5,8 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.cairosquad.domain.exception.MovioException
-import com.cairosquad.domain.usecase.movies.GetPersonalizedMoviesUseCase
-import com.cairosquad.domain.usecase.movies.GetSuggestedMoviesUseCase
-import com.cairosquad.domain.usecase.search.ClearSearchHistoryUseCase
-import com.cairosquad.domain.usecase.search.GetLocalSearchHistoryUseCase
+import com.cairosquad.domain.usecase.ManageMoviesUseCase
+import com.cairosquad.domain.usecase.ManageSearchHistoryUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
@@ -22,10 +20,8 @@ import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val searchPager: SearchPager,
-    private val getLocalSearchHistoryUseCase: GetLocalSearchHistoryUseCase,
-    private val clearSearchHistoryUseCase: ClearSearchHistoryUseCase,
-    private val getSuggestedMoviesUseCase: GetSuggestedMoviesUseCase,
-    private val getPersonalizedMoviesUseCase: GetPersonalizedMoviesUseCase,
+    private val manageSearchHistoryUseCase: ManageSearchHistoryUseCase,
+    private val manageMoviesUseCase: ManageMoviesUseCase,
 ) : BaseViewModel<SearchScreenState, SearchEffect>(initialState = SearchScreenState()),
     SearchInteractionListener {
 
@@ -45,7 +41,7 @@ class SearchViewModel(
 
         tryToCall(
             block = {
-                val forYou = getPersonalizedMoviesUseCase.getPersonalizedMovies(1).map { it.toUiState() }
+                val forYou = manageMoviesUseCase.getPersonalizedMovies(1).map { it.toUiState() }
                 forYou
             },
             onSuccess = { forYou ->
@@ -65,7 +61,7 @@ class SearchViewModel(
     fun getSuggestedMovies(){
         tryToCall(
             block = {
-                val exploreMore = getSuggestedMoviesUseCase.getSuggestedMovies().map { it.toUiState() }
+                val exploreMore = manageMoviesUseCase.getSuggestedMovies().map { it.toUiState() }
                 exploreMore
             },
             onSuccess = { exploreMore ->
@@ -104,7 +100,7 @@ class SearchViewModel(
         searchJob = tryToCall(
             block = {
                 delay(300)
-                getLocalSearchHistoryUseCase.getByQuery(query)
+                manageSearchHistoryUseCase.getByQuery(query)
             },
             onSuccess = ::updateSuggestions,
             onError = {},
@@ -182,7 +178,7 @@ class SearchViewModel(
 
     override fun onClearHistory() {
         tryToCall(
-            block = { clearSearchHistoryUseCase.clearAllHistory() },
+            block = { manageSearchHistoryUseCase.clearAllHistory() },
             onSuccess = { updateState { it.copy(recentSearch = emptyList(), errorStatus = null) } },
             onError = { e ->
                 updateState {
@@ -197,7 +193,7 @@ class SearchViewModel(
 
     override fun onRemoveHistoryItem(query: String) {
         tryToCall(
-            block = { clearSearchHistoryUseCase.removeQueryFromHistory(query) },
+            block = { manageSearchHistoryUseCase.removeQueryFromHistory(query) },
             onSuccess = {
                 updateState {
                     it.copy(
@@ -239,8 +235,8 @@ class SearchViewModel(
 
         tryToCall(
             block = {
-                if (query.isBlank()) getLocalSearchHistoryUseCase.getAll()
-                else getLocalSearchHistoryUseCase.getByQuery(query)
+                if (query.isBlank()) manageSearchHistoryUseCase.getAll()
+                else manageSearchHistoryUseCase.getByQuery(query)
             },
             onSuccess = ::updateSuggestions,
             onError = {

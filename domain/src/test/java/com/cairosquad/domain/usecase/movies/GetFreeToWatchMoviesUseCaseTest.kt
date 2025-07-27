@@ -1,4 +1,3 @@
-import com.cairosquad.domain.usecase.movies.GetFreeToWatchMoviesUseCase
 import com.cairosquad.domain.repository.MoviesRepository
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie

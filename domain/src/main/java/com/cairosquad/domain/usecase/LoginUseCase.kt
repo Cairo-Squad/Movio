@@ -1,4 +1,4 @@
-package com.cairosquad.domain.usecase.authentication
+package com.cairosquad.domain.usecase
 
 import com.cairosquad.domain.repository.LoginRepository
 

@@ -3,7 +3,6 @@ package com.cairosquad.viewmodel.details.series
 import app.cash.turbine.test
 import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.exception.NetworkException
-import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
 import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.google.common.truth.Truth.assertThat

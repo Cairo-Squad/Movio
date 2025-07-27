@@ -1,13 +1,13 @@
 package com.cairosquad.viewmodel.details.artist
 
 import com.cairosquad.domain.exception.MovioException
-import com.cairosquad.domain.usecase.artists.GetArtistDetailsUseCase
+import com.cairosquad.domain.usecase.ManageArtistUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 
 class ArtistViewModel(
-    private val getArtistDetailsUseCase: GetArtistDetailsUseCase,
+    private val manageArtistUseCase: ManageArtistUseCase,
     artistId: Long
 ) : BaseViewModel<ArtistScreenState, ArtistEffect>(initialState = ArtistScreenState()),
     ArtistInteractionListener {
@@ -24,7 +24,7 @@ class ArtistViewModel(
                 updateState { it.copy(screenStatus = ArtistScreenState.ScreenStatus.LOADING) }
             },
             block = {
-                getArtistDetailsUseCase.getArtist(artistId).toArtistUiState()
+                manageArtistUseCase.getArtist(artistId).toArtistUiState()
             },
             onSuccess = { artist ->
                 updateState {
@@ -47,7 +47,7 @@ class ArtistViewModel(
                 updateState { it.copy(screenStatus = ArtistScreenState.ScreenStatus.LOADING) }
             },
             block = {
-                getArtistDetailsUseCase.getMoviesOfArtist(artistId)
+                manageArtistUseCase.getMoviesOfArtist(artistId)
             },
             onSuccess = { movies ->
                 updateState {
@@ -71,7 +71,7 @@ class ArtistViewModel(
                 updateState { it.copy(screenStatus = ArtistScreenState.ScreenStatus.LOADING) }
             },
             block = {
-                val series = getArtistDetailsUseCase
+                val series = manageArtistUseCase
                     .getSeriesOfArtist(artistId)
                     .map { it.toArtistSeriesUiState() }
                 series

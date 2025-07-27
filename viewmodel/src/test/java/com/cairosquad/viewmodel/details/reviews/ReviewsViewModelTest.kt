@@ -1,7 +1,5 @@
 package com.cairosquad.viewmodel.details.reviews
 
-import com.cairosquad.domain.usecase.movies.GetMovieDetailsUseCase
-import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
 import com.cairosquad.entity.Review
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
@@ -52,8 +50,8 @@ class ReviewsViewModelTest {
             viewModel = ReviewsViewModel(
                 mediaId = MOVIE_ID,
                 isMovie = true,
-                getMovieDetailsUseCase = getMovieDetailsUseCase,
-                getSeriesDetailsUseCase = getSeriesDetailsUseCase,
+                manageMoviesUseCase = getMovieDetailsUseCase,
+                manageSeriesUseCase = getSeriesDetailsUseCase,
                 dispatcher = testDispatcher
             )
 
@@ -78,8 +76,8 @@ class ReviewsViewModelTest {
             viewModel = ReviewsViewModel(
                 mediaId = SERIES_ID,
                 isMovie = false,
-                getMovieDetailsUseCase = getMovieDetailsUseCase,
-                getSeriesDetailsUseCase = getSeriesDetailsUseCase,
+                manageMoviesUseCase = getMovieDetailsUseCase,
+                manageSeriesUseCase = getSeriesDetailsUseCase,
                 dispatcher = testDispatcher
             )
             // When
@@ -104,8 +102,8 @@ class ReviewsViewModelTest {
             viewModel = ReviewsViewModel(
                 mediaId = MOVIE_ID,
                 isMovie = true,
-                getMovieDetailsUseCase = getMovieDetailsUseCase,
-                getSeriesDetailsUseCase = getSeriesDetailsUseCase,
+                manageMoviesUseCase = getMovieDetailsUseCase,
+                manageSeriesUseCase = getSeriesDetailsUseCase,
                 dispatcher = testDispatcher
             )
 

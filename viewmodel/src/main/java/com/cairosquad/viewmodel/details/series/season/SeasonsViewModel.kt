@@ -1,6 +1,6 @@
 package com.cairosquad.viewmodel.details.series.season
 
-import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
+import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Season
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.series.season.SeasonDetailsScreenState.ScreenStatus
@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
 class SeasonsViewModel(
-    private val seriesDetailsUseCase: GetSeriesDetailsUseCase,
+    private val manageSeriesUseCase: ManageSeriesUseCase,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
     seriesId: Long,
 ) : BaseViewModel<SeasonDetailsScreenState, SeasonDetailEffect>(SeasonDetailsScreenState()),
@@ -24,7 +24,7 @@ class SeasonsViewModel(
     }
     private fun getSeriesName(seriesId: Long) {
         tryToCall(
-            block = { seriesDetailsUseCase.getSeries(seriesId).title },
+            block = { manageSeriesUseCase.getSeries(seriesId).title },
             onSuccess = { seriesTitle -> updateState { it.copy(seriesTitle = seriesTitle) } },
             onError = { updateState { it.copy(errorStatus = ErrorStatus.UNKNOWN_ERROR) } },
             dispatcher = dispatcher
@@ -33,7 +33,7 @@ class SeasonsViewModel(
     private fun getSeasonDetails(seriesId: Long) {
         tryToCall(
             onStart = { updateState { it.copy(seasonSectionState = ScreenStatus.LOADING) } },
-            block = { seriesDetailsUseCase.getSeriesSeasons(seriesId) },
+            block = { manageSeriesUseCase.getSeriesSeasons(seriesId) },
             onSuccess = ::setSeasonDetailsToUiState,
             onError = { throwable -> setError(throwable) { copy(seasonSectionState = ScreenStatus.ERROR) } },
             dispatcher = dispatcher

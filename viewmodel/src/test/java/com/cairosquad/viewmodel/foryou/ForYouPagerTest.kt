@@ -1,7 +1,6 @@
 package com.cairosquad.viewmodel.foryou
 
 import androidx.paging.testing.asSnapshot
-import com.cairosquad.domain.usecase.movies.GetPersonalizedMoviesUseCase
 import com.cairosquad.entity.Movie
 import io.mockk.coEvery
 import io.mockk.mockk

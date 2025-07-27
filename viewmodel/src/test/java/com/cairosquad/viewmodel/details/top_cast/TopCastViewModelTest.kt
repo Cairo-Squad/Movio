@@ -1,7 +1,5 @@
 package com.cairosquad.viewmodel.details.top_cast
 
-import com.cairosquad.domain.usecase.movies.GetMovieDetailsUseCase
-import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
 import com.cairosquad.entity.Artist
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
@@ -51,8 +49,8 @@ class TopCastViewModelTest {
         viewModel = TopCastViewModel(
             mediaId = MOVIE_ID,
             isMovie = true,
-            getMovieDetailsUseCase = getMovieDetailsUseCase,
-            getSeriesDetailsUseCase = getSeriesDetailsUseCase,
+            manageMoviesUseCase = getMovieDetailsUseCase,
+            manageSeriesUseCase = getSeriesDetailsUseCase,
             dispatcher = testDispatcher
         )
 
@@ -74,8 +72,8 @@ class TopCastViewModelTest {
         viewModel = TopCastViewModel(
             mediaId = SERIES_ID,
             isMovie = false,
-            getMovieDetailsUseCase = getMovieDetailsUseCase,
-            getSeriesDetailsUseCase = getSeriesDetailsUseCase,
+            manageMoviesUseCase = getMovieDetailsUseCase,
+            manageSeriesUseCase = getSeriesDetailsUseCase,
             dispatcher = testDispatcher
         )
 
@@ -97,8 +95,8 @@ class TopCastViewModelTest {
         viewModel = TopCastViewModel(
             mediaId = MOVIE_ID,
             isMovie = true,
-            getMovieDetailsUseCase = getMovieDetailsUseCase,
-            getSeriesDetailsUseCase = getSeriesDetailsUseCase,
+            manageMoviesUseCase = getMovieDetailsUseCase,
+            manageSeriesUseCase = getSeriesDetailsUseCase,
             dispatcher = testDispatcher
         )
 
