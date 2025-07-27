@@ -1,6 +1,5 @@
 package com.cairosquad.ui.home.content
 
-import android.content.res.Resources
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,13 +11,14 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.ui.movio_component.MediaHorizontalPager
@@ -72,48 +72,69 @@ fun HomeScreenContentAllTab(
             sections.forEach { sectionType ->
                 item {
                     SectionContainer(
-                        listState = lazyListState,
+                        listState =lazyListState,
+                        index = 0,
                         onVisible = {
                             if (!screenState.sections.containsKey(sectionType)) {
                                 listener.onSectionVisible(sectionType)
                             }
                         }
                     ) {
-                        MediaSection(
-                            modifier = Modifier.padding(bottom = 32.dp),
-                            mediaList = MediaSectionItem.fromHomeSectionUiState(screenState.sections[sectionType]),
-                            sectionTitle = stringResource(sectionType.titleId),
-                            mediaSectionLayoutType = getMediaSectionLayout(sectionType),
-                            onClickMedia = listener::onClickMedia,
-                            seeAllAction = { listener.onClickSeeAll(sectionType, MediaType.BOTH) }
-                        )
+                        val sectionState = screenState.sections[sectionType]
+
+                        if (sectionState == null || sectionState.isLoading) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 32.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                // CircularProgressIndicator()
+                            }
+                        } else {
+                            MediaSection(
+                                modifier = Modifier.padding(bottom = 32.dp),
+                                mediaList = MediaSectionItem.fromHomeSectionUiState(sectionState),
+                                sectionTitle = stringResource(sectionType.titleId),
+                                mediaSectionLayoutType = getMediaSectionLayout(sectionType),
+                                onClickMedia = listener::onClickMedia,
+                                seeAllAction = {
+                                    listener.onClickSeeAll(
+                                        sectionType,
+                                        MediaType.BOTH
+                                    )
+                                }
+                            )
+                        }
                     }
                 }
             }
         }
-}}
+    }
+}
 
 @Composable
 fun SectionContainer(
     listState: LazyListState,
+    index: Int,
     onVisible: () -> Unit,
     content: @Composable () -> Unit
 ) {
+    val layoutInfo = listState.layoutInfo
+    val isVisible = remember(layoutInfo) {
+        derivedStateOf {
+            layoutInfo.visibleItemsInfo.any { it.index == index }
+        }
+    }
+
     var triggered by remember { mutableStateOf(false) }
 
-    Box(
-        modifier = Modifier
-            .onGloballyPositioned { coordinates ->
-                if (!triggered) {
-                    val position = coordinates.positionInWindow()
-                    val height = Resources.getSystem().displayMetrics.heightPixels.toFloat()
-                    if (position.y in 0f..height) {
-                        triggered = true
-                        onVisible()
-                    }
-                }
-            }
-    ) {
-        content()
+    LaunchedEffect(isVisible.value) {
+        if (isVisible.value && !triggered) {
+            triggered = true
+            onVisible()
+        }
     }
+
+    content()
 }

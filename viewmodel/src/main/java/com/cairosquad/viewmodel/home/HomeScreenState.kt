@@ -26,6 +26,7 @@ data class HomeScreenState(
     data class SectionUiState(
         val movies: List<MediaUiState> = emptyList(),
         val series: List<MediaUiState> = emptyList(),
+        val isLoading: Boolean = false
     )
 
     data class MediaUiState(

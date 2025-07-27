@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.home
 
+import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.usecase.movies.GetAllMoviesUseCase
@@ -26,6 +27,10 @@ import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import com.cairosquad.viewmodel.util.MediaContentType
 import com.cairosquad.viewmodel.util.MediaType
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 
 class HomeViewModel(
     private val getFreeToWatchMoviesUseCase: GetFreeToWatchMoviesUseCase,
@@ -49,18 +54,30 @@ class HomeViewModel(
     HomeInteractionsListener {
 
     init {
-        loadAllData()
+        loadHomeScreenData()
     }
 
-    private fun loadAllData(genreId: Long? = null) {
-        fetchPopularMedia(genreId)
-
-        MediaContentType.entries.forEach {
-            fetchSectionData(it)
+    fun loadHomeScreenData() {
+        viewModelScope.launch {
+            supervisorScope {
+                val section = async { fetchPopularMedia(null) }
+                section.await()
+                loadGenres()
+            }
         }
-
-        loadGenres()
     }
+
+    private fun setSectionLoading(sectionType: MediaContentType) {
+        updateState {
+            val newSection = HomeScreenState.SectionUiState(isLoading = true)
+            it.copy(
+                sections = (it.sections + (sectionType to newSection))
+                    .entries.sortedBy { entry -> entry.key.ordinal }
+                    .associate { it.key to it.value }
+            )
+        }
+    }
+
 
     suspend fun getDataOfSection(
         sectionType: MediaContentType,
@@ -279,37 +296,54 @@ class HomeViewModel(
 
     override fun onSectionVisible(sectionType: MediaContentType) {
         if (screenState.value.sections.containsKey(sectionType)) return
-
         fetchSectionData(sectionType)
     }
 
     private fun sortCategoriesMedia() {
         val genre = screenState.value.genres[screenState.value.selectedGenreIndex]
         tryToCall(
-            block = { when (screenState.value.selectedSortingType) {
-                HomeScreenState.SortingType.ALL -> {
-                     Pair(
-                        getAllMoviesUseCase.getAllMovies(page = 1, categoryId = genre.id?.toString()),
-                        getAllSeriesUseCase.getAllSeries(page = 1, categoryId = genre.id?.toString())
-                    )
+            block = {
+                when (screenState.value.selectedSortingType) {
+                    HomeScreenState.SortingType.ALL -> {
+                        Pair(
+                            getAllMoviesUseCase.getAllMovies(
+                                page = 1,
+                                categoryId = genre.id?.toString()
+                            ),
+                            getAllSeriesUseCase.getAllSeries(
+                                page = 1,
+                                categoryId = genre.id?.toString()
+                            )
+                        )
+                    }
+
+                    HomeScreenState.SortingType.POPULARITY -> {
+                        Pair(
+                            getAllMoviesUseCase.getAllMovies(
+                                page = 1, categoryId = genre.id?.toString(),
+                                SortType.POPULAR
+                            ),
+                            getAllSeriesUseCase.getAllSeries(
+                                page = 1, categoryId = genre.id?.toString(),
+                                SortType.POPULAR
+                            )
+                        )
+                    }
+
+                    HomeScreenState.SortingType.LATEST -> {
+                        Pair(
+                            getAllMoviesUseCase.getAllMovies(
+                                page = 1, categoryId = genre.id?.toString(),
+                                SortType.LATEST
+                            ),
+                            getAllSeriesUseCase.getAllSeries(
+                                page = 1, categoryId = genre.id?.toString(),
+                                SortType.LATEST
+                            )
+                        )
+                    }
                 }
-                HomeScreenState.SortingType.POPULARITY -> {
-                    Pair(
-                        getAllMoviesUseCase.getAllMovies(page = 1, categoryId = genre.id?.toString(),
-                            SortType.POPULAR),
-                        getAllSeriesUseCase.getAllSeries(page = 1, categoryId = genre.id?.toString(),
-                            SortType.POPULAR)
-                    )
-                }
-                HomeScreenState.SortingType.LATEST -> {
-                    Pair(
-                        getAllMoviesUseCase.getAllMovies(page = 1, categoryId = genre.id?.toString(),
-                            SortType.LATEST),
-                        getAllSeriesUseCase.getAllSeries(page = 1, categoryId = genre.id?.toString(),
-                            SortType.LATEST)
-                    )
-                }
-            } },
+            },
             onSuccess = { (movies, series) ->
                 updateState {
                     it.copy(
@@ -318,7 +352,7 @@ class HomeViewModel(
                             list2 = series.map(Series::toHomeMediaUiState)
                         ),
 
-                    )
+                        )
                 }
             },
             onError = ::handleError
@@ -329,11 +363,14 @@ class HomeViewModel(
     private fun fetchSectionData(
         sectionType: MediaContentType,
     ) {
-        tryToCall(
-            block = { getDataOfSection(sectionType) },
-            onSuccess = { onSuccessFetchData(it, sectionType) },
-            onError = ::handleError
-        )
+        viewModelScope.launch(Dispatchers.IO) {
+            setSectionLoading(sectionType)
+            tryToCall(
+                block = { getDataOfSection(sectionType) },
+                onSuccess = { onSuccessFetchData(it, sectionType) },
+                onError = ::handleError
+            )
+        }
     }
 
     private fun onSuccessFetchData(
@@ -368,6 +405,7 @@ class HomeViewModel(
             else -> ErrorStatus.UNKNOWN_ERROR
         }
     }
+
     private fun <T> combineTwoList(
         list1: List<T>,
         list2: List<T>,
