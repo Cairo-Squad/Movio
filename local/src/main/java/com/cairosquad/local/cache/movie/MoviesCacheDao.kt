@@ -14,10 +14,10 @@ import com.cairosquad.repository.movie.data_source.local.dto.RequestWithMoviesCa
 interface MoviesCacheDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertRequestMovieCacheCrossRef(mappings: List<RequestMovieCacheCrossRef>)
+    suspend fun insertCrossRefForRequestAndMovieCache(mappings: List<RequestMovieCacheCrossRef>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMovieGenreCacheCrossRef(mappings: List<MovieGenreCacheCrossRef>)
+    suspend fun insertCrossRefForMovieAndGenreCache(mappings: List<MovieGenreCacheCrossRef>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMoviesWithoutGenre(movies: List<MovieWithoutGenreCacheDto>)
@@ -30,14 +30,14 @@ interface MoviesCacheDao {
                 "Not movie_id in (Select movie_id from MovieWithoutGenreCacheDto) " +
              "OR " +
                 "Not request in (Select request from RequestCacheDto)")
-    suspend fun deleteUnwantedRequestMovieCacheCrossRef()
+    suspend fun deleteCrossRefForNonExistingRequestAndMovieCache()
 
     @Query("Delete from MovieGenreCacheCrossRef " +
             "where " +
                 "Not movie_id in (Select movie_id from MovieWithoutGenreCacheDto) " +
              "OR " +
                 "Not genre_id in (Select genre_id from MovieGenreCacheCrossRef)")
-    suspend fun deleteUnwantedMovieGenreCacheCrossRef()
+    suspend fun deleteCrossRefForNonExistingMovieAndGenreCache()
 
     @Transaction
     @Query("Select * From RequestCacheDto where request = :request")

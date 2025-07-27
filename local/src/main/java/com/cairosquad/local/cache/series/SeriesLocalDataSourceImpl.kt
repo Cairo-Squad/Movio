@@ -22,7 +22,7 @@ class SeriesLocalDataSourceImpl(
     override suspend fun insertRequestWithSeries(requestWithSeries: RequestWithSeriesCacheDto) {
         seriesCacheDao.insertSeriesWithoutGenre(requestWithSeries.series.map { it.seriesWithoutGenre })
         genreDao.insertSeriesGenres(genres = requestWithSeries.series.map { it.genres }.flatten().toSet().toList())
-        seriesCacheDao.insertSeriesGenreCacheCrossRef(
+        seriesCacheDao.insertCrossRefForSeriesAndGenreCache(
             requestWithSeries.series.map { series ->
                 series.genres.map { genre ->
                     SeriesGenreCacheCrossRef(series.seriesWithoutGenre.id, genre.id)
@@ -30,7 +30,7 @@ class SeriesLocalDataSourceImpl(
             }.flatten()
         )
         requestCachedDao.insertRequestCache(requestWithSeries.request)
-        seriesCacheDao.insertRequestSeriesCacheCrossRef(
+        seriesCacheDao.insertCrossRefForRequestAndSeriesCache(
             RequestSeriesCacheCrossRef.fromRequestAndSeriesList(
                 request = requestWithSeries.request,
                 seriesList = requestWithSeries.series
@@ -69,10 +69,10 @@ class SeriesLocalDataSourceImpl(
         requestCachedDao.deleteExpiredRequestCache(timestamp)
 
         seriesCacheDao.deleteExpiredSeriesWithoutGenreCache(timestamp)
-        seriesCacheDao.deleteUnwantedRequestSeriesCacheCrossRef()
+        seriesCacheDao.deleteCrossRefForNonExistingRequestAndSeriesCache()
 
         genreDao.deleteExpiredSeriesGenreCache(timestamp)
-        seriesCacheDao.deleteUnwantedSeriesGenreCacheCrossRef()
+        seriesCacheDao.deleteCrossRefForNonExistingSeriesAndGenreCache()
 
         reviewDao.deleteExpiredReviewCache(timestamp)
         reviewDao.deleteUnwantedRequestReviewCacheCrossRef()

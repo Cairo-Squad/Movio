@@ -14,10 +14,10 @@ import com.cairosquad.repository.series.data_source.local.dto.SeriesWithoutGenre
 interface SeriesCacheDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertRequestSeriesCacheCrossRef(mappings: List<RequestSeriesCacheCrossRef>)
+    suspend fun insertCrossRefForRequestAndSeriesCache(mappings: List<RequestSeriesCacheCrossRef>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertSeriesGenreCacheCrossRef(mappings: List<SeriesGenreCacheCrossRef>)
+    suspend fun insertCrossRefForSeriesAndGenreCache(mappings: List<SeriesGenreCacheCrossRef>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSeriesWithoutGenre(series: List<SeriesWithoutGenreCacheDto>)
@@ -30,14 +30,14 @@ interface SeriesCacheDao {
                 "Not series_id in (Select series_id from SeriesWithoutGenreCacheDto) " +
              "OR " +
                 "Not request in (Select request from RequestCacheDto)")
-    suspend fun deleteUnwantedRequestSeriesCacheCrossRef()
+    suspend fun deleteCrossRefForNonExistingRequestAndSeriesCache()
 
     @Query("Delete from SeriesGenreCacheCrossRef " +
             "where " +
                 "Not series_id in (Select series_id from SeriesWithoutGenreCacheDto) " +
              "OR " +
                 "Not genre_id in (Select genre_id from SeriesGenreCacheCrossRef)")
-    suspend fun deleteUnwantedSeriesGenreCacheCrossRef()
+    suspend fun deleteCrossRefForNonExistingSeriesAndGenreCache()
 
     @Transaction
     @Query("Select * From RequestCacheDto where request = :request")

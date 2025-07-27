@@ -22,7 +22,7 @@ class MoviesLocalDataSourceImpl(
     override suspend fun insertRequestWithMovies(requestWithMovies: RequestWithMoviesCacheDto) {
         moviesCacheDao.insertMoviesWithoutGenre(requestWithMovies.movies.map { it.movieWithoutGenre })
         genreDao.insertMovieGenres(genres = requestWithMovies.movies.map { it.genres }.flatten().toSet().toList())
-        moviesCacheDao.insertMovieGenreCacheCrossRef(
+        moviesCacheDao.insertCrossRefForMovieAndGenreCache(
             requestWithMovies.movies.map { movie ->
                 movie.genres.map { genre ->
                     MovieGenreCacheCrossRef(movie.movieWithoutGenre.id, genre.id)
@@ -30,7 +30,7 @@ class MoviesLocalDataSourceImpl(
             }.flatten()
         )
         requestCachedDao.insertRequestCache(requestWithMovies.request)
-        moviesCacheDao.insertRequestMovieCacheCrossRef(
+        moviesCacheDao.insertCrossRefForRequestAndMovieCache(
             RequestMovieCacheCrossRef.fromRequestAndMovieList(
                 request = requestWithMovies.request,
                 movies = requestWithMovies.movies
@@ -70,10 +70,10 @@ class MoviesLocalDataSourceImpl(
         requestCachedDao.deleteExpiredRequestCache(timestamp)
 
         moviesCacheDao.deleteExpiredMovieWithoutGenreCache(timestamp)
-        moviesCacheDao.deleteUnwantedRequestMovieCacheCrossRef()
+        moviesCacheDao.deleteCrossRefForNonExistingRequestAndMovieCache()
 
         genreDao.deleteExpiredMovieGenreCache(timestamp)
-        moviesCacheDao.deleteUnwantedMovieGenreCacheCrossRef()
+        moviesCacheDao.deleteCrossRefForNonExistingMovieAndGenreCache()
 
         reviewDao.deleteExpiredReviewCache(timestamp)
         reviewDao.deleteUnwantedRequestReviewCacheCrossRef()
