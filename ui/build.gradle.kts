@@ -78,5 +78,4 @@ dependencies {
     implementation(project(":design_system"))
     implementation(project(":viewmodel"))
     implementation(project(":safe_image_viewer"))
-    implementation (libs.androidx.core.splashscreen)
 }

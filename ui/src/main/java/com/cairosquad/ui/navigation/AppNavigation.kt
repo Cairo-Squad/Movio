@@ -1,8 +1,10 @@
 package com.cairosquad.ui.navigation
 
+import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
@@ -30,7 +32,7 @@ import com.cairosquad.ui.see_all_screen.SeeAllScreen
 import com.cairosquad.ui.splash.SplashScreen
 import com.cairosquad.viewmodel.auth_gate.AuthGate
 import kotlinx.coroutines.launch
-import org.koin.mp.KoinPlatform.getKoin
+import org.koin.compose.getKoin
 
 
 @Composable
@@ -48,24 +50,31 @@ fun AppNavigation(
         NavHost(
             modifier = Modifier.background(Theme.color.surfaces.surface),
             navController = navController,
-//            startDestination = SplashRoute
-            startDestination = AppRoute
+            startDestination = SplashRoute
         ) {
             composable<SplashRoute> {
-                SplashScreen(
-                    onNavigateNext = {
-                        coroutineScope.launch {
-                            val route = if (authGate.isUserLoggedIn()) AppRoute else LoginRoute
-                            navController.navigate(route) {
-                                popUpTo(SplashRoute) {
-                                    inclusive = true
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    SplashScreen(
+                        onNavigateNext = {
+                            coroutineScope.launch {
+                                val route = if (authGate.isUserLoggedIn()) AppRoute else LoginRoute
+                                navController.navigate(route) {
+                                    popUpTo(SplashRoute) { inclusive = true }
+                                    launchSingleTop = true
                                 }
-
-                                launchSingleTop = true
                             }
                         }
+                    )
+                } else {
+
+                    LaunchedEffect(Unit) {
+                        val route = if (authGate.isUserLoggedIn()) AppRoute else LoginRoute
+                        navController.navigate(route) {
+                            popUpTo(SplashRoute) { inclusive = true }
+                            launchSingleTop = true
+                        }
                     }
-                )
+                }
             }
 
             composable<LoginRoute> {
