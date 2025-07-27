@@ -13,8 +13,8 @@ class MoviesRemoteDataSourceImpl(
     private val apiService: MovieApiService,
 ) : MoviesRemoteDataSource {
 
-    override suspend fun getMovieById(movieId: Long): MovieDetailsRemoteDto {
-        return safeCallApi { apiService.getMovieById(movieId) }
+    override suspend fun getMovieById(id: Long): MovieDetailsRemoteDto {
+        return safeCallApi { apiService.getMovieById(id) }
     }
 
     override suspend fun getMovieReviews(movieId: Long, page: Int): List<ReviewRemoteDto> {

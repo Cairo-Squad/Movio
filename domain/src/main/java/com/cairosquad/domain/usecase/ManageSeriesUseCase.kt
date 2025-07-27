@@ -55,8 +55,8 @@ class ManageSeriesUseCase(
         return seriesRepository.getSeriesByCategory(genreId, page)
     }
 
-    suspend fun getSeries(seriesId: Long): Series {
-        return seriesRepository.getSeriesById(seriesId)
+    suspend fun getSeriesById(id: Long): Series {
+        return seriesRepository.getSeriesById(id)
     }
 
     suspend fun getSeriesReviews(seriesId: Long, page: Int): List<Review> {

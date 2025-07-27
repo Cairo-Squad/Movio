@@ -34,8 +34,8 @@ class ManageMoviesUseCase(
         return moviesRepository.getMoreRecommendedMovies(page, genreId)
     }
 
-    suspend fun getMovieById(movieId: Long): Movie {
-        return moviesRepository.getMovieById(movieId)
+    suspend fun getMovieById(id: Long): Movie {
+        return moviesRepository.getMovieById(id)
     }
 
     suspend fun getMovieReviews(movieId: Long, page: Int = 1): List<Review> {

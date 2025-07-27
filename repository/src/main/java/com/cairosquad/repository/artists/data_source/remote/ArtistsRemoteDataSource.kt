@@ -6,7 +6,7 @@ import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 
 interface ArtistsRemoteDataSource {
     suspend fun getArtistsByQuery(query: String,page:Int): List<ArtistRemoteDto>
-    suspend fun getArtist(artistId: Long): ArtistRemoteDto
+    suspend fun getArtistById(id: Long): ArtistRemoteDto
     suspend fun getMoviesOfArtist(artistId: Long): List<MovieRemoteDto>
     suspend fun getSeriesOfArtist(artistId: Long): List<SeriesRemoteDto>
 }

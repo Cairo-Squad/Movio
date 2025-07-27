@@ -15,8 +15,8 @@ class ManageArtistUseCase(
             searchRepository.addQuery(query)
         }
     }
-    suspend fun getArtist(artistId: Long): Artist {
-        return artistsRepository.getArtistById(artistId)
+    suspend fun getArtistById(id: Long): Artist {
+        return artistsRepository.getArtistById(id)
     }
 
     suspend fun getMoviesOfArtist(artistId: Long): List<Movie> {

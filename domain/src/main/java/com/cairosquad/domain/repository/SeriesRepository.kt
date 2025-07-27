@@ -9,7 +9,7 @@ import com.cairosquad.entity.Season
 import com.cairosquad.entity.Series
 
 interface SeriesRepository {
-    suspend fun getSeriesById(seriesId: Long): Series
+    suspend fun getSeriesById(id: Long): Series
 
     suspend fun getSeriesReviews(seriesId: Long, page: Int): List<Review>
 

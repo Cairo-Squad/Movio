@@ -24,7 +24,7 @@ class ArtistViewModel(
                 updateState { it.copy(screenStatus = ArtistScreenState.ScreenStatus.LOADING) }
             },
             block = {
-                manageArtistUseCase.getArtist(artistId).toArtistUiState()
+                manageArtistUseCase.getArtistById(artistId).toArtistUiState()
             },
             onSuccess = { artist ->
                 updateState {

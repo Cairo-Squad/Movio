@@ -10,7 +10,7 @@ import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 
 interface SeriesRemoteDataSource {
 
-    suspend fun getSeriesById(seriesId: Long): SeriesDetailsRemoteDto
+    suspend fun getSeriesById(id: Long): SeriesDetailsRemoteDto
 
     suspend fun getSeriesReviews(seriesId: Long, page: Int): List<ReviewRemoteDto>
 

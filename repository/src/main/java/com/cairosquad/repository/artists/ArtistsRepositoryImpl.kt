@@ -25,7 +25,7 @@ class ArtistsRepositoryImpl(
 
     override suspend fun getArtistById(id: Long): Artist {
         return tryToCall {
-                artistsRemoteDataSource.getArtist(id).toEntity()
+                artistsRemoteDataSource.getArtistById(id).toEntity()
         }
     }
 

@@ -27,7 +27,7 @@ class GetArtistDetailsUseCaseTest {
     fun `getArtist SHOULD return artist from repository`() = runTest {
         coEvery { artistsRepository.getArtistById(312L) } returns actor
 
-        val result = useCase.getArtist(312L)
+        val result = useCase.getArtistById(312L)
 
         assertThat(result).isEqualTo(actor)
         coVerify(exactly = 1) { artistsRepository.getArtistById(312L) }
@@ -58,7 +58,7 @@ class GetArtistDetailsUseCaseTest {
     fun `getArtist SHOULD throw exception when repository fails`() = runTest {
         coEvery { artistsRepository.getArtistById(312L) } throws RuntimeException("Failed to fetch")
 
-        useCase.getArtist(312L)
+        useCase.getArtistById(312L)
     }
 
     private companion object {

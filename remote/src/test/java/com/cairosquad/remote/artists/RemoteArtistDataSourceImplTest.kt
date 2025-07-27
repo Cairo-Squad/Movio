@@ -26,10 +26,10 @@ class RemoteArtistDataSourceImplTest {
     fun `getArtist should return artist data`() = runTest {
         // Given
         val artistId = 42L
-        coEvery { apiService.getArtist(artistId) } returns expectedArtist
+        coEvery { apiService.getArtistById(artistId) } returns expectedArtist
 
         // When
-        val result = dataSource.getArtist(artistId)
+        val result = dataSource.getArtistById(artistId)
 
         // Then
         assertThat(result).isEqualTo(expectedArtist)

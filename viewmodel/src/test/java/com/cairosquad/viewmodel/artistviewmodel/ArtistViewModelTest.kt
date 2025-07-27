@@ -62,7 +62,7 @@ class ArtistViewModelTest {
     @Test
     fun `should load artist details when loadArtistDetails is called`() = runTest {
         val artistId = 1L
-        coEvery { manageArtistUseCase.getArtist(artistId) } returns artist
+        coEvery { manageArtistUseCase.getArtistById(artistId) } returns artist
 
         viewModel.loadArtistDetails(artistId)
 
@@ -74,7 +74,7 @@ class ArtistViewModelTest {
     @Test
     fun `should set error status when loadArtistDetails fails`() = runTest {
         val artistId = 1L
-        coEvery { manageArtistUseCase.getArtist(artistId) } throws IOException()
+        coEvery { manageArtistUseCase.getArtistById(artistId) } throws IOException()
 
         viewModel.loadArtistDetails(artistId)
 
@@ -159,7 +159,7 @@ class ArtistViewModelTest {
     fun `should set NETWORK_ERROR when loadArtistDetails fails with NetworkException`() =
         runTest {
             val artistId = 1L
-            coEvery { manageArtistUseCase.getArtist(artistId) } throws NetworkException()
+            coEvery { manageArtistUseCase.getArtistById(artistId) } throws NetworkException()
 
             viewModel.loadArtistDetails(artistId)
 
@@ -175,7 +175,7 @@ class ArtistViewModelTest {
     fun `should set UNKNOWN_ERROR when loadArtistDetails fails with UnknownException`() =
         runTest {
             val artistId = 1L
-            coEvery { manageArtistUseCase.getArtist(artistId) } throws UnknownException()
+            coEvery { manageArtistUseCase.getArtistById(artistId) } throws UnknownException()
 
             viewModel.loadArtistDetails(artistId)
 
@@ -191,7 +191,7 @@ class ArtistViewModelTest {
     fun `should set NO_INTERNET when loadArtistDetails fails with InternetConnectionException`() =
         runTest {
             val artistId = 1L
-            coEvery { manageArtistUseCase.getArtist(artistId) } throws InternetConnectionException()
+            coEvery { manageArtistUseCase.getArtistById(artistId) } throws InternetConnectionException()
 
             viewModel.loadArtistDetails(artistId)
 

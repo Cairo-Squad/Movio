@@ -24,7 +24,7 @@ class SeasonsViewModel(
     }
     private fun getSeriesName(seriesId: Long) {
         tryToCall(
-            block = { manageSeriesUseCase.getSeries(seriesId).title },
+            block = { manageSeriesUseCase.getSeriesById(seriesId).title },
             onSuccess = { seriesTitle -> updateState { it.copy(seriesTitle = seriesTitle) } },
             onError = { updateState { it.copy(errorStatus = ErrorStatus.UNKNOWN_ERROR) } },
             dispatcher = dispatcher

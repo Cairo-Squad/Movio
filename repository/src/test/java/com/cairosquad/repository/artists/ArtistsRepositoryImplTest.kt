@@ -77,7 +77,7 @@ class ArtistsRepositoryImplTest {
 
         coEvery { cacheDataSource.clearExpiredCache(any()) } just Runs
         coEvery { cacheDataSource.getCachedArtists(artistId) } throws IllegalStateException()
-        coEvery { artistsRemoteDataSource.getArtist(artistId) } returns artistRemoteDto
+        coEvery { artistsRemoteDataSource.getArtistById(artistId) } returns artistRemoteDto
         coEvery { cacheDataSource.cacheArtist(any()) } just Runs
 
         val result = repository.getArtistById(artistId)

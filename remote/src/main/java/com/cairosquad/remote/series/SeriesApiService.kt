@@ -17,7 +17,7 @@ interface SeriesApiService {
 
     @GET("tv/{seriesId}")
     suspend fun getSeriesById(
-        @Path("seriesId") seriesId: Long
+        @Path("seriesId") id: Long
     ): SeriesDetailsRemoteDto
 
     @GET("tv/{seriesId}/reviews")

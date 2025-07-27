@@ -14,8 +14,8 @@ interface ArtistsApiService {
     ): ResultResponse<ArtistRemoteDto>
 
     @GET("person/{id}")
-    suspend fun getArtist(
-        @Path("id") artistId: Long
+    suspend fun getArtistById(
+        @Path("id") id: Long
     ): ArtistRemoteDto
 
     @GET("person/{id}/movie_credits")

@@ -145,19 +145,19 @@ class SeriesRepositoryImpl(
             }
     }
 
-    override suspend fun getSeriesById(seriesId: Long): Series {
+    override suspend fun getSeriesById(id: Long): Series {
         seriesLocalDataSource.deleteExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
         return seriesLocalDataSource
-            .getSeriesByRequest(request = getRequestOfSeries(seriesId))
+            .getSeriesByRequest(request = getRequestOfSeries(id))
             .toEntityList()
             .firstOrNull()
             ?: tryToCall {
-                seriesRemoteDataSource.getSeriesById(seriesId).toEntity(
-                    seriesRemoteDataSource.getVideoKey(seriesId)
+                seriesRemoteDataSource.getSeriesById(id).toEntity(
+                    seriesRemoteDataSource.getVideoKey(id)
                 )
             }.also { series ->
                 seriesLocalDataSource.insertRequestWithSeries(
-                    listOf(series).toRequestWithSeriesCacheDto(request = "series/${seriesId}")
+                    listOf(series).toRequestWithSeriesCacheDto(request = "series/${id}")
                 )
             }
     }

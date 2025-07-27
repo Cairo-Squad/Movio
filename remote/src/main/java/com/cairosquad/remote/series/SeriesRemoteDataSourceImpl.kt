@@ -14,8 +14,8 @@ import java.time.LocalDate
 class SeriesRemoteDataSourceImpl(
     private val seriesApiService: SeriesApiService
 ) : SeriesRemoteDataSource {
-    override suspend fun getSeriesById(seriesId: Long): SeriesDetailsRemoteDto {
-        return safeCallApi { seriesApiService.getSeriesById(seriesId) }
+    override suspend fun getSeriesById(id: Long): SeriesDetailsRemoteDto {
+        return safeCallApi { seriesApiService.getSeriesById(id) }
     }
 
     override suspend fun getSeriesReviews(

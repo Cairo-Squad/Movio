@@ -137,7 +137,7 @@ class SeriesDetailsViewModel(
             onStart = {
                 updateState { it.copy(basicDetailsSectionState = SectionStatus.LOADING) }
             },
-            block = { manageSeriesUseCase.getSeries(seriesId) },
+            block = { manageSeriesUseCase.getSeriesById(seriesId) },
             onSuccess = ::setBasicSeriesDetailsToUiState,
             onError = { throwable ->
                 setError(throwable) { copy(basicDetailsSectionState = SectionStatus.ERROR) }

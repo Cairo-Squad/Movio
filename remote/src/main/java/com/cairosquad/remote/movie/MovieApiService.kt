@@ -16,7 +16,7 @@ interface MovieApiService {
 
     @GET("movie/{movieId}")
     suspend fun getMovieById(
-        @Path("movieId") movieId: Long
+        @Path("movieId") id: Long
     ): MovieDetailsRemoteDto
 
     @GET("movie/{movieId}/reviews")
