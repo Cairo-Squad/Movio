@@ -13,4 +13,6 @@ interface RemoteLoginDataSource {
     ): RequestTokenResponse
 
     suspend fun createSessionId(requestToken: String): SessionIdResponse
+
+    suspend fun updateInterceptorToken(token: String)
 }
