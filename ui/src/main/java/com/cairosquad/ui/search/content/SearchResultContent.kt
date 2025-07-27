@@ -27,6 +27,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.InputField
+import com.cairosquad.design_system.basic_component.RefreshBox
 import com.cairosquad.design_system.basic_component.TabRow
 import com.cairosquad.design_system.text_style.defaultTextStyle
 import com.cairosquad.design_system.theme.Theme
@@ -81,38 +82,52 @@ fun SearchResultContent(
             },
             readOnly = true
         )
-
-        TabRow(
-            modifier = Modifier.padding(bottom = 12.dp),
-            tabs = listOf(
-                stringResource(R.string.top_Results),
-                stringResource(R.string.movies),
-                stringResource(R.string.series),
-                stringResource(R.string.artists),
-            ),
-            selectedTabIndex = selectedTabIndex,
-            onTabSelected = { listener.onTabSelected(it) }
-        )
-
-        when (selectedTabIndex) {
-            0 -> {
-                SearchResultText(noOfResults = movies.itemCount)
-                AllResultsTabContent(movies = movies, listener = listener, state = state)
+        if(state.screenStatus == SearchScreenState.ScreenStatus.FAILED){
+            RefreshBox(
+                isRefreshing = state.isRefreshing,
+                onRefresh = listener::onRefresh,
+                modifier = modifier
+                    .fillMaxSize()
+            ) {
+                SearchFailContent(
+                    modifier = modifier,
+                    state = state,
+                    listener = listener
+                )
             }
+        }else {
+            TabRow(
+                modifier = Modifier.padding(bottom = 12.dp),
+                tabs = listOf(
+                    stringResource(R.string.top_Results),
+                    stringResource(R.string.movies),
+                    stringResource(R.string.series),
+                    stringResource(R.string.artists),
+                ),
+                selectedTabIndex = selectedTabIndex,
+                onTabSelected = { listener.onTabSelected(it) }
+            )
 
-            1 -> {
-                SearchResultText(noOfResults = movies.itemCount)
-                MoviesTabContent(movies = movies, listener = listener, state = state)
-            }
+            when (selectedTabIndex) {
+                0 -> {
+                    SearchResultText(noOfResults = movies.itemCount)
+                    AllResultsTabContent(movies = movies, listener = listener, state = state)
+                }
 
-            2 -> {
-                SearchResultText(noOfResults = series.itemCount)
-                SeriesTabContent(series = series, listener = listener, state = state)
-            }
+                1 -> {
+                    SearchResultText(noOfResults = movies.itemCount)
+                    MoviesTabContent(movies = movies, listener = listener, state = state)
+                }
 
-            3 -> {
-                SearchResultText(noOfResults = artists.itemCount)
-                ArtistsTabContent(artist = artists, listener = listener, state = state)
+                2 -> {
+                    SearchResultText(noOfResults = series.itemCount)
+                    SeriesTabContent(series = series, listener = listener, state = state)
+                }
+
+                3 -> {
+                    SearchResultText(noOfResults = artists.itemCount)
+                    ArtistsTabContent(artist = artists, listener = listener, state = state)
+                }
             }
         }
     }
