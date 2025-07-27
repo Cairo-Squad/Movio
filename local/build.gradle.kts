@@ -52,37 +52,22 @@ android {
 }
 
 dependencies {
-    //Project Module
     implementation(projects.repository)
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.junit.ktx)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
 
-    // Room
-    implementation(libs.androidx.room.runtime)
+    implementation(libs.bundles.room)
     ksp(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.ktx)
 
-    //test
-    testImplementation(libs.mockk)
-    testImplementation(libs.truth)
-    testImplementation(libs.junit)
-    testImplementation(libs.kotlinx.coroutines.test)
-    androidTestImplementation(libs.androidx.junit)
-    testImplementation(libs.androidx.room.testing)
+    implementation(libs.androidx.junit.ktx)
+    testImplementation(libs.bundles.unittest)
+    testImplementation(libs.bundles.roomtest)
     testImplementation(libs.androidx.core.testing)
-    androidTestImplementation(libs.androidx.room.testing)
-    androidTestImplementation(libs.androidx.runner)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+
+    androidTestImplementation(libs.bundles.androidtest)
+    androidTestImplementation(libs.bundles.roomtest)
     androidTestImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.core.testing)
     androidTestImplementation(libs.mockk)
     androidTestImplementation(libs.truth)
-
-
-    implementation(project(":repository"))
-    testImplementation(kotlin("test"))
 }

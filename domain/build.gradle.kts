@@ -13,14 +13,7 @@ kotlin {
     }
 }
 dependencies {
-    // Project Module
     api(projects.entity)
 
-    //test
-    testImplementation(kotlin("test"))
-    testImplementation(libs.junit.jupiter)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.junit)
-    testImplementation(libs.mockk)
-    testImplementation(libs.truth)
+    testImplementation(libs.bundles.unittest)
 }

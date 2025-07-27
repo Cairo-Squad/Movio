@@ -149,94 +149,70 @@ tensorflow-lite = { module = "org.tensorflow:tensorflow-lite", version.ref = "te
 tensorflow-lite-task-vision = { module = "org.tensorflow:tensorflow-lite-task-vision", version.ref = "tensorflowLiteTaskVision" }
 
 [bundles]
-androidx-core = [
+
+androidcore = [
     "androidx-core-ktx",
     "androidx-appcompat",
-    "androidx-activity-compose",
-    "androidx-lifecycle-runtime-ktx",
-    "androidx-lifecycle-viewmodel-ktx",
-    "androidx-lifecycle-viewmodel-compose",
-    "androidx-constraintlayout-compose"
+    "androidx-lifecycle-runtime-ktx"
 ]
 
-compose = [
+composeUi = [
     "androidx-ui",
-    "androidx-ui-tooling",
+    "androidx-ui-graphics",
     "androidx-ui-tooling-preview",
-    "androidx-ui-test-manifest",
-    "androidx-ui-test-junit4",
-    "androidx-material3",
-    "androidx-runtime",
     "androidx-foundation",
     "androidx-foundation-layout-android",
-    "accompanist-webview",
-    "androidx-constraintlayout-compose",
-    "navigation-compose",
-    "lottie-compose"
+    "androidx-activity-compose"
 ]
 
+composeMaterial3=[
+    "androidx-material3"
+]
+composedebug = [
+    "androidx-ui-tooling",
+    "androidx-ui-test-manifest"
+]
 
 room = [
     "androidx-room-runtime",
-    "androidx-room-ktx",
-    "androidx-room-compiler",
+    "androidx-room-ktx"
+]
+
+roomtest = [
     "androidx-room-testing"
 ]
 
-paging = [
-    "androidx-paging-runtime",
-    "androidx-paging-testing",
-    "paging-compose"
-]
-
-koin = [
-    "koin-android",
-    "koin-androidx-compose",
-    "koin-test",
-    "koin-annotations",
-    "koin-ksp"
-]
-
 firebase = [
-    "firebase-bom",
     "firebase-analytics",
     "firebase-crashlytics",
     "firebase-perf"
 ]
 
 network = [
-    "okhttp",
     "retrofit",
-    "logging-interceptor",
-    "mockwebserver",
-    "converter-kotlinx-serialization"
+    "converter-kotlinx-serialization",
+    "okhttp",
+    "logging-interceptor"
 ]
 
-kotlinx = [
-    "kotlinx-coroutines-core",
-    "kotlinx-coroutines-test",
-    "kotlinx-serialization-json"
+koin = [
+    "koin-android",
+    "koin-androidx-compose",
+    "koin-annotations"
 ]
 
-testing = [
+unittest = [
     "junit",
     "junit-jupiter",
-    "androidx-junit",
-    "androidx-junit-ktx",
-    "androidx-espresso-core",
-    "androidx-runner",
-    "androidx-core-testing",
-    "truth",
     "mockk",
-    "turbine"
+    "truth",
+    "kotlinx-coroutines-test"
 ]
 
-media = [
-    "coil-network-okhttp",
-    "coil-compose",
-    "lottie-compose",
-    "tensorflow-lite",
-    "tensorflow-lite-task-vision"
+androidtest = [
+    "androidx-junit",
+    "androidx-espresso-core",
+    "androidx-runner"
 ]
 
 [plugins]

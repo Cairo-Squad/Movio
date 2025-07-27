@@ -45,33 +45,22 @@ android {
     }
 }
 dependencies {
-    // Project Module
     implementation(projects.domain)
 
-    // Core and Lifecycle
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
-    // AndroidX Paging
     api(libs.androidx.paging.runtime)
     api(libs.paging.compose)
 
-    // Unit Testing
-    testImplementation(kotlin("test"))
-    testImplementation(libs.junit)
-    testImplementation(libs.junit.jupiter)
-    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.bundles.unittest)
     testImplementation(libs.androidx.core.testing)
     testImplementation(libs.androidx.paging.testing)
     testImplementation(libs.turbine)
-    testImplementation(libs.truth)
-    testImplementation(libs.mockk)
 
-    // Android Testing
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.truth)
+    androidTestImplementation(libs.bundles.androidtest)
     androidTestImplementation(libs.mockk)
 }

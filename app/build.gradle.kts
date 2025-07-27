@@ -92,7 +92,6 @@ ksp {
 }
 
 dependencies {
-    // Project Modules
     implementation(projects.designSystem)
     implementation(projects.domain)
     implementation(projects.entity)
@@ -102,45 +101,24 @@ dependencies {
     implementation(projects.ui)
     implementation(projects.viewmodel)
 
-    // AndroidX Compose
+    implementation(libs.bundles.androidcore)
+
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.foundation)
-    implementation(libs.androidx.foundation.layout.android)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.ui.tooling.preview)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.bundles.composeUi)
+    implementation(libs.bundles.composeMaterial3)
+    debugImplementation(libs.bundles.composedebug)
 
-    // Core and Lifecycle
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-
-    // Firebase
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics)
-    implementation(libs.firebase.crashlytics)
-    implementation(libs.firebase.perf)
+    implementation(libs.bundles.firebase)
 
-    // Dependency Injection
-    implementation(libs.koin.android)
-    implementation(libs.koin.androidx.compose)
-    implementation(libs.koin.annotations)
+    implementation(libs.bundles.koin)
     implementation(libs.koin.test)
     ksp(libs.koin.ksp)
 
-    // Retrofit and Networking
-    implementation(libs.retrofit)
-    implementation(libs.converter.kotlinx.serialization)
-    implementation(libs.okhttp)
-    implementation(libs.logging.interceptor)
+    implementation(libs.bundles.network)
 
-    // Serialization
     implementation(libs.kotlinx.serialization.json)
 
-    // Room Database
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
+    implementation(libs.bundles.room)
     ksp(libs.androidx.room.compiler)
 }

@@ -40,23 +40,13 @@ android {
 }
 
 dependencies {
-    // Project Modules
     implementation(projects.domain)
+
     implementation(libs.kotlinx.serialization.json)
 
-    // Room
-    implementation(libs.androidx.room.runtime)
+    implementation(libs.bundles.room)
     ksp(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.ktx)
     implementation(libs.kotlinx.coroutines.core)
 
-    //test
-    testImplementation(kotlin("test"))
-    testImplementation(libs.junit)
-    testImplementation(libs.junit.jupiter)
-    testImplementation(libs.mockk)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.truth)
-
-
+    testImplementation(libs.bundles.unittest)
 }

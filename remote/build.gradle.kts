@@ -62,29 +62,17 @@ android {
     }
 }
 dependencies {
-    // Project Module
     implementation(projects.repository)
 
-    // AndroidX Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.runtime)
 
-    // Serialization
     implementation(libs.kotlinx.serialization.json)
 
-    // Retrofit and Networking
-    implementation(libs.retrofit)
-    implementation(libs.converter.kotlinx.serialization)
-    implementation(libs.okhttp)
-    implementation(libs.logging.interceptor)
+    implementation(libs.bundles.network)
 
-    // Testing
-    testImplementation(kotlin("test"))
-    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.bundles.unittest)
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${libs.versions.junitJupiter.get()}")
     testImplementation(libs.mockwebserver)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.truth)
     testImplementation(libs.koin.test)
-    testImplementation(libs.mockk)
 }
