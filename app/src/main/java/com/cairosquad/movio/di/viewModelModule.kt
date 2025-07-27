@@ -22,61 +22,68 @@ import org.koin.dsl.module
 
 
 val viewModelModule = module {
-    viewModelOf(::SearchViewModel)
-    viewModelOf(::ForYouViewModel)
-    viewModel { (seriesId: Long, seasonNumber: Int) ->
-        EpisodesDetailsViewModel(
-            seriesDetailsUseCase = get(),
-            seriesId = seriesId,
-            seasonNumber = seasonNumber
-        )
-    }
-    viewModelOf(::SimilarMoviesViewModel)
-    viewModel { (movieId: Long) ->
-        MovieViewModel(movieId = movieId, movieUseCase = get())
-    }
+	viewModelOf(::SearchViewModel)
+	viewModelOf(::ForYouViewModel)
+	viewModel { (seriesId: Long, seasonNumber: Int) ->
+		EpisodesDetailsViewModel(
+				seriesDetailsUseCase = get(),
+				seriesId = seriesId,
+				seasonNumber = seasonNumber
+		)
+	}
+	viewModelOf(::SimilarMoviesViewModel)
+	viewModel { (movieId: Long) ->
+		MovieViewModel(movieId = movieId, movieUseCase = get())
+	}
 
-    viewModel { (seriesId: Long) ->
-        SeriesDetailsViewModel(seriesDetailsUseCase = get(), seriesId = seriesId)
-    }
-    viewModel { (mediaId: Long, isMovie: Boolean) ->
-        TopCastViewModel(
-            mediaId = mediaId,
-            isMovie = isMovie,
-            getMovieDetailsUseCase = get(),
-            getSeriesDetailsUseCase = get()
-        )
-    }
+	viewModel { (seriesId: Long) ->
+		SeriesDetailsViewModel(
+			seriesDetailsUseCase = get(),
+			loginUseCase = get(),
+			seriesId = seriesId
+		)
+	}
+	viewModel { (mediaId: Long, isMovie: Boolean) ->
+		TopCastViewModel(
+			mediaId = mediaId,
+			isMovie = isMovie,
+			getMovieDetailsUseCase = get(),
+			getSeriesDetailsUseCase = get()
+		)
+	}
 
-    viewModel { (mediaId: Long, isMovie: Boolean) ->
-        ReviewsViewModel(
-            mediaId = mediaId,
-            isMovie = isMovie,
-            getMovieDetailsUseCase = get(),
-            getSeriesDetailsUseCase = get()
-        )
-    }
+	viewModel { (mediaId: Long, isMovie: Boolean) ->
+		ReviewsViewModel(
+			mediaId = mediaId,
+			isMovie = isMovie,
+			getMovieDetailsUseCase = get(),
+			getSeriesDetailsUseCase = get()
+		)
+	}
 
-    viewModel { (artistId: Long) ->
-        ArtistViewModel(getArtistDetailsUseCase = get(), artistId = artistId)
-    }
+	viewModel { (artistId: Long) ->
+		ArtistViewModel(getArtistDetailsUseCase = get(), artistId = artistId)
+	}
 
-    viewModel { (seriesId: Long) ->
-        SeriesDetailsViewModel(seriesDetailsUseCase = get(), seriesId = seriesId)
-    }
+	viewModel { (seriesId: Long) ->
+		SeriesDetailsViewModel(
+			seriesDetailsUseCase = get(),
+			loginUseCase = get(),
+			seriesId = seriesId
+		)
+	}
 
-    viewModel { (seriesId: Long) ->
-        SeasonsViewModel(
-            seriesDetailsUseCase = get(),
-            seriesId = seriesId,
-        )
-    }
+	viewModel { (seriesId: Long) ->
+		SeasonsViewModel(
+				seriesDetailsUseCase = get(),
+				seriesId = seriesId,
+		)
+	}
 
-    viewModelOf(::SimilarSeriesViewModel)
-    viewModelOf(::LoginViewModel)
-    viewModelOf(::HomeViewModel)
-    viewModelOf(::SeeAllViewModel)
+	viewModelOf(::SimilarSeriesViewModel)
+	viewModelOf(::LoginViewModel)
+	viewModelOf(::HomeViewModel)
+	viewModelOf(::SeeAllViewModel)
 
-
-    singleOf(::AuthGate)
+	singleOf(::AuthGate)
 }

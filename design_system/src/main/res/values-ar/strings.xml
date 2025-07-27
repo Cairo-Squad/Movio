@@ -21,7 +21,7 @@
     <string name="similar_movies">أفلام مشابهة</string>
     <string name="artists">فنانون</string>
     <string name="library">المكتبة</string>
-    <string name="more">المزيد</string>
+    <string name="more">…المزيد</string>
     <string name="icon">ايقونة</string>
     <string name="movie_poster">بوستر العرض</string>
     <string name="artist_image">صورة الفنان</string>
@@ -67,7 +67,7 @@
     <string name="reviews">المراجعات</string>
     <string name="similar_series">المسلسلات مشابهة</string>
     <string name="known_for">معروف بالتالي</string>
-    <string name="less">أقل</string>
+    <string name="less">…أقل</string>
     <string name="read_less">اقرأأقل</string>
     <string name="read_more">اقرأأكثر</string>
     <string name="top_cast">أفضل الممثلين</string>
