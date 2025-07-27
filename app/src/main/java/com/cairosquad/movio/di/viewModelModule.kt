@@ -20,15 +20,14 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
-
 val viewModelModule = module {
 	viewModelOf(::SearchViewModel)
 	viewModelOf(::ForYouViewModel)
 	viewModel { (seriesId: Long, seasonNumber: Int) ->
 		EpisodesDetailsViewModel(
-				seriesDetailsUseCase = get(),
-				seriesId = seriesId,
-				seasonNumber = seasonNumber
+			seriesDetailsUseCase = get(),
+			seriesId = seriesId,
+			seasonNumber = seasonNumber
 		)
 	}
 	viewModelOf(::SimilarMoviesViewModel)
@@ -75,8 +74,8 @@ val viewModelModule = module {
 
 	viewModel { (seriesId: Long) ->
 		SeasonsViewModel(
-				seriesDetailsUseCase = get(),
-				seriesId = seriesId,
+			seriesDetailsUseCase = get(),
+			seriesId = seriesId,
 		)
 	}
 
