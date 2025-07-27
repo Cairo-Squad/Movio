@@ -7,6 +7,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kover)
+    alias(libs.plugins.ksp)
+    id("org.jetbrains.kotlin.kapt")
 }
 android {
     namespace = "com.cairosquad.remote"
@@ -88,6 +90,10 @@ dependencies {
     testImplementation(libs.koin.test)
     testImplementation(libs.mockk)
     implementation(libs.logging.interceptor)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
 
     implementation(project(":repository"))
 }

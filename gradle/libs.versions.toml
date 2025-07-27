@@ -63,8 +63,6 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
 androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
 androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltCompilerVersion" }
-androidx-hilt-lifecycle-viewmodel = { module = "androidx.hilt:hilt-lifecycle-viewmodel", version.ref = "hiltLifecycleViewmodel" }
-androidx-hilt-navigation-fragment = { module = "androidx.hilt:hilt-navigation-fragment", version.ref = "hiltCompilerVersion" }
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging_version" }
 androidx-paging-testing = { module = "androidx.paging:paging-testing", version.ref = "paging_version" }
 androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "roomTesting" }

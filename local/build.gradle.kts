@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
+    id("org.jetbrains.kotlin.kapt")
     id("androidx.room") version "2.7.1"
 }
 
@@ -78,6 +79,10 @@ dependencies {
     androidTestImplementation(libs.androidx.core.testing)
     androidTestImplementation(libs.mockk)
     androidTestImplementation(libs.truth)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
 
 
     implementation(project(":repository"))
