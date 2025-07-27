@@ -38,11 +38,11 @@ class GetMoreRecommendedMoviesUseCaseTest {
     fun testReturnsMoviesWhenCategoryIdIsNull() = runTest {
         val page = 2
         val categoryId: String? = null
-        coEvery { moviesRepository.getMoreRecommendedMovies(page, categoryId) } returns expectedMoviesNoCategory
+        coEvery { moviesRepository.getMoreRecommendedMovies(page, categoryId) } returns expectedMoviesNoGenre
 
         val result = useCase.getMoreRecommendedMovies(page, categoryId)
 
-        assertEquals(expectedMoviesNoCategory, result)
+        assertEquals(expectedMoviesNoGenre, result)
         coVerify { moviesRepository.getMoreRecommendedMovies(page, categoryId) }
     }
 
@@ -88,7 +88,7 @@ class GetMoreRecommendedMoviesUseCaseTest {
             )
         )
 
-        val expectedMoviesNoCategory = listOf(
+        val expectedMoviesNoGenre = listOf(
             Movie(
                 id = 3,
                 title = "General Movie",

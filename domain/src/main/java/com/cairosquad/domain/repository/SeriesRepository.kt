@@ -21,25 +21,25 @@ interface SeriesRepository {
 
     suspend fun getSeriesTopCast(seriesId: Long, page: Int): List<Artist>
 
-    suspend fun getTopRatingSeries(page: Int,categoryId : String?): List<Series>
+    suspend fun getTopRatingSeries(page: Int, genreId: Long?): List<Series>
 
-    suspend fun getMoreRecommendedSeries(page: Int,categoryId : String?): List<Series>
+    suspend fun getMoreRecommendedSeries(page: Int, genreId: Long?): List<Series>
 
-    suspend fun getOnTvSeries(page: Int,categoryId : String?): List<Series>
+    suspend fun getOnTvSeries(page: Int, genreId: Long?): List<Series>
 
-    suspend fun getAiringTodaySeries(page: Int,categoryId : String?): List<Series>
+    suspend fun getAiringTodaySeries(page: Int, genreId: Long?): List<Series>
 
-    suspend fun getTrendingSeries(page: Int,categoryId : String?): List<Series>
+    suspend fun getTrendingSeries(page: Int, genreId: Long?): List<Series>
 
-    suspend fun getFreeToWatchSeries(page: Int,categoryId : String?): List<Series>
+    suspend fun getFreeToWatchSeries(page: Int, genreId: Long?): List<Series>
 
-    suspend fun getSeriesByCategory(genreId: String, page: Int): List<Series>
+    suspend fun getSeriesByCategory(genreId: Long, page: Int): List<Series>
 
     suspend fun getSeriesGenres(): List<Genre>
 
-    suspend fun getPopularSeries(page: Int,categoryId : String?): List<Series>
+    suspend fun getPopularSeries(page: Int, genreId: Long?): List<Series>
 
-    suspend fun getAllSeries(page: Int,categoryId : String?,sortType: SortType?): List<Series>
+    suspend fun getAllSeries(page: Int, genreId: Long?, sortType: SortType?): List<Series>
 
     suspend fun getSeriesByQuery(query: String, page: Int): List<Series>
 }

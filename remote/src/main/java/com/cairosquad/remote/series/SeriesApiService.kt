@@ -57,7 +57,7 @@ interface SeriesApiService {
     @GET("discover/tv")
     suspend fun getTopRatingSeries(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String? = null,
+        @Query("with_genres") withGenres: Long? = null,
         @Query("sort_by") sortBy: String = "vote_average.desc",
         @Query("vote_count.gte") voteCountGte: Int = 200,
         @Query("include_adult") includeAdult: Boolean = false,
@@ -67,7 +67,7 @@ interface SeriesApiService {
     @GET("discover/tv")
     suspend fun getOnTvSeries(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String? = null,
+        @Query("with_genres") withGenres: Long? = null,
         @Query("sort_by") sortBy: String = "popularity.desc",
         @Query("air_date.gte") minDate: String? = null,
         @Query("air_date.lte") maxDate: String? = null,
@@ -78,7 +78,7 @@ interface SeriesApiService {
     @GET("discover/tv")
     suspend fun getAiringTodaySeries(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String? = null,
+        @Query("with_genres") withGenres: Long? = null,
         @Query("sort_by") sortBy: String = "popularity.desc",
         @Query("air_date.gte") minDate: String? = null,
         @Query("air_date.lte") maxDate: String? = null,
@@ -90,7 +90,7 @@ interface SeriesApiService {
     @GET("discover/tv")
     suspend fun getTrendingSeries(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String? = null,
+        @Query("with_genres") withGenres: Long? = null,
         @Query("sort_by") sortBy: String = "popularity.desc",
         @Query("vote_count.gte") voteCountGte: Int = 50,
         @Query("air_date.gte") minDate: String? = null,
@@ -103,19 +103,19 @@ interface SeriesApiService {
     suspend fun getMoreRecommendedSeries(
         @Query("page") page: Int,
         @Query("sort_by") sortBy: String = "vote_count.desc",
-        @Query("with_genres") withGenres: String? = null
+        @Query("with_genres") withGenres: Long? = null
     ): ResultResponse<SeriesRemoteDto>
 
     @GET("discover/tv")
     suspend fun getFreeToWatchSeries(
         @Query("page") page: Int,
         @Query("with_watch_providers") free: String = "free", // TODO: find better way
-        @Query("with_genres") withGenres: String? = null
+        @Query("with_genres") withGenres: Long? = null
     ): ResultResponse<SeriesRemoteDto>
 
     @GET("discover/tv")
     suspend fun getSeriesByCategory(
-        @Query("with_genres") categoryId: String,
+        @Query("with_genres") genreId: Long,
         @Query("page") page: Int,
     ): ResultResponse<SeriesRemoteDto>
 
@@ -126,13 +126,13 @@ interface SeriesApiService {
     @GET("tv/popular")
     suspend fun getPopularSeries(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String? = null
+        @Query("with_genres") withGenres: Long? = null
     ): ResultResponse<SeriesRemoteDto>
 
     @GET("discover/tv")
     suspend fun getAllSeries(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String? = null,
+        @Query("with_genres") withGenres: Long? = null,
         @Query("sort_by") sortBy: String? = null
     ): ResultResponse<SeriesRemoteDto>
 

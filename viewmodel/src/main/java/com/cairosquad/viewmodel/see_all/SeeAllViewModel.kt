@@ -102,13 +102,13 @@ class SeeAllViewModel(
                 { page, genreId ->
                     manageMoviesUseCase.getTopRatingMovies(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 },
                 { page, genreId ->
                     manageSeriesUseCase.getTopRatingSeries(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 }
             )
@@ -117,13 +117,13 @@ class SeeAllViewModel(
                 { page, genreId ->
                     manageMoviesUseCase.getTrendingMovies(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 },
                 { page, genreId ->
                     manageSeriesUseCase.getTrendingSeries(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 }
             )
@@ -132,7 +132,7 @@ class SeeAllViewModel(
                 { page, genreId ->
                     manageMoviesUseCase.getFreeToWatchMovies(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 },
                 { _, _ -> emptyList() }
@@ -142,7 +142,7 @@ class SeeAllViewModel(
                 { page, genreId ->
                     manageMoviesUseCase.getUpcomingMovies(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 },
                 { _, _ -> emptyList() }
@@ -152,7 +152,7 @@ class SeeAllViewModel(
                 { page, genreId ->
                     manageMoviesUseCase.getNowPlayingMovies(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 },
                 { _, _ -> emptyList() }
@@ -162,13 +162,13 @@ class SeeAllViewModel(
                 { page, genreId ->
                     manageMoviesUseCase.getMoreRecommendedMovies(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 },
                 { page, genreId ->
                     manageSeriesUseCase.getMoreRecommendedSeries(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 }
             )
@@ -178,14 +178,14 @@ class SeeAllViewModel(
                 { page, genreId ->
                     manageSeriesUseCase.getAiringTodaySeries(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 }
             )
 
             MediaContentType.ON_TV -> Pair(
                 { _, _ -> emptyList() },
-                { page, genreId -> manageSeriesUseCase.getOnTvSeries(page, genreId?.toString()) }
+                { page, genreId -> manageSeriesUseCase.getOnTvSeries(page, genreId) }
             )
         }
     }

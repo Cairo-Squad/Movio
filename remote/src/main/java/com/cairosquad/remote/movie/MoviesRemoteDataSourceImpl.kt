@@ -32,8 +32,8 @@ class MoviesRemoteDataSourceImpl(
             .cast?.filterNotNull().orEmpty()
     }
 
-    override suspend fun getTopRatingMovies(page: Int,categoryId: String?): List<MovieRemoteDto> {
-        return safeCallApi { apiService.getTopRatingMovies(page,categoryId) }
+    override suspend fun getTopRatingMovies(page: Int, genreId: Long?): List<MovieRemoteDto> {
+        return safeCallApi { apiService.getTopRatingMovies(page, genreId) }
             .results?.filterNotNull().orEmpty()
     }
 
@@ -41,47 +41,63 @@ class MoviesRemoteDataSourceImpl(
         return safeCallApi { apiService.getVideoKey(movieId).getVideoKey() ?: "" }
     }
 
-    override suspend fun getUpcomingMovies(page: Int,categoryId: String?): List<MovieRemoteDto> {
+    override suspend fun getUpcomingMovies(page: Int, genreId: Long?): List<MovieRemoteDto> {
         val today = LocalDate.now()
         val thirtyDaysFromNow = today.plusDays(30)
-        return safeCallApi { apiService.getUpcomingMovies(page,categoryId,
-            minDate = today.toString(), maxDate = thirtyDaysFromNow.toString()
-        ) }
+        return safeCallApi {
+            apiService.getUpcomingMovies(
+                page, genreId,
+                minDate = today.toString(), maxDate = thirtyDaysFromNow.toString()
+            )
+        }
             .results?.filterNotNull().orEmpty()
     }
 
-    override suspend fun getNowPlayingMovies(page: Int,categoryId: String?): List<MovieRemoteDto> {
+    override suspend fun getNowPlayingMovies(page: Int, genreId: Long?): List<MovieRemoteDto> {
         val today = LocalDate.now()
         val twoWeeksAgo = today.minusWeeks(2)
-        return safeCallApi { apiService.getNowPlayingMovies(page,categoryId,
-            minDate = twoWeeksAgo.toString(), maxDate = today.toString()) }
+        return safeCallApi {
+            apiService.getNowPlayingMovies(
+                page, genreId,
+                minDate = twoWeeksAgo.toString(), maxDate = today.toString()
+            )
+        }
             .results?.filterNotNull().orEmpty()
     }
 
-    override suspend fun getTrendingMovies(page: Int,categoryId: String?): List<MovieRemoteDto> {
+    override suspend fun getTrendingMovies(page: Int, genreId: Long?): List<MovieRemoteDto> {
         val today = LocalDate.now()
         val lastMonth = today.minusDays(30)
-        return safeCallApi { apiService.getTrendingMovies(page,categoryId,
-            minDate = lastMonth.toString(), maxDate = today.toString()
-            ) }
+        return safeCallApi {
+            apiService.getTrendingMovies(
+                page, genreId,
+                minDate = lastMonth.toString(), maxDate = today.toString()
+            )
+        }
             .results?.filterNotNull().orEmpty()
     }
 
-    override suspend fun getMoreRecommendedMovies(page: Int,categoryId: String?): List<MovieRemoteDto> {
-        return safeCallApi { apiService.getMoreRecommendedMovies(page, withGenres = categoryId) }
+    override suspend fun getMoreRecommendedMovies(
+        page: Int,
+        genreId: Long?
+    ): List<MovieRemoteDto> {
+        return safeCallApi { apiService.getMoreRecommendedMovies(page, withGenres = genreId) }
             .results?.filterNotNull().orEmpty()
     }
 
-    override suspend fun getFreeToWatchMovies(page: Int,categoryId: String?): List<MovieRemoteDto> {
-        return safeCallApi { apiService.getFreeToWatchMovies(page,categoryId) }
+    override suspend fun getFreeToWatchMovies(
+        page: Int,
+        genreId: Long?
+    ): List<MovieRemoteDto> {
+        return safeCallApi { apiService.getFreeToWatchMovies(page, genreId) }
             .results?.filterNotNull().orEmpty()
     }
 
     override suspend fun getMoviesByCategory(
-        categoryId: String,
+        genreId: Long,
         page: Int
     ): List<MovieRemoteDto> {
-        return safeCallApi { apiService.getMoviesByCategory(categoryId, page) }
+        return safeCallApi { apiService.getMoviesByGenre(genreId, page) }
             .results?.filterNotNull().orEmpty()
     }
 
@@ -95,13 +111,17 @@ class MoviesRemoteDataSourceImpl(
             .genres?.filterNotNull().orEmpty()
     }
 
-    override suspend fun getPopularMovies(page: Int,categoryId: String?): List<MovieRemoteDto> {
-        return safeCallApi { apiService.getPopularMovies(page,categoryId) }
+    override suspend fun getPopularMovies(page: Int, genreId: Long?): List<MovieRemoteDto> {
+        return safeCallApi { apiService.getPopularMovies(page, genreId) }
             .results?.filterNotNull().orEmpty()
     }
 
-    override suspend fun getAllMovies(page: Int,categoryId: String?,sortBy : String?): List<MovieRemoteDto> {
-        return safeCallApi { apiService.getAllMovies(page,categoryId,sortBy) }
+    override suspend fun getAllMovies(
+        page: Int,
+        genreId: Long?,
+        sortBy: String?
+    ): List<MovieRemoteDto> {
+        return safeCallApi { apiService.getAllMovies(page, genreId, sortBy) }
             .results?.filterNotNull().orEmpty()
     }
 

@@ -41,11 +41,11 @@ class HomeViewModel(
                 Pair(
                     manageMoviesUseCase.getTopRatingMovies(
                         page = 1,
-                        categoryId = genreId?.toString()
+                        genreId = genreId
                     ),
                     manageSeriesUseCase.getTopRatingSeries(
                         page = 1,
-                        categoryId = genreId?.toString()
+                        genreId = genreId
                     ),
                 )
             }
@@ -54,11 +54,11 @@ class HomeViewModel(
                 Pair(
                     manageMoviesUseCase.getTrendingMovies(
                         page = 1,
-                        categoryId = genreId?.toString()
+                        genreId = genreId
                     ),
                     manageSeriesUseCase.getTrendingSeries(
                         page = 1,
-                        categoryId = genreId?.toString()
+                        genreId = genreId
                     ),
                 )
             }
@@ -67,7 +67,7 @@ class HomeViewModel(
                 Pair(
                     manageMoviesUseCase.getFreeToWatchMovies(
                         page = 1,
-                        categoryId = genreId?.toString()
+                        genreId = genreId
                     ),
                     emptyList()
                 )
@@ -77,9 +77,12 @@ class HomeViewModel(
                 Pair(
                     manageMoviesUseCase.getUpcomingMovies(
                         page = 1,
-                        categoryId = genreId?.toString()
+                        genreId = genreId
                     ),
-                    emptyList()
+                    manageSeriesUseCase.getFreeToWatchSeries(
+                        page = 1,
+                        genreId = genreId
+                    )
                 )
             }
 
@@ -87,7 +90,7 @@ class HomeViewModel(
                 Pair(
                     manageMoviesUseCase.getNowPlayingMovies(
                         page = 1,
-                        categoryId = genreId?.toString()
+                        genreId = genreId
                     ),
                     emptyList(),
                 )
@@ -97,11 +100,11 @@ class HomeViewModel(
                 Pair(
                     manageMoviesUseCase.getMoreRecommendedMovies(
                         page = 1,
-                        categoryId = genreId?.toString()
+                        genreId = genreId
                     ),
                     manageSeriesUseCase.getMoreRecommendedSeries(
                         page = 1,
-                        categoryId = genreId?.toString()
+                        genreId = genreId
                     ),
                 )
             }
@@ -111,7 +114,7 @@ class HomeViewModel(
                     emptyList(),
                     manageSeriesUseCase.getAiringTodaySeries(
                         page = 1,
-                        categoryId = genreId?.toString()
+                        genreId = genreId
                     ),
                 )
             }
@@ -119,7 +122,7 @@ class HomeViewModel(
             MediaContentType.ON_TV -> {
                 Pair(
                     emptyList(),
-                    manageSeriesUseCase.getOnTvSeries(page = 1, categoryId = genreId?.toString()),
+                    manageSeriesUseCase.getOnTvSeries(page = 1, genreId = genreId),
                 )
             }
         }
@@ -136,11 +139,11 @@ class HomeViewModel(
     private suspend fun fetchPopularMediaBlock(genreId: Long? = null): Pair<List<Movie>, List<Series>> {
         val series = manageSeriesUseCase.getPopularSeries(
             page = 1,
-            categoryId = genreId?.toString()
+            genreId = genreId
         )
         val movies = manageMoviesUseCase.getPopularMovies(
             page = 1,
-            categoryId = genreId?.toString()
+            genreId = genreId
         )
         return Pair(movies, series)
     }
@@ -225,8 +228,8 @@ class HomeViewModel(
         tryToCall(
             block = {
                 Pair(
-                    manageMoviesUseCase.getAllMovies(page = 1, genreId = genreId?.toString()),
-                    manageSeriesUseCase.getAllSeries(page = 1, genreId = genreId?.toString())
+                    manageMoviesUseCase.getAllMovies(page = 1, genreId = genreId),
+                    manageSeriesUseCase.getAllSeries(page = 1, genreId = genreId)
                 )
             },
             onSuccess = { (movies, series) ->
@@ -253,23 +256,23 @@ class HomeViewModel(
             block = { when (screenState.value.selectedSortingType) {
                 HomeScreenState.SortingType.ALL -> {
                      Pair(
-                        manageMoviesUseCase.getAllMovies(page = 1, genreId = genre.id?.toString()),
-                        manageSeriesUseCase.getAllSeries(page = 1, genreId = genre.id?.toString())
+                        manageMoviesUseCase.getAllMovies(page = 1, genreId = genre.id),
+                        manageSeriesUseCase.getAllSeries(page = 1, genreId = genre.id)
                     )
                 }
                 HomeScreenState.SortingType.POPULARITY -> {
                     Pair(
-                        manageMoviesUseCase.getAllMovies(page = 1, genreId = genre.id?.toString(),
+                        manageMoviesUseCase.getAllMovies(page = 1, genreId = genre.id,
                             SortType.POPULAR),
-                        manageSeriesUseCase.getAllSeries(page = 1, genreId = genre.id?.toString(),
+                        manageSeriesUseCase.getAllSeries(page = 1, genreId = genre.id,
                             SortType.POPULAR)
                     )
                 }
                 HomeScreenState.SortingType.LATEST -> {
                     Pair(
-                        manageMoviesUseCase.getAllMovies(page = 1, genreId = genre.id?.toString(),
+                        manageMoviesUseCase.getAllMovies(page = 1, genreId = genre.id,
                             SortType.LATEST),
-                        manageSeriesUseCase.getAllSeries(page = 1, genreId = genre.id?.toString(),
+                        manageSeriesUseCase.getAllSeries(page = 1, genreId = genre.id,
                             SortType.LATEST)
                     )
                 }

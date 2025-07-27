@@ -279,7 +279,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `should update selected tab and fetch media by category when CATEGORIES tab is selected`() = runTest {
+    fun `should update selected tab and fetch media by genre when CATEGORIES tab is selected`() = runTest {
         // Given
         val movies = listOf(movie1)
         val series = listOf(series1)
@@ -297,7 +297,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `should update selected genre and fetch media by category when genre is selected`() = runTest {
+    fun `should update selected genre and fetch media by genre when genre is selected`() = runTest {
         // Given
         val genreId = 1L
         val movies = listOf(movie1)

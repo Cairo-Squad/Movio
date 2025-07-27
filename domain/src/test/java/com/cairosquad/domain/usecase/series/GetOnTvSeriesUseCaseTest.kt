@@ -22,49 +22,49 @@ class GetOnTvSeriesUseCaseTest {
     }
 
     @Test
-    fun testReturnsOnTvSeriesWithCategory() = runTest {
+    fun testReturnsOnTvSeriesWithGenre() = runTest {
         val page = 1
-        val categoryId = "10766"
+        val genreId = "10766"
 
-        coEvery { seriesRepository.getOnTvSeries(page, categoryId) } returns expectedWithCategory
+        coEvery { seriesRepository.getOnTvSeries(page, genreId) } returns expectedWithGenre
 
-        val result = useCase.getOnTvSeries(page, categoryId)
+        val result = useCase.getOnTvSeries(page, genreId)
 
-        assertEquals(expectedWithCategory, result)
-        coVerify { seriesRepository.getOnTvSeries(page, categoryId) }
+        assertEquals(expectedWithGenre, result)
+        coVerify { seriesRepository.getOnTvSeries(page, genreId) }
     }
 
     @Test
-    fun testReturnsOnTvSeriesWithoutCategory() = runTest {
+    fun testReturnsOnTvSeriesWithoutGenre() = runTest {
         val page = 2
-        val categoryId: String? = null
+        val genreId: String? = null
 
-        coEvery { seriesRepository.getOnTvSeries(page, categoryId) } returns expectedWithoutCategory
+        coEvery { seriesRepository.getOnTvSeries(page, genreId) } returns expectedWithoutGenre
 
-        val result = useCase.getOnTvSeries(page, categoryId)
+        val result = useCase.getOnTvSeries(page, genreId)
 
-        assertEquals(expectedWithoutCategory, result)
-        coVerify { seriesRepository.getOnTvSeries(page, categoryId) }
+        assertEquals(expectedWithoutGenre, result)
+        coVerify { seriesRepository.getOnTvSeries(page, genreId) }
     }
 
     @Test
     fun testThrowsExceptionWhenRepositoryFails() = runTest {
         val page = 3
-        val categoryId = "99"
+        val genreId = "99"
         val exception = RuntimeException("Failed to fetch On TV series")
 
-        coEvery { seriesRepository.getOnTvSeries(page, categoryId) } throws exception
+        coEvery { seriesRepository.getOnTvSeries(page, genreId) } throws exception
 
         val thrown = assertFailsWith<RuntimeException> {
-            useCase.getOnTvSeries(page, categoryId)
+            useCase.getOnTvSeries(page, genreId)
         }
 
         assertEquals("Failed to fetch On TV series", thrown.message)
-        coVerify { seriesRepository.getOnTvSeries(page, categoryId) }
+        coVerify { seriesRepository.getOnTvSeries(page, genreId) }
     }
 
     companion object {
-        val expectedWithCategory = listOf(
+        val expectedWithGenre = listOf(
             Series(
                 id = 1000L,
                 title = "Daily Drama",
@@ -78,7 +78,7 @@ class GetOnTvSeriesUseCaseTest {
             )
         )
 
-        val expectedWithoutCategory = listOf(
+        val expectedWithoutGenre = listOf(
             Series(
                 id = 1001L,
                 title = "Prime Time Show",

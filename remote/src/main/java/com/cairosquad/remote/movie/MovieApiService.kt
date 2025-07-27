@@ -29,7 +29,7 @@ interface MovieApiService {
     suspend fun getSimilarMovies(
         @Path("movieId") movieId: Long,
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String? = null
+        @Query("with_genres") withGenres: Long? = null
     ): ResultResponse<MovieRemoteDto>
 
     @GET("movie/{movieId}/credits")
@@ -46,13 +46,13 @@ interface MovieApiService {
     @GET("discover/movie?sort_by=vote_average.desc&vote_count.gte=200&include_adult=false&include_video=false")
     suspend fun getTopRatingMovies(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String?,
+        @Query("with_genres") withGenres: Long?,
     ): ResultResponse<MovieRemoteDto>
 
     @GET("discover/movie?sort_by=popularity.desc&include_adult=false&include_video=false&with_release_type=2|3")
     suspend fun getUpcomingMovies(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String?,
+        @Query("with_genres") withGenres: Long?,
         @Query("release_date.gte") minDate: String?,
         @Query("release_date.lte") maxDate: String?,
     ): ResultResponse<MovieRemoteDto>
@@ -60,7 +60,7 @@ interface MovieApiService {
     @GET("discover/movie?sort_by=popularity.desc&include_adult=false&include_video=false&with_release_type=2|3")
     suspend fun getNowPlayingMovies(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String?,
+        @Query("with_genres") withGenres: Long?,
         @Query("release_date.gte") minDate: String?,
         @Query("release_date.lte") maxDate: String?,
     ): ResultResponse<MovieRemoteDto>
@@ -68,7 +68,7 @@ interface MovieApiService {
     @GET("discover/movie?sort_by=popularity.desc&include_adult=false&include_video=false&vote_count.gte=50")
     suspend fun getTrendingMovies(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String?,
+        @Query("with_genres") withGenres: Long?,
         @Query("release_date.lte") maxDate: String?,
         @Query("release_date.gte") minDate: String?,
     ): ResultResponse<MovieRemoteDto>
@@ -77,18 +77,18 @@ interface MovieApiService {
     @GET("discover/movie?sort_by=vote_count.desc")
     suspend fun getMoreRecommendedMovies(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String?,
+        @Query("with_genres") withGenres: Long?,
     ): ResultResponse<MovieRemoteDto>
 
     @GET("discover/movie?with_watch_providers=free")
     suspend fun getFreeToWatchMovies(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String?,
+        @Query("with_genres") withGenres: Long?,
     ): ResultResponse<MovieRemoteDto>
 
     @GET("discover/movie")
-    suspend fun getMoviesByCategory(
-        @Query("with_genres") categoryId: String,
+    suspend fun getMoviesByGenre(
+        @Query("with_genres") genreId: Long,
         @Query("page") page: Int,
     ): ResultResponse<MovieRemoteDto>
 
@@ -105,14 +105,14 @@ interface MovieApiService {
     @GET("movie/popular")
     suspend fun getPopularMovies(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String? = null,
+        @Query("with_genres") withGenres: Long? = null,
     ): ResultResponse<MovieRemoteDto>
 
 
     @GET("discover/movie")
     suspend fun getAllMovies(
         @Query("page") page: Int,
-        @Query("with_genres") withGenres: String? = null,
+        @Query("with_genres") withGenres: Long? = null,
         @Query("sort_by") sortBy: String? = null
     ): ResultResponse<MovieRemoteDto>
 

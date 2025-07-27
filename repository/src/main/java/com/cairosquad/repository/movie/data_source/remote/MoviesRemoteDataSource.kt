@@ -18,29 +18,29 @@ interface MoviesRemoteDataSource {
 
     suspend fun getVideoKey(movieId: Long): String
 
-    suspend fun getTopRatingMovies(page: Int,categoryId: String?): List<MovieRemoteDto>
+    suspend fun getTopRatingMovies(page: Int, genreId: Long?): List<MovieRemoteDto>
 
-    suspend fun getUpcomingMovies(page: Int,categoryId: String?): List<MovieRemoteDto>
+    suspend fun getUpcomingMovies(page: Int, genreId: Long?): List<MovieRemoteDto>
 
-    suspend fun getNowPlayingMovies(page: Int,categoryId: String?): List<MovieRemoteDto>
+    suspend fun getNowPlayingMovies(page: Int, genreId: Long?): List<MovieRemoteDto>
 
-    suspend fun getTrendingMovies(page: Int,categoryId: String?): List<MovieRemoteDto>
+    suspend fun getTrendingMovies(page: Int, genreId: Long?): List<MovieRemoteDto>
 
-    suspend fun getMoreRecommendedMovies(page: Int,categoryId: String?): List<MovieRemoteDto>
+    suspend fun getMoreRecommendedMovies(page: Int, genreId: Long?): List<MovieRemoteDto>
 
-    suspend fun getFreeToWatchMovies(page: Int,categoryId: String?): List<MovieRemoteDto>
+    suspend fun getFreeToWatchMovies(page: Int, genreId: Long?): List<MovieRemoteDto>
 
-    suspend fun getMoviesByCategory(categoryId: String, page: Int): List<MovieRemoteDto>
+    suspend fun getMoviesByCategory(genreId: Long, page: Int): List<MovieRemoteDto>
 
     suspend fun getMoviesByQuery(query: String, page: Int): List<MovieRemoteDto>
 
     suspend fun getMoviesGenres(): List<GenreDto>
 
-    suspend fun getPopularMovies(page: Int,categoryId: String?): List<MovieRemoteDto>
+    suspend fun getPopularMovies(page: Int, genreId: Long?): List<MovieRemoteDto>
 
-    suspend fun getAllMovies(page: Int,categoryId: String?,sortBy: String?) : List<MovieRemoteDto>
+    suspend fun getAllMovies(page: Int, genreId: Long?, sortBy: String?): List<MovieRemoteDto>
 
-    suspend fun getPersonalizedMovies(page : Int): List<MovieRemoteDto>
+    suspend fun getPersonalizedMovies(page: Int): List<MovieRemoteDto>
 
     suspend fun getSuggestedMovies(): List<MovieRemoteDto>
 }

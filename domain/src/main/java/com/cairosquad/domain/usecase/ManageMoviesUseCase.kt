@@ -12,26 +12,26 @@ class ManageMoviesUseCase(
     private val moviesRepository: MoviesRepository,
     private val searchRepository: SearchRepository,
 ) {
-    suspend fun getMoviesByQuery(query: String, page: Int ): List<Movie> {
-        return moviesRepository.getMoviesByQuery(query,page).also {
+    suspend fun getMoviesByQuery(query: String, page: Int): List<Movie> {
+        return moviesRepository.getMoviesByQuery(query, page).also {
             searchRepository.addQuery(query)
         }
     }
 
     suspend fun getAllMovies(
         page: Int,
-        genreId: String? = null,
+        genreId: Long? = null,
         sortType: SortType? = null
     ): List<Movie> {
         return moviesRepository.getAllMovies(page, genreId, sortType)
     }
 
-    suspend fun getFreeToWatchMovies(page : Int , categoryId: String? = null): List<Movie> {
-        return moviesRepository.getFreeToWatchMovies(page, categoryId)
+    suspend fun getFreeToWatchMovies(page: Int, genreId: Long? = null): List<Movie> {
+        return moviesRepository.getFreeToWatchMovies(page, genreId)
     }
 
-    suspend fun getMoreRecommendedMovies(page:Int, categoryId: String? = null ) : List<Movie>{
-        return moviesRepository.getMoreRecommendedMovies(page,categoryId)
+    suspend fun getMoreRecommendedMovies(page: Int, genreId: Long? = null): List<Movie> {
+        return moviesRepository.getMoreRecommendedMovies(page, genreId)
     }
 
     suspend fun getMovieById(movieId: Long): Movie {
@@ -50,40 +50,40 @@ class ManageMoviesUseCase(
         return moviesRepository.getMovieTopCast(movieId, page)
     }
 
-    suspend fun getMoviesByCategory( page : Int,categoryId : String): List<Movie> {
-        return moviesRepository.getMoviesByCategory(page,categoryId)
+    suspend fun getMoviesByCategory(page: Int, genreId: Long): List<Movie> {
+        return moviesRepository.getMoviesByCategory(page, genreId)
     }
 
-    suspend fun getMoviesGenres(): List<Genre>{
+    suspend fun getMoviesGenres(): List<Genre> {
         return moviesRepository.getMoviesGenres()
     }
 
-    suspend fun getNowPlayingMovies(page: Int, categoryId : String?  =null ) : List<Movie>{
-        return moviesRepository.getNowPlayingMovies(page,categoryId)
+    suspend fun getNowPlayingMovies(page: Int, genreId: Long? = null): List<Movie> {
+        return moviesRepository.getNowPlayingMovies(page, genreId)
     }
 
-    suspend fun getPersonalizedMovies(page : Int): List<Movie> {
+    suspend fun getPersonalizedMovies(page: Int): List<Movie> {
         return moviesRepository.getPersonalizedMovies(page)
     }
 
-    suspend fun getPopularMovies(page: Int, categoryId: String? = null) : List<Movie>{
-        return moviesRepository.getPopularMovies(page,categoryId)
+    suspend fun getPopularMovies(page: Int, genreId: Long? = null): List<Movie> {
+        return moviesRepository.getPopularMovies(page, genreId)
     }
 
     suspend fun getSuggestedMovies(): List<Movie> {
         return moviesRepository.getSuggestedMovies()
     }
 
-    suspend fun getTopRatingMovies(page: Int, categoryId: String? = null) : List<Movie>{
-        return moviesRepository.getTopRatingMovies(page,categoryId)
+    suspend fun getTopRatingMovies(page: Int, genreId: Long? = null): List<Movie> {
+        return moviesRepository.getTopRatingMovies(page, genreId)
     }
 
-    suspend fun getTrendingMovies(page:Int, categoryId: String? = null) : List<Movie>{
-        return moviesRepository.getTrendingMovies(page,categoryId)
+    suspend fun getTrendingMovies(page: Int, genreId: Long? = null): List<Movie> {
+        return moviesRepository.getTrendingMovies(page, genreId)
     }
 
-    suspend fun getUpcomingMovies(page: Int, categoryId: String? = null): List<Movie>{
-        return moviesRepository.getUpcomingMovies(page,categoryId)
+    suspend fun getUpcomingMovies(page: Int, genreId: Long? = null): List<Movie> {
+        return moviesRepository.getUpcomingMovies(page, genreId)
     }
 
 }

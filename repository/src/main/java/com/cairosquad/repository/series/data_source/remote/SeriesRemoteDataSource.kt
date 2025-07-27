@@ -24,25 +24,25 @@ interface SeriesRemoteDataSource {
 
     suspend fun getVideoKey(seriesId: Long): String
 
-    suspend fun getTopRatingSeries(page: Int,categoryId : String?): List<SeriesRemoteDto>
+    suspend fun getTopRatingSeries(page: Int, genreId: Long?): List<SeriesRemoteDto>
 
-    suspend fun getMoreRecommendedSeries(page: Int,categoryId : String?): List<SeriesRemoteDto>
+    suspend fun getMoreRecommendedSeries(page: Int, genreId: Long?): List<SeriesRemoteDto>
 
-    suspend fun getOnTvSeries(page: Int,categoryId : String?): List<SeriesRemoteDto>
+    suspend fun getOnTvSeries(page: Int, genreId: Long?): List<SeriesRemoteDto>
 
-    suspend fun getAiringTodaySeries(page: Int,categoryId : String?): List<SeriesRemoteDto>
+    suspend fun getAiringTodaySeries(page: Int, genreId: Long?): List<SeriesRemoteDto>
 
-    suspend fun getTrendingSeries(page: Int,categoryId : String?): List<SeriesRemoteDto>
+    suspend fun getTrendingSeries(page: Int, genreId: Long?): List<SeriesRemoteDto>
 
-    suspend fun getFreeToWatchSeries(page: Int,categoryId : String?): List<SeriesRemoteDto>
+    suspend fun getFreeToWatchSeries(page: Int, genreId: Long?): List<SeriesRemoteDto>
 
-    suspend fun getSeriesByCategory(genreId: String, page: Int): List<SeriesRemoteDto>
+    suspend fun getSeriesByCategory(genreId: Long, page: Int): List<SeriesRemoteDto>
 
     suspend fun getSeriesGenres(): List<GenreDto>
 
-    suspend fun getPopularSeries(page: Int,categoryId : String?): List<SeriesRemoteDto>
+    suspend fun getPopularSeries(page: Int, genreId: Long?): List<SeriesRemoteDto>
 
-    suspend fun getAllSeries(page: Int,categoryId : String?,sortBy: String?): List<SeriesRemoteDto>
+    suspend fun getAllSeries(page: Int, genreId: Long?, sortBy: String?): List<SeriesRemoteDto>
 
     suspend fun getSeriesByQuery(query: String, page: Int): List<SeriesRemoteDto>
 }

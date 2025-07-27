@@ -60,66 +60,76 @@ class MovieRepositoryImpl(
         )
     }
 
-    override suspend fun getTopRatingMovies(page: Int, genreId: String?): List<Movie> {
+    override suspend fun getTopRatingMovies(page: Int, genreId: Long?): List<Movie> {
         return getMovies(
-            remoteFetcher = { moviesRemoteDataSource.getTopRatingMovies(page,genreId) },
+            remoteFetcher = { moviesRemoteDataSource.getTopRatingMovies(page, genreId) },
             requestCache = getRequestOfTopRatedMovies(page, genreId)
         )
     }
 
-    override suspend fun getUpcomingMovies(page: Int, categoryId: String?): List<Movie> {
+    override suspend fun getUpcomingMovies(page: Int, genreId: Long?): List<Movie> {
         return getMovies(
-            remoteFetcher = { moviesRemoteDataSource.getUpcomingMovies(page, categoryId) },
-            requestCache = getRequestOfUpcomingMovies(page, categoryId)
+            remoteFetcher = { moviesRemoteDataSource.getUpcomingMovies(page, genreId) },
+            requestCache = getRequestOfUpcomingMovies(page, genreId)
         )
     }
 
-    override suspend fun getNowPlayingMovies(page: Int, categoryId: String?): List<Movie> {
+    override suspend fun getNowPlayingMovies(page: Int, genreId: Long?): List<Movie> {
         return getMovies(
-            remoteFetcher = {moviesRemoteDataSource.getNowPlayingMovies(page, categoryId) },
-            requestCache = getRequestOfNowPlayingMovies(page, categoryId)
+            remoteFetcher = { moviesRemoteDataSource.getNowPlayingMovies(page, genreId) },
+            requestCache = getRequestOfNowPlayingMovies(page, genreId)
         )
     }
 
-    override suspend fun getTrendingMovies(page: Int, categoryId: String?): List<Movie> {
+    override suspend fun getTrendingMovies(page: Int, genreId: Long?): List<Movie> {
         return getMovies(
-            remoteFetcher = { moviesRemoteDataSource.getTrendingMovies(page, categoryId) },
-            requestCache = getRequestOfTrendingMovies(page, categoryId)
+            remoteFetcher = { moviesRemoteDataSource.getTrendingMovies(page, genreId) },
+            requestCache = getRequestOfTrendingMovies(page, genreId)
         )
     }
 
-    override suspend fun getMoreRecommendedMovies(page: Int, categoryId: String?): List<Movie> {
+    override suspend fun getMoreRecommendedMovies(page: Int, genreId: Long?): List<Movie> {
         return getMovies(
-            remoteFetcher = { moviesRemoteDataSource.getMoreRecommendedMovies(page, categoryId) },
-            requestCache = getRequestOfMoreRecommendedMovies(page, categoryId)
+            remoteFetcher = { moviesRemoteDataSource.getMoreRecommendedMovies(page, genreId) },
+            requestCache = getRequestOfMoreRecommendedMovies(page, genreId)
         )
     }
 
-    override suspend fun getFreeToWatchMovies(page: Int, categoryId: String?): List<Movie> {
+    override suspend fun getFreeToWatchMovies(page: Int, genreId: Long?): List<Movie> {
         return getMovies(
-            remoteFetcher = { moviesRemoteDataSource.getFreeToWatchMovies(page, categoryId) },
-            requestCache = getRequestOfFreeToWatchMovies(page, categoryId)
+            remoteFetcher = { moviesRemoteDataSource.getFreeToWatchMovies(page, genreId) },
+            requestCache = getRequestOfFreeToWatchMovies(page, genreId)
         )
     }
 
-    override suspend fun getMoviesByCategory(page: Int, categoryId: String): List<Movie> {
+    override suspend fun getMoviesByCategory(page: Int, genreId: Long): List<Movie> {
         return getMovies(
-            remoteFetcher = { moviesRemoteDataSource.getMoviesByCategory(categoryId, page) },
-            requestCache = getRequestOfMoviesByCategory(page, categoryId)
+            remoteFetcher = { moviesRemoteDataSource.getMoviesByCategory(genreId, page) },
+            requestCache = getRequestOfMoviesByCategory(page, genreId)
         )
     }
 
-    override suspend fun getPopularMovies(page: Int, categoryId: String?): List<Movie> {
+    override suspend fun getPopularMovies(page: Int, genreId: Long?): List<Movie> {
         return getMovies(
-            remoteFetcher = { moviesRemoteDataSource.getPopularMovies(page, categoryId) },
-            requestCache = getRequestOfPopularMovies(page, categoryId)
+            remoteFetcher = { moviesRemoteDataSource.getPopularMovies(page, genreId) },
+            requestCache = getRequestOfPopularMovies(page, genreId)
         )
     }
 
-    override suspend fun getAllMovies(page: Int, categoryId: String?, sortType: SortType?): List<Movie> {
+    override suspend fun getAllMovies(
+        page: Int,
+        genreId: Long?,
+        sortType: SortType?
+    ): List<Movie> {
         return getMovies(
-            remoteFetcher = { moviesRemoteDataSource.getAllMovies(page, categoryId, sortType?.sortBy) },
-            requestCache = getRequestOfAllMovies(page, categoryId, sortType)
+            remoteFetcher = {
+                moviesRemoteDataSource.getAllMovies(
+                    page,
+                    genreId,
+                    sortType?.sortBy
+                )
+            },
+            requestCache = getRequestOfAllMovies(page, genreId, sortType)
         )
     }
 
@@ -133,7 +143,7 @@ class MovieRepositoryImpl(
     private suspend fun getMovies(
         remoteFetcher: suspend () -> List<MovieRemoteDto>,
         requestCache: String
-    ):List<Movie> {
+    ): List<Movie> {
         moviesLocalDataSource.deleteExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
         return moviesLocalDataSource
             .getMoviesByRequest(request = requestCache)
@@ -153,19 +163,19 @@ class MovieRepositoryImpl(
             }
     }
 
-    override suspend fun getMovieById(movieId: Long): Movie {
+    override suspend fun getMovieById(id: Long): Movie {
         moviesLocalDataSource.deleteExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
         return moviesLocalDataSource
-            .getMoviesByRequest(request = getRequestOfMovie(movieId))
+            .getMoviesByRequest(request = getRequestOfMovie(id))
             .toEntityList()
             .firstOrNull()
             ?: tryToCall {
-                moviesRemoteDataSource.getMovieById(movieId).toEntity(
-                    moviesRemoteDataSource.getVideoKey(movieId)
+                moviesRemoteDataSource.getMovieById(id).toEntity(
+                    moviesRemoteDataSource.getVideoKey(id)
                 )
             }.also { movie ->
                 moviesLocalDataSource.insertRequestWithMovies(
-                    listOf(movie).toRequestWithMoviesCacheDto(request = getRequestOfMovie(movieId))
+                    listOf(movie).toRequestWithMoviesCacheDto(request = getRequestOfMovie(id))
                 )
             }
     }
@@ -175,7 +185,7 @@ class MovieRepositoryImpl(
             .getMovieReviewsByRequest(getRequestOfMovieReviews(page, movieId))
             .toEntityList()
             .takeIf { it.isNotEmpty() }
-            ?:tryToCall {
+            ?: tryToCall {
                 moviesRemoteDataSource.getMovieReviews(movieId, page).map { it.toEntity() }
             }.also {
                 moviesLocalDataSource.insertRequestWithReviews(

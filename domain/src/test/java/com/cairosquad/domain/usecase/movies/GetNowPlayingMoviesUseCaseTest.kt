@@ -22,47 +22,47 @@ class GetNowPlayingMoviesUseCaseTest {
     }
 
     @Test
-    fun testReturnsNowPlayingWithCategory() = runTest {
+    fun testReturnsNowPlayingWithGenre() = runTest {
         val page = 1
-        val categoryId = "28"
-        coEvery { moviesRepository.getNowPlayingMovies(page, categoryId) } returns expectedNowPlayingWithCategory
+        val genreId = "28"
+        coEvery { moviesRepository.getNowPlayingMovies(page, genreId) } returns expectedNowPlayingWithGenre
 
-        val result = useCase.getNowPlayingMovies(page, categoryId)
+        val result = useCase.getNowPlayingMovies(page, genreId)
 
-        assertEquals(expectedNowPlayingWithCategory, result)
-        coVerify { moviesRepository.getNowPlayingMovies(page, categoryId) }
+        assertEquals(expectedNowPlayingWithGenre, result)
+        coVerify { moviesRepository.getNowPlayingMovies(page, genreId) }
     }
 
     @Test
-    fun testReturnsNowPlayingWithoutCategory() = runTest {
+    fun testReturnsNowPlayingWithoutGenre() = runTest {
         val page = 2
-        val categoryId: String? = null
-        coEvery { moviesRepository.getNowPlayingMovies(page, categoryId) } returns expectedNowPlayingWithoutCategory
+        val genreId: String? = null
+        coEvery { moviesRepository.getNowPlayingMovies(page, genreId) } returns expectedNowPlayingWithoutGenre
 
-        val result = useCase.getNowPlayingMovies(page, categoryId)
+        val result = useCase.getNowPlayingMovies(page, genreId)
 
-        assertEquals(expectedNowPlayingWithoutCategory, result)
-        coVerify { moviesRepository.getNowPlayingMovies(page, categoryId) }
+        assertEquals(expectedNowPlayingWithoutGenre, result)
+        coVerify { moviesRepository.getNowPlayingMovies(page, genreId) }
     }
 
     @Test
     fun testThrowsExceptionWhenRepositoryFails() = runTest {
         val page = 3
-        val categoryId = "16"
+        val genreId = "16"
         val exception = RuntimeException("Now playing fetch failed")
 
-        coEvery { moviesRepository.getNowPlayingMovies(page, categoryId) } throws exception
+        coEvery { moviesRepository.getNowPlayingMovies(page, genreId) } throws exception
 
         val thrown = assertFailsWith<RuntimeException> {
-            useCase.getNowPlayingMovies(page, categoryId)
+            useCase.getNowPlayingMovies(page, genreId)
         }
 
         assertEquals("Now playing fetch failed", thrown.message)
-        coVerify { moviesRepository.getNowPlayingMovies(page, categoryId) }
+        coVerify { moviesRepository.getNowPlayingMovies(page, genreId) }
     }
 
     companion object {
-        val expectedNowPlayingWithCategory = listOf(
+        val expectedNowPlayingWithGenre = listOf(
             Movie(
                 id = 100,
                 title = "Action Reloaded",
@@ -76,7 +76,7 @@ class GetNowPlayingMoviesUseCaseTest {
             )
         )
 
-        val expectedNowPlayingWithoutCategory = listOf(
+        val expectedNowPlayingWithoutGenre = listOf(
             Movie(
                 id = 101,
                 title = "Cinema Vibes",

@@ -46,72 +46,72 @@ class SeriesRepositoryImpl(
         )
     }
 
-    override suspend fun getTopRatingSeries(page: Int, genreId: String?): List<Series> {
+    override suspend fun getTopRatingSeries(page: Int, genreId: Long?): List<Series> {
         return getSeries(
             remoteFetcher = { seriesRemoteDataSource.getTopRatingSeries(page,genreId) },
             requestCache = getRequestOfTopRatedSeries(page, genreId)
         )
     }
 
-    override suspend fun getTrendingSeries(page: Int, categoryId: String?): List<Series> {
+    override suspend fun getTrendingSeries(page: Int, genreId: Long?): List<Series> {
         return getSeries(
-            remoteFetcher = { seriesRemoteDataSource.getTrendingSeries(page, categoryId) },
-            requestCache = getRequestOfTrendingSeries(page, categoryId)
+            remoteFetcher = { seriesRemoteDataSource.getTrendingSeries(page, genreId) },
+            requestCache = getRequestOfTrendingSeries(page, genreId)
         )
     }
 
-    override suspend fun getMoreRecommendedSeries(page: Int, categoryId: String?): List<Series> {
+    override suspend fun getMoreRecommendedSeries(page: Int, genreId: Long?): List<Series> {
         return getSeries(
-            remoteFetcher = { seriesRemoteDataSource.getMoreRecommendedSeries(page, categoryId) },
-            requestCache = getRequestOfMoreRecommendedSeries(page, categoryId)
+            remoteFetcher = { seriesRemoteDataSource.getMoreRecommendedSeries(page, genreId) },
+            requestCache = getRequestOfMoreRecommendedSeries(page, genreId)
         )
     }
 
     override suspend fun getOnTvSeries(
         page: Int,
-        categoryId: String?
+        genreId: Long?
     ): List<Series> {
         return getSeries(
-            remoteFetcher = { seriesRemoteDataSource.getOnTvSeries(page,categoryId) },
-            requestCache = getRequestOfOnTvSeries(page, categoryId)
+            remoteFetcher = { seriesRemoteDataSource.getOnTvSeries(page,genreId) },
+            requestCache = getRequestOfOnTvSeries(page, genreId)
         )
     }
 
     override suspend fun getAiringTodaySeries(
         page: Int,
-        categoryId: String?
+        genreId: Long?
     ): List<Series> {
         return getSeries(
-            remoteFetcher = { seriesRemoteDataSource.getAiringTodaySeries(page,categoryId) },
-            requestCache = getRequestOfAiringTodaySeries(page, categoryId)
+            remoteFetcher = { seriesRemoteDataSource.getAiringTodaySeries(page,genreId) },
+            requestCache = getRequestOfAiringTodaySeries(page, genreId)
         )
     }
 
-    override suspend fun getFreeToWatchSeries(page: Int, categoryId: String?): List<Series> {
+    override suspend fun getFreeToWatchSeries(page: Int, genreId: Long?): List<Series> {
         return getSeries(
-            remoteFetcher = { seriesRemoteDataSource.getFreeToWatchSeries(page, categoryId) },
-            requestCache = getRequestOfFreeToWatchSeries(page, categoryId)
+            remoteFetcher = { seriesRemoteDataSource.getFreeToWatchSeries(page, genreId) },
+            requestCache = getRequestOfFreeToWatchSeries(page, genreId)
         )
     }
 
-    override suspend fun getSeriesByCategory(genreId: String, page: Int): List<Series> {
+    override suspend fun getSeriesByCategory(genreId: Long, page: Int): List<Series> {
         return getSeries(
             remoteFetcher = { seriesRemoteDataSource.getSeriesByCategory(genreId, page) },
             requestCache = getRequestOfSeriesByCategory(page, genreId)
         )
     }
 
-    override suspend fun getPopularSeries(page: Int, categoryId: String?): List<Series> {
+    override suspend fun getPopularSeries(page: Int, genreId: Long?): List<Series> {
         return getSeries(
-            remoteFetcher = { seriesRemoteDataSource.getPopularSeries(page, categoryId) },
-            requestCache = getRequestOfPopularSeries(page, categoryId)
+            remoteFetcher = { seriesRemoteDataSource.getPopularSeries(page, genreId) },
+            requestCache = getRequestOfPopularSeries(page, genreId)
         )
     }
 
-    override suspend fun getAllSeries(page: Int, categoryId: String?, sortType: SortType?): List<Series> {
+    override suspend fun getAllSeries(page: Int, genreId: Long?, sortType: SortType?): List<Series> {
         return getSeries(
-            remoteFetcher = { seriesRemoteDataSource.getAllSeries(page, categoryId, sortType?.sortBy) },
-            requestCache = getRequestOfAllSeries(page, categoryId, sortType)
+            remoteFetcher = { seriesRemoteDataSource.getAllSeries(page, genreId, sortType?.sortBy) },
+            requestCache = getRequestOfAllSeries(page, genreId, sortType)
         )
     }
 

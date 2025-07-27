@@ -15,40 +15,44 @@ class ManageSeriesUseCase(
     private val searchRepository: SearchRepository
 ) {
     suspend fun getSeriesByQuery(query: String, page: Int): List<Series> {
-        return seriesRepository.getSeriesByQuery(query,page).also {
+        return seriesRepository.getSeriesByQuery(query, page).also {
             searchRepository.addQuery(query)
         }
     }
 
-    suspend fun getAiringTodaySeries(page: Int,categoryId : String?= null) : List<Series>{
-        return seriesRepository.getAiringTodaySeries(page,categoryId)
+    suspend fun getAiringTodaySeries(page: Int, genreId: Long? = null): List<Series> {
+        return seriesRepository.getAiringTodaySeries(page, genreId)
     }
 
-    suspend fun getAllSeries(page: Int, genreId : String?= null, sortType : SortType? = null) : List<Series>{
-        return seriesRepository.getAllSeries(page,genreId,sortType)
+    suspend fun getAllSeries(
+        page: Int,
+        genreId: Long? = null,
+        sortType: SortType? = null
+    ): List<Series> {
+        return seriesRepository.getAllSeries(page, genreId, sortType)
     }
 
-    suspend fun getFreeToWatchSeries(page: Int,categoryId : String?= null): List<Series> {
-        return seriesRepository.getFreeToWatchSeries(page,categoryId)
+    suspend fun getFreeToWatchSeries(page: Int, genreId: Long? = null): List<Series> {
+        return seriesRepository.getFreeToWatchSeries(page, genreId)
     }
 
-    suspend fun getMoreRecommendedSeries(page: Int,categoryId : String?= null): List<Series> {
-        return seriesRepository.getMoreRecommendedSeries(page,categoryId)
+    suspend fun getMoreRecommendedSeries(page: Int, genreId: Long? = null): List<Series> {
+        return seriesRepository.getMoreRecommendedSeries(page, genreId)
     }
 
-    suspend fun getOnTvSeries(page: Int,categoryId : String?= null): List<Series> {
-        return seriesRepository.getOnTvSeries(page,categoryId)
+    suspend fun getOnTvSeries(page: Int, genreId: Long? = null): List<Series> {
+        return seriesRepository.getOnTvSeries(page, genreId)
     }
 
-    suspend fun getPopularSeries(page: Int,categoryId : String?= null) : List<Series>{
-        return seriesRepository.getPopularSeries(page,categoryId)
+    suspend fun getPopularSeries(page: Int, genreId: Long? = null): List<Series> {
+        return seriesRepository.getPopularSeries(page, genreId)
     }
 
     suspend fun getSeriesByCategory(
-        categoryId: String,
+        genreId: Long,
         page: Int,
     ): List<Series> {
-        return seriesRepository.getSeriesByCategory(categoryId, page)
+        return seriesRepository.getSeriesByCategory(genreId, page)
     }
 
     suspend fun getSeries(seriesId: Long): Series {
@@ -75,15 +79,15 @@ class ManageSeriesUseCase(
         return seriesRepository.getSeriesTopCast(seriesId, page)
     }
 
-    suspend fun getSeriesGenres() : List<Genre>{
+    suspend fun getSeriesGenres(): List<Genre> {
         return seriesRepository.getSeriesGenres()
     }
 
-    suspend fun getTopRatingSeries(page: Int,categoryId : String?= null): List<Series> {
-        return seriesRepository.getTopRatingSeries(page,categoryId)
+    suspend fun getTopRatingSeries(page: Int, genreId: Long? = null): List<Series> {
+        return seriesRepository.getTopRatingSeries(page, genreId)
     }
 
-    suspend fun getTrendingSeries(page: Int,categoryId : String?= null): List<Series> {
-        return seriesRepository.getTrendingSeries(page,categoryId)
+    suspend fun getTrendingSeries(page: Int, genreId: Long? = null): List<Series> {
+        return seriesRepository.getTrendingSeries(page, genreId)
     }
 }

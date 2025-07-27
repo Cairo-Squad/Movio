@@ -22,26 +22,26 @@ class GetFreeToWatchMoviesUseCaseTest {
     }
 
     @Test
-    fun testReturnsMoviesWhenCategoryIdIsNotNull() = runTest {
+    fun testReturnsMoviesWhenGenreIdIsNotNull() = runTest {
         val page = 1
         val categoryId = "35"
-        coEvery { moviesRepository.getFreeToWatchMovies(page, categoryId) } returns expectedMoviesCategory35
+        coEvery { moviesRepository.getFreeToWatchMovies(page, categoryId) } returns expectedMoviesGenre35
 
         val result = useCase.getFreeToWatchMovies(page, categoryId)
 
-        assertEquals(expectedMoviesCategory35, result)
+        assertEquals(expectedMoviesGenre35, result)
         coVerify { moviesRepository.getFreeToWatchMovies(page, categoryId) }
     }
 
     @Test
-    fun testReturnsMoviesWhenCategoryIdIsNull() = runTest {
+    fun testReturnsMoviesWhenGenreIdIsNull() = runTest {
         val page = 2
         val categoryId: String? = null
-        coEvery { moviesRepository.getFreeToWatchMovies(page, categoryId) } returns expectedMoviesNoCategory
+        coEvery { moviesRepository.getFreeToWatchMovies(page, categoryId) } returns expectedMoviesNoGenre
 
         val result = useCase.getFreeToWatchMovies(page, categoryId)
 
-        assertEquals(expectedMoviesNoCategory, result)
+        assertEquals(expectedMoviesNoGenre, result)
         coVerify { moviesRepository.getFreeToWatchMovies(page, categoryId) }
     }
 
@@ -62,7 +62,7 @@ class GetFreeToWatchMoviesUseCaseTest {
     }
 
     companion object {
-        val expectedMoviesCategory35 = listOf(
+        val expectedMoviesGenre35 = listOf(
             Movie(
                 id = 10,
                 title = "Laugh Out Loud",
@@ -87,7 +87,7 @@ class GetFreeToWatchMoviesUseCaseTest {
             )
         )
 
-        val expectedMoviesNoCategory = listOf(
+        val expectedMoviesNoGenre = listOf(
             Movie(
                 id = 12,
                 title = "Public Access",
