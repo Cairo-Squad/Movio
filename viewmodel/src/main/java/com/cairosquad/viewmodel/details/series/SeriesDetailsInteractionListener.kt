@@ -28,4 +28,5 @@ interface SeriesDetailsInteractionListener {
 
     fun onSeriesClicked(seriesId: Long)
     fun onSeeAllSimilarClicked(seriesId: Long)
+    fun onNavigateToLogin()
 }
