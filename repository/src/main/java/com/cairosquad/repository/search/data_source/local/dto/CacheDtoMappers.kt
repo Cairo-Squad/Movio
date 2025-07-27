@@ -18,7 +18,7 @@ fun Series.toCacheDto(query: String,page: Int): SeriesCacheDto {
 }
 
 @JvmName("toCacheSeriesDto")
-fun List<Series>.toCacheDto(query: String,page: Int): List<SeriesCacheDto> {
+fun List<Series>.toCacheDtoList(query: String,page: Int): List<SeriesCacheDto> {
     return map { it.toCacheDto(query,page) }
 }
 
@@ -37,7 +37,7 @@ fun SeriesCacheDto.toEntity(): Series {
 }
 
 @JvmName("toEntitySeries")
-fun List<SeriesCacheDto>.toEntity(): List<Series> {
+fun List<SeriesCacheDto>.toEntityList(): List<Series> {
     return map { it.toEntity() }
 }
 
@@ -54,7 +54,7 @@ fun Movie.toCacheDto(query: String,page:Int): MovieCacheDto {
 }
 
 @JvmName("toCacheMovieDto")
-fun List<Movie>.toCacheDto(query: String,page: Int): List<MovieCacheDto> {
+fun List<Movie>.toCacheDtoList(query: String,page: Int): List<MovieCacheDto> {
     return map { it.toCacheDto(query,page) }
 }
 
@@ -73,7 +73,7 @@ fun MovieCacheDto.toEntity(): Movie {
 }
 
 @JvmName("toEntityMovie")
-fun List<MovieCacheDto>.toEntity(): List<Movie> {
+fun List<MovieCacheDto>.toEntityList(): List<Movie> {
     return map { it.toEntity() }
 }
 
@@ -93,7 +93,7 @@ fun Artist.toCacheDto(query: String,page: Int): ArtistCacheDto {
 }
 
 @JvmName("toCacheArtistDto")
-fun List<Artist>.toCacheDto(query: String,page: Int): List<ArtistCacheDto> {
+fun List<Artist>.toCacheDtoList(query: String,page: Int): List<ArtistCacheDto> {
     return map { it.toCacheDto(query,page) }
 }
 
@@ -110,6 +110,6 @@ fun ArtistCacheDto.toEntity(): Artist {
 }
 
 @JvmName("toEntityArtist")
-fun List<ArtistCacheDto>.toEntity(): List<Artist> {
+fun List<ArtistCacheDto>.toEntityList(): List<Artist> {
     return map { it.toEntity() }
 }
