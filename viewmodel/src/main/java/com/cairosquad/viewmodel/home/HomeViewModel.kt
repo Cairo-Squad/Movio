@@ -277,6 +277,12 @@ class HomeViewModel(
         sortCategoriesMedia()
     }
 
+    override fun onSectionVisible(sectionType: MediaContentType) {
+        if (screenState.value.sections.containsKey(sectionType)) return
+
+        fetchSectionData(sectionType)
+    }
+
     private fun sortCategoriesMedia() {
         val genre = screenState.value.genres[screenState.value.selectedGenreIndex]
         tryToCall(
