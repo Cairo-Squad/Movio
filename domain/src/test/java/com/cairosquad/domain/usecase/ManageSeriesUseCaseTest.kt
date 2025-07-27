@@ -1,6 +1,7 @@
 package com.cairosquad.domain.usecase
 
 import com.cairosquad.domain.model.SortType
+import com.cairosquad.domain.repository.ArtistsRepository
 import com.cairosquad.domain.repository.SearchRepository
 import com.cairosquad.domain.repository.SeriesRepository
 import com.cairosquad.entity.Artist
@@ -23,13 +24,19 @@ class ManageSeriesUseCaseTest {
 
     private lateinit var seriesRepository: SeriesRepository
     private lateinit var searchRepository: SearchRepository
+    private lateinit var artistRepository: ArtistsRepository
     private lateinit var useCase: ManageSeriesUseCase
 
     @BeforeTest
     fun setUp() {
         seriesRepository = mockk()
         searchRepository = mockk()
-        useCase = ManageSeriesUseCase(seriesRepository, searchRepository)
+        artistRepository = mockk()
+        useCase = ManageSeriesUseCase(
+            seriesRepository,
+            searchRepository,
+            artistRepository
+        )
     }
 
     @Test
@@ -490,23 +497,23 @@ class ManageSeriesUseCaseTest {
     fun `should return top cast when getSeriesTopCast is called`() = runTest {
         val seriesId = 1L
         val page = 1
-        coEvery { seriesRepository.getSeriesTopCast(seriesId, page) } returns listOf(actor)
+        coEvery { artistRepository.getSeriesTopCast(seriesId, page) } returns listOf(actor)
 
         val result = useCase.getSeriesTopCast(seriesId, page)
 
         assertThat(result).containsExactly(actor)
-        coVerify(exactly = 1) { seriesRepository.getSeriesTopCast(seriesId, page) }
+        coVerify(exactly = 1) { artistRepository.getSeriesTopCast(seriesId, page) }
     }
 
     @Test
     fun `should return top cast when getSeriesTopCast is called with only seriesId`() = runTest {
         val seriesId = 1L
-        coEvery { seriesRepository.getSeriesTopCast(seriesId, 1) } returns listOf(actor)
+        coEvery { artistRepository.getSeriesTopCast(seriesId, 1) } returns listOf(actor)
 
         val result = useCase.getSeriesTopCast(seriesId, 1)
 
         assertThat(result).containsExactly(actor)
-        coVerify(exactly = 1) { seriesRepository.getSeriesTopCast(seriesId, 1) }
+        coVerify(exactly = 1) { artistRepository.getSeriesTopCast(seriesId, 1) }
     }
 
     @Test

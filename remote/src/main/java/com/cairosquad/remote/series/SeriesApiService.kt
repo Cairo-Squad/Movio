@@ -1,6 +1,6 @@
 package com.cairosquad.remote.series
 
-import com.cairosquad.repository.movie.data_source.remote.dto.CreditResponse
+import com.cairosquad.remote.artists.SeriesListResponse
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.VideoResponse
 import com.cairosquad.repository.series.data_source.remote.dto.SeasonResponse
@@ -26,17 +26,16 @@ interface SeriesApiService {
         @Query("page") page: Int
     ): ResultResponse<ReviewRemoteDto>
 
+    @GET("person/{id}/tv_credits")
+    suspend fun getSeriesOfArtist(
+        @Path("id") artistId: Long
+    ): SeriesListResponse
+
     @GET("tv/{seriesId}/similar")
     suspend fun getSimilarSeries(
         @Path("seriesId") seriesId: Long,
         @Query("page") page: Int
     ): ResultResponse<SeriesRemoteDto>
-
-    @GET("tv/{seriesId}/credits")
-    suspend fun getSeriesTopCast(
-        @Path("seriesId") seriesId: Long,
-        @Query("page") page: Int
-    ): CreditResponse
 
     @GET("tv/{seriesId}")
     suspend fun getSeriesSeasons(

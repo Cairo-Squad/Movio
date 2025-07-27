@@ -30,6 +30,6 @@ val repositoryModule = module {
     }
 
     single<ArtistsRepository> {
-        ArtistsRepositoryImpl(get())
+        ArtistsRepositoryImpl(get(), get())
     }
 }

@@ -2,15 +2,13 @@ package com.cairosquad.repository.movie
 
 import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.repository.MoviesRepository
-import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Review
-import com.cairosquad.repository.artists.data_source.remote.toEntity
 import com.cairosquad.repository.movie.data_source.local.MoviesLocalDataSource
+import com.cairosquad.repository.movie.data_source.local.toCacheCodeWithMoviesCacheDto
 import com.cairosquad.repository.movie.data_source.local.toCacheDtoList
 import com.cairosquad.repository.movie.data_source.local.toEntityList
-import com.cairosquad.repository.movie.data_source.local.toRequestWithMoviesCacheDto
 import com.cairosquad.repository.movie.data_source.remote.MoviesRemoteDataSource
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.toEntity
@@ -21,6 +19,7 @@ import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfMoreRecomme
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfMovie
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfMovieReviews
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfMoviesByCategory
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfMoviesOfArtist
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfNowPlayingMovies
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfPersonalizedMovies
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfPopularMovies
@@ -30,8 +29,8 @@ import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSuggestedMo
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfTopRatedMovies
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfTrendingMovies
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfUpcomingMovies
+import com.cairosquad.repository.utils.sharedDto.local.toCacheCodeWithReviewsCacheDto
 import com.cairosquad.repository.utils.sharedDto.local.toEntityList
-import com.cairosquad.repository.utils.sharedDto.local.toRequestWithReviewsCacheDto
 import java.util.Date
 
 class MovieRepositoryImpl(
@@ -140,6 +139,13 @@ class MovieRepositoryImpl(
         )
     }
 
+    override suspend fun getMoviesOfArtist(artistId: Long): List<Movie> {
+        return getMovies(
+            remoteFetcher = { moviesRemoteDataSource.getMoviesOfArtist(artistId) },
+            cacheCode = getCacheCodeOfMoviesOfArtist(artistId)
+        )
+    }
+
     private suspend fun getMovies(
         remoteFetcher: suspend () -> List<MovieRemoteDto>,
         cacheCode: String
@@ -154,7 +160,7 @@ class MovieRepositoryImpl(
                     .map { it.toEntity(genres) }
                     .also { movies ->
                         moviesLocalDataSource.insertCacheCodeWithMovies(
-                            movies.toRequestWithMoviesCacheDto(
+                            movies.toCacheCodeWithMoviesCacheDto(
                                 request = cacheCode
                             )
                         )
@@ -174,7 +180,7 @@ class MovieRepositoryImpl(
                 )
             }.also { movie ->
                 moviesLocalDataSource.insertCacheCodeWithMovies(
-                    listOf(movie).toRequestWithMoviesCacheDto(request = getCacheCodeOfMovie(id))
+                    listOf(movie).toCacheCodeWithMoviesCacheDto(request = getCacheCodeOfMovie(id))
                 )
             }
     }
@@ -188,17 +194,11 @@ class MovieRepositoryImpl(
                 moviesRemoteDataSource.getMovieReviews(movieId, page).map { it.toEntity() }
             }.also {
                 moviesLocalDataSource.insertCacheCodeWithReviews(
-                    it.toRequestWithReviewsCacheDto(
+                    it.toCacheCodeWithReviewsCacheDto(
                         getCacheCodeOfMovieReviews(page, movieId)
                     )
                 )
             }
-    }
-
-    override suspend fun getMovieTopCast(movieId: Long, page: Int): List<Artist> {
-        return tryToCall {
-            moviesRemoteDataSource.getMovieTopCast(movieId, page).map { it.toEntity() }
-        }
     }
 
     override suspend fun getMoviesGenres(): List<Genre> {

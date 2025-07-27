@@ -1,7 +1,6 @@
 package com.cairosquad.domain.repository
 
 import com.cairosquad.domain.model.SortType
-import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Episode
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Review
@@ -19,7 +18,7 @@ interface SeriesRepository {
 
     suspend fun getSimilarSeries(seriesId: Long, page: Int): List<Series>
 
-    suspend fun getSeriesTopCast(seriesId: Long, page: Int): List<Artist>
+    suspend fun getSeriesOfArtist(artistId: Long): List<Series>
 
     suspend fun getTopRatingSeries(page: Int, genreId: Long?): List<Series>
 

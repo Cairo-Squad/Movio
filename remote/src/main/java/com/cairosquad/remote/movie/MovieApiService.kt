@@ -1,7 +1,7 @@
 package com.cairosquad.remote.movie
 
 
-import com.cairosquad.repository.movie.data_source.remote.dto.CreditResponse
+import com.cairosquad.remote.artists.MoviesListResponse
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieDetailsRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
@@ -25,18 +25,17 @@ interface MovieApiService {
         @Query("page") page: Int
     ): ResultResponse<ReviewRemoteDto>
 
+    @GET("person/{id}/movie_credits")
+    suspend fun getMoviesOfArtist(
+        @Path("id") artistId: Long
+    ): MoviesListResponse
+
     @GET("movie/{movieId}/similar")
     suspend fun getSimilarMovies(
         @Path("movieId") movieId: Long,
         @Query("page") page: Int,
         @Query("with_genres") withGenres: Long? = null
     ): ResultResponse<MovieRemoteDto>
-
-    @GET("movie/{movieId}/credits")
-    suspend fun getMovieTopCast(
-        @Path("movieId") movieId: Long,
-        @Query("page") page: Int
-    ): CreditResponse
 
     @GET("movie/{movieId}/videos")
     suspend fun getVideoKey(

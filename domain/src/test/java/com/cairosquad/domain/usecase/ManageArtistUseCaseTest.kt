@@ -1,7 +1,9 @@
 package com.cairosquad.domain.usecase
 
 import com.cairosquad.domain.repository.ArtistsRepository
+import com.cairosquad.domain.repository.MoviesRepository
 import com.cairosquad.domain.repository.SearchRepository
+import com.cairosquad.domain.repository.SeriesRepository
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
@@ -17,11 +19,18 @@ import org.junit.Test
 class ManageArtistUseCaseTest {
     private val artistsRepository: ArtistsRepository = mockk(relaxed = true)
     private val searchRepository: SearchRepository = mockk(relaxed = true)
+    private val moviesRepository: MoviesRepository = mockk(relaxed = true)
+    private val seriesRepository: SeriesRepository = mockk(relaxed = true)
     private lateinit var useCase: ManageArtistUseCase
 
     @Before
     fun setUp() {
-        useCase = ManageArtistUseCase(artistsRepository, searchRepository)
+        useCase = ManageArtistUseCase(
+            artistsRepository,
+            searchRepository,
+            moviesRepository,
+            seriesRepository
+        )
     }
 
     @Test
@@ -36,22 +45,22 @@ class ManageArtistUseCaseTest {
 
     @Test
     fun `getMoviesOfArtist SHOULD return movies from repository`() = runTest {
-        coEvery { artistsRepository.getMoviesOfArtist(312L) } returns listOf(movie)
+        coEvery { moviesRepository.getMoviesOfArtist(312L) } returns listOf(movie)
 
         val result = useCase.getMoviesOfArtist(312L)
 
         Truth.assertThat(result).containsExactly(movie)
-        coVerify(exactly = 1) { artistsRepository.getMoviesOfArtist(312L) }
+        coVerify(exactly = 1) { moviesRepository.getMoviesOfArtist(312L) }
     }
 
     @Test
     fun `getSeriesOfArtist SHOULD return series from repository`() = runTest {
-        coEvery { artistsRepository.getSeriesOfArtist(312L) } returns listOf(series1, series2)
+        coEvery { seriesRepository.getSeriesOfArtist(312L) } returns listOf(series1, series2)
 
         val result = useCase.getSeriesOfArtist(312L)
 
         Truth.assertThat(result).containsExactly(series1, series2)
-        coVerify(exactly = 1) { artistsRepository.getSeriesOfArtist(312L) }
+        coVerify(exactly = 1) { seriesRepository.getSeriesOfArtist(312L) }
     }
 
     // 🔥 Edge Case

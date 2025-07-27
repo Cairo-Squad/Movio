@@ -1,7 +1,6 @@
 package com.cairosquad.remote.series
 
 import com.cairosquad.remote.utils.retrofit.safeCallApi
-import com.cairosquad.repository.artists.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.GenreDto
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
 import com.cairosquad.repository.series.data_source.remote.SeriesRemoteDataSource
@@ -12,17 +11,17 @@ import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 import java.time.LocalDate
 
 class SeriesRemoteDataSourceImpl(
-    private val seriesApiService: SeriesApiService
+    private val apiService: SeriesApiService
 ) : SeriesRemoteDataSource {
     override suspend fun getSeriesById(id: Long): SeriesDetailsRemoteDto {
-        return safeCallApi { seriesApiService.getSeriesById(id) }
+        return safeCallApi { apiService.getSeriesById(id) }
     }
 
     override suspend fun getSeriesReviews(
         seriesId: Long,
         page: Int
     ): List<ReviewRemoteDto> {
-        return safeCallApi { seriesApiService.getSeriesReviews(seriesId, page) }
+        return safeCallApi { apiService.getSeriesReviews(seriesId, page) }
             .results?.filterNotNull().orEmpty()
     }
 
@@ -30,20 +29,17 @@ class SeriesRemoteDataSourceImpl(
         seriesId: Long,
         page: Int
     ): List<SeriesRemoteDto> {
-        return safeCallApi { seriesApiService.getSimilarSeries(seriesId, page) }
+        return safeCallApi { apiService.getSimilarSeries(seriesId, page) }
             .results?.filterNotNull().orEmpty()
     }
 
-    override suspend fun getSeriesTopCast(
-        seriesId: Long,
-        page: Int
-    ): List<ArtistRemoteDto> {
-        return safeCallApi { seriesApiService.getSeriesTopCast(seriesId, page) }
-            .cast?.filterNotNull().orEmpty()
+    override suspend fun getSeriesOfArtist(artistId: Long): List<SeriesRemoteDto> {
+        return safeCallApi { apiService.getSeriesOfArtist(artistId) }
+            .series.filter { it.id != null }
     }
 
     override suspend fun getSeriesSeasons(seriesId: Long): List<SeasonRemoteDto> {
-        return safeCallApi { seriesApiService.getSeriesSeasons(seriesId) }
+        return safeCallApi { apiService.getSeriesSeasons(seriesId) }
             .seasons?.filterNotNull() ?: emptyList()
     }
 
@@ -51,16 +47,16 @@ class SeriesRemoteDataSourceImpl(
         seriesId: Long,
         seasonNumber: Int
     ): List<EpisodeRemoteDto> {
-        return safeCallApi { seriesApiService.getEpisodes(seriesId, seasonNumber) }
+        return safeCallApi { apiService.getEpisodes(seriesId, seasonNumber) }
             .episodes ?: emptyList()
     }
 
     override suspend fun getVideoKey(seriesId: Long): String {
-        return safeCallApi { seriesApiService.getVideoKey(seriesId).getVideoKey() ?: "" }
+        return safeCallApi { apiService.getVideoKey(seriesId).getVideoKey() ?: "" }
     }
 
     override suspend fun getTopRatingSeries(page: Int, genreId: Long?): List<SeriesRemoteDto> {
-        return safeCallApi { seriesApiService.getTopRatingSeries(page, genreId) }
+        return safeCallApi { apiService.getTopRatingSeries(page, genreId) }
             .results?.filterNotNull().orEmpty()
     }
 
@@ -68,7 +64,7 @@ class SeriesRemoteDataSourceImpl(
         page: Int,
         genreId: Long?
     ): List<SeriesRemoteDto> {
-        return safeCallApi { seriesApiService.getMoreRecommendedSeries(page, withGenres = genreId) }
+        return safeCallApi { apiService.getMoreRecommendedSeries(page, withGenres = genreId) }
             .results?.filterNotNull().orEmpty()
     }
 
@@ -76,7 +72,7 @@ class SeriesRemoteDataSourceImpl(
         val today = LocalDate.now()
         val oneWeekAgo = today.minusDays(7)
         return safeCallApi {
-            seriesApiService.getOnTvSeries(
+            apiService.getOnTvSeries(
                 page, genreId,
                 minDate = oneWeekAgo.toString(), maxDate = today.toString()
             )
@@ -90,7 +86,7 @@ class SeriesRemoteDataSourceImpl(
         val minDate = today.toString()
         val maxDate = today.toString()
         return safeCallApi {
-            seriesApiService.getAiringTodaySeries(
+            apiService.getAiringTodaySeries(
                 page, genreId,
                 minDate = minDate, maxDate = maxDate
             )
@@ -102,7 +98,7 @@ class SeriesRemoteDataSourceImpl(
         val today = LocalDate.now()
         val thirtyDaysAgo = today.minusDays(30)
         return safeCallApi {
-            seriesApiService.getTrendingSeries(
+            apiService.getTrendingSeries(
                 page, genreId,
                 minDate = thirtyDaysAgo.toString(),
                 maxDate = today.toString()
@@ -112,7 +108,7 @@ class SeriesRemoteDataSourceImpl(
     }
 
     override suspend fun getFreeToWatchSeries(page: Int, genreId: Long?): List<SeriesRemoteDto> {
-        return safeCallApi { seriesApiService.getFreeToWatchSeries(page, withGenres = genreId) }
+        return safeCallApi { apiService.getFreeToWatchSeries(page, withGenres = genreId) }
             .results?.filterNotNull().orEmpty()
     }
 
@@ -120,17 +116,17 @@ class SeriesRemoteDataSourceImpl(
         genreId: Long,
         page: Int
     ): List<SeriesRemoteDto> {
-        return safeCallApi { seriesApiService.getSeriesByCategory(genreId, page) }
+        return safeCallApi { apiService.getSeriesByCategory(genreId, page) }
             .results?.filterNotNull().orEmpty()
     }
 
     override suspend fun getSeriesGenres(): List<GenreDto> {
-        return safeCallApi { seriesApiService.getSeriesGenres() }
+        return safeCallApi { apiService.getSeriesGenres() }
             .genres?.filterNotNull().orEmpty()
     }
 
     override suspend fun getPopularSeries(page: Int, genreId: Long?): List<SeriesRemoteDto> {
-        return safeCallApi { seriesApiService.getPopularSeries(page, genreId) }
+        return safeCallApi { apiService.getPopularSeries(page, genreId) }
             .results?.filterNotNull().orEmpty()
     }
 
@@ -139,12 +135,12 @@ class SeriesRemoteDataSourceImpl(
         genreId: Long?,
         sortBy: String?
     ): List<SeriesRemoteDto> {
-        return safeCallApi { seriesApiService.getAllSeries(page, genreId, sortBy) }
+        return safeCallApi { apiService.getAllSeries(page, genreId, sortBy) }
             .results?.filterNotNull().orEmpty()
     }
 
     override suspend fun getSeriesByQuery(query: String, page: Int): List<SeriesRemoteDto> {
-        return safeCallApi { seriesApiService.getSeriesByQuery(query, page) }
+        return safeCallApi { apiService.getSeriesByQuery(query, page) }
             .results?.filterNotNull()?.filter { it.id != null } ?: emptyList()
     }
 }

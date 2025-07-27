@@ -2,17 +2,15 @@ package com.cairosquad.repository.series
 
 import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.repository.SeriesRepository
-import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Episode
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Review
 import com.cairosquad.entity.Season
 import com.cairosquad.entity.Series
-import com.cairosquad.repository.artists.data_source.remote.toEntity
 import com.cairosquad.repository.series.data_source.local.SeriesLocalDataSource
+import com.cairosquad.repository.series.data_source.local.toCacheCodeWithSeriesCacheDto
 import com.cairosquad.repository.series.data_source.local.toCacheDtoList
 import com.cairosquad.repository.series.data_source.local.toEntityList
-import com.cairosquad.repository.series.data_source.local.toRequestWithSeriesCacheDto
 import com.cairosquad.repository.series.data_source.remote.SeriesRemoteDataSource
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 import com.cairosquad.repository.series.data_source.remote.toEntity
@@ -26,12 +24,13 @@ import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfPopularSeri
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSearchedSeries
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSeries
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSeriesByCategory
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSeriesOfArtist
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSeriesReviews
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSimilarSeries
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfTopRatedSeries
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfTrendingSeries
+import com.cairosquad.repository.utils.sharedDto.local.toCacheCodeWithReviewsCacheDto
 import com.cairosquad.repository.utils.sharedDto.local.toEntityList
-import com.cairosquad.repository.utils.sharedDto.local.toRequestWithReviewsCacheDto
 import java.util.Date
 
 class SeriesRepositoryImpl(
@@ -122,6 +121,13 @@ class SeriesRepositoryImpl(
         )
     }
 
+    override suspend fun getSeriesOfArtist(artistId: Long): List<Series> {
+        return getSeries(
+            remoteFetcher = { seriesRemoteDataSource.getSeriesOfArtist(artistId) },
+            cacheCode = getCacheCodeOfSeriesOfArtist(artistId)
+        )
+    }
+
     private suspend fun getSeries(
         remoteFetcher: suspend () -> List<SeriesRemoteDto>,
         cacheCode: String
@@ -137,7 +143,7 @@ class SeriesRepositoryImpl(
                     .map { it.toEntity(genres) }
                     .also { series ->
                         seriesLocalDataSource.insertCacheCodeWithSeries(
-                            series.toRequestWithSeriesCacheDto(
+                            series.toCacheCodeWithSeriesCacheDto(
                                 request = cacheCode
                             )
                         )
@@ -157,7 +163,7 @@ class SeriesRepositoryImpl(
                 )
             }.also { series ->
                 seriesLocalDataSource.insertCacheCodeWithSeries(
-                    listOf(series).toRequestWithSeriesCacheDto(request = "series/${id}")
+                    listOf(series).toCacheCodeWithSeriesCacheDto(request = "series/${id}")
                 )
             }
     }
@@ -170,7 +176,7 @@ class SeriesRepositoryImpl(
                 seriesRemoteDataSource.getSeriesReviews(seriesId, page).map { it.toEntity() }
             }.also {
                 seriesLocalDataSource.insertCacheCodeWithReviews(
-                    it.toRequestWithReviewsCacheDto(
+                    it.toCacheCodeWithReviewsCacheDto(
                         getCacheCodeOfSeriesReviews(page, seriesId)
                     )
                 )
@@ -178,19 +184,17 @@ class SeriesRepositoryImpl(
     }
 
     override suspend fun getSeriesSeasons(seriesId: Long): List<Season> {
-        return seriesRemoteDataSource.getSeriesSeasons(seriesId).map { it.toEntity(seriesId) }
+        return tryToCall {
+            seriesRemoteDataSource.getSeriesSeasons(seriesId).map { it.toEntity(seriesId) }
+        }
     }
 
     override suspend fun getEpisodes(
         seriesId: Long,
         seasonNumber: Int
     ): List<Episode> {
-        return seriesRemoteDataSource.getEpisodes(seriesId, seasonNumber).map { it.toEntity() }
-    }
-
-    override suspend fun getSeriesTopCast(seriesId: Long, page: Int): List<Artist> {
         return tryToCall {
-            seriesRemoteDataSource.getSeriesTopCast(seriesId, page).map { it.toEntity() }
+            seriesRemoteDataSource.getEpisodes(seriesId, seasonNumber).map { it.toEntity() }
         }
     }
 

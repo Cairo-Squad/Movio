@@ -1,6 +1,5 @@
 package com.cairosquad.repository.movie.data_source.remote
 
-import com.cairosquad.repository.artists.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.GenreDto
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieDetailsRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
@@ -14,7 +13,7 @@ interface MoviesRemoteDataSource {
 
     suspend fun getSimilarMovies(movieId: Long, page: Int): List<MovieRemoteDto>
 
-    suspend fun getMovieTopCast(movieId: Long, page: Int): List<ArtistRemoteDto>
+    suspend fun getMoviesOfArtist(artistId: Long): List<MovieRemoteDto>
 
     suspend fun getVideoKey(movieId: Long): String
 

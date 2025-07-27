@@ -9,7 +9,7 @@ import com.cairosquad.repository.movie.data_source.local.dto.MovieWithoutGenreCa
 import com.cairosquad.repository.utils.sharedDto.local.CacheCodeDto
 
 
-fun List<Movie>.toRequestWithMoviesCacheDto(request: String): CacheCodeWithMoviesCacheDto {
+fun List<Movie>.toCacheCodeWithMoviesCacheDto(request: String): CacheCodeWithMoviesCacheDto {
     return CacheCodeWithMoviesCacheDto(
         cacheCode = CacheCodeDto(cacheCode = request),
         movies = this.map { it.toCacheDto() }

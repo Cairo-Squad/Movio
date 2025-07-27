@@ -1,6 +1,8 @@
 package com.cairosquad.movio.di
 
 import androidx.room.Room
+import com.cairosquad.local.cache.artist.ArtistsCacheDao
+import com.cairosquad.local.cache.artist.ArtistsLocalDataSourceImpl
 import com.cairosquad.local.cache.cacheCode.CacheCodeDao
 import com.cairosquad.local.cache.genre.GenreDao
 import com.cairosquad.local.cache.movie.MoviesCacheDao
@@ -13,6 +15,7 @@ import com.cairosquad.local.login.dao.LoginDao
 import com.cairosquad.local.search.recent.LocalRecentSearchDataSourceImpl
 import com.cairosquad.local.search.recent.dao.LocalRecentSearchDao
 import com.cairosquad.local.utils.MovioDataBase
+import com.cairosquad.repository.artists.data_source.local.ArtistsLocalDataSource
 import com.cairosquad.repository.login.data_source.local.LocalAuthenticationDataSource
 import com.cairosquad.repository.movie.data_source.local.MoviesLocalDataSource
 import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
@@ -36,6 +39,10 @@ val localDataSourceModule = module {
 
     single<SeriesCacheDao> {
         get<MovioDataBase>().seriesCacheDao()
+    }
+
+    single<ArtistsCacheDao> {
+        get<MovioDataBase>().artistsCacheDao()
     }
 
     single<GenreDao> {
@@ -68,5 +75,9 @@ val localDataSourceModule = module {
 
     single<SeriesLocalDataSource> {
         SeriesLocalDataSourceImpl(get(), get(), get(), get())
+    }
+
+    single<ArtistsLocalDataSource> {
+        ArtistsLocalDataSourceImpl(get(), get())
     }
 }

@@ -3,8 +3,6 @@ package com.cairosquad.remote.artists
 import com.cairosquad.remote.utils.retrofit.safeCallApi
 import com.cairosquad.repository.artists.data_source.remote.ArtistsRemoteDataSource
 import com.cairosquad.repository.artists.data_source.remote.dto.ArtistRemoteDto
-import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
-import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 
 class RemoteArtistDataSourceImpl(
     private val apiService: ArtistsApiService
@@ -21,13 +19,16 @@ class RemoteArtistDataSourceImpl(
         return safeCallApi { apiService.getArtistById(id) }
     }
 
-    override suspend fun getMoviesOfArtist(artistId: Long): List<MovieRemoteDto> {
-        return safeCallApi { apiService.getMoviesOfArtist(artistId) }
-            .movies.filter { it.id != null }
+    override suspend fun getMovieTopCast(movieId: Long, page: Int): List<ArtistRemoteDto> {
+        return safeCallApi { apiService.getMovieTopCast(movieId, page) }
+            .cast?.filterNotNull().orEmpty()
     }
 
-    override suspend fun getSeriesOfArtist(artistId: Long): List<SeriesRemoteDto> {
-        return safeCallApi { apiService.getSeriesOfArtist(artistId) }
-            .series.filter { it.id != null }
+    override suspend fun getSeriesTopCast(
+        seriesId: Long,
+        page: Int
+    ): List<ArtistRemoteDto> {
+        return safeCallApi { apiService.getSeriesTopCast(seriesId, page) }
+            .cast?.filterNotNull().orEmpty()
     }
 }

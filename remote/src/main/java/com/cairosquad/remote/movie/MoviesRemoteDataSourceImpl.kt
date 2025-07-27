@@ -1,7 +1,6 @@
 package com.cairosquad.remote.movie
 
 import com.cairosquad.remote.utils.retrofit.safeCallApi
-import com.cairosquad.repository.artists.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.MoviesRemoteDataSource
 import com.cairosquad.repository.movie.data_source.remote.dto.GenreDto
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieDetailsRemoteDto
@@ -27,9 +26,9 @@ class MoviesRemoteDataSourceImpl(
             .results?.filterNotNull().orEmpty()
     }
 
-    override suspend fun getMovieTopCast(movieId: Long, page: Int): List<ArtistRemoteDto> {
-        return safeCallApi { apiService.getMovieTopCast(movieId, page) }
-            .cast?.filterNotNull().orEmpty()
+    override suspend fun getMoviesOfArtist(artistId: Long): List<MovieRemoteDto> {
+        return safeCallApi { apiService.getMoviesOfArtist(artistId) }
+            .movies.filter { it.id != null }
     }
 
     override suspend fun getTopRatingMovies(page: Int, genreId: Long?): List<MovieRemoteDto> {

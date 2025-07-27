@@ -9,7 +9,7 @@ import com.cairosquad.repository.series.data_source.local.dto.SeriesWithoutGenre
 import com.cairosquad.repository.utils.sharedDto.local.CacheCodeDto
 
 
-fun List<Series>.toRequestWithSeriesCacheDto(request: String): CacheCodeWithSeriesCacheDto {
+fun List<Series>.toCacheCodeWithSeriesCacheDto(request: String): CacheCodeWithSeriesCacheDto {
     return CacheCodeWithSeriesCacheDto(
         cacheCode = CacheCodeDto(cacheCode = request),
         series = this.map { it.toCacheDto() }
@@ -19,7 +19,7 @@ fun List<Series>.toRequestWithSeriesCacheDto(request: String): CacheCodeWithSeri
 
 fun SeriesCacheDto.toEntity(): Series {
     return Series(
-        id = seriesWithoutGenre.id.toLong(),
+        id = seriesWithoutGenre.id,
         title = seriesWithoutGenre.title,
         posterPath = seriesWithoutGenre.posterPath,
         rating = seriesWithoutGenre.rating,
@@ -39,7 +39,7 @@ fun List<SeriesCacheDto>.toEntityList(): List<Series> {
 fun Series.toCacheDto(): SeriesCacheDto {
     return SeriesCacheDto(
         seriesWithoutGenre = SeriesWithoutGenreCacheDto(
-            id = id.toLong(),
+            id = id,
             title = title,
             posterPath = posterPath,
             rating = rating,

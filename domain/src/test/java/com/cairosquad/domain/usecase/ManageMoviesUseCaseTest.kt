@@ -1,6 +1,7 @@
 package com.cairosquad.domain.usecase
 
 import com.cairosquad.domain.model.SortType
+import com.cairosquad.domain.repository.ArtistsRepository
 import com.cairosquad.domain.repository.MoviesRepository
 import com.cairosquad.domain.repository.SearchRepository
 import com.cairosquad.entity.Artist
@@ -21,13 +22,19 @@ class ManageMoviesUseCaseTest {
 
     private lateinit var moviesRepository: MoviesRepository
     private lateinit var searchRepository: SearchRepository
+    private lateinit var artistRepository: ArtistsRepository
     private lateinit var useCase: ManageMoviesUseCase
 
     @BeforeTest
     fun setUp() {
         moviesRepository = mockk()
         searchRepository = mockk()
-        useCase = ManageMoviesUseCase(moviesRepository, searchRepository)
+        artistRepository = mockk()
+        useCase = ManageMoviesUseCase(
+            moviesRepository,
+            searchRepository,
+            artistRepository
+        )
     }
 
     @Test
@@ -288,23 +295,23 @@ class ManageMoviesUseCaseTest {
     fun `should return top cast when getMovieTopCast is called`() = runTest {
         val movieId = 123L
         val page = 1
-        coEvery { moviesRepository.getMovieTopCast(movieId, page) } returns listOf(actor)
+        coEvery { artistRepository.getMovieTopCast(movieId, page) } returns listOf(actor)
 
         val result = useCase.getMovieTopCast(movieId, page)
 
         assertThat(result).containsExactly(actor)
-        coVerify(exactly = 1) { moviesRepository.getMovieTopCast(movieId, page) }
+        coVerify(exactly = 1) { artistRepository.getMovieTopCast(movieId, page) }
     }
 
     @Test
     fun `should return top cast when getMovieTopCast is called with only movieId`() = runTest {
         val movieId = 123L
-        coEvery { moviesRepository.getMovieTopCast(movieId, 1) } returns listOf(actor)
+        coEvery { artistRepository.getMovieTopCast(movieId, 1) } returns listOf(actor)
 
         val result = useCase.getMovieTopCast(movieId)
 
         assertThat(result).containsExactly(actor)
-        coVerify(exactly = 1) { moviesRepository.getMovieTopCast(movieId, 1) }
+        coVerify(exactly = 1) { artistRepository.getMovieTopCast(movieId, 1) }
     }
 
     @Test

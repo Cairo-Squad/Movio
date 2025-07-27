@@ -47,6 +47,9 @@ fun getCacheCodeOfSearchedMovies(query: String, page: Int): String {
 fun getCacheCodeOfMovieReviews(page: Int, movieId: Long): String {
     return "movies/tobRated/page = $page/movieId = $movieId"
 }
+fun getCacheCodeOfMoviesOfArtist(artistId: Long): String {
+    return "movies/artist/artistId = $artistId"
+}
 fun getCacheCodeOfSeries(seriesId: Long): String {
     return "series/seriesId = $seriesId"
 }
@@ -85,4 +88,22 @@ fun getCacheCodeOfSearchedSeries(query: String, page: Int): String {
 }
 fun getCacheCodeOfSeriesReviews(page: Int, seriesId: Long): String {
     return "series/tobRated/page = $page/seriesId = $seriesId"
+}
+
+fun getCacheCodeOfSeriesOfArtist(artistId: Long): String {
+    return "series/artist/artistId = $artistId"
+}
+fun getCacheCodeOfArtist(artistId: Long): String {
+    return "artists/artistId=$artistId"
+}
+fun getCacheCodeOfArtistsByQuery(query: String, page: Int): String {
+    return "artists/search/page=$page/query=$query"
+}
+
+fun getCacheCodeOfMovieTopCast(movieId: Long, page: Int): String {
+    return "artists/topCast/movieId=$movieId/page=$page"
+}
+
+fun getCacheCodeOfSeriesTopCast(seriesId: Long, page: Int): String {
+    return "artists/topCast/seriesId=$seriesId/page=$page"
 }

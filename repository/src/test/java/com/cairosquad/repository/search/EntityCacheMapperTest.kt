@@ -5,7 +5,9 @@ import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import com.cairosquad.repository.artists.data_source.local.dto.ArtistCacheDto
 import com.cairosquad.repository.artists.data_source.local.toCacheDto
+import com.cairosquad.repository.artists.data_source.local.toCacheDtoList
 import com.cairosquad.repository.artists.data_source.local.toEntity
+import com.cairosquad.repository.artists.data_source.local.toEntityList
 import com.cairosquad.repository.series.data_source.local.dto.SeriesWithoutGenreCacheDto
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
@@ -22,7 +24,7 @@ class EntityCacheMapperTest {
         val page = 1
         val before = Instant.now().toEpochMilli()
 
-        val cache = series.toCacheDto(query, page)
+        val cache = series.toCacheDtoList(query, page)
 
         assertThat(cache).isEqualTo(
             SeriesWithoutGenreCacheDto(
@@ -51,7 +53,7 @@ class EntityCacheMapperTest {
             releaseDate = 0L,
             seasonsCount = 1
         )
-        assertThat(seriesCacheWithNulls.toEntity()).isEqualTo(expected)
+        assertThat(seriesCacheWithNulls.toEntityList()).isEqualTo(expected)
     }
 
     @Test
@@ -59,7 +61,7 @@ class EntityCacheMapperTest {
         val before = Instant.now().toEpochMilli()
         val query = "crime series"
         val page = 1
-        val cache = movie.toCacheDto(query, page)
+        val cache = movie.toCacheDtoList(query, page)
 
         assertThat(cache.id).isEqualTo(movie.id.toInt())
         assertThat(cache.title).isEqualTo(movie.title)
@@ -79,7 +81,7 @@ class EntityCacheMapperTest {
             runtimeMinutes = 0,
             trailerPath = ""
         )
-        assertThat(movieCacheWithNulls.toEntity()).isEqualTo(expected)
+        assertThat(movieCacheWithNulls.toEntityList()).isEqualTo(expected)
     }
 
     @Test
@@ -118,7 +120,7 @@ class EntityCacheMapperTest {
             runtimeMinutes = 0,
             trailerPath = ""
         )
-            .toCacheDto(query, page)
+            .toCacheDtoList(query, page)
 
         assertThat(result.voteAverage).isWithin(0.001).of(9.0)
     }
@@ -133,7 +135,7 @@ class EntityCacheMapperTest {
             runtimeMinutes = 0,
             trailerPath = ""
         )
-            .toCacheDto(query, page)
+            .toCacheDtoList(query, page)
 
         assertThat(result.voteAverage).isWithin(0.001).of(Float.MAX_VALUE.toDouble())
     }

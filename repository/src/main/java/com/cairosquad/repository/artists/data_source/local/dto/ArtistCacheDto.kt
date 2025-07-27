@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 data class ArtistCacheDto(
     @ColumnInfo(name = "artist_id")
     @PrimaryKey
-    val id: Int,
+    val id: Long,
     @ColumnInfo(name = "name")
     val name: String,
     @ColumnInfo(name = "photoPath")

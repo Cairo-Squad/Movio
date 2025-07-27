@@ -1,6 +1,7 @@
 package com.cairosquad.domain.usecase
 
 import com.cairosquad.domain.model.SortType
+import com.cairosquad.domain.repository.ArtistsRepository
 import com.cairosquad.domain.repository.MoviesRepository
 import com.cairosquad.domain.repository.SearchRepository
 import com.cairosquad.entity.Artist
@@ -11,6 +12,7 @@ import com.cairosquad.entity.Review
 class ManageMoviesUseCase(
     private val moviesRepository: MoviesRepository,
     private val searchRepository: SearchRepository,
+    private val artistRepository: ArtistsRepository
 ) {
     suspend fun getMoviesByQuery(query: String, page: Int): List<Movie> {
         return moviesRepository.getMoviesByQuery(query, page).also {
@@ -47,7 +49,7 @@ class ManageMoviesUseCase(
     }
 
     suspend fun getMovieTopCast(movieId: Long, page: Int = 1): List<Artist> {
-        return moviesRepository.getMovieTopCast(movieId, page)
+        return artistRepository.getMovieTopCast(movieId, page)
     }
 
     suspend fun getMoviesByCategory(page: Int, genreId: Long): List<Movie> {
