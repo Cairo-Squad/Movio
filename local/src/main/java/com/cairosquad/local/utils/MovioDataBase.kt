@@ -7,6 +7,7 @@ import com.cairosquad.local.cache.cacheCode.CacheCodeDao
 import com.cairosquad.local.cache.genre.GenreDao
 import com.cairosquad.local.cache.movie.MoviesCacheDao
 import com.cairosquad.local.cache.reviews.ReviewDao
+import com.cairosquad.local.cache.series.SeasonEpisodeCacheDao
 import com.cairosquad.local.cache.series.SeriesCacheDao
 import com.cairosquad.local.login.dao.LoginDao
 import com.cairosquad.local.search.recent.dao.LocalRecentSearchDao
@@ -18,8 +19,12 @@ import com.cairosquad.repository.movie.data_source.local.dto.GenreOfMovieCacheDt
 import com.cairosquad.repository.movie.data_source.local.dto.MovieGenreCacheCrossRef
 import com.cairosquad.repository.movie.data_source.local.dto.MovieWithoutGenreCacheDto
 import com.cairosquad.repository.search.data_source.local.dto.RecentSearchEntity
+import com.cairosquad.repository.series.data_source.local.dto.CacheCodeEpisodeCrossRef
+import com.cairosquad.repository.series.data_source.local.dto.CacheCodeSeasonCrossRef
 import com.cairosquad.repository.series.data_source.local.dto.CacheCodeSeriesCacheCrossRef
+import com.cairosquad.repository.series.data_source.local.dto.EpisodeCacheDto
 import com.cairosquad.repository.series.data_source.local.dto.GenreOfSeriesCacheDto
+import com.cairosquad.repository.series.data_source.local.dto.SeasonCacheDto
 import com.cairosquad.repository.series.data_source.local.dto.SeriesGenreCacheCrossRef
 import com.cairosquad.repository.series.data_source.local.dto.SeriesWithoutGenreCacheDto
 import com.cairosquad.repository.utils.sharedDto.local.CacheCodeDto
@@ -42,7 +47,11 @@ import com.cairosquad.repository.utils.sharedDto.local.ReviewCacheDto
         GenreOfSeriesCacheDto::class,
         SeriesGenreCacheCrossRef::class,
         ReviewCacheDto::class,
-        CacheCodeReviewCacheCrossRef::class
+        CacheCodeReviewCacheCrossRef::class,
+        SeasonCacheDto::class,
+        EpisodeCacheDto::class,
+        CacheCodeSeasonCrossRef::class,
+        CacheCodeEpisodeCrossRef::class,
     ],
     version = 1,
     exportSchema = true,
@@ -56,6 +65,8 @@ abstract class MovioDataBase : RoomDatabase() {
     abstract fun moviesCacheDao(): MoviesCacheDao
 
     abstract fun seriesCacheDao(): SeriesCacheDao
+
+    abstract fun seasonEpisodeCacheDao(): SeasonEpisodeCacheDao
 
     abstract fun artistsCacheDao(): ArtistsCacheDao
 

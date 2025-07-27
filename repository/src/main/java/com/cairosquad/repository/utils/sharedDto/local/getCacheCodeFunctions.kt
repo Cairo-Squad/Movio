@@ -107,3 +107,9 @@ fun getCacheCodeOfMovieTopCast(movieId: Long, page: Int): String {
 fun getCacheCodeOfSeriesTopCast(seriesId: Long, page: Int): String {
     return "artists/topCast/seriesId=$seriesId/page=$page"
 }
+fun getCacheCodeOfSeriesSeasons(seriesId: Long): String {
+    return "seasons/seriesId=$seriesId"
+}
+fun getCacheCodeOfEpisodes(seriesId: Long, seasonNumber: Int): String {
+    return "episodes/seriesId=$seriesId/season=$seasonNumber"
+}

@@ -1,9 +1,15 @@
 package com.cairosquad.repository.series.data_source.local
 
+import com.cairosquad.entity.Episode
 import com.cairosquad.entity.Genre
+import com.cairosquad.entity.Season
 import com.cairosquad.entity.Series
+import com.cairosquad.repository.series.data_source.local.dto.CacheCodeWithEpisodesCacheDto
+import com.cairosquad.repository.series.data_source.local.dto.CacheCodeWithSeasonsCacheDto
 import com.cairosquad.repository.series.data_source.local.dto.CacheCodeWithSeriesCacheDto
+import com.cairosquad.repository.series.data_source.local.dto.EpisodeCacheDto
 import com.cairosquad.repository.series.data_source.local.dto.GenreOfSeriesCacheDto
+import com.cairosquad.repository.series.data_source.local.dto.SeasonCacheDto
 import com.cairosquad.repository.series.data_source.local.dto.SeriesCacheDto
 import com.cairosquad.repository.series.data_source.local.dto.SeriesWithoutGenreCacheDto
 import com.cairosquad.repository.utils.sharedDto.local.CacheCodeDto
@@ -74,4 +80,92 @@ fun Genre.toCacheDto(): GenreOfSeriesCacheDto {
 @JvmName("toCacheGenre")
 fun List<Genre>.toCacheDtoList(): List<GenreOfSeriesCacheDto> {
     return map { it.toCacheDto() }
+}
+
+fun Season.toCacheDto(): SeasonCacheDto {
+    return SeasonCacheDto(
+        id = seriesId * 1000L + seasonNumber, // Unique ID combining seriesId and seasonNumber
+        seriesId = seriesId,
+        seasonNumber = seasonNumber,
+        seasonName = seasonName,
+        episodesCount = episodesCount,
+        rating = rating,
+        posterPath = posterPath,
+        overview = overview,
+        airDate = airDate
+    )
+}
+
+
+@JvmName("toCacheDtoListSeason")
+fun List<Season>.toCacheDtoList(): List<SeasonCacheDto> {
+    return map { it.toCacheDto() }
+}
+
+fun SeasonCacheDto.toEntity(): Season {
+    return Season(
+        seriesId = seriesId,
+        seasonNumber = seasonNumber,
+        seasonName = seasonName,
+        episodesCount = episodesCount,
+        rating = rating,
+        posterPath = posterPath,
+        overview = overview,
+        airDate = airDate
+    )
+}
+
+@JvmName("toEntityListSeasonCacheDto")
+fun List<SeasonCacheDto>.toEntityList(): List<Season> {
+    return map { it.toEntity() }
+}
+
+fun Episode.toCacheDto(): EpisodeCacheDto {
+    return EpisodeCacheDto(
+        id = id,
+        episodeNumber = episodeNumber,
+        photoPath = photoPath,
+        episodeName = episodeName,
+        runtimeMinutes = runtimeMinutes,
+        rating = rating,
+        seasonNumber = seasonNumber,
+        seriesId = seriesId
+    )
+}
+
+@JvmName("toCacheDtoListEpisode")
+fun List<Episode>.toCacheDtoList(): List<EpisodeCacheDto> {
+    return map { it.toCacheDto() }
+}
+
+fun EpisodeCacheDto.toEntity(): Episode {
+    return Episode(
+        id = id,
+        episodeNumber = episodeNumber,
+        photoPath = photoPath,
+        episodeName = episodeName,
+        runtimeMinutes = runtimeMinutes,
+        rating = rating,
+        seasonNumber = seasonNumber,
+        seriesId = seriesId
+    )
+}
+
+@JvmName("toEntityListEpisodeCacheDto")
+fun List<EpisodeCacheDto>.toEntityList(): List<Episode> {
+    return map { it.toEntity() }
+}
+
+fun List<Season>.toCacheCodeWithSeasonsCacheDto(request: String): CacheCodeWithSeasonsCacheDto {
+    return CacheCodeWithSeasonsCacheDto(
+        cacheCode = CacheCodeDto(cacheCode = request),
+        seasons = this.toCacheDtoList()
+    )
+}
+
+fun List<Episode>.toCacheCodeWithEpisodesCacheDto(request: String): CacheCodeWithEpisodesCacheDto {
+    return CacheCodeWithEpisodesCacheDto(
+        cacheCode = CacheCodeDto(cacheCode = request),
+        episodes = this.toCacheDtoList()
+    )
 }

@@ -26,7 +26,7 @@ val repositoryModule = module {
     }
 
     single<SeriesRepository> {
-        SeriesRepositoryImpl(get(), get())
+        SeriesRepositoryImpl(get(), get(), get())
     }
 
     single<ArtistsRepository> {

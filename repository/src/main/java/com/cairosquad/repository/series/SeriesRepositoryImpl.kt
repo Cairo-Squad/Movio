@@ -7,7 +7,10 @@ import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Review
 import com.cairosquad.entity.Season
 import com.cairosquad.entity.Series
+import com.cairosquad.repository.series.data_source.local.SeasonEpisodeLocalDataSource
 import com.cairosquad.repository.series.data_source.local.SeriesLocalDataSource
+import com.cairosquad.repository.series.data_source.local.toCacheCodeWithEpisodesCacheDto
+import com.cairosquad.repository.series.data_source.local.toCacheCodeWithSeasonsCacheDto
 import com.cairosquad.repository.series.data_source.local.toCacheCodeWithSeriesCacheDto
 import com.cairosquad.repository.series.data_source.local.toCacheDtoList
 import com.cairosquad.repository.series.data_source.local.toEntityList
@@ -17,6 +20,7 @@ import com.cairosquad.repository.series.data_source.remote.toEntity
 import com.cairosquad.repository.utils.mappers.tryToCall
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfAiringTodaySeries
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfAllSeries
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfEpisodes
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfFreeToWatchSeries
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfMoreRecommendedSeries
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfOnTvSeries
@@ -26,6 +30,7 @@ import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSeries
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSeriesByCategory
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSeriesOfArtist
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSeriesReviews
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSeriesSeasons
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSimilarSeries
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfTopRatedSeries
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfTrendingSeries
@@ -35,7 +40,8 @@ import java.util.Date
 
 class SeriesRepositoryImpl(
     private val seriesRemoteDataSource: SeriesRemoteDataSource,
-    private val seriesLocalDataSource: SeriesLocalDataSource
+    private val seriesLocalDataSource: SeriesLocalDataSource,
+    private val seasonEpisodeLocalDataSource: SeasonEpisodeLocalDataSource
 ) : SeriesRepository {
 
     override suspend fun getSimilarSeries(seriesId: Long, page: Int): List<Series> {
@@ -184,18 +190,39 @@ class SeriesRepositoryImpl(
     }
 
     override suspend fun getSeriesSeasons(seriesId: Long): List<Season> {
-        return tryToCall {
-            seriesRemoteDataSource.getSeriesSeasons(seriesId).map { it.toEntity(seriesId) }
-        }
+        seasonEpisodeLocalDataSource.deleteExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
+        return seasonEpisodeLocalDataSource
+            .getSeasonsByCacheCode(cacheCode = getCacheCodeOfSeriesSeasons(seriesId))
+            .toEntityList()
+            .takeIf { it.isNotEmpty() }
+            ?: tryToCall {
+                seriesRemoteDataSource.getSeriesSeasons(seriesId).map { it.toEntity(seriesId) }
+                    .also { seasons ->
+                        seasonEpisodeLocalDataSource.insertCacheCodeWithSeasons(
+                            seasons.toCacheCodeWithSeasonsCacheDto(
+                                request = getCacheCodeOfSeriesSeasons(seriesId)
+                            )
+                        )
+                    }
+            }
     }
 
-    override suspend fun getEpisodes(
-        seriesId: Long,
-        seasonNumber: Int
-    ): List<Episode> {
-        return tryToCall {
-            seriesRemoteDataSource.getEpisodes(seriesId, seasonNumber).map { it.toEntity() }
-        }
+    override suspend fun getEpisodes(seriesId: Long, seasonNumber: Int): List<Episode> {
+        seasonEpisodeLocalDataSource.deleteExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
+        return seasonEpisodeLocalDataSource
+            .getEpisodesByCacheCode(cacheCode = getCacheCodeOfEpisodes(seriesId, seasonNumber))
+            .toEntityList()
+            .takeIf { it.isNotEmpty() }
+            ?: tryToCall {
+                seriesRemoteDataSource.getEpisodes(seriesId, seasonNumber).map { it.toEntity() }
+                    .also { episodes ->
+                        seasonEpisodeLocalDataSource.insertCacheCodeWithEpisodes(
+                            episodes.toCacheCodeWithEpisodesCacheDto(
+                                request = getCacheCodeOfEpisodes(seriesId, seasonNumber)
+                            )
+                        )
+                    }
+            }
     }
 
     override suspend fun getSeriesGenres(): List<Genre> {
