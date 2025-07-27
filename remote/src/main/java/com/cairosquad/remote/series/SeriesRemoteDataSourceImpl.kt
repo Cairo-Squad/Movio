@@ -1,9 +1,9 @@
 package com.cairosquad.remote.series
 
 import com.cairosquad.remote.utils.retrofit.safeCallApi
+import com.cairosquad.repository.artists.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.GenreDto
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.series.data_source.remote.SeriesRemoteDataSource
 import com.cairosquad.repository.series.data_source.remote.dto.EpisodeRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeasonRemoteDto

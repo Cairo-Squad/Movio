@@ -4,17 +4,28 @@ import com.cairosquad.domain.repository.ArtistsRepository
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
-import com.cairosquad.repository.artists.data_source.ArtistsRemoteDataSource
-import com.cairosquad.repository.search.data_source.remote.dto.toEntity
-import com.cairosquad.repository.search.data_source.remote.dto.toEntityList
+import com.cairosquad.repository.artists.data_source.remote.ArtistsRemoteDataSource
+import com.cairosquad.repository.artists.data_source.remote.toEntity
+import com.cairosquad.repository.artists.data_source.remote.toEntityList
+import com.cairosquad.repository.movie.data_source.remote.toEntityList
+import com.cairosquad.repository.series.data_source.remote.toEntityList
 import com.cairosquad.repository.utils.mappers.tryToCall
 
 class ArtistsRepositoryImpl(
     private val artistsRemoteDataSource: ArtistsRemoteDataSource,
 ) : ArtistsRepository {
-    override suspend fun getArtist(artistId: Long): Artist {
+    override suspend fun getArtistsByQuery(
+        query: String,
+        page: Int
+    ): List<Artist> {
         return tryToCall {
-                artistsRemoteDataSource.getArtist(artistId).toEntity()
+            artistsRemoteDataSource.getArtistsByQuery(query, page).toEntityList()
+        }
+    }
+
+    override suspend fun getArtistById(id: Long): Artist {
+        return tryToCall {
+                artistsRemoteDataSource.getArtist(id).toEntity()
         }
     }
 

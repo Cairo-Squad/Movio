@@ -24,12 +24,12 @@ class GetArtistDetailsUseCaseTest {
 
     @Test
     fun `getArtist SHOULD return artist from repository`() = runTest {
-        coEvery { artistsRepository.getArtist(312L) } returns actor
+        coEvery { artistsRepository.getArtistById(312L) } returns actor
 
         val result = useCase.getArtist(312L)
 
         assertThat(result).isEqualTo(actor)
-        coVerify(exactly = 1) { artistsRepository.getArtist(312L) }
+        coVerify(exactly = 1) { artistsRepository.getArtistById(312L) }
     }
 
     @Test
@@ -55,7 +55,7 @@ class GetArtistDetailsUseCaseTest {
     // 🔥 Edge Case
     @Test(expected = RuntimeException::class)
     fun `getArtist SHOULD throw exception when repository fails`() = runTest {
-        coEvery { artistsRepository.getArtist(312L) } throws RuntimeException("Failed to fetch")
+        coEvery { artistsRepository.getArtistById(312L) } throws RuntimeException("Failed to fetch")
 
         useCase.getArtist(312L)
     }

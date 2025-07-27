@@ -1,4 +1,4 @@
-package com.cairosquad.repository.search.data_source.remote.dto
+package com.cairosquad.repository.utils.sharedDto.remote
 
 
 import com.cairosquad.repository.movie.data_source.remote.dto.GenreDto

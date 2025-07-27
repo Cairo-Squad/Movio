@@ -1,9 +1,8 @@
 package com.cairosquad.remote.series
 
+import com.cairosquad.repository.artists.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.CreditResponse
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.ResultResponse
 import com.cairosquad.repository.series.data_source.remote.dto.EpisodeRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeasonRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeasonResponse
@@ -11,6 +10,7 @@ import com.cairosquad.repository.series.data_source.remote.dto.SeriesDetailsRemo
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesResponse
 import com.cairosquad.repository.utils.exception.ServerException
+import com.cairosquad.repository.utils.sharedDto.remote.ResultResponse
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.mockk

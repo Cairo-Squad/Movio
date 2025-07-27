@@ -1,13 +1,13 @@
 package com.cairosquad.remote.movie
 
+import com.cairosquad.repository.artists.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.CreditResponse
 import com.cairosquad.repository.movie.data_source.remote.dto.GenreDto
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieDetailsRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.GenreResponse
-import com.cairosquad.repository.search.data_source.remote.dto.ResultResponse
+import com.cairosquad.repository.utils.sharedDto.remote.GenreResponse
+import com.cairosquad.repository.utils.sharedDto.remote.ResultResponse
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify

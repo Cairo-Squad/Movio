@@ -2,7 +2,7 @@ package com.cairosquad.local.cache
 
 import com.cairosquad.local.search.cache.CacheDataSourceImpl
 import com.cairosquad.local.search.cache.dao.CacheDao
-import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
+import com.cairosquad.repository.artists.data_source.local.dto.ArtistCacheDto
 import com.cairosquad.repository.series.data_source.local.dto.SeriesWithoutGenreCacheDto
 import com.google.common.truth.Truth.assertThat
 import io.mockk.Runs
@@ -118,7 +118,7 @@ class LocalSearchCacheDataSourceImplTest {
             name = "Emma",
             photoPath = null,
             query = query,
-            timestamp = Instant.now().toEpochMilli(),
+            cachingTimestamp = Instant.now().toEpochMilli(),
             country = "",
             birthDate = 0L,
             biography = "",
@@ -144,7 +144,7 @@ class LocalSearchCacheDataSourceImplTest {
             id = 0,
             page = 1,
             query = query,
-            timestamp = 0,
+            cachingTimestamp = 0,
             name = "Emma",
             photoPath = "photo.jpg",
             country = "",

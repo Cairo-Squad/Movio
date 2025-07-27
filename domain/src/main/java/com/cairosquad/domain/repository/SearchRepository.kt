@@ -1,9 +1,6 @@
 package com.cairosquad.domain.repository
 
-import com.cairosquad.entity.Artist
-
 interface SearchRepository {
-    suspend fun getArtists(query: String,page:Int): List<Artist>
 
     suspend fun getAllHistory(): List<String>
 

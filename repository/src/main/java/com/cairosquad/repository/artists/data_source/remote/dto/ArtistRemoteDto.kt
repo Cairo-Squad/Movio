@@ -1,4 +1,4 @@
-package com.cairosquad.repository.search.data_source.remote.dto
+package com.cairosquad.repository.artists.data_source.remote.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

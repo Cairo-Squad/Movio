@@ -1,10 +1,10 @@
 package com.cairosquad.remote.search
 
+import com.cairosquad.repository.artists.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.ResultResponse
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 import com.cairosquad.repository.utils.exception.ServerException
+import com.cairosquad.repository.utils.sharedDto.remote.ResultResponse
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.mockk

@@ -3,11 +3,11 @@ package com.cairosquad.repository.artists
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
-import com.cairosquad.repository.artists.data_source.ArtistsRemoteDataSource
+import com.cairosquad.repository.artists.data_source.local.dto.ArtistCacheDto
+import com.cairosquad.repository.artists.data_source.local.toEntity
+import com.cairosquad.repository.artists.data_source.remote.ArtistsRemoteDataSource
+import com.cairosquad.repository.artists.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
-import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
-import com.cairosquad.repository.search.data_source.local.dto.toEntity
-import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 import com.google.common.truth.Truth.assertThat
 import io.mockk.Runs
@@ -66,7 +66,7 @@ class ArtistsRepositoryImplTest {
         coEvery { cacheDataSource.clearExpiredCache(any()) } just Runs
         coEvery { cacheDataSource.getCachedArtists(artistId) } returns cachedDto
 
-        val result = repository.getArtist(artistId)
+        val result = repository.getArtistById(artistId)
 
         assertThat(result).isEqualTo(expected)
     }
@@ -80,7 +80,7 @@ class ArtistsRepositoryImplTest {
         coEvery { artistsRemoteDataSource.getArtist(artistId) } returns artistRemoteDto
         coEvery { cacheDataSource.cacheArtist(any()) } just Runs
 
-        val result = repository.getArtist(artistId)
+        val result = repository.getArtistById(artistId)
 
         assertThat(result).isEqualTo(expectedArtist)
     }
@@ -149,7 +149,7 @@ class ArtistsRepositoryImplTest {
             id = 1,
             name = "Jane",
             photoPath = "/jane.jpg",
-            timestamp = System.currentTimeMillis(),
+            cachingTimestamp = System.currentTimeMillis(),
             page = 1,
             query = "",
             country = "",

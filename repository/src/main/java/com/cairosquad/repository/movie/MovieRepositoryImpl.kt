@@ -6,13 +6,14 @@ import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Review
+import com.cairosquad.repository.artists.data_source.remote.toEntity
 import com.cairosquad.repository.movie.data_source.local.MoviesLocalDataSource
 import com.cairosquad.repository.movie.data_source.local.toCacheDtoList
 import com.cairosquad.repository.movie.data_source.local.toEntityList
 import com.cairosquad.repository.movie.data_source.local.toRequestWithMoviesCacheDto
 import com.cairosquad.repository.movie.data_source.remote.MoviesRemoteDataSource
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.toEntity
+import com.cairosquad.repository.movie.data_source.remote.toEntity
 import com.cairosquad.repository.utils.mappers.tryToCall
 import com.cairosquad.repository.utils.sharedDto.local.getRequestOfAllMovies
 import com.cairosquad.repository.utils.sharedDto.local.getRequestOfFreeToWatchMovies

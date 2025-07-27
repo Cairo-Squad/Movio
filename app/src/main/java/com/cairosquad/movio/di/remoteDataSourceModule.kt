@@ -6,15 +6,12 @@ import com.cairosquad.remote.login.LoginApiService
 import com.cairosquad.remote.login.RemoteLoginDataSourceImpl
 import com.cairosquad.remote.movie.MovieApiService
 import com.cairosquad.remote.movie.MoviesRemoteDataSourceImpl
-import com.cairosquad.remote.search.RemoteSearchDataSourceImpl
-import com.cairosquad.remote.search.SearchApiService
 import com.cairosquad.remote.series.SeriesApiService
 import com.cairosquad.remote.series.SeriesRemoteDataSourceImpl
 import com.cairosquad.remote.utils.retrofit.retrofitProvider
-import com.cairosquad.repository.artists.data_source.ArtistsRemoteDataSource
+import com.cairosquad.repository.artists.data_source.remote.ArtistsRemoteDataSource
 import com.cairosquad.repository.login.data_source.remote.RemoteLoginDataSource
 import com.cairosquad.repository.movie.data_source.remote.MoviesRemoteDataSource
-import com.cairosquad.repository.search.data_source.remote.RemoteSearchDataSource
 import com.cairosquad.repository.series.data_source.remote.SeriesRemoteDataSource
 import com.cairosquad.repository.utils.authenticationTokenProvider
 import org.koin.dsl.module
@@ -36,17 +33,10 @@ val remoteDataSourceModule = module {
         get<Retrofit>().create(SeriesApiService::class.java)
     }
 
-    single<SearchApiService> {
-        get<Retrofit>().create(SearchApiService::class.java)
-    }
-
     single<RemoteLoginDataSource> {
         RemoteLoginDataSourceImpl(get())
     }
 
-    single<RemoteSearchDataSource> {
-        RemoteSearchDataSourceImpl(get())
-    }
     single<ArtistsRemoteDataSource> {
         RemoteArtistDataSourceImpl(get())
     }

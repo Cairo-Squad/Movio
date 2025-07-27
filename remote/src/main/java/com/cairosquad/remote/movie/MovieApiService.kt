@@ -6,8 +6,8 @@ import com.cairosquad.repository.movie.data_source.remote.dto.MovieDetailsRemote
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.VideoResponse
-import com.cairosquad.repository.search.data_source.remote.dto.GenreResponse
-import com.cairosquad.repository.search.data_source.remote.dto.ResultResponse
+import com.cairosquad.repository.utils.sharedDto.remote.GenreResponse
+import com.cairosquad.repository.utils.sharedDto.remote.ResultResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

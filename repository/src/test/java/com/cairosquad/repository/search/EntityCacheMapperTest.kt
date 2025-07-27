@@ -3,9 +3,9 @@ package com.cairosquad.repository.search
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
-import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
-import com.cairosquad.repository.search.data_source.local.dto.toCacheDto
-import com.cairosquad.repository.search.data_source.local.dto.toEntity
+import com.cairosquad.repository.artists.data_source.local.dto.ArtistCacheDto
+import com.cairosquad.repository.artists.data_source.local.toCacheDto
+import com.cairosquad.repository.artists.data_source.local.toEntity
 import com.cairosquad.repository.series.data_source.local.dto.SeriesWithoutGenreCacheDto
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
@@ -97,8 +97,8 @@ class EntityCacheMapperTest {
         assertThat(cache.page).isEqualTo(page)
         assertThat(cache.photoPath).isEqualTo(artist.photoPath)
 
-        val delta = (Instant.now().toEpochMilli() - cache.timestamp).absoluteValue
-        assertThat(cache.timestamp).isAtLeast(before)
+        val delta = (Instant.now().toEpochMilli() - cache.cachingTimestamp).absoluteValue
+        assertThat(cache.cachingTimestamp).isAtLeast(before)
         assertThat(delta).isAtMost(tolerance)
     }
 
@@ -197,7 +197,7 @@ class EntityCacheMapperTest {
             query = query,
             name = null,
             photoPath = null,
-            timestamp = 123L,
+            cachingTimestamp = 123L,
             country = "",
             birthDate = 0L,
             biography = "",

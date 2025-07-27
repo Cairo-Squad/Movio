@@ -1,12 +1,12 @@
 package com.cairosquad.remote.movie
 
 import com.cairosquad.remote.utils.retrofit.safeCallApi
+import com.cairosquad.repository.artists.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.MoviesRemoteDataSource
 import com.cairosquad.repository.movie.data_source.remote.dto.GenreDto
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieDetailsRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
 import java.time.LocalDate
 
 class MoviesRemoteDataSourceImpl(

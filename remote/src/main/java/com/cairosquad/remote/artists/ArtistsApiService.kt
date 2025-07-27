@@ -1,10 +1,17 @@
 package com.cairosquad.remote.artists
 
-import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
+import com.cairosquad.repository.artists.data_source.remote.dto.ArtistRemoteDto
+import com.cairosquad.repository.utils.sharedDto.remote.ResultResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ArtistsApiService {
+    @GET("search/person")
+    suspend fun getArtistsByQuery(
+        @Query("query") query: String,
+        @Query("page") page: Int
+    ): ResultResponse<ArtistRemoteDto>
 
     @GET("person/{id}")
     suspend fun getArtist(

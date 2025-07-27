@@ -9,7 +9,7 @@ class GetArtistDetailsUseCase(
     private val artistsRepository: ArtistsRepository
 ) {
     suspend fun getArtist(artistId: Long): Artist {
-        return artistsRepository.getArtist(artistId)
+        return artistsRepository.getArtistById(artistId)
     }
 
     suspend fun getMoviesOfArtist(artistId: Long): List<Movie> {

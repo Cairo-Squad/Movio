@@ -1,16 +1,15 @@
-package com.cairosquad.repository.search.data_source.local.dto
+package com.cairosquad.repository.artists.data_source.local
 
 import com.cairosquad.entity.Artist
+import com.cairosquad.repository.artists.data_source.local.dto.ArtistCacheDto
 import java.util.Date
 
-fun Artist.toCacheDto(query: String,page: Int): ArtistCacheDto {
+fun Artist.toCacheDto(): ArtistCacheDto {
     return ArtistCacheDto(
         id = id.toInt(),
-        page =page ,
         name = name,
         photoPath = photoPath,
-        query = query,
-        timestamp = Date().time,
+        cachingTimestamp = Date().time,
         country = country,
         birthDate = birthDate,
         biography = biography,
@@ -19,15 +18,15 @@ fun Artist.toCacheDto(query: String,page: Int): ArtistCacheDto {
 }
 
 @JvmName("toCacheArtistDto")
-fun List<Artist>.toCacheDto(query: String,page: Int): List<ArtistCacheDto> {
-    return map { it.toCacheDto(query,page) }
+fun List<Artist>.toCacheDto(): List<ArtistCacheDto> {
+    return map { it.toCacheDto() }
 }
 
 fun ArtistCacheDto.toEntity(): Artist {
     return Artist(
         id = id.toLong(),
-        name = name ?: "",
-        photoPath = photoPath ?: "",
+        name = name,
+        photoPath = photoPath,
         country = country,
         birthDate = birthDate,
         biography = biography,

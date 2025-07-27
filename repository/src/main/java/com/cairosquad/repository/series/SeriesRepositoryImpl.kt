@@ -8,13 +8,14 @@ import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Review
 import com.cairosquad.entity.Season
 import com.cairosquad.entity.Series
-import com.cairosquad.repository.search.data_source.remote.dto.toEntity
+import com.cairosquad.repository.artists.data_source.remote.toEntity
 import com.cairosquad.repository.series.data_source.local.SeriesLocalDataSource
 import com.cairosquad.repository.series.data_source.local.toCacheDtoList
 import com.cairosquad.repository.series.data_source.local.toEntityList
 import com.cairosquad.repository.series.data_source.local.toRequestWithSeriesCacheDto
 import com.cairosquad.repository.series.data_source.remote.SeriesRemoteDataSource
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
+import com.cairosquad.repository.series.data_source.remote.toEntity
 import com.cairosquad.repository.utils.mappers.tryToCall
 import com.cairosquad.repository.utils.sharedDto.local.getRequestOfAiringTodaySeries
 import com.cairosquad.repository.utils.sharedDto.local.getRequestOfAllSeries
