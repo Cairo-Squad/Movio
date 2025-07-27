@@ -4,8 +4,8 @@ import com.cairosquad.local.search.discovery.dao.DiscoveryDao
 import com.cairosquad.repository.search.data_source.local.CacheDataSource
 import com.cairosquad.repository.search.data_source.local.DiscoveryDataSource
 import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
-import com.cairosquad.repository.utils.mappers.toPersonalizedMoviesIdsDto
-import com.cairosquad.repository.utils.mappers.toSuggestedMoviesIds
+import com.cairosquad.repository.utils.mappers.toPersonalizedMoviesIdsDtoList
+import com.cairosquad.repository.utils.mappers.toSuggestedMoviesIdsList
 
 class DiscoveryDataSourceImpl(
     private val cacheDataSource: CacheDataSource,
@@ -16,7 +16,7 @@ class DiscoveryDataSourceImpl(
     }
 
     override suspend fun cachePersonalizedMovies(movies: List<MovieCacheDto>) {
-        discoveryDao.cachePersonalizedMoviesIds(movies.toPersonalizedMoviesIdsDto())
+        discoveryDao.cachePersonalizedMoviesIds(movies.toPersonalizedMoviesIdsDtoList())
         cacheDataSource.cacheMovies(movies)
     }
 
@@ -25,7 +25,7 @@ class DiscoveryDataSourceImpl(
     }
 
     override suspend fun cacheSuggestedMovies(movies: List<MovieCacheDto>) {
-        discoveryDao.cacheSuggestedMovies(movies.toSuggestedMoviesIds())
+        discoveryDao.cacheSuggestedMovies(movies.toSuggestedMoviesIdsList())
         cacheDataSource.cacheMovies(movies)
     }
 
