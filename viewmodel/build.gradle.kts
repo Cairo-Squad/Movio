@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
@@ -28,8 +30,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
     }
     packaging {
         resources {
@@ -48,24 +52,24 @@ android {
 dependencies {
     implementation(libs.androidx.core.ktx)
     testImplementation(libs.junit)
-    testImplementation(libs.junit.junit)
-    testImplementation(libs.junit.junit)
     testImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.androidx.junit)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
-    testImplementation(libs.junit.jupiter)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
     // Paging
     api(libs.androidx.paging.runtime)
     api(libs.paging.compose)
+
     // test
     androidTestImplementation(libs.androidx.core.testing)
     androidTestImplementation(libs.androidx.junit.ktx)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.androidx.paging.testing)
+
     // google truth
     testImplementation(libs.truth)
     androidTestImplementation(libs.truth)
@@ -76,7 +80,6 @@ dependencies {
 
     testImplementation(libs.androidx.core.testing)
     testImplementation(libs.turbine)
-
 
     implementation(project(":domain"))
     testImplementation(kotlin("test"))

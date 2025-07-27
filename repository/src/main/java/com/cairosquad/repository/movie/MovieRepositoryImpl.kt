@@ -8,7 +8,7 @@ import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Review
 import com.cairosquad.repository.movie.data_source.remote.RemoteMovieDataSource
 import com.cairosquad.repository.search.data_source.local.DiscoveryDataSource
-import com.cairosquad.repository.search.data_source.local.dto.toCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.toCacheDtoList
 import com.cairosquad.repository.search.data_source.local.dto.toEntity
 import com.cairosquad.repository.search.data_source.remote.RemoteMovieDiscoveryDataSource
 import com.cairosquad.repository.search.data_source.remote.dto.toEntity
@@ -54,7 +54,7 @@ class MovieRepositoryImpl(
                 ?: remoteMovieDiscoveryDataSource.getPersonalizedMovies(page).map { it.toEntity() }
                     .also { result ->
                         discoveryDataSource.cachePersonalizedMovies(
-                            result.toCacheDto(
+                            result.toCacheDtoList(
                                 "ELSAYEDMAGDY",
                                 1
                             )
@@ -72,7 +72,7 @@ class MovieRepositoryImpl(
                 ?: remoteMovieDiscoveryDataSource.getSuggestedMovies().map { it.toEntity() }
                     .also { result ->
                         discoveryDataSource.cacheSuggestedMovies(
-                            result.toCacheDto(
+                            result.toCacheDtoList(
                                 "ELSAYEDMAGDY",
                                 1
                             )

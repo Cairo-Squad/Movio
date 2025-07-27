@@ -19,7 +19,7 @@ class AuthInterceptorTest {
 
     @Before
     fun setup() {
-        interceptor = AuthInterceptor("test-id")
+        interceptor = AuthInterceptor()
         chain = mockk(relaxed = true)
     }
 
@@ -38,6 +38,7 @@ class AuthInterceptorTest {
             assertThat(url.queryParameter("session_id")).isEqualTo("test-id")
             mockk<Response>(relaxed = true)
         }
+        AuthInterceptor.updateToken("test-id")
 
         // When
         interceptor.intercept(chain)
