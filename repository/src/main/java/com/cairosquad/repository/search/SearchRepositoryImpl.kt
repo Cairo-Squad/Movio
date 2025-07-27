@@ -11,10 +11,10 @@ class SearchRepositoryImpl(
     private val moviesRemoteDataSource: MoviesRemoteDataSource,
     private val seriesRemoteDataSource: SeriesRemoteDataSource,
     private val artistsRemoteDataSource: ArtistsRemoteDataSource,
-    private val dataSource: LocalRecentSearchDataSource
+    private val localRecentSearchDataSource: LocalRecentSearchDataSource
 ) : SearchRepository {
     override suspend fun getAllHistory(): List<String> {
-        return tryToCall { dataSource.getAll() }
+        return tryToCall { localRecentSearchDataSource.getAll() }
     }
 
     override suspend fun getAllHistoryByQuery(query: String): List<String> {
@@ -24,7 +24,7 @@ class SearchRepositoryImpl(
                     val series = seriesRemoteDataSource.getSeriesByQuery(query, 1)
                     val movies = moviesRemoteDataSource.getMoviesByQuery(query, 1)
                     val artist = artistsRemoteDataSource.getArtistsByQuery(query, 1)
-                    val local = dataSource.getByQuery(query)
+                    val local = localRecentSearchDataSource.getByQuery(query)
                     val merged = buildList {
                         addAll(local)
                         addAll(movies.map { it.title ?: "" })
@@ -33,19 +33,19 @@ class SearchRepositoryImpl(
                     }
                     merged.distinct().shuffled().take(20)
                 }
-                ?: dataSource.getAll()
+                ?: localRecentSearchDataSource.getAll()
         }
     }
 
     override suspend fun clearAll() {
-        tryToCall { dataSource.clearAll() }
+        tryToCall { localRecentSearchDataSource.clearAll() }
     }
 
     override suspend fun removeQuery(query: String) {
-        tryToCall { dataSource.removeQuery(query) }
+        tryToCall { localRecentSearchDataSource.removeQuery(query) }
     }
 
     override suspend fun addQuery(query: String) {
-        tryToCall { dataSource.addQuery(query) }
+        tryToCall { localRecentSearchDataSource.addQuery(query) }
     }
 }
