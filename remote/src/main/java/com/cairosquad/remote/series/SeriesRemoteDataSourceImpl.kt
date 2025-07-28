@@ -73,8 +73,10 @@ class SeriesRemoteDataSourceImpl(
         val oneWeekAgo = today.minusDays(7)
         return safeCallApi {
             apiService.getOnTvSeries(
-                page, genreId,
-                minDate = oneWeekAgo.toString(), maxDate = today.toString()
+                page = page,
+                withGenres = genreId,
+                minDate = oneWeekAgo.toString(),
+                maxDate = today.toString()
             )
         }
             .results?.filterNotNull().orEmpty()
