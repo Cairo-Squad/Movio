@@ -3,7 +3,6 @@ package com.cairosquad.viewmodel.see_all
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
-import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.base.BaseViewModel
@@ -200,11 +199,21 @@ class SeeAllViewModel(
 
     private suspend fun loadGenresBlock(): List<SeeAllScreenState.GenreUiState> {
         return when (mediaType) {
-            MediaType.MOVIES -> manageMoviesUseCase.getMoviesGenres()
-                .map(Genre::toSeeAllGenreUiState)
+            MediaType.MOVIES -> {
+                val movieGenres = manageMoviesUseCase.getMoviesGenres()
+                buildSet {
+                    add(SeeAllScreenState.GenreUiState.defaultGenre)
+                    movieGenres.mapTo(this) { it.toSeeAllGenreUiState() }
+                }.toList()
+            }
 
-            MediaType.SERIES -> manageSeriesUseCase.getSeriesGenres()
-                .map(Genre::toSeeAllGenreUiState)
+            MediaType.SERIES -> {
+                val seriesGenres = manageSeriesUseCase.getSeriesGenres()
+                buildSet {
+                    add(SeeAllScreenState.GenreUiState.defaultGenre)
+                    seriesGenres.mapTo(this) { it.toSeeAllGenreUiState() }
+                }.toList()
+            }
 
             MediaType.BOTH -> {
                 val movieGenres = manageMoviesUseCase.getMoviesGenres()
