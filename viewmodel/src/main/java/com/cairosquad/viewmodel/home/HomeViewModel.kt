@@ -58,13 +58,8 @@ class HomeViewModel(
     }
 
     fun loadHomeScreenData() {
-        viewModelScope.launch {
-            supervisorScope {
-                val section = async { fetchPopularMedia(null) }
-                section.await()
-                loadGenres()
-            }
-        }
+        fetchPopularMedia(null)
+        loadGenres()
     }
 
     private fun setSectionLoading(sectionType: MediaContentType) {
@@ -73,7 +68,7 @@ class HomeViewModel(
             it.copy(
                 sections = (it.sections + (sectionType to newSection))
                     .entries.sortedBy { entry -> entry.key.ordinal }
-                    .associate { it.key to it.value }
+                    .associate { it -> it.key to it.value }
             )
         }
     }
