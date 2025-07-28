@@ -32,7 +32,11 @@ val viewModelModule = module {
     }
     viewModelOf(::SimilarMoviesViewModel)
     viewModel { (movieId: Long) ->
-        MovieViewModel(movieId = movieId, movieUseCase = get())
+        MovieViewModel(
+            movieId = movieId,
+            movieUseCase = get(),
+            loginUseCase = get()
+        )
     }
 
 	viewModel { (seriesId: Long) ->
