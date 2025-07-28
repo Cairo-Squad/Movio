@@ -94,9 +94,6 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 # lifecycle
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
 mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "mockwebserver" }
-androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleRuntimeKtx" }
-androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
-converter-kotlinx-serialization = { module = "com.squareup.retrofit2:converter-kotlinx-serialization", version.ref = "converterKotlinxSerialization" }
 
 # retrofit + network
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
@@ -110,8 +107,6 @@ tensorflow-lite-task-vision = { module = "org.tensorflow:tensorflow-lite-task-vi
 # firebase
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics", version.ref = "firebaseAnalytics" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics", version.ref = "firebaseCrashlytics" }
-firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
-firebase-perf = { module = "com.google.firebase:firebase-perf" }
 
 # coil
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
@@ -121,7 +116,6 @@ coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose"
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
-androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "roomTesting" }
 
 # navigation
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
@@ -135,8 +129,6 @@ koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "
 koin-ksp = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koin-annotations" }
 
 # paginagtion
-androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging_version" }
-androidx-paging-testing = { module = "androidx.paging:paging-testing", version.ref = "paging_version" }
 paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging_version" }
 
 # webview
@@ -152,8 +144,6 @@ ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = 
 androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitKtx" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 
 
