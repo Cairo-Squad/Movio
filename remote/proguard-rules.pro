@@ -32,12 +32,6 @@
 }
 
 ##########################################
-# 🌟 AndroidX DataStore
-##########################################
--keep class androidx.datastore.** { *; }
--dontwarn androidx.datastore.**
-
-##########################################
 # 🌟 Ktor
 ##########################################
 # Keep Ktor client classes

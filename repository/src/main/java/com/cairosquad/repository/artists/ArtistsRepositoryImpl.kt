@@ -7,7 +7,9 @@ import com.cairosquad.entity.Series
 import com.cairosquad.repository.artists.data_source.ArtistsRemoteDataSource
 import com.cairosquad.repository.search.data_source.local.CacheDataSource
 import com.cairosquad.repository.search.data_source.local.dto.toCacheDto
+import com.cairosquad.repository.search.data_source.local.dto.toCacheDtoList
 import com.cairosquad.repository.search.data_source.local.dto.toEntity
+import com.cairosquad.repository.search.data_source.local.dto.toEntityList
 import com.cairosquad.repository.search.data_source.remote.dto.toEntity
 import com.cairosquad.repository.search.data_source.remote.dto.toEntityList
 import com.cairosquad.repository.utils.mappers.tryToCall
@@ -38,13 +40,13 @@ class ArtistsRepositoryImpl(
         return tryToCall {
             cacheDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
             cacheDataSource.getCachedArtistMovies(artistId = artistId)
-                .takeIf { it.isNotEmpty() }?.toEntity()
+                .takeIf { it.isNotEmpty() }?.toEntityList()
                 ?: artistsRemoteDataSource.getMoviesOfArtist(artistId).toEntityList()
-                    .also { cacheDataSource.cacheMovies(it.toCacheDto(
+                    .also { cacheDataSource.cacheMovies(it.toCacheDtoList(
                         "ELSAYEDMAGDY",
                         1
                     )) }
-                    .also { cacheDataSource.cacheArtistMovies(it.toArtistMoviesCachedDto(artistId)) }
+                    .also { cacheDataSource.cacheArtistMovies(it.toArtistMoviesCachedDtoList(artistId)) }
         }
     }
 
@@ -52,13 +54,13 @@ class ArtistsRepositoryImpl(
         return tryToCall {
             cacheDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
             cacheDataSource.getCachedArtistSeries(artistId = artistId)
-                .takeIf { it.isNotEmpty() }?.toEntity()
+                .takeIf { it.isNotEmpty() }?.toEntityList()
                 ?: artistsRemoteDataSource.getSeriesOfArtist(artistId).toEntityList()
-                    .also { cacheDataSource.cacheSeries(it.toCacheDto(
+                    .also { cacheDataSource.cacheSeries(it.toCacheDtoList(
                         "ELSAYEDMAGDY",
                         1
                     )) }
-                    .also { cacheDataSource.cacheArtistSeries(it.toArtistSeriesCachedDto(artistId)) }
+                    .also { cacheDataSource.cacheArtistSeries(it.toArtistSeriesCachedDtoList(artistId)) }
         }
     }
 
