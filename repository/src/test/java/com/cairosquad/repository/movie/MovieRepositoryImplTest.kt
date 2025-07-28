@@ -675,7 +675,7 @@ class MovieRepositoryImplTest {
                 posterPath = "/poster.jpg",
                 trailerPath = "trailer_key",
                 overview = "A great movie",
-                releaseDate = 1672520400000L, // 2023-01-01
+                releaseDate = 1672531200000L, // 2023-01-01
                 runtime = 120,
                 cachingTimestamp = System.currentTimeMillis()
             ),
@@ -690,7 +690,7 @@ class MovieRepositoryImplTest {
             trailerPath = "trailer_key",
             genres = listOf(expectedGenre),
             overview = "A great movie",
-            releaseDate = 1672520400000L,
+            releaseDate = 1672531200000L,
             runtimeMinutes = 120
         )
 

@@ -3,8 +3,7 @@ package com.cairosquad.repository.movie.data_source.remote
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.cairosquad.repository.utils.TimeUtils
 
 fun MovieRemoteDto.toEntity(allGenres: List<Genre> = emptyList()): Movie {
     return Movie(
@@ -14,7 +13,7 @@ fun MovieRemoteDto.toEntity(allGenres: List<Genre> = emptyList()): Movie {
         posterPath = posterPath ?: "",
         genres = allGenres.filter { genreIds?.contains(it.id) == true },
         overview = overview.orEmpty(),
-        releaseDate = releaseDate?.let { parseDateToMillis(it) } ?: 0L,
+        releaseDate = releaseDate?.let { TimeUtils.dateToLong(it) } ?: 0L,
         runtimeMinutes = 0,
         trailerPath = "",
     )
@@ -23,13 +22,4 @@ fun MovieRemoteDto.toEntity(allGenres: List<Genre> = emptyList()): Movie {
 @JvmName("toEntityMovie")
 fun List<MovieRemoteDto>.toEntityList(): List<Movie> {
     return map { it.toEntity() }
-}
-
-private fun parseDateToMillis(dateStr: String): Long {
-    return try {
-        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        formatter.parse(dateStr)?.time ?: 0L
-    } catch (e: Exception) {
-        0L
-    }
 }

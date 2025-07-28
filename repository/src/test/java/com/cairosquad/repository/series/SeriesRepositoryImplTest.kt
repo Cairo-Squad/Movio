@@ -738,7 +738,7 @@ class SeriesRepositoryImplTest {
                 posterPath = "/poster.jpg",
                 trailerPath = "trailer_key",
                 overview = "A great series",
-                releaseDate = 1672520400000L,
+                releaseDate = 1672531200000L,
                 seasonsCount = 2,
                 cachingTimestamp = System.currentTimeMillis()
             ),
@@ -753,7 +753,7 @@ class SeriesRepositoryImplTest {
             trailerPath = "trailer_key",
             genres = listOf(expectedGenre),
             overview = "A great series",
-            releaseDate = 1672520400000L,
+            releaseDate = 1672531200000L,
             seasonsCount = 2
         )
 
@@ -807,7 +807,7 @@ class SeriesRepositoryImplTest {
             rating = 8.0f,
             posterPath = "/season_poster.jpg",
             overview = "First season",
-            airDate = 1672520400000L,
+            airDate = 1672531200000L,
             cachingTimestamp = System.currentTimeMillis()
         )
 
@@ -819,7 +819,7 @@ class SeriesRepositoryImplTest {
             rating = 8.0f,
             posterPath = "/season_poster.jpg",
             overview = "First season",
-            airDate = 1672520400000L
+            airDate = 1672531200000L
         )
 
         private val episodeRemoteDto = EpisodeRemoteDto(
