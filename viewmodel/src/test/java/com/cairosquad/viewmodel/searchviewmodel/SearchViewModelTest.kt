@@ -5,6 +5,7 @@ import app.cash.turbine.test
 import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.exception.NetworkException
 import com.cairosquad.domain.exception.UnknownException
+import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSearchHistoryUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
@@ -43,12 +44,9 @@ import java.io.IOException
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
-    private lateinit var getLocalSearchHistoryUseCase: GetLocalSearchHistoryUseCase
-    private lateinit var searchPager: SearchPager
-    private lateinit var getRecentSearchUseCase: GetLocalSearchHistoryUseCase
     private lateinit var manageSearchHistoryUseCase: ManageSearchHistoryUseCase
-    private lateinit var getSuggestedMoviesUseCase: GetSuggestedMoviesUseCase
-    private lateinit var getPersonalizedMoviesUseCase: GetPersonalizedMoviesUseCase
+    private lateinit var searchPager: SearchPager
+    private lateinit var manageMoviesUseCase: ManageMoviesUseCase
     private lateinit var viewModel: SearchViewModel
 
     @Before
@@ -59,18 +57,15 @@ class SearchViewModelTest {
         every { Dispatchers.IO } returns testDispatcher
 
         searchPager = mockk(relaxed = true)
-        getLocalSearchHistoryUseCase = mockk(relaxed = true)
-        getRecentSearchUseCase = mockk(relaxed = true)
         manageSearchHistoryUseCase = mockk(relaxed = true)
-        getSuggestedMoviesUseCase = mockk(relaxed = true)
-        getPersonalizedMoviesUseCase = mockk(relaxed = true)
+        manageSearchHistoryUseCase = mockk(relaxed = true)
+        manageSearchHistoryUseCase = mockk(relaxed = true)
+        manageMoviesUseCase = mockk(relaxed = true)
 
         viewModel = SearchViewModel(
             searchPager,
-            getRecentSearchUseCase,
             manageSearchHistoryUseCase,
-            getSuggestedMoviesUseCase,
-            getPersonalizedMoviesUseCase
+            manageMoviesUseCase
         )
     }
 
@@ -143,7 +138,7 @@ class SearchViewModelTest {
     @Test
     fun `should remove query from recentSearch when removal succeeds`() = runTest {
         val initial = listOf("Batman", "Spiderman", "Superman")
-        coEvery { getLocalSearchHistoryUseCase.getAll() } returns initial
+        coEvery { manageSearchHistoryUseCase.getAll() } returns initial
         coEvery { manageSearchHistoryUseCase.removeQueryFromHistory("Batman") } returns Unit
 
         viewModel.onClickSearchTextField()
@@ -176,8 +171,8 @@ class SearchViewModelTest {
         val forYouList = listOf(movie1)
         val exploreMoreList = listOf(movie2)
 
-        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(1) } returns listOf(movie1)
-        coEvery { getSuggestedMoviesUseCase.getSuggestedMovies() } returns listOf(movie2)
+        coEvery { manageMoviesUseCase.getPersonalizedMovies(1) } returns listOf(movie1)
+        coEvery { manageMoviesUseCase.getSuggestedMovies() } returns listOf(movie2)
 
         viewModel.loadDiscoverMovies()
 
@@ -190,7 +185,7 @@ class SearchViewModelTest {
 
     @Test
     fun `should set error status when personalized movies loading fails`() = runTest {
-        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(1) } throws IOException()
+        coEvery { manageMoviesUseCase.getPersonalizedMovies(1) } throws IOException()
 
         viewModel.getPersonalizedMovies()
 
@@ -208,8 +203,8 @@ class SearchViewModelTest {
 
     @Test
     fun `should set error status when discover movies loading fails`() = runTest {
-        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(1) } throws IOException()
-        coEvery { getSuggestedMoviesUseCase.getSuggestedMovies() } throws IOException() // Make both fail
+        coEvery { manageMoviesUseCase.getPersonalizedMovies(1) } throws IOException()
+        coEvery { manageMoviesUseCase.getSuggestedMovies() } throws IOException() // Make both fail
 
         viewModel.loadDiscoverMovies()
 
@@ -278,7 +273,7 @@ class SearchViewModelTest {
     @Test
     fun `should load recent searches when search field is clicked`() = runTest {
         val recent = listOf("Query1", "Query2")
-        coEvery { getRecentSearchUseCase.getAll() } returns recent
+        coEvery { manageSearchHistoryUseCase.getAll() } returns recent
 
         viewModel.onClickSearchTextField()
 
@@ -308,7 +303,7 @@ class SearchViewModelTest {
 
     @Test
     fun `should handle error gracefully when search field is clicked`() = runTest {
-        coEvery { getRecentSearchUseCase.getAll() } throws IOException()
+        coEvery { manageSearchHistoryUseCase.getAll() } throws IOException()
         viewModel.onClickSearchTextField()
         advanceUntilIdle()
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
@@ -317,7 +312,7 @@ class SearchViewModelTest {
 
     @Test
     fun `should clear recent search when query text change fails`() = runTest {
-        coEvery { getRecentSearchUseCase.getByQuery(any()) } throws IOException()
+        coEvery { manageSearchHistoryUseCase.getByQuery(any()) } throws IOException()
         viewModel.onQueryTextChanged("x")
         advanceUntilIdle()
         assertThat(viewModel.screenState.value.recentSearch).isEmpty()
@@ -431,7 +426,7 @@ class SearchViewModelTest {
     @Test
     fun `should not crash if suggestions use case throws inside debounce`() = runTest {
         val query = "Error"
-        coEvery { getRecentSearchUseCase.getByQuery(query) } throws RuntimeException()
+        coEvery { manageSearchHistoryUseCase.getByQuery(query) } throws RuntimeException()
 
         viewModel.onQueryTextChanged(query)
         advanceUntilIdle()
@@ -446,8 +441,8 @@ class SearchViewModelTest {
         mockkStatic(Dispatchers::class)
         every { Dispatchers.IO } returns testDispatcher
 
-        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(1) } returns listOf(movie1)
-        coEvery { getSuggestedMoviesUseCase.getSuggestedMovies() } returns listOf(movie2)
+        coEvery { manageMoviesUseCase.getPersonalizedMovies(1) } returns listOf(movie1)
+        coEvery { manageMoviesUseCase.getSuggestedMovies() } returns listOf(movie2)
 
         viewModel.updateState { it.copy(query = "") }
 
@@ -571,8 +566,8 @@ class SearchViewModelTest {
 
     @Test
     fun `should show failed status when both personalized and suggested fail`() = runTest {
-        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(1) } throws IOException()
-        coEvery { getSuggestedMoviesUseCase.getSuggestedMovies() } throws IOException()
+        coEvery { manageMoviesUseCase.getPersonalizedMovies(1) } throws IOException()
+        coEvery { manageMoviesUseCase.getSuggestedMovies() } throws IOException()
 
         viewModel.loadDiscoverMovies()
 
@@ -584,8 +579,8 @@ class SearchViewModelTest {
 
     @Test
     fun `should show explore screen when both personalized and suggested succeed`() = runTest {
-        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(1) } returns listOf(movie1)
-        coEvery { getSuggestedMoviesUseCase.getSuggestedMovies() } returns listOf(movie1)
+        coEvery { manageMoviesUseCase.getPersonalizedMovies(1) } returns listOf(movie1)
+        coEvery { manageMoviesUseCase.getSuggestedMovies() } returns listOf(movie1)
 
         viewModel.loadDiscoverMovies()
 

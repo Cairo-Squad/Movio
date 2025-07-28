@@ -3,6 +3,8 @@ package com.cairosquad.viewmodel.home
 import app.cash.turbine.test
 import com.cairosquad.domain.exception.NetworkException
 import com.cairosquad.domain.model.SortType
+import com.cairosquad.domain.usecase.ManageMoviesUseCase
+import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
@@ -29,23 +31,8 @@ import org.junit.Test
 class HomeViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
-    private lateinit var getFreeToWatchMoviesUseCase: GetFreeToWatchMoviesUseCase
-    private lateinit var getMoreRecommendedMoviesUseCase: GetMoreRecommendedMoviesUseCase
-    private lateinit var getTopRatingMoviesUseCase: GetTopRatingMoviesUseCase
-    private lateinit var getTrendingMoviesUseCase: GetTrendingMoviesUseCase
-    private lateinit var getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase
-    private lateinit var getNowPlayingMoviesUseCase: GetNowPlayingMoviesUseCase
-    private lateinit var getAiringTodaySeriesUseCase: GetAiringTodaySeriesUseCase
-    private lateinit var getMoreRecommendedSeriesUseCase: GetMoreRecommendedSeriesUseCase
-    private lateinit var getOnTvSeriesUseCase: GetOnTvSeriesUseCase
-    private lateinit var getTopRatingSeriesUseCase: GetTopRatingSeriesUseCase
-    private lateinit var getPopularSeriesUseCase: GetPopularSeriesUseCase
-    private lateinit var getPopularMoviesUseCase: GetPopularMoviesUseCase
-    private lateinit var getMoviesGenresUseCase: GetMoviesGenresUseCase
-    private lateinit var getSeriesGenresUseCase: GetSeriesGenresUseCase
-    private lateinit var getTrendingSeriesUseCase: GetTrendingSeriesUseCase
-    private lateinit var getAllMoviesUseCase: GetAllMoviesUseCase
-    private lateinit var getAllSeriesUseCase: GetAllSeriesUseCase
+    private lateinit var manageMoviesUseCase: ManageMoviesUseCase
+    private lateinit var manageSeriesUseCase: ManageSeriesUseCase
 
     private lateinit var viewModel: HomeViewModel
 
@@ -56,42 +43,12 @@ class HomeViewModelTest {
         mockkStatic(Dispatchers::class)
         every { Dispatchers.IO } returns testDispatcher
 
-        getFreeToWatchMoviesUseCase = mockk(relaxed = true)
-        getMoreRecommendedMoviesUseCase = mockk(relaxed = true)
-        getTopRatingMoviesUseCase = mockk(relaxed = true)
-        getTrendingMoviesUseCase = mockk(relaxed = true)
-        getUpcomingMoviesUseCase = mockk(relaxed = true)
-        getNowPlayingMoviesUseCase = mockk(relaxed = true)
-        getAiringTodaySeriesUseCase = mockk(relaxed = true)
-        getMoreRecommendedSeriesUseCase = mockk(relaxed = true)
-        getOnTvSeriesUseCase = mockk(relaxed = true)
-        getTopRatingSeriesUseCase = mockk(relaxed = true)
-        getPopularSeriesUseCase = mockk(relaxed = true)
-        getPopularMoviesUseCase = mockk(relaxed = true)
-        getMoviesGenresUseCase = mockk(relaxed = true)
-        getSeriesGenresUseCase = mockk(relaxed = true)
-        getTrendingSeriesUseCase = mockk(relaxed = true)
-        getAllMoviesUseCase = mockk(relaxed = true)
-        getAllSeriesUseCase = mockk(relaxed = true)
+        manageMoviesUseCase = mockk(relaxed = true)
+        manageSeriesUseCase = mockk(relaxed = true)
 
         viewModel = HomeViewModel(
-            getFreeToWatchMoviesUseCase,
-            getMoreRecommendedMoviesUseCase,
-            getTopRatingMoviesUseCase,
-            getTrendingMoviesUseCase,
-            getUpcomingMoviesUseCase,
-            getNowPlayingMoviesUseCase,
-            getAiringTodaySeriesUseCase,
-            getMoreRecommendedSeriesUseCase,
-            getOnTvSeriesUseCase,
-            getTopRatingSeriesUseCase,
-            getPopularSeriesUseCase,
-            getPopularMoviesUseCase,
-            getMoviesGenresUseCase,
-            getSeriesGenresUseCase,
-            getTrendingSeriesUseCase,
-            getAllMoviesUseCase,
-            getAllSeriesUseCase
+            manageMoviesUseCase,
+            manageSeriesUseCase,
         )
     }
 
@@ -105,28 +62,13 @@ class HomeViewModelTest {
         // Given
         val popularMovies = listOf(movie1)
         val popularSeries = listOf(series1)
-        coEvery { getPopularMoviesUseCase.getPopularMovies(page = 1, categoryId = null) } returns popularMovies
-        coEvery { getPopularSeriesUseCase.getPopularSeries(page = 1, categoryId = null) } returns popularSeries
+        coEvery { manageMoviesUseCase.getPopularMovies(page = 1, genreId = null) } returns popularMovies
+        coEvery { manageSeriesUseCase.getPopularSeries(page = 1, genreId = null) } returns popularSeries
 
         // When
         viewModel = HomeViewModel(
-            getFreeToWatchMoviesUseCase,
-            getMoreRecommendedMoviesUseCase,
-            getTopRatingMoviesUseCase,
-            getTrendingMoviesUseCase,
-            getUpcomingMoviesUseCase,
-            getNowPlayingMoviesUseCase,
-            getAiringTodaySeriesUseCase,
-            getMoreRecommendedSeriesUseCase,
-            getOnTvSeriesUseCase,
-            getTopRatingSeriesUseCase,
-            getPopularSeriesUseCase,
-            getPopularMoviesUseCase,
-            getMoviesGenresUseCase,
-            getSeriesGenresUseCase,
-            getTrendingSeriesUseCase,
-            getAllMoviesUseCase,
-            getAllSeriesUseCase
+            manageMoviesUseCase,
+            manageSeriesUseCase,
         )
         advanceUntilIdle()
 
@@ -142,28 +84,13 @@ class HomeViewModelTest {
 
         val movieGenres = listOf(Genre(id = 1, name = "Action"))
         val seriesGenres = listOf(Genre(id = 2, name = "Drama"))
-        coEvery { getMoviesGenresUseCase.getMoviesGenres() } returns movieGenres
-        coEvery { getSeriesGenresUseCase.getSeriesGenres() } returns seriesGenres
+        coEvery { manageMoviesUseCase.getMoviesGenres() } returns movieGenres
+        coEvery { manageSeriesUseCase.getSeriesGenres() } returns seriesGenres
 
         // When
         viewModel = HomeViewModel(
-            getFreeToWatchMoviesUseCase,
-            getMoreRecommendedMoviesUseCase,
-            getTopRatingMoviesUseCase,
-            getTrendingMoviesUseCase,
-            getUpcomingMoviesUseCase,
-            getNowPlayingMoviesUseCase,
-            getAiringTodaySeriesUseCase,
-            getMoreRecommendedSeriesUseCase,
-            getOnTvSeriesUseCase,
-            getTopRatingSeriesUseCase,
-            getPopularSeriesUseCase,
-            getPopularMoviesUseCase,
-            getMoviesGenresUseCase,
-            getSeriesGenresUseCase,
-            getTrendingSeriesUseCase,
-            getAllMoviesUseCase,
-            getAllSeriesUseCase
+            manageMoviesUseCase,
+            manageSeriesUseCase,
         )
         advanceUntilIdle()
 
@@ -179,28 +106,13 @@ class HomeViewModelTest {
         // Given
         val topRatingMovies = listOf(movie1)
         val topRatingSeries = listOf(series1)
-        coEvery { getTopRatingMoviesUseCase.getTopRatingMovies(page = 1, categoryId = null) } returns topRatingMovies
-        coEvery { getTopRatingSeriesUseCase.getTopRatingSeries(page = 1, categoryId = null) } returns topRatingSeries
+        coEvery { manageMoviesUseCase.getTopRatingMovies(page = 1, genreId = null) } returns topRatingMovies
+        coEvery { manageSeriesUseCase.getTopRatingSeries(page = 1, genreId = null) } returns topRatingSeries
 
         // When
         viewModel = HomeViewModel(
-            getFreeToWatchMoviesUseCase,
-            getMoreRecommendedMoviesUseCase,
-            getTopRatingMoviesUseCase,
-            getTrendingMoviesUseCase,
-            getUpcomingMoviesUseCase,
-            getNowPlayingMoviesUseCase,
-            getAiringTodaySeriesUseCase,
-            getMoreRecommendedSeriesUseCase,
-            getOnTvSeriesUseCase,
-            getTopRatingSeriesUseCase,
-            getPopularSeriesUseCase,
-            getPopularMoviesUseCase,
-            getMoviesGenresUseCase,
-            getSeriesGenresUseCase,
-            getTrendingSeriesUseCase,
-            getAllMoviesUseCase,
-            getAllSeriesUseCase
+            manageMoviesUseCase,
+            manageSeriesUseCase,
         )
         advanceUntilIdle()
 
@@ -214,28 +126,13 @@ class HomeViewModelTest {
     @Test
     fun `should set error status when fetching popular media fails`() = runTest {
         // Given
-        coEvery { getPopularMoviesUseCase.getPopularMovies(page = 1, categoryId = null) } throws NetworkException()
-        coEvery { getPopularSeriesUseCase.getPopularSeries(page = 1, categoryId = null) } returns emptyList()
+        coEvery { manageMoviesUseCase.getPopularMovies(page = 1, genreId = null) } throws NetworkException()
+        coEvery { manageSeriesUseCase.getPopularSeries(page = 1, genreId = null) } returns emptyList()
 
         // When
         viewModel = HomeViewModel(
-            getFreeToWatchMoviesUseCase,
-            getMoreRecommendedMoviesUseCase,
-            getTopRatingMoviesUseCase,
-            getTrendingMoviesUseCase,
-            getUpcomingMoviesUseCase,
-            getNowPlayingMoviesUseCase,
-            getAiringTodaySeriesUseCase,
-            getMoreRecommendedSeriesUseCase,
-            getOnTvSeriesUseCase,
-            getTopRatingSeriesUseCase,
-            getPopularSeriesUseCase,
-            getPopularMoviesUseCase,
-            getMoviesGenresUseCase,
-            getSeriesGenresUseCase,
-            getTrendingSeriesUseCase,
-            getAllMoviesUseCase,
-            getAllSeriesUseCase
+            manageMoviesUseCase,
+            manageSeriesUseCase,
         )
         advanceUntilIdle()
 
@@ -283,8 +180,8 @@ class HomeViewModelTest {
         // Given
         val movies = listOf(movie1)
         val series = listOf(series1)
-        coEvery { getAllMoviesUseCase.getAllMovies(page = 1, categoryId = null) } returns movies
-        coEvery { getAllSeriesUseCase.getAllSeries(page = 1, categoryId = null) } returns series
+        coEvery { manageMoviesUseCase.getAllMovies(page = 1, genreId = null) } returns movies
+        coEvery { manageSeriesUseCase.getAllSeries(page = 1, genreId = null) } returns series
 
         // When
         viewModel.onClickTab(HomeScreenState.Tab.CATEGORIES.ordinal)
@@ -302,8 +199,8 @@ class HomeViewModelTest {
         val genreId = 1L
         val movies = listOf(movie1)
         val series = listOf(series1)
-        coEvery { getAllMoviesUseCase.getAllMovies(page = 1, categoryId = genreId.toString()) } returns movies
-        coEvery { getAllSeriesUseCase.getAllSeries(page = 1, categoryId = genreId.toString()) } returns series
+        coEvery { manageMoviesUseCase.getAllMovies(page = 1, genreId = genreId) } returns movies
+        coEvery { manageSeriesUseCase.getAllSeries(page = 1, genreId = genreId) } returns series
         viewModel.updateState {
             it.copy(genres = listOf(HomeScreenState.GenreUiState.defaultGenre, HomeScreenState.GenreUiState(genreId, "Action")))
         }
@@ -324,8 +221,8 @@ class HomeViewModelTest {
         val genreId = 1L
         val movies = listOf(movie1)
         val series = listOf(series1)
-        coEvery { getAllMoviesUseCase.getAllMovies(page = 1, categoryId = genreId.toString(), SortType.POPULAR) } returns movies
-        coEvery { getAllSeriesUseCase.getAllSeries(page = 1, categoryId = genreId.toString(), SortType.POPULAR) } returns series
+        coEvery { manageMoviesUseCase.getAllMovies(page = 1, genreId = genreId, SortType.POPULAR) } returns movies
+        coEvery { manageSeriesUseCase.getAllSeries(page = 1, genreId = genreId, SortType.POPULAR) } returns series
         viewModel.updateState {
             it.copy(
                 genres = listOf(HomeScreenState.GenreUiState.defaultGenre, HomeScreenState.GenreUiState(genreId, "Action")),
@@ -346,28 +243,13 @@ class HomeViewModelTest {
     @Test
     fun `should handle error when fetching section data fails`() = runTest {
         // Given
-        coEvery { getTopRatingMoviesUseCase.getTopRatingMovies(page = 1, categoryId = null) } throws NetworkException()
-        coEvery { getTopRatingSeriesUseCase.getTopRatingSeries(page = 1, categoryId = null) } returns emptyList()
+        coEvery { manageMoviesUseCase.getTopRatingMovies(page = 1, genreId = null) } throws NetworkException()
+        coEvery { manageSeriesUseCase.getTopRatingSeries(page = 1, genreId = null) } returns emptyList()
 
         // When
         viewModel = HomeViewModel(
-            getFreeToWatchMoviesUseCase,
-            getMoreRecommendedMoviesUseCase,
-            getTopRatingMoviesUseCase,
-            getTrendingMoviesUseCase,
-            getUpcomingMoviesUseCase,
-            getNowPlayingMoviesUseCase,
-            getAiringTodaySeriesUseCase,
-            getMoreRecommendedSeriesUseCase,
-            getOnTvSeriesUseCase,
-            getTopRatingSeriesUseCase,
-            getPopularSeriesUseCase,
-            getPopularMoviesUseCase,
-            getMoviesGenresUseCase,
-            getSeriesGenresUseCase,
-            getTrendingSeriesUseCase,
-            getAllMoviesUseCase,
-            getAllSeriesUseCase
+            manageMoviesUseCase,
+            manageSeriesUseCase,
         )
         advanceUntilIdle()
 

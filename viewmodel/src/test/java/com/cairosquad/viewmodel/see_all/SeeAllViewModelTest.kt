@@ -8,6 +8,8 @@ import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.exception.NetworkException
 import com.cairosquad.domain.exception.UnknownException
+import com.cairosquad.domain.usecase.ManageMoviesUseCase
+import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
@@ -39,19 +41,8 @@ class SeeAllViewModelTest {
     private lateinit var viewModel: SeeAllViewModel
 
     private val testDispatcher = StandardTestDispatcher()
-    private val getFreeToWatchMoviesUseCase = mockk<GetFreeToWatchMoviesUseCase>()
-    private val getMoreRecommendedMoviesUseCase = mockk<GetMoreRecommendedMoviesUseCase>()
-    private val getTopRatingMoviesUseCase = mockk<GetTopRatingMoviesUseCase>()
-    private val getTrendingMoviesUseCase = mockk<GetTrendingMoviesUseCase>()
-    private val getUpcomingMoviesUseCase = mockk<GetUpcomingMoviesUseCase>()
-    private val getNowPlayingMoviesUseCase = mockk<GetNowPlayingMoviesUseCase>()
-    private val getAiringTodaySeriesUseCase = mockk<GetAiringTodaySeriesUseCase>()
-    private val getMoreRecommendedSeriesUseCase = mockk<GetMoreRecommendedSeriesUseCase>()
-    private val getOnTvSeriesUseCase = mockk<GetOnTvSeriesUseCase>()
-    private val getTopRatingSeriesUseCase = mockk<GetTopRatingSeriesUseCase>()
-    private val getMoviesGenresUseCase = mockk<GetMoviesGenresUseCase>()
-    private val getSeriesGenresUseCase = mockk<GetSeriesGenresUseCase>()
-    private val getTrendingSeriesUseCase = mockk<GetTrendingSeriesUseCase>()
+    private val manageMoviesUseCase = mockk<ManageMoviesUseCase>()
+    private val manageSeriesUseCase = mockk<ManageSeriesUseCase>()
 
     private val dummyMovie =
         Movie(1, "Title", 8.5f, "path.jpg", listOf(), "overview", 1234567890, 120, "trailer")
@@ -65,19 +56,8 @@ class SeeAllViewModelTest {
         every { Dispatchers.IO } returns testDispatcher
 
         viewModel = SeeAllViewModel(
-            getFreeToWatchMoviesUseCase,
-            getMoreRecommendedMoviesUseCase,
-            getTopRatingMoviesUseCase,
-            getTrendingMoviesUseCase,
-            getUpcomingMoviesUseCase,
-            getNowPlayingMoviesUseCase,
-            getAiringTodaySeriesUseCase,
-            getMoreRecommendedSeriesUseCase,
-            getOnTvSeriesUseCase,
-            getTopRatingSeriesUseCase,
-            getMoviesGenresUseCase,
-            getSeriesGenresUseCase,
-            getTrendingSeriesUseCase
+            manageMoviesUseCase,
+            manageSeriesUseCase,
         )
     }
 
@@ -131,7 +111,7 @@ class SeeAllViewModelTest {
 
     @Test
     fun `loadGenres with SERIES updates genre list`() = runTest {
-        coEvery { getSeriesGenresUseCase.getSeriesGenres() } returns listOf(dummyGenre)
+        coEvery { manageSeriesUseCase.getSeriesGenres() } returns listOf(dummyGenre)
 
         viewModel.mediaType = MediaType.SERIES
         viewModel.loadGenres()
@@ -152,8 +132,8 @@ class SeeAllViewModelTest {
 
     @Test
     fun `onGenreSelected updates selectedGenreIndex`() = runTest {
-        coEvery { getMoviesGenresUseCase.getMoviesGenres() } returns listOf(dummyGenre)
-        coEvery { getTopRatingMoviesUseCase.getTopRatingMovies(any(), any()) } returns listOf(
+        coEvery { manageMoviesUseCase.getMoviesGenres() } returns listOf(dummyGenre)
+        coEvery { manageMoviesUseCase.getTopRatingMovies(any(), any()) } returns listOf(
             dummyMovie
         )
 
@@ -258,13 +238,13 @@ class SeeAllViewModelTest {
         val testSeries = listOf(mockk<Series>())
 
         coEvery {
-            getTopRatingMoviesUseCase.getTopRatingMovies(
-                testPage, testGenreId.toString()
+            manageMoviesUseCase.getTopRatingMovies(
+                testPage, testGenreId
             )
         } returns testMovies
         coEvery {
-            getTopRatingSeriesUseCase.getTopRatingSeries(
-                testPage, testGenreId.toString()
+            manageSeriesUseCase.getTopRatingSeries(
+                testPage, testGenreId
             )
         } returns testSeries
 
@@ -285,13 +265,13 @@ class SeeAllViewModelTest {
         val testSeries = listOf(mockk<Series>())
 
         coEvery {
-            getTrendingMoviesUseCase.getTrendingMovies(
-                testPage, testGenreId.toString()
+            manageMoviesUseCase.getTrendingMovies(
+                testPage, testGenreId
             )
         } returns testMovies
         coEvery {
-            getTrendingSeriesUseCase.getTrendingSeries(
-                testPage, testGenreId.toString()
+            manageSeriesUseCase.getTrendingSeries(
+                testPage, testGenreId
             )
         } returns testSeries
 
@@ -309,8 +289,8 @@ class SeeAllViewModelTest {
         val testMovies = listOf(mockk<Movie>())
 
         coEvery {
-            getFreeToWatchMoviesUseCase.getFreeToWatchMovies(
-                testPage, testGenreId.toString()
+            manageMoviesUseCase.getFreeToWatchMovies(
+                testPage, testGenreId
             )
         } returns testMovies
 
@@ -328,8 +308,8 @@ class SeeAllViewModelTest {
         val testSeries = listOf(mockk<Series>())
 
         coEvery {
-            getAiringTodaySeriesUseCase.getAiringTodaySeries(
-                testPage, testGenreId.toString()
+            manageSeriesUseCase.getAiringTodaySeries(
+                testPage, testGenreId
             )
         } returns testSeries
 
@@ -353,7 +333,7 @@ class SeeAllViewModelTest {
         val testPage = 1
         val testMovies = listOf(mockk<Movie>())
 
-        coEvery { getTopRatingMoviesUseCase.getTopRatingMovies(testPage, null) } returns testMovies
+        coEvery { manageMoviesUseCase.getTopRatingMovies(testPage, null) } returns testMovies
 
         val (movieFetcher, _) = viewModel.getDataFetcher(MediaContentType.TOP_RATING)
 
@@ -368,8 +348,8 @@ class SeeAllViewModelTest {
         val testMovies = listOf(mockk<Movie>())
 
         coEvery {
-            getUpcomingMoviesUseCase.getUpcomingMovies(
-                testPage, testGenreId.toString()
+            manageMoviesUseCase.getUpcomingMovies(
+                testPage, testGenreId
             )
         } returns testMovies
 
@@ -387,8 +367,8 @@ class SeeAllViewModelTest {
         val testMovies = listOf(mockk<Movie>())
 
         coEvery {
-            getNowPlayingMoviesUseCase.getNowPlayingMovies(
-                testPage, testGenreId.toString()
+            manageMoviesUseCase.getNowPlayingMovies(
+                testPage, testGenreId
             )
         } returns testMovies
 
@@ -406,13 +386,13 @@ class SeeAllViewModelTest {
         val testSeries = listOf(mockk<Series>())
 
         coEvery {
-            getMoreRecommendedMoviesUseCase.getMoreRecommendedMovies(
-                testPage, testGenreId.toString()
+            manageMoviesUseCase.getMoreRecommendedMovies(
+                testPage, testGenreId
             )
         } returns testMovies
         coEvery {
-            getMoreRecommendedSeriesUseCase.getMoreRecommendedSeries(
-                testPage, testGenreId.toString()
+            manageSeriesUseCase.getMoreRecommendedSeries(
+                testPage, testGenreId
             )
         } returns testSeries
 
@@ -429,8 +409,8 @@ class SeeAllViewModelTest {
         val testSeries = listOf(mockk<Series>())
 
         coEvery {
-            getOnTvSeriesUseCase.getOnTvSeries(
-                testPage, testGenreId.toString()
+            manageSeriesUseCase.getOnTvSeries(
+                testPage, testGenreId
             )
         } returns testSeries
 
@@ -452,19 +432,19 @@ class SeeAllViewModelTest {
 
             when (type) {
                 MediaContentType.UPCOMING -> coEvery {
-                    getUpcomingMoviesUseCase.getUpcomingMovies(
+                    manageMoviesUseCase.getUpcomingMovies(
                         testPage, null
                     )
                 } returns testMovies
 
                 MediaContentType.NOW_PLAYING -> coEvery {
-                    getNowPlayingMoviesUseCase.getNowPlayingMovies(
+                    manageMoviesUseCase.getNowPlayingMovies(
                         testPage, null
                     )
                 } returns testMovies
 
                 MediaContentType.MORE_RECOMMENDED -> coEvery {
-                    getMoreRecommendedMoviesUseCase.getMoreRecommendedMovies(
+                    manageMoviesUseCase.getMoreRecommendedMovies(
                         testPage, null
                     )
                 } returns testMovies
@@ -483,19 +463,19 @@ class SeeAllViewModelTest {
 
             when (type) {
                 MediaContentType.MORE_RECOMMENDED -> coEvery {
-                    getMoreRecommendedSeriesUseCase.getMoreRecommendedSeries(
+                    manageSeriesUseCase.getMoreRecommendedSeries(
                         testPage, null
                     )
                 } returns testSeries
 
                 MediaContentType.AIRING_TODAY -> coEvery {
-                    getAiringTodaySeriesUseCase.getAiringTodaySeries(
+                    manageSeriesUseCase.getAiringTodaySeries(
                         testPage, null
                     )
                 } returns testSeries
 
                 MediaContentType.ON_TV -> coEvery {
-                    getOnTvSeriesUseCase.getOnTvSeries(
+                    manageSeriesUseCase.getOnTvSeries(
                         testPage, null
                     )
                 } returns testSeries

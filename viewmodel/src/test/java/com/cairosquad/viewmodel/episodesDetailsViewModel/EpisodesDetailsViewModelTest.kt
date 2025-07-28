@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.episodesDetailsViewModel
 
+import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Episode
 import com.cairosquad.entity.Season
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState.ScreenStatus
@@ -32,7 +33,7 @@ class EpisodesDetailsViewModelTest {
 
     private val testDispatcher = StandardTestDispatcher()
     private lateinit var viewModel: EpisodesDetailsViewModel
-    private val useCase: GetSeriesDetailsUseCase = mockk()
+    private val manageSeriesUseCase: ManageSeriesUseCase = mockk(relaxed = true)
     private val seriesId = 123L
     private val initialSeason = 1
 
@@ -43,7 +44,7 @@ class EpisodesDetailsViewModelTest {
         mockkStatic(Dispatchers::class)
         every { Dispatchers.IO } returns testDispatcher
 
-        coEvery { useCase.getSeriesSeasons(seriesId) } returns listOf(
+        coEvery { manageSeriesUseCase.getSeriesSeasons(seriesId) } returns listOf(
             Season(
                 seasonNumber = 1, episodesCount = 2, posterPath = "url1",
                 seriesId = 123L, seasonName = "Season 1",
@@ -56,7 +57,7 @@ class EpisodesDetailsViewModelTest {
             )
         )
 
-        coEvery { useCase.getEpisodes(seriesId, initialSeason) } returns listOf(
+        coEvery { manageSeriesUseCase.getEpisodes(seriesId, initialSeason) } returns listOf(
             Episode(
                 id = 1, episodeName = "Ep1", episodeNumber = 1, photoPath = "img1",
                 runtimeMinutes = 45, rating = 9.0f, seasonNumber = 1,
@@ -69,7 +70,7 @@ class EpisodesDetailsViewModelTest {
             )
         )
 
-        viewModel = EpisodesDetailsViewModel(useCase, seriesId, initialSeason)
+        viewModel = EpisodesDetailsViewModel(manageSeriesUseCase, seriesId, initialSeason)
     }
 
     @After
@@ -158,7 +159,7 @@ class EpisodesDetailsViewModelTest {
         assertTrue(viewModel.screenState.value.isSeasonDropdownExpanded)
 
         val newSeason = initialSeason + 1
-        coEvery { useCase.getEpisodes(seriesId, newSeason) } returns emptyList()
+        coEvery { manageSeriesUseCase.getEpisodes(seriesId, newSeason) } returns emptyList()
 
         viewModel.onSeasonSelected(seriesId, newSeason)
         advanceUntilIdle()
@@ -171,7 +172,7 @@ class EpisodesDetailsViewModelTest {
         advanceUntilIdle()
 
         val newSeason = initialSeason + 1
-        coEvery { useCase.getEpisodes(seriesId, newSeason) } coAnswers {
+        coEvery { manageSeriesUseCase.getEpisodes(seriesId, newSeason) } coAnswers {
             assertEquals(ScreenStatus.LOADING, viewModel.screenState.value.episodesSectionState)
             emptyList()
         }

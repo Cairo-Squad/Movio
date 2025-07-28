@@ -1,6 +1,9 @@
 package com.cairosquad.viewmodel.searchviewmodel
 
 import androidx.paging.testing.asSnapshot
+import com.cairosquad.domain.usecase.ManageArtistUseCase
+import com.cairosquad.domain.usecase.ManageMoviesUseCase
+import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
@@ -16,15 +19,23 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchPagerTest {
 
-    private lateinit var searchUseCase: SearchUseCase
+    private lateinit var manageSeriesUseCase: ManageSeriesUseCase
+    private lateinit var manageMoviesUseCase: ManageMoviesUseCase
+    private lateinit var manageArtistUseCase: ManageArtistUseCase
     private lateinit var searchPager: SearchPager
 
     private val testQuery = "batman"
 
     @Before
     fun setUp() {
-        searchUseCase = mockk()
-        searchPager = SearchPager(searchUseCase)
+        manageSeriesUseCase = mockk(relaxed = true)
+        manageArtistUseCase = mockk(relaxed = true)
+        manageMoviesUseCase = mockk(relaxed = true)
+        searchPager = SearchPager(
+            manageMoviesUseCase,
+            manageSeriesUseCase,
+            manageArtistUseCase
+        )
     }
 
     @Test
@@ -48,8 +59,8 @@ class SearchPagerTest {
                 trailerPath = ""
             )
         )
-        coEvery { searchUseCase.getMovies(testQuery, 1) } returns expected
-        coEvery { searchUseCase.getMovies(testQuery, match { it != 1 }) } returns emptyList()
+        coEvery { manageMoviesUseCase.getMoviesByQuery(testQuery, 1) } returns expected
+        coEvery { manageMoviesUseCase.getMoviesByQuery(testQuery, match { it != 1 }) } returns emptyList()
         // When
         val flow = searchPager.movies(testQuery)
         val result = flow.asSnapshot()
@@ -78,8 +89,8 @@ class SearchPagerTest {
                 seasonsCount = 1
             )
         )
-        coEvery { searchUseCase.getSeries(testQuery, 1) } returns expected
-        coEvery { searchUseCase.getSeries(testQuery, match { it != 1 }) } returns emptyList()
+        coEvery { manageSeriesUseCase.getSeriesByQuery(testQuery, 1) } returns expected
+        coEvery { manageSeriesUseCase.getSeriesByQuery(testQuery, match { it != 1 }) } returns emptyList()
         // When
         val flow = searchPager.series(testQuery)
         val result = flow.asSnapshot()
@@ -94,8 +105,8 @@ class SearchPagerTest {
             Artist(1, "Christian Bale", ""),
             Artist(2, "Christopher Nolan", "")
         )
-        coEvery { searchUseCase.getArtists(testQuery, 1) } returns expected
-        coEvery { searchUseCase.getArtists(testQuery, match { it != 1 }) } returns emptyList()
+        coEvery { manageArtistUseCase.getArtistsByQuery(testQuery, 1) } returns expected
+        coEvery { manageArtistUseCase.getArtistsByQuery(testQuery, match { it != 1 }) } returns emptyList()
         // When
         val flow = searchPager.artists(testQuery)
         val result = flow.asSnapshot()

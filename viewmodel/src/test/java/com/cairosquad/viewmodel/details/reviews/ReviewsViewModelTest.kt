@@ -1,5 +1,7 @@
 package com.cairosquad.viewmodel.details.reviews
 
+import com.cairosquad.domain.usecase.ManageMoviesUseCase
+import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Review
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
@@ -23,8 +25,8 @@ class ReviewsViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
     private val testScope = TestScope(testDispatcher)
-    private lateinit var getMovieDetailsUseCase: GetMovieDetailsUseCase
-    private lateinit var getSeriesDetailsUseCase: GetSeriesDetailsUseCase
+    private lateinit var manageMoviesUseCase: ManageMoviesUseCase
+    private lateinit var manageSeriesUseCase: ManageSeriesUseCase
     private lateinit var viewModel: ReviewsViewModel
 
     @Before
@@ -32,8 +34,8 @@ class ReviewsViewModelTest {
         Dispatchers.setMain(testDispatcher)
         mockkStatic(Dispatchers::class)
         every { Dispatchers.IO } returns testDispatcher
-        getMovieDetailsUseCase = mockk(relaxed = true)
-        getSeriesDetailsUseCase = mockk(relaxed = true)
+        manageMoviesUseCase = mockk(relaxed = true)
+        manageSeriesUseCase = mockk(relaxed = true)
 
     }
 
@@ -46,12 +48,12 @@ class ReviewsViewModelTest {
     fun `getReviews should return reviews state when the movie use case return reviews`() =
         testScope.runTest {
             // Given
-            coEvery { getMovieDetailsUseCase.getMovieReviews(MOVIE_ID) } returns testReviews
+            coEvery { manageMoviesUseCase.getMovieReviews(MOVIE_ID) } returns testReviews
             viewModel = ReviewsViewModel(
                 mediaId = MOVIE_ID,
                 isMovie = true,
-                manageMoviesUseCase = getMovieDetailsUseCase,
-                manageSeriesUseCase = getSeriesDetailsUseCase,
+                manageMoviesUseCase = manageMoviesUseCase,
+                manageSeriesUseCase = manageSeriesUseCase,
                 dispatcher = testDispatcher
             )
 
@@ -72,12 +74,12 @@ class ReviewsViewModelTest {
     fun `getReviews should return reviews state when the series use case return reviews`() =
         testScope.runTest {
             // Given
-            coEvery { getSeriesDetailsUseCase.getSeriesReviews(SERIES_ID, 1) } returns testReviews
+            coEvery { manageSeriesUseCase.getSeriesReviews(SERIES_ID, 1) } returns testReviews
             viewModel = ReviewsViewModel(
                 mediaId = SERIES_ID,
                 isMovie = false,
-                manageMoviesUseCase = getMovieDetailsUseCase,
-                manageSeriesUseCase = getSeriesDetailsUseCase,
+                manageMoviesUseCase = manageMoviesUseCase,
+                manageSeriesUseCase = manageSeriesUseCase,
                 dispatcher = testDispatcher
             )
             // When
@@ -96,14 +98,14 @@ class ReviewsViewModelTest {
     fun `getReviews should return error state when the movie use case throws an exception`() =
         testScope.runTest {
             // Given
-            coEvery { getMovieDetailsUseCase.getMovieReviews(MOVIE_ID) } throws Exception(
+            coEvery { manageMoviesUseCase.getMovieReviews(MOVIE_ID) } throws Exception(
                 ERROR_MESSAGE
             )
             viewModel = ReviewsViewModel(
                 mediaId = MOVIE_ID,
                 isMovie = true,
-                manageMoviesUseCase = getMovieDetailsUseCase,
-                manageSeriesUseCase = getSeriesDetailsUseCase,
+                manageMoviesUseCase = manageMoviesUseCase,
+                manageSeriesUseCase = manageSeriesUseCase,
                 dispatcher = testDispatcher
             )
 
