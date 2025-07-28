@@ -73,7 +73,7 @@ class SeriesDetailsRemoteDtoTest {
         assertThat(entity.genres).isEmpty()
         assertThat(entity.overview).isEmpty()
         assertThat(entity.releaseDate).isEqualTo(0L)
-        assertThat(entity.seasonsCount).isEqualTo(0)
+        assertThat(entity.seasonsCount).isEqualTo(1)
         assertThat(entity.trailerPath).isEmpty()
     }
 
