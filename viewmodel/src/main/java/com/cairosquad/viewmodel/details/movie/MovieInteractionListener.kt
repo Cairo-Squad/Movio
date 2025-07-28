@@ -9,6 +9,9 @@ interface MovieInteractionListener {
     fun onRateItClick()
     fun onPlayClick()
     fun onAddToListClick()
+    fun onCreateListClicked()
+    fun onDismissCreateListBottomSheet()
+    fun onListValueChange(listName: String)
 
     fun onSeeAllCastClick(movieId: Long)
     fun onActorClick(actorId: Long)
@@ -27,4 +30,5 @@ interface MovieInteractionListener {
 
     fun onRateChange(rate: Int)
     fun onSubmitRateClicked(rate: Int)
+    fun onNavigateToLogin()
 }

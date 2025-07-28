@@ -10,13 +10,13 @@ class ArtistViewModel(
     private val manageArtistUseCase: ManageArtistUseCase,
     artistId: Long
 ) : BaseViewModel<ArtistScreenState, ArtistEffect>(initialState = ArtistScreenState()),
-    ArtistInteractionListener {
+	ArtistInteractionListener {
 
-    init {
-        loadArtistDetails(artistId)
-        loadArtistMovies(artistId)
-        loadArtistSeries(artistId)
-    }
+	init {
+		loadArtistDetails(artistId)
+		loadArtistMovies(artistId)
+		loadArtistSeries(artistId)
+	}
 
     fun loadArtistDetails(artistId: Long) {
         tryToCall(
@@ -92,23 +92,27 @@ class ArtistViewModel(
         )
     }
 
-    override fun onClickBack() {
-        sendEffect(ArtistEffect.NavigateBack)
-    }
+	override fun onClickBack() {
+		sendEffect(ArtistEffect.NavigateBack)
+	}
 
-    override fun onMovieClick(movieID: Long) {
-        sendEffect(ArtistEffect.NavigateToMovieDetails(movieID))
-    }
+	override fun onMovieClick(movieID: Long) {
+		sendEffect(ArtistEffect.NavigateToMovieDetails(movieID))
+	}
 
-    private fun handleArtistException(e: Throwable): ErrorStatus {
-        return when (e) {
-            is MovioException -> {
-                exceptionToErrorStatus(e)
-            }
+	override fun onSeriesClick(seriesId: Long) {
+		sendEffect(ArtistEffect.NavigateToSeriesDetails(seriesId))
+	}
 
-            else -> ErrorStatus.UNKNOWN_ERROR
-        }
-    }
+	private fun handleArtistException(e: Throwable): ErrorStatus {
+		return when (e) {
+			is MovioException -> {
+				exceptionToErrorStatus(e)
+			}
+
+			else -> ErrorStatus.UNKNOWN_ERROR
+		}
+	}
 }
 
 

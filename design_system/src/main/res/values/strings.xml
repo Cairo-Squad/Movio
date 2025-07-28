@@ -21,7 +21,7 @@
     <string name="similar_movies">Similar Movies</string>
     <string name="artists">Artists</string>
     <string name="library">Library</string>
-    <string name="more">More</string>
+    <string name="more">...More</string>
     <string name="icon">icon</string>
     <string name="movie_poster">movie poster</string>
     <string name="artist_image">Artist Image</string>
@@ -57,7 +57,7 @@
     <string name="play">Play</string>
     <string name="known_for">Known For</string>
     <string name="top_cast">Top Cast</string>
-    <string name="less">Less</string>
+    <string name="less">...Less</string>
     <string name="read_less">Read Less</string>
     <string name="read_more">Read More</string>
     <string name="current_season">Current Seasons</string>
@@ -71,7 +71,7 @@
     <string name="current_seasons">Current Seasons</string>
     <string name="reviews">Reviews</string>
     <string name="similar_series">Similar Series</string>
-    <string name="unauthorized_access">You are not authorized to perform this action</string>
+    <string name="unauthorized_access">Wrong credentials</string>
     <string name="error_parsing_data">Something went wrong while processing data</string>
 
 </resources>

@@ -20,7 +20,6 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
-
 val viewModelModule = module {
     viewModelOf(::SearchViewModel)
     viewModelOf(::ForYouViewModel)
@@ -36,17 +35,21 @@ val viewModelModule = module {
         MovieViewModel(movieId = movieId, movieUseCase = get())
     }
 
-    viewModel { (seriesId: Long) ->
-        SeriesDetailsViewModel(manageSeriesUseCase = get(), seriesId = seriesId)
-    }
-    viewModel { (mediaId: Long, isMovie: Boolean) ->
-        TopCastViewModel(
-            mediaId = mediaId,
-            isMovie = isMovie,
+	viewModel { (seriesId: Long) ->
+		SeriesDetailsViewModel(
+            manageSeriesUseCase = get(),
+			loginUseCase = get(),
+			seriesId = seriesId
+		)
+	}
+	viewModel { (mediaId: Long, isMovie: Boolean) ->
+		TopCastViewModel(
+			mediaId = mediaId,
+			isMovie = isMovie,
             manageMoviesUseCase = get(),
             manageSeriesUseCase = get()
-        )
-    }
+		)
+	}
 
     viewModel { (mediaId: Long, isMovie: Boolean) ->
         ReviewsViewModel(
@@ -61,9 +64,13 @@ val viewModelModule = module {
         ArtistViewModel(manageArtistUseCase = get(), artistId = artistId)
     }
 
-    viewModel { (seriesId: Long) ->
-        SeriesDetailsViewModel(manageSeriesUseCase = get(), seriesId = seriesId)
-    }
+	viewModel { (seriesId: Long) ->
+		SeriesDetailsViewModel(
+            manageSeriesUseCase = get(),
+			loginUseCase = get(),
+			seriesId = seriesId
+		)
+	}
 
     viewModel { (seriesId: Long) ->
         SeasonsViewModel(
@@ -72,11 +79,10 @@ val viewModelModule = module {
         )
     }
 
-    viewModelOf(::SimilarSeriesViewModel)
-    viewModelOf(::LoginViewModel)
-    viewModelOf(::HomeViewModel)
-    viewModelOf(::SeeAllViewModel)
+	viewModelOf(::SimilarSeriesViewModel)
+	viewModelOf(::LoginViewModel)
+	viewModelOf(::HomeViewModel)
+	viewModelOf(::SeeAllViewModel)
 
-
-    singleOf(::AuthGate)
+	singleOf(::AuthGate)
 }

@@ -222,7 +222,8 @@ class SeeAllViewModel(
         updateState {
             it.copy(
                 errorStatus = handleHomeException(e),
-                screenStatus = SeeAllScreenState.ScreenStatus.FAILED
+                screenStatus = SeeAllScreenState.ScreenStatus.FAILED,
+                isLoading = false
             )
         }
     }

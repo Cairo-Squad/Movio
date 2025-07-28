@@ -1,5 +1,6 @@
 package com.cairosquad.remote.login
 
+import com.cairosquad.remote.utils.retrofit.interceptor.AuthInterceptor
 import com.cairosquad.remote.utils.retrofit.safeCallApi
 import com.cairosquad.repository.login.data_source.remote.RemoteLoginDataSource
 import com.cairosquad.repository.login.data_source.remote.dto.RequestTokenResponse
@@ -28,5 +29,9 @@ class RemoteLoginDataSourceImpl(
 
     override suspend fun createSessionId(requestToken: String): SessionIdResponse {
         return safeCallApi { loginApiService.createSessionId(requestToken) }
+    }
+
+    override suspend fun updateInterceptorToken(token: String) {
+        AuthInterceptor.updateToken(token)
     }
 }
