@@ -63,7 +63,6 @@ class ManageArtistUseCaseTest {
         coVerify(exactly = 1) { seriesRepository.getSeriesOfArtist(312L) }
     }
 
-    // 🔥 Edge Case
     @Test(expected = RuntimeException::class)
     fun `getArtist SHOULD throw exception when repository fails`() = runTest {
         coEvery { artistsRepository.getArtistById(312L) } throws RuntimeException("Failed to fetch")
