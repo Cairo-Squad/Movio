@@ -119,21 +119,23 @@ fun SafeImageViewer(
 
     LaunchedEffect(model) {
         hasClassificationCompleted = false
-        withContext(Dispatchers.IO) {
-            val classifier = SafeImageClassifier(context)
-            bitmap = CoilImageLoader(context).loadBitmap(model)
+        val classifier = SafeImageClassifier(context)
 
-            if (bitmap != null && nudeThreshold != 0.0 && nonNudeThreshold != 0.0) {
-                withContext(Dispatchers.Unconfined) {
-                    isImageSafe = classifier.isInappropriate(
-                        bitmap = bitmap!!,
-                        nsfwThreshold = nudeThreshold,
-                        sfwThreshold = nonNudeThreshold,
-                        isLogEnabled = enableLog
-                    )
-                }
+        withContext(Dispatchers.IO) {
+            bitmap = CoilImageLoader(context).loadBitmap(model)
+        }
+
+        if (bitmap != null && nudeThreshold != 0.0 && nonNudeThreshold != 0.0) {
+            withContext(Dispatchers.Unconfined) {
+                isImageSafe = classifier.isInappropriate(
+                    bitmap = bitmap!!,
+                    nsfwThreshold = nudeThreshold,
+                    sfwThreshold = nonNudeThreshold,
+                    isLogEnabled = enableLog
+                )
             }
         }
+
         hasClassificationCompleted = true
     }
     Crossfade(

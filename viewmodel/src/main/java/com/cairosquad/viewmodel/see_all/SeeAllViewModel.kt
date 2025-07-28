@@ -1,20 +1,8 @@
 package com.cairosquad.viewmodel.see_all
 
 import com.cairosquad.domain.exception.MovioException
-import com.cairosquad.domain.usecase.movies.GetFreeToWatchMoviesUseCase
-import com.cairosquad.domain.usecase.movies.GetMoreRecommendedMoviesUseCase
-import com.cairosquad.domain.usecase.movies.GetMoviesGenresUseCase
-import com.cairosquad.domain.usecase.movies.GetNowPlayingMoviesUseCase
-import com.cairosquad.domain.usecase.movies.GetTopRatingMoviesUseCase
-import com.cairosquad.domain.usecase.movies.GetTrendingMoviesUseCase
-import com.cairosquad.domain.usecase.movies.GetUpcomingMoviesUseCase
-import com.cairosquad.domain.usecase.series.GetAiringTodaySeriesUseCase
-import com.cairosquad.domain.usecase.series.GetMoreRecommendedSeriesUseCase
-import com.cairosquad.domain.usecase.series.GetOnTvSeriesUseCase
-import com.cairosquad.domain.usecase.series.GetSeriesGenresUseCase
-import com.cairosquad.domain.usecase.series.GetTopRatingSeriesUseCase
-import com.cairosquad.domain.usecase.series.GetTrendingSeriesUseCase
-import com.cairosquad.entity.Genre
+import com.cairosquad.domain.usecase.ManageMoviesUseCase
+import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.base.BaseViewModel
@@ -24,19 +12,8 @@ import com.cairosquad.viewmodel.util.MediaContentType
 import com.cairosquad.viewmodel.util.MediaType
 
 class SeeAllViewModel(
-    private val getFreeToWatchMoviesUseCase: GetFreeToWatchMoviesUseCase,
-    private val getMoreRecommendedMoviesUseCase: GetMoreRecommendedMoviesUseCase,
-    private val getTopRatingMoviesUseCase: GetTopRatingMoviesUseCase,
-    private val getTrendingMoviesUseCase: GetTrendingMoviesUseCase,
-    private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase,
-    private val getNowPlayingMoviesUseCase: GetNowPlayingMoviesUseCase,
-    private val getAiringTodaySeriesUseCase: GetAiringTodaySeriesUseCase,
-    private val getMoreRecommendedSeriesUseCase: GetMoreRecommendedSeriesUseCase,
-    private val getOnTvSeriesUseCase: GetOnTvSeriesUseCase,
-    private val getTopRatingSeriesUseCase: GetTopRatingSeriesUseCase,
-    private val getMoviesGenresUseCase: GetMoviesGenresUseCase,
-    private val getSeriesGenresUseCase: GetSeriesGenresUseCase,
-    private val getTrendingSeriesUseCase: GetTrendingSeriesUseCase
+    private val manageMoviesUseCase: ManageMoviesUseCase,
+    private val manageSeriesUseCase: ManageSeriesUseCase
 ) : BaseViewModel<SeeAllScreenState, SeeAllEffect>(SeeAllScreenState()),
     SeeAllInteractionsListener {
 
@@ -122,39 +99,39 @@ class SeeAllViewModel(
         return when (contentType) {
             MediaContentType.TOP_RATING -> Pair(
                 { page, genreId ->
-                    getTopRatingMoviesUseCase.getTopRatingMovies(
+                    manageMoviesUseCase.getTopRatingMovies(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 },
                 { page, genreId ->
-                    getTopRatingSeriesUseCase.getTopRatingSeries(
+                    manageSeriesUseCase.getTopRatingSeries(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 }
             )
 
             MediaContentType.TRENDING -> Pair(
                 { page, genreId ->
-                    getTrendingMoviesUseCase.getTrendingMovies(
+                    manageMoviesUseCase.getTrendingMovies(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 },
                 { page, genreId ->
-                    getTrendingSeriesUseCase.getTrendingSeries(
+                    manageSeriesUseCase.getTrendingSeries(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 }
             )
 
             MediaContentType.FREE_TO_WATCH -> Pair(
                 { page, genreId ->
-                    getFreeToWatchMoviesUseCase.getFreeToWatchMovies(
+                    manageMoviesUseCase.getFreeToWatchMovies(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 },
                 { _, _ -> emptyList() }
@@ -162,9 +139,9 @@ class SeeAllViewModel(
 
             MediaContentType.UPCOMING -> Pair(
                 { page, genreId ->
-                    getUpcomingMoviesUseCase.getUpcomingMovies(
+                    manageMoviesUseCase.getUpcomingMovies(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 },
                 { _, _ -> emptyList() }
@@ -172,9 +149,9 @@ class SeeAllViewModel(
 
             MediaContentType.NOW_PLAYING -> Pair(
                 { page, genreId ->
-                    getNowPlayingMoviesUseCase.getNowPlayingMovies(
+                    manageMoviesUseCase.getNowPlayingMovies(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 },
                 { _, _ -> emptyList() }
@@ -182,15 +159,15 @@ class SeeAllViewModel(
 
             MediaContentType.MORE_RECOMMENDED -> Pair(
                 { page, genreId ->
-                    getMoreRecommendedMoviesUseCase.getMoreRecommendedMovies(
+                    manageMoviesUseCase.getMoreRecommendedMovies(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 },
                 { page, genreId ->
-                    getMoreRecommendedSeriesUseCase.getMoreRecommendedSeries(
+                    manageSeriesUseCase.getMoreRecommendedSeries(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 }
             )
@@ -198,16 +175,16 @@ class SeeAllViewModel(
             MediaContentType.AIRING_TODAY -> Pair(
                 { _, _ -> emptyList() },
                 { page, genreId ->
-                    getAiringTodaySeriesUseCase.getAiringTodaySeries(
+                    manageSeriesUseCase.getAiringTodaySeries(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 }
             )
 
             MediaContentType.ON_TV -> Pair(
                 { _, _ -> emptyList() },
-                { page, genreId -> getOnTvSeriesUseCase.getOnTvSeries(page, genreId?.toString()) }
+                { page, genreId -> manageSeriesUseCase.getOnTvSeries(page, genreId) }
             )
         }
     }
@@ -222,15 +199,25 @@ class SeeAllViewModel(
 
     private suspend fun loadGenresBlock(): List<SeeAllScreenState.GenreUiState> {
         return when (mediaType) {
-            MediaType.MOVIES -> getMoviesGenresUseCase.getMoviesGenres()
-                .map(Genre::toSeeAllGenreUiState)
+            MediaType.MOVIES -> {
+                val movieGenres = manageMoviesUseCase.getMoviesGenres()
+                buildSet {
+                    add(SeeAllScreenState.GenreUiState.defaultGenre)
+                    movieGenres.mapTo(this) { it.toSeeAllGenreUiState() }
+                }.toList()
+            }
 
-            MediaType.SERIES -> getSeriesGenresUseCase.getSeriesGenres()
-                .map(Genre::toSeeAllGenreUiState)
+            MediaType.SERIES -> {
+                val seriesGenres = manageSeriesUseCase.getSeriesGenres()
+                buildSet {
+                    add(SeeAllScreenState.GenreUiState.defaultGenre)
+                    seriesGenres.mapTo(this) { it.toSeeAllGenreUiState() }
+                }.toList()
+            }
 
             MediaType.BOTH -> {
-                val movieGenres = getMoviesGenresUseCase.getMoviesGenres()
-                val seriesGenres = getSeriesGenresUseCase.getSeriesGenres()
+                val movieGenres = manageMoviesUseCase.getMoviesGenres()
+                val seriesGenres = manageSeriesUseCase.getSeriesGenres()
                 buildSet {
                     add(SeeAllScreenState.GenreUiState.defaultGenre)
                     movieGenres.mapTo(this) { it.toSeeAllGenreUiState() }

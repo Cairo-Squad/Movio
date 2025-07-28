@@ -1,7 +1,6 @@
 package com.cairosquad.ui.details
 
 import android.net.Uri
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -123,7 +122,7 @@ fun SeriesScreen(
 					context.getString(errorStatusToMessageResource(effect.message)),
 					Toast.LENGTH_LONG
 				).show()
-				TODO("Replace it with SnackBar")
+				// TODO("Replace it with SnackBar")
 			}
 
 			is SeriesDetailEffect.NavigateToAllArtists -> {
@@ -156,7 +155,6 @@ fun SeriesScreen(
 			}
 
 			is SeriesDetailEffect.NavigateToSeriesDetails -> {
-				Log.d("Series ASDASD ", "SeriesScreen: ${effect.seriesId}")
 				navController.navigate(SeriesRoute(effect.seriesId))
 			}
 

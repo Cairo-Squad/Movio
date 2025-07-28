@@ -1,8 +1,8 @@
 package com.cairosquad.viewmodel.details.series
 
 import com.cairosquad.domain.exception.MovioException
-import com.cairosquad.domain.usecase.authentication.LoginUseCase
-import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
+import com.cairosquad.domain.usecase.ManageSeriesUseCase
+import com.cairosquad.domain.usecase.LoginUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Review
 import com.cairosquad.entity.Season
@@ -15,15 +15,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 
 class SeriesDetailsViewModel(
-	private val seriesDetailsUseCase: GetSeriesDetailsUseCase,
+    private val manageSeriesUseCase: ManageSeriesUseCase,
 	private val loginUseCase: LoginUseCase,
 	seriesId: Long
 ) : BaseViewModel<SeriesDetailsScreenState, SeriesDetailEffect>(SeriesDetailsScreenState()),
-	SeriesDetailsInteractionListener {
+    SeriesDetailsInteractionListener {
 
-	init {
-		loadDetails(seriesId)
-	}
+    init {
+        loadDetails(seriesId)
+    }
 
 	fun loadDetails(seriesId: Long) {
 		getSeriesDetails(seriesId)
@@ -193,7 +193,7 @@ class SeriesDetailsViewModel(
 			onStart = {
 				updateState { it.copy(basicDetailsSectionState = SectionStatus.LOADING) }
 			},
-			block = { seriesDetailsUseCase.getSeries(seriesId) },
+			block = { manageSeriesUseCase.getSeriesById(seriesId) },
 			onSuccess = ::setBasicSeriesDetailsToUiState,
 			onError = { throwable ->
 				setError(throwable) { copy(basicDetailsSectionState = SectionStatus.ERROR) }
@@ -211,19 +211,19 @@ class SeriesDetailsViewModel(
 		}
 	}
 
-	private fun getTopCast(seriesId: Long) {
-		tryToCall(
-			onStart = {
-				updateState { it.copy(castSectionState = SectionStatus.LOADING) }
-			},
-			block = { seriesDetailsUseCase.getSeriesTopCast(seriesId, 1) },
-			onSuccess = ::setTopCastToUiState,
-			onError = { throwable ->
-				setError(throwable) { copy(castSectionState = SectionStatus.ERROR) }
-			},
-			dispatcher = Dispatchers.IO
-		)
-	}
+    private fun getTopCast(seriesId: Long) {
+        tryToCall(
+            onStart = {
+                updateState { it.copy(castSectionState = SectionStatus.LOADING) }
+            },
+            block = { manageSeriesUseCase.getSeriesTopCast(seriesId, 1) },
+            onSuccess = ::setTopCastToUiState,
+            onError = { throwable ->
+                setError(throwable) { copy(castSectionState = SectionStatus.ERROR) }
+            },
+            dispatcher = Dispatchers.IO
+        )
+    }
 
 	private fun setTopCastToUiState(cast: List<Artist>) {
 		updateState {
@@ -234,19 +234,19 @@ class SeriesDetailsViewModel(
 		}
 	}
 
-	private fun getSeasons(seriesId: Long) {
-		tryToCall(
-			onStart = {
-				updateState { it.copy(seasonsSectionState = SectionStatus.LOADING) }
-			},
-			block = { seriesDetailsUseCase.getSeriesSeasons(seriesId) },
-			onSuccess = ::setSeasonToUiState,
-			onError = { throwable ->
-				setError(throwable) { copy(seasonsSectionState = SectionStatus.ERROR) }
-			},
-			dispatcher = Dispatchers.IO
-		)
-	}
+    private fun getSeasons(seriesId: Long) {
+        tryToCall(
+            onStart = {
+                updateState { it.copy(seasonsSectionState = SectionStatus.LOADING) }
+            },
+            block = { manageSeriesUseCase.getSeriesSeasons(seriesId) },
+            onSuccess = ::setSeasonToUiState,
+            onError = { throwable ->
+                setError(throwable) { copy(seasonsSectionState = SectionStatus.ERROR) }
+            },
+            dispatcher = Dispatchers.IO
+        )
+    }
 
 	private fun setSeasonToUiState(seasons: List<Season>) {
 		updateState {
@@ -257,19 +257,19 @@ class SeriesDetailsViewModel(
 		}
 	}
 
-	private fun getReviews(seriesId: Long) {
-		tryToCall(
-			onStart = {
-				updateState { it.copy(reviewsSectionState = SectionStatus.LOADING) }
-			},
-			block = { seriesDetailsUseCase.getSeriesReviews(seriesId, 1) },
-			onSuccess = ::setReviewsToUiState,
-			onError = { throwable ->
-				setError(throwable) { copy(reviewsSectionState = SectionStatus.ERROR) }
-			},
-			dispatcher = Dispatchers.IO
-		)
-	}
+    private fun getReviews(seriesId: Long) {
+        tryToCall(
+            onStart = {
+                updateState { it.copy(reviewsSectionState = SectionStatus.LOADING) }
+            },
+            block = { manageSeriesUseCase.getSeriesReviews(seriesId, 1) },
+            onSuccess = ::setReviewsToUiState,
+            onError = { throwable ->
+                setError(throwable) { copy(reviewsSectionState = SectionStatus.ERROR) }
+            },
+            dispatcher = Dispatchers.IO
+        )
+    }
 
 	private fun setReviewsToUiState(reviews: List<Review>) {
 		updateState {
@@ -280,19 +280,19 @@ class SeriesDetailsViewModel(
 		}
 	}
 
-	private fun getSimilarSeries(seriesId: Long) {
-		tryToCall(
-			onStart = {
-				updateState { it.copy(similarSeriesSectionState = SectionStatus.LOADING) }
-			},
-			block = { seriesDetailsUseCase.getSimilarSeries(seriesId, 1) },
-			onSuccess = ::setSimilarSeriesToUiState,
-			onError = { throwable ->
-				setError(throwable) { copy(similarSeriesSectionState = SectionStatus.ERROR) }
-			},
-			dispatcher = Dispatchers.IO
-		)
-	}
+    private fun getSimilarSeries(seriesId: Long) {
+        tryToCall(
+            onStart = {
+                updateState { it.copy(similarSeriesSectionState = SectionStatus.LOADING) }
+            },
+            block = { manageSeriesUseCase.getSimilarSeries(seriesId, 1) },
+            onSuccess = ::setSimilarSeriesToUiState,
+            onError = { throwable ->
+                setError(throwable) { copy(similarSeriesSectionState = SectionStatus.ERROR) }
+            },
+            dispatcher = Dispatchers.IO
+        )
+    }
 
 	private fun setSimilarSeriesToUiState(similarSeries: List<Series>) {
 		updateState {

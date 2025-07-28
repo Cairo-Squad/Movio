@@ -1,7 +1,6 @@
 package com.cairosquad.repository.movie.data_source.remote.dto
 
-import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.toEntity
+import com.cairosquad.repository.movie.data_source.remote.toEntity
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

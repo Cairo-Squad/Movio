@@ -35,11 +35,9 @@ class TimeUtilTest {
         assertThat(result).isEqualTo("July 18, 2025")
     }
 
-    // Edge Cases
-
     @Test
     fun `convertLongToTime SHOULD handle epoch time`() {
-        val time = 0L // Epoch
+        val time = 0L
         val result = TimeUtil.convertLongToTime(time)
         assertThat(result).isEqualTo("01/01/1970")
     }

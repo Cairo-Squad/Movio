@@ -1,8 +1,7 @@
 package com.cairosquad.viewmodel.details.episodes
 
-import android.util.Log
 import com.cairosquad.domain.exception.MovioException
-import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
+import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Episode
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState.ScreenStatus
@@ -11,7 +10,7 @@ import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import kotlinx.coroutines.Dispatchers
 
 class EpisodesDetailsViewModel(
-    private val seriesDetailsUseCase: GetSeriesDetailsUseCase,
+    private val manageSeriesUseCase: ManageSeriesUseCase,
     seriesId: Long,
     private var seasonNumber: Int
 ) : BaseViewModel<EpisodesDetailsScreenState, EpisodesDetailEffect>(EpisodesDetailsScreenState()),
@@ -27,7 +26,7 @@ class EpisodesDetailsViewModel(
             onStart = {
                 updateState { it.copy(episodesSectionState = ScreenStatus.LOADING) }
             },
-            block = { seriesDetailsUseCase.getEpisodes(seriesId, seasonNumber) },
+            block = { manageSeriesUseCase.getEpisodes(seriesId, seasonNumber) },
             onSuccess = ::setEpisodesToUiState,
             onError = { throwable ->
                 setError(throwable) { copy(episodesSectionState = ScreenStatus.ERROR) }
@@ -60,7 +59,7 @@ class EpisodesDetailsViewModel(
         tryToCall(
             onStart = { updateState { it.copy(basicDetailsSectionState = ScreenStatus.LOADING) } },
             block = {
-                seriesDetailsUseCase.getSeriesSeasons(seriesId)
+                manageSeriesUseCase.getSeriesSeasons(seriesId)
             },
             onSuccess = { seasons ->
                 updateState {

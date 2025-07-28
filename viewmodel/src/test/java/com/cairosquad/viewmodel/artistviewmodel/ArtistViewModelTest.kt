@@ -3,7 +3,7 @@ package com.cairosquad.viewmodel.artistviewmodel
 import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.exception.NetworkException
 import com.cairosquad.domain.exception.UnknownException
-import com.cairosquad.domain.usecase.artists.GetArtistDetailsUseCase
+import com.cairosquad.domain.usecase.ManageArtistUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
@@ -36,7 +36,7 @@ class ArtistViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
 
-    private lateinit var getArtistDetailsUseCase: GetArtistDetailsUseCase
+    private lateinit var manageArtistUseCase: ManageArtistUseCase
     private lateinit var viewModel: ArtistViewModel
 
     @Before
@@ -46,10 +46,10 @@ class ArtistViewModelTest {
         mockkStatic(Dispatchers::class)
         every { Dispatchers.IO } returns testDispatcher
 
-        getArtistDetailsUseCase = mockk(relaxed = true)
+        manageArtistUseCase = mockk(relaxed = true)
 
         viewModel = ArtistViewModel(
-            getArtistDetailsUseCase = getArtistDetailsUseCase,
+            manageArtistUseCase = manageArtistUseCase,
             artistId = 1L
         )
     }
@@ -62,7 +62,7 @@ class ArtistViewModelTest {
     @Test
     fun `should load artist details when loadArtistDetails is called`() = runTest {
         val artistId = 1L
-        coEvery { getArtistDetailsUseCase.getArtist(artistId) } returns artist
+        coEvery { manageArtistUseCase.getArtistById(artistId) } returns artist
 
         viewModel.loadArtistDetails(artistId)
 
@@ -74,7 +74,7 @@ class ArtistViewModelTest {
     @Test
     fun `should set error status when loadArtistDetails fails`() = runTest {
         val artistId = 1L
-        coEvery { getArtistDetailsUseCase.getArtist(artistId) } throws IOException()
+        coEvery { manageArtistUseCase.getArtistById(artistId) } throws IOException()
 
         viewModel.loadArtistDetails(artistId)
 
@@ -94,7 +94,7 @@ class ArtistViewModelTest {
     fun `should load artist movies when loadArtistMovies is called`() = runTest {
         val artistId = 1L
         val movies = listOf(movie1, movie2)
-        coEvery { getArtistDetailsUseCase.getMoviesOfArtist(artistId) } returns movies
+        coEvery { manageArtistUseCase.getMoviesOfArtist(artistId) } returns movies
 
         viewModel.loadArtistMovies(artistId)
 
@@ -106,7 +106,7 @@ class ArtistViewModelTest {
     @Test
     fun `should set error status when loadArtistMovies fails`() = runTest {
         val artistId = 1L
-        coEvery { getArtistDetailsUseCase.getMoviesOfArtist(artistId) } throws IOException()
+        coEvery { manageArtistUseCase.getMoviesOfArtist(artistId) } throws IOException()
 
         viewModel.loadArtistMovies(artistId)
 
@@ -126,7 +126,7 @@ class ArtistViewModelTest {
     fun `should load artist series when loadArtistSeries is called`() = runTest {
         val artistId = 1L
         val series = listOf(series1)
-        coEvery { getArtistDetailsUseCase.getSeriesOfArtist(artistId) } returns series
+        coEvery { manageArtistUseCase.getSeriesOfArtist(artistId) } returns series
 
         viewModel.loadArtistSeries(artistId)
 
@@ -138,7 +138,7 @@ class ArtistViewModelTest {
     @Test
     fun `should set error status when loadArtistSeries fails`() = runTest {
         val artistId = 1L
-        coEvery { getArtistDetailsUseCase.getSeriesOfArtist(artistId) } throws IOException()
+        coEvery { manageArtistUseCase.getSeriesOfArtist(artistId) } throws IOException()
 
         viewModel.loadArtistSeries(artistId)
 
@@ -159,7 +159,7 @@ class ArtistViewModelTest {
     fun `should set NETWORK_ERROR when loadArtistDetails fails with NetworkException`() =
         runTest {
             val artistId = 1L
-            coEvery { getArtistDetailsUseCase.getArtist(artistId) } throws NetworkException()
+            coEvery { manageArtistUseCase.getArtistById(artistId) } throws NetworkException()
 
             viewModel.loadArtistDetails(artistId)
 
@@ -175,7 +175,7 @@ class ArtistViewModelTest {
     fun `should set UNKNOWN_ERROR when loadArtistDetails fails with UnknownException`() =
         runTest {
             val artistId = 1L
-            coEvery { getArtistDetailsUseCase.getArtist(artistId) } throws UnknownException()
+            coEvery { manageArtistUseCase.getArtistById(artistId) } throws UnknownException()
 
             viewModel.loadArtistDetails(artistId)
 
@@ -191,7 +191,7 @@ class ArtistViewModelTest {
     fun `should set NO_INTERNET when loadArtistDetails fails with InternetConnectionException`() =
         runTest {
             val artistId = 1L
-            coEvery { getArtistDetailsUseCase.getArtist(artistId) } throws InternetConnectionException()
+            coEvery { manageArtistUseCase.getArtistById(artistId) } throws InternetConnectionException()
 
             viewModel.loadArtistDetails(artistId)
 
@@ -245,7 +245,7 @@ class ArtistViewModelTest {
     fun `should set NETWORK_ERROR when loadArtistMovies fails with NetworkException`() =
         runTest {
             val artistId = 1L
-            coEvery { getArtistDetailsUseCase.getMoviesOfArtist(artistId) } throws NetworkException()
+            coEvery { manageArtistUseCase.getMoviesOfArtist(artistId) } throws NetworkException()
 
             viewModel.loadArtistMovies(artistId)
 
@@ -261,7 +261,7 @@ class ArtistViewModelTest {
     fun `should set NETWORK_ERROR when loadArtistSeries fails with NetworkException`() =
         runTest {
             val artistId = 1L
-            coEvery { getArtistDetailsUseCase.getSeriesOfArtist(artistId) } throws NetworkException()
+            coEvery { manageArtistUseCase.getSeriesOfArtist(artistId) } throws NetworkException()
 
             viewModel.loadArtistSeries(artistId)
 

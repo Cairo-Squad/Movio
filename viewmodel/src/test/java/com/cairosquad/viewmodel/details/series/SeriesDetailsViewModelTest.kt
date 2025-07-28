@@ -3,8 +3,8 @@ package com.cairosquad.viewmodel.details.series
 import app.cash.turbine.test
 import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.exception.NetworkException
-import com.cairosquad.domain.usecase.authentication.LoginUseCase
-import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
+import com.cairosquad.domain.usecase.LoginUseCase
+import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.google.common.truth.Truth.assertThat
@@ -35,7 +35,7 @@ class SeriesDetailsViewModelTest {
 
 	private val testDispatcher = StandardTestDispatcher()
 	private val seriesId = 123L
-	private val mockUseCase: GetSeriesDetailsUseCase = mockk(relaxed = true)
+	private val manageSeriesUseCase: ManageSeriesUseCase = mockk(relaxed = true)
 	private val loginUseCase: LoginUseCase = mockk(relaxed = true)
 
 	private lateinit var viewModel: SeriesDetailsViewModel
@@ -47,7 +47,7 @@ class SeriesDetailsViewModelTest {
 		mockkStatic(Dispatchers::class)
 		every { Dispatchers.IO } returns testDispatcher
 
-		viewModel = SeriesDetailsViewModel(mockUseCase, loginUseCase, seriesId)
+		viewModel = SeriesDetailsViewModel(manageSeriesUseCase, loginUseCase, seriesId)
 	}
 
 	@After

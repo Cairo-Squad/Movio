@@ -2,66 +2,89 @@ package com.cairosquad.repository.artists
 
 import com.cairosquad.domain.repository.ArtistsRepository
 import com.cairosquad.entity.Artist
-import com.cairosquad.entity.Movie
-import com.cairosquad.entity.Series
-import com.cairosquad.repository.artists.data_source.ArtistsRemoteDataSource
-import com.cairosquad.repository.search.data_source.local.CacheDataSource
-import com.cairosquad.repository.search.data_source.local.dto.toCacheDto
-import com.cairosquad.repository.search.data_source.local.dto.toCacheDtoList
-import com.cairosquad.repository.search.data_source.local.dto.toEntity
-import com.cairosquad.repository.search.data_source.local.dto.toEntityList
-import com.cairosquad.repository.search.data_source.remote.dto.toEntity
-import com.cairosquad.repository.search.data_source.remote.dto.toEntityList
+import com.cairosquad.repository.artists.data_source.local.ArtistsLocalDataSource
+import com.cairosquad.repository.artists.data_source.local.toCacheCodeWithArtistsCacheDto
+import com.cairosquad.repository.artists.data_source.local.toEntityList
+import com.cairosquad.repository.artists.data_source.remote.ArtistsRemoteDataSource
+import com.cairosquad.repository.artists.data_source.remote.toEntity
+import com.cairosquad.repository.artists.data_source.remote.toEntityList
 import com.cairosquad.repository.utils.mappers.tryToCall
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfArtist
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfArtistsByQuery
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfMovieTopCast
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSeriesTopCast
 import java.util.Date
 
 class ArtistsRepositoryImpl(
     private val artistsRemoteDataSource: ArtistsRemoteDataSource,
-    private val cacheDataSource: CacheDataSource,
+    private val artistsLocalDataSource: ArtistsLocalDataSource
 ) : ArtistsRepository {
-    override suspend fun getArtist(artistId: Long): Artist {
-        return try {
-            cacheDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
-            cacheDataSource.getCachedArtists(id = artistId).toEntity()
-        } catch (_: IllegalStateException) {
-            tryToCall {
-                artistsRemoteDataSource.getArtist(artistId).toEntity()
-                    .also { cacheDataSource.cacheArtist(listOf(it.toCacheDto(
-                        "ELSAYEDMAGDY",
-                        1
-                    ))) }
+
+    override suspend fun getArtistsByQuery(query: String, page: Int): List<Artist> {
+        return getArtists(
+            remoteFetcher = {
+                artistsRemoteDataSource.getArtistsByQuery(query, page).toEntityList()
+            },
+            cacheCode = getCacheCodeOfArtistsByQuery(query, page)
+        )
+    }
+
+    override suspend fun getArtistById(id: Long): Artist {
+        artistsLocalDataSource.deleteExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
+        return artistsLocalDataSource
+            .getArtistsByCacheCode(cacheCode = getCacheCodeOfArtist(id))
+            .toEntityList()
+            .firstOrNull()
+            ?: tryToCall {
+                artistsRemoteDataSource.getArtistById(id)
+                    .toEntity()
+                    .also { artist ->
+                        artistsLocalDataSource.insertCacheCodeWithArtists(
+                            listOf(artist).toCacheCodeWithArtistsCacheDto(
+                                cacheCode = getCacheCodeOfArtist(id)
+                            )
+                        )
+                    }
             }
-        }
-
-
     }
 
-    override suspend fun getMoviesOfArtist(artistId: Long): List<Movie> {
-        return tryToCall {
-            cacheDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
-            cacheDataSource.getCachedArtistMovies(artistId = artistId)
-                .takeIf { it.isNotEmpty() }?.toEntityList()
-                ?: artistsRemoteDataSource.getMoviesOfArtist(artistId).toEntityList()
-                    .also { cacheDataSource.cacheMovies(it.toCacheDtoList(
-                        "ELSAYEDMAGDY",
-                        1
-                    )) }
-                    .also { cacheDataSource.cacheArtistMovies(it.toArtistMoviesCachedDtoList(artistId)) }
-        }
+    override suspend fun getMovieTopCast(movieId: Long, page: Int): List<Artist> {
+        return getArtists(
+            remoteFetcher = {
+                artistsRemoteDataSource.getMovieTopCast(movieId, page).map { it.toEntity() }
+            },
+            cacheCode = getCacheCodeOfMovieTopCast(movieId, page)
+        )
     }
 
-    override suspend fun getSeriesOfArtist(artistId: Long): List<Series> {
-        return tryToCall {
-            cacheDataSource.clearExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
-            cacheDataSource.getCachedArtistSeries(artistId = artistId)
-                .takeIf { it.isNotEmpty() }?.toEntityList()
-                ?: artistsRemoteDataSource.getSeriesOfArtist(artistId).toEntityList()
-                    .also { cacheDataSource.cacheSeries(it.toCacheDtoList(
-                        "ELSAYEDMAGDY",
-                        1
-                    )) }
-                    .also { cacheDataSource.cacheArtistSeries(it.toArtistSeriesCachedDtoList(artistId)) }
-        }
+    override suspend fun getSeriesTopCast(seriesId: Long, page: Int): List<Artist> {
+        return getArtists(
+            remoteFetcher = {
+                artistsRemoteDataSource.getSeriesTopCast(seriesId, page).map { it.toEntity() }
+            },
+            cacheCode = getCacheCodeOfSeriesTopCast(seriesId, page)
+        )
+    }
+
+    private suspend fun getArtists(
+        remoteFetcher: suspend () -> List<Artist>,
+        cacheCode: String
+    ): List<Artist> {
+        artistsLocalDataSource.deleteExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
+        return artistsLocalDataSource
+            .getArtistsByCacheCode(cacheCode = cacheCode)
+            .toEntityList()
+            .takeIf { it.isNotEmpty() }
+            ?: tryToCall {
+                remoteFetcher()
+                    .also { artists ->
+                        artistsLocalDataSource.insertCacheCodeWithArtists(
+                            artists.toCacheCodeWithArtistsCacheDto(
+                                cacheCode = cacheCode
+                            )
+                        )
+                    }
+            }
     }
 
     private companion object {

@@ -42,7 +42,7 @@ data class SeriesDetailsRemoteDto(
         genres = genres?.mapNotNull { it?.toEntity() } ?: emptyList(),
         overview = overview.orEmpty(),
         releaseDate = firstAirDate?.let { TimeUtils.dateToLong(it) } ?: 0L,
-        seasonsCount = numberOfSeasons ?: 0,
+        seasonsCount = numberOfSeasons ?: 1,
         trailerPath = trailerPath
     )
 }
