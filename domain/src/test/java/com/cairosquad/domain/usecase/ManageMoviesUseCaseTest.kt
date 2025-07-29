@@ -821,7 +821,7 @@ class ManageMoviesUseCaseTest {
             id = "123",
             author = "Ana",
             authorPhotoPath = "/poster.png",
-            rating = 8.0,
+            rating = 4.0f,
             date = 123,
             description = ""
         )

@@ -9,7 +9,7 @@ fun SeriesRemoteDto.toEntity(allGenres: List<Genre> = emptyList()): Series {
     return Series(
         id = id ?: 0L,
         title = name ?: "",
-        rating = voteAverage ?: 0f,
+        rating = voteAverage?.times(0.5f) ?: 0f,
         posterPath = posterPath ?: "",
         trailerPath = "",
         genres = allGenres.filter { genreIds?.contains(it.id) == true },

@@ -16,7 +16,7 @@ data class ReviewCacheDto(
     @ColumnInfo("authorPhotoPath")
     val authorPhotoPath: String,
     @ColumnInfo("rating")
-    val rating: Double,
+    val rating: Float,
     @ColumnInfo("date")
     val date: Long,
     @ColumnInfo("description")

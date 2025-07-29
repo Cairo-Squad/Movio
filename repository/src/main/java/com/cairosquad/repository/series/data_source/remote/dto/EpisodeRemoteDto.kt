@@ -35,7 +35,7 @@ data class EpisodeRemoteDto(
             photoPath = stillPath.orEmpty(),
             episodeName = name.orEmpty(),
             runtimeMinutes = runtime ?: 0,
-            rating = voteAverage?.toFloat() ?: 0f,
+            rating = voteAverage?.toFloat()?.times(0.5f) ?: 0f,
             seasonNumber = seasonNumber ?: 0,
             seriesId = seriesId,
         )

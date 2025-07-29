@@ -4,6 +4,7 @@ import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Review
 import com.cairosquad.viewmodel.util.TimeUtil
+import com.cairosquad.viewmodel.util.roundToFirstDecimalPlace
 
 fun Artist.toArtistUiState() = MovieScreenState.TopCastUiState(
     id = id,
@@ -14,7 +15,7 @@ fun Artist.toArtistUiState() = MovieScreenState.TopCastUiState(
 fun Movie.toMovieUiState() = MovieScreenState.MovieDetailsUiState(
     id = id,
     title = title,
-    rating = (rating * 10 / 2).toInt().toFloat() / 10,
+    rating = rating.roundToFirstDecimalPlace(),
     posterPath = posterPath,
     genres = genres.map { it.name },
     overview = overview,
@@ -27,7 +28,7 @@ fun Review.toReviewUiState() = MovieScreenState.ReviewUiState(
     id = id,
     author = author,
     authorPhotoPath = authorPhotoPath,
-    rating = (rating * 10 / 2).toInt().toFloat() / 10.toFloat(),
+    rating = rating.roundToFirstDecimalPlace(),
     date = TimeUtil.convertLongToNamedDate(date),
     description = description
 )

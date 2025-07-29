@@ -51,7 +51,7 @@ class SearchPagerTest {
                 trailerPath = ""
             ),
             Movie(
-                id = 2, title = "The Dark Knight", rating = 0.0f, posterPath = "",
+                id = 2, title = "The Dark Knight", rating = 0f, posterPath = "",
                 genres = emptyList(),
                 overview = "",
                 releaseDate = 9L,
@@ -81,7 +81,7 @@ class SearchPagerTest {
                 seasonsCount = 1
             ),
             Series(
-                id = 2, title = "The Dark Knight", rating = 0.0f, posterPath = "",
+                id = 2, title = "The Dark Knight", rating = 0f, posterPath = "",
                 trailerPath = "",
                 genres = emptyList(),
                 overview = "",
