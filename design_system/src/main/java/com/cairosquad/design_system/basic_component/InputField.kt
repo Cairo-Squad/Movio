@@ -155,7 +155,7 @@ fun InputField(
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
             textStyle = Theme.textStyle.label.smallRegular14.copy(
-                color = Theme.color.surfaces.onSurface
+                color = Theme.color.surfaces.onSurfaceContainer
             ),
             decorationBox = { innerTextField ->
                 Row(
