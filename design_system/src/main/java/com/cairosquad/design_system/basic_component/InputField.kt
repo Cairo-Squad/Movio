@@ -45,7 +45,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.preview.MultiThemePreviews
@@ -155,7 +158,9 @@ fun InputField(
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
             textStyle = Theme.textStyle.label.smallRegular14.copy(
-                color = Theme.color.surfaces.onSurface
+                color = Theme.color.surfaces.onSurface,
+                letterSpacing = if (isPasswordField) TextUnit(2f, TextUnitType.Sp)
+                                else TextUnit.Unspecified
             ),
             decorationBox = { innerTextField ->
                 Row(
@@ -258,6 +263,22 @@ private fun TextFieldIcon(
                     )
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewInputPasswordField() {
+    MovioTheme {
+        InputField(
+            value = "12345678",
+            onValueChange = {},
+            placeholder = stringResource(R.string.search),
+            leadingIcon = R.drawable.search_bottom_nav,
+            trailingIcon = R.drawable.ic_close,
+            isPasswordField = true,
+            modifier = Modifier.padding(16.dp)
+        )
     }
 }
 
