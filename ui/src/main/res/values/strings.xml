@@ -49,4 +49,6 @@
     <string name="genre_all">All</string>
     <string name="read_more_with_dotes_behind"> ... Read More</string>
     <string name="read_less_with_dotes_behind"> ... Read Less</string>
+    <string name="no_trailer_found_for_this_movie">No trailer found for this movie</string>
+    <string name="no_trailer_found_for_this_series">No trailer found for this series</string>
 </resources>
