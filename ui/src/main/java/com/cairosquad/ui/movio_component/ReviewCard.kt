@@ -73,6 +73,7 @@ fun ReviewCard(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
+	                    modifier = Modifier.padding(8.dp),
                         imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
                         contentDescription = stringResource(R.string.reviewer_image),
                         tint = Color(0xFFEFF1F5)
