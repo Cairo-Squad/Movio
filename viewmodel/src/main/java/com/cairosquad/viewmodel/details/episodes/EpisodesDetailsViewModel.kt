@@ -14,11 +14,11 @@ import javax.inject.Inject
 @HiltViewModel
 class EpisodesDetailsViewModel @Inject constructor(
     private val manageSeriesUseCase: ManageSeriesUseCase,
-    private var seasonNumber: Int
 ) : BaseViewModel<EpisodesDetailsScreenState, EpisodesDetailEffect>(EpisodesDetailsScreenState()),
     EpisodesDetailsInteractionListener {
 
     private val seriesId: Long = 0 // TODO: get from savedHandle
+    private var seasonNumber: Int = 0 // TODO: get from savedHandle
 
     init {
         getSeasons(seriesId)

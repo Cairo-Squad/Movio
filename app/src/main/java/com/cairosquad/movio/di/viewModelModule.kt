@@ -27,7 +27,7 @@ val viewModelModule = module {
         EpisodesDetailsViewModel(
             manageSeriesUseCase = get(),
 //            seriesId = seriesId,
-            seasonNumber = seasonNumber
+//            seasonNumber = seasonNumber
         )
     }
     viewModelOf(::SimilarMoviesViewModel)
@@ -48,8 +48,8 @@ val viewModelModule = module {
 	}
 	viewModel { (mediaId: Long, isMovie: Boolean) ->
 		TopCastViewModel(
-			mediaId = mediaId,
-			isMovie = isMovie,
+//			mediaId = mediaId,
+//			isMovie = isMovie,
             manageMoviesUseCase = get(),
             manageSeriesUseCase = get()
 		)

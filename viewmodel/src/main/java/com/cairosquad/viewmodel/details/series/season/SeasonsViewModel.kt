@@ -13,11 +13,11 @@ import javax.inject.Inject
 @HiltViewModel
 class SeasonsViewModel @Inject constructor(
     private val manageSeriesUseCase: ManageSeriesUseCase,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : BaseViewModel<SeasonDetailsScreenState, SeasonDetailEffect>(SeasonDetailsScreenState()),
     SeasonDetailsInteractionListener {
 
     private val seriesId: Long = 0 // TODO: get from savedHandle
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO // TODO: inject
 
     init {
         loadSeasonDetails(seriesId)

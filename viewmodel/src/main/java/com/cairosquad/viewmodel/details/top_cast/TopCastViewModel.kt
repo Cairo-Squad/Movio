@@ -12,12 +12,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TopCastViewModel @Inject constructor(
-    private val mediaId: Long,
-    private val isMovie: Boolean,
     private val manageMoviesUseCase: ManageMoviesUseCase,
-    private val manageSeriesUseCase: ManageSeriesUseCase,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val manageSeriesUseCase: ManageSeriesUseCase
 ) : BaseViewModel<TopCastScreenState, Nothing>(TopCastScreenState()) {
+
+    private val mediaId: Long = 0 // TODO: get
+    private val isMovie: Boolean = false // TODO: get
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO // TODO: get
+
+
     init {
         getTopCast()
     }

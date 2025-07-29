@@ -12,13 +12,13 @@ import javax.inject.Inject
 @HiltViewModel
 class ReviewsViewModel @Inject constructor(
     private val manageMoviesUseCase: ManageMoviesUseCase,
-    private val manageSeriesUseCase: ManageSeriesUseCase,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val manageSeriesUseCase: ManageSeriesUseCase
 ) : BaseViewModel<ReviewsScreenState, ReviewsEffect>(initialState = ReviewsScreenState()),
     ReviewsInteractionListener {
 
     private val mediaId: Long = 0 // // TODO: get from savedHandle
     private val isMovie: Boolean = false // TODO: get from savedHandle
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO // TODO: inject
 
     fun getReviews() {
         updateState { it.copy(isLoading = true, error = null) }
