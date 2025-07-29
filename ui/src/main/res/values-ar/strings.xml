@@ -46,4 +46,6 @@
     <string name="on_tv">على التلفزيون</string>
     <string name="now_playing">يبث الان</string>
     <string name="genre_all">الكل</string>
+    <string name="read_more">..عرض المزيد</string>
+    <string name="read_less">..عرض اقل</string>
 </resources>
