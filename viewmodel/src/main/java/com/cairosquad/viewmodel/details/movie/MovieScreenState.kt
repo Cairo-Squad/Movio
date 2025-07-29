@@ -33,7 +33,7 @@ data class MovieScreenState(
     data class MovieDetailsUiState(
         val id: Long = 0,
         val title: String = "",
-        val rating: Float = 0.0f,
+        val rating: Float = 0f,
         val posterPath: String = "",
         val genres: List<String> = emptyList(),
         val overview: String = "",
@@ -52,7 +52,7 @@ data class MovieScreenState(
         val id: String = "",
         val author: String = "",
         val authorPhotoPath: String = "",
-        val rating: Float = 0.0f,
+        val rating: Float = 0f,
         val date: String,
         val description: String,
     )

@@ -129,7 +129,7 @@ class SeriesDetailsUiStateMapperTest {
             id = "10L",
             author = "Time Traveler",
             authorPhotoPath = "",
-            rating = 0.0f,
+            rating = 0f,
             date = getMillis("1965-05-15"),
             description = "Before 1970!"
         )
