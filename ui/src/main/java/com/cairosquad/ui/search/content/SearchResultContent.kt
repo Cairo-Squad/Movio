@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
@@ -27,13 +29,13 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.InputField
-import com.cairosquad.design_system.basic_component.RefreshBox
 import com.cairosquad.design_system.basic_component.TabRow
 import com.cairosquad.design_system.text_style.defaultTextStyle
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.ArtistCard
 import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.ui.movio_component.StateMessage
+import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.search.SearchInteractionListener
 import com.cairosquad.viewmodel.search.SearchScreenState
 
@@ -82,20 +84,6 @@ fun SearchResultContent(
             },
             readOnly = true
         )
-        if(state.screenStatus == SearchScreenState.ScreenStatus.FAILED){
-            RefreshBox(
-                isRefreshing = state.isRefreshing,
-                onRefresh = listener::onRefresh,
-                modifier = modifier
-                    .fillMaxSize()
-            ) {
-                SearchFailContent(
-                    modifier = modifier,
-                    state = state,
-                    listener = listener
-                )
-            }
-        }else {
             TabRow(
                 modifier = Modifier.padding(bottom = 12.dp),
                 tabs = listOf(
@@ -129,7 +117,6 @@ fun SearchResultContent(
                     ArtistsTabContent(artist = artists, listener = listener, state = state)
                 }
             }
-        }
     }
 }
 
@@ -152,7 +139,11 @@ private fun AllResultsTabContent(
                 modifier = modifier
             )
         }
-
+        isError ->{
+            SearchResultFail(
+                errorStatus = state.errorStatus
+            )
+        }
         isEmpty -> {
             Box(
                 modifier = modifier.fillMaxSize(),
@@ -210,6 +201,11 @@ private fun MoviesTabContent(
                 state = state,
                 listener = listener,
                 modifier = modifier
+            )
+        }
+        isError ->{
+            SearchResultFail(
+                errorStatus = state.errorStatus
             )
         }
         isEmpty -> {
@@ -272,7 +268,11 @@ private fun SeriesTabContent(
                 modifier = modifier
             )
         }
-
+        isError ->{
+            SearchResultFail(
+                errorStatus = state.errorStatus
+            )
+        }
         isEmpty -> {
             Box(
                 modifier = modifier.fillMaxSize(),
@@ -331,7 +331,11 @@ private fun ArtistsTabContent(
                 modifier = modifier
             )
         }
-
+        isError ->{
+            SearchResultFail(
+                errorStatus = state.errorStatus
+            )
+        }
         isEmpty -> {
             Box(
                 modifier = modifier.fillMaxSize(),
@@ -368,7 +372,47 @@ private fun ArtistsTabContent(
     }
 }
 
-
+@Composable
+private fun SearchResultFail(
+    errorStatus: ErrorStatus?
+){
+    Box(
+        Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
+        contentAlignment = Alignment.Center
+    ) {
+        StateMessage(
+            imageDrawable = when (errorStatus) {
+                ErrorStatus.NO_INTERNET -> R.drawable.no_internet
+                ErrorStatus.NETWORK_ERROR -> R.drawable.no_result
+                ErrorStatus.UNKNOWN_ERROR -> R.drawable.no_result
+                null -> R.drawable.no_result
+                ErrorStatus.UNAUTHORIZED -> TODO()
+                ErrorStatus.EMPTY -> R.drawable.no_result
+                ErrorStatus.PARSING_ERROR -> TODO()
+            },
+            titleId = when (errorStatus) {
+                ErrorStatus.NO_INTERNET -> R.string.no_internet_connection
+                ErrorStatus.NETWORK_ERROR -> R.string.an_error_occured_while_getting_results
+                ErrorStatus.UNKNOWN_ERROR -> R.string.an_unexpected_error_occurred
+                null -> R.string.an_unexpected_error_occurred
+                ErrorStatus.EMPTY -> R.string.no_results_found
+                ErrorStatus.PARSING_ERROR -> R.string.error_parsing_data
+                ErrorStatus.UNAUTHORIZED -> TODO()
+            },
+            descriptionId = when (errorStatus) {
+                ErrorStatus.NO_INTERNET -> R.string.internet_is_not_available_description
+                ErrorStatus.NETWORK_ERROR -> R.string.internet_is_not_available_description
+                ErrorStatus.UNKNOWN_ERROR -> R.string.an_unexpected_error_occurred_description
+                null -> R.string.an_unexpected_error_occurred_description
+                ErrorStatus.UNAUTHORIZED -> R.string.unauthorized_access
+                ErrorStatus.EMPTY -> R.string.no_results_found
+                ErrorStatus.PARSING_ERROR -> R.string.error_parsing_data
+            }
+        )
+    }
+}
 @Composable
 fun SearchResultText(
     noOfResults: Int,

@@ -15,4 +15,6 @@ interface SearchInteractionListener {
     fun onArtistClicked(artistId: Long)
     fun onSeeAllForYouClicked()
     fun onTabSelected(index: Int)
+    fun onTabPagingError(error: Throwable?)
+
 }
