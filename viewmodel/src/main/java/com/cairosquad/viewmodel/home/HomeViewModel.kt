@@ -11,6 +11,7 @@ import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import com.cairosquad.viewmodel.util.MediaContentType
 import com.cairosquad.viewmodel.util.MediaType
+import com.cairosquad.viewmodel.util.combineTwoList
 
 class HomeViewModel(
     private val manageMoviesUseCase: ManageMoviesUseCase,
@@ -335,20 +336,7 @@ class HomeViewModel(
             else -> ErrorStatus.UNKNOWN_ERROR
         }
     }
-    private fun <T> combineTwoList(
-        list1: List<T>,
-        list2: List<T>,
-    ): List<T> {
-        val mergedList = mutableListOf<T>()
-        val iterator1 = list1.iterator()
-        val iterator2 = list2.iterator()
 
-        while (iterator1.hasNext() || iterator2.hasNext()) {
-            if (iterator1.hasNext()) mergedList.add(iterator1.next())
-            if (iterator2.hasNext()) mergedList.add(iterator2.next())
-        }
-        return mergedList
-    }
 
 
 }
