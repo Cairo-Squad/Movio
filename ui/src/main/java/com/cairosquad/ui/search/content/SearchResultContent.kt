@@ -15,9 +15,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -33,6 +36,7 @@ import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.ArtistCard
 import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.ui.movio_component.StateMessage
+import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.search.SearchInteractionListener
 import com.cairosquad.viewmodel.search.SearchScreenState
 
@@ -81,40 +85,39 @@ fun SearchResultContent(
             },
             readOnly = true
         )
+            TabRow(
+                modifier = Modifier.padding(bottom = 12.dp),
+                tabs = listOf(
+                    stringResource(R.string.top_Results),
+                    stringResource(R.string.movies),
+                    stringResource(R.string.series),
+                    stringResource(R.string.artists),
+                ),
+                selectedTabIndex = selectedTabIndex,
+                onTabSelected = { listener.onTabSelected(it) }
+            )
 
-        TabRow(
-            modifier = Modifier.padding(bottom = 12.dp),
-            tabs = listOf(
-                stringResource(R.string.top_Results),
-                stringResource(R.string.movies),
-                stringResource(R.string.series),
-                stringResource(R.string.artists),
-            ),
-            selectedTabIndex = selectedTabIndex,
-            onTabSelected = { listener.onTabSelected(it) }
-        )
+            when (selectedTabIndex) {
+                0 -> {
+                    SearchResultText(noOfResults = movies.itemCount)
+                    AllResultsTabContent(movies = movies, listener = listener, state = state)
+                }
 
-        when (selectedTabIndex) {
-            0 -> {
-                SearchResultText(noOfResults = movies.itemCount)
-                AllResultsTabContent(movies = movies, listener = listener, state = state)
+                1 -> {
+                    SearchResultText(noOfResults = movies.itemCount)
+                    MoviesTabContent(movies = movies, listener = listener, state = state)
+                }
+
+                2 -> {
+                    SearchResultText(noOfResults = series.itemCount)
+                    SeriesTabContent(series = series, listener = listener, state = state)
+                }
+
+                3 -> {
+                    SearchResultText(noOfResults = artists.itemCount)
+                    ArtistsTabContent(artist = artists, listener = listener, state = state)
+                }
             }
-
-            1 -> {
-                SearchResultText(noOfResults = movies.itemCount)
-                MoviesTabContent(movies = movies, listener = listener, state = state)
-            }
-
-            2 -> {
-                SearchResultText(noOfResults = series.itemCount)
-                SeriesTabContent(series = series, listener = listener, state = state)
-            }
-
-            3 -> {
-                SearchResultText(noOfResults = artists.itemCount)
-                ArtistsTabContent(artist = artists, listener = listener, state = state)
-            }
-        }
     }
 }
 
@@ -128,6 +131,13 @@ private fun AllResultsTabContent(
     val isLoading = movies.loadState.refresh is LoadState.Loading
     val isError = movies.loadState.refresh is LoadState.Error
     val isEmpty = movies.itemCount == 0 && !isLoading && !isError
+    val error = (movies.loadState.refresh as? LoadState.Error)?.error
+
+    LaunchedEffect(error) {
+        if (error != null) {
+            listener.onTabPagingError(error)
+        }
+    }
 
     when {
         isLoading -> {
@@ -137,7 +147,11 @@ private fun AllResultsTabContent(
                 modifier = modifier
             )
         }
-
+        isError ->{
+            SearchResultFail(
+                errorStatus = state.errorStatus
+            )
+        }
         isEmpty -> {
             Box(
                 modifier = modifier.fillMaxSize(),
@@ -197,6 +211,11 @@ private fun MoviesTabContent(
                 modifier = modifier
             )
         }
+        isError ->{
+            SearchResultFail(
+                errorStatus = state.errorStatus
+            )
+        }
         isEmpty -> {
             Box(
                 modifier = modifier.fillMaxSize(),
@@ -248,6 +267,13 @@ private fun SeriesTabContent(
     val isLoading = series.loadState.refresh is LoadState.Loading
     val isError = series.loadState.refresh is LoadState.Error
     val isEmpty = series.itemCount == 0 && !isLoading && !isError
+    val error = (series.loadState.refresh as? LoadState.Error)?.error
+
+    LaunchedEffect(error) {
+        if (error != null) {
+            listener.onTabPagingError(error)
+        }
+    }
 
     when {
         isLoading -> {
@@ -257,7 +283,11 @@ private fun SeriesTabContent(
                 modifier = modifier
             )
         }
-
+        isError ->{
+            SearchResultFail(
+                errorStatus = state.errorStatus
+            )
+        }
         isEmpty -> {
             Box(
                 modifier = modifier.fillMaxSize(),
@@ -307,6 +337,13 @@ private fun ArtistsTabContent(
     val isLoading = artist.loadState.refresh is LoadState.Loading
     val isError = artist.loadState.refresh is LoadState.Error
     val isEmpty = artist.itemCount == 0 && !isLoading && !isError
+    val error = (artist.loadState.refresh as? LoadState.Error)?.error
+
+    LaunchedEffect(error) {
+        if (error != null) {
+            listener.onTabPagingError(error)
+        }
+    }
 
     when {
         isLoading -> {
@@ -316,7 +353,11 @@ private fun ArtistsTabContent(
                 modifier = modifier
             )
         }
-
+        isError ->{
+            SearchResultFail(
+                errorStatus = state.errorStatus
+            )
+        }
         isEmpty -> {
             Box(
                 modifier = modifier.fillMaxSize(),
@@ -353,7 +394,47 @@ private fun ArtistsTabContent(
     }
 }
 
-
+@Composable
+private fun SearchResultFail(
+    errorStatus: ErrorStatus?
+){
+    Box(
+        Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
+        contentAlignment = Alignment.Center
+    ) {
+        StateMessage(
+            imageDrawable = when (errorStatus) {
+                ErrorStatus.NO_INTERNET -> R.drawable.no_internet
+                ErrorStatus.NETWORK_ERROR -> R.drawable.no_result
+                ErrorStatus.UNKNOWN_ERROR -> R.drawable.no_result
+                null -> R.drawable.no_result
+                ErrorStatus.UNAUTHORIZED -> R.drawable.no_result
+                ErrorStatus.EMPTY -> R.drawable.no_result
+                ErrorStatus.PARSING_ERROR -> R.drawable.no_result
+            },
+            titleId = when (errorStatus) {
+                ErrorStatus.NO_INTERNET -> R.string.no_internet_connection
+                ErrorStatus.NETWORK_ERROR -> R.string.an_error_occured_while_getting_results
+                ErrorStatus.UNKNOWN_ERROR -> R.string.an_unexpected_error_occurred
+                null -> R.string.an_unexpected_error_occurred
+                ErrorStatus.EMPTY -> R.string.no_results_found
+                ErrorStatus.PARSING_ERROR -> R.string.error_parsing_data
+                ErrorStatus.UNAUTHORIZED -> R.drawable.no_result
+            },
+            descriptionId = when (errorStatus) {
+                ErrorStatus.NO_INTERNET -> R.string.internet_is_not_available_description
+                ErrorStatus.NETWORK_ERROR -> R.string.internet_is_not_available_description
+                ErrorStatus.UNKNOWN_ERROR -> R.string.an_unexpected_error_occurred_description
+                null -> R.string.an_unexpected_error_occurred_description
+                ErrorStatus.UNAUTHORIZED -> R.string.unauthorized_access
+                ErrorStatus.EMPTY -> R.string.no_results_found
+                ErrorStatus.PARSING_ERROR -> R.string.error_parsing_data
+            }
+        )
+    }
+}
 @Composable
 fun SearchResultText(
     noOfResults: Int,

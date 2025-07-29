@@ -274,6 +274,12 @@ class SearchViewModel(
     override fun onTabSelected(index: Int) {
         updateState { it.copy(selectedTabIndex = index) }
     }
+    override fun onTabPagingError(error: Throwable) {
+        val status = handleSearchException(error)
+        updateState {
+            it.copy(errorStatus = status)
+        }
+    }
 
     private fun setLoading() {
         updateState {
