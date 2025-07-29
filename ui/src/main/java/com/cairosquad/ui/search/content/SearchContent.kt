@@ -70,13 +70,13 @@ fun SearchContent(
                 onDone = { listener.onSearch() }
             )
         )
-
-        SectionHeader(
-            title = stringResource(R.string.recent_search),
-            actionText = stringResource(R.string.clear_all),
-            onActionClick = listener::onClearHistory
-        )
-
+        if (!state.recentSearch.isNullOrEmpty()){
+            SectionHeader(
+                title = stringResource(R.string.recent_search),
+                actionText = stringResource(R.string.clear_all),
+                onActionClick = listener::onClearHistory
+            )
+        }
         LazyColumn(
             modifier = Modifier
                 .weight(1f)
