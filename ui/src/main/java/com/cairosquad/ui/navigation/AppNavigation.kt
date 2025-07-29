@@ -29,9 +29,7 @@ import com.cairosquad.ui.details.similar_movies.SimilarMoviesScreen
 import com.cairosquad.ui.details.similar_series.SimilarSeriesScreen
 import com.cairosquad.ui.search.ForYouScreen
 import com.cairosquad.ui.see_all_screen.SeeAllScreen
-//import com.cairosquad.ui.splash.SplashScreen
 import com.cairosquad.viewmodel.auth_gate.AuthGate
-//import kotlinx.coroutines.launch
 import org.koin.compose.getKoin
 
 
@@ -51,32 +49,7 @@ fun AppNavigation(
             modifier = Modifier.background(Theme.color.surfaces.surface),
             navController = navController,
             startDestination = SplashRoute
-        ) {
-//            composable<SplashRoute> {
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-//                    SplashScreen(
-//                        onNavigateNext = {
-//                            coroutineScope.launch {
-//                                val route = if (authGate.isUserLoggedIn()) AppRoute else LoginRoute
-//                                navController.navigate(route) {
-//                                    popUpTo(SplashRoute) { inclusive = true }
-//                                    launchSingleTop = true
-//                                }
-//                            }
-//                        }
-//                    )
-//                } else {
-//
-//                    LaunchedEffect(Unit) {
-//                        val route = if (authGate.isUserLoggedIn()) AppRoute else LoginRoute
-//                        navController.navigate(route) {
-//                            popUpTo(SplashRoute) { inclusive = true }
-//                            launchSingleTop = true
-//                        }
-//                    }
-//                }
-//            }
-
+        ) {         
             composable<LoginRoute> {
                 LoginScreen()
             }
