@@ -8,22 +8,26 @@ import com.cairosquad.viewmodel.exception.ErrorStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import javax.inject.Inject
 
 @HiltViewModel
-class SeasonsViewModel(
+class SeasonsViewModel @Inject constructor(
     private val manageSeriesUseCase: ManageSeriesUseCase,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
-    seriesId: Long,
 ) : BaseViewModel<SeasonDetailsScreenState, SeasonDetailEffect>(SeasonDetailsScreenState()),
     SeasonDetailsInteractionListener {
-        init {
-            loadSeasonDetails(seriesId)
-        }
+
+    private val seriesId: Long = 0 // TODO: get from savedHandle
+
+    init {
+        loadSeasonDetails(seriesId)
+    }
 
     private fun loadSeasonDetails(seriesId: Long) {
         getSeriesName(seriesId)
         getSeasonDetails(seriesId)
     }
+
     private fun getSeriesName(seriesId: Long) {
         tryToCall(
             block = { manageSeriesUseCase.getSeriesById(seriesId).title },
@@ -32,6 +36,7 @@ class SeasonsViewModel(
             dispatcher = dispatcher
         )
     }
+
     private fun getSeasonDetails(seriesId: Long) {
         tryToCall(
             onStart = { updateState { it.copy(seasonSectionState = ScreenStatus.LOADING) } },
@@ -41,6 +46,7 @@ class SeasonsViewModel(
             dispatcher = dispatcher
         )
     }
+
     private fun setSeasonDetailsToUiState(seasons: List<Season>) {
         updateState { currentState ->
             currentState.copy(
@@ -50,7 +56,10 @@ class SeasonsViewModel(
         }
     }
 
-    private fun setError(throwable: Throwable, updateSection: SeasonDetailsScreenState.() -> SeasonDetailsScreenState) {
+    private fun setError(
+        throwable: Throwable,
+        updateSection: SeasonDetailsScreenState.() -> SeasonDetailsScreenState
+    ) {
         updateState {
             it.updateSection().copy(
                 errorStatus = handleDetailsException(throwable)

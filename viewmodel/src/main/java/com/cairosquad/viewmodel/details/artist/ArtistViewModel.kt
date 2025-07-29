@@ -6,19 +6,21 @@ import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 @HiltViewModel
-class ArtistViewModel(
+class ArtistViewModel @Inject constructor(
     private val manageArtistUseCase: ManageArtistUseCase,
-    artistId: Long
 ) : BaseViewModel<ArtistScreenState, ArtistEffect>(initialState = ArtistScreenState()),
-	ArtistInteractionListener {
+    ArtistInteractionListener {
 
-	init {
-		loadArtistDetails(artistId)
-		loadArtistMovies(artistId)
-		loadArtistSeries(artistId)
-	}
+    private val artistId: Long = 0 // TODO: get from savedHandle
+
+    init {
+        loadArtistDetails(artistId)
+        loadArtistMovies(artistId)
+        loadArtistSeries(artistId)
+    }
 
     fun loadArtistDetails(artistId: Long) {
         tryToCall(
@@ -94,27 +96,27 @@ class ArtistViewModel(
         )
     }
 
-	override fun onClickBack() {
-		sendEffect(ArtistEffect.NavigateBack)
-	}
+    override fun onClickBack() {
+        sendEffect(ArtistEffect.NavigateBack)
+    }
 
-	override fun onMovieClick(movieId: Long) {
-		sendEffect(ArtistEffect.NavigateToMovieDetails(movieId))
-	}
+    override fun onMovieClick(movieId: Long) {
+        sendEffect(ArtistEffect.NavigateToMovieDetails(movieId))
+    }
 
-	override fun onSeriesClick(seriesId: Long) {
-		sendEffect(ArtistEffect.NavigateToSeriesDetails(seriesId))
-	}
+    override fun onSeriesClick(seriesId: Long) {
+        sendEffect(ArtistEffect.NavigateToSeriesDetails(seriesId))
+    }
 
-	private fun handleArtistException(e: Throwable): ErrorStatus {
-		return when (e) {
-			is MovioException -> {
-				exceptionToErrorStatus(e)
-			}
+    private fun handleArtistException(e: Throwable): ErrorStatus {
+        return when (e) {
+            is MovioException -> {
+                exceptionToErrorStatus(e)
+            }
 
-			else -> ErrorStatus.UNKNOWN_ERROR
-		}
-	}
+            else -> ErrorStatus.UNKNOWN_ERROR
+        }
+    }
 }
 
 

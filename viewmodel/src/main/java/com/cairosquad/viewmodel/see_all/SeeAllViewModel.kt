@@ -11,9 +11,10 @@ import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import com.cairosquad.viewmodel.util.MediaContentType
 import com.cairosquad.viewmodel.util.MediaType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 @HiltViewModel
-class SeeAllViewModel(
+class SeeAllViewModel @Inject constructor(
     private val manageMoviesUseCase: ManageMoviesUseCase,
     private val manageSeriesUseCase: ManageSeriesUseCase
 ) : BaseViewModel<SeeAllScreenState, SeeAllEffect>(SeeAllScreenState()),

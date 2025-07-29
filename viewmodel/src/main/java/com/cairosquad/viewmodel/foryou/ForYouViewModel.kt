@@ -16,9 +16,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
-class ForYouViewModel(private val forYouPager: ForYouPager) :
+class ForYouViewModel @Inject constructor(private val forYouPager: ForYouPager) :
     BaseViewModel<ForYouState, ForYouEffect>(ForYouState()), ForYouInteractionListener {
 
     init {

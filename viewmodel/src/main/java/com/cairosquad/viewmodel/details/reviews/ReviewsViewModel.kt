@@ -7,17 +7,18 @@ import com.cairosquad.viewmodel.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import javax.inject.Inject
 
 @HiltViewModel
-class ReviewsViewModel(
-    private val mediaId: Long,
-    private val isMovie: Boolean,
+class ReviewsViewModel @Inject constructor(
     private val manageMoviesUseCase: ManageMoviesUseCase,
     private val manageSeriesUseCase: ManageSeriesUseCase,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
-
 ) : BaseViewModel<ReviewsScreenState, ReviewsEffect>(initialState = ReviewsScreenState()),
     ReviewsInteractionListener {
+
+    private val mediaId: Long = 0 // // TODO: get from savedHandle
+    private val isMovie: Boolean = false // TODO: get from savedHandle
 
     fun getReviews() {
         updateState { it.copy(isLoading = true, error = null) }

@@ -9,14 +9,16 @@ import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import javax.inject.Inject
 
 @HiltViewModel
-class EpisodesDetailsViewModel(
+class EpisodesDetailsViewModel @Inject constructor(
     private val manageSeriesUseCase: ManageSeriesUseCase,
-    seriesId: Long,
     private var seasonNumber: Int
 ) : BaseViewModel<EpisodesDetailsScreenState, EpisodesDetailEffect>(EpisodesDetailsScreenState()),
     EpisodesDetailsInteractionListener {
+
+    private val seriesId: Long = 0 // TODO: get from savedHandle
 
     init {
         getSeasons(seriesId)

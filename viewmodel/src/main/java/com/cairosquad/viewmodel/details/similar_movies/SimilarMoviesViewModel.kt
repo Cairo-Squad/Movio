@@ -8,9 +8,10 @@ import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import javax.inject.Inject
 
 @HiltViewModel
-class SimilarMoviesViewModel(
+class SimilarMoviesViewModel @Inject constructor(
     private val manageMoviesUseCase: ManageMoviesUseCase
 ) : BaseViewModel<SimilarMoviesScreenState, SimilarMoviesEffect>(SimilarMoviesScreenState()),
     SimilarMoviesInteractionListener {

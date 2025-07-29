@@ -8,9 +8,10 @@ import com.cairosquad.viewmodel.details.top_cast.TopCastScreenState.ScreenStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import javax.inject.Inject
 
 @HiltViewModel
-class TopCastViewModel(
+class TopCastViewModel @Inject constructor(
     private val mediaId: Long,
     private val isMovie: Boolean,
     private val manageMoviesUseCase: ManageMoviesUseCase,
