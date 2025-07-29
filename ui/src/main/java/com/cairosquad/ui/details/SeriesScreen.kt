@@ -444,8 +444,8 @@ private fun SeriesScreenContent(
                                     .padding(horizontal = 16.dp)
                                     .padding(top = 16.dp),
                                 text = uiState.series.overview,
-                                showMoreText = stringResource(R.string.read_more),
-                                showLessText = stringResource(R.string.read_less),
+                                showMoreText = stringResource(R.string.read_more_with_dots_behind),
+                                showLessText = stringResource(R.string.read_less_with_dots_behind),
                                 color = Theme.color.surfaces.onSurface,
                                 style = Theme.textStyle.label.smallRegular14,
                                 showMoreStyle = Theme.textStyle.label.smallRegular14,

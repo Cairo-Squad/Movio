@@ -273,7 +273,7 @@ private fun PreviewInputPasswordField() {
         InputField(
             value = "12345678",
             onValueChange = {},
-            placeholder = stringResource(R.string.search),
+            placeholder = stringResource(R.string.search_with_dotes_ahead),
             leadingIcon = R.drawable.search_bottom_nav,
             trailingIcon = R.drawable.ic_close,
             isPasswordField = true,
@@ -289,7 +289,7 @@ private fun PreviewInputField() {
         InputField(
             value = "",
             onValueChange = {},
-            placeholder = stringResource(R.string.search),
+            placeholder = stringResource(R.string.search_with_dotes_ahead),
             leadingIcon = R.drawable.search_bottom_nav,
             trailingIcon = R.drawable.ic_close,
             isPasswordField = false,
@@ -305,7 +305,7 @@ private fun PreviewInputFieldError() {
         InputField(
             value = "",
             onValueChange = {},
-            placeholder = stringResource(R.string.search),
+            placeholder = stringResource(R.string.search_with_dotes_ahead),
             leadingIcon = R.drawable.search_bottom_nav,
             trailingIcon = R.drawable.ic_close,
             isPasswordField = false,
