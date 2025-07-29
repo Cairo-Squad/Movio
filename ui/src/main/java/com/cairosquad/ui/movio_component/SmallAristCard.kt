@@ -28,62 +28,54 @@ import com.cairosquad.ui.BuildConfig
 
 @Composable
 fun SmallArtistCard(
-	name: String,
-	imgUrl: String?,
-	modifier: Modifier = Modifier
+    name: String,
+    imgUrl: String?,
+    modifier: Modifier = Modifier
 ) {
-	Column(
-		modifier = modifier
-			.widthIn(max = 102.dp)
-			.fillMaxWidth(),
-		horizontalAlignment = Alignment.CenterHorizontally
-	) {
-		if (imgUrl?.isNotEmpty() == true) {
-			SafeImageViewer(
-				model = BuildConfig.IMAGE_BASE_URL + imgUrl,
-				modifier = Modifier
-					.padding(horizontal = 6.67.dp)
-					.size(88.dp)
-					.clip(CircleShape),
-				contentDescription = stringResource(R.string.artist_image),
-				nudeThreshold = 0.0,
-				nonNudeThreshold = 0.0,
-				loadingPlaceholder = {
-					LoadingMovieImage(
-						modifier = Modifier
-							.padding(horizontal = 6.67.dp)
-							.size(88.dp)
-							.clip(CircleShape)
-					)
-				}
-			)
-		} else {
-			Box(
-				modifier = Modifier
-					.padding(horizontal = 6.67.dp)
-					.size(88.dp)
-					.clip(CircleShape)
-					.background(Theme.color.system.defaultImageBackground),
-				contentAlignment = Alignment.Center
-			) {
-				Icon(
-					modifier = Modifier.size(24.dp),
-					imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
-					contentDescription = stringResource(R.string.default_image_icon),
-					tint = Color(0xFFEFF1F5)
-				)
-			}
-		}
-		Text(
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(top = 8.dp),
-			text = name,
-			textAlign = TextAlign.Center,
-			style = Theme.textStyle.title.mediumMedium14,
-			color = Theme.color.surfaces.onSurface,
-			overflow = TextOverflow.Ellipsis,
-			maxLines = 1
-		)
-	}
+    Column(
+        modifier = modifier
+            .widthIn(max = 102.dp)
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        if (imgUrl?.isNotEmpty() == true) {
+            SafeImageViewer(
+                model = BuildConfig.IMAGE_BASE_URL + imgUrl,
+                modifier = Modifier
+                    .padding(horizontal = 6.67.dp)
+                    .size(88.dp)
+                    .clip(CircleShape),
+                contentDescription = stringResource(R.string.artist_image),
+                nudeThreshold = 0.0,
+                nonNudeThreshold = 0.0
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .padding(horizontal = 6.67.dp)
+                    .size(88.dp)
+                    .clip(CircleShape)
+                    .background(Theme.color.system.defaultImageBackground),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
+                    contentDescription = stringResource(R.string.default_image_icon),
+                    tint = Color(0xFFEFF1F5)
+                )
+            }
+        }
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            text = name,
+            textAlign = TextAlign.Center,
+            style = Theme.textStyle.title.mediumMedium14,
+            color = Theme.color.surfaces.onSurface,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1
+        )
+    }
 }
