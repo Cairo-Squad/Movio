@@ -25,5 +25,6 @@ fun Series.toHomeMediaUiState() = HomeScreenState.MediaUiState(
 
 fun Genre.toHomeGenreUiState() = HomeScreenState.GenreUiState(
     id = id,
-    name = name
+    name = name,
+    nameResId = null
 )

@@ -5,9 +5,11 @@ import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
+import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
+import com.cairosquad.viewmodel.home.HomeScreenState
 import com.cairosquad.viewmodel.util.MediaContentType
 import com.cairosquad.viewmodel.util.MediaType
 
@@ -198,11 +200,16 @@ class SeeAllViewModel(
     }
 
     private suspend fun loadGenresBlock(): List<SeeAllScreenState.GenreUiState> {
+        val defaultGenre = SeeAllScreenState.GenreUiState(
+            id = null,
+            name = "",
+            nameResId = R.string.sorting_type_all
+        )
         return when (mediaType) {
             MediaType.MOVIES -> {
                 val movieGenres = manageMoviesUseCase.getMoviesGenres()
                 buildSet {
-                    add(SeeAllScreenState.GenreUiState.defaultGenre)
+                    add(defaultGenre)
                     movieGenres.mapTo(this) { it.toSeeAllGenreUiState() }
                 }.toList()
             }
@@ -210,7 +217,7 @@ class SeeAllViewModel(
             MediaType.SERIES -> {
                 val seriesGenres = manageSeriesUseCase.getSeriesGenres()
                 buildSet {
-                    add(SeeAllScreenState.GenreUiState.defaultGenre)
+                    add(defaultGenre)
                     seriesGenres.mapTo(this) { it.toSeeAllGenreUiState() }
                 }.toList()
             }
@@ -219,7 +226,7 @@ class SeeAllViewModel(
                 val movieGenres = manageMoviesUseCase.getMoviesGenres()
                 val seriesGenres = manageSeriesUseCase.getSeriesGenres()
                 buildSet {
-                    add(SeeAllScreenState.GenreUiState.defaultGenre)
+                    add(defaultGenre)
                     movieGenres.mapTo(this) { it.toSeeAllGenreUiState() }
                     seriesGenres.mapTo(this) { it.toSeeAllGenreUiState() }
                 }.toList()
