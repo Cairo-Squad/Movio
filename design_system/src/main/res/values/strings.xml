@@ -12,7 +12,7 @@
     <string name="favorite_list_empty_description">Start adding the movies and shows you love — keep them all in one place for easy access.</string>
     <string name="state_message_image">State Message Image</string>
     <string name="home">Home</string>
-    <string name="search">Search</string>
+    <string name="search">Search ...</string>
     <string name="search_result">Search result</string>
     <string name="number_of_items">%d items</string>
     <string name="top_Results">Top Results</string>
