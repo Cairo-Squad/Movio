@@ -1,7 +1,6 @@
 package com.cairosquad.viewmodel.details.reviews
 
 import com.cairosquad.entity.Review
-import com.cairosquad.viewmodel.util.roundToFirstDecimalPlace
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -9,7 +8,7 @@ import java.util.Locale
 fun Review.toUiState() = ReviewsScreenState.ReviewUiState(
     reviewerName = author,
     reviewDate = Timestamp(date).toDateFormat(),
-    rating = rating.roundToFirstDecimalPlace().toString(),
+    rating = String.format(Locale.getDefault(), "%.1f", rating),
     reviewText = description,
     reviewerImageUrl = authorPhotoPath
 )

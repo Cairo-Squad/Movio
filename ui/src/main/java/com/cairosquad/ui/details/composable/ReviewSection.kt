@@ -17,6 +17,7 @@ import com.cairosquad.ui.movio_component.ReviewCard
 import com.cairosquad.ui.movio_component.SectionHeader
 import com.cairosquad.viewmodel.details.movie.MovieScreenState
 import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState
+import java.util.Locale
 
 @Composable
 fun SeriesReviewSection(
@@ -38,7 +39,7 @@ fun SeriesReviewSection(
             ReviewCard(
                 imgUrl = it.authorPhotoPath,
                 reviewerName = it.author,
-                rating = it.rating.toString(),
+                rating = String.format(Locale.getDefault(), "%.1f", it.rating),
                 reviewDate = it.date,
                 reviewText = it.description,
                 isExpandable = false
@@ -67,7 +68,7 @@ fun MovieReviewSection(
             ReviewCard(
                 imgUrl = it.authorPhotoPath,
                 reviewerName = it.author,
-                rating = it.rating.toString(),
+                rating = String.format(Locale.getDefault(), "%.1f", it.rating),
                 reviewDate = it.date,
                 reviewText = it.description,
                 isExpandable = false
