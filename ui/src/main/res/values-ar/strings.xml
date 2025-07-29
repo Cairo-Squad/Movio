@@ -24,6 +24,7 @@
     <string name="create">إنشاء</string>
     <string name="list_name">إسم القائمة</string>
     <string name="movie">فيلم</string>
+    <string name="series">مسلسل</string>
     <string name="create_list_description">قم بصناعة قائمة جديدة لكي تتابع %1$s التي تريد الوصول إليها بسهولة</string>
     <string name="create_list_title">أضف عنوان للقائمة</string>
     <string name="create_new_list">أضف قائمة جديدة</string>
@@ -48,4 +49,6 @@
     <string name="genre_all">الكل</string>
     <string name="read_more_with_dotes_behind">... اقرء المزيد </string>
     <string name="read_less_with_dotes_behind">... اقرء اقل </string>
+    <string name="no_trailer_found_for_this_movie">لم يتم العثور على عرض تشويقي لهذا الفيلم</string>
+    <string name="no_trailer_found_for_this_series">لم يتم العثور على عرض تشويقي لهذا المسلسل</string>
 </resources>

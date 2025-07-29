@@ -90,9 +90,9 @@ fun MovieScreen(
 	val navController = LocalNavController.current
 	val context = LocalContext.current
 	val state by viewModel.screenState.collectAsState()
-	val seriesUrl = "https://www.cairo-movio.com/movie/${movieId}"
+	val movieUrl = "https://www.cairo-movio.com/movie/${movieId}"
 	val message = stringResource(R.string.check_out_this_amazing_movie)
-	val encodedMessageAndUrl = Uri.encode("$message $seriesUrl")
+	val encodedMessageAndUrl = Uri.encode("$message $movieUrl")
 
 
 	ObserveAsEffect(viewModel.effect) { effect ->
@@ -130,7 +130,15 @@ fun MovieScreen(
 			}
 
 			MovieEffect.PlayTrailer -> {
-				ShareUtil.playOnYoutube(videoId = state.movie.trailerPath, context = context)
+				if (state.movie.trailerPath.isBlank()) {
+					Toast.makeText(
+						context,
+						context.getString(com.cairosquad.ui.R.string.no_trailer_found_for_this_movie),
+						Toast.LENGTH_LONG
+					).show()
+				} else {
+					ShareUtil.playOnYoutube(videoId = state.movie.trailerPath, context = context)
+				}
 			}
 
 			MovieEffect.NavigateToLogin -> {
@@ -153,7 +161,7 @@ fun MovieScreen(
 				onDismiss = viewModel::onDismissShareBottomSheet,
 				onCopyLinkClick = {
 					ShareUtil.copyLink(
-						seriesUrl = seriesUrl,
+						seriesUrl = movieUrl,
 						context = context,
 						onDismiss = viewModel::onCopy
 					)
@@ -230,9 +238,9 @@ fun MovieScreen(
 		}
 		AnimatedVisibility(
 			modifier = Modifier
-					.align(Alignment.BottomCenter)
-					.windowInsetsPadding(WindowInsets.navigationBars)
-					.padding(16.dp),
+				.align(Alignment.BottomCenter)
+				.windowInsetsPadding(WindowInsets.navigationBars)
+				.padding(16.dp),
 			visible = state.showSnackBar,
 			enter = slideInVertically(
 				initialOffsetY = { fullHeight -> fullHeight },
@@ -279,10 +287,10 @@ fun MovieContent(
 	)
 	Box(
 		modifier = Modifier
-				.fillMaxSize()
-				.background(Theme.color.surfaces.surface)
-				.windowInsetsPadding(WindowInsets.navigationBars)
-				.verticalScroll(listState)
+			.fillMaxSize()
+			.background(Theme.color.surfaces.surface)
+			.windowInsetsPadding(WindowInsets.navigationBars)
+			.verticalScroll(listState)
 	) {
 		when (uiState.basicDetailsSectionState) {
 			MovieScreenState.ScreenStatus.LOADING -> {}
@@ -290,10 +298,10 @@ fun MovieContent(
 				if (uiState.movie.posterPath.isNotEmpty()) {
 					SafeImageViewer(
 						modifier = Modifier
-								.blur(16.dp)
-								.fillMaxWidth()
-								.height(400.dp)
-								.offset(y = (- 28).dp),
+							.blur(16.dp)
+							.fillMaxWidth()
+							.height(400.dp)
+							.offset(y = (-28).dp),
 						model = "https://image.tmdb.org/t/p/w500/${uiState.movie.posterPath}",
 						contentDescription = "",
 						blur = 0,
@@ -303,10 +311,10 @@ fun MovieContent(
 				} else {
 					Box(
 						modifier = Modifier
-								.blur(16.dp)
-								.fillMaxWidth()
-								.height(400.dp)
-								.offset(y = (- 28).dp),
+							.blur(16.dp)
+							.fillMaxWidth()
+							.height(400.dp)
+							.offset(y = (-28).dp),
 					)
 				}
 			}
@@ -315,9 +323,9 @@ fun MovieContent(
 		}
 		LazyColumn(
 			modifier = Modifier
-					.fillMaxWidth()
-					.windowInsetsPadding(WindowInsets.statusBars)
-					.heightIn(max = 10000.dp),
+				.fillMaxWidth()
+				.windowInsetsPadding(WindowInsets.statusBars)
+				.heightIn(max = 10000.dp),
 			horizontalAlignment = Alignment.Start,
 			userScrollEnabled = false
 		) {
@@ -326,8 +334,8 @@ fun MovieContent(
 					MovieScreenState.ScreenStatus.LOADING -> {
 						Column(
 							modifier = Modifier
-									.fillMaxWidth()
-									.padding(top = 56.dp, bottom = 24.dp),
+								.fillMaxWidth()
+								.padding(top = 56.dp, bottom = 24.dp),
 							horizontalAlignment = Alignment.CenterHorizontally
 						) {
 							LoadingMovieImage(
@@ -339,15 +347,15 @@ fun MovieContent(
 					MovieScreenState.ScreenStatus.SUCCESS -> {
 						Column(
 							modifier = Modifier
-									.fillMaxWidth()
-									.padding(top = 56.dp, bottom = 24.dp),
+								.fillMaxWidth()
+								.padding(top = 56.dp, bottom = 24.dp),
 							horizontalAlignment = Alignment.CenterHorizontally
 						) {
 							if (uiState.movie.posterPath.isNotEmpty()) {
 								SafeImageViewer(
 									modifier = Modifier
-											.size(height = 260.dp, width = 200.dp)
-											.clip(RoundedCornerShape(8.dp)),
+										.size(height = 260.dp, width = 200.dp)
+										.clip(RoundedCornerShape(8.dp)),
 									model = BuildConfig.IMAGE_BASE_URL + uiState.movie.posterPath,
 									contentDescription = "",
 									loadingPlaceholder = {
@@ -362,9 +370,9 @@ fun MovieContent(
 							} else {
 								Box(
 									modifier = Modifier
-											.size(height = 260.dp, width = 200.dp)
-											.clip(RoundedCornerShape(8.dp))
-											.background(Theme.color.system.defaultImageBackground),
+										.size(height = 260.dp, width = 200.dp)
+										.clip(RoundedCornerShape(8.dp))
+										.background(Theme.color.system.defaultImageBackground),
 									contentAlignment = Alignment.Center
 								) {
 									Icon(
@@ -408,18 +416,18 @@ fun MovieContent(
 					MovieScreenState.ScreenStatus.LOADING -> {
 						LoadingMovieImage(
 							modifier = Modifier
-									.padding(horizontal = 16.dp)
-									.fillMaxWidth()
-									.height(height = 200.dp)
-									.padding(bottom = 32.dp)
+								.padding(horizontal = 16.dp)
+								.fillMaxWidth()
+								.height(height = 200.dp)
+								.padding(bottom = 32.dp)
 						)
 					}
 
 					MovieScreenState.ScreenStatus.SUCCESS -> {
 						ExpandableText(
 							modifier = Modifier
-									.padding(horizontal = 16.dp)
-									.padding(top = 16.dp),
+								.padding(horizontal = 16.dp)
+								.padding(top = 16.dp),
 							text = uiState.movie.overview,
 							showMoreText = stringResource(R.string.read_more_with_dots_behind),
 							showLessText = stringResource(R.string.read_less_with_dots_behind),
@@ -517,9 +525,9 @@ fun MovieContent(
 	}
 	AppBar(
 		modifier = Modifier
-				.background(animatedBrush)
-				.windowInsetsPadding(WindowInsets.statusBars)
-				.fillMaxWidth(),
+			.background(animatedBrush)
+			.windowInsetsPadding(WindowInsets.statusBars)
+			.fillMaxWidth(),
 		onBackButtonClicked = interactionListener::onBackClick,
 		onShareButtonClicked = interactionListener::onShareClick,
 		onFavoriteButtonClicked = interactionListener::onFavoriteClick

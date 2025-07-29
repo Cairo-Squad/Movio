@@ -108,12 +108,13 @@ fun SeriesScreen(
                 if (uiState.series.trailerPath.isBlank()) {
                     Toast.makeText(
                         context,
-                        "There is no trailer for this",
+                        context.getString(com.cairosquad.ui.R.string.no_trailer_found_for_this_series),
                         Toast.LENGTH_LONG
                     ).show()
 
+                } else {
+                    ShareUtil.playOnYoutube(videoId = uiState.series.trailerPath, context = context)
                 }
-                ShareUtil.playOnYoutube(videoId = uiState.series.trailerPath, context = context)
             }
 
             is SeriesDetailEffect.ErrorHappened -> {
