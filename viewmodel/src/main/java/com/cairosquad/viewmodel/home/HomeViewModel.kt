@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.home
 
+import android.util.Log
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
@@ -215,14 +216,13 @@ class HomeViewModel(
     }
 
     override fun onGenreSelected(genreIndex: Int) {
-
-        fetchMediaByCategory(screenState.value.genres[genreIndex].id)
-
+        if (genreIndex == screenState.value.selectedGenreIndex) return
         updateState {
             it.copy(
                 selectedGenreIndex = genreIndex
             )
         }
+        fetchMediaByCategory(screenState.value.genres[genreIndex].id)
     }
 
     private fun fetchMediaByCategory(genreId: Long? = null) {
@@ -245,6 +245,7 @@ class HomeViewModel(
     }
 
     override fun onSortingSelected(filter: HomeScreenState.SortingType) {
+        if (filter == screenState.value.selectedSortingType) return
         updateState {
             it.copy(selectedSortingType = filter)
         }
