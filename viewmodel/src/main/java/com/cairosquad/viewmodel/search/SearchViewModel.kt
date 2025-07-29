@@ -278,7 +278,7 @@ class SearchViewModel(
     override fun onTabSelected(index: Int) {
         updateState { it.copy(selectedTabIndex = index) }
     }
-    override fun onTabPagingError(error: Throwable?) {
+    override fun onTabPagingError(error: Throwable) {
         val status = handleSearchException(error)
         updateState {
             it.copy(errorStatus = status)
@@ -291,7 +291,7 @@ class SearchViewModel(
         }
     }
 
-    private fun handleSearchException(e: Throwable?): ErrorStatus {
+    private fun handleSearchException(e: Throwable): ErrorStatus {
         return when (e) {
             is MovioException -> {
                 exceptionToErrorStatus(e)

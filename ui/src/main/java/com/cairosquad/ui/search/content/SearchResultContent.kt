@@ -20,6 +20,7 @@ import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -130,6 +131,13 @@ private fun AllResultsTabContent(
     val isLoading = movies.loadState.refresh is LoadState.Loading
     val isError = movies.loadState.refresh is LoadState.Error
     val isEmpty = movies.itemCount == 0 && !isLoading && !isError
+    val error = (movies.loadState.refresh as? LoadState.Error)?.error
+
+    LaunchedEffect(error) {
+        if (error != null) {
+            listener.onTabPagingError(error)
+        }
+    }
 
     when {
         isLoading -> {
@@ -259,6 +267,13 @@ private fun SeriesTabContent(
     val isLoading = series.loadState.refresh is LoadState.Loading
     val isError = series.loadState.refresh is LoadState.Error
     val isEmpty = series.itemCount == 0 && !isLoading && !isError
+    val error = (series.loadState.refresh as? LoadState.Error)?.error
+
+    LaunchedEffect(error) {
+        if (error != null) {
+            listener.onTabPagingError(error)
+        }
+    }
 
     when {
         isLoading -> {
@@ -322,6 +337,13 @@ private fun ArtistsTabContent(
     val isLoading = artist.loadState.refresh is LoadState.Loading
     val isError = artist.loadState.refresh is LoadState.Error
     val isEmpty = artist.itemCount == 0 && !isLoading && !isError
+    val error = (artist.loadState.refresh as? LoadState.Error)?.error
+
+    LaunchedEffect(error) {
+        if (error != null) {
+            listener.onTabPagingError(error)
+        }
+    }
 
     when {
         isLoading -> {
@@ -388,9 +410,9 @@ private fun SearchResultFail(
                 ErrorStatus.NETWORK_ERROR -> R.drawable.no_result
                 ErrorStatus.UNKNOWN_ERROR -> R.drawable.no_result
                 null -> R.drawable.no_result
-                ErrorStatus.UNAUTHORIZED -> TODO()
+                ErrorStatus.UNAUTHORIZED -> R.drawable.no_result
                 ErrorStatus.EMPTY -> R.drawable.no_result
-                ErrorStatus.PARSING_ERROR -> TODO()
+                ErrorStatus.PARSING_ERROR -> R.drawable.no_result
             },
             titleId = when (errorStatus) {
                 ErrorStatus.NO_INTERNET -> R.string.no_internet_connection
@@ -399,7 +421,7 @@ private fun SearchResultFail(
                 null -> R.string.an_unexpected_error_occurred
                 ErrorStatus.EMPTY -> R.string.no_results_found
                 ErrorStatus.PARSING_ERROR -> R.string.error_parsing_data
-                ErrorStatus.UNAUTHORIZED -> TODO()
+                ErrorStatus.UNAUTHORIZED -> R.drawable.no_result
             },
             descriptionId = when (errorStatus) {
                 ErrorStatus.NO_INTERNET -> R.string.internet_is_not_available_description
