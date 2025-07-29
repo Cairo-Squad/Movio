@@ -62,7 +62,7 @@ fun SearchContent(
                 },
             value = state.query,
             onValueChange = listener::onQueryTextChanged,
-            placeholder = stringResource(R.string.search),
+            placeholder = stringResource(R.string.search_with_dotes_ahead),
             leadingIcon = R.drawable.search_bottom_nav,
             trailingIcon = R.drawable.ic_close,
             onTrailingIconClick = { listener.onBackClicked() },
@@ -70,13 +70,13 @@ fun SearchContent(
                 onDone = { listener.onSearch() }
             )
         )
-
-        SectionHeader(
-            title = stringResource(R.string.recent_search),
-            actionText = stringResource(R.string.clear_all),
-            onActionClick = listener::onClearHistory
-        )
-
+        if (!state.recentSearch.isNullOrEmpty()){
+            SectionHeader(
+                title = stringResource(R.string.recent_search),
+                actionText = stringResource(R.string.clear_all),
+                onActionClick = listener::onClearHistory
+            )
+        }
         LazyColumn(
             modifier = Modifier
                 .weight(1f)
