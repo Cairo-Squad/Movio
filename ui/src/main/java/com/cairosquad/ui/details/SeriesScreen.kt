@@ -50,6 +50,7 @@ import com.cairosquad.design_system.basic_component.SnackBar
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import com.cairosquad.ui.BuildConfig
+import com.cairosquad.ui.details.Constants.SERIES_URL
 import com.cairosquad.ui.details.composable.BasicDetails
 import com.cairosquad.ui.details.composable.BasicDetailsLoading
 import com.cairosquad.ui.details.composable.SeasonSection
@@ -93,7 +94,7 @@ fun SeriesScreen(
     val navController = LocalNavController.current
     val context = LocalContext.current
     val uiState by viewModel.screenState.collectAsStateWithLifecycle()
-    val seriesUrl = "https://www.cairo-movio.com/series/${seriesId}"
+    val seriesUrl = "$SERIES_URL${seriesId}"
     val message = stringResource(R.string.check_out_this_amazing_series)
     val encodedMessageAndUrl = Uri.encode("$message $seriesUrl")
 
@@ -110,8 +111,7 @@ fun SeriesScreen(
                         context,
                         context.getString(com.cairosquad.ui.R.string.no_trailer_found_for_this_series),
                         Toast.LENGTH_LONG
-                    ).show()
-
+                    ).show() // TODO: Change to snack bar
                 } else {
                     ShareUtil.playOnYoutube(videoId = uiState.series.trailerPath, context = context)
                 }

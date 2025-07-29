@@ -50,6 +50,7 @@ import com.cairosquad.design_system.basic_component.SnackBar
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import com.cairosquad.ui.BuildConfig
+import com.cairosquad.ui.details.Constants.MOVIE_URL
 import com.cairosquad.ui.details.composable.BasicDetails
 import com.cairosquad.ui.details.composable.BasicDetailsLoading
 import com.cairosquad.ui.details.composable.MovieReviewSection
@@ -90,7 +91,7 @@ fun MovieScreen(
 	val navController = LocalNavController.current
 	val context = LocalContext.current
 	val state by viewModel.screenState.collectAsState()
-	val movieUrl = "https://www.cairo-movio.com/movie/${movieId}"
+	val movieUrl = "$MOVIE_URL${movieId}"
 	val message = stringResource(R.string.check_out_this_amazing_movie)
 	val encodedMessageAndUrl = Uri.encode("$message $movieUrl")
 
@@ -110,7 +111,7 @@ fun MovieScreen(
 					context,
 					context.getString(errorStatusToMessageResource(effect.message)),
 					Toast.LENGTH_LONG
-				).show()
+				).show() // TODO: Change to snack bar
 			}
 
 			MovieEffect.NavigateBack -> {
@@ -135,7 +136,7 @@ fun MovieScreen(
 						context,
 						context.getString(com.cairosquad.ui.R.string.no_trailer_found_for_this_movie),
 						Toast.LENGTH_LONG
-					).show()
+					).show() // TODO: Change to snack bar
 				} else {
 					ShareUtil.playOnYoutube(videoId = state.movie.trailerPath, context = context)
 				}
