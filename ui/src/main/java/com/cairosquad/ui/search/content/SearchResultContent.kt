@@ -76,7 +76,7 @@ fun SearchResultContent(
                 .padding(bottom = 12.dp),
             value = state.query,
             onValueChange = listener::onQueryTextChanged,
-            placeholder = stringResource(R.string.search),
+            placeholder = stringResource(R.string.search_with_dotes_ahead),
             leadingIcon = R.drawable.search_bottom_nav,
             onFocusChanged = {
                 if (it) {

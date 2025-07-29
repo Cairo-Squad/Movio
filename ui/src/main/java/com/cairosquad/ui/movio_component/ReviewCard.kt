@@ -125,10 +125,10 @@ fun ReviewCard(
 				color = color.surfaces.onSurfaceVariant,
 				style = textStyle.label.smallRegular12,
 				collapsedMaxLine = 4,
-				showMoreText = "... " + stringResource(R.string.more),
+				showMoreText = stringResource(R.string.more_with_dotes_behind),
 				showMoreStyle = textStyle.label.mediumMedium12,
 				showMoreColor = color.brand.onPrimaryContainer,
-				showLessText = " " + stringResource(R.string.less),
+				showLessText = " " + stringResource(R.string.less_with_dotes_behind),
 				showLessStyle = textStyle.label.mediumMedium12,
 				showLessColor = color.brand.onPrimaryContainer,
 				modifier = Modifier.padding(top = 12.dp)

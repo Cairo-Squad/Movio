@@ -121,62 +121,62 @@ private fun ArtistScreenContent(
 	Box(modifier = modifier.fillMaxSize()) {
 		Column(
 			modifier = modifier
-					.fillMaxSize()
-					.windowInsetsPadding(WindowInsets.navigationBars)
-					.verticalScroll(listScroll),
+				.fillMaxSize()
+				.windowInsetsPadding(WindowInsets.navigationBars)
+				.verticalScroll(listScroll),
 			horizontalAlignment = Alignment.Start,
 		) {
 			Box(
 				contentAlignment = Alignment.Center,
 				modifier = Modifier
-						.fillMaxWidth()
-						.height(340.dp)
+					.fillMaxWidth()
+					.height(340.dp)
 			) {
 				if (state.artist.photoPath.isBlank()) {
 					Box(
 						modifier = Modifier
-								.fillMaxSize()
-								.height(335.dp)
-								.offset(y = (- 5).dp)
-								.CustomBrush(0.5f, 16.dp),
+							.fillMaxSize()
+							.height(335.dp)
+							.offset(y = (-5).dp)
+							.CustomBrush(0.5f, 16.dp),
 					)
 				} else {
 					SafeImageViewer(
 						model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
 						contentDescription = "blured image",
 						modifier = Modifier
-								.fillMaxSize()
-								.height(335.dp)
-								.offset(y = (- 5).dp)
-								.CustomBrush(0.5f, 16.dp),
+							.fillMaxSize()
+							.height(335.dp)
+							.offset(y = (-5).dp)
+							.CustomBrush(0.5f, 16.dp),
 						nudeThreshold = 0.0,
 						nonNudeThreshold = 0.0
 					)
 				}
 				Box(
 					modifier = Modifier
-							.fillMaxWidth()
-							.height(20.dp)
-							.align(Alignment.BottomCenter)
-							.background(
-								brush = verticalGradient(
-									colors = listOf(
-										Theme.color.surfaces.surface.copy(alpha = 0f),
-										Theme.color.surfaces.surface.copy(alpha = .10f),
-										Theme.color.surfaces.surface.copy(alpha = .50f),
-										Theme.color.surfaces.surface.copy(alpha = .90f),
-										Theme.color.surfaces.surface,
-									)
+						.fillMaxWidth()
+						.height(20.dp)
+						.align(Alignment.BottomCenter)
+						.background(
+							brush = verticalGradient(
+								colors = listOf(
+									Theme.color.surfaces.surface.copy(alpha = 0f),
+									Theme.color.surfaces.surface.copy(alpha = .10f),
+									Theme.color.surfaces.surface.copy(alpha = .50f),
+									Theme.color.surfaces.surface.copy(alpha = .90f),
+									Theme.color.surfaces.surface,
 								)
 							)
+						)
 				)
 				when (state.screenStatus) {
 					ArtistScreenState.ScreenStatus.LOADING -> {
 						LoadingMovieImage(
 							Modifier
-									.padding(top = 31.dp)
-									.clip(CircleShape)
-									.size(160.dp)
+								.padding(top = 31.dp)
+								.clip(CircleShape)
+								.size(160.dp)
 						)
 					}
 
@@ -185,29 +185,29 @@ private fun ArtistScreenContent(
 							SafeImageViewer(
 								model = BuildConfig.IMAGE_BASE_URL + state.artist.photoPath,
 								modifier = Modifier
-										.padding(horizontal = 6.67.dp)
-										.padding(top = 31.dp)
-										.size(160.dp)
-										.clip(CircleShape),
+									.padding(horizontal = 6.67.dp)
+									.padding(top = 31.dp)
+									.size(160.dp)
+									.clip(CircleShape),
 								contentDescription = stringResource(R.string.artist_image),
 								nudeThreshold = 0.0,
 								nonNudeThreshold = 0.0,
 								loadingPlaceholder = {
 									LoadingMovieImage(
 										Modifier
-												.clip(CircleShape)
-												.size(160.dp)
+											.clip(CircleShape)
+											.size(160.dp)
 									)
 								}
 							)
 						} else {
 							Box(
 								modifier = Modifier
-										.padding(horizontal = 6.67.dp)
-										.padding(top = 31.dp)
-										.size(160.dp)
-										.clip(CircleShape)
-										.background(Theme.color.system.defaultImageBackground),
+									.padding(horizontal = 6.67.dp)
+									.padding(top = 31.dp)
+									.size(160.dp)
+									.clip(CircleShape)
+									.background(Theme.color.system.defaultImageBackground),
 								contentAlignment = Alignment.Center
 							) {
 								Icon(
@@ -227,9 +227,9 @@ private fun ArtistScreenContent(
 				ArtistScreenState.ScreenStatus.LOADING -> {
 					LoadingMovieImage(
 						Modifier
-								.padding(horizontal = 16.dp)
-								.clip(CircleShape)
-								.size(width = 60.dp, height = 32.dp)
+							.padding(horizontal = 16.dp)
+							.clip(CircleShape)
+							.size(width = 60.dp, height = 32.dp)
 					)
 				}
 
@@ -248,9 +248,9 @@ private fun ArtistScreenContent(
 				ArtistScreenState.ScreenStatus.LOADING -> {
 					LoadingMovieImage(
 						Modifier
-								.padding(start = 16.dp, top = 4.dp)
-								.clip(CircleShape)
-								.size(width = 60.dp, height = 32.dp)
+							.padding(start = 16.dp, top = 4.dp)
+							.clip(CircleShape)
+							.size(width = 60.dp, height = 32.dp)
 					)
 				}
 
@@ -274,9 +274,9 @@ private fun ArtistScreenContent(
 						repeat(2) {
 							LoadingMovieImage(
 								Modifier
-										.padding(top = 16.dp, start = 16.dp)
-										.clip(CircleShape)
-										.size(width = 60.dp, height = 32.dp)
+									.padding(top = 16.dp, start = 16.dp)
+									.clip(CircleShape)
+									.size(width = 60.dp, height = 32.dp)
 							)
 						}
 					}
@@ -319,9 +319,9 @@ private fun ArtistScreenContent(
 				ArtistScreenState.ScreenStatus.LOADING -> {
 					LoadingMovieImage(
 						Modifier
-								.padding(16.dp)
-								.height(120.dp)
-								.fillMaxWidth()
+							.padding(16.dp)
+							.height(120.dp)
+							.fillMaxWidth()
 					)
 				}
 
@@ -332,12 +332,12 @@ private fun ArtistScreenContent(
 							color = Theme.color.surfaces.onSurface,
 							style = Theme.textStyle.label.smallRegular14,
 							modifier = Modifier
-									.padding(16.dp)
-									.fillMaxWidth(),
+								.padding(16.dp)
+								.fillMaxWidth(),
 							collapsedMaxLine = 5,
-							showMoreText = "...Read More",
+							showMoreText = stringResource(com.cairosquad.ui.R.string.read_more_with_dotes_behind),
 							showMoreColor = Theme.color.surfaces.onSurfaceVariant,
-							showLessText = "...Read Less"
+							showLessText = stringResource(com.cairosquad.ui.R.string.read_less_with_dotes_behind)
 						)
 					}
 				}
@@ -402,8 +402,8 @@ private fun ArtistScreenContent(
 		AppBar(
 			onBackButtonClicked = listener::onClickBack,
 			modifier = Modifier
-					.background(animatedBrush)
-					.windowInsetsPadding(WindowInsets.statusBars)
+				.background(animatedBrush)
+				.windowInsetsPadding(WindowInsets.statusBars)
 		)
 	}
 }
