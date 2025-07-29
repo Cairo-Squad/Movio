@@ -24,8 +24,8 @@ import com.cairosquad.repository.movie.data_source.local.MoviesLocalDataSource
 import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
 import com.cairosquad.repository.series.data_source.local.SeasonEpisodeLocalDataSource
 import com.cairosquad.repository.series.data_source.local.SeriesLocalDataSource
-import com.google.firebase.sessions.dagger.Module
-import com.google.firebase.sessions.dagger.Provides
+import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
@@ -35,7 +35,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object LocalDataSourceModule {
     @Provides
-    @Singleton
     fun provideDatabase(@ApplicationContext context: Context): MovioDataBase {
         return Room.databaseBuilder(
             context,

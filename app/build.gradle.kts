@@ -94,6 +94,10 @@ ksp {
     arg("KOIN_CONFIG_CHECK", "true")
 }
 
+hilt {
+    enableAggregatingTask = false
+}
+
 dependencies {
     testImplementation(libs.junit)
     implementation(libs.androidx.ui)

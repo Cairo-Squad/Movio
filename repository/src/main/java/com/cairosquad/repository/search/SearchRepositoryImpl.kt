@@ -6,8 +6,9 @@ import com.cairosquad.repository.movie.data_source.remote.MoviesRemoteDataSource
 import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
 import com.cairosquad.repository.series.data_source.remote.SeriesRemoteDataSource
 import com.cairosquad.repository.utils.mappers.tryToCall
+import javax.inject.Inject
 
-class SearchRepositoryImpl(
+class SearchRepositoryImpl @Inject constructor(
     private val moviesRemoteDataSource: MoviesRemoteDataSource,
     private val seriesRemoteDataSource: SeriesRemoteDataSource,
     private val artistsRemoteDataSource: ArtistsRemoteDataSource,

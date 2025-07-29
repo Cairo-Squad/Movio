@@ -26,14 +26,14 @@ val viewModelModule = module {
     viewModel { (seriesId: Long, seasonNumber: Int) ->
         EpisodesDetailsViewModel(
             manageSeriesUseCase = get(),
-            seriesId = seriesId,
+//            seriesId = seriesId,
             seasonNumber = seasonNumber
         )
     }
     viewModelOf(::SimilarMoviesViewModel)
     viewModel { (movieId: Long) ->
         MovieViewModel(
-            movieId = movieId,
+//            movieId = movieId,
             movieUseCase = get(),
             loginUseCase = get()
         )
@@ -43,7 +43,7 @@ val viewModelModule = module {
 		SeriesDetailsViewModel(
             manageSeriesUseCase = get(),
 			loginUseCase = get(),
-			seriesId = seriesId
+//			seriesId = seriesId
 		)
 	}
 	viewModel { (mediaId: Long, isMovie: Boolean) ->
@@ -57,29 +57,29 @@ val viewModelModule = module {
 
     viewModel { (mediaId: Long, isMovie: Boolean) ->
         ReviewsViewModel(
-            mediaId = mediaId,
-            isMovie = isMovie,
+//            mediaId = mediaId,
+//            isMovie = isMovie,
             manageMoviesUseCase = get(),
             manageSeriesUseCase = get()
         )
     }
 
     viewModel { (artistId: Long) ->
-        ArtistViewModel(manageArtistUseCase = get(), artistId = artistId)
+        ArtistViewModel(manageArtistUseCase = get() /*artistId = artistId*/)
     }
 
 	viewModel { (seriesId: Long) ->
 		SeriesDetailsViewModel(
             manageSeriesUseCase = get(),
 			loginUseCase = get(),
-			seriesId = seriesId
+//			seriesId = seriesId
 		)
 	}
 
     viewModel { (seriesId: Long) ->
         SeasonsViewModel(
             manageSeriesUseCase = get(),
-            seriesId = seriesId,
+//            seriesId = seriesId,
         )
     }
 
