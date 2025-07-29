@@ -5,7 +5,9 @@ import com.cairosquad.domain.usecase.ManageArtistUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
+import dagger.hilt.android.lifecycle.HiltViewModel
 
+@HiltViewModel
 class ArtistViewModel(
     private val manageArtistUseCase: ManageArtistUseCase,
     artistId: Long

@@ -5,9 +5,11 @@ import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.top_cast.TopCastScreenState.ScreenStatus
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
+@HiltViewModel
 class TopCastViewModel(
     private val mediaId: Long,
     private val isMovie: Boolean,

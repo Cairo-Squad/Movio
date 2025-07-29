@@ -1,8 +1,8 @@
 package com.cairosquad.viewmodel.details.movie
 
 import com.cairosquad.domain.exception.MovioException
-import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.LoginUseCase
+import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Review
@@ -10,9 +10,11 @@ import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.movie.MovieScreenState.ScreenStatus
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 
+@HiltViewModel
 class MovieViewModel(
     private val movieUseCase: ManageMoviesUseCase,
 	private val loginUseCase: LoginUseCase,

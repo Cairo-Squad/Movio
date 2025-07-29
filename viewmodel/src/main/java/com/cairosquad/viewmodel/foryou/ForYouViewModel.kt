@@ -6,10 +6,10 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.viewmodel.base.BaseViewModel
-import com.cairosquad.viewmodel.details.artist.ArtistScreenState
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import com.cairosquad.viewmodel.foryou.ForYouState.ScreenStatus
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
+@HiltViewModel
 class ForYouViewModel(private val forYouPager: ForYouPager) :
     BaseViewModel<ForYouState, ForYouEffect>(ForYouState()), ForYouInteractionListener {
 

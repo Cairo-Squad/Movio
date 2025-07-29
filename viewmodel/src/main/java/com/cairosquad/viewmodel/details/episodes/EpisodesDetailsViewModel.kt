@@ -7,8 +7,10 @@ import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState.ScreenStatus
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 
+@HiltViewModel
 class EpisodesDetailsViewModel(
     private val manageSeriesUseCase: ManageSeriesUseCase,
     seriesId: Long,

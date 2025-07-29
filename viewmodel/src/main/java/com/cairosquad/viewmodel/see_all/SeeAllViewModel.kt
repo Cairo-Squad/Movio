@@ -1,6 +1,5 @@
 package com.cairosquad.viewmodel.see_all
 
-import android.util.Log
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
@@ -11,7 +10,9 @@ import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import com.cairosquad.viewmodel.util.MediaContentType
 import com.cairosquad.viewmodel.util.MediaType
+import dagger.hilt.android.lifecycle.HiltViewModel
 
+@HiltViewModel
 class SeeAllViewModel(
     private val manageMoviesUseCase: ManageMoviesUseCase,
     private val manageSeriesUseCase: ManageSeriesUseCase

@@ -4,9 +4,11 @@ import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Review
 import com.cairosquad.viewmodel.base.BaseViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
+@HiltViewModel
 class ReviewsViewModel(
     private val mediaId: Long,
     private val isMovie: Boolean,

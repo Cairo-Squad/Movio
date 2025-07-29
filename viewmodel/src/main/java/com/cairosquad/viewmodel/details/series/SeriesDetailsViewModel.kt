@@ -1,8 +1,8 @@
 package com.cairosquad.viewmodel.details.series
 
 import com.cairosquad.domain.exception.MovioException
-import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.domain.usecase.LoginUseCase
+import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Review
 import com.cairosquad.entity.Season
@@ -11,9 +11,11 @@ import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState.SectionStatus
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 
+@HiltViewModel
 class SeriesDetailsViewModel(
     private val manageSeriesUseCase: ManageSeriesUseCase,
 	private val loginUseCase: LoginUseCase,

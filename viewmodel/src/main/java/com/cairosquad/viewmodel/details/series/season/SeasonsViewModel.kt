@@ -5,9 +5,11 @@ import com.cairosquad.entity.Season
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.series.season.SeasonDetailsScreenState.ScreenStatus
 import com.cairosquad.viewmodel.exception.ErrorStatus
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
+@HiltViewModel
 class SeasonsViewModel(
     private val manageSeriesUseCase: ManageSeriesUseCase,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
