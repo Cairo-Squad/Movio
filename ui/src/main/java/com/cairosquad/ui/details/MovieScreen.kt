@@ -421,6 +421,8 @@ fun MovieContent(
 									.padding(horizontal = 16.dp)
 									.padding(top = 16.dp),
 							text = uiState.movie.overview,
+							showMoreText = stringResource(R.string.read_more),
+							showLessText = stringResource(R.string.read_less),
 							color = Theme.color.surfaces.onSurface,
 							style = Theme.textStyle.label.smallRegular14,
 							showMoreStyle = Theme.textStyle.label.smallRegular14,
