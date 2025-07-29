@@ -47,6 +47,6 @@
     <string name="on_tv">On TV</string>
     <string name="now_playing">Now Playing</string>
     <string name="genre_all">All</string>
-    <string name="read_more_with_dotes_behind">...Read More</string>
-    <string name="read_less_with_dotes_behind">...Read Less</string>
+    <string name="read_more_with_dotes_behind"> ... Read More</string>
+    <string name="read_less_with_dotes_behind"> ... Read Less</string>
 </resources>
