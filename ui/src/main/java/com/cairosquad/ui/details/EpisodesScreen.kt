@@ -44,6 +44,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
@@ -60,14 +61,12 @@ import com.cairosquad.viewmodel.details.episodes.EpisodesDetailEffect
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsInteractionListener
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsViewModel
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
 fun EpisodesScreen(
     seriesId: Long,
     seasonNumber: Int,
-    viewModel: EpisodesDetailsViewModel = koinViewModel { parametersOf(seriesId, seasonNumber) }
+    viewModel: EpisodesDetailsViewModel = hiltViewModel()
 ) {
     val navController = LocalNavController.current
     val context = LocalContext.current

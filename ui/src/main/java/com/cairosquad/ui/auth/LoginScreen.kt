@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -31,6 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.cairosquad.design_system.basic_component.Button
 import com.cairosquad.design_system.basic_component.Icon
 import com.cairosquad.design_system.basic_component.InputField
@@ -51,13 +51,12 @@ import com.cairosquad.viewmodel.login.LoginEffect
 import com.cairosquad.viewmodel.login.LoginInteractionListener
 import com.cairosquad.viewmodel.login.LoginScreenState
 import com.cairosquad.viewmodel.login.LoginViewModel
-import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    viewModel: LoginViewModel = koinViewModel()
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
     val navController = LocalNavController.current
     val uiState by viewModel.screenState.collectAsState()

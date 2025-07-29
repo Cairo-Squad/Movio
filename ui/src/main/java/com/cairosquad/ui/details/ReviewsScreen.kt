@@ -26,6 +26,7 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.R
@@ -38,16 +39,12 @@ import com.cairosquad.viewmodel.details.reviews.ReviewsEffect
 import com.cairosquad.viewmodel.details.reviews.ReviewsInteractionListener
 import com.cairosquad.viewmodel.details.reviews.ReviewsScreenState
 import com.cairosquad.viewmodel.details.reviews.ReviewsViewModel
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ReviewsScreen(
     mediaId: Long,
     isMovie: Boolean,
-    viewModel: ReviewsViewModel = koinViewModel(
-        parameters = { parametersOf(mediaId, isMovie) }
-    )
+    viewModel: ReviewsViewModel = hiltViewModel()
 ) {
     val navController = LocalNavController.current
     val state = viewModel.screenState.collectAsState()

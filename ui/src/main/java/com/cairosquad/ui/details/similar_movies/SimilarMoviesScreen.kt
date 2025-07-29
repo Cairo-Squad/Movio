@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
@@ -29,13 +30,12 @@ import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.viewmodel.details.similar_movies.SimilarMoviesEffect
 import com.cairosquad.viewmodel.details.similar_movies.SimilarMoviesScreenState
 import com.cairosquad.viewmodel.details.similar_movies.SimilarMoviesViewModel
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SimilarMoviesScreen(
     movieId: Long,
     navController: NavController,
-    viewModel: SimilarMoviesViewModel = koinViewModel()
+    viewModel: SimilarMoviesViewModel = hiltViewModel()
 ) {
     val state by viewModel.screenState.collectAsState()
     LaunchedEffect(movieId) {

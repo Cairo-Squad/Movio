@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
@@ -35,13 +36,11 @@ import com.cairosquad.viewmodel.details.series.season.SeasonDetailEffect
 import com.cairosquad.viewmodel.details.series.season.SeasonDetailsInteractionListener
 import com.cairosquad.viewmodel.details.series.season.SeasonDetailsScreenState
 import com.cairosquad.viewmodel.details.series.season.SeasonsViewModel
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
 fun SeasonsScreen(
     seriesId: Long,
-    viewModel: SeasonsViewModel = koinViewModel { parametersOf(seriesId) }
+    viewModel: SeasonsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.screenState.collectAsStateWithLifecycle()
     val navController = LocalNavController.current

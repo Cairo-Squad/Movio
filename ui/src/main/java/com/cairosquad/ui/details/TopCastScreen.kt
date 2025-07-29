@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
@@ -33,17 +34,13 @@ import com.cairosquad.ui.movio_component.LoadingArtistCard
 import com.cairosquad.ui.navigation.ArtistRoute
 import com.cairosquad.viewmodel.details.top_cast.TopCastScreenState
 import com.cairosquad.viewmodel.details.top_cast.TopCastViewModel
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
 fun TopCastScreen(
     mediaId: Long,
     isMovie: Boolean,
     navController: NavHostController,
-    viewmodel: TopCastViewModel = koinViewModel<TopCastViewModel>(
-        parameters = { parametersOf(mediaId, isMovie) }
-    )
+    viewmodel: TopCastViewModel = hiltViewModel()
 ) {
     val state by viewmodel.screenState.collectAsState()
 

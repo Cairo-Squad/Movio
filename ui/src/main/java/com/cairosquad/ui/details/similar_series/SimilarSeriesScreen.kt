@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
@@ -29,13 +30,12 @@ import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.viewmodel.details.similar_series.SimilarSeriesEffect
 import com.cairosquad.viewmodel.details.similar_series.SimilarSeriesScreenState
 import com.cairosquad.viewmodel.details.similar_series.SimilarSeriesViewModel
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SimilarSeriesScreen(
     seriesId: Long,
     navController: NavController,
-    viewModel: SimilarSeriesViewModel = koinViewModel()
+    viewModel: SimilarSeriesViewModel = hiltViewModel()
 ) {
     val state by viewModel.screenState.collectAsState()
     LaunchedEffect(seriesId) {
