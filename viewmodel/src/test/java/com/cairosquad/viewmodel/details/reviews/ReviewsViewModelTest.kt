@@ -125,7 +125,7 @@ class ReviewsViewModelTest {
         private const val SERIES_ID = 202L
         private const val AUTHOR_NAME = "lmao7"
         private const val AUTHOR_PHOTO_PATH = "/ekmYOUU4tfx9zGGadjRdE7UPce.jpg"
-        private const val RATING = 9.0
+        private const val RATING = 9.0f
         private const val DATE = 1487569648872L
         private const val DESCRIPTION = "good"
         private const val ERROR_MESSAGE = "Network error"

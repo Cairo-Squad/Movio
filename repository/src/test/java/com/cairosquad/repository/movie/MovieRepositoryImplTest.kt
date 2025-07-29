@@ -671,7 +671,7 @@ class MovieRepositoryImplTest {
             movieWithoutGenre = MovieWithoutGenreCacheDto(
                 id = 1L,
                 title = "Test Movie",
-                rating = 8.0f,
+                rating = 4.0f,
                 posterPath = "/poster.jpg",
                 trailerPath = "trailer_key",
                 overview = "A great movie",
@@ -685,7 +685,7 @@ class MovieRepositoryImplTest {
         private val expectedMovie = Movie(
             id = 1L,
             title = "Test Movie",
-            rating = 8.0f,
+            rating = 4.0f,
             posterPath = "/poster.jpg",
             trailerPath = "trailer_key",
             genres = listOf(expectedGenre),
@@ -709,7 +709,7 @@ class MovieRepositoryImplTest {
             id = "review1",
             author = "John Doe",
             authorPhotoPath = "/avatar.jpg",
-            rating = 8.5,
+            rating = 4.25f,
             date = 1672531200000L,
             description = "Great movie!",
             cachingTimestamp = System.currentTimeMillis()
@@ -719,7 +719,7 @@ class MovieRepositoryImplTest {
             id = "review1",
             author = "John Doe",
             authorPhotoPath = "/avatar.jpg",
-            rating = 8.5,
+            rating = 4.25f,
             date = 1672531200000L,
             description = "Great movie!"
         )

@@ -35,7 +35,7 @@ class SeriesDetailsUiStateMapperTest {
         val series = Series(
             id = 99L,
             title = "The Great Show",
-            rating = 8.0f,
+            rating = 4.0f,
             posterPath = "/poster.jpg",
             genres = listOf(Genre(1, "Drama"), Genre(2, "Sci-Fi")),
             seasonsCount = 3,
@@ -63,7 +63,7 @@ class SeriesDetailsUiStateMapperTest {
             seasonNumber = 2,
             seasonName = "Season 2",
             episodesCount = 10,
-            rating = 9.0f,
+            rating = 4.5f,
             posterPath = "/season.jpg",
             overview = "Best season",
             airDate = TimeUtil.convertLongToYear(0L).let { 0L },
@@ -87,7 +87,7 @@ class SeriesDetailsUiStateMapperTest {
             id = "5",
             author = "Jane Smith",
             authorPhotoPath = "/author.jpg",
-            rating = 10.0,
+            rating = 5.0f,
             date = TimeUtil.convertLongToNamedDate(0L).let { 0L }, // epoch
             description = "Amazing series!"
         )
@@ -129,7 +129,7 @@ class SeriesDetailsUiStateMapperTest {
             id = "10L",
             author = "Time Traveler",
             authorPhotoPath = "",
-            rating = 0.0,
+            rating = 0.0f,
             date = getMillis("1965-05-15"),
             description = "Before 1970!"
         )

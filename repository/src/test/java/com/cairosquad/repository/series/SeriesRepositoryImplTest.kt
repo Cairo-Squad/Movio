@@ -734,7 +734,7 @@ class SeriesRepositoryImplTest {
             seriesWithoutGenre = SeriesWithoutGenreCacheDto(
                 id = 1L,
                 title = "Test Series",
-                rating = 8.0f,
+                rating = 4.0f,
                 posterPath = "/poster.jpg",
                 trailerPath = "trailer_key",
                 overview = "A great series",
@@ -748,7 +748,7 @@ class SeriesRepositoryImplTest {
         private val expectedSeries = Series(
             id = 1L,
             title = "Test Series",
-            rating = 8.0f,
+            rating = 4.0f,
             posterPath = "/poster.jpg",
             trailerPath = "trailer_key",
             genres = listOf(expectedGenre),
@@ -772,7 +772,7 @@ class SeriesRepositoryImplTest {
             id = "review1",
             author = "John Doe",
             authorPhotoPath = "/avatar.jpg",
-            rating = 8.5,
+            rating = 4.25f,
             date = 1672531200000L,
             description = "Great show!",
             cachingTimestamp = System.currentTimeMillis()
@@ -782,7 +782,7 @@ class SeriesRepositoryImplTest {
             id = "review1",
             author = "John Doe",
             authorPhotoPath = "/avatar.jpg",
-            rating = 8.5,
+            rating = 4.25f,
             date = 1672531200000L,
             description = "Great show!"
         )
@@ -804,7 +804,7 @@ class SeriesRepositoryImplTest {
             seasonNumber = 1,
             seasonName = "Season 1",
             episodesCount = 10,
-            rating = 8.0f,
+            rating = 4.0f,
             posterPath = "/season_poster.jpg",
             overview = "First season",
             airDate = 1672531200000L,
@@ -816,7 +816,7 @@ class SeriesRepositoryImplTest {
             seasonNumber = 1,
             seasonName = "Season 1",
             episodesCount = 10,
-            rating = 8.0f,
+            rating = 4.0f,
             posterPath = "/season_poster.jpg",
             overview = "First season",
             airDate = 1672531200000L
@@ -840,7 +840,7 @@ class SeriesRepositoryImplTest {
             episodeNumber = 1,
             episodeName = "Episode 1",
             runtimeMinutes = 45,
-            rating = 8.0f,
+            rating = 4.0f,
             photoPath = "/episode_still.jpg",
             seasonNumber = 1,
             seriesId = 1L,
@@ -852,7 +852,7 @@ class SeriesRepositoryImplTest {
             episodeNumber = 1,
             episodeName = "Episode 1",
             runtimeMinutes = 45,
-            rating = 8.0f,
+            rating = 4.0f,
             photoPath = "/episode_still.jpg",
             seasonNumber = 1,
             seriesId = 1L

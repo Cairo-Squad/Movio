@@ -27,7 +27,7 @@ data class ReviewRemoteDto(
         id = id,
         author = author.orEmpty(),
         authorPhotoPath = authorDetails?.avatarPath.orEmpty(),
-        rating = authorDetails?.rating ?: 0.0,
+        rating = authorDetails?.rating?.toFloat()?.times(0.5f) ?: 0.0f,
         date = TimeUtils.isoDateToLong(createdAt ?: ""),
         description = content.orEmpty()
     )

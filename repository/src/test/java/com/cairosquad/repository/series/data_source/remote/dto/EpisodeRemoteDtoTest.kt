@@ -25,7 +25,7 @@ class EpisodeRemoteDtoTest {
         assertThat(entity.episodeNumber).isEqualTo(5)
         assertThat(entity.episodeName).isEqualTo("Episode Name")
         assertThat(entity.runtimeMinutes).isEqualTo(42)
-        assertThat(entity.rating).isEqualTo(8.7f)
+        assertThat(entity.rating).isEqualTo(4.35f)
         assertThat(entity.seasonNumber).isEqualTo(2)
         assertThat(entity.seriesId).isEqualTo(202L)
         assertThat(entity.photoPath).isEqualTo("/image.jpg")
