@@ -51,7 +51,6 @@ fun SmallArtistCard(
 				loadingPlaceholder = {
 					LoadingMovieImage(
 						modifier = Modifier
-							.padding(horizontal = 6.67.dp)
 							.size(88.dp)
 							.clip(CircleShape)
 					)
