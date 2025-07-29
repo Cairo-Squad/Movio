@@ -70,7 +70,7 @@ fun SearchContent(
                 onDone = { listener.onSearch() }
             )
         )
-        if(state.recentSearch.isNotEmpty()) {
+        if (!state.recentSearch.isNullOrEmpty()){
             SectionHeader(
                 title = stringResource(R.string.recent_search),
                 actionText = stringResource(R.string.clear_all),
