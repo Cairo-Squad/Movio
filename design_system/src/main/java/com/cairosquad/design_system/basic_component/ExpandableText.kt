@@ -37,7 +37,7 @@ fun ExpandableText(
     showLessColor: Color = color,
     textAlign: TextAlign? = null,
 ) {
-    var isExpanded by remember { mutableStateOf(false) }
+    var isExpanded by rememberSaveable { mutableStateOf(false) }
     var isOverflowing by remember { mutableStateOf(false) }
     var lastCharIndex by remember { mutableIntStateOf(0) }
 
