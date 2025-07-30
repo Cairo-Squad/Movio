@@ -68,13 +68,10 @@ dependencies {
     testImplementation(libs.junit)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    // Koin
-    implementation(libs.koin.androidx.compose)
-    implementation(libs.koin.android)
-    implementation(libs.koin.annotations)
-    ksp(libs.koin.ksp)
+
     // navigation
     implementation(libs.navigation.compose)
+
     // serialization
     implementation(libs.kotlinx.serialization.json)
 

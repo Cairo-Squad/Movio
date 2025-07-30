@@ -30,7 +30,6 @@ activityCompose = "1.10.1"
 kotlinxCoroutinesCore = "1.10.2"
 mockk = "1.14.5"
 coreKtx = "1.16.0"
-koin-annotations = "2.1.0"
 kotlin = "2.2.0"
 coreTesting = "2.2.0"
 coilCompose = "2.7.0"
@@ -41,7 +40,6 @@ tensorflowLite = "2.13.0"
 googleFirebaseCrashlytics = "3.0.5"
 coil = "3.3.0"
 junit = "4.13.2"
-koin = "4.1.0"
 googleGmsGoogleServices = "4.4.3"
 loggingInterceptor = "5.1.0"
 googleFirebaseAppdistribution = "5.1.1"
@@ -121,13 +119,6 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 # navigation
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
-
-# koin
-koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
-koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
-koin-test = { module = "io.insert-koin:koin-test-junit4", version.ref = "koin" }
-koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koin-annotations" }
-koin-ksp = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koin-annotations" }
 
 # paginagtion
 paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging_version" }

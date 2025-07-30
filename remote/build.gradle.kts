@@ -87,7 +87,6 @@ dependencies {
     testImplementation(libs.junit)
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${libs.versions.junitJupiter.get()}")
     testImplementation(libs.truth)
-    testImplementation(libs.koin.test)
     testImplementation(libs.mockk)
     implementation(libs.logging.interceptor)
 

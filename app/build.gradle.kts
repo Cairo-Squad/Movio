@@ -90,10 +90,6 @@ android {
     }
 }
 
-ksp {
-    arg("KOIN_CONFIG_CHECK", "true")
-}
-
 hilt {
     enableAggregatingTask = false
 }
@@ -118,12 +114,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.foundation.layout.android)
 
-    // koin
-    implementation(libs.koin.androidx.compose)
-    implementation(libs.koin.android)
-    implementation(libs.koin.test)
-    implementation(libs.koin.annotations)
-    ksp(libs.koin.ksp)
     implementation(libs.logging.interceptor)
 
     // --- Retrofit 3 ---
