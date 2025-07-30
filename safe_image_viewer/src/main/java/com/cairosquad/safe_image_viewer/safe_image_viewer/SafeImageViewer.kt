@@ -103,6 +103,7 @@ fun SafeImageViewer(
 	nudeThreshold: Double = 0.16,
 	nonNudeThreshold: Double = 0.79,
 	enableLog: Boolean = true,
+	isBlurForced: Boolean = false,
 	// UI-related
 	placeholder: Painter = painterResource(R.drawable.placeholder),
 	error: Painter = painterResource(R.drawable.error),
@@ -211,6 +212,7 @@ fun SafeImageViewer(
 								isBlurEnabled = isBlurEnabled,
 								isImageSafe = isImageSafe,
 								blur = blur.dp,
+								isBlurForced = isBlurForced,
 								bitmap = bitmap !!
 							),
 						model = bitmap,

@@ -1,5 +1,6 @@
 package com.cairosquad.ui.details.artist
 
+import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -152,35 +153,39 @@ private fun ArtistScreenContent(
 								.CustomBrush(0.5f, 16.dp),
 						)
 					} else {
-						SafeImageViewer(
-							model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
-							contentDescription = "blured image",
-							modifier = Modifier
-								.fillMaxSize()
-								.height(335.dp)
-								.offset(y = (-5).dp)
-								.CustomBrush(0.5f, 16.dp),
-							nudeThreshold = 0.0,
-							nonNudeThreshold = 0.0
-						)
-					}
-					Box(
-						modifier = Modifier
-							.fillMaxWidth()
-							.height(20.dp)
-							.align(Alignment.BottomCenter)
-							.background(
-								brush = verticalGradient(
-									colors = listOf(
-										Theme.color.surfaces.surface.copy(alpha = 0f),
-										Theme.color.surfaces.surface.copy(alpha = .10f),
-										Theme.color.surfaces.surface.copy(alpha = .50f),
-										Theme.color.surfaces.surface.copy(alpha = .90f),
-										Theme.color.surfaces.surface,
-									)
-								)
+						Box {
+							SafeImageViewer(
+								model = BuildConfig.IMAGE_BASE_URL + state.artist.photoPath,
+								contentDescription = "blured image",
+								modifier = Modifier
+									.fillMaxSize()
+									.height(335.dp)
+									.offset(y = (-20).dp),
+								blur = 16,
+								isBlurForced = true
 							)
-					)
+							if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+								Box(
+									modifier = Modifier
+										.fillMaxWidth()
+										.height(40.dp)
+										.align(Alignment.BottomCenter)
+										.background(
+											brush = verticalGradient(
+												colors = listOf(
+													Theme.color.surfaces.surface.copy(alpha = 0.00f),
+													Theme.color.surfaces.surface.copy(alpha = 0.10f),
+													Theme.color.surfaces.surface.copy(alpha = 0.50f),
+													Theme.color.surfaces.surface.copy(alpha = 0.90f),
+													Theme.color.surfaces.surface,
+												)
+											)
+										)
+								)
+							}
+
+						}
+					}
 					when (state.screenStatus) {
 						ArtistScreenState.ScreenStatus.LOADING -> {
 							LoadingMovieImage(
