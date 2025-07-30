@@ -73,7 +73,11 @@ fun SeeAllScreen(
             }
 
             is androidx.paging.LoadState.NotLoading -> {
-                viewModel.updateScreenStatus(SeeAllScreenState.ScreenStatus.SUCCESS)
+                if (media.itemCount == 0) {
+                    viewModel.updateScreenStatus(SeeAllScreenState.ScreenStatus.Empty)
+                } else {
+                    viewModel.updateScreenStatus(SeeAllScreenState.ScreenStatus.SUCCESS)
+                }
             }
 
             is androidx.paging.LoadState.Error -> {
@@ -174,7 +178,7 @@ private fun SeeAllMediaItems(
             SeeAllLoadingScreen(modifier)
         }
 
-        state.isEmpty -> {
+        state.screenStatus == SeeAllScreenState.ScreenStatus.Empty ->{
             Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 StateMessage(
                     imageDrawable = R.drawable.no_result,
@@ -213,7 +217,7 @@ private fun TrendingContentList(
             SeeAllLoadingScreen(modifier)
         }
 
-        state.isEmpty -> {
+        state.screenStatus == SeeAllScreenState.ScreenStatus.Empty -> {
             Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 StateMessage(
                     imageDrawable = R.drawable.no_result,
