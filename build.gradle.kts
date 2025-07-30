@@ -35,6 +35,13 @@ kover {
                     "**.entity.**",
                     "**.local.**",
                     "**.safe_image_viewer.**",
+                    "**.build.**",
+                    "dagger.hilt.internal.aggregatedroot.codegen.*",
+                    "hilt_aggregated_deps.*",
+                    "*_HiltModules*",
+                    "*Hilt_*",
+                    "*_Factory*",
+                    "*BuildConfig*"
                 )
             }
         }
