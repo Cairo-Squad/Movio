@@ -39,7 +39,7 @@ object NSFWDetector {
 
 	private val imageCache = LruCache<String, Boolean>(50)
 
-	private val executorService = Executors.newFixedThreadPool(2)
+	private val executorService = Executors.newFixedThreadPool(4)
 
 	fun isNSFWCancellable(
 		bitmap: Bitmap,
