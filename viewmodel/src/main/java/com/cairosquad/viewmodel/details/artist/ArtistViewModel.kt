@@ -88,7 +88,7 @@ class ArtistViewModel @AssistedInject constructor(
             },
             onSuccess = { series ->
                 updateState {
-                    it.copy(KnownForSeries = series)
+                    it.copy(knownForSeries = series)
                 }
             },
             onError = { e ->

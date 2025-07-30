@@ -295,36 +295,38 @@ private fun ArtistScreenContent(
                         }
                     }
 
-                    ArtistScreenState.ScreenStatus.SUCCESS -> {
-                        LazyRow(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            modifier = Modifier.padding(top = 16.dp),
-                            contentPadding = PaddingValues(horizontal = 16.dp)
-                        ) {
-                            val lastWord = state.artist.country
-                                .trim()
-                                .let { full ->
-                                    val partsByComma = full.split(",")
-                                    val lastPart = partsByComma.lastOrNull()?.trim().orEmpty()
-                                    lastPart.split(" ").lastOrNull()?.trim()
-                                }
-                                ?.takeIf { it.isNotBlank() }
-                            item {
-                                InfoChip(
-                                    text = formatBirthDateLegacy(state.artist.birthDate),
-                                    imgRes = R.drawable.date,
-                                )
-                            }
-                            if (lastWord != null) {
-                                item {
-                                    InfoChip(
-                                        text = state.artist.country,
-                                        imgRes = R.drawable.component_1,
-                                    )
-                                }
-                            }
-                        }
-                    }
+					ArtistScreenState.ScreenStatus.SUCCESS -> {
+						LazyRow(
+							horizontalArrangement = Arrangement.spacedBy(8.dp),
+							modifier = Modifier.padding(top = 16.dp),
+							contentPadding = PaddingValues(horizontal = 16.dp)
+						) {
+							val lastWord = state.artist.country
+								.trim()
+								.let { full ->
+									val partsByComma = full.split(",")
+									val lastPart = partsByComma.lastOrNull()?.trim().orEmpty()
+									lastPart.split(" ").lastOrNull()?.trim()
+								}
+								?.takeIf { it.isNotBlank() }
+							state.artist.birthDate?.let{ birthDate ->
+								item {
+									InfoChip(
+										text = formatBirthDateLegacy(birthDate),
+										imgRes = R.drawable.date,
+									)
+								}
+							}
+							if (lastWord != null) {
+								item {
+									InfoChip(
+										text = state.artist.country,
+										imgRes = R.drawable.component_1,
+									)
+								}
+							}
+						}
+					}
 
                     ArtistScreenState.ScreenStatus.FAILED -> {}
                 }
@@ -369,49 +371,45 @@ private fun ArtistScreenContent(
                         }
                     }
 
-                    ArtistScreenState.ScreenStatus.SUCCESS -> {
-                        if (state.knownForMovies.isNotEmpty() || state.KnownForSeries.isNotEmpty()) {
-                            BasicText(
-                                modifier = Modifier.padding(
-                                    start = 16.dp,
-                                    top = 32.dp,
-                                    bottom = 12.dp
-                                ),
-                                text = stringResource(R.string.known_for),
-                                style = Theme.textStyle.title.mediumMedium16
-                                    .copy(color = Theme.color.surfaces.onSurface)
-                            )
-                            LazyRow(
-                                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                                contentPadding = PaddingValues(horizontal = 16.dp)
-                            ) {
-                                items(state.knownForMovies) { movie ->
-                                    MovieCard(
-                                        title = movie.title,
-                                        vote = movie.rating,
-                                        imgUrl = movie.posterPath,
-                                        width = 124.dp,
-                                        aspectRatio = 0.67f,
-                                        modifier = Modifier.clickable { listener.onMovieClick(movie.id) }
-                                    )
-                                }
-                                items(state.KnownForSeries) { series ->
-                                    MovieCard(
-                                        title = series.title,
-                                        vote = series.rating,
-                                        imgUrl = series.posterPath,
-                                        width = 124.dp,
-                                        aspectRatio = 0.67f,
-                                        modifier = Modifier.clickable {
-                                            listener.onSeriesClick(
-                                                series.id
-                                            )
-                                        }
-                                    )
-                                }
-                            }
-                        }
-                    }
+					ArtistScreenState.ScreenStatus.SUCCESS -> {
+						if (state.knownForMovies.isNotEmpty() || state.knownForSeries.isNotEmpty()) {
+							BasicText(
+								modifier = Modifier.padding(
+									start = 16.dp,
+									top = 32.dp,
+									bottom = 12.dp
+								),
+								text = stringResource(R.string.known_for),
+								style = Theme.textStyle.title.mediumMedium16
+									.copy(color = Theme.color.surfaces.onSurface)
+							)
+							LazyRow(
+								horizontalArrangement = Arrangement.spacedBy(12.dp),
+								contentPadding = PaddingValues(horizontal = 16.dp)
+							) {
+								items(state.knownForMovies) { movie ->
+									MovieCard(
+										title = movie.title,
+										vote = movie.rating,
+										imgUrl = movie.posterPath,
+										width = 124.dp,
+										aspectRatio = 0.67f,
+										modifier = Modifier.clickable { listener.onMovieClick(movie.id) }
+									)
+								}
+								items(state.knownForSeries) { series ->
+									MovieCard(
+										title = series.title,
+										vote = series.rating,
+										imgUrl = series.posterPath,
+										width = 124.dp,
+										aspectRatio = 0.67f,
+										modifier = Modifier.clickable { listener.onSeriesClick(series.id) }
+									)
+								}
+							}
+						}
+					}
 
                     ArtistScreenState.ScreenStatus.FAILED -> {}
                 }

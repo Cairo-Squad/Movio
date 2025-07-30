@@ -5,17 +5,17 @@ import com.cairosquad.viewmodel.exception.ErrorStatus
 data class ArtistScreenState (
     val artist : ArtistUiState= ArtistUiState(),
     val knownForMovies :List<MovieUiState> = emptyList(),
-    val KnownForSeries :List<SeriesUiState> =emptyList(),
+    val knownForSeries :List<SeriesUiState> =emptyList(),
     val screenStatus: ScreenStatus= ScreenStatus.LOADING,
     val errorStatus: ErrorStatus? = null,
 
-) {
+    ) {
     data class ArtistUiState(
         val id: Long = 0L,
         val name: String = "",
         val photoPath: String = "",
         val country: String = "",
-        val birthDate: Long = 0L,
+        val birthDate: Long? = null,
         val biography: String = "",
         val department: String = ""
     )

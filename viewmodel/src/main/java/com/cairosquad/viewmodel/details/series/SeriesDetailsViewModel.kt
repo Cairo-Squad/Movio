@@ -259,14 +259,14 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         )
     }
 
-    private fun setSeasonToUiState(seasons: List<Season>) {
-        updateState {
-            it.copy(
-                seasonsSectionState = SectionStatus.SUCCESS,
-                seasons = seasons.map { it.toUiState() }.reversed()
-            )
-        }
-    }
+	private fun setSeasonToUiState(seasons: List<Season>) {
+		updateState {
+			it.copy(
+				seasonsSectionState = SectionStatus.SUCCESS,
+				seasons = seasons.map { it.toUiState() }
+			)
+		}
+	}
 
     private fun getReviews(seriesId: Long) {
         tryToCall(
