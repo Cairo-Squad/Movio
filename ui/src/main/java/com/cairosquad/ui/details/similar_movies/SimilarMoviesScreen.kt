@@ -2,6 +2,7 @@ package com.cairosquad.ui.details.similar_movies
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -16,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -25,6 +27,7 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.ui.movio_component.LoadingMovieCard
 import com.cairosquad.ui.movio_component.MovieCard
+import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.ui.navigation.MovieRoute
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.viewmodel.details.similar_movies.SimilarMoviesEffect
@@ -89,7 +92,21 @@ fun SimilarMoviesScreen(
                     }
                 }
 
-                SimilarMoviesScreenState.ScreenStatus.ERROR -> {}
+                SimilarMoviesScreenState.ScreenStatus.ERROR -> {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            StateMessage(
+                                imageDrawable = R.drawable.no_internet,
+                                titleId = R.string.no_internet_connection,
+                                descriptionId = R.string.internet_is_not_available_description
+                            )
+                        }
+                    }
+                }
             }
         }
     }

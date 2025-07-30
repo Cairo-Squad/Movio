@@ -32,6 +32,7 @@ import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.R
 import com.cairosquad.ui.movio_component.LoadingReviewCard
 import com.cairosquad.ui.movio_component.ReviewCard
+import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.ui.utils.errorStatusToMessageResource
@@ -93,6 +94,20 @@ private fun ReviewsContent(
     when {
         state.isLoading -> {
             ReviewsLoadingContent()
+        }
+        state.error != null -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp), //
+                contentAlignment = Alignment.Center
+            ) {
+                StateMessage(
+                    imageDrawable = com.cairosquad.design_system.R.drawable.no_internet,
+                    titleId = com.cairosquad.design_system.R.string.no_internet_connection,
+                    descriptionId = com.cairosquad.design_system.R.string.internet_is_not_available_description
+                )
+            }
         }
 
         else -> Box {

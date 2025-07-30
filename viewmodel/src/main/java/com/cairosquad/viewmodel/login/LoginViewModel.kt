@@ -157,7 +157,7 @@ class LoginViewModel @Inject constructor(
                     }
                 )
             }
-        } else if (password.length < 8) {
+        } else if (password.length < 4) {
             updateState {
                 it.copy(
                     errors = it.errors.toMutableMap().apply {

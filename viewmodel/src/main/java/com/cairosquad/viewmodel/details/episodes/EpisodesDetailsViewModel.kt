@@ -4,6 +4,7 @@ import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Episode
 import com.cairosquad.viewmodel.base.BaseViewModel
+import com.cairosquad.viewmodel.details.artist.ArtistScreenState
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState.ScreenStatus
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
@@ -85,7 +86,9 @@ class EpisodesDetailsViewModel @AssistedInject constructor(
                     )
                 }
             },
-            onError = {},
+            onError = {
+
+            },
             dispatcher = Dispatchers.IO
         )
     }
