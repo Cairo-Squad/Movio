@@ -1,13 +1,17 @@
 package com.cairosquad.viewmodel.see_all
 
+import androidx.paging.PagingData
 import com.cairosquad.viewmodel.exception.ErrorStatus
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 
 data class SeeAllScreenState(
-    val mediaList: List<MediaUiState> = emptyList(),
+    val mediaList: Flow<PagingData<MediaUiState>> = flowOf(PagingData.empty()),
 
     val screenStatus: ScreenStatus = ScreenStatus.LOADING,
     val errorStatus: ErrorStatus? = null,
-    val isLoading: Boolean = false,
+    val isRefreshing: Boolean = false,
+    val isEmpty: Boolean = false,
     val genres: List<GenreUiState> = listOf(GenreUiState.defaultGenre),
     val selectedGenreIndex: Int = 0,
 ) {
