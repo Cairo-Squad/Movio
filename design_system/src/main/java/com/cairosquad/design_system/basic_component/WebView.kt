@@ -42,13 +42,13 @@ fun WebView(
                         val uri = Uri.parse(url)
                         val isTmdbDomain = uri.host == "www.themoviedb.org"
                         val allowedPaths = listOf(
-                            "signup", "reset-password", "reset-password/confirm", "/login"
+                            "signup", "reset-password"
                         )
-                        val isAuthPath = uri.path?.startsWith("/authenticate") == true
 
-                        val isAllowed = isTmdbDomain && (uri.path in allowedPaths || isAuthPath)
+                        val isAllowed = isTmdbDomain && (uri.path in allowedPaths)
 
                         if (!isAllowed) {
+                            Log.d("WebView","Navigation blocked: $url")
                             Toast.makeText(context, "Navigation blocked", Toast.LENGTH_SHORT).show()
                         }
 
