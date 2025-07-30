@@ -3,6 +3,7 @@ package com.cairosquad.ui.details
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -84,6 +86,14 @@ fun SeasonScreenContent(
                 )
                 .align(Alignment.TopEnd)
         )
+        Column( modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.systemBars)
+        ) {
+            AppBar(
+                title = stringResource(R.string.current_season),
+                onBackButtonClicked = listener::onBackClicked,
+            )
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -91,12 +101,6 @@ fun SeasonScreenContent(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp)
         ) {
-            stickyHeader {
-                AppBar(
-                    title = stringResource(R.string.current_season),
-                    onBackButtonClicked = listener::onBackClicked
-                )
-            }
             when (uiState.seasonSectionState) {
                 SeasonDetailsScreenState.ScreenStatus.LOADING -> {
                     items(10) {
@@ -145,6 +149,7 @@ fun SeasonScreenContent(
 
                 }
             }
+        }
         }
     }
 }
