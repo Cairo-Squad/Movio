@@ -118,309 +118,312 @@ private fun ArtistScreenContent(
     val scrollThresholdPx = with(density) { 250.dp.toPx() }
     val progress = (listScroll.value / scrollThresholdPx).coerceIn(0f, 1f)
 
-	val animatedStartColor =
-		lerp(Theme.color.surfaces.statusBarShadow, Theme.color.surfaces.surface, progress)
-	val animatedEndColor = lerp(Color.Transparent, Theme.color.surfaces.surface, progress)
-	val animatedBrush = verticalGradient(colors = listOf(animatedStartColor, animatedEndColor))
-	Box(modifier = modifier.fillMaxSize()) {
-		if (state.screenStatus == ArtistScreenState.ScreenStatus.FAILED) {
-			Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-				StateMessage(
-					imageDrawable = R.drawable.no_internet,
-					titleId = R.string.no_internet_connection,
-					descriptionId = R.string.internet_is_not_available_description
-				)
-			}
-		}
-		else{
-			Column(
-				modifier = modifier
-					.fillMaxSize()
-					.windowInsetsPadding(WindowInsets.navigationBars)
-					.verticalScroll(listScroll),
-				horizontalAlignment = Alignment.Start,
-			) {
-				Box(
-					contentAlignment = Alignment.Center,
-					modifier = Modifier
-						.fillMaxWidth()
-						.height(340.dp)
-				) {
-					if (state.artist.photoPath.isBlank()) {
-						Box(
-							modifier = Modifier
-								.fillMaxSize()
-								.height(335.dp)
-								.offset(y = (-5).dp)
-								.CustomBrush(0.5f, 16.dp),
-						)
-					} else {
-						SafeImageViewer(
-							model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
-							contentDescription = "blured image",
-							modifier = Modifier
-								.fillMaxSize()
-								.height(335.dp)
-								.offset(y = (-5).dp)
-								.CustomBrush(0.5f, 16.dp),
-							nudeThreshold = 0.0,
-							nonNudeThreshold = 0.0
-						)
-					}
-					Box(
-						modifier = Modifier
-							.fillMaxWidth()
-							.height(20.dp)
-							.align(Alignment.BottomCenter)
-							.background(
-								brush = verticalGradient(
-									colors = listOf(
-										Theme.color.surfaces.surface.copy(alpha = 0f),
-										Theme.color.surfaces.surface.copy(alpha = .10f),
-										Theme.color.surfaces.surface.copy(alpha = .50f),
-										Theme.color.surfaces.surface.copy(alpha = .90f),
-										Theme.color.surfaces.surface,
-									)
-								)
-							)
-					)
-					when (state.screenStatus) {
-						ArtistScreenState.ScreenStatus.LOADING -> {
-							LoadingMovieImage(
-								Modifier
-									.padding(top = 31.dp)
-									.clip(CircleShape)
-									.size(160.dp)
-							)
-						}
+    val animatedStartColor =
+        lerp(Theme.color.surfaces.statusBarShadow, Theme.color.surfaces.surface, progress)
+    val animatedEndColor = lerp(Color.Transparent, Theme.color.surfaces.surface, progress)
+    val animatedBrush = verticalGradient(colors = listOf(animatedStartColor, animatedEndColor))
+    Box(modifier = modifier.fillMaxSize()) {
+        if (state.screenStatus == ArtistScreenState.ScreenStatus.FAILED) {
+            Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                StateMessage(
+                    imageDrawable = R.drawable.no_internet,
+                    titleId = R.string.no_internet_connection,
+                    descriptionId = R.string.internet_is_not_available_description
+                )
+            }
+        } else {
+            Column(
+                modifier = modifier
+                    .fillMaxSize()
+                    .windowInsetsPadding(WindowInsets.navigationBars)
+                    .verticalScroll(listScroll),
+                horizontalAlignment = Alignment.Start,
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(340.dp)
+                ) {
+                    if (state.artist.photoPath.isBlank()) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .height(335.dp)
+                                .offset(y = (-5).dp)
+                                .CustomBrush(0.5f, 16.dp),
+                        )
+                    } else {
+                        SafeImageViewer(
+                            model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
+                            contentDescription = "blured image",
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .height(335.dp)
+                                .offset(y = (-5).dp)
+                                .CustomBrush(0.5f, 16.dp),
+                            nudeThreshold = 0.0,
+                            nonNudeThreshold = 0.0
+                        )
+                    }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(20.dp)
+                            .align(Alignment.BottomCenter)
+                            .background(
+                                brush = verticalGradient(
+                                    colors = listOf(
+                                        Theme.color.surfaces.surface.copy(alpha = 0f),
+                                        Theme.color.surfaces.surface.copy(alpha = .10f),
+                                        Theme.color.surfaces.surface.copy(alpha = .50f),
+                                        Theme.color.surfaces.surface.copy(alpha = .90f),
+                                        Theme.color.surfaces.surface,
+                                    )
+                                )
+                            )
+                    )
+                    when (state.screenStatus) {
+                        ArtistScreenState.ScreenStatus.LOADING -> {
+                            LoadingMovieImage(
+                                Modifier
+                                    .padding(top = 31.dp)
+                                    .clip(CircleShape)
+                                    .size(160.dp)
+                            )
+                        }
 
-						ArtistScreenState.ScreenStatus.SUCCESS -> {
-							if (state.artist.photoPath.isNotEmpty()) {
-								SafeImageViewer(
-									model = BuildConfig.IMAGE_BASE_URL + state.artist.photoPath,
-									modifier = Modifier
-										.padding(horizontal = 6.67.dp)
-										.padding(top = 31.dp)
-										.size(160.dp)
-										.clip(CircleShape),
-									contentDescription = stringResource(R.string.artist_image),
-									nudeThreshold = 0.0,
-									nonNudeThreshold = 0.0,
-									loadingPlaceholder = {
-										LoadingMovieImage(
-											Modifier
-												.clip(CircleShape)
-												.size(160.dp)
-										)
-									}
-								)
-							} else {
-								Box(
-									modifier = Modifier
-										.padding(horizontal = 6.67.dp)
-										.padding(top = 31.dp)
-										.size(160.dp)
-										.clip(CircleShape)
-										.background(Theme.color.system.defaultImageBackground),
-									contentAlignment = Alignment.Center
-								) {
-									Icon(
-										modifier = Modifier.size(24.dp),
-										imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
-										contentDescription = stringResource(R.string.default_image_icon),
-										tint = Color(0xFFEFF1F5)
-									)
-								}
-							}
-						}
+                        ArtistScreenState.ScreenStatus.SUCCESS -> {
+                            if (state.artist.photoPath.isNotEmpty()) {
+                                SafeImageViewer(
+                                    model = BuildConfig.IMAGE_BASE_URL + state.artist.photoPath,
+                                    modifier = Modifier
+                                        .padding(horizontal = 6.67.dp)
+                                        .padding(top = 31.dp)
+                                        .size(160.dp)
+                                        .clip(CircleShape),
+                                    contentDescription = stringResource(R.string.artist_image),
+                                    nudeThreshold = 0.0,
+                                    nonNudeThreshold = 0.0,
+                                    loadingPlaceholder = {
+                                        LoadingMovieImage(
+                                            Modifier
+                                                .clip(CircleShape)
+                                                .size(160.dp)
+                                        )
+                                    }
+                                )
+                            } else {
+                                Box(
+                                    modifier = Modifier
+                                        .padding(horizontal = 6.67.dp)
+                                        .padding(top = 31.dp)
+                                        .size(160.dp)
+                                        .clip(CircleShape)
+                                        .background(Theme.color.system.defaultImageBackground),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        modifier = Modifier.size(24.dp),
+                                        imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
+                                        contentDescription = stringResource(R.string.default_image_icon),
+                                        tint = Color(0xFFEFF1F5)
+                                    )
+                                }
+                            }
+                        }
 
-						ArtistScreenState.ScreenStatus.FAILED -> {}
-					}
-				}
-				when (state.screenStatus) {
-					ArtistScreenState.ScreenStatus.LOADING -> {
-						LoadingMovieImage(
-							Modifier
-								.padding(horizontal = 16.dp)
-								.clip(CircleShape)
-								.size(width = 60.dp, height = 32.dp)
-						)
-					}
+                        ArtistScreenState.ScreenStatus.FAILED -> {}
+                    }
+                }
+                when (state.screenStatus) {
+                    ArtistScreenState.ScreenStatus.LOADING -> {
+                        LoadingMovieImage(
+                            Modifier
+                                .padding(horizontal = 16.dp)
+                                .clip(CircleShape)
+                                .size(width = 60.dp, height = 32.dp)
+                        )
+                    }
 
-					ArtistScreenState.ScreenStatus.SUCCESS -> {
-						BasicText(
-							modifier = Modifier.padding(horizontal = 16.dp),
-							text = state.artist.name,
-							style = Theme.textStyle.headline.mediumMedium18
-								.copy(color = Theme.color.surfaces.onSurface),
-						)
-					}
+                    ArtistScreenState.ScreenStatus.SUCCESS -> {
+                        BasicText(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            text = state.artist.name,
+                            style = Theme.textStyle.headline.mediumMedium18
+                                .copy(color = Theme.color.surfaces.onSurface),
+                        )
+                    }
 
-					ArtistScreenState.ScreenStatus.FAILED -> {}
-				}
-				when (state.screenStatus) {
-					ArtistScreenState.ScreenStatus.LOADING -> {
-						LoadingMovieImage(
-							Modifier
-								.padding(start = 16.dp, top = 4.dp)
-								.clip(CircleShape)
-								.size(width = 60.dp, height = 32.dp)
-						)
-					}
+                    ArtistScreenState.ScreenStatus.FAILED -> {}
+                }
+                when (state.screenStatus) {
+                    ArtistScreenState.ScreenStatus.LOADING -> {
+                        LoadingMovieImage(
+                            Modifier
+                                .padding(start = 16.dp, top = 4.dp)
+                                .clip(CircleShape)
+                                .size(width = 60.dp, height = 32.dp)
+                        )
+                    }
 
-					ArtistScreenState.ScreenStatus.SUCCESS -> {
-						BasicText(
-							modifier = Modifier.padding(start = 16.dp, top = 4.dp),
-							text = state.artist.department,
-							style = Theme.textStyle.label.smallRegular14
-								.copy(color = Theme.color.surfaces.onSurfaceVariant),
-						)
-					}
+                    ArtistScreenState.ScreenStatus.SUCCESS -> {
+                        BasicText(
+                            modifier = Modifier.padding(start = 16.dp, top = 4.dp),
+                            text = state.artist.department,
+                            style = Theme.textStyle.label.smallRegular14
+                                .copy(color = Theme.color.surfaces.onSurfaceVariant),
+                        )
+                    }
 
-					ArtistScreenState.ScreenStatus.FAILED -> {}
-				}
-				when (state.screenStatus) {
-					ArtistScreenState.ScreenStatus.LOADING -> {
-						Row(
-							modifier = Modifier.padding(horizontal = 16.dp),
-							horizontalArrangement = Arrangement.spacedBy(8.dp)
-						) {
-							repeat(2) {
-								LoadingMovieImage(
-									Modifier
-										.padding(top = 16.dp, start = 16.dp)
-										.clip(CircleShape)
-										.size(width = 60.dp, height = 32.dp)
-								)
-							}
-						}
-					}
+                    ArtistScreenState.ScreenStatus.FAILED -> {}
+                }
+                when (state.screenStatus) {
+                    ArtistScreenState.ScreenStatus.LOADING -> {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            repeat(2) {
+                                LoadingMovieImage(
+                                    Modifier
+                                        .padding(top = 16.dp, start = 16.dp)
+                                        .clip(CircleShape)
+                                        .size(width = 60.dp, height = 32.dp)
+                                )
+                            }
+                        }
+                    }
 
-					ArtistScreenState.ScreenStatus.SUCCESS -> {
-						LazyRow(
-							horizontalArrangement = Arrangement.spacedBy(8.dp),
-							modifier = Modifier.padding(top = 16.dp),
-							contentPadding = PaddingValues(horizontal = 16.dp)
-						) {
-							val lastWord = state.artist.country
-								.trim()
-								.let { full ->
-									val partsByComma = full.split(",")
-									val lastPart = partsByComma.lastOrNull()?.trim().orEmpty()
-									lastPart.split(" ").lastOrNull()?.trim()
-								}
-								?.takeIf { it.isNotBlank() }
-							item {
-								InfoChip(
-									text = formatBirthDateLegacy(state.artist.birthDate),
-									imgRes = R.drawable.date,
-								)
-							}
-							if (lastWord != null) {
-								item {
-									InfoChip(
-										text = state.artist.country,
-										imgRes = R.drawable.component_1,
-									)
-								}
-							}
-						}
-					}
+                    ArtistScreenState.ScreenStatus.SUCCESS -> {
+                        LazyRow(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.padding(top = 16.dp),
+                            contentPadding = PaddingValues(horizontal = 16.dp)
+                        ) {
+                            val lastWord = state.artist.country
+                                .trim()
+                                .let { full ->
+                                    val partsByComma = full.split(",")
+                                    val lastPart = partsByComma.lastOrNull()?.trim().orEmpty()
+                                    lastPart.split(" ").lastOrNull()?.trim()
+                                }
+                                ?.takeIf { it.isNotBlank() }
+                            item {
+                                InfoChip(
+                                    text = formatBirthDateLegacy(state.artist.birthDate),
+                                    imgRes = R.drawable.date,
+                                )
+                            }
+                            if (lastWord != null) {
+                                item {
+                                    InfoChip(
+                                        text = state.artist.country,
+                                        imgRes = R.drawable.component_1,
+                                    )
+                                }
+                            }
+                        }
+                    }
 
-					ArtistScreenState.ScreenStatus.FAILED -> {}
-				}
-				when (state.screenStatus) {
-					ArtistScreenState.ScreenStatus.LOADING -> {
-						LoadingMovieImage(
-							Modifier
-								.padding(16.dp)
-								.height(120.dp)
-								.fillMaxWidth()
-						)
-					}
+                    ArtistScreenState.ScreenStatus.FAILED -> {}
+                }
+                when (state.screenStatus) {
+                    ArtistScreenState.ScreenStatus.LOADING -> {
+                        LoadingMovieImage(
+                            Modifier
+                                .padding(16.dp)
+                                .height(120.dp)
+                                .fillMaxWidth()
+                        )
+                    }
 
-					ArtistScreenState.ScreenStatus.SUCCESS -> {
-						if (state.artist.biography.isNotBlank()) {
-							ExpandableText(
-								text = state.artist.biography,
-								color = Theme.color.surfaces.onSurface,
-								style = Theme.textStyle.label.smallRegular14,
-								modifier = Modifier
-									.padding(16.dp)
-									.fillMaxWidth(),
-								collapsedMaxLine = 5,
-								showMoreText = stringResource(com.cairosquad.ui.R.string.read_more_with_dotes_behind),
-								showMoreColor = Theme.color.surfaces.onSurfaceVariant,
-								showLessText = stringResource(com.cairosquad.ui.R.string.read_less_with_dotes_behind)
-							)
-						}
-					}
+                    ArtistScreenState.ScreenStatus.SUCCESS -> {
+                        if (state.artist.biography.isNotBlank()) {
+                            ExpandableText(
+                                text = state.artist.biography,
+                                color = Theme.color.surfaces.onSurface,
+                                style = Theme.textStyle.label.smallRegular14,
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .fillMaxWidth(),
+                                collapsedMaxLine = 5,
+                                showMoreText = stringResource(com.cairosquad.ui.R.string.read_more_with_dotes_behind),
+                                showMoreColor = Theme.color.surfaces.onSurfaceVariant,
+                                showLessText = stringResource(com.cairosquad.ui.R.string.read_less_with_dotes_behind)
+                            )
+                        }
+                    }
 
-					ArtistScreenState.ScreenStatus.FAILED -> {}
-				}
-				when (state.screenStatus) {
-					ArtistScreenState.ScreenStatus.LOADING -> {
-						LoadingMovieImage(
-							Modifier.size(height = 32.dp, width = 64.dp)
-						)
-						LazyRow {
-							items(10) {
-								LoadingMovieCard()
-							}
-						}
-					}
+                    ArtistScreenState.ScreenStatus.FAILED -> {}
+                }
+                when (state.screenStatus) {
+                    ArtistScreenState.ScreenStatus.LOADING -> {
+                        LoadingMovieImage(
+                            Modifier.size(height = 32.dp, width = 64.dp)
+                        )
+                        LazyRow {
+                            items(10) {
+                                LoadingMovieCard()
+                            }
+                        }
+                    }
 
-					ArtistScreenState.ScreenStatus.SUCCESS -> {
-						if (state.knownForMovies.isNotEmpty() || state.KnownForSeries.isNotEmpty()) {
-							BasicText(
-								modifier = Modifier.padding(
-									start = 16.dp,
-									top = 32.dp,
-									bottom = 12.dp
-								),
-								text = stringResource(R.string.known_for),
-								style = Theme.textStyle.title.mediumMedium16
-									.copy(color = Theme.color.surfaces.onSurface)
-							)
-							LazyRow(
-								horizontalArrangement = Arrangement.spacedBy(12.dp),
-								contentPadding = PaddingValues(horizontal = 16.dp)
-							) {
-								items(state.knownForMovies) { movie ->
-									MovieCard(
-										title = movie.title,
-										vote = movie.rating,
-										imgUrl = movie.posterPath,
-										width = 124.dp,
-										aspectRatio = 0.67f,
-										modifier = Modifier.clickable { listener.onMovieClick(movie.id) }
-									)
-								}
-								items(state.KnownForSeries) { series ->
-									MovieCard(
-										title = series.title,
-										vote = series.rating,
-										imgUrl = series.posterPath,
-										width = 124.dp,
-										aspectRatio = 0.67f,
-										modifier = Modifier.clickable { listener.onSeriesClick(series.id) }
-									)
-								}
-							}
-						}
-					}
+                    ArtistScreenState.ScreenStatus.SUCCESS -> {
+                        if (state.knownForMovies.isNotEmpty() || state.KnownForSeries.isNotEmpty()) {
+                            BasicText(
+                                modifier = Modifier.padding(
+                                    start = 16.dp,
+                                    top = 32.dp,
+                                    bottom = 12.dp
+                                ),
+                                text = stringResource(R.string.known_for),
+                                style = Theme.textStyle.title.mediumMedium16
+                                    .copy(color = Theme.color.surfaces.onSurface)
+                            )
+                            LazyRow(
+                                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                contentPadding = PaddingValues(horizontal = 16.dp)
+                            ) {
+                                items(state.knownForMovies) { movie ->
+                                    MovieCard(
+                                        title = movie.title,
+                                        vote = movie.rating,
+                                        imgUrl = movie.posterPath,
+                                        width = 124.dp,
+                                        aspectRatio = 0.67f,
+                                        modifier = Modifier.clickable { listener.onMovieClick(movie.id) }
+                                    )
+                                }
+                                items(state.KnownForSeries) { series ->
+                                    MovieCard(
+                                        title = series.title,
+                                        vote = series.rating,
+                                        imgUrl = series.posterPath,
+                                        width = 124.dp,
+                                        aspectRatio = 0.67f,
+                                        modifier = Modifier.clickable {
+                                            listener.onSeriesClick(
+                                                series.id
+                                            )
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    }
 
-					ArtistScreenState.ScreenStatus.FAILED -> {}
-				}
-			}
-		}
-		AppBar(
-			onBackButtonClicked = listener::onClickBack,
-			modifier = Modifier
-				.background(animatedBrush)
-				.windowInsetsPadding(WindowInsets.statusBars)
-		)
-	}
+                    ArtistScreenState.ScreenStatus.FAILED -> {}
+                }
+            }
+        }
+        AppBar(
+            onBackButtonClicked = listener::onClickBack,
+            modifier = Modifier
+                .background(animatedBrush)
+                .windowInsetsPadding(WindowInsets.statusBars)
+        )
+    }
 }
 
 private fun formatBirthDateLegacy(birthDateLong: Long): String {

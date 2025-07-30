@@ -487,15 +487,6 @@ fun MovieContent(
                                     )
                                 }
                             }
-                    MovieScreenState.ScreenStatus.SUCCESS -> {
-                        if (uiState.topCast.isNotEmpty()) {
-                            MovieTopCastSection(
-                                onActionClicked = { interactionListener.onSeeAllCastClick(uiState.movie.id) },
-                                onArtistClicked = interactionListener::onActorClick,
-                                cast = uiState.topCast,
-                            )
-                        }
-                    }
 
                             MovieScreenState.ScreenStatus.ERROR -> {}
                         }
@@ -515,21 +506,6 @@ fun MovieContent(
                                     }
                                 )
                             }
-                    MovieScreenState.ScreenStatus.ERROR -> {}
-                }
-            }
-            item {
-                when (uiState.reviewsSectionState) {
-                    MovieScreenState.ScreenStatus.LOADING -> {
-                        SectionLoading(
-                            headerName = stringResource(R.string.reviews),
-                            sectionLoadingItem = {
-                                LoadingReviewCard(
-                                    modifier = Modifier.size(width = 260.dp, height = 137.dp)
-                                )
-                            }
-                        )
-                    }
 
                             MovieScreenState.ScreenStatus.SUCCESS -> {
                                 if (uiState.reviews.isNotEmpty()) {
