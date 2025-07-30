@@ -85,7 +85,7 @@ fun InputField(
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
 
     val fontScale = LocalConfiguration.current.fontScale
-    val chipHeight = (48 - 15) * fontScale + 15
+    val chipHeight = (48 - 28) * fontScale + 28
 
     val hasFocusGradientColors = listOf(
         Theme.color.brand.onPrimary,
