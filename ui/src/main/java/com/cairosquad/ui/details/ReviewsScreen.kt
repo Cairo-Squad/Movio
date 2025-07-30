@@ -121,7 +121,8 @@ private fun ReviewsContent(
 								color = Theme.color.surfaces.onSurfaceAt5,
 								blur = 264.dp,
 								offsetX = 0.dp,
-								offsetY = 0.dp
+								offsetY = 0.dp,
+								alpha = 0.10f
 							)
 						} else {
 							Modifier

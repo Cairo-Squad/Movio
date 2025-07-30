@@ -31,6 +31,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
@@ -337,10 +339,17 @@ private fun SeriesScreenContent(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(400.dp)
+                                        .then(
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                                Modifier.blur(16.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
+                                            } else {
+                                                Modifier
+                                            }
+                                        )
                                         .offset(y = (-28).dp),
                                     model = BuildConfig.IMAGE_BASE_URL + uiState.series.posterPath,
                                     contentDescription = "",
-                                    blur = 16,
+                                    blur = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) 16 else 0,
                                     isBlurForced = true
                                 )
                                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {

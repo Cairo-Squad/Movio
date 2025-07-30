@@ -30,6 +30,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
 import androidx.compose.ui.graphics.Color
@@ -160,8 +162,15 @@ private fun ArtistScreenContent(
 								modifier = Modifier
 									.fillMaxSize()
 									.height(335.dp)
+									.then(
+										if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+											Modifier.blur(16.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
+										} else {
+											Modifier
+										}
+									)
 									.offset(y = (-20).dp),
-								blur = 16,
+								blur = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) 16 else 0,
 								isBlurForced = true
 							)
 							if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {

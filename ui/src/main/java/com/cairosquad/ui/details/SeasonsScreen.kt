@@ -87,7 +87,7 @@ fun SeasonScreenContent(
                             blur = 264.dp,
                             offsetX = 0.dp,
                             offsetY = 0.dp,
-                                    alpha = 0.10f
+                            alpha = 0.10f
                         )
                     } else {
                         Modifier
