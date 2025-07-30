@@ -52,15 +52,6 @@ class SeeAllViewModel(
         updateState { it.copy(errorStatus = errorStatus) }
     }
 
-    fun handleSearchException(e: Throwable): ErrorStatus {
-        return when (e) {
-            is MovioException -> {
-                exceptionToErrorStatus(e)
-            }
-
-            else -> ErrorStatus.UNKNOWN_ERROR
-        }
-    }
 
     override fun onClickMedia(mediaId: Long, isMovie: Boolean) {
         sendEffect(SeeAllEffect.NavigateMediaDetails(mediaId, isMovie))
@@ -118,47 +109,9 @@ class SeeAllViewModel(
                     pagingData.map { it.toSeeAllMediaUiState() }
                 }
             }
-
-            MediaType.BOTH -> {
-                // دمج الاثنين باستخدام combine
-//                combine(
-//                    moviesFlowGetter().map { it.map { it.toSeeAllMediaUiState() } },
-//                    seriesFlowGetter().map { it.map { it.toSeeAllMediaUiState() } }
-//                ) { movies, series ->
-//                    PagingData.from(movies series)
-//                }
-                moviesFlowGetter().map { pagingData ->
-                    pagingData.map { it.toSeeAllMediaUiState() }
-                }
-            }
         }
     }
-//    private suspend fun loadDataBlock(
-//        page: Int = 1,
-//        genreId: Long? = null
-//    ): List<SeeAllScreenState.MediaUiState> {
-//        val (moviesFetcher, seriesFetcher) = getDataFetcher(contentType)
-//
-//        return when (mediaType) {
-//            MediaType.MOVIES -> moviesFetcher(page, genreId).map(Movie::toSeeAllMediaUiState)
-//            MediaType.SERIES -> seriesFetcher(page, genreId).map(Series::toSeeAllMediaUiState)
-//            MediaType.BOTH -> combineTwoList(
-//                moviesFetcher(page, genreId).map(Movie::toSeeAllMediaUiState),
-//                seriesFetcher(page, genreId).map(Series::toSeeAllMediaUiState)
-//            )
-//        }
-//    }
 
-    //    private fun <T> combineTwoList(list1: List<T>, list2: List<T>): List<T> {
-//        val mergedList = mutableListOf<T>()
-//        val i1 = list1.iterator()
-//        val i2 = list2.iterator()
-//        while (i1.hasNext() || i2.hasNext()) {
-//            if (i1.hasNext()) mergedList.add(i1.next())
-//            if (i2.hasNext()) mergedList.add(i2.next())
-//        }
-//        return mergedList
-//    }
     fun getDataPagerFetcher2(
         contentType: MediaContentType,
         genreId: Long?
@@ -185,7 +138,7 @@ class SeeAllViewModel(
             )
 
             MediaContentType.NOW_PLAYING -> Pair(
-                { flowOf(PagingData.empty()) },
+                { seeAllMoviesPager.getNowPlayingMovies(genreId) },
                 { flowOf(PagingData.empty()) }
             )
 
@@ -196,12 +149,12 @@ class SeeAllViewModel(
 
             MediaContentType.AIRING_TODAY -> Pair(
                 { flowOf(PagingData.empty()) },
-                { flowOf(PagingData.empty()) }
+                { seeAllSeriesPager.getAiringTodaySeries(genreId) }
             )
 
             MediaContentType.ON_TV -> Pair(
                 { flowOf(PagingData.empty()) },
-                { flowOf(PagingData.empty()) }
+                { seeAllSeriesPager.getOnTvSeries(genreId) }
             )
         }
     }
@@ -327,16 +280,6 @@ class SeeAllViewModel(
                     seriesGenres.mapTo(this) { it.toSeeAllGenreUiState() }
                 }.toList()
             }
-
-            MediaType.BOTH -> {
-                val movieGenres = manageMoviesUseCase.getMoviesGenres()
-                val seriesGenres = manageSeriesUseCase.getSeriesGenres()
-                buildSet {
-                    add(SeeAllScreenState.GenreUiState.defaultGenre)
-                    movieGenres.mapTo(this) { it.toSeeAllGenreUiState() }
-                    seriesGenres.mapTo(this) { it.toSeeAllGenreUiState() }
-                }.toList()
-            }
         }
     }
 
@@ -349,8 +292,13 @@ class SeeAllViewModel(
         }
     }
 
-    private fun handleHomeException(e: Throwable): ErrorStatus {
-        return if (e is MovioException) exceptionToErrorStatus(e)
-        else ErrorStatus.UNKNOWN_ERROR
+    fun handleHomeException(e: Throwable): ErrorStatus {
+        return when (e) {
+            is MovioException -> {
+                exceptionToErrorStatus(e)
+            }
+
+            else -> ErrorStatus.UNKNOWN_ERROR
+        }
     }
 }
