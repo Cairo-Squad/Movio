@@ -4,21 +4,30 @@ import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Review
 import com.cairosquad.viewmodel.base.BaseViewModel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import javax.inject.Inject
 
-@HiltViewModel
-class ReviewsViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = ReviewsViewModel.Factory::class)
+class ReviewsViewModel @AssistedInject constructor(
     private val manageMoviesUseCase: ManageMoviesUseCase,
-    private val manageSeriesUseCase: ManageSeriesUseCase
+    private val manageSeriesUseCase: ManageSeriesUseCase,
+    @Assisted private val mediaId: Long,
+    @Assisted private val isMovie: Boolean = false,
+    @Assisted private val dispatcher: CoroutineDispatcher,
 ) : BaseViewModel<ReviewsScreenState, ReviewsEffect>(initialState = ReviewsScreenState()),
     ReviewsInteractionListener {
 
-    private val mediaId: Long = 0 // // TODO: get from savedHandle
-    private val isMovie: Boolean = false // TODO: get from savedHandle
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO // TODO: inject
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            mediaId: Long,
+            isMovie: Boolean,
+            dispatcher: CoroutineDispatcher,
+        ): ReviewsViewModel
+    }
 
     fun getReviews() {
         updateState { it.copy(isLoading = true, error = null) }

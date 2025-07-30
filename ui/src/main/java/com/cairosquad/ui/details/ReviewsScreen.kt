@@ -39,13 +39,21 @@ import com.cairosquad.viewmodel.details.reviews.ReviewsEffect
 import com.cairosquad.viewmodel.details.reviews.ReviewsInteractionListener
 import com.cairosquad.viewmodel.details.reviews.ReviewsScreenState
 import com.cairosquad.viewmodel.details.reviews.ReviewsViewModel
+import kotlinx.coroutines.Dispatchers
 
 @Composable
 fun ReviewsScreen(
     mediaId: Long,
     isMovie: Boolean,
-    viewModel: ReviewsViewModel = hiltViewModel()
 ) {
+    val viewModel: ReviewsViewModel =
+        hiltViewModel<ReviewsViewModel, ReviewsViewModel.Factory> { factory ->
+            factory.create(
+                mediaId = mediaId,
+                isMovie = isMovie,
+                dispatcher = Dispatchers.IO
+            )
+        }
     val navController = LocalNavController.current
     val state = viewModel.screenState.collectAsState()
     val context = LocalContext.current
