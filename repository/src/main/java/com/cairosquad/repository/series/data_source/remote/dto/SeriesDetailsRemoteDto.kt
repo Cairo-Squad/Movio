@@ -37,12 +37,12 @@ data class SeriesDetailsRemoteDto(
     fun toEntity(trailerPath: String) = Series(
         id = id ?: 0,
         title = name.orEmpty(),
-        rating = voteAverage?.toFloat() ?: 0f,
+        rating = voteAverage?.toFloat()?.times(0.5f) ?: 0f,
         posterPath = posterPath.orEmpty(),
         genres = genres?.mapNotNull { it?.toEntity() } ?: emptyList(),
         overview = overview.orEmpty(),
         releaseDate = firstAirDate?.let { TimeUtils.dateToLong(it) } ?: 0L,
-        seasonsCount = numberOfSeasons ?: 0,
+        seasonsCount = numberOfSeasons ?: 1,
         trailerPath = trailerPath
     )
 }

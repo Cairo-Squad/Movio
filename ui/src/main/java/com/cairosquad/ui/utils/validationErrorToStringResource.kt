@@ -14,7 +14,7 @@ fun validationErrorToStringResource(
         LoginScreenState.ValidationError.TOO_SHORT_FIELD -> {
             when (field) {
                 LoginScreenState.FormField.USERNAME -> R.string.username_must_be_at_least_2_characters_long
-                LoginScreenState.FormField.PASSWORD -> R.string.password_must_be_at_least_8_characters_long
+                LoginScreenState.FormField.PASSWORD -> R.string.password_must_be_at_least_4_characters_long
             }
         }
     }

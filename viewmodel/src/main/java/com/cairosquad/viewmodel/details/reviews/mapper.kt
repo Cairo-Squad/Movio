@@ -21,9 +21,3 @@ private fun Timestamp.toDateFormat(): String {
     val format = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
     return format.format(date)
 }
-
-internal fun String.toSingleDecimal(): String {
-    return this.toDoubleOrNull()
-        ?.let { String.format(Locale.getDefault(), "%.1f", it) }
-        ?: "0.0"
-}

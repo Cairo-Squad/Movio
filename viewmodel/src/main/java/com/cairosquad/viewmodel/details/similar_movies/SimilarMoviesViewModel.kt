@@ -1,7 +1,7 @@
 package com.cairosquad.viewmodel.details.similar_movies
 
 import com.cairosquad.domain.exception.MovioException
-import com.cairosquad.domain.usecase.movies.GetMovieDetailsUseCase
+import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.similar_movies.SimilarMoviesScreenState.ScreenStatus
 import com.cairosquad.viewmodel.exception.ErrorStatus
@@ -9,7 +9,7 @@ import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import kotlinx.coroutines.Dispatchers
 
 class SimilarMoviesViewModel(
-    private val getMoviesDetailsUseCase: GetMovieDetailsUseCase
+    private val manageMoviesUseCase: ManageMoviesUseCase
 ) : BaseViewModel<SimilarMoviesScreenState, SimilarMoviesEffect>(SimilarMoviesScreenState()),
     SimilarMoviesInteractionListener {
 
@@ -24,7 +24,7 @@ class SimilarMoviesViewModel(
                 }
             },
             block = {
-                getMoviesDetailsUseCase.getSimilarMovies(movieId)
+                manageMoviesUseCase.getSimilarMovies(movieId)
             }, onSuccess = { movies ->
                 updateState {
                     it.copy(

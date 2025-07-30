@@ -1,7 +1,7 @@
 package com.cairosquad.viewmodel.login
 
 import app.cash.turbine.test
-import com.cairosquad.domain.usecase.authentication.LoginUseCase
+import com.cairosquad.domain.usecase.LoginUseCase
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
@@ -132,7 +132,7 @@ class LoginViewModelTest {
 
     @Test
     fun `WHEN login clicked with short password SHOULD validate password`() = runTest {
-        viewModel.onPasswordChange("1234567")
+        viewModel.onPasswordChange("123")
         viewModel.onLoginClick()
         advanceUntilIdle()
         assertThat(viewModel.screenState.value.errors[LoginScreenState.FormField.PASSWORD]).isEqualTo(

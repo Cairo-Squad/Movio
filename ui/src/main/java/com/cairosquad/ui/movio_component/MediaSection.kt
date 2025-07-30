@@ -22,6 +22,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.viewmodel.home.HomeScreenState
+import java.util.Locale
 
 @Composable
 fun MediaSection(
@@ -64,7 +65,7 @@ fun MediaSection(
                             imgUrl = media.photoPath,
                             movieTitle = media.title,
                             movieCategory = media.genres.firstOrNull() ?: "",
-                            rating = media.rating.toString()
+                            rating = String.format(Locale.getDefault(), "%.1f", media.rating)
                         )
                     }
                 }

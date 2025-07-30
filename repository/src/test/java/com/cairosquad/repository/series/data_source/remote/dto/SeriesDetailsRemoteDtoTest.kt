@@ -49,7 +49,7 @@ class SeriesDetailsRemoteDtoTest {
 
         assertThat(entity.id).isEqualTo(10L)
         assertThat(entity.title).isEqualTo("Test Series")
-        assertThat(entity.rating).isEqualTo(8.9f)
+        assertThat(entity.rating).isEqualTo(4.45f)
         assertThat(entity.posterPath).isEqualTo("/poster.jpg")
         assertThat(entity.genres).containsExactly(Genre(1, "Drama"), Genre(2, "Action"))
         assertThat(entity.overview).isEqualTo("This is a test series.")
@@ -73,7 +73,7 @@ class SeriesDetailsRemoteDtoTest {
         assertThat(entity.genres).isEmpty()
         assertThat(entity.overview).isEmpty()
         assertThat(entity.releaseDate).isEqualTo(0L)
-        assertThat(entity.seasonsCount).isEqualTo(0)
+        assertThat(entity.seasonsCount).isEqualTo(1)
         assertThat(entity.trailerPath).isEmpty()
     }
 

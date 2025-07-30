@@ -1,6 +1,6 @@
 package com.cairosquad.viewmodel.auth_gate
 
-import com.cairosquad.domain.usecase.authentication.LoginUseCase
+import com.cairosquad.domain.usecase.LoginUseCase
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.mockk

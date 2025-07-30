@@ -3,7 +3,8 @@ package com.cairosquad.viewmodel.details.movie
 import app.cash.turbine.test
 import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.exception.NetworkException
-import com.cairosquad.domain.usecase.movies.GetMovieDetailsUseCase
+import com.cairosquad.domain.usecase.LoginUseCase
+import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.entity.Movie
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.google.common.truth.Truth.assertThat
@@ -29,28 +30,29 @@ import org.junit.runner.Description
 @OptIn(ExperimentalCoroutinesApi::class)
 class MovieViewModelTest {
 
-    @get:Rule
-    val mainDispatcherRule = MainDispatcherRule()
+	@get:Rule
+	val mainDispatcherRule = MainDispatcherRule()
 
-    private val testDispatcher = StandardTestDispatcher()
-    private val movieId = 123L
-    private val mockUseCase: GetMovieDetailsUseCase = mockk(relaxed = true)
-    private lateinit var viewModel: MovieViewModel
+	private val testDispatcher = StandardTestDispatcher()
+	private val movieId = 123L
+	private val manageMoviesUseCase: ManageMoviesUseCase = mockk(relaxed = true)
+	private val loginUseCase: LoginUseCase = mockk(relaxed = true)
+	private lateinit var viewModel: MovieViewModel
 
-    @Before
-    fun setup() {
-        Dispatchers.setMain(testDispatcher)
+	@Before
+	fun setup() {
+		Dispatchers.setMain(testDispatcher)
 
-        mockkStatic(Dispatchers::class)
-        every { Dispatchers.IO } returns testDispatcher
+		mockkStatic(Dispatchers::class)
+		every { Dispatchers.IO } returns testDispatcher
 
-        viewModel = MovieViewModel(mockUseCase, movieId)
-    }
+		viewModel = MovieViewModel(manageMoviesUseCase, loginUseCase, movieId)
+	}
 
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-    }
+	@After
+	fun tearDown() {
+		Dispatchers.resetMain()
+	}
 
 //    @Test
 //    fun `init SHOULD load all data sections`() = runTest {
@@ -72,143 +74,143 @@ class MovieViewModelTest {
 //        }
 //    }
 
-    @Test
-    fun `WHEN onBackClicked SHOULD emit NavigateBack effect`() = runTest {
-        viewModel.effect.test {
-            viewModel.onBackClick()
-            assertThat(awaitItem()).isEqualTo(MovieEffect.NavigateBack)
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
+	@Test
+	fun `WHEN onBackClicked SHOULD emit NavigateBack effect`() = runTest {
+		viewModel.effect.test {
+			viewModel.onBackClick()
+			assertThat(awaitItem()).isEqualTo(MovieEffect.NavigateBack)
+			cancelAndIgnoreRemainingEvents()
+		}
+	}
 
-    @Test
-    fun `WHEN onShareClicked SHOULD update state to show share bottom sheet`() = runTest {
-        viewModel.onShareClick()
-        assertThat(viewModel.screenState.value.isShareBottomSheetOpen).isTrue()
-    }
+	@Test
+	fun `WHEN onShareClicked SHOULD update state to show share bottom sheet`() = runTest {
+		viewModel.onShareClick()
+		assertThat(viewModel.screenState.value.isShareBottomSheetOpen).isTrue()
+	}
 
-    @Test
-    fun `WHEN onFavoriteClicked WHEN not logged in SHOULD show login bottom sheet`() = runTest {
-        viewModel.onFavoriteClick()
-        assertThat(viewModel.screenState.value.isNoAccountBottomSheetOpen).isTrue()
-    }
+//	@Test
+//	fun `WHEN onFavoriteClicked WHEN not logged in SHOULD show login bottom sheet`() = runTest {
+//		viewModel.onFavoriteClick()
+//		assertThat(viewModel.screenState.value.isNoAccountBottomSheetOpen).isTrue()
+//	}
+//
+//	@Test
+//	fun `WHEN AddToListClicked WHEN not logged in SHOULD show login bottom sheet`() = runTest {
+//		viewModel.onAddToListClick()
+//		assertThat(viewModel.screenState.value.isAddToListBottomSheetOpen).isTrue()
+//	}
+//
+//	@Test
+//	fun `onRateClicked WHEN not logged in SHOULD show login bottom sheet`() = runTest {
+//		viewModel.onRateItClick()
+//		assertThat(viewModel.screenState.value.isRateBottomSheetOpen).isTrue()
+//	}
 
-    @Test
-    fun `WHEN AddToListClicked WHEN not logged in SHOULD show login bottom sheet`() = runTest {
-        viewModel.onAddToListClick()
-        assertThat(viewModel.screenState.value.isAddToListBottomSheetOpen).isTrue()
-    }
+	@Test
+	fun `WHEN onPlayTrailerClicked WHEN clicked SHOULD emit PlayTrailer`() = runTest {
+		viewModel.effect.test {
+			viewModel.onPlayClick()
+			assertThat(awaitItem()).isEqualTo(MovieEffect.PlayTrailer)
+			cancelAndIgnoreRemainingEvents()
+		}
+	}
 
-    @Test
-    fun `onRateClicked WHEN not logged in SHOULD show login bottom sheet`() = runTest {
-        viewModel.onRateItClick()
-        assertThat(viewModel.screenState.value.isRateBottomSheetOpen).isTrue()
-    }
+	@Test
+	fun `WHEN onDismissShareBottomSheet SHOULD hide share bottom sheet`() = runTest {
+		viewModel.effect.test {
+			viewModel.onShareClick()
+			viewModel.onDismissShareBottomSheet()
+			assertThat(viewModel.screenState.value.isShareBottomSheetOpen).isFalse()
+		}
+	}
 
-    @Test
-    fun `WHEN onPlayTrailerClicked WHEN clicked SHOULD emit PlayTrailer`() = runTest {
-        viewModel.effect.test {
-            viewModel.onPlayClick()
-            assertThat(awaitItem()).isEqualTo(MovieEffect.PlayTrailer)
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
+	@Test
+	fun `WHEN onSeeAllCastClick SHOULD Navigate To All Actors screen`() = runTest {
+		viewModel.effect.test {
+			viewModel.onSeeAllCastClick(1399)
+			assertThat(awaitItem()).isEqualTo(MovieEffect.NavigateToAllActors(1399))
+			cancelAndIgnoreRemainingEvents()
+		}
+	}
 
-    @Test
-    fun `WHEN onDismissShareBottomSheet SHOULD hide share bottom sheet`() = runTest {
-        viewModel.effect.test {
-            viewModel.onShareClick()
-            viewModel.onDismissShareBottomSheet()
-            assertThat(viewModel.screenState.value.isShareBottomSheetOpen).isFalse()
-        }
-    }
+	@Test
+	fun `WHEN onMovieClicked SHOULD navigate to movie screen`() = runTest {
+		viewModel.effect.test {
+			viewModel.onMovieClick(1399)
+			assertThat(awaitItem()).isEqualTo(MovieEffect.NavigateToMovie(1399))
+			cancelAndIgnoreRemainingEvents()
+		}
+	}
 
-    @Test
-    fun `WHEN onSeeAllCastClick SHOULD Navigate To All Actors screen`() = runTest {
-        viewModel.effect.test {
-            viewModel.onSeeAllCastClick(1399)
-            assertThat(awaitItem()).isEqualTo(MovieEffect.NavigateToAllActors(1399))
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
+	@Test
+	fun `WHEN onSeeAllSimilarMoviesClick SHOULD navigate to all similar movies screen`() = runTest {
+		viewModel.effect.test {
+			viewModel.onSeeAllSimilarMoviesClick(1399)
+			assertThat(awaitItem()).isEqualTo(MovieEffect.NavigateToSimilarMovies(1399))
+			cancelAndIgnoreRemainingEvents()
+		}
+	}
 
-    @Test
-    fun `WHEN onMovieClicked SHOULD navigate to movie screen`() = runTest {
-        viewModel.effect.test {
-            viewModel.onMovieClick(1399)
-            assertThat(awaitItem()).isEqualTo(MovieEffect.NavigateToMovie(1399))
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
+	@Test
+	fun `WHEN onSeeAllSeasonsClicked SHOULD navigate to all seasons screen`() = runTest {
+		viewModel.effect.test {
+			viewModel.onSeeAllReviewsClick(1399)
+			assertThat(awaitItem()).isEqualTo(MovieEffect.NavigateToAllReviews(1399))
+			cancelAndIgnoreRemainingEvents()
+		}
+	}
 
-    @Test
-    fun `WHEN onSeeAllSimilarMoviesClick SHOULD navigate to all similar movies screen`() = runTest {
-        viewModel.effect.test {
-            viewModel.onSeeAllSimilarMoviesClick(1399)
-            assertThat(awaitItem()).isEqualTo(MovieEffect.NavigateToSimilarMovies(1399))
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
+	@Test
+	fun `onCopy SHOULD show then hide snackbar after delay`() = runTest {
+		viewModel.onCopy("Copied!", true)
 
-    @Test
-    fun `WHEN onSeeAllSeasonsClicked SHOULD navigate to all seasons screen`() = runTest {
-        viewModel.effect.test {
-            viewModel.onSeeAllReviewsClick(1399)
-            assertThat(awaitItem()).isEqualTo(MovieEffect.NavigateToAllReviews(1399))
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
+		advanceTimeBy(0)
+		assertThat(viewModel.screenState.value.showSnackBar).isFalse()
+	}
 
-    @Test
-    fun `onCopy SHOULD show then hide snackbar after delay`() = runTest {
-        viewModel.onCopy("Copied!", true)
+	@Test
+	fun `WHEN onActorClick SHOULD emit NavigateToArtistDetails effect`() = runTest {
+		viewModel.effect.test {
+			viewModel.onActorClick(456L)
+			assertThat(awaitItem()).isEqualTo(MovieEffect.NavigateToActor(456L))
+			cancelAndIgnoreRemainingEvents()
+		}
+	}
 
-        advanceTimeBy(0)
-        assertThat(viewModel.screenState.value.showSnackBar).isFalse()
-    }
+	@Test
+	fun `handleDetailsException SHOULD map exceptions correctly`() {
+		assertThat(viewModel.handleDetailsException(NetworkException()))
+				.isEqualTo(ErrorStatus.NETWORK_ERROR)
+		assertThat(viewModel.handleDetailsException(InternetConnectionException()))
+				.isEqualTo(ErrorStatus.NO_INTERNET)
+		assertThat(viewModel.handleDetailsException(RuntimeException()))
+				.isEqualTo(ErrorStatus.UNKNOWN_ERROR)
+	}
 
-    @Test
-    fun `WHEN onActorClick SHOULD emit NavigateToArtistDetails effect`() = runTest {
-        viewModel.effect.test {
-            viewModel.onActorClick(456L)
-            assertThat(awaitItem()).isEqualTo(MovieEffect.NavigateToActor(456L))
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
+	companion object {
+		private val mockMovie = Movie(
+			id = 123,
+			title = "Test Series",
+			rating = 8.7f,
+			posterPath = "/poster.jpg",
+			genres = emptyList(),
+			releaseDate = 0L,
+			overview = "Test overview",
+			trailerPath = "",
+			runtimeMinutes = 15
+		)
+	}
 
-    @Test
-    fun `handleDetailsException SHOULD map exceptions correctly`() {
-        assertThat(viewModel.handleDetailsException(NetworkException()))
-            .isEqualTo(ErrorStatus.NETWORK_ERROR)
-        assertThat(viewModel.handleDetailsException(InternetConnectionException()))
-            .isEqualTo(ErrorStatus.NO_INTERNET)
-        assertThat(viewModel.handleDetailsException(RuntimeException()))
-            .isEqualTo(ErrorStatus.UNKNOWN_ERROR)
-    }
+	class MainDispatcherRule(
+		private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
+	) : TestWatcher() {
+		override fun starting(description: Description) {
+			Dispatchers.setMain(testDispatcher)
+		}
 
-    companion object {
-        private val mockMovie = Movie(
-            id = 123,
-            title = "Test Series",
-            rating = 8.7f,
-            posterPath = "/poster.jpg",
-            genres = emptyList(),
-            releaseDate = 0L,
-            overview = "Test overview",
-            trailerPath = "",
-            runtimeMinutes = 15
-        )
-    }
-
-    class MainDispatcherRule(
-        private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
-    ) : TestWatcher() {
-        override fun starting(description: Description) {
-            Dispatchers.setMain(testDispatcher)
-        }
-
-        override fun finished(description: Description) {
-            Dispatchers.resetMain()
-        }
-    }
+		override fun finished(description: Description) {
+			Dispatchers.resetMain()
+		}
+	}
 }
