@@ -36,13 +36,6 @@ fun HomeScreenContent(
 
     Crossfade(screenState.selectedTab) { selectedTab ->
         when (selectedTab) {
-            HomeScreenState.Tab.ALL -> {
-                HomeScreenContentAllTab(
-                    screenState = screenState,
-                    listener = listener,
-                    scrollState = scrollState
-                )
-            }
 
             HomeScreenState.Tab.MOVIES -> {
                 HomeScreenContentMoviesTab(
@@ -109,7 +102,6 @@ private fun TobContent(
 
         val tabsList = remember {
             listOf(
-                R.string.all,
                 R.string.movies,
                 R.string.tv_shows,
                 R.string.categories,
