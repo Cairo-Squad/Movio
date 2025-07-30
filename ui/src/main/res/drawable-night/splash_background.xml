@@ -4,7 +4,7 @@
     <item android:drawable="@drawable/grid" />
     <item>
         <bitmap
-            android:width="100dp"
+            android:width="143dp"
             android:height="143dp"
             android:gravity="center"
             android:src="@drawable/splash_icon" />
