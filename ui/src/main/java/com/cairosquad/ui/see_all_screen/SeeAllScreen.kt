@@ -101,7 +101,13 @@ fun SeeAllScreen(
 
             CategoriesChips(
                 modifier = Modifier.padding(top = 16.dp),
-                categories = state.genres.map { it.name },
+                categories = state.genres.map { genre ->
+                    if (genre.id==null) {
+                        stringResource(com.cairosquad.ui.R.string.all)
+                    } else {
+                        genre.name
+                    }
+                },
                 selectedChipIndex = state.selectedGenreIndex,
                 onChipSelected = { index ->
                     viewModel.onGenreSelected(index)

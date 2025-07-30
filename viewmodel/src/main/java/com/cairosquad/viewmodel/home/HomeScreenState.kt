@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.home
 
+import androidx.compose.ui.res.stringResource
 import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.util.MediaContentType
@@ -41,11 +42,12 @@ data class HomeScreenState(
     data class GenreUiState(
         val id: Long?,
         val name: String,
+
     ) {
         companion object {
             val defaultGenre = GenreUiState(
                 id = null,
-                name = "ALL GENRES"
+                name ="",
             )
         }
     }
