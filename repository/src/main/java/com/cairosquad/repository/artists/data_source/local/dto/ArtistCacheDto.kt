@@ -18,7 +18,7 @@ data class ArtistCacheDto(
     @ColumnInfo(name = "country")
     val country: String,
     @ColumnInfo(name = "birthDate")
-    val birthDate: Long,
+    val birthDate: Long?,
     @ColumnInfo(name = "biography")
     val biography: String,
     @ColumnInfo(name = "department")
