@@ -78,7 +78,7 @@ fun SeeAllScreen(
 
             is androidx.paging.LoadState.Error -> {
                 viewModel.updateScreenStatus(SeeAllScreenState.ScreenStatus.FAILED)
-                val errorStatus = viewModel.handleSearchException(state.error)
+                val errorStatus = viewModel.handleHomeException(state.error)
                 viewModel.updateErrorStatus(errorStatus)
             }
         }
