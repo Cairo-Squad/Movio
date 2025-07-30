@@ -87,7 +87,7 @@ fun SeasonScreenContent(
                 .align(Alignment.TopEnd)
         )
         Column( modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .windowInsetsPadding(WindowInsets.systemBars)
         ) {
             AppBar(
@@ -96,8 +96,7 @@ fun SeasonScreenContent(
             )
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.statusBars),
+                .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp)
         ) {
