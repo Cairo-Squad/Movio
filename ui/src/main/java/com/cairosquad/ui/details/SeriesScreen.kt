@@ -88,8 +88,11 @@ import com.cairosquad.viewmodel.details.series.SeriesDetailsViewModel
 @Composable
 fun SeriesScreen(
     seriesId: Long,
-    viewModel: SeriesDetailsViewModel = hiltViewModel()
 ) {
+    val viewModel: SeriesDetailsViewModel =
+        hiltViewModel<SeriesDetailsViewModel, SeriesDetailsViewModel.Factory> { factory ->
+            factory.create(seriesId)
+        }
     val navController = LocalNavController.current
     val context = LocalContext.current
     val uiState by viewModel.screenState.collectAsStateWithLifecycle()

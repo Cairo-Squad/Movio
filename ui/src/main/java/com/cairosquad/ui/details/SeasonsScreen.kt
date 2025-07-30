@@ -36,12 +36,19 @@ import com.cairosquad.viewmodel.details.series.season.SeasonDetailEffect
 import com.cairosquad.viewmodel.details.series.season.SeasonDetailsInteractionListener
 import com.cairosquad.viewmodel.details.series.season.SeasonDetailsScreenState
 import com.cairosquad.viewmodel.details.series.season.SeasonsViewModel
+import kotlinx.coroutines.Dispatchers
 
 @Composable
 fun SeasonsScreen(
     seriesId: Long,
-    viewModel: SeasonsViewModel = hiltViewModel()
 ) {
+    val viewModel: SeasonsViewModel =
+        hiltViewModel<SeasonsViewModel, SeasonsViewModel.Factory> { factory ->
+            factory.create(
+                seriesId = seriesId,
+                dispatcher = Dispatchers.IO
+            )
+        }
     val uiState by viewModel.screenState.collectAsStateWithLifecycle()
     val navController = LocalNavController.current
 

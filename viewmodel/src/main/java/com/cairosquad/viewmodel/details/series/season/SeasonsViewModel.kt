@@ -5,19 +5,28 @@ import com.cairosquad.entity.Season
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.series.season.SeasonDetailsScreenState.ScreenStatus
 import com.cairosquad.viewmodel.exception.ErrorStatus
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import javax.inject.Inject
 
-@HiltViewModel
-class SeasonsViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = SeasonsViewModel.Factory::class)
+class SeasonsViewModel @AssistedInject constructor(
     private val manageSeriesUseCase: ManageSeriesUseCase,
+    @Assisted private val seriesId: Long,
+    @Assisted private val dispatcher: CoroutineDispatcher
 ) : BaseViewModel<SeasonDetailsScreenState, SeasonDetailEffect>(SeasonDetailsScreenState()),
     SeasonDetailsInteractionListener {
 
-    private val seriesId: Long = 0 // TODO: get from savedHandle
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO // TODO: inject
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            seriesId: Long,
+            dispatcher: CoroutineDispatcher
+        ): SeasonsViewModel
+    }
 
     init {
         loadSeasonDetails(seriesId)
