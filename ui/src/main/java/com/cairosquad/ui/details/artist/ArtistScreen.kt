@@ -307,11 +307,13 @@ private fun ArtistScreenContent(
 									lastPart.split(" ").lastOrNull()?.trim()
 								}
 								?.takeIf { it.isNotBlank() }
-							item {
-								InfoChip(
-									text = formatBirthDateLegacy(state.artist.birthDate),
-									imgRes = R.drawable.date,
-								)
+							state.artist.birthDate?.let{ birthDate ->
+								item {
+									InfoChip(
+										text = formatBirthDateLegacy(birthDate),
+										imgRes = R.drawable.date,
+									)
+								}
 							}
 							if (lastWord != null) {
 								item {
@@ -368,7 +370,7 @@ private fun ArtistScreenContent(
 					}
 
 					ArtistScreenState.ScreenStatus.SUCCESS -> {
-						if (state.knownForMovies.isNotEmpty() || state.KnownForSeries.isNotEmpty()) {
+						if (state.knownForMovies.isNotEmpty() || state.knownForSeries.isNotEmpty()) {
 							BasicText(
 								modifier = Modifier.padding(
 									start = 16.dp,
@@ -393,7 +395,7 @@ private fun ArtistScreenContent(
 										modifier = Modifier.clickable { listener.onMovieClick(movie.id) }
 									)
 								}
-								items(state.KnownForSeries) { series ->
+								items(state.knownForSeries) { series ->
 									MovieCard(
 										title = series.title,
 										vote = series.rating,
