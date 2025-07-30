@@ -6,7 +6,6 @@ daggerCompiler = "2.57"
 espressoCore = "3.6.1"
 hiltCompiler = "2.57"
 hiltCompilerVersion = "1.2.0"
-hiltLifecycleViewmodel = "1.0.0-alpha03"
 firebaseMlModelInterpreter = "22.0.4"
 firebaseMlVisionAutoml = "18.0.6"
 mockwebserver = "5.1.0"
@@ -15,7 +14,6 @@ retrofit = "3.0.0"
 lottieCompose = "6.6.7"
 roomTesting = "2.7.2"
 runner = "1.6.2"
-tensorflowLiteTaskVision = "0.4.4"
 junitKtx = "1.2.1"
 truth = "1.4.4"
 googleFirebasePerf = "2.0.0"
@@ -36,7 +34,6 @@ coilCompose = "2.7.0"
 lifecycleRuntimeKtx = "2.9.2"
 roomRuntime = "2.7.2"
 navigation = "2.9.2"
-tensorflowLite = "2.13.0"
 googleFirebaseCrashlytics = "3.0.5"
 coil = "3.3.0"
 junit = "4.13.2"
@@ -72,6 +69,7 @@ dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = 
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-perf = { module = "com.google.firebase:firebase-perf" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "daggerCompiler" }
+hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "daggerCompiler" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltCompiler" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitKtx" }
