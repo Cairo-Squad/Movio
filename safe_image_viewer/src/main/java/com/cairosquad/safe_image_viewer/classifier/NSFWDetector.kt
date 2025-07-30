@@ -50,7 +50,7 @@ object NSFWDetector {
 		callback: (isNSFW: Boolean) -> Unit
 	) {
 		// Early exit if not active
-		if (!isActive()) {
+		if (! isActive()) {
 			if (enableLog) Log.d(TAG, "Processing cancelled - not active")
 			return
 		}
@@ -68,20 +68,20 @@ object NSFWDetector {
 		}
 
 		// Check if still active before expensive operations
-		if (!isActive()) return
+		if (! isActive()) return
 
 		// Optimize bitmap for processing
 		val optimizedBitmap = optimizeBitmap(bitmap)
 
 		// Check again before Firebase call
-		if (!isActive()) return
+		if (! isActive()) return
 
 		val image = FirebaseVisionImage.fromBitmap(optimizedBitmap)
 
 		interpreter.processImage(image)
 			.addOnSuccessListener { labels ->
 				// Check if still active before processing
-				if (!isActive()) {
+				if (! isActive()) {
 					if (enableLog) Log.d(TAG, "Processing cancelled after Firebase success")
 					return@addOnSuccessListener
 				}
@@ -89,24 +89,25 @@ object NSFWDetector {
 				executorService.execute {
 					try {
 						// Final activity check before processing results
-						if (!isActive()) {
-							if (enableLog) Log.d(TAG, "Processing cancelled during label processing")
+						if (! isActive()) {
+							if (enableLog) Log.d(
+								TAG,
+								"Processing cancelled during label processing"
+							)
 							return@execute
 						}
 
 						val result = processLabels(labels, nudeThreshold, nonNudeThreshold, enableLog)
 
-						// Cache the result only if still active
-						if (isActive()) {
-							imageCache.put(cacheKey, result)
+						imageCache.put(cacheKey, result)
 
-							// Return result on main thread
-							Handler(Looper.getMainLooper()).post {
-								if (isActive()) {
-									callback(result)
-								}
+						// Return result on main thread
+						Handler(Looper.getMainLooper()).post {
+							if (isActive()) {
+								callback(result)
 							}
 						}
+
 					} catch (e: Exception) {
 						if (isActive()) {
 							Log.e(TAG, "Error processing labels: ${e.localizedMessage}")
@@ -151,6 +152,7 @@ object NSFWDetector {
 				LABEL_SFW -> {
 					maxNudeConfidence = maxOf(maxNudeConfidence, label.confidence)
 				}
+
 				LABEL_NSFW -> {
 					maxNonNudeConfidence = maxOf(maxNonNudeConfidence, label.confidence)
 				}
