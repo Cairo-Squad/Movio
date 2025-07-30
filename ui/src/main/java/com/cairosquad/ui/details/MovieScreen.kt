@@ -85,8 +85,11 @@ import com.cairosquad.viewmodel.details.movie.MovieViewModel
 @Composable
 fun MovieScreen(
     movieId: Long,
-    viewModel: MovieViewModel = hiltViewModel()
 ) {
+    val viewModel: MovieViewModel =
+        hiltViewModel<MovieViewModel, MovieViewModel.Factory> { factory ->
+            factory.create(movieId)
+        }
     val navController = LocalNavController.current
     val context = LocalContext.current
     val state by viewModel.screenState.collectAsState()

@@ -7,18 +7,24 @@ import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState.ScreenStatus
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import javax.inject.Inject
 
-@HiltViewModel
-class EpisodesDetailsViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = EpisodesDetailsViewModel.Factory::class)
+class EpisodesDetailsViewModel @AssistedInject constructor(
     private val manageSeriesUseCase: ManageSeriesUseCase,
+    @Assisted private val seriesId: Long,
+    @Assisted private var seasonNumber: Int = 0
 ) : BaseViewModel<EpisodesDetailsScreenState, EpisodesDetailEffect>(EpisodesDetailsScreenState()),
     EpisodesDetailsInteractionListener {
 
-    private val seriesId: Long = 0 // TODO: get from savedHandle
-    private var seasonNumber: Int = 0 // TODO: get from savedHandle
+    @AssistedFactory
+    interface Factory {
+        fun create(seriesId: Long, seasonNumber: Int): EpisodesDetailsViewModel
+    }
 
     init {
         getSeasons(seriesId)

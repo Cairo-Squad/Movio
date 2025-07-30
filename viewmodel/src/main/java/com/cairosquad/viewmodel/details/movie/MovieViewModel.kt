@@ -10,19 +10,26 @@ import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.movie.MovieScreenState.ScreenStatus
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import javax.inject.Inject
 
-@HiltViewModel
-class MovieViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = MovieViewModel.Factory::class)
+class MovieViewModel @AssistedInject constructor(
     private val movieUseCase: ManageMoviesUseCase,
     private val loginUseCase: LoginUseCase,
+    @Assisted private val movieId: Long = 0
 ) : BaseViewModel<MovieScreenState, MovieEffect>(MovieScreenState()),
     MovieInteractionListener {
 
-    private val movieId: Long = 0 // TODO: get from savedHandle
+    @AssistedFactory
+    interface Factory {
+        fun create(movieId: Long): MovieViewModel
+    }
 
     init {
         loadMovieData(movieId)

@@ -66,8 +66,11 @@ import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsViewModel
 fun EpisodesScreen(
     seriesId: Long,
     seasonNumber: Int,
-    viewModel: EpisodesDetailsViewModel = hiltViewModel()
 ) {
+    val viewModel: EpisodesDetailsViewModel =
+        hiltViewModel<EpisodesDetailsViewModel, EpisodesDetailsViewModel.Factory> { factory ->
+            factory.create(seriesId, seasonNumber)
+        }
     val navController = LocalNavController.current
     val context = LocalContext.current
     val uiState by viewModel.screenState.collectAsStateWithLifecycle()
