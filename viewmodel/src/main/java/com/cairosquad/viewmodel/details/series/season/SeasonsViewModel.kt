@@ -10,7 +10,6 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 
 @HiltViewModel(assistedFactory = SeasonsViewModel.Factory::class)
 class SeasonsViewModel @AssistedInject constructor(
