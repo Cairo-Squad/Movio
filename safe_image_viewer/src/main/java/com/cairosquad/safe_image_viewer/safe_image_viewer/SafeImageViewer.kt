@@ -149,7 +149,7 @@ fun SafeImageViewer(
 
 		try {
 			// Load bitmap with cancellation check
-			withContext(Dispatchers.IO) {
+			withContext(Dispatchers.Unconfined) {
 				if (!isActive) return@withContext
 				bitmap = CoilImageLoader(context).loadBitmap(model)
 			}

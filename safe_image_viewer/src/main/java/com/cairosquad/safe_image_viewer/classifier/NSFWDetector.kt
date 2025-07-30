@@ -43,10 +43,10 @@ object NSFWDetector {
 
 	fun isNSFWCancellable(
 		bitmap: Bitmap,
-		nudeThreshold: Double = 0.7,
-		nonNudeThreshold: Double = 0.7,
+		nudeThreshold: Double,
+		nonNudeThreshold: Double,
 		enableLog: Boolean = false,
-		isActive: () -> Boolean, // Function to check if processing should continue
+		isActive: () -> Boolean,
 		callback: (isNSFW: Boolean) -> Unit
 	) {
 		// Early exit if not active
