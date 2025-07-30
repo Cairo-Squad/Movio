@@ -1,6 +1,5 @@
 package com.cairosquad.viewmodel.search
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
@@ -86,7 +85,6 @@ class SearchViewModel(
     }
 
     override fun onQueryTextChanged(query: String) {
-        Log.d("asdasd", "onQueryTextChanged:  $query")
         if (query == screenState.value.query) return
         enterSearchMode(query)
         debounceSearchSuggestions(query)
