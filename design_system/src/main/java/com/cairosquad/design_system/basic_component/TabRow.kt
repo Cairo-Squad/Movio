@@ -126,7 +126,7 @@ fun TabRow(
                     .height(1.dp)
                     .width(indicatorWidth)
                     .align(Alignment.BottomStart)
-                    .background(brush = indicatorBrush) // 👈 نستخدم الفرشاة المخصصة هنا
+                    .background(brush = indicatorBrush)
             )
         }
     }
@@ -137,7 +137,7 @@ fun TabRow(
 private fun TabRowPreview() {
     MovioTheme(isDarkTheme = true) {
         val tabs = listOf("All", "Movies", "Series", "Categories")
-        var selectedTabIndex by remember { mutableIntStateOf(3) } // جرب "Categories" مباشرة
+        var selectedTabIndex by remember { mutableIntStateOf(3) } 
         Box(
             Modifier
                 .background(Theme.color.surfaces.surface)
