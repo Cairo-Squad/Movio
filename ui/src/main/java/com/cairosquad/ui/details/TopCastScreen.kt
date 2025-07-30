@@ -35,14 +35,23 @@ import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.ui.navigation.ArtistRoute
 import com.cairosquad.viewmodel.details.top_cast.TopCastScreenState
 import com.cairosquad.viewmodel.details.top_cast.TopCastViewModel
+import kotlinx.coroutines.Dispatchers
 
 @Composable
 fun TopCastScreen(
     mediaId: Long,
     isMovie: Boolean,
     navController: NavHostController,
-    viewmodel: TopCastViewModel = hiltViewModel()
 ) {
+    val viewmodel: TopCastViewModel =
+        hiltViewModel<TopCastViewModel, TopCastViewModel.Factory> { factory ->
+            factory.create(
+                mediaId = mediaId,
+                isMovie = isMovie,
+                dispatcher = Dispatchers.IO
+            )
+        }
+
     val state by viewmodel.screenState.collectAsState()
 
     TopCastContent(
