@@ -67,7 +67,7 @@ fun SeasonCard(
         } else {
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .size(width = 76.dp, height = 100.dp)
                     .clip(RoundedCornerShape(8.dp))
                     .background(Theme.color.system.defaultImageBackground),
                 contentAlignment = Alignment.Center

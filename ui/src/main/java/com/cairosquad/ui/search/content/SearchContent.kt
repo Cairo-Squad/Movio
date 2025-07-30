@@ -1,7 +1,6 @@
 package com.cairosquad.ui.search.content
 
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,7 +12,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -37,17 +35,8 @@ fun SearchContent(
 ) {
     val focusRequester = remember { FocusRequester() }
 
-    val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
-    DisposableEffect(backPressedDispatcher) {
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                listener.onBackClicked()
-            }
-        }
-        backPressedDispatcher?.addCallback(callback)
-        onDispose {
-            callback.remove()
-        }
+    BackHandler(enabled = true) {
+        listener.onBackClicked()
     }
 
     Column(modifier = modifier.fillMaxSize()) {
@@ -65,12 +54,12 @@ fun SearchContent(
             placeholder = stringResource(R.string.search_with_dotes_ahead),
             leadingIcon = R.drawable.search_bottom_nav,
             trailingIcon = R.drawable.ic_close,
-            onTrailingIconClick = { listener.onBackClicked() },
+            onTrailingIconClick = { listener.onCancelSearch() },
             keyboardActions = KeyboardActions(
                 onDone = { listener.onSearch() }
             )
         )
-        if (!state.recentSearch.isNullOrEmpty()){
+        if (state.recentSearch.isNotEmpty()) {
             SectionHeader(
                 title = stringResource(R.string.recent_search),
                 actionText = stringResource(R.string.clear_all),

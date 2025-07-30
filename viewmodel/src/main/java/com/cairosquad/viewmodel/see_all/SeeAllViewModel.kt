@@ -11,6 +11,7 @@ import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
+import com.cairosquad.viewmodel.see_all.SeeAllScreenState.GenreUiState.Companion.defaultGenre
 import com.cairosquad.viewmodel.util.MediaContentType
 import com.cairosquad.viewmodel.util.MediaType
 import kotlinx.coroutines.delay
@@ -263,11 +264,12 @@ class SeeAllViewModel(
     }
 
     private suspend fun loadGenresBlock(): List<SeeAllScreenState.GenreUiState> {
+
         return when (mediaType) {
             MediaType.MOVIES -> {
                 val movieGenres = manageMoviesUseCase.getMoviesGenres()
                 buildSet {
-                    add(SeeAllScreenState.GenreUiState.defaultGenre)
+                    add(defaultGenre)
                     movieGenres.mapTo(this) { it.toSeeAllGenreUiState() }
                 }.toList()
             }
@@ -275,7 +277,7 @@ class SeeAllViewModel(
             MediaType.SERIES -> {
                 val seriesGenres = manageSeriesUseCase.getSeriesGenres()
                 buildSet {
-                    add(SeeAllScreenState.GenreUiState.defaultGenre)
+                    add(defaultGenre)
                     seriesGenres.mapTo(this) { it.toSeeAllGenreUiState() }
                 }.toList()
             }

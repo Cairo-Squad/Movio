@@ -1,9 +1,11 @@
 package com.cairosquad.viewmodel.see_all
 
 import androidx.paging.PagingData
+import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import com.cairosquad.viewmodel.home.HomeScreenState.GenreUiState
 
 data class SeeAllScreenState(
     val mediaList: Flow<PagingData<MediaUiState>> = flowOf(PagingData.empty()),
@@ -29,7 +31,7 @@ data class SeeAllScreenState(
         companion object {
             val defaultGenre = GenreUiState(
                 id = null,
-                name = "All"
+                name ="",
             )
         }
     }

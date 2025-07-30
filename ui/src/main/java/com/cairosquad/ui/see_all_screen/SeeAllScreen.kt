@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -124,7 +126,13 @@ fun SeeAllScreen(
 
                 CategoriesChips(
                     modifier = Modifier.padding(top = 16.dp),
-                    categories = state.genres.map { it.name },
+                    categories =state.genres.map { genre ->
+                        if (genre.id == null) {
+                            stringResource(com.cairosquad.ui.R.string.all)
+                        } else {
+                            genre.name
+                        }
+                    },
                     selectedChipIndex = state.selectedGenreIndex,
                     onChipSelected = { index ->
                         viewModel.onGenreSelected(index)

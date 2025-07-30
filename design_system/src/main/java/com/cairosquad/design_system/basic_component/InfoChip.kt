@@ -39,7 +39,7 @@ fun InfoChip(
                 color = Theme.color.surfaces.onSurfaceAt3,
                 shape = CircleShape
             )
-            .padding(horizontal = 12.dp, vertical = 8.dp),
+            .padding(horizontal = 12.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
