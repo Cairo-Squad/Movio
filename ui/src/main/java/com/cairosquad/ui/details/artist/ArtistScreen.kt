@@ -1,5 +1,6 @@
 package com.cairosquad.ui.details.artist
 
+import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,6 +30,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
 import androidx.compose.ui.graphics.Color
@@ -118,80 +121,92 @@ private fun ArtistScreenContent(
     val scrollThresholdPx = with(density) { 250.dp.toPx() }
     val progress = (listScroll.value / scrollThresholdPx).coerceIn(0f, 1f)
 
-    val animatedStartColor =
-        lerp(Theme.color.surfaces.statusBarShadow, Theme.color.surfaces.surface, progress)
-    val animatedEndColor = lerp(Color.Transparent, Theme.color.surfaces.surface, progress)
-    val animatedBrush = verticalGradient(colors = listOf(animatedStartColor, animatedEndColor))
-    Box(modifier = modifier.fillMaxSize()) {
-        if (state.screenStatus == ArtistScreenState.ScreenStatus.FAILED) {
-            Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                StateMessage(
-                    imageDrawable = R.drawable.no_internet,
-                    titleId = R.string.no_internet_connection,
-                    descriptionId = R.string.internet_is_not_available_description
-                )
-            }
-        } else {
-            Column(
-                modifier = modifier
-                    .fillMaxSize()
-                    .windowInsetsPadding(WindowInsets.navigationBars)
-                    .verticalScroll(listScroll),
-                horizontalAlignment = Alignment.Start,
-            ) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(340.dp)
-                ) {
-                    if (state.artist.photoPath.isBlank()) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .height(335.dp)
-                                .offset(y = (-5).dp)
-                                .CustomBrush(0.5f, 16.dp),
-                        )
-                    } else {
-                        SafeImageViewer(
-                            model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
-                            contentDescription = "blured image",
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .height(335.dp)
-                                .offset(y = (-5).dp)
-                                .CustomBrush(0.5f, 16.dp),
-                            nudeThreshold = 0.0,
-                            nonNudeThreshold = 0.0
-                        )
-                    }
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(20.dp)
-                            .align(Alignment.BottomCenter)
-                            .background(
-                                brush = verticalGradient(
-                                    colors = listOf(
-                                        Theme.color.surfaces.surface.copy(alpha = 0f),
-                                        Theme.color.surfaces.surface.copy(alpha = .10f),
-                                        Theme.color.surfaces.surface.copy(alpha = .50f),
-                                        Theme.color.surfaces.surface.copy(alpha = .90f),
-                                        Theme.color.surfaces.surface,
-                                    )
-                                )
-                            )
-                    )
-                    when (state.screenStatus) {
-                        ArtistScreenState.ScreenStatus.LOADING -> {
-                            LoadingMovieImage(
-                                Modifier
-                                    .padding(top = 31.dp)
-                                    .clip(CircleShape)
-                                    .size(160.dp)
-                            )
-                        }
+	val animatedStartColor =
+		lerp(Theme.color.surfaces.statusBarShadow, Theme.color.surfaces.surface, progress)
+	val animatedEndColor = lerp(Color.Transparent, Theme.color.surfaces.surface, progress)
+	val animatedBrush = verticalGradient(colors = listOf(animatedStartColor, animatedEndColor))
+	Box(modifier = modifier.fillMaxSize()) {
+		if (state.screenStatus == ArtistScreenState.ScreenStatus.FAILED) {
+			Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+				StateMessage(
+					imageDrawable = R.drawable.no_internet,
+					titleId = R.string.no_internet_connection,
+					descriptionId = R.string.internet_is_not_available_description
+				)
+			}
+		}
+		else{
+			Column(
+				modifier = modifier
+					.fillMaxSize()
+					.windowInsetsPadding(WindowInsets.navigationBars)
+					.verticalScroll(listScroll),
+				horizontalAlignment = Alignment.Start,
+			) {
+				Box(
+					contentAlignment = Alignment.Center,
+					modifier = Modifier
+						.fillMaxWidth()
+						.height(340.dp)
+				) {
+					if (state.artist.photoPath.isBlank()) {
+						Box(
+							modifier = Modifier
+								.fillMaxSize()
+								.height(335.dp)
+								.offset(y = (-5).dp)
+								.CustomBrush(0.5f, 16.dp),
+						)
+					} else {
+						Box {
+							SafeImageViewer(
+								model = BuildConfig.IMAGE_BASE_URL + state.artist.photoPath,
+								contentDescription = "blured image",
+								modifier = Modifier
+									.fillMaxSize()
+									.height(335.dp)
+									.then(
+										if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+											Modifier.blur(16.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
+										} else {
+											Modifier
+										}
+									)
+									.offset(y = (-20).dp),
+								blur = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) 16 else 0,
+								isBlurForced = true
+							)
+							if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+								Box(
+									modifier = Modifier
+										.fillMaxWidth()
+										.height(40.dp)
+										.align(Alignment.BottomCenter)
+										.background(
+											brush = verticalGradient(
+												colors = listOf(
+													Theme.color.surfaces.surface.copy(alpha = 0.00f),
+													Theme.color.surfaces.surface.copy(alpha = 0.10f),
+													Theme.color.surfaces.surface.copy(alpha = 0.50f),
+													Theme.color.surfaces.surface.copy(alpha = 0.90f),
+													Theme.color.surfaces.surface,
+												)
+											)
+										)
+								)
+							}
+
+						}
+					}
+					when (state.screenStatus) {
+						ArtistScreenState.ScreenStatus.LOADING -> {
+							LoadingMovieImage(
+								Modifier
+									.padding(top = 31.dp)
+									.clip(CircleShape)
+									.size(160.dp)
+							)
+						}
 
                         ArtistScreenState.ScreenStatus.SUCCESS -> {
                             if (state.artist.photoPath.isNotEmpty()) {

@@ -1,6 +1,7 @@
 package com.cairosquad.ui.details
 
 import android.net.Uri
+import android.os.Build
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -30,9 +31,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -333,29 +336,45 @@ private fun SeriesScreenContent(
                     SeriesDetailsScreenState.SectionStatus.LOADING -> {}
                     SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
                         if (uiState.series.posterPath.isNotEmpty()) {
-                            SafeImageViewer(
-                                modifier = Modifier
-                                    .blur(16.dp)
-                                    .fillMaxWidth()
-                                    .height(400.dp)
-                                    .offset(y = (-28).dp),
-                                model = BuildConfig.IMAGE_BASE_URL + uiState.series.posterPath,
-                                contentDescription = "",
-                                blur = 0,
-                                nudeThreshold = 0.0,
-                                nonNudeThreshold = 0.0
-                            )
-                        } else {
-                            Box(
-                                modifier = Modifier
-                                    .blur(16.dp)
-                                    .fillMaxWidth()
-                                    .height(400.dp)
-                                    .offset(y = (-28).dp),
-                            )
+                            Box {
+                                SafeImageViewer(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(400.dp)
+                                        .then(
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                                Modifier.blur(16.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
+                                            } else {
+                                                Modifier
+                                            }
+                                        )
+                                        .offset(y = (-28).dp),
+                                    model = BuildConfig.IMAGE_BASE_URL + uiState.series.posterPath,
+                                    contentDescription = "",
+                                    blur = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) 16 else 0,
+                                    isBlurForced = true
+                                )
+                                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(60.dp)
+                                            .align(Alignment.BottomCenter)
+                                            .background(
+                                                brush = verticalGradient(
+                                                    colors = listOf(
+                                                        Theme.color.surfaces.surface.copy(alpha = 0.35f),
+                                                        Theme.color.surfaces.surface.copy(alpha = 0.50f),
+                                                        Theme.color.surfaces.surface.copy(alpha = 0.90f),
+                                                        Theme.color.surfaces.surface,
+                                                    )
+                                                )
+                                            )
+                                    )
+                                }
+                            }
                         }
                     }
-
                     SeriesDetailsScreenState.SectionStatus.ERROR -> {}
                 }
                 LazyColumn(
