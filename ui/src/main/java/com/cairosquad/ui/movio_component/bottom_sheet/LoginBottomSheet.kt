@@ -33,82 +33,84 @@ import com.cairosquad.design_system.theme.Theme
 
 @Composable
 fun LoginBottomSheet(
-    isVisible: Boolean,
-    onDismiss: () -> Unit,
-    onLoginClick: () -> Unit
+	isVisible: Boolean,
+	onDismiss: () -> Unit,
+	onLoginClick: () -> Unit
 ) {
-    BottomSheet(
-        isVisible = isVisible,
-        onDismiss = onDismiss,
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Image(
-                modifier = Modifier
-                    .size(width = 60.dp, height = 66.dp)
-                    .padding(16.dp),
-                imageVector = ImageVector.vectorResource(R.drawable.logo),
-                contentDescription = "Application Logo"
-            )
-            BasicText(
-                modifier = Modifier.padding(bottom = 8.dp),
-                text = stringResource(R.string.you_don_t_have_an_account),
-                style = Theme.textStyle.title.mediumMedium16.copy(
-                    color = Theme.color.surfaces.onSurface
-                )
-            )
-            BasicText(
-                modifier = Modifier.padding(bottom = 40.dp),
-                text = stringResource(R.string.you_don_t_have_an_account_description),
-                style = Theme.textStyle.label.smallRegular12.copy(
-                    color = Theme.color.surfaces.onSurfaceContainer
-                )
-            )
-            Button(
-                text = stringResource(R.string.login),
-                onClick = onLoginClick
-            )
-        }
-    }
+	BottomSheet(
+		isVisible = isVisible,
+		onDismiss = onDismiss,
+	) {
+		Column(
+			modifier = Modifier
+					.fillMaxWidth()
+					.padding(horizontal = 16.dp)
+					.padding(bottom = 32.dp),
+			horizontalAlignment = Alignment.CenterHorizontally,
+			verticalArrangement = Arrangement.spacedBy(16.dp)
+		) {
+			Image(
+				modifier = Modifier
+						.size(width = 60.dp, height = 66.dp)
+						.padding(16.dp),
+				imageVector = ImageVector.vectorResource(R.drawable.logo),
+				contentDescription = "Application Logo"
+			)
+			BasicText(
+				modifier = Modifier.padding(bottom = 8.dp),
+				text = stringResource(R.string.you_don_t_have_an_account),
+				style = Theme.textStyle.title.mediumMedium16.copy(
+					color = Theme.color.surfaces.onSurface,
+					textAlign = TextAlign.Center
+				)
+			)
+			BasicText(
+				modifier = Modifier.padding(bottom = 40.dp),
+				text = stringResource(R.string.you_don_t_have_an_account_description),
+				style = Theme.textStyle.label.smallRegular12.copy(
+					color = Theme.color.surfaces.onSurfaceContainer,
+					textAlign = TextAlign.Center
+				),
+			)
+			Button(
+				text = stringResource(R.string.login),
+				onClick = onLoginClick
+			)
+		}
+	}
 }
 
 @MultiThemePreviews
 @Composable
 private fun LoginBottomSheetPreview() {
-    var isVisible = remember { mutableStateOf(false) }
+	var isVisible = remember { mutableStateOf(false) }
 
-    MovioTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Theme.color.surfaces.surface),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "Show Bottom Sheet",
-                modifier = Modifier
-                    .background(Theme.color.brand.primary, CircleShape)
-                    .clip(CircleShape)
-                    .clickable { isVisible.value = true }
-                    .padding(12.dp),
-                style = Theme.textStyle.label.smallRegular12,
-                color = Theme.color.brand.onPrimary,
-                textAlign = TextAlign.Center
-            )
+	MovioTheme {
+		Box(
+			modifier = Modifier
+					.fillMaxSize()
+					.background(Theme.color.surfaces.surface),
+			contentAlignment = Alignment.Center
+		) {
+			Text(
+				text = "Show Bottom Sheet",
+				modifier = Modifier
+						.background(Theme.color.brand.primary, CircleShape)
+						.clip(CircleShape)
+						.clickable { isVisible.value = true }
+						.padding(12.dp),
+				style = Theme.textStyle.label.smallRegular12,
+				color = Theme.color.brand.onPrimary,
+				textAlign = TextAlign.Center
+			)
 
-            LoginBottomSheet(
-                isVisible = isVisible.value,
-                onDismiss = {
-                    isVisible.value = false
-                },
-                {},
-            )
-        }
-    }
+			LoginBottomSheet(
+				isVisible = isVisible.value,
+				onDismiss = {
+					isVisible.value = false
+				},
+				{},
+			)
+		}
+	}
 }

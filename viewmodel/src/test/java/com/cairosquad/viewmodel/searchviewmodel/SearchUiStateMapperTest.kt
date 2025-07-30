@@ -5,6 +5,7 @@ import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.search.SearchScreenState
 import com.cairosquad.viewmodel.search.toUiState
+import com.cairosquad.viewmodel.util.roundToFirstDecimalPlace
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
@@ -20,7 +21,7 @@ class SearchUiStateMapperTest {
             SearchScreenState.MovieUiState(
                 id = movie.id,
                 title = movie.title,
-                rating = movie.rating / 2,
+                rating = movie.rating.roundToFirstDecimalPlace(),
                 posterPath = movie.posterPath
             )
         )
@@ -51,7 +52,7 @@ class SearchUiStateMapperTest {
             SearchScreenState.SeriesUiState(
                 id = series.id,
                 title = series.title,
-                rating = series.rating / 2,
+                rating = series.rating.roundToFirstDecimalPlace(),
                 posterPath = series.posterPath
             )
         )

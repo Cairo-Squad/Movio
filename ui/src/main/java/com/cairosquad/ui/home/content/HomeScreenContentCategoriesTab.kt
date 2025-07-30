@@ -76,7 +76,7 @@ fun HomeScreenContentCategoriesTab(
                 columns = GridCells.Adaptive(minSize = 101.33.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(bottom = 16.dp),
+                contentPadding = PaddingValues(bottom = 12.dp),
                 userScrollEnabled = false
             ) {
                 items(screenState.categoriesMedia) { moreRecommended ->

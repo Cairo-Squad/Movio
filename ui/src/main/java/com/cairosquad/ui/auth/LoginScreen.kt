@@ -7,13 +7,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -45,6 +45,7 @@ import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.LoginRoute
 import com.cairosquad.ui.navigation.SignUpWebViewRoute
 import com.cairosquad.ui.utils.ObserveAsEffect
+import com.cairosquad.ui.utils.errorStatusToMessageResource
 import com.cairosquad.ui.utils.validationErrorToStringResource
 import com.cairosquad.viewmodel.login.LoginEffect
 import com.cairosquad.viewmodel.login.LoginInteractionListener
@@ -141,18 +142,17 @@ private fun LoginScreenContent(
             modifier = Modifier.padding(bottom = 12.dp)
         )
 
-        val passwordError = uiState.errors[LoginScreenState.FormField.PASSWORD]
+        val passwordError = uiState.errors[LoginScreenState.FormField.PASSWORD]?.let {
+            validationErrorToStringResource(it, LoginScreenState.FormField.PASSWORD)
+        } ?: uiState.error?.let {
+            errorStatusToMessageResource(it)
+        }
 
         InputField(
             value = uiState.password,
             onValueChange = { interactionListener.onPasswordChange(it) },
             placeholder = stringResource(R.string.password),
-            error = if (passwordError != null) stringResource(
-                validationErrorToStringResource(
-                    passwordError,
-                    LoginScreenState.FormField.PASSWORD
-                )
-            ) else "",
+            error = if (passwordError != null) stringResource(passwordError) else "",
             isErrorMessageShown = false,
             isPasswordField = !uiState.isPasswordVisible,
             leadingIcon = R.drawable.lock,
@@ -175,7 +175,7 @@ private fun LoginScreenContent(
                 modifier = Modifier.weight(1f)
             ) {
                 AnimatedVisibility(
-                    visible = uiState.errors[LoginScreenState.FormField.PASSWORD] != null,
+                    visible = passwordError != null,
                 ) {
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -187,14 +187,9 @@ private fun LoginScreenContent(
                             tint = Theme.color.system.errorContainer,
                             modifier = Modifier.size(16.dp)
                         )
-                        uiState.errors[LoginScreenState.FormField.PASSWORD]?.let { error ->
+                        passwordError?.let { error ->
                             Text(
-                                text = stringResource(
-                                    validationErrorToStringResource(
-                                        error,
-                                        LoginScreenState.FormField.PASSWORD
-                                    )
-                                ),
+                                text = stringResource(error),
                                 style = Theme.textStyle.label.smallRegular12,
                                 color = Theme.color.system.errorContainer,
                                 overflow = TextOverflow.Ellipsis,
@@ -208,7 +203,6 @@ private fun LoginScreenContent(
             Text(
                 text = stringResource(R.string.forgot_password),
                 modifier = Modifier
-                    .width(120.dp)
                     .clickable { interactionListener.onForgetPasswordClick() },
                 style = Theme.textStyle.label.mediumMedium12,
                 color = Theme.color.surfaces.onSurfaceVariant,
@@ -255,10 +249,10 @@ private fun LoginScreenContent(
             containerColor = Theme.color.surfaces.surface,
             borderColor = Theme.color.surfaces.onSurfaceAt3
         )
+        Spacer(modifier = Modifier.weight(1f))
         Row(
             modifier = Modifier
                 .wrapContentWidth()
-                .weight(1f)
                 .padding(bottom = 32.dp),
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.spacedBy(4.dp)

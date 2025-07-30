@@ -51,12 +51,14 @@ object ShareUtil {
         val deepLinkUri = "vnd.youtube:$videoId".toUri()
         val webUri = "https://www.youtube.com/watch?v=$videoId".toUri()
 
-        openUrlInAppOrBrowser(
-            appPackage = "com.google.android.youtube",
-            deepLinkUri = deepLinkUri,
-            webUri = webUri,
-            context = context
-        )
+        if (videoId.isNotBlank()) {
+            openUrlInAppOrBrowser(
+                appPackage = "com.google.android.youtube",
+                deepLinkUri = deepLinkUri,
+                webUri = webUri,
+                context = context
+            )
+        }
     }
 
     private fun openUrlInAppOrBrowser(

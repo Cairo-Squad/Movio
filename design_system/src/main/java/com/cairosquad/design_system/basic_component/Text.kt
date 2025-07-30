@@ -18,6 +18,7 @@ fun Text(
     maxLines: Int = Int.MAX_VALUE,
     minLines: Int = 1,
     overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
     textAlign: TextAlign? = null,
 
 ) {
@@ -29,6 +30,7 @@ fun Text(
         maxLines = maxLines,
         minLines = minLines,
         overflow = overflow,
+        softWrap =softWrap ,
         textAlign = textAlign
     )
 }

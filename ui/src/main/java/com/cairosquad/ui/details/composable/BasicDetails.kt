@@ -15,6 +15,7 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.InfoChip
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.ActionBar
+import java.util.Locale
 
 @Composable
 fun BasicDetails(
@@ -55,7 +56,7 @@ fun BasicDetails(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             InfoChip(
-                text = rating.toString(),
+                text = String.format(Locale.getDefault(), "%.1f", rating),
                 imgRes = R.drawable.review_star,
             )
             if (seasonsCount != null) {

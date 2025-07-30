@@ -15,4 +15,5 @@ sealed interface MovieEffect {
     data class NavigateToAllReviews(val movieId: Long) : MovieEffect
 
     data class ErrorHappened(val message: ErrorStatus) : MovieEffect
+    data object NavigateToLogin : MovieEffect
 }

@@ -53,6 +53,7 @@ import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import com.cairosquad.ui.BuildConfig
 import com.cairosquad.ui.movio_component.LoadingMovieImage
+import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.ui.utils.errorStatusToMessageResource
@@ -98,8 +99,10 @@ fun EpisodesScreen(
 private fun EpisodesScreenContent(
     uiState: EpisodesDetailsScreenState,
     listener: EpisodesDetailsInteractionListener,
-    seriesId: Long
-) {
+    seriesId: Long,
+    modifier: Modifier = Modifier,
+
+    ) {
     val seasonOptions = uiState.seasons.map { "Season ${it.seasonNumber}" }
 
     val listState = rememberScrollState()
@@ -120,138 +123,181 @@ private fun EpisodesScreenContent(
     val animatedBrush = Brush.verticalGradient(
         colors = listOf(animatedStartColor, animatedEndColor)
     )
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Theme.color.surfaces.surface)
-            .windowInsetsPadding(WindowInsets.navigationBars)
-            .verticalScroll(listState)
-    ) {
-        Box {
-            when (uiState.basicDetailsSectionState) {
-                EpisodesDetailsScreenState.ScreenStatus.LOADING -> {}
-                EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
-                    if (uiState.season.posterUrl.isNotEmpty()) {
-                        SafeImageViewer(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(400.dp)
-                                .blur(16.dp)
-                                .offset(y = (-20).dp),
-                            model = BuildConfig.IMAGE_BASE_URL + uiState.season.posterUrl,
-                            contentDescription = "",
-                        )
-                    }
-                }
-
-                EpisodesDetailsScreenState.ScreenStatus.ERROR -> {}
+    when (uiState.episodesSectionState) {
+        EpisodesDetailsScreenState.ScreenStatus.ERROR -> {
+            Box(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                StateMessage(
+                    imageDrawable = R.drawable.no_internet,
+                    titleId = R.string.no_internet_connection,
+                    descriptionId = R.string.internet_is_not_available_description
+                )
             }
         }
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .windowInsetsPadding(WindowInsets.systemBars)
-                .heightIn(max = 10000.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            userScrollEnabled = false,
+    else->{
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .background(Theme.color.surfaces.surface)
+                .windowInsetsPadding(WindowInsets.navigationBars)
+                .verticalScroll(listState)
         ) {
-            item {
+            Box {
                 when (uiState.basicDetailsSectionState) {
-                    EpisodesDetailsScreenState.ScreenStatus.LOADING -> {
-                        LoadingMovieImage(
-                            Modifier
-                                .padding(top = 56.dp, bottom = 24.dp)
-                                .size(height = 260.dp, width = 200.dp)
-                        )
-                    }
-
+                    EpisodesDetailsScreenState.ScreenStatus.LOADING -> {}
                     EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
                         if (uiState.season.posterUrl.isNotEmpty()) {
                             SafeImageViewer(
                                 modifier = Modifier
-                                    .padding(top = 56.dp, bottom = 24.dp)
-                                    .size(height = 260.dp, width = 200.dp)
-                                    .clip(RoundedCornerShape(8.dp)),
+                                    .fillMaxWidth()
+                                    .height(400.dp)
+                                    .blur(16.dp)
+                                    .offset(y = (-20).dp),
                                 model = BuildConfig.IMAGE_BASE_URL + uiState.season.posterUrl,
                                 contentDescription = "",
-                                loadingPlaceholder = {
-                                    LoadingMovieImage(
-                                        Modifier.size(height = 260.dp, width = 200.dp)
-                                    )
-                                }
                             )
-                        } else {
-                            Box(
-                                modifier = Modifier
-                                    .padding(top = 56.dp, bottom = 24.dp)
-                                    .size(height = 260.dp, width = 200.dp)
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(Theme.color.system.defaultImageBackground),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    modifier = Modifier.size(24.dp),
-                                    imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
-                                    contentDescription = stringResource(R.string.default_image_icon),
-                                    tint = Color(0xFFEFF1F5)
-                                )
-                            }
                         }
                     }
 
                     EpisodesDetailsScreenState.ScreenStatus.ERROR -> {}
                 }
             }
-            item {
-                when (uiState.basicDetailsSectionState) {
-                    EpisodesDetailsScreenState.ScreenStatus.LOADING -> {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .windowInsetsPadding(WindowInsets.systemBars)
+                    .heightIn(max = 10000.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                userScrollEnabled = false,
+            ) {
+                item {
+                    when (uiState.basicDetailsSectionState) {
+                        EpisodesDetailsScreenState.ScreenStatus.LOADING -> {
                             LoadingMovieImage(
-                                modifier = Modifier
-                                    .clip(CircleShape)
-                                    .size(height = 26.dp, width = 32.dp)
+                                Modifier
+                                    .padding(top = 56.dp, bottom = 24.dp)
+                                    .size(height = 260.dp, width = 200.dp)
                             )
-                            Spacer(modifier = Modifier.weight(1f))
+                        }
+
+                        EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
+                            if (uiState.season.posterUrl.isNotEmpty()) {
+                                SafeImageViewer(
+                                    modifier = Modifier
+                                        .padding(top = 56.dp, bottom = 24.dp)
+                                        .size(height = 260.dp, width = 200.dp)
+                                        .clip(RoundedCornerShape(8.dp)),
+                                    model = BuildConfig.IMAGE_BASE_URL + uiState.season.posterUrl,
+                                    contentDescription = "",
+                                    loadingPlaceholder = {
+                                        LoadingMovieImage(
+                                            Modifier.size(height = 260.dp, width = 200.dp)
+                                        )
+                                    }
+                                )
+                            } else {
+                                Box(
+                                    modifier = Modifier
+                                        .padding(top = 56.dp, bottom = 24.dp)
+                                        .size(height = 260.dp, width = 200.dp)
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .background(Theme.color.system.defaultImageBackground),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        modifier = Modifier.size(24.dp),
+                                        imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
+                                        contentDescription = stringResource(R.string.default_image_icon),
+                                        tint = Color(0xFFEFF1F5)
+                                    )
+                                }
+                            }
+                        }
+
+                        EpisodesDetailsScreenState.ScreenStatus.ERROR -> {}
+                    }
+                }
+                item {
+                    when (uiState.basicDetailsSectionState) {
+                        EpisodesDetailsScreenState.ScreenStatus.LOADING -> {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 16.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                LoadingMovieImage(
+                                    modifier = Modifier
+                                        .clip(CircleShape)
+                                        .size(height = 26.dp, width = 32.dp)
+                                )
+                                Spacer(modifier = Modifier.weight(1f))
+                                LoadingMovieImage(
+                                    modifier = Modifier
+                                        .clip(CircleShape)
+                                        .size(height = 26.dp, width = 96.dp)
+                                )
+                            }
+                        }
+
+                        EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 16.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                BasicText(
+                                    modifier = Modifier.padding(bottom = 8.dp),
+                                    text = stringResource(
+                                        com.cairosquad.ui.R.string.episodes,
+                                        uiState.season.episodesCount
+                                    ),
+                                    style = Theme.textStyle.headline.mediumMedium18.copy(
+                                        color = Theme.color.surfaces.onSurface
+                                    )
+                                )
+                                Spacer(modifier = Modifier.weight(1f))
+                                AppDropDownMenu(
+                                    selectedText = "Season ${uiState.selectedSeasonNumber}",
+                                    options = seasonOptions,
+                                    imgRes = R.drawable.drop_down_arrow,
+                                    onOptionSelected = { selected ->
+                                        val seasonNum =
+                                            selected.removePrefix("Season ").toIntOrNull() ?: 1
+                                        listener.onSeasonSelected(seriesId, seasonNum)
+                                    },
+                                )
+                            }
+                        }
+
+                        EpisodesDetailsScreenState.ScreenStatus.ERROR -> {}
+                    }
+                }
+                when (uiState.episodesSectionState) {
+                    EpisodesDetailsScreenState.ScreenStatus.LOADING -> {
+                        items(10) {
                             LoadingMovieImage(
                                 modifier = Modifier
-                                    .clip(CircleShape)
-                                    .size(height = 26.dp, width = 96.dp)
+                                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                                    .height(74.dp)
+                                    .fillMaxSize(),
                             )
                         }
                     }
 
                     EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            BasicText(
-                                modifier = Modifier.padding(bottom = 8.dp),
-                                text = stringResource(
-                                    com.cairosquad.ui.R.string.episodes,
-                                    uiState.season.episodesCount
-                                ),
-                                style = Theme.textStyle.headline.mediumMedium18.copy(
-                                    color = Theme.color.surfaces.onSurface
-                                )
-                            )
-                            Spacer(modifier = Modifier.weight(1f))
-                            AppDropDownMenu(
-                                selectedText = "Season ${uiState.selectedSeasonNumber}",
-                                options = seasonOptions,
-                                imgRes = R.drawable.drop_down_arrow,
-                                onOptionSelected = { selected ->
-                                    val seasonNum =
-                                        selected.removePrefix("Season ").toIntOrNull() ?: 1
-                                    listener.onSeasonSelected(seriesId, seasonNum)
-                                },
+                        items(uiState.episodes) { episode ->
+                            EpisodeCard(
+                                episodeNumber = episode.number.toString().padStart(2, '0'),
+                                episodeImageUrl = BuildConfig.IMAGE_BASE_URL + episode.imageUrl,
+                                episodeName = episode.name,
+                                episodeDuration = episode.runtime,
+                                episodeRating = String.format("%.1f", episode.rating),
                             )
                         }
                     }
@@ -259,33 +305,7 @@ private fun EpisodesScreenContent(
                     EpisodesDetailsScreenState.ScreenStatus.ERROR -> {}
                 }
             }
-            when (uiState.episodesSectionState) {
-                EpisodesDetailsScreenState.ScreenStatus.LOADING -> {
-                    items(10) {
-                        LoadingMovieImage(
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp, vertical = 12.dp)
-                                .height(74.dp)
-                                .fillMaxSize(),
-                        )
-                    }
-                }
-
-                EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
-                    items(uiState.episodes) { episode ->
-                        EpisodeCard(
-                            episodeNumber = episode.number.toString().padStart(2, '0'),
-                            episodeImageUrl = BuildConfig.IMAGE_BASE_URL + episode.imageUrl,
-                            episodeName = episode.name,
-                            episodeDuration = episode.runtime,
-                            episodeRating = String.format("%.1f", episode.rating),
-                        )
-                    }
-                }
-
-                EpisodesDetailsScreenState.ScreenStatus.ERROR -> {}
-            }
-        }
+        }}
     }
     AppBar(
         modifier = Modifier

@@ -101,7 +101,13 @@ fun SeeAllScreen(
 
             CategoriesChips(
                 modifier = Modifier.padding(top = 16.dp),
-                categories = state.genres.map { it.name },
+                categories = state.genres.map { genre ->
+                    if (genre.id==null) {
+                        stringResource(com.cairosquad.ui.R.string.all)
+                    } else {
+                        genre.name
+                    }
+                },
                 selectedChipIndex = state.selectedGenreIndex,
                 onChipSelected = { index ->
                     viewModel.onGenreSelected(index)
@@ -134,6 +140,19 @@ private fun SeeAllMediaItems(
     modifier: Modifier = Modifier
 ) {
     when {
+
+        state.screenStatus == SeeAllScreenState.ScreenStatus.FAILED -> {
+            AnimatedVisibility(visible = true, enter = fadeIn(), exit = fadeOut()) {
+                Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    StateMessage(
+                        imageDrawable = R.drawable.no_internet,
+                        titleId = R.string.no_internet_connection,
+                        descriptionId = R.string.internet_is_not_available_description
+                    )
+                }
+            }
+        }
+
         state.isLoading -> {
             SeeAllLoadingScreen(modifier)
         }
@@ -184,6 +203,19 @@ private fun TrendingContentList(
     modifier: Modifier = Modifier
 ) {
     when {
+
+        state.screenStatus == SeeAllScreenState.ScreenStatus.FAILED -> {
+            AnimatedVisibility(visible = true, enter = fadeIn(), exit = fadeOut()) {
+                Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    StateMessage(
+                        imageDrawable = R.drawable.no_internet,
+                        titleId = R.string.no_internet_connection,
+                        descriptionId = R.string.internet_is_not_available_description
+                    )
+                }
+            }
+        }
+
         state.isLoading -> {
             SeeAllLoadingScreen(modifier)
         }
