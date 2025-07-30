@@ -62,6 +62,7 @@ import com.cairosquad.ui.movio_component.LoadingArtistCard
 import com.cairosquad.ui.movio_component.LoadingMovieCard
 import com.cairosquad.ui.movio_component.LoadingMovieImage
 import com.cairosquad.ui.movio_component.LoadingReviewCard
+import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.ui.movio_component.bottom_sheet.CreateListBottomSheet
 import com.cairosquad.ui.movio_component.bottom_sheet.ListBottomSheet
 import com.cairosquad.ui.movio_component.bottom_sheet.LoginBottomSheet
@@ -301,271 +302,304 @@ private fun SeriesScreenContent(
     val animatedBrush = Brush.verticalGradient(
         colors = listOf(animatedStartColor, animatedEndColor)
     )
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Theme.color.surfaces.surface)
-            .windowInsetsPadding(WindowInsets.navigationBars)
-            .verticalScroll(listState)
-    ) {
-        when (uiState.basicDetailsSectionState) {
-            SeriesDetailsScreenState.SectionStatus.LOADING -> {}
-            SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
-                if (uiState.series.posterPath.isNotEmpty()) {
-                    SafeImageViewer(
-                        modifier = Modifier
-                            .blur(16.dp)
-                            .fillMaxWidth()
-                            .height(400.dp)
-                            .offset(y = (-28).dp),
-                        model = BuildConfig.IMAGE_BASE_URL + uiState.series.posterPath,
-                        contentDescription = "",
-                        blur = 0,
-                        nudeThreshold = 0.0,
-                        nonNudeThreshold = 0.0
-                    )
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .blur(16.dp)
-                            .fillMaxWidth()
-                            .height(400.dp)
-                            .offset(y = (-28).dp),
-                    )
-                }
-            }
 
-            SeriesDetailsScreenState.SectionStatus.ERROR -> {}
+    when (uiState.basicDetailsSectionState) {
+        SeriesDetailsScreenState.SectionStatus.ERROR -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                StateMessage(
+                    imageDrawable = R.drawable.no_internet,
+                    titleId = R.string.no_internet_connection,
+                    descriptionId = R.string.internet_is_not_available_description
+                )
+            }
         }
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .windowInsetsPadding(WindowInsets.statusBars)
-                .heightIn(max = 10000.dp),
-            horizontalAlignment = Alignment.Start,
-            userScrollEnabled = false
-        ) {
-            item {
+
+        else -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Theme.color.surfaces.surface)
+                    .windowInsetsPadding(WindowInsets.navigationBars)
+                    .verticalScroll(listState)
+            ) {
                 when (uiState.basicDetailsSectionState) {
-                    SeriesDetailsScreenState.SectionStatus.LOADING -> {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 56.dp, bottom = 24.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            LoadingMovieImage(
-                                modifier = Modifier.size(height = 260.dp, width = 200.dp)
+                    SeriesDetailsScreenState.SectionStatus.LOADING -> {}
+                    SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
+                        if (uiState.series.posterPath.isNotEmpty()) {
+                            SafeImageViewer(
+                                modifier = Modifier
+                                    .blur(16.dp)
+                                    .fillMaxWidth()
+                                    .height(400.dp)
+                                    .offset(y = (-28).dp),
+                                model = BuildConfig.IMAGE_BASE_URL + uiState.series.posterPath,
+                                contentDescription = "",
+                                blur = 0,
+                                nudeThreshold = 0.0,
+                                nonNudeThreshold = 0.0
+                            )
+                        } else {
+                            Box(
+                                modifier = Modifier
+                                    .blur(16.dp)
+                                    .fillMaxWidth()
+                                    .height(400.dp)
+                                    .offset(y = (-28).dp),
                             )
                         }
                     }
 
-                    SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 56.dp, bottom = 24.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            if (uiState.series.posterPath.isNotEmpty())
-                                SafeImageViewer(
+                    SeriesDetailsScreenState.SectionStatus.ERROR -> {}
+                }
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .windowInsetsPadding(WindowInsets.statusBars)
+                        .heightIn(max = 10000.dp),
+                    horizontalAlignment = Alignment.Start,
+                    userScrollEnabled = false
+                ) {
+                    item {
+                        when (uiState.basicDetailsSectionState) {
+                            SeriesDetailsScreenState.SectionStatus.LOADING -> {
+                                Column(
                                     modifier = Modifier
-                                        .size(height = 260.dp, width = 200.dp)
-                                        .clip(RoundedCornerShape(8.dp)),
-                                    model = BuildConfig.IMAGE_BASE_URL + uiState.series.posterPath,
-                                    contentDescription = "",
-                                    loadingPlaceholder = {
+                                        .fillMaxWidth()
+                                        .padding(top = 56.dp, bottom = 24.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    LoadingMovieImage(
+                                        modifier = Modifier.size(height = 260.dp, width = 200.dp)
+                                    )
+                                }
+                            }
+
+                            SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 56.dp, bottom = 24.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    if (uiState.series.posterPath.isNotEmpty())
+                                        SafeImageViewer(
+                                            modifier = Modifier
+                                                .size(height = 260.dp, width = 200.dp)
+                                                .clip(RoundedCornerShape(8.dp)),
+                                            model = BuildConfig.IMAGE_BASE_URL + uiState.series.posterPath,
+                                            contentDescription = "",
+                                            loadingPlaceholder = {
+                                                LoadingMovieImage(
+                                                    modifier = Modifier.size(
+                                                        height = 260.dp,
+                                                        width = 200.dp
+                                                    )
+                                                )
+                                            }
+                                        )
+                                    else
+                                        Box(
+                                            modifier = Modifier
+                                                .size(height = 260.dp, width = 200.dp)
+                                                .clip(RoundedCornerShape(8.dp))
+                                                .background(Theme.color.system.defaultImageBackground),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Icon(
+                                                modifier = Modifier.size(24.dp),
+                                                imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
+                                                contentDescription = stringResource(R.string.default_image_icon),
+                                                tint = Color(0xFFEFF1F5)
+                                            )
+                                        }
+                                }
+                            }
+
+                            SeriesDetailsScreenState.SectionStatus.ERROR -> {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(horizontal = 16.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    StateMessage(
+                                        imageDrawable = R.drawable.no_internet,
+                                        titleId = R.string.no_internet_connection,
+                                        descriptionId = R.string.internet_is_not_available_description
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    item {
+                        when (uiState.basicDetailsSectionState) {
+                            SeriesDetailsScreenState.SectionStatus.LOADING -> {
+                                BasicDetailsLoading()
+                            }
+
+                            SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
+                                BasicDetails(
+                                    title = uiState.series.title,
+                                    genres = uiState.series.genres,
+                                    rating = uiState.series.rating,
+                                    releaseDate = uiState.series.releaseDate,
+                                    seasonsCount = uiState.series.seasonsCount,
+                                    onRateClicked = listener::onRateClicked,
+                                    onPlayTrailerClicked = listener::onPlayTrailerClicked,
+                                    onAddToListClicked = listener::onAddToListClicked
+                                )
+                            }
+
+                            SeriesDetailsScreenState.SectionStatus.ERROR -> {}
+                        }
+                    }
+                    item {
+                        when (uiState.basicDetailsSectionState) {
+                            SeriesDetailsScreenState.SectionStatus.LOADING -> {
+                                LoadingMovieImage(
+                                    modifier = Modifier
+                                        .padding(horizontal = 16.dp)
+                                        .fillMaxWidth()
+                                        .height(height = 200.dp)
+                                        .padding(bottom = 32.dp)
+                                )
+                            }
+
+                            SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
+                                if (uiState.series.overview.isNotEmpty()) {
+                                    ExpandableText(
+                                        modifier = Modifier
+                                            .padding(horizontal = 16.dp)
+                                            .padding(top = 16.dp),
+                                        text = uiState.series.overview,
+                                        showMoreText = stringResource(R.string.read_more_with_dots_behind),
+                                        showLessText = stringResource(R.string.read_less_with_dots_behind),
+                                        color = Theme.color.surfaces.onSurface,
+                                        style = Theme.textStyle.label.smallRegular14,
+                                        showMoreStyle = Theme.textStyle.label.smallRegular14,
+                                        showMoreColor = Theme.color.surfaces.onSurfaceVariant,
+                                        showLessColor = Theme.color.surfaces.onSurfaceVariant,
+                                    )
+                                }
+                            }
+
+                            SeriesDetailsScreenState.SectionStatus.ERROR -> {}
+                        }
+                    }
+                    item {
+                        when (uiState.castSectionState) {
+                            SeriesDetailsScreenState.SectionStatus.LOADING -> {
+                                SectionLoading(
+                                    headerName = stringResource(R.string.top_cast),
+                                    sectionLoadingItem = {
+                                        LoadingArtistCard()
+                                    }
+                                )
+                            }
+
+                            SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
+                                if (uiState.cast.isNotEmpty()) {
+                                    SeriesTopCastSection(
+                                        onActionClicked = { listener.onSeeAllArtistsClicked(uiState.series.id) },
+                                        onArtistClicked = listener::onArtistClicked,
+                                        cast = uiState.cast
+                                    )
+                                }
+                            }
+
+                            SeriesDetailsScreenState.SectionStatus.ERROR -> {}
+                        }
+                    }
+                    item {
+                        when (uiState.seasonsSectionState) {
+                            SeriesDetailsScreenState.SectionStatus.LOADING -> {
+                                SectionLoading(
+                                    headerName = stringResource(R.string.current_seasons),
+                                    sectionLoadingItem = {
                                         LoadingMovieImage(
                                             modifier = Modifier.size(
-                                                height = 260.dp,
-                                                width = 200.dp
+                                                width = 260.dp,
+                                                height = 137.dp
                                             )
                                         )
                                     }
                                 )
-                            else
-                                Box(
-                                    modifier = Modifier
-                                        .size(height = 260.dp, width = 200.dp)
-                                        .clip(RoundedCornerShape(8.dp))
-                                        .background(Theme.color.system.defaultImageBackground),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Icon(
-                                        modifier = Modifier.size(24.dp),
-                                        imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
-                                        contentDescription = stringResource(R.string.default_image_icon),
-                                        tint = Color(0xFFEFF1F5)
+                            }
+
+                            SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
+                                if (uiState.seasons.isNotEmpty()) {
+                                    SeasonSection(
+                                        seriesName = uiState.series.title,
+                                        seriesId = uiState.series.id,
+                                        seasons = uiState.seasons,
+                                        onActionClicked = { listener.onSeeAllSeasonsClicked(seriesId = uiState.series.id) },
+                                        onSeasonClicked = listener::onSeasonClicked
                                     )
                                 }
-                        }
-                    }
-
-                    SeriesDetailsScreenState.SectionStatus.ERROR -> {}
-                }
-            }
-            item {
-                when (uiState.basicDetailsSectionState) {
-                    SeriesDetailsScreenState.SectionStatus.LOADING -> {
-                        BasicDetailsLoading()
-                    }
-
-                    SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
-                        BasicDetails(
-                            title = uiState.series.title,
-                            genres = uiState.series.genres,
-                            rating = uiState.series.rating,
-                            releaseDate = uiState.series.releaseDate,
-                            seasonsCount = uiState.series.seasonsCount,
-                            onRateClicked = listener::onRateClicked,
-                            onPlayTrailerClicked = listener::onPlayTrailerClicked,
-                            onAddToListClicked = listener::onAddToListClicked
-                        )
-                    }
-
-                    SeriesDetailsScreenState.SectionStatus.ERROR -> {}
-                }
-            }
-            item {
-                when (uiState.basicDetailsSectionState) {
-                    SeriesDetailsScreenState.SectionStatus.LOADING -> {
-                        LoadingMovieImage(
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp)
-                                .fillMaxWidth()
-                                .height(height = 200.dp)
-                                .padding(bottom = 32.dp)
-                        )
-                    }
-
-                    SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
-                        if (uiState.series.overview.isNotEmpty()) {
-                            ExpandableText(
-                                modifier = Modifier
-                                    .padding(horizontal = 16.dp)
-                                    .padding(top = 16.dp),
-                                text = uiState.series.overview,
-                                showMoreText = stringResource(R.string.read_more_with_dots_behind),
-                                showLessText = stringResource(R.string.read_less_with_dots_behind),
-                                color = Theme.color.surfaces.onSurface,
-                                style = Theme.textStyle.label.smallRegular14,
-                                showMoreStyle = Theme.textStyle.label.smallRegular14,
-                                showMoreColor = Theme.color.surfaces.onSurfaceVariant,
-                                showLessColor = Theme.color.surfaces.onSurfaceVariant,
-                            )
-                        }
-                    }
-
-                    SeriesDetailsScreenState.SectionStatus.ERROR -> {}
-                }
-            }
-            item {
-                when (uiState.castSectionState) {
-                    SeriesDetailsScreenState.SectionStatus.LOADING -> {
-                        SectionLoading(
-                            headerName = stringResource(R.string.top_cast),
-                            sectionLoadingItem = {
-                                LoadingArtistCard()
                             }
-                        )
-                    }
 
-                    SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
-                        if (uiState.cast.isNotEmpty()) {
-                            SeriesTopCastSection(
-                                onActionClicked = { listener.onSeeAllArtistsClicked(uiState.series.id) },
-                                onArtistClicked = listener::onArtistClicked,
-                                cast = uiState.cast
-                            )
+                            SeriesDetailsScreenState.SectionStatus.ERROR -> {}
                         }
                     }
+                    item {
+                        when (uiState.reviewsSectionState) {
+                            SeriesDetailsScreenState.SectionStatus.LOADING -> {
+                                SectionLoading(
+                                    headerName = stringResource(R.string.reviews),
+                                    sectionLoadingItem = {
+                                        LoadingReviewCard(
+                                            modifier = Modifier.size(
+                                                width = 260.dp,
+                                                height = 137.dp
+                                            )
+                                        )
+                                    }
+                                )
+                            }
 
-                    SeriesDetailsScreenState.SectionStatus.ERROR -> {}
-                }
-            }
-            item {
-                when (uiState.seasonsSectionState) {
-                    SeriesDetailsScreenState.SectionStatus.LOADING -> {
-                        SectionLoading(
-                            headerName = stringResource(R.string.current_seasons),
-                            sectionLoadingItem = {
-                                LoadingMovieImage(
-                                    modifier = Modifier.size(
-                                        width = 260.dp,
-                                        height = 137.dp
+                            SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
+                                if (uiState.reviews.isNotEmpty()) {
+                                    SeriesReviewSection(
+                                        reviews = uiState.reviews,
+                                        onActionClicked = { listener.onSeeAllReviewsClicked(seriesId = uiState.series.id) }
                                     )
-                                )
+                                }
                             }
-                        )
-                    }
 
-                    SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
-                        if (uiState.seasons.isNotEmpty()) {
-                            SeasonSection(
-                                seriesName = uiState.series.title,
-                                seriesId = uiState.series.id,
-                                seasons = uiState.seasons,
-                                onActionClicked = { listener.onSeeAllSeasonsClicked(seriesId = uiState.series.id) },
-                                onSeasonClicked = listener::onSeasonClicked
-                            )
+                            SeriesDetailsScreenState.SectionStatus.ERROR -> {}
                         }
                     }
+                    item {
+                        when (uiState.similarSeriesSectionState) {
+                            SeriesDetailsScreenState.SectionStatus.LOADING -> {
+                                SectionLoading(
+                                    headerName = stringResource(R.string.similar_series),
+                                    sectionLoadingItem = {
+                                        LoadingMovieCard(
+                                            height = 160.dp
+                                        )
+                                    }
+                                )
+                            }
 
-                    SeriesDetailsScreenState.SectionStatus.ERROR -> {}
-                }
-            }
-            item {
-                when (uiState.reviewsSectionState) {
-                    SeriesDetailsScreenState.SectionStatus.LOADING -> {
-                        SectionLoading(
-                            headerName = stringResource(R.string.reviews),
-                            sectionLoadingItem = {
-                                LoadingReviewCard(
-                                    modifier = Modifier.size(
-                                        width = 260.dp,
-                                        height = 137.dp
+                            SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
+                                if (uiState.similarSeries.isNotEmpty()) {
+                                    SimilarSeriesSection(
+                                        similarSeries = uiState.similarSeries,
+                                        onSeriesClicked = listener::onSeriesClicked,
+                                        onActionClicked = { listener.onSeeAllSimilarClicked(seriesId = uiState.series.id) }
                                     )
-                                )
+                                }
                             }
-                        )
-                    }
 
-                    SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
-                        if (uiState.reviews.isNotEmpty()) {
-                            SeriesReviewSection(
-                                reviews = uiState.reviews,
-                                onActionClicked = { listener.onSeeAllReviewsClicked(seriesId = uiState.series.id) }
-                            )
+                            SeriesDetailsScreenState.SectionStatus.ERROR -> {}
                         }
                     }
-
-                    SeriesDetailsScreenState.SectionStatus.ERROR -> {}
-                }
-            }
-            item {
-                when (uiState.similarSeriesSectionState) {
-                    SeriesDetailsScreenState.SectionStatus.LOADING -> {
-                        SectionLoading(
-                            headerName = stringResource(R.string.similar_series),
-                            sectionLoadingItem = {
-                                LoadingMovieCard(
-                                    height = 160.dp
-                                )
-                            }
-                        )
-                    }
-
-                    SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
-                        if (uiState.similarSeries.isNotEmpty()) {
-                            SimilarSeriesSection(
-                                similarSeries = uiState.similarSeries,
-                                onSeriesClicked = listener::onSeriesClicked,
-                                onActionClicked = { listener.onSeeAllSimilarClicked(seriesId = uiState.series.id) }
-                            )
-                        }
-                    }
-
-                    SeriesDetailsScreenState.SectionStatus.ERROR -> {}
                 }
             }
         }
