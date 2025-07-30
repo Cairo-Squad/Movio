@@ -6,12 +6,18 @@ import java.util.TimeZone
 
 object TimeUtils {
 
+
     /**
      * Converts a date string in "yyyy-MM-dd" format to epoch milliseconds.
      */
     fun dateToLong(dateString: String): Long {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        return dateFormat.parse(dateString).time
+        return try {
+            val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            formatter.timeZone = TimeZone.getTimeZone("UTC")
+            formatter.parse(dateString)?.time ?: 0L
+        } catch (_: Exception) {
+            0L
+        }
     }
 
     /**
@@ -19,8 +25,12 @@ object TimeUtils {
      * to epoch milliseconds.
      */
     fun isoDateToLong(isoDateString: String): Long {
-        val isoFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
-        isoFormat.timeZone = TimeZone.getTimeZone("UTC")
-        return isoFormat.parse(isoDateString).time
+        return try {
+            val isoFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+            isoFormat.timeZone = TimeZone.getTimeZone("UTC")
+            isoFormat.parse(isoDateString)?.time ?: 0L
+        } catch (_: Exception) {
+            0L
+        }
     }
 }

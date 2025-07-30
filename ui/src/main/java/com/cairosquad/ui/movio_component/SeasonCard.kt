@@ -48,8 +48,7 @@ fun SeasonCard(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
-            .clickable { onClick() }
-            .background(color = Theme.color.surfaces.surface),
+            .clickable { onClick() },
         verticalAlignment = Alignment.Top
     ) {
         if (movieImage?.isNotEmpty() == true) {

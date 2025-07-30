@@ -3,6 +3,8 @@ package com.cairosquad.viewmodel.details.series.season
 import com.cairosquad.entity.Season
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.util.TimeUtil
+import com.cairosquad.viewmodel.util.roundToFirstDecimalPlace
+
 data class SeasonDetailsScreenState(
     val seriesTitle: String = "",
     val seasonSectionState: ScreenStatus = ScreenStatus.LOADING,
@@ -33,7 +35,7 @@ fun Season.toUiState():SeasonDetailsScreenState.SeasonUiState {
         number = seasonNumber,
         name = seasonName,
         episodesCount = episodesCount,
-        rating = rating / 2,
+        rating = rating.roundToFirstDecimalPlace(),
         posterPath = posterPath,
         overview = overview,
         airDate = TimeUtil.convertLongToYear(airDate),

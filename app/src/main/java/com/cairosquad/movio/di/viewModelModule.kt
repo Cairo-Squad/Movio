@@ -21,23 +21,27 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val viewModelModule = module {
-	viewModelOf(::SearchViewModel)
-	viewModelOf(::ForYouViewModel)
-	viewModel { (seriesId: Long, seasonNumber: Int) ->
-		EpisodesDetailsViewModel(
-			seriesDetailsUseCase = get(),
-			seriesId = seriesId,
-			seasonNumber = seasonNumber
-		)
-	}
-	viewModelOf(::SimilarMoviesViewModel)
-	viewModel { (movieId: Long) ->
-		MovieViewModel(movieId = movieId, movieUseCase = get(), loginUseCase = get())
-	}
+    viewModelOf(::SearchViewModel)
+    viewModelOf(::ForYouViewModel)
+    viewModel { (seriesId: Long, seasonNumber: Int) ->
+        EpisodesDetailsViewModel(
+            manageSeriesUseCase = get(),
+            seriesId = seriesId,
+            seasonNumber = seasonNumber
+        )
+    }
+    viewModelOf(::SimilarMoviesViewModel)
+    viewModel { (movieId: Long) ->
+        MovieViewModel(
+            movieId = movieId,
+            movieUseCase = get(),
+            loginUseCase = get()
+        )
+    }
 
 	viewModel { (seriesId: Long) ->
 		SeriesDetailsViewModel(
-			seriesDetailsUseCase = get(),
+            manageSeriesUseCase = get(),
 			loginUseCase = get(),
 			seriesId = seriesId
 		)
@@ -46,38 +50,38 @@ val viewModelModule = module {
 		TopCastViewModel(
 			mediaId = mediaId,
 			isMovie = isMovie,
-			getMovieDetailsUseCase = get(),
-			getSeriesDetailsUseCase = get()
+            manageMoviesUseCase = get(),
+            manageSeriesUseCase = get()
 		)
 	}
 
-	viewModel { (mediaId: Long, isMovie: Boolean) ->
-		ReviewsViewModel(
-			mediaId = mediaId,
-			isMovie = isMovie,
-			getMovieDetailsUseCase = get(),
-			getSeriesDetailsUseCase = get()
-		)
-	}
+    viewModel { (mediaId: Long, isMovie: Boolean) ->
+        ReviewsViewModel(
+            mediaId = mediaId,
+            isMovie = isMovie,
+            manageMoviesUseCase = get(),
+            manageSeriesUseCase = get()
+        )
+    }
 
-	viewModel { (artistId: Long) ->
-		ArtistViewModel(getArtistDetailsUseCase = get(), artistId = artistId)
-	}
+    viewModel { (artistId: Long) ->
+        ArtistViewModel(manageArtistUseCase = get(), artistId = artistId)
+    }
 
 	viewModel { (seriesId: Long) ->
 		SeriesDetailsViewModel(
-			seriesDetailsUseCase = get(),
+            manageSeriesUseCase = get(),
 			loginUseCase = get(),
 			seriesId = seriesId
 		)
 	}
 
-	viewModel { (seriesId: Long) ->
-		SeasonsViewModel(
-			seriesDetailsUseCase = get(),
-			seriesId = seriesId,
-		)
-	}
+    viewModel { (seriesId: Long) ->
+        SeasonsViewModel(
+            manageSeriesUseCase = get(),
+            seriesId = seriesId,
+        )
+    }
 
 	viewModelOf(::SimilarSeriesViewModel)
 	viewModelOf(::LoginViewModel)

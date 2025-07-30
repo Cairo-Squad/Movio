@@ -1,6 +1,7 @@
 package com.cairosquad.ui.movio_component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,6 +32,7 @@ import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import com.cairosquad.ui.BuildConfig
 import com.cairosquad.ui.R
+
 @Composable
 fun TrendingMovieCard(
     imgUrl: String,
@@ -71,10 +73,11 @@ fun TrendingMovieCard(
                 )
             }
         }
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .padding(start = 8.dp, top = 4.dp, bottom = 4.dp)
+                .padding(start = 8.dp, top = 4.dp, bottom = 4.dp),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
                 Text(
@@ -106,7 +109,6 @@ fun TrendingMovieCard(
             if (movieCategory.isNotEmpty()) {
                 Chip(
                     modifier = Modifier
-                        .align(Alignment.BottomStart)
                         .height(24.dp),
                     title = movieCategory,
                     textStyle = Theme.textStyle.label.smallRegular12,
@@ -121,7 +123,12 @@ fun TrendingMovieCard(
 @Composable
 private fun TrendingMovieCardPrevNight() {
     MovioTheme(isDarkTheme = true) {
-        TrendingMovieCard("", movieTitle = "Ocean with David Attenborough", movieCategory = "Documentary", rating = "4.5")
+        TrendingMovieCard(
+            "",
+            movieTitle = "Ocean with David Attenborough",
+            movieCategory = "Documentary",
+            rating = "4.5"
+        )
     }
 }
 
@@ -129,6 +136,11 @@ private fun TrendingMovieCardPrevNight() {
 @Composable
 private fun TrendingMovieCardPrevLight() {
     MovioTheme(isDarkTheme = false) {
-        TrendingMovieCard("", movieTitle = "Ocean with David Attenborough", movieCategory = "Documentary", rating = "4.5")
+        TrendingMovieCard(
+            "",
+            movieTitle = "Ocean with David Attenborough",
+            movieCategory = "Documentary",
+            rating = "4.5"
+        )
     }
 }

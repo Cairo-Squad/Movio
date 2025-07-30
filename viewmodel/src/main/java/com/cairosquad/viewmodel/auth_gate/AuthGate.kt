@@ -1,6 +1,6 @@
 package com.cairosquad.viewmodel.auth_gate
 
-import com.cairosquad.domain.usecase.authentication.LoginUseCase
+import com.cairosquad.domain.usecase.LoginUseCase
 
 class AuthGate(
     private val loginUseCase: LoginUseCase

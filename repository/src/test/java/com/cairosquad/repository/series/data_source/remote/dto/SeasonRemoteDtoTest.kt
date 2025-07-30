@@ -44,7 +44,7 @@ class SeasonRemoteDtoTest {
         assertThat(entity.seasonName).isEqualTo("Season One")
         assertThat(entity.seriesId).isEqualTo(seriesId)
         assertThat(entity.episodesCount).isEqualTo(10)
-        assertThat(entity.rating).isEqualTo(9.1f)
+        assertThat(entity.rating).isEqualTo(4.55f)
         assertThat(entity.posterPath).isEqualTo("/poster.jpg")
         assertThat(entity.overview).isEqualTo("A great season.")
         assertThat(entity.airDate).isEqualTo(1720000000L)

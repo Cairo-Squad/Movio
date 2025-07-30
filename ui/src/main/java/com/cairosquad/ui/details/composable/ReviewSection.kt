@@ -13,11 +13,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
-import com.cairosquad.ui.BuildConfig
 import com.cairosquad.ui.movio_component.ReviewCard
 import com.cairosquad.ui.movio_component.SectionHeader
 import com.cairosquad.viewmodel.details.movie.MovieScreenState
 import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState
+import java.util.Locale
 
 @Composable
 fun SeriesReviewSection(
@@ -37,9 +37,9 @@ fun SeriesReviewSection(
     ) {
         items(reviews) {
             ReviewCard(
-                imgUrl = BuildConfig.IMAGE_BASE_URL + it.authorPhotoPath,
+                imgUrl = it.authorPhotoPath,
                 reviewerName = it.author,
-                rating = it.rating.toString(),
+                rating = String.format(Locale.getDefault(), "%.1f", it.rating),
                 reviewDate = it.date,
                 reviewText = it.description,
                 isExpandable = false
@@ -66,9 +66,9 @@ fun MovieReviewSection(
     ) {
         items(reviews) {
             ReviewCard(
-                imgUrl = BuildConfig.IMAGE_BASE_URL + it.authorPhotoPath,
+                imgUrl = it.authorPhotoPath,
                 reviewerName = it.author,
-                rating = it.rating.toString(),
+                rating = String.format(Locale.getDefault(), "%.1f", it.rating),
                 reviewDate = it.date,
                 reviewText = it.description,
                 isExpandable = false
