@@ -30,6 +30,7 @@ import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.ArtistCard
 import com.cairosquad.ui.movio_component.LoadingArtistCard
+import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.ui.navigation.ArtistRoute
 import com.cairosquad.viewmodel.details.top_cast.TopCastScreenState
 import com.cairosquad.viewmodel.details.top_cast.TopCastViewModel
@@ -97,7 +98,21 @@ private fun TopCastContent(
                     }
                 }
 
-                TopCastScreenState.ScreenStatus.ERROR -> {}
+                TopCastScreenState.ScreenStatus.ERROR -> {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            StateMessage(
+                                imageDrawable = R.drawable.no_internet,
+                                titleId = R.string.no_internet_connection,
+                                descriptionId = R.string.internet_is_not_available_description
+                            )
+                        }
+                    }
+                }
             }
 
         }

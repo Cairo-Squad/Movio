@@ -1,7 +1,7 @@
 package com.cairosquad.viewmodel.details.similar_series
 
 import com.cairosquad.domain.exception.MovioException
-import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
+import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.similar_series.SimilarSeriesScreenState.ScreenStatus
 import com.cairosquad.viewmodel.exception.ErrorStatus
@@ -9,7 +9,7 @@ import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import kotlinx.coroutines.Dispatchers
 
 class SimilarSeriesViewModel(
-    private val getSeriesDetailsUseCase: GetSeriesDetailsUseCase
+    private val manageSeriesUseCase: ManageSeriesUseCase
 ) : BaseViewModel<SimilarSeriesScreenState, SimilarSeriesEffect>(SimilarSeriesScreenState()),
     SimilarSeriesInteractionListener {
 
@@ -23,7 +23,7 @@ class SimilarSeriesViewModel(
                 }
             },
             block = {
-                getSeriesDetailsUseCase.getSimilarSeries(seriesId, 1)
+                manageSeriesUseCase.getSimilarSeries(seriesId, 1)
             }, onSuccess = { seriesList ->
                 updateState {
                     it.copy(

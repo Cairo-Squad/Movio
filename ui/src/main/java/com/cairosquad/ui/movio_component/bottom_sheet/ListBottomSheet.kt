@@ -48,7 +48,9 @@ fun ListBottomSheet(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp))
-                    .clickable(onClick = onCreateNewList)
+                    .clickable(onClick = onCreateNewList),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Icon(
                     modifier = Modifier
@@ -56,7 +58,8 @@ fun ListBottomSheet(
                         .size(32.dp)
                         .padding(6.dp),
                     imageVector = ImageVector.vectorResource(R.drawable.ic_add),
-                    contentDescription = ""
+                    contentDescription = "",
+                    tint = Theme.color.surfaces.onSurface
                 )
                 Text(
                     text = stringResource(com.cairosquad.ui.R.string.create_list_title),

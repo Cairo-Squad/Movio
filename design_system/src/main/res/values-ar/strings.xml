@@ -13,6 +13,7 @@
     <string name="state_message_image">صورة رسالة الحالة</string>
     <string name="home">الرئيسية</string>
     <string name="search">بحث</string>
+    <string name="search_with_dotes_ahead">بحث ...</string>
     <string name="search_result">نتيجة البحث</string>
     <string name="number_of_items">%d عناصر</string>
     <string name="top_Results">أفضل النتائج</string>
@@ -22,6 +23,7 @@
     <string name="artists">فنانون</string>
     <string name="library">المكتبة</string>
     <string name="more">المزيد</string>
+    <string name="more_with_dotes_behind">... المزيد </string>
     <string name="icon">ايقونة</string>
     <string name="movie_poster">بوستر العرض</string>
     <string name="artist_image">صورة الفنان</string>
@@ -67,9 +69,9 @@
     <string name="reviews">المراجعات</string>
     <string name="similar_series">المسلسلات مشابهة</string>
     <string name="known_for">معروف بالتالي</string>
-    <string name="less">أقل</string>
-    <string name="read_less">اقرأأقل</string>
-    <string name="read_more">اقرأأكثر</string>
+    <string name="less_with_dotes_behind"> ... أقل</string>
+    <string name="read_less_with_dots_behind"> ... اقرأأقل</string>
+    <string name="read_more_with_dots_behind"> ... اقرأأكثر</string>
     <string name="top_cast">أفضل الممثلين</string>
     <string name="unauthorized_access">أنت غير مصرح لك بتنفيذ هذا الإجراء</string>
     <string name="error_parsing_data">حدث خطأ أثناء معالجة البيانات</string>

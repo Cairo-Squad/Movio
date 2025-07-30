@@ -31,7 +31,7 @@ data class SeasonRemoteDto(
             seasonName = name.orEmpty(),
             seriesId = seriesId,
             episodesCount = episodeCount ?: 0,
-            rating = voteAverage?.toFloat() ?: 0f,
+            rating = voteAverage?.toFloat()?.times(0.5f) ?: 0f,
             posterPath = posterPath.orEmpty(),
             overview = overview.orEmpty(),
             airDate = TimeUtils.dateToLong(airDate ?: "")

@@ -1,196 +1,250 @@
 package com.cairosquad.repository.artists
 
+import com.cairosquad.domain.exception.DomainEmptyResponseException
+import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.entity.Artist
-import com.cairosquad.entity.Movie
-import com.cairosquad.entity.Series
-import com.cairosquad.repository.artists.data_source.ArtistsRemoteDataSource
-import com.cairosquad.repository.search.data_source.local.CacheDataSource
-import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
-import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
-import com.cairosquad.repository.search.data_source.local.dto.toEntity
-import com.cairosquad.repository.search.data_source.local.dto.toEntityList
-import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.SeriesRemoteDto
+import com.cairosquad.repository.artists.data_source.local.ArtistsLocalDataSource
+import com.cairosquad.repository.artists.data_source.local.dto.ArtistCacheDto
+import com.cairosquad.repository.artists.data_source.remote.ArtistsRemoteDataSource
+import com.cairosquad.repository.artists.data_source.remote.dto.ArtistRemoteDto
+import com.cairosquad.repository.utils.exception.NoInternetException
+import com.cairosquad.repository.utils.exception.RepoEmptyResponseException
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfArtist
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfArtistsByQuery
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfMovieTopCast
+import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSeriesTopCast
 import com.google.common.truth.Truth.assertThat
 import io.mockk.Runs
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.just
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.Before
 import org.junit.Test
-import kotlin.test.BeforeTest
-
+import kotlin.test.assertFailsWith
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ArtistsRepositoryImplTest {
-    private lateinit var artistsRemoteDataSource: ArtistsRemoteDataSource
-    private lateinit var cacheDataSource: CacheDataSource
+
     private lateinit var repository: ArtistsRepositoryImpl
+    private lateinit var remoteDataSource: ArtistsRemoteDataSource
+    private lateinit var localDataSource: ArtistsLocalDataSource
 
-    @BeforeTest
+    @Before
     fun setUp() {
-        artistsRemoteDataSource = mockk(relaxed = true)
-        cacheDataSource = mockk(relaxed = true)
-        repository = ArtistsRepositoryImpl(artistsRemoteDataSource, cacheDataSource)
+        remoteDataSource = mockk(relaxed = true)
+        localDataSource = mockk(relaxed = true)
+        repository = ArtistsRepositoryImpl(remoteDataSource, localDataSource)
     }
 
     @Test
-    fun `getMoviesOfArtist fetches from remote and caches when cache is empty`() = runTest {
-        val artistId = 5L
+    fun `should return cached artists when getArtistsByQuery is called and cache is available`() = runTest {
+        val query = "John"
+        val page = 1
+        val cacheCode = getCacheCodeOfArtistsByQuery(query, page)
+        val cachedArtists = listOf(cachedArtistDto)
+        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+        coEvery { localDataSource.getArtistsByCacheCode(cacheCode) } returns cachedArtists
 
-        val remoteMovieDtos = remoteMovies.map {
-            MovieRemoteDto(
-                id = it.id.toInt(),
-                title = it.title,
-                posterPath = it.posterPath,
-                voteAverage = it.rating.toDouble()
-            )
+        val result = repository.getArtistsByQuery(query, page)
+
+        assertThat(result).isEqualTo(listOf(expectedArtist))
+        coVerify(exactly = 1) { localDataSource.getArtistsByCacheCode(cacheCode) }
+        coVerify(exactly = 0) { remoteDataSource.getArtistsByQuery(any(), any()) }
+    }
+
+    @Test
+    fun `should fetch data from remote when getArtistsByQuery is called and cache is empty`() = runTest {
+        val query = "John"
+        val page = 1
+        val cacheCode = "artists_query_${query}_$page"
+        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+        coEvery { localDataSource.getArtistsByCacheCode(cacheCode) } returns emptyList()
+        coEvery { remoteDataSource.getArtistsByQuery(query, page) } returns listOf(artistRemoteDto)
+        coEvery { localDataSource.insertCacheCodeWithArtists(any()) } just Runs
+
+        val result = repository.getArtistsByQuery(query, page)
+
+        assertThat(result).isEqualTo(listOf(expectedArtist))
+        coVerify(exactly = 1) { remoteDataSource.getArtistsByQuery(query, page) }
+        coVerify(exactly = 1) { localDataSource.insertCacheCodeWithArtists(any()) }
+    }
+
+    @Test
+    fun `should throw DomainEmptyResponseException when getArtistsByQuery is called and remote returns empty`() = runTest {
+        val query = "John"
+        val page = 1
+        val cacheCode = "artists_query_${query}_$page"
+        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+        coEvery { localDataSource.getArtistsByCacheCode(cacheCode) } returns emptyList()
+        coEvery { remoteDataSource.getArtistsByQuery(query, page) } throws RepoEmptyResponseException()
+
+        assertFailsWith<DomainEmptyResponseException> {
+            repository.getArtistsByQuery(query, page)
         }
-
-        coEvery { cacheDataSource.clearExpiredCache(any()) } just Runs
-        coEvery { cacheDataSource.getCachedArtistMovies(artistId) } returns emptyList()
-        coEvery { artistsRemoteDataSource.getMoviesOfArtist(artistId) } returns remoteMovieDtos
-        coEvery { cacheDataSource.cacheMovies(any()) } just Runs
-        coEvery { cacheDataSource.cacheArtistMovies(any()) } just Runs
-
-        val result = repository.getMoviesOfArtist(artistId)
-
-        assertThat(result).isEqualTo(remoteMovies)
+        coVerify(exactly = 1) { remoteDataSource.getArtistsByQuery(query, page) }
+        coVerify(exactly = 0) { localDataSource.insertCacheCodeWithArtists(any()) }
     }
 
     @Test
-    fun `getArtist returns cached artist if available`() = runTest {
+    fun `should throw InternetConnectionException when getArtistsByQuery is called and no internet`() = runTest {
+        val query = "John"
+        val page = 1
+        val cacheCode = "artists_query_${query}_$page"
+        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+        coEvery { localDataSource.getArtistsByCacheCode(cacheCode) } returns emptyList()
+        coEvery { remoteDataSource.getArtistsByQuery(query, page) } throws NoInternetException()
+
+        assertFailsWith<InternetConnectionException> {
+            repository.getArtistsByQuery(query, page)
+        }
+        coVerify(exactly = 1) { remoteDataSource.getArtistsByQuery(query, page) }
+        coVerify(exactly = 0) { localDataSource.insertCacheCodeWithArtists(any()) }
+    }
+
+    @Test
+    fun `should return cached artist when getArtistById is called and cache is available`() = runTest {
         val artistId = 1L
+        val cacheCode = getCacheCodeOfArtist(artistId)
+        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+        coEvery { localDataSource.getArtistsByCacheCode(cacheCode) } returns listOf(cachedArtistDto)
 
-        val expected = cachedDto.toEntity()
-
-        coEvery { cacheDataSource.clearExpiredCache(any()) } just Runs
-        coEvery { cacheDataSource.getCachedArtists(artistId) } returns cachedDto
-
-        val result = repository.getArtist(artistId)
-
-        assertThat(result).isEqualTo(expected)
-    }
-
-    @Test
-    fun `getArtist fetches from remote and caches when cache is empty`() = runTest {
-        val artistId = 2L
-
-        coEvery { cacheDataSource.clearExpiredCache(any()) } just Runs
-        coEvery { cacheDataSource.getCachedArtists(artistId) } throws IllegalStateException()
-        coEvery { artistsRemoteDataSource.getArtist(artistId) } returns artistRemoteDto
-        coEvery { cacheDataSource.cacheArtist(any()) } just Runs
-
-        val result = repository.getArtist(artistId)
+        val result = repository.getArtistById(artistId)
 
         assertThat(result).isEqualTo(expectedArtist)
+        coVerify(exactly = 1) { localDataSource.getArtistsByCacheCode(cacheCode) }
+        coVerify(exactly = 0) { remoteDataSource.getArtistById(any()) }
     }
 
+    @Test
+    fun `should fetch data from remote when getArtistById is called and cache is empty`() = runTest {
+        val artistId = 1L
+        val cacheCode = "artist_$artistId"
+        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+        coEvery { localDataSource.getArtistsByCacheCode(cacheCode) } returns emptyList()
+        coEvery { remoteDataSource.getArtistById(artistId) } returns artistRemoteDto
+        coEvery { localDataSource.insertCacheCodeWithArtists(any()) } just Runs
+
+        val result = repository.getArtistById(artistId)
+
+        assertThat(result).isEqualTo(expectedArtist)
+        coVerify(exactly = 1) { remoteDataSource.getArtistById(artistId) }
+        coVerify(exactly = 1) { localDataSource.insertCacheCodeWithArtists(any()) }
+    }
 
     @Test
-    fun `getMoviesOfArtist returns cached movies if available`() = runTest {
-        val artistId = 3L
+    fun `should throw DomainEmptyResponseException when getArtistById is called and remote returns empty`() = runTest {
+        val artistId = 1L
+        val cacheCode = "artist_$artistId"
+        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+        coEvery { localDataSource.getArtistsByCacheCode(cacheCode) } returns emptyList()
+        coEvery { remoteDataSource.getArtistById(artistId) } throws RepoEmptyResponseException()
 
-        val cachedMovies = expectedMovies.map {
-            MovieCacheDto(
-                id = it.id.toInt(),
-                title = it.title,
-                posterPath = it.posterPath,
-                voteAverage = it.rating.toDouble(),
-                timestamp = System.currentTimeMillis(),
-                page = 1,
-                query = ""
-            )
+        assertFailsWith<DomainEmptyResponseException> {
+            repository.getArtistById(artistId)
         }
-
-        coEvery { cacheDataSource.clearExpiredCache(any()) } just Runs
-        coEvery { cacheDataSource.getCachedArtistMovies(artistId) } returns cachedMovies
-
-        val result = repository.getMoviesOfArtist(artistId)
-
-        assertThat(result).isEqualTo(expectedMovies)
+        coVerify(exactly = 1) { remoteDataSource.getArtistById(artistId) }
+        coVerify(exactly = 0) { localDataSource.insertCacheCodeWithArtists(any()) }
     }
 
+    @Test
+    fun `should return cached artists when getMovieTopCast is called and cache is available`() = runTest {
+        val movieId = 100L
+        val page = 1
+        val cacheCode = getCacheCodeOfMovieTopCast(movieId, page)
+        val cachedArtists = listOf(cachedArtistDto)
+        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+        coEvery { localDataSource.getArtistsByCacheCode(cacheCode) } returns cachedArtists
+
+        val result = repository.getMovieTopCast(movieId, page)
+
+        assertThat(result).isEqualTo(listOf(expectedArtist))
+        coVerify(exactly = 1) { localDataSource.getArtistsByCacheCode(cacheCode) }
+        coVerify(exactly = 0) { remoteDataSource.getMovieTopCast(any(), any()) }
+    }
 
     @Test
-    fun `getSeriesOfArtist returns from remote and caches when cache is empty`() = runTest {
-        val artistId = 4L
+    fun `should fetch data from remote when getMovieTopCast is called and cache is empty`() = runTest {
+        val movieId = 100L
+        val page = 1
+        val cacheCode = getCacheCodeOfMovieTopCast(movieId, page)
+        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+        coEvery { localDataSource.getArtistsByCacheCode(cacheCode) } returns emptyList()
+        coEvery { remoteDataSource.getMovieTopCast(movieId, page) } returns listOf(artistRemoteDto)
+        coEvery { localDataSource.insertCacheCodeWithArtists(any()) } just Runs
 
-        coEvery { cacheDataSource.clearExpiredCache(any()) } just Runs
-        coEvery { cacheDataSource.getCachedArtistSeries(artistId) } returns emptyList()
-        coEvery { artistsRemoteDataSource.getSeriesOfArtist(artistId) } returns remoteSeriesDto
-        coEvery { cacheDataSource.cacheSeries(any()) } just Runs
-        coEvery { cacheDataSource.cacheArtistSeries(any()) } just Runs
+        val result = repository.getMovieTopCast(movieId, page)
 
-        val result = repository.getSeriesOfArtist(artistId)
+        assertThat(result).isEqualTo(listOf(expectedArtist))
+        coVerify(exactly = 1) { remoteDataSource.getMovieTopCast(movieId, page) }
+        coVerify(exactly = 1) { localDataSource.insertCacheCodeWithArtists(any()) }
+    }
 
-        assertThat(result).isEqualTo(expectedSeries)
+    @Test
+    fun `should return cached artists when getSeriesTopCast is called and cache is available`() = runTest {
+        val seriesId = 200L
+        val page = 1
+        val cacheCode = getCacheCodeOfSeriesTopCast(seriesId, page)
+        val cachedArtists = listOf(cachedArtistDto)
+        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+        coEvery { localDataSource.getArtistsByCacheCode(cacheCode) } returns cachedArtists
+
+        val result = repository.getSeriesTopCast(seriesId, page)
+
+        assertThat(result).isEqualTo(listOf(expectedArtist))
+        coVerify(exactly = 1) { localDataSource.getArtistsByCacheCode(cacheCode) }
+        coVerify(exactly = 0) { remoteDataSource.getSeriesTopCast(any(), any()) }
+    }
+
+    @Test
+    fun `should fetch data from remote when getSeriesTopCast is called and cache is empty`() = runTest {
+        val seriesId = 200L
+        val page = 1
+        val cacheCode = "series_top_cast_${seriesId}_$page"
+        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+        coEvery { localDataSource.getArtistsByCacheCode(cacheCode) } returns emptyList()
+        coEvery { remoteDataSource.getSeriesTopCast(seriesId, page) } returns listOf(artistRemoteDto)
+        coEvery { localDataSource.insertCacheCodeWithArtists(any()) } just Runs
+
+        val result = repository.getSeriesTopCast(seriesId, page)
+
+        assertThat(result).isEqualTo(listOf(expectedArtist))
+        coVerify(exactly = 1) { remoteDataSource.getSeriesTopCast(seriesId, page) }
+        coVerify(exactly = 1) { localDataSource.insertCacheCodeWithArtists(any()) }
     }
 
     private companion object {
-        val remoteMovies = listOf(
-            Movie(
-                id = 1, title = "Remote Movie 1", posterPath = "/poster1.jpg", rating = 8.0f,
-                genres = emptyList(),
-                overview = "",
-                releaseDate = 0L,
-                runtimeMinutes = 0,
-                trailerPath = ""
-            ),
-            Movie(
-                id = 2, title = "Remote Movie 2", posterPath = "/poster2.jpg", rating = 7.0f,
-                genres = emptyList(),
-                overview = "",
-                releaseDate = 0L,
-                runtimeMinutes = 0,
-                trailerPath = ""
-            ),
-        )
-        val cachedDto = ArtistCacheDto(
+        private val artistRemoteDto = ArtistRemoteDto(
             id = 1,
-            name = "Jane",
-            photoPath = "/jane.jpg",
-            timestamp = System.currentTimeMillis(),
-            page = 1,
-            query = "",
-            country = "",
-            birthDate = 0L,
-            biography = "",
-            department = ""
+            name = "John Doe",
+            profilePath = "/path/to/photo.jpg",
+            placeOfBirth = "USA",
+            birthday = "2000-01-01",
+            biography = "Talented actor",
+            department = "Acting"
         )
-        val artistRemoteDto = ArtistRemoteDto(id = 2, name = "John", profilePath = "/john.jpg")
-        val remoteSeriesDto =
-            listOf(SeriesRemoteDto(id = 1, name = "Series A", posterPath = "/img.jpg"))
-        val expectedArtist = Artist(
-            id = 2,
-            name = "John",
-            photoPath = "/john.jpg",
-            country = "",
-            birthDate = 0L,
-            biography = "",
-            department = ""
-        )
-        val expectedSeries =
-            listOf(Series(
-                id = 1, title = "Series A", posterPath = "/img.jpg", rating = 0f,
-                trailerPath = "",
-                genres = emptyList(),
-                overview = "",
-                releaseDate = 0L,
-                seasonsCount = 1
-            ))
-    }
 
-    val expectedMovies = listOf(
-        Movie(
-            id = 1, title = "Film 1", rating = 7.5f, posterPath = "/film1.jpg",
-            genres = emptyList(),
-            overview = "",
-            releaseDate = 0L,
-            runtimeMinutes = 0,
-            trailerPath = ""
+        private val cachedArtistDto = ArtistCacheDto(
+            id = 1L,
+            name = "John Doe",
+            photoPath = "/path/to/photo.jpg",
+            country = "USA",
+            birthDate = 946684800000L, // 2000-01-01
+            biography = "Talented actor",
+            department = "Acting",
+            cachingTimestamp = System.currentTimeMillis()
         )
-    )
+
+        private val expectedArtist = Artist(
+            id = 1L,
+            name = "John Doe",
+            photoPath = "/path/to/photo.jpg",
+            country = "USA",
+            birthDate = 946684800000L,
+            biography = "Talented actor",
+            department = "Acting"
+        )
+    }
 }

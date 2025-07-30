@@ -8,6 +8,6 @@ import org.koin.dsl.module
 
 val pagerModule = module {
     viewModelOf(::SearchViewModel)
-    single { SearchPager(get()) }
+    single { SearchPager(get(), get(), get()) }
     single { ForYouPager(get()) }
 }

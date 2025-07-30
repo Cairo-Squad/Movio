@@ -52,6 +52,9 @@ fun TabRow(
     val layoutDirection = LocalLayoutDirection.current
     val density = LocalDensity.current
 
+    val horizontalScrollingState = rememberScrollState()
+    val horizontalScrollingValueDp = with(density) { horizontalScrollingState.value.toDp() }
+
     val indicatorOffsetX by animateDpAsState(
         targetValue = with(density) {
             tabPositions[selectedTabIndex]?.let { (xPx, widthPx) ->
@@ -78,7 +81,7 @@ fun TabRow(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(36.dp)
-                .horizontalScroll(rememberScrollState())
+                .horizontalScroll(horizontalScrollingState)
                 .onGloballyPositioned { rowWidthPx = it.size.width },
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
@@ -124,7 +127,7 @@ fun TabRow(
         if (tabPositions.containsKey(selectedTabIndex)) {
             Box(
                 modifier = Modifier
-                    .offset(x = indicatorOffsetX)
+                    .offset(x = indicatorOffsetX - horizontalScrollingValueDp)
                     .height(1.dp)
                     .width(indicatorWidth)
                     .align(Alignment.BottomStart)

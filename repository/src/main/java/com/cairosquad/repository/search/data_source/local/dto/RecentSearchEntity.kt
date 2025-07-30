@@ -9,6 +9,6 @@ data class RecentSearchEntity(
     @ColumnInfo(name = "query_column")
     @PrimaryKey
     val query: String,
-    @ColumnInfo(name= "timestamp")
-    val timestamp: Long = System.currentTimeMillis()
+    @ColumnInfo(name= "cachingTimestamp")
+    val cachingTimestamp: Long = System.currentTimeMillis()
 )

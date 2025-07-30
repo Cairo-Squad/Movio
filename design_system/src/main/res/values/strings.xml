@@ -13,6 +13,7 @@
     <string name="state_message_image">State Message Image</string>
     <string name="home">Home</string>
     <string name="search">Search</string>
+    <string name="search_with_dotes_ahead">Search ...</string>
     <string name="search_result">Search result</string>
     <string name="number_of_items">%d items</string>
     <string name="top_Results">Top Results</string>
@@ -22,6 +23,7 @@
     <string name="artists">Artists</string>
     <string name="library">Library</string>
     <string name="more">More</string>
+    <string name="more_with_dotes_behind"> ... More</string>
     <string name="icon">icon</string>
     <string name="movie_poster">movie poster</string>
     <string name="artist_image">Artist Image</string>
@@ -57,9 +59,9 @@
     <string name="play">Play</string>
     <string name="known_for">Known For</string>
     <string name="top_cast">Top Cast</string>
-    <string name="less">Less</string>
-    <string name="read_less">Read Less</string>
-    <string name="read_more">Read More</string>
+    <string name="less_with_dotes_behind"> ... Less</string>
+    <string name="read_less_with_dots_behind"> ... Read Less</string>
+    <string name="read_more_with_dots_behind"> ... Read More</string>
     <string name="current_season">Current Seasons</string>
     <string name="copy_link">Copy link</string>
     <string name="you_don_t_have_an_account">You don\'t have an account</string>

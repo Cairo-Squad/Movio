@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.LoadingMovieCard
@@ -20,7 +21,7 @@ fun SeeAllLoadingScreen(
         columns = GridCells.Adaptive(minSize = 100.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
-        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
+        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 8.dp)
     ) {
         items(20) {
             LoadingMovieCard()

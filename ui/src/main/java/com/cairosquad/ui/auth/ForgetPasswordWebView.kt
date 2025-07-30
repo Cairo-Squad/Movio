@@ -16,13 +16,20 @@ fun ForgetPasswordWebViewScreen(url: String) {
     val navController = LocalNavController.current
 
     Column(
-        modifier = Modifier.systemBarsPadding().fillMaxSize()
+        modifier = Modifier
+            .systemBarsPadding()
+            .fillMaxSize()
     ) {
+
         AppBar(
             modifier = Modifier.fillMaxWidth(),
             title = "Reset Password",
             onBackButtonClicked = { navController.popBackStack() },
         )
-        WebView(url, Modifier.fillMaxSize())
+        WebView(
+            webPageUrl = url,
+            Modifier.fillMaxSize(),
+            onBackPressed = { navController.popBackStack() }
+        )
     }
 }

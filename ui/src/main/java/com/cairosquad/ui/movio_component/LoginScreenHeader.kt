@@ -23,7 +23,7 @@ import com.cairosquad.ui.R
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Icon(
-            painter = painterResource(R.drawable.welcome_icon),
+            painter = painterResource(R.drawable.logo_icon_with_ring),
             contentDescription = stringResource(R.string.icon),
             modifier = Modifier.size(64.dp)
         )

@@ -1,7 +1,7 @@
 package com.cairosquad.viewmodel.details.top_cast
 
-import com.cairosquad.domain.usecase.movies.GetMovieDetailsUseCase
-import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
+import com.cairosquad.domain.usecase.ManageMoviesUseCase
+import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.top_cast.TopCastScreenState.ScreenStatus
@@ -11,8 +11,8 @@ import kotlinx.coroutines.Dispatchers
 class TopCastViewModel(
     private val mediaId: Long,
     private val isMovie: Boolean,
-    private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
-    private val getSeriesDetailsUseCase: GetSeriesDetailsUseCase,
+    private val manageMoviesUseCase: ManageMoviesUseCase,
+    private val manageSeriesUseCase: ManageSeriesUseCase,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : BaseViewModel<TopCastScreenState, Nothing>(TopCastScreenState()) {
     init {
@@ -42,9 +42,9 @@ class TopCastViewModel(
 
     private suspend fun getTopCastByMediaType(): List<Artist> {
         return if (isMovie) {
-            getMovieDetailsUseCase.getMovieTopCast(mediaId)
+            manageMoviesUseCase.getMovieTopCast(mediaId)
         } else {
-            getSeriesDetailsUseCase.getSeriesTopCast(mediaId, 1)
+            manageSeriesUseCase.getSeriesTopCast(mediaId, 1)
         }
     }
 
