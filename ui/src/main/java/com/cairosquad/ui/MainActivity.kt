@@ -11,9 +11,18 @@ import com.cairosquad.ui.navigation.AppNavigation
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            installSplashScreen()
+            val splashScreen = installSplashScreen()
+            splashScreen.setOnExitAnimationListener { splashScreenView ->
+                splashScreenView.view.animate()
+                    .alpha(0.2f)
+                    .setDuration(250)
+                    .withEndAction { splashScreenView.remove() }
+                    .start()
+            }
         }
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 

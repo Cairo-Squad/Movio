@@ -1,11 +1,9 @@
 package com.cairosquad.ui.navigation
 
-import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -37,10 +35,7 @@ import org.koin.compose.getKoin
 fun AppNavigation(
     authGate: AuthGate = getKoin().get()
 ) {
-
     val navController = rememberNavController()
-
-    val coroutineScope = rememberCoroutineScope()
 
     CompositionLocalProvider(
         LocalNavController provides navController
@@ -49,7 +44,19 @@ fun AppNavigation(
             modifier = Modifier.background(Theme.color.surfaces.surface),
             navController = navController,
             startDestination = SplashRoute
-        ) {         
+        ) {
+
+            composable<SplashRoute> {
+                LaunchedEffect(Unit) {
+                    val isLoggedIn = authGate.isUserLoggedIn()
+                    val destination = if (isLoggedIn) AppRoute else LoginRoute
+                    navController.navigate(destination) {
+                        popUpTo(SplashRoute) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+            }
+
             composable<LoginRoute> {
                 LoginScreen()
             }
