@@ -91,6 +91,11 @@ fun InputField(
             hasFocusGradientColors
         }
     )
+    val textColor = if (error.isNotBlank()) {
+        Theme.color.system.errorContainer
+    } else {
+        Theme.color.surfaces.onSurfaceContainer
+    }
     val noErrorBorder = if (hasFocus) {
         hasFocusGradient
     } else {
@@ -122,15 +127,16 @@ fun InputField(
             value = textFieldValue,
             readOnly = readOnly,
             onValueChange = { newValue ->
-                val filteredValue = if (maxCharacters != null && newValue.text.length > maxCharacters) {
-                    val truncatedText = newValue.text.take(maxCharacters)
-                    newValue.copy(
-                        text = truncatedText,
-                        selection = TextRange(truncatedText.length.coerceAtMost(newValue.selection.start))
-                    )
-                } else {
-                    newValue
-                }
+                val filteredValue =
+                    if (maxCharacters != null && newValue.text.length > maxCharacters) {
+                        val truncatedText = newValue.text.take(maxCharacters)
+                        newValue.copy(
+                            text = truncatedText,
+                            selection = TextRange(truncatedText.length.coerceAtMost(newValue.selection.start))
+                        )
+                    } else {
+                        newValue
+                    }
 
                 textFieldValue = filteredValue
                 onValueChange(filteredValue.text)
@@ -160,7 +166,7 @@ fun InputField(
             textStyle = Theme.textStyle.label.smallRegular14.copy(
                 color = Theme.color.surfaces.onSurface,
                 letterSpacing = if (isPasswordField) TextUnit(2f, TextUnitType.Sp)
-                                else TextUnit.Unspecified
+                else TextUnit.Unspecified
             ),
             decorationBox = { innerTextField ->
                 Row(
@@ -182,7 +188,7 @@ fun InputField(
                             Text(
                                 text = placeholder,
                                 style = Theme.textStyle.label.smallRegular14.copy(
-                                    color = Theme.color.surfaces.onSurfaceContainer
+                                    color =textColor
                                 )
                             )
                         }
@@ -227,6 +233,7 @@ fun InputField(
         }
     }
 }
+
 @Composable
 private fun TextFieldIcon(
     @DrawableRes icon: Int?,
