@@ -6,7 +6,10 @@ class SearchPagingSource<T : Any>(
     private val query: String,
     private val fetcher: suspend (String, Int) -> List<T>
 ) : BasePagingSource<T>() {
-    override suspend fun fetchData(page: Int): List<T> {
+    override suspend fun fetchData(
+        page: Int,
+        genreId: Long?
+    ): List<T> {
         return fetcher(query, page)
     }
 }
