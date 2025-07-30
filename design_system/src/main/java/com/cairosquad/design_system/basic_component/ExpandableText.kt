@@ -57,6 +57,7 @@ fun ExpandableText(
                         withStyle(
                             style = showLessStyle.toSpanStyle().copy(color = showLessColor)
                         ) {
+                            append(" ")
                             append(showLessText)
                         }
                     } else {
@@ -65,6 +66,7 @@ fun ExpandableText(
                         val visibleText = text.substring(0, safeEnd)
                             .dropLastWhile { it.isWhitespace() || it == '.' }
                         append(visibleText)
+                        append(" ")
 
                         withStyle(
                             style = showMoreStyle.toSpanStyle().copy(color = showMoreColor)
