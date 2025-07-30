@@ -13,6 +13,30 @@ class SeeAllSeriesPager(
     fun getTopRatingSeries(genreId: Long?): Flow<PagingData<Series>> =
         createPager(genreId) { page, genre -> manageSeriesUseCase.getTopRatingSeries(page, genre) }
 
+    fun getMoreRecommendedSeries(genreId: Long?): Flow<PagingData<Series>> =
+        createPager(genreId) { page, genre ->
+            manageSeriesUseCase.getMoreRecommendedSeries(
+                page,
+                genre
+            )
+        }
+
+    fun getAiringTodaySeries(genreId: Long?): Flow<PagingData<Series>> =
+        createPager(genreId) { page, genre ->
+            manageSeriesUseCase.getAiringTodaySeries(
+                page,
+                genre
+            )
+        }
+
+    fun getOnTvSeries(genreId: Long?): Flow<PagingData<Series>> =
+        createPager(genreId) { page, genre ->
+            manageSeriesUseCase.getOnTvSeries(
+                page,
+                genre
+            )
+        }
+
     fun getTrendingSeries(genreId: Long?): Flow<PagingData<Series>> =
         createPager(genreId) { page, genre -> manageSeriesUseCase.getTrendingSeries(page, genre) }
 
@@ -24,13 +48,6 @@ class SeeAllSeriesPager(
             )
         }
 
-    fun getMoreRecommendedSeries(genreId: Long?): Flow<PagingData<Series>> =
-        createPager(genreId) { page, genre ->
-            manageSeriesUseCase.getMoreRecommendedSeries(
-                page,
-                genre
-            )
-        }
 
     private fun <T : Any> createPager(
         genreId: Long? = null,

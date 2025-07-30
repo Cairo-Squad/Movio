@@ -15,8 +15,16 @@ class SeeAllMoviesPager(
             manageMoviesUseCase.getTopRatingMovies(page, genre)
         }
 
-    fun getTrendingMovies(genreId: Long?): Flow<PagingData<Movie>> =
-        createPager(genreId) { page, genre -> manageMoviesUseCase.getTrendingMovies(page, genre) }
+    fun getMoreRecommendedMovies(genreId: Long?): Flow<PagingData<Movie>> =
+        createPager(genreId) { page, genre ->
+            manageMoviesUseCase.getMoreRecommendedMovies(
+                page,
+                genre
+            )
+        }
+
+    fun getUpcomingMovies(genreId: Long?): Flow<PagingData<Movie>> =
+        createPager(genreId) { page, genre -> manageMoviesUseCase.getUpcomingMovies(page, genre) }
 
     fun getFreeToWatchMovies(genreId: Long?): Flow<PagingData<Movie>> =
         createPager(genreId) { page, genre ->
@@ -26,16 +34,12 @@ class SeeAllMoviesPager(
             )
         }
 
-    fun getUpcomingMovies(genreId: Long?): Flow<PagingData<Movie>> =
-        createPager(genreId) { page, genre -> manageMoviesUseCase.getUpcomingMovies(page, genre) }
+    fun getTrendingMovies(genreId: Long?): Flow<PagingData<Movie>> =
+        createPager(genreId) { page, genre -> manageMoviesUseCase.getTrendingMovies(page, genre) }
 
-    fun getMoreRecommendedMovies(genreId: Long?): Flow<PagingData<Movie>> =
-        createPager(genreId) { page, genre ->
-            manageMoviesUseCase.getMoreRecommendedMovies(
-                page,
-                genre
-            )
-        }
+    fun getNowPlayingMovies(genreId: Long?): Flow<PagingData<Movie>> =
+        createPager(genreId) { page, genre -> manageMoviesUseCase.getNowPlayingMovies(page, genre) }
+
 
     private fun <T : Any> createPager(
         genreId: Long? = null,
