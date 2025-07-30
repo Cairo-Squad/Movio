@@ -85,13 +85,14 @@ class SearchViewModel(
     }
 
     override fun onQueryTextChanged(query: String) {
+        if (query == screenState.value.query) return
         enterSearchMode(query)
         debounceSearchSuggestions(query)
     }
 
     private fun enterSearchMode(query: String) {
         updateState {
-            it.copy(screenStatus = SearchScreenState.ScreenStatus.SEARCH, query = query)
+            it.copy(query = query)
         }
     }
 
