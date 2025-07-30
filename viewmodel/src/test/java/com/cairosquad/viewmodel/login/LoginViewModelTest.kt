@@ -132,7 +132,7 @@ class LoginViewModelTest {
 
     @Test
     fun `WHEN login clicked with short password SHOULD validate password`() = runTest {
-        viewModel.onPasswordChange("1234567")
+        viewModel.onPasswordChange("123")
         viewModel.onLoginClick()
         advanceUntilIdle()
         assertThat(viewModel.screenState.value.errors[LoginScreenState.FormField.PASSWORD]).isEqualTo(

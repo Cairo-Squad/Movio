@@ -154,7 +154,7 @@ class LoginViewModel(
                     }
                 )
             }
-        } else if (password.length < 8) {
+        } else if (password.length < 4) {
             updateState {
                 it.copy(
                     errors = it.errors.toMutableMap().apply {

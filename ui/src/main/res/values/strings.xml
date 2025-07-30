@@ -20,7 +20,7 @@
     <string name="password">Password</string>
     <string name="this_field_cannot_be_empty">This field is required</string>
     <string name="username_must_be_at_least_2_characters_long">Username must be at least 2 characters long</string>
-    <string name="password_must_be_at_least_8_characters_long">Password must be at least 8 characters long</string>
+    <string name="password_must_be_at_least_4_characters_long">Password must be at least 4 characters long</string>
     <string name="create">Create</string>
     <string name="list_name">List name</string>
     <string name="movie">Movie</string>
