@@ -71,8 +71,12 @@ fun ArtistScreen(
     artistId: Long,
     navController: NavController,
     modifier: Modifier = Modifier,
-    artistViewModel: ArtistViewModel = hiltViewModel()
 ) {
+    val artistViewModel: ArtistViewModel =
+        hiltViewModel<ArtistViewModel, ArtistViewModel.Factory> { factory ->
+            factory.create(artistId)
+        }
+
     val state by artistViewModel.screenState.collectAsState()
     val context = LocalContext.current
     ObserveAsEffect(artistViewModel.effect) { effect ->

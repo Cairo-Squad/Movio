@@ -5,16 +5,22 @@ import com.cairosquad.domain.usecase.ManageArtistUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 
-@HiltViewModel
-class ArtistViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = ArtistViewModel.Factory::class)
+class ArtistViewModel @AssistedInject constructor(
     private val manageArtistUseCase: ManageArtistUseCase,
+    @Assisted private val artistId: Long,
 ) : BaseViewModel<ArtistScreenState, ArtistEffect>(initialState = ArtistScreenState()),
     ArtistInteractionListener {
 
-    private val artistId: Long = 0 // TODO: get from savedHandle
+    @AssistedFactory
+    interface Factory {
+        fun create(artistId: Long): ArtistViewModel
+    }
 
     init {
         loadArtistDetails(artistId)
@@ -118,5 +124,3 @@ class ArtistViewModel @Inject constructor(
         }
     }
 }
-
-
