@@ -359,12 +359,12 @@ class HomeViewModel(
 
     fun onRetry() {
         updateState { it.copy(isRefreshing = true) }
-        loadAllData()
+        loadHomeScreenData()
     }
 
     fun onRefresh() {
         updateState { it.copy(isRefreshing = true) }
-        loadAllData()
+        loadHomeScreenData()
     }
 
 
