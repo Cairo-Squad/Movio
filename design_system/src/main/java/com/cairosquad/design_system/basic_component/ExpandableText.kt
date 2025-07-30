@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,9 +37,9 @@ fun ExpandableText(
     showLessColor: Color = color,
     textAlign: TextAlign? = null,
 ) {
-    var isExpanded by remember { mutableStateOf(false) }
-    var isOverflowing by remember { mutableStateOf(false) }
-    var lastCharIndex by remember { mutableIntStateOf(0) }
+    var isExpanded by rememberSaveable { mutableStateOf(false) }
+    var isOverflowing by rememberSaveable { mutableStateOf(false) }
+    var lastCharIndex by rememberSaveable { mutableIntStateOf(0) }
 
     Box(
         modifier = modifier.clickable(enabled = isOverflowing) {
