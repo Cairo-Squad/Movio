@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -82,6 +83,9 @@ fun InputField(
         mutableStateOf(TextFieldValue(text = value, selection = TextRange(value.length)))
     }
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
+
+    val fontScale = LocalConfiguration.current.fontScale
+    val chipHeight = (48 - 15) * fontScale + 15
 
     val hasFocusGradientColors = listOf(
         Theme.color.brand.onPrimary,
@@ -163,7 +167,7 @@ fun InputField(
                     }
                 )
                 .padding(horizontal = 12.dp)
-                .height(48.dp),
+                .height(chipHeight.dp),
             singleLine = isSingleLine,
             maxLines = 1,
             keyboardOptions = keyboardOptions,
