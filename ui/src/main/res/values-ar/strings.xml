@@ -20,7 +20,7 @@
     <string name="password">كلمة السر</string>
     <string name="this_field_cannot_be_empty">هذا الحقل مطلوب</string>
     <string name="username_must_be_at_least_2_characters_long">اسم المستخدم لا بد أن يكون حرفان على الأقل</string>
-    <string name="password_must_be_at_least_8_characters_long">كلمة المرور لا بد أن تكون 8 حروف على الأقل</string>
+    <string name="password_must_be_at_least_4_characters_long">كلمة المرور لا بد أن تكون  4 حروف على الأقل</string>
     <string name="create">إنشاء</string>
     <string name="list_name">إسم القائمة</string>
     <string name="movie">فيلم</string>
