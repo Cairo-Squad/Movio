@@ -1,6 +1,8 @@
 package com.cairosquad.movio.di
 
 import com.cairosquad.viewmodel.foryou.ForYouPager
+import com.cairosquad.viewmodel.see_all.SeeAllMoviesPager
+import com.cairosquad.viewmodel.see_all.SeeAllSeriesPager
 import com.cairosquad.viewmodel.search.SearchViewModel
 import com.cairosquad.viewmodel.search.paging.SearchPager
 import org.koin.core.module.dsl.viewModelOf
@@ -10,4 +12,6 @@ val pagerModule = module {
     viewModelOf(::SearchViewModel)
     single { SearchPager(get(), get(), get()) }
     single { ForYouPager(get()) }
+    single { SeeAllMoviesPager(get()) }
+    single { SeeAllSeriesPager(get()) }
 }
