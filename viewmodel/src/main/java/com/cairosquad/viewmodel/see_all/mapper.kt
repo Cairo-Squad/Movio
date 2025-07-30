@@ -26,5 +26,4 @@ fun Series.toSeeAllMediaUiState() = SeeAllScreenState.MediaUiState(
 fun Genre.toSeeAllGenreUiState() = SeeAllScreenState.GenreUiState(
     id = id,
     name = name,
-    nameResId = null,
 )

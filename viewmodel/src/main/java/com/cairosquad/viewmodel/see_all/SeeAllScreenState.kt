@@ -25,13 +25,11 @@ data class SeeAllScreenState(
     data class GenreUiState(
         val id: Long? = 0L,
         val name: String = "",
-        val nameResId: Int? = null
     ) {
         companion object {
             val defaultGenre = GenreUiState(
                 id = null,
                 name ="",
-                nameResId = R.string.sorting_type_all
             )
         }
     }

@@ -41,13 +41,12 @@ data class HomeScreenState(
     data class GenreUiState(
         val id: Long?,
         val name: String,
-        val nameResId: Int? = null
+
     ) {
         companion object {
             val defaultGenre = GenreUiState(
                 id = null,
                 name ="",
-                nameResId = R.string.sorting_type_all
             )
         }
     }

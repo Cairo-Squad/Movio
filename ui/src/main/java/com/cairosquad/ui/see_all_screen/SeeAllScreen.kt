@@ -102,7 +102,7 @@ fun SeeAllScreen(
             CategoriesChips(
                 modifier = Modifier.padding(top = 16.dp),
                 categories = state.genres.map { genre ->
-                    if (genre.nameResId!= null) {
+                    if (genre.id==null) {
                         stringResource(com.cairosquad.ui.R.string.all)
                     } else {
                         genre.name

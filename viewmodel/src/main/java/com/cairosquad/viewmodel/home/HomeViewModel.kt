@@ -10,6 +10,7 @@ import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
+import com.cairosquad.viewmodel.see_all.SeeAllScreenState.GenreUiState.Companion.defaultGenre
 import com.cairosquad.viewmodel.util.MediaContentType
 import com.cairosquad.viewmodel.util.MediaType
 import com.cairosquad.viewmodel.util.combineTwoList
@@ -170,14 +171,8 @@ class HomeViewModel(
     private suspend fun loadGenresBlock(): List<HomeScreenState.GenreUiState> {
         val movieGenres = manageMoviesUseCase.getMoviesGenres()
         val seriesGenres = manageSeriesUseCase.getSeriesGenres()
-        val defaultGenre = HomeScreenState.GenreUiState(
-            id = null,
-            name = "",
-            nameResId = R.string.sorting_type_all
-        )
-
         return buildSet {
-            add(defaultGenre)
+            add(HomeScreenState.GenreUiState.defaultGenre)
             movieGenres.mapTo(this) { it.toHomeGenreUiState() }
             seriesGenres.mapTo(this) { it.toHomeGenreUiState() }
         }.toList()
