@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.see_all
 
+import android.util.Log
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
@@ -30,9 +31,10 @@ class SeeAllViewModel(
     }
 
     override fun onGenreSelected(genreIndex: Int) {
+        if (genreIndex == screenState.value.selectedGenreIndex) return
         val genreId = screenState.value.genres.getOrNull(genreIndex)?.id
-        loadData(contentType, mediaType, page = 1, genreId = genreId)
         updateState { it.copy(selectedGenreIndex = genreIndex) }
+        loadData(contentType, mediaType, page = 1, genreId = genreId)
     }
 
     fun loadData(

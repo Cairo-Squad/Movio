@@ -2,6 +2,7 @@ package com.cairosquad.viewmodel.details.episodes
 
 import com.cairosquad.entity.Episode
 import com.cairosquad.entity.Season
+import com.cairosquad.viewmodel.util.roundToFirstDecimalPlace
 
 fun Season.toUiState() = EpisodesDetailsScreenState.SeasonUiState(
     seasonNumber = seasonNumber,
@@ -14,7 +15,7 @@ fun Episode.toUiState() = EpisodesDetailsScreenState.EpisodeUiState(
     name = episodeName,
     number = episodeNumber,
     runtime = runtimeMinutes,
-    rating = rating / 2,
+    rating = rating.roundToFirstDecimalPlace(),
     imageUrl = photoPath
 )
 

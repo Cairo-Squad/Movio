@@ -17,6 +17,7 @@ import com.cairosquad.viewmodel.search.SearchScreenState
 import com.cairosquad.viewmodel.search.SearchViewModel
 import com.cairosquad.viewmodel.search.paging.SearchPager
 import com.cairosquad.viewmodel.search.toUiState
+import com.cairosquad.viewmodel.util.roundToFirstDecimalPlace
 import com.google.common.truth.Truth.assertThat
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -100,7 +101,7 @@ class SearchViewModelTest {
         val uiState = movie.toUiState()
         assertThat(uiState.id).isEqualTo(movie.id)
         assertThat(uiState.title).isEqualTo(movie.title)
-        assertThat(uiState.rating).isEqualTo(movie.rating / 2)
+        assertThat(uiState.rating).isEqualTo(movie.rating.roundToFirstDecimalPlace())
         assertThat(uiState.posterPath).isEqualTo(movie.posterPath)
     }
 

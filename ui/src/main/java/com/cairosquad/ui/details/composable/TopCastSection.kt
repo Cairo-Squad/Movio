@@ -14,7 +14,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
-import com.cairosquad.ui.BuildConfig
 import com.cairosquad.ui.movio_component.SectionHeader
 import com.cairosquad.ui.movio_component.SmallArtistCard
 import com.cairosquad.viewmodel.details.movie.MovieScreenState
@@ -41,7 +40,7 @@ fun SeriesTopCastSection(
             SmallArtistCard(
                 modifier = Modifier.clickable { onArtistClicked(it.id) },
                 name = it.name,
-                imgUrl = BuildConfig.IMAGE_BASE_URL + it.photoPath
+                imgUrl = it.photoPath
             )
         }
     }
@@ -69,7 +68,7 @@ fun MovieTopCastSection(
             SmallArtistCard(
                 modifier = Modifier.clickable { onArtistClicked(it.id) },
                 name = it.name,
-                imgUrl = BuildConfig.IMAGE_BASE_URL + it.photoPath
+                imgUrl = it.photoPath
             )
         }
     }

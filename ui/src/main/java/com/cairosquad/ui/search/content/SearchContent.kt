@@ -62,7 +62,7 @@ fun SearchContent(
                 },
             value = state.query,
             onValueChange = listener::onQueryTextChanged,
-            placeholder = stringResource(R.string.search),
+            placeholder = stringResource(R.string.search_with_dotes_ahead),
             leadingIcon = R.drawable.search_bottom_nav,
             trailingIcon = R.drawable.ic_close,
             onTrailingIconClick = { listener.onBackClicked() },

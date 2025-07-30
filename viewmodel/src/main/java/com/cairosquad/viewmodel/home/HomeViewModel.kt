@@ -1,16 +1,16 @@
 package com.cairosquad.viewmodel.home
 
+import android.util.Log
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
-import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
-import com.cairosquad.viewmodel.see_all.SeeAllScreenState.GenreUiState.Companion.defaultGenre
+import com.cairosquad.viewmodel.home.HomeScreenState.ScreenStatus
 import com.cairosquad.viewmodel.util.MediaContentType
 import com.cairosquad.viewmodel.util.MediaType
 import com.cairosquad.viewmodel.util.combineTwoList
@@ -156,6 +156,8 @@ class HomeViewModel(
             it.copy(
                 popularMovies = moviesAndSeries.first.map(Movie::toHomeMediaUiState),
                 popularSeries = moviesAndSeries.second.map(Series::toHomeMediaUiState),
+                isRefreshing = false,
+                screenStatus = ScreenStatus.SUCCESS
             )
         }
     }
@@ -171,6 +173,7 @@ class HomeViewModel(
     private suspend fun loadGenresBlock(): List<HomeScreenState.GenreUiState> {
         val movieGenres = manageMoviesUseCase.getMoviesGenres()
         val seriesGenres = manageSeriesUseCase.getSeriesGenres()
+
         return buildSet {
             add(HomeScreenState.GenreUiState.defaultGenre)
             movieGenres.mapTo(this) { it.toHomeGenreUiState() }
@@ -216,14 +219,13 @@ class HomeViewModel(
     }
 
     override fun onGenreSelected(genreIndex: Int) {
-
-        fetchMediaByCategory(screenState.value.genres[genreIndex].id)
-
+        if (genreIndex == screenState.value.selectedGenreIndex) return
         updateState {
             it.copy(
                 selectedGenreIndex = genreIndex
             )
         }
+        fetchMediaByCategory(screenState.value.genres[genreIndex].id)
     }
 
     private fun fetchMediaByCategory(genreId: Long? = null) {
@@ -246,6 +248,7 @@ class HomeViewModel(
     }
 
     override fun onSortingSelected(filter: HomeScreenState.SortingType) {
+        if (filter == screenState.value.selectedSortingType) return
         updateState {
             it.copy(selectedSortingType = filter)
         }
@@ -326,7 +329,8 @@ class HomeViewModel(
         updateState {
             it.copy(
                 errorStatus = handleHomeException(throwable),
-                screenStatus = HomeScreenState.ScreenStatus.FAILED
+                screenStatus = ScreenStatus.FAILED,
+                isRefreshing = false
             )
         }
     }
@@ -336,6 +340,16 @@ class HomeViewModel(
             is MovioException -> exceptionToErrorStatus(e)
             else -> ErrorStatus.UNKNOWN_ERROR
         }
+    }
+
+    fun onRetry() {
+        updateState { it.copy(isRefreshing = true) }
+        loadAllData()
+    }
+
+    fun onRefresh() {
+        updateState { it.copy(isRefreshing = true) }
+        loadAllData()
     }
 
 

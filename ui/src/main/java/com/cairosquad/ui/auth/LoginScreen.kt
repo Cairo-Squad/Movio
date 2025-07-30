@@ -203,7 +203,6 @@ private fun LoginScreenContent(
             Text(
                 text = stringResource(R.string.forgot_password),
                 modifier = Modifier
-                    .width(120.dp)
                     .clickable { interactionListener.onForgetPasswordClick() },
                 style = Theme.textStyle.label.mediumMedium12,
                 color = Theme.color.surfaces.onSurfaceVariant,

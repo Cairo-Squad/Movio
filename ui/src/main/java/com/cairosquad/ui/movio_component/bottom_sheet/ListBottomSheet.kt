@@ -58,7 +58,8 @@ fun ListBottomSheet(
                         .size(32.dp)
                         .padding(6.dp),
                     imageVector = ImageVector.vectorResource(R.drawable.ic_add),
-                    contentDescription = ""
+                    contentDescription = "",
+                    tint = Theme.color.surfaces.onSurface
                 )
                 Text(
                     text = stringResource(com.cairosquad.ui.R.string.create_list_title),

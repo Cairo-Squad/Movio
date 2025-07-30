@@ -96,8 +96,8 @@ class ArtistViewModel(
 		sendEffect(ArtistEffect.NavigateBack)
 	}
 
-	override fun onMovieClick(movieID: Long) {
-		sendEffect(ArtistEffect.NavigateToMovieDetails(movieID))
+	override fun onMovieClick(movieId: Long) {
+		sendEffect(ArtistEffect.NavigateToMovieDetails(movieId))
 	}
 
 	override fun onSeriesClick(seriesId: Long) {

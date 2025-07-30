@@ -22,6 +22,7 @@ data class HomeScreenState(
 
     val selectedSortingType: SortingType = SortingType.ALL,
     val selectedTab: Tab = Tab.ALL,
+    val isRefreshing: Boolean = false
 ) {
 
     data class SectionUiState(

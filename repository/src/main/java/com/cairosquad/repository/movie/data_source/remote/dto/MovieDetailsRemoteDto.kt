@@ -34,7 +34,7 @@ data class MovieDetailsRemoteDto(
     fun toEntity(trailerPath: String) = Movie(
         id = id,
         title = title.orEmpty(),
-        rating = voteAverage?.toFloat() ?: 0f,
+        rating = voteAverage?.toFloat()?.times(0.5f) ?: 0f,
         posterPath = posterPath.orEmpty(),
         genres = genres?.mapNotNull { it?.toEntity() } ?: emptyList(),
         overview = overview.orEmpty(),
