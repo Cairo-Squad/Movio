@@ -7,11 +7,9 @@ import kotlinx.coroutines.flow.flowOf
 
 data class SeeAllScreenState(
     val mediaList: Flow<PagingData<MediaUiState>> = flowOf(PagingData.empty()),
-
     val screenStatus: ScreenStatus = ScreenStatus.LOADING,
     val errorStatus: ErrorStatus? = null,
     val isRefreshing: Boolean = false,
-    val isEmpty: Boolean = false,
     val genres: List<GenreUiState> = listOf(GenreUiState.defaultGenre),
     val selectedGenreIndex: Int = 0,
 ) {
@@ -39,6 +37,7 @@ data class SeeAllScreenState(
     enum class ScreenStatus {
         LOADING,
         SUCCESS,
-        FAILED
+        FAILED,
+        Empty
     }
 }

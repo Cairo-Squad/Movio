@@ -74,7 +74,6 @@ class SeeAllViewModel(
         loadGenres()
         updateScreenStatus(SeeAllScreenState.ScreenStatus.LOADING)
         updateErrorStatus(null)
-        updateState { it.copy(isEmpty = false) }
         tryToCall(
             onStart = { updateState { it.copy(screenStatus = SeeAllScreenState.ScreenStatus.LOADING) } },
             block = {

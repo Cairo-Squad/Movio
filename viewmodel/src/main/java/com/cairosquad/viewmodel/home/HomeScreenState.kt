@@ -20,7 +20,7 @@ data class HomeScreenState(
     val genres: List<GenreUiState> = listOf(GenreUiState.defaultGenre),
 
     val selectedSortingType: SortingType = SortingType.ALL,
-    val selectedTab: Tab = Tab.ALL,
+    val selectedTab: Tab = Tab.MOVIES,
     val isRefreshing: Boolean = false
 ) {
 
@@ -58,7 +58,6 @@ data class HomeScreenState(
     }
 
     enum class Tab {
-        ALL,
         MOVIES,
         TV_SHOWS,
         CATEGORIES
