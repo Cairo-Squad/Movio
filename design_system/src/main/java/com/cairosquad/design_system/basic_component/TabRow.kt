@@ -7,25 +7,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalDensity
@@ -44,9 +33,7 @@ fun TabRow(
     onTabSelected: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
     val tabPositions = remember { mutableStateMapOf<Int, Pair<Int, Int>>() }
-
     var rowWidthPx by remember { mutableIntStateOf(0) }
 
     val layoutDirection = LocalLayoutDirection.current
@@ -74,6 +61,14 @@ fun TabRow(
         },
         animationSpec = tween(200)
     )
+
+
+    val selectedTabTitle = tabs.getOrNull(selectedTabIndex)
+    val indicatorBrush = if (selectedTabTitle == "Categories") {
+        Theme.color.gradiant.horizontalCategoriesGradient
+    } else {
+        Theme.color.gradiant.horizontalGradient
+    }
 
     Box(modifier = modifier.fillMaxWidth()) {
 
@@ -131,7 +126,7 @@ fun TabRow(
                     .height(1.dp)
                     .width(indicatorWidth)
                     .align(Alignment.BottomStart)
-                    .background(brush = Theme.color.gradiant.horizontalGradient)
+                    .background(brush = indicatorBrush) // 👈 نستخدم الفرشاة المخصصة هنا
             )
         }
     }
@@ -141,8 +136,8 @@ fun TabRow(
 @Composable
 private fun TabRowPreview() {
     MovioTheme(isDarkTheme = true) {
-        val tabs = listOf("Top Results", "Movies", "Series", "Artists")
-        var selectedTabIndex by remember { mutableIntStateOf(0) }
+        val tabs = listOf("All", "Movies", "Series", "Categories")
+        var selectedTabIndex by remember { mutableIntStateOf(3) } // جرب "Categories" مباشرة
         Box(
             Modifier
                 .background(Theme.color.surfaces.surface)

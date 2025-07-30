@@ -53,6 +53,7 @@ data class System(
 
 data class Gradiant(
     val horizontalGradient: Brush,
+    val horizontalCategoriesGradient :Brush,
     val shimmerGradientColors: List<Color>,
     val primaryGradient: Brush,
     val logo: Brush
