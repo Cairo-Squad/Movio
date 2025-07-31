@@ -1,5 +1,6 @@
 package com.cairosquad.ui.details.artist
 
+import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,6 +30,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
 import androidx.compose.ui.graphics.Color
@@ -39,6 +42,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
@@ -61,8 +65,6 @@ import com.cairosquad.viewmodel.details.artist.ArtistEffect
 import com.cairosquad.viewmodel.details.artist.ArtistInteractionListener
 import com.cairosquad.viewmodel.details.artist.ArtistScreenState
 import com.cairosquad.viewmodel.details.artist.ArtistViewModel
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -70,50 +72,54 @@ import java.util.Locale
 
 @Composable
 fun ArtistScreen(
-	artistId: Long,
-	navController: NavController,
-	modifier: Modifier = Modifier,
-	artistViewModel: ArtistViewModel = koinViewModel { parametersOf(artistId) }
+    artistId: Long,
+    navController: NavController,
+    modifier: Modifier = Modifier,
 ) {
-	val state by artistViewModel.screenState.collectAsState()
-	val context = LocalContext.current
-	ObserveAsEffect(artistViewModel.effect) { effect ->
-		when (effect) {
-			is ArtistEffect.ErrorHappened -> {
-				Toast.makeText(
-					context,
-					context.getString(errorStatusToMessageResource(effect.message)),
-					Toast.LENGTH_LONG
-				).show()
-			}
+    val artistViewModel: ArtistViewModel =
+        hiltViewModel<ArtistViewModel, ArtistViewModel.Factory> { factory ->
+            factory.create(artistId)
+        }
 
-			is ArtistEffect.NavigateToMovieDetails -> {
-				navController.navigate(MovieRoute(effect.movieId))
-			}
+    val state by artistViewModel.screenState.collectAsState()
+    val context = LocalContext.current
+    ObserveAsEffect(artistViewModel.effect) { effect ->
+        when (effect) {
+            is ArtistEffect.ErrorHappened -> {
+                Toast.makeText(
+                    context,
+                    context.getString(errorStatusToMessageResource(effect.message)),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
 
-			is ArtistEffect.NavigateBack -> {
-				navController.popBackStack()
-			}
+            is ArtistEffect.NavigateToMovieDetails -> {
+                navController.navigate(MovieRoute(effect.movieId))
+            }
 
-			is ArtistEffect.NavigateToSeriesDetails -> {
-				navController.navigate(SeriesRoute(effect.seriesId))
-			}
-		}
-	}
+            is ArtistEffect.NavigateBack -> {
+                navController.popBackStack()
+            }
 
-	ArtistScreenContent(modifier = modifier, state = state, listener = artistViewModel)
+            is ArtistEffect.NavigateToSeriesDetails -> {
+                navController.navigate(SeriesRoute(effect.seriesId))
+            }
+        }
+    }
+
+    ArtistScreenContent(modifier = modifier, state = state, listener = artistViewModel)
 }
 
 @Composable
 private fun ArtistScreenContent(
-	modifier: Modifier = Modifier,
-	state: ArtistScreenState,
-	listener: ArtistInteractionListener
+    modifier: Modifier = Modifier,
+    state: ArtistScreenState,
+    listener: ArtistInteractionListener
 ) {
-	val listScroll = rememberScrollState()
-	val density = LocalDensity.current
-	val scrollThresholdPx = with(density) { 250.dp.toPx() }
-	val progress = (listScroll.value / scrollThresholdPx).coerceIn(0f, 1f)
+    val listScroll = rememberScrollState()
+    val density = LocalDensity.current
+    val scrollThresholdPx = with(density) { 250.dp.toPx() }
+    val progress = (listScroll.value / scrollThresholdPx).coerceIn(0f, 1f)
 
 	val animatedStartColor =
 		lerp(Theme.color.surfaces.statusBarShadow, Theme.color.surfaces.surface, progress)
@@ -152,35 +158,46 @@ private fun ArtistScreenContent(
 								.CustomBrush(0.5f, 16.dp),
 						)
 					} else {
-						SafeImageViewer(
-							model = "https://image.tmdb.org/t/p/w500${state.artist.photoPath}",
-							contentDescription = "blured image",
-							modifier = Modifier
-								.fillMaxSize()
-								.height(335.dp)
-								.offset(y = (-5).dp)
-								.CustomBrush(0.5f, 16.dp),
-							nudeThreshold = 0.0,
-							nonNudeThreshold = 0.0
-						)
-					}
-					Box(
-						modifier = Modifier
-							.fillMaxWidth()
-							.height(20.dp)
-							.align(Alignment.BottomCenter)
-							.background(
-								brush = verticalGradient(
-									colors = listOf(
-										Theme.color.surfaces.surface.copy(alpha = 0f),
-										Theme.color.surfaces.surface.copy(alpha = .10f),
-										Theme.color.surfaces.surface.copy(alpha = .50f),
-										Theme.color.surfaces.surface.copy(alpha = .90f),
-										Theme.color.surfaces.surface,
+						Box {
+							SafeImageViewer(
+								model = BuildConfig.IMAGE_BASE_URL + state.artist.photoPath,
+								contentDescription = "blured image",
+								modifier = Modifier
+									.fillMaxSize()
+									.height(335.dp)
+									.then(
+										if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+											Modifier.blur(16.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
+										} else {
+											Modifier
+										}
 									)
-								)
+									.offset(y = (-20).dp),
+								blur = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) 16 else 0,
+								isBlurForced = true
 							)
-					)
+							if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+								Box(
+									modifier = Modifier
+										.fillMaxWidth()
+										.height(40.dp)
+										.align(Alignment.BottomCenter)
+										.background(
+											brush = verticalGradient(
+												colors = listOf(
+													Theme.color.surfaces.surface.copy(alpha = 0.00f),
+													Theme.color.surfaces.surface.copy(alpha = 0.10f),
+													Theme.color.surfaces.surface.copy(alpha = 0.50f),
+													Theme.color.surfaces.surface.copy(alpha = 0.90f),
+													Theme.color.surfaces.surface,
+												)
+											)
+										)
+								)
+							}
+
+						}
+					}
 					when (state.screenStatus) {
 						ArtistScreenState.ScreenStatus.LOADING -> {
 							LoadingMovieImage(
@@ -191,107 +208,107 @@ private fun ArtistScreenContent(
 							)
 						}
 
-						ArtistScreenState.ScreenStatus.SUCCESS -> {
-							if (state.artist.photoPath.isNotEmpty()) {
-								SafeImageViewer(
-									model = BuildConfig.IMAGE_BASE_URL + state.artist.photoPath,
-									modifier = Modifier
-										.padding(horizontal = 6.67.dp)
-										.padding(top = 31.dp)
-										.size(160.dp)
-										.clip(CircleShape),
-									contentDescription = stringResource(R.string.artist_image),
-									nudeThreshold = 0.0,
-									nonNudeThreshold = 0.0,
-									loadingPlaceholder = {
-										LoadingMovieImage(
-											Modifier
-												.clip(CircleShape)
-												.size(160.dp)
-										)
-									}
-								)
-							} else {
-								Box(
-									modifier = Modifier
-										.padding(horizontal = 6.67.dp)
-										.padding(top = 31.dp)
-										.size(160.dp)
-										.clip(CircleShape)
-										.background(Theme.color.system.defaultImageBackground),
-									contentAlignment = Alignment.Center
-								) {
-									Icon(
-										modifier = Modifier.size(24.dp),
-										imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
-										contentDescription = stringResource(R.string.default_image_icon),
-										tint = Color(0xFFEFF1F5)
-									)
-								}
-							}
-						}
+                        ArtistScreenState.ScreenStatus.SUCCESS -> {
+                            if (state.artist.photoPath.isNotEmpty()) {
+                                SafeImageViewer(
+                                    model = BuildConfig.IMAGE_BASE_URL + state.artist.photoPath,
+                                    modifier = Modifier
+                                        .padding(horizontal = 6.67.dp)
+                                        .padding(top = 31.dp)
+                                        .size(160.dp)
+                                        .clip(CircleShape),
+                                    contentDescription = stringResource(R.string.artist_image),
+                                    nudeThreshold = 0.0,
+                                    nonNudeThreshold = 0.0,
+                                    loadingPlaceholder = {
+                                        LoadingMovieImage(
+                                            Modifier
+                                                .clip(CircleShape)
+                                                .size(160.dp)
+                                        )
+                                    }
+                                )
+                            } else {
+                                Box(
+                                    modifier = Modifier
+                                        .padding(horizontal = 6.67.dp)
+                                        .padding(top = 31.dp)
+                                        .size(160.dp)
+                                        .clip(CircleShape)
+                                        .background(Theme.color.system.defaultImageBackground),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        modifier = Modifier.size(24.dp),
+                                        imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
+                                        contentDescription = stringResource(R.string.default_image_icon),
+                                        tint = Color(0xFFEFF1F5)
+                                    )
+                                }
+                            }
+                        }
 
-						ArtistScreenState.ScreenStatus.FAILED -> {}
-					}
-				}
-				when (state.screenStatus) {
-					ArtistScreenState.ScreenStatus.LOADING -> {
-						LoadingMovieImage(
-							Modifier
-								.padding(horizontal = 16.dp)
-								.clip(CircleShape)
-								.size(width = 60.dp, height = 32.dp)
-						)
-					}
+                        ArtistScreenState.ScreenStatus.FAILED -> {}
+                    }
+                }
+                when (state.screenStatus) {
+                    ArtistScreenState.ScreenStatus.LOADING -> {
+                        LoadingMovieImage(
+                            Modifier
+                                .padding(horizontal = 16.dp)
+                                .clip(CircleShape)
+                                .size(width = 60.dp, height = 32.dp)
+                        )
+                    }
 
-					ArtistScreenState.ScreenStatus.SUCCESS -> {
-						BasicText(
-							modifier = Modifier.padding(horizontal = 16.dp),
-							text = state.artist.name,
-							style = Theme.textStyle.headline.mediumMedium18
-								.copy(color = Theme.color.surfaces.onSurface),
-						)
-					}
+                    ArtistScreenState.ScreenStatus.SUCCESS -> {
+                        BasicText(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            text = state.artist.name,
+                            style = Theme.textStyle.headline.mediumMedium18
+                                .copy(color = Theme.color.surfaces.onSurface),
+                        )
+                    }
 
-					ArtistScreenState.ScreenStatus.FAILED -> {}
-				}
-				when (state.screenStatus) {
-					ArtistScreenState.ScreenStatus.LOADING -> {
-						LoadingMovieImage(
-							Modifier
-								.padding(start = 16.dp, top = 4.dp)
-								.clip(CircleShape)
-								.size(width = 60.dp, height = 32.dp)
-						)
-					}
+                    ArtistScreenState.ScreenStatus.FAILED -> {}
+                }
+                when (state.screenStatus) {
+                    ArtistScreenState.ScreenStatus.LOADING -> {
+                        LoadingMovieImage(
+                            Modifier
+                                .padding(start = 16.dp, top = 4.dp)
+                                .clip(CircleShape)
+                                .size(width = 60.dp, height = 32.dp)
+                        )
+                    }
 
-					ArtistScreenState.ScreenStatus.SUCCESS -> {
-						BasicText(
-							modifier = Modifier.padding(start = 16.dp, top = 4.dp),
-							text = state.artist.department,
-							style = Theme.textStyle.label.smallRegular14
-								.copy(color = Theme.color.surfaces.onSurfaceVariant),
-						)
-					}
+                    ArtistScreenState.ScreenStatus.SUCCESS -> {
+                        BasicText(
+                            modifier = Modifier.padding(start = 16.dp, top = 4.dp),
+                            text = state.artist.department,
+                            style = Theme.textStyle.label.smallRegular14
+                                .copy(color = Theme.color.surfaces.onSurfaceVariant),
+                        )
+                    }
 
-					ArtistScreenState.ScreenStatus.FAILED -> {}
-				}
-				when (state.screenStatus) {
-					ArtistScreenState.ScreenStatus.LOADING -> {
-						Row(
-							modifier = Modifier.padding(horizontal = 16.dp),
-							horizontalArrangement = Arrangement.spacedBy(8.dp)
-						) {
-							repeat(2) {
-								LoadingMovieImage(
-									Modifier
-										.padding(top = 16.dp, start = 16.dp)
-										.clip(CircleShape)
-										.size(width = 60.dp, height = 32.dp)
-								)
-							}
-						}
-					}
+                    ArtistScreenState.ScreenStatus.FAILED -> {}
+                }
+                when (state.screenStatus) {
+                    ArtistScreenState.ScreenStatus.LOADING -> {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            repeat(2) {
+                                LoadingMovieImage(
+                                    Modifier
+                                        .padding(top = 16.dp, start = 16.dp)
+                                        .clip(CircleShape)
+                                        .size(width = 60.dp, height = 32.dp)
+                                )
+                            }
+                        }
+                    }
 
 					ArtistScreenState.ScreenStatus.SUCCESS -> {
 						LazyRow(
@@ -307,11 +324,13 @@ private fun ArtistScreenContent(
 									lastPart.split(" ").lastOrNull()?.trim()
 								}
 								?.takeIf { it.isNotBlank() }
-							item {
-								InfoChip(
-									text = formatBirthDateLegacy(state.artist.birthDate),
-									imgRes = R.drawable.date,
-								)
+							state.artist.birthDate?.let{ birthDate ->
+								item {
+									InfoChip(
+										text = formatBirthDateLegacy(birthDate),
+										imgRes = R.drawable.date,
+									)
+								}
 							}
 							if (lastWord != null) {
 								item {
@@ -324,51 +343,51 @@ private fun ArtistScreenContent(
 						}
 					}
 
-					ArtistScreenState.ScreenStatus.FAILED -> {}
-				}
-				when (state.screenStatus) {
-					ArtistScreenState.ScreenStatus.LOADING -> {
-						LoadingMovieImage(
-							Modifier
-								.padding(16.dp)
-								.height(120.dp)
-								.fillMaxWidth()
-						)
-					}
+                    ArtistScreenState.ScreenStatus.FAILED -> {}
+                }
+                when (state.screenStatus) {
+                    ArtistScreenState.ScreenStatus.LOADING -> {
+                        LoadingMovieImage(
+                            Modifier
+                                .padding(16.dp)
+                                .height(120.dp)
+                                .fillMaxWidth()
+                        )
+                    }
+
+                    ArtistScreenState.ScreenStatus.SUCCESS -> {
+                        if (state.artist.biography.isNotBlank()) {
+                            ExpandableText(
+                                text = state.artist.biography,
+                                color = Theme.color.surfaces.onSurface,
+                                style = Theme.textStyle.label.smallRegular14,
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .fillMaxWidth(),
+                                collapsedMaxLine = 5,
+                                showMoreText = stringResource(com.cairosquad.ui.R.string.read_more_with_dotes_behind),
+                                showMoreColor = Theme.color.surfaces.onSurfaceVariant,
+                                showLessText = stringResource(com.cairosquad.ui.R.string.read_less_with_dotes_behind)
+                            )
+                        }
+                    }
+
+                    ArtistScreenState.ScreenStatus.FAILED -> {}
+                }
+                when (state.screenStatus) {
+                    ArtistScreenState.ScreenStatus.LOADING -> {
+                        LoadingMovieImage(
+                            Modifier.size(height = 32.dp, width = 64.dp)
+                        )
+                        LazyRow {
+                            items(10) {
+                                LoadingMovieCard()
+                            }
+                        }
+                    }
 
 					ArtistScreenState.ScreenStatus.SUCCESS -> {
-						if (state.artist.biography.isNotBlank()) {
-							ExpandableText(
-								text = state.artist.biography,
-								color = Theme.color.surfaces.onSurface,
-								style = Theme.textStyle.label.smallRegular14,
-								modifier = Modifier
-									.padding(16.dp)
-									.fillMaxWidth(),
-								collapsedMaxLine = 5,
-								showMoreText = stringResource(com.cairosquad.ui.R.string.read_more_with_dotes_behind),
-								showMoreColor = Theme.color.surfaces.onSurfaceVariant,
-								showLessText = stringResource(com.cairosquad.ui.R.string.read_less_with_dotes_behind)
-							)
-						}
-					}
-
-					ArtistScreenState.ScreenStatus.FAILED -> {}
-				}
-				when (state.screenStatus) {
-					ArtistScreenState.ScreenStatus.LOADING -> {
-						LoadingMovieImage(
-							Modifier.size(height = 32.dp, width = 64.dp)
-						)
-						LazyRow {
-							items(10) {
-								LoadingMovieCard()
-							}
-						}
-					}
-
-					ArtistScreenState.ScreenStatus.SUCCESS -> {
-						if (state.knownForMovies.isNotEmpty() || state.KnownForSeries.isNotEmpty()) {
+						if (state.knownForMovies.isNotEmpty() || state.knownForSeries.isNotEmpty()) {
 							BasicText(
 								modifier = Modifier.padding(
 									start = 16.dp,
@@ -393,7 +412,7 @@ private fun ArtistScreenContent(
 										modifier = Modifier.clickable { listener.onMovieClick(movie.id) }
 									)
 								}
-								items(state.KnownForSeries) { series ->
+								items(state.knownForSeries) { series ->
 									MovieCard(
 										title = series.title,
 										vote = series.rating,
@@ -407,21 +426,21 @@ private fun ArtistScreenContent(
 						}
 					}
 
-					ArtistScreenState.ScreenStatus.FAILED -> {}
-				}
-			}
-		}
-		AppBar(
-			onBackButtonClicked = listener::onClickBack,
-			modifier = Modifier
-				.background(animatedBrush)
-				.windowInsetsPadding(WindowInsets.statusBars)
-		)
-	}
+                    ArtistScreenState.ScreenStatus.FAILED -> {}
+                }
+            }
+        }
+        AppBar(
+            onBackButtonClicked = listener::onClickBack,
+            modifier = Modifier
+                .background(animatedBrush)
+                .windowInsetsPadding(WindowInsets.statusBars)
+        )
+    }
 }
 
 private fun formatBirthDateLegacy(birthDateLong: Long): String {
-	val date = Date(birthDateLong)
-	val formatter = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault())
-	return formatter.format(date)
+    val date = Date(birthDateLong)
+    val formatter = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault())
+    return formatter.format(date)
 }

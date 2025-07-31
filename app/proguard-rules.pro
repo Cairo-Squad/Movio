@@ -19,6 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
 ##########################################
 # 🌟 Jetpack Compose
 ##########################################
@@ -66,16 +67,24 @@
 }
 
 ##########################################
-# 🌟 Koin (Reflection heavy)
+# 🌟 Dagger Hilt
 ##########################################
--keep class org.koin.** { *; }
--dontwarn org.koin.**
+# Keep Hilt's generated code
+-keep class dagger.hilt.** { *; }
+-dontwarn dagger.hilt.**
 
-# Keep DI annotations
--keep @org.koin.core.annotation.* class * {*;}
--keepclassmembers class * {
-    @org.koin.core.annotation.* *;
-}
+# Preserve Hilt entry points (Application class with @HiltAndroidApp)
+-keep @dagger.hilt.android.HiltAndroidApp class * { *; }
+
+# Preserve Hilt Android entry points (activities, fragments, services)
+-keep @dagger.hilt.android.AndroidEntryPoint class * { *; }
+
+# Preserve Hilt ViewModel annotations
+-keep @dagger.hilt.android.lifecycle.HiltViewModel class * { *; }
+
+# Optional: Add if you use Hilt's @EntryPoint or @InstallIn
+-keep @dagger.hilt.EntryPoint class * { *; }
+-keep @dagger.hilt.InstallIn class * { *; }
 
 ##########################################
 # 🌟 Ktor
@@ -125,3 +134,5 @@
 -dontwarn com.cairosquad.**
 -dontwarn a.a
 -ignorewarnings
+-keep @dagger.hilt.EntryPoint class * { *; }
+-keep @dagger.hilt.InstallIn class * { *; }

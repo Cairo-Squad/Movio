@@ -12,7 +12,7 @@ fun ArtistRemoteDto.toEntity(): Artist {
         name = name ?: "",
         photoPath = profilePath ?: "",
         country = placeOfBirth ?: "",
-        birthDate = birthday?.toMillisFromDate() ?: 0,
+        birthDate = birthday?.toMillisFromDate(),
         biography = biography ?: "",
         department = department ?: "",
     )

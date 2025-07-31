@@ -16,13 +16,24 @@
 }
 
 ##########################################
-# 🌟 Koin
+# 🌟 Dagger Hilt
 ##########################################
--keep class org.koin.** { *; }
--keep @org.koin.core.annotation.* class * {*;}
--keepclassmembers class * {
-    @org.koin.core.annotation.* *;
-}
+# Keep Hilt's generated code
+-keep class dagger.hilt.** { *; }
+-dontwarn dagger.hilt.**
+
+# Preserve Hilt entry points (activities, fragments, services)
+-keep @dagger.hilt.android.AndroidEntryPoint class * { *; }
+
+# Preserve Hilt ViewModel annotations
+-keep @dagger.hilt.android.lifecycle.HiltViewModel class * { *; }
+
+# Optional: Add if you use Hilt's @EntryPoint or @InstallIn
+-keep @dagger.hilt.EntryPoint class * { *; }
+-keep @dagger.hilt.InstallIn class * { *; }
+
+# Optional: Add if you use Hilt's @HiltAndroidApp in the app module
+-keep @dagger.hilt.android.HiltAndroidApp class * { *; }
 
 ##########################################
 # 🌟 Kotlin Metadata
@@ -31,3 +42,5 @@
 -keepclassmembers class ** {
     @kotlin.Metadata *;
 }
+-keep @dagger.hilt.EntryPoint class * { *; }
+-keep @dagger.hilt.InstallIn class * { *; }

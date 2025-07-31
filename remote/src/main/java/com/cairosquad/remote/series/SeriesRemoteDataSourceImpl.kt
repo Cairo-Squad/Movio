@@ -9,8 +9,9 @@ import com.cairosquad.repository.series.data_source.remote.dto.SeasonRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesDetailsRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 import java.time.LocalDate
+import javax.inject.Inject
 
-class SeriesRemoteDataSourceImpl(
+class SeriesRemoteDataSourceImpl @Inject constructor(
     private val apiService: SeriesApiService
 ) : SeriesRemoteDataSource {
     override suspend fun getSeriesById(id: Long): SeriesDetailsRemoteDto {

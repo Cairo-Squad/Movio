@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.cairosquad.ui.navigation.ArtistRoute
 import com.cairosquad.ui.navigation.ForYouRoute
 import com.cairosquad.ui.navigation.LocalNavController
@@ -20,12 +21,11 @@ import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.ui.utils.errorStatusToMessageResource
 import com.cairosquad.viewmodel.search.SearchEffect
 import com.cairosquad.viewmodel.search.SearchViewModel
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
-    viewModel: SearchViewModel = koinViewModel()
+    viewModel: SearchViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
 
