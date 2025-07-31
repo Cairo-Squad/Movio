@@ -146,7 +146,6 @@ private fun TobContent(
             selectedTabIndex = screenState.selectedTab.ordinal,
             onTabSelected = listener::onClickTab,
             scrollState = scrollState
-
         )
     }
 }

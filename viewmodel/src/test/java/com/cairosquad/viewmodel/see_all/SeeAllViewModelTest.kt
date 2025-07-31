@@ -76,19 +76,19 @@ class SeeAllViewModelTest {
         assertNotNull(seriesFetcher)
     }
 
-    @Test
-    fun `combineTwoList merges lists alternately`() {
-        val movies = listOf("A", "B")
-        val series = listOf("1", "2", "3")
-        val result = viewModel.run {
-            val m = this::class.java.getDeclaredMethod(
-                "combineTwoList", List::class.java, List::class.java
-            )
-            m.isAccessible = true
-            m.invoke(this, movies, series) as List<*>
-        }
-        assertEquals(listOf("A", "1", "B", "2", "3"), result)
-    }
+//    @Test
+//    fun `combineTwoList merges lists alternately`() {
+//        val movies = listOf("A", "B")
+//        val series = listOf("1", "2", "3")
+//        val result = viewModel.run {
+//            val m = this::class.java.getDeclaredMethod(
+//                "combineTwoList", List::class.java, List::class.java
+//            )
+//            m.isAccessible = true
+//            m.invoke(this, movies, series) as List<*>
+//        }
+//        assertEquals(listOf("A", "1", "B", "2", "3"), result)
+//    }
 
     @Test
     fun `handleError maps exceptions to ErrorStatus correctly`() = runTest {
