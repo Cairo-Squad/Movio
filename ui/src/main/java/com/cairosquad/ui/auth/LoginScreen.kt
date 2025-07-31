@@ -172,7 +172,9 @@ private fun LoginScreenContent(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .weight(1f)
             ) {
                 AnimatedVisibility(
                     visible = passwordError != null,
