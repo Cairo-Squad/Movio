@@ -5,6 +5,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.cairosquad.domain.exception.MovioException
+import com.cairosquad.domain.usecase.GetSearchRecommendationUseCase
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSearchHistoryUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
@@ -25,6 +26,7 @@ class SearchViewModel @Inject constructor(
     private val searchPager: SearchPager,
     private val manageSearchHistoryUseCase: ManageSearchHistoryUseCase,
     private val manageMoviesUseCase: ManageMoviesUseCase,
+    private val getSearchRecommendationUseCase: GetSearchRecommendationUseCase
 ) : BaseViewModel<SearchScreenState, SearchEffect>(initialState = SearchScreenState()),
     SearchInteractionListener {
 
@@ -40,7 +42,7 @@ class SearchViewModel @Inject constructor(
         getSuggestedMovies()
     }
 
-    fun getPersonalizedMovies(){
+    fun getPersonalizedMovies() {
 
         tryToCall(
             block = {
@@ -61,7 +63,7 @@ class SearchViewModel @Inject constructor(
         )
     }
 
-    fun getSuggestedMovies(){
+    fun getSuggestedMovies() {
         tryToCall(
             block = {
                 val exploreMore = manageMoviesUseCase.getSuggestedMovies().map { it.toUiState() }
@@ -104,7 +106,9 @@ class SearchViewModel @Inject constructor(
         searchJob = tryToCall(
             block = {
                 delay(300)
-                manageSearchHistoryUseCase.getByQuery(query)
+                val recent = manageSearchHistoryUseCase.getByQuery(query)
+                val recommendations = getSearchRecommendationUseCase(query)
+                Pair(recent, recommendations)
             },
             onSuccess = ::updateSuggestions,
             onError = {},
@@ -112,8 +116,14 @@ class SearchViewModel @Inject constructor(
         )
     }
 
-    private fun updateSuggestions(suggestions: List<String>) {
-        updateState { it.copy(recentSearch = suggestions) }
+    private fun updateSuggestions(suggestions: Pair<List<String>, List<String>>) {
+        val (recent, recommendations) = suggestions
+        updateState {
+            it.copy(
+                recentSearch = recent,
+                searchRecommendation = recommendations
+            )
+        }
     }
 
     override fun onCancelSearch() {
@@ -239,8 +249,10 @@ class SearchViewModel @Inject constructor(
 
         tryToCall(
             block = {
-                if (query.isBlank()) manageSearchHistoryUseCase.getAll()
+                val recent = if (query.isBlank()) manageSearchHistoryUseCase.getAll()
                 else manageSearchHistoryUseCase.getByQuery(query)
+                val recommendations = getSearchRecommendationUseCase(query)
+                Pair(recent, recommendations)
             },
             onSuccess = ::updateSuggestions,
             onError = {
@@ -278,6 +290,7 @@ class SearchViewModel @Inject constructor(
     override fun onTabSelected(index: Int) {
         updateState { it.copy(selectedTabIndex = index) }
     }
+
     override fun onTabPagingError(error: Throwable) {
         val status = handleSearchException(error)
         updateState {

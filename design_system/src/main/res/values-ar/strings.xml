@@ -36,6 +36,7 @@
     <string name="error_loading_image">خطأ في تحميل الصورة</string>
     <string name="recent_item_icon">ايقونة العنصر الحديث</string>
     <string name="clear_search_result">مسح نتائج البحث</string>
+    <string name="recommendation_icon">ايقونة الاقتراحات</string>
     <string name="no_internet_connection">لا يوجد اتصال بالأنترنت</string>
     <string name="an_error_occured_while_getting_results">هناك خطأ حدث عند جلب نتائج البحث</string>
     <string name="an_unexpected_error_occurred">خطأ غير متوقع حدث</string>
