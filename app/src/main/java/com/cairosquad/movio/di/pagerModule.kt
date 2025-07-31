@@ -1,6 +1,7 @@
 package com.cairosquad.movio.di
 
 import com.cairosquad.viewmodel.foryou.ForYouPager
+import com.cairosquad.viewmodel.home.UnifiedMediaPager
 import com.cairosquad.viewmodel.see_all.SeeAllMoviesPager
 import com.cairosquad.viewmodel.see_all.SeeAllSeriesPager
 import com.cairosquad.viewmodel.search.SearchViewModel
@@ -14,4 +15,5 @@ val pagerModule = module {
     single { ForYouPager(get()) }
     single { SeeAllMoviesPager(get()) }
     single { SeeAllSeriesPager(get()) }
+    single { UnifiedMediaPager(get(), get()) }
 }
