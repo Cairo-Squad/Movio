@@ -27,6 +27,7 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.R
 import com.cairosquad.ui.movio_component.CategoriesChips
@@ -38,12 +39,11 @@ import com.cairosquad.viewmodel.see_all.SeeAllScreenState
 @Composable
 fun HomeScreenContentCategoriesTab(
     screenState: HomeScreenState,
-    media: LazyPagingItems<HomeScreenState.MediaUiState>,
     listener: HomeInteractionsListener,
     scrollState: ScrollState,
     modifier: Modifier = Modifier
 ) {
-
+    val media = screenState.categoriesMedia.collectAsLazyPagingItems()
     Box(modifier = modifier.fillMaxSize()) {
         Box(
             modifier = Modifier
