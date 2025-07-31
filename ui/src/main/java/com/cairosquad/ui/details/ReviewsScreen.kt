@@ -1,7 +1,6 @@
 package com.cairosquad.ui.details
 
 import android.os.Build
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,11 +23,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.cairosquad.design_system.basic_component.AppBar
+import com.cairosquad.design_system.basic_component.SnackBar
 import com.cairosquad.design_system.modifier.dropShadow
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.R
@@ -37,7 +39,6 @@ import com.cairosquad.ui.movio_component.ReviewCard
 import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.utils.ObserveAsEffect
-import com.cairosquad.ui.utils.errorStatusToMessageResource
 import com.cairosquad.viewmodel.details.reviews.ReviewsEffect
 import com.cairosquad.viewmodel.details.reviews.ReviewsInteractionListener
 import com.cairosquad.viewmodel.details.reviews.ReviewsScreenState
@@ -68,16 +69,7 @@ fun ReviewsScreen(
 
 	ObserveAsEffect(viewModel.effect) { effect ->
 		when (effect) {
-			is ReviewsEffect.ErrorHappened -> {
-				Toast.makeText(
-					context,
-					context.getString(errorStatusToMessageResource(effect.message)),
-					Toast.LENGTH_LONG
-				).show()
-			}
-
 			is ReviewsEffect.NavigateBack -> navController.popBackStack()
-
 		}
 
 	}
@@ -86,6 +78,14 @@ fun ReviewsScreen(
 		listener = viewModel,
 		state = state.value,
 	)
+
+	if (state.value.error != null) {
+		SnackBar(
+			imageVector = ImageVector.vectorResource(com.cairosquad.design_system.R.drawable.danger),
+			message = state.value.error ?: stringResource(R.string.something_went_wrong),
+			action = {}
+		)
+	}
 }
 
 @Composable
