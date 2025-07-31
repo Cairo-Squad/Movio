@@ -5,8 +5,6 @@ import com.cairosquad.repository.artists.data_source.remote.ArtistsRemoteDataSou
 import com.cairosquad.repository.movie.data_source.remote.MoviesRemoteDataSource
 import com.cairosquad.repository.series.data_source.remote.SeriesRemoteDataSource
 import com.cairosquad.repository.utils.mappers.tryToCall
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
 class SearchRecommendationRepositoryImpl @Inject constructor(
@@ -18,30 +16,20 @@ class SearchRecommendationRepositoryImpl @Inject constructor(
         return tryToCall {
             query.takeIf { it.isNotBlank() }
                 ?.let { query ->
-                    coroutineScope {
-                        val series = async {
-                            runCatching { seriesRemoteDataSource.getSeriesByQuery(query, 1) }
-                                .getOrNull() ?: emptyList()
-                        }.await()
-                        val movies = async {
-                            runCatching { moviesRemoteDataSource.getMoviesByQuery(query, 1) }
-                                .getOrNull() ?: emptyList()
-                        }.await()
-                        val artist = async {
-                            runCatching { artistsRemoteDataSource.getArtistsByQuery(query, 1) }
-                                .getOrNull() ?: emptyList()
-                        }.await()
-                        buildList {
-                            addAll(movies.mapNotNull { it.title?.takeIf { title -> title.isNotBlank() } })
-                            addAll(artist.mapNotNull { it.name?.takeIf { name -> name.isNotBlank() } })
-                            addAll(series.mapNotNull { it.name?.takeIf { name -> name.isNotBlank() } })
-                        }
-                            .distinct()
-                            .shuffled()
-                            .take(20)
+                    val series = seriesRemoteDataSource.getSeriesByQuery(query, 1)
+                    val movies = moviesRemoteDataSource.getMoviesByQuery(query, 1)
+                    val artist = artistsRemoteDataSource.getArtistsByQuery(query, 1)
+
+                    buildList {
+                        addAll(movies.mapNotNull { it.title?.takeIf { title -> title.isNotBlank() } })
+                        addAll(artist.mapNotNull { it.name?.takeIf { name -> name.isNotBlank() } })
+                        addAll(series.mapNotNull { it.name?.takeIf { name -> name.isNotBlank() } })
                     }
+                        .distinct()
+                        .shuffled()
+                        .take(20)
                 }
-                ?: emptyList()
         }
+            ?: emptyList()
     }
 }
