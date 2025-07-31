@@ -12,8 +12,9 @@ import com.cairosquad.repository.series.data_source.local.dto.SeriesGenreCacheCr
 import com.cairosquad.repository.utils.sharedDto.local.CacheCodeReviewCacheCrossRef
 import com.cairosquad.repository.utils.sharedDto.local.CacheCodeWithReviewsCacheDto
 import com.cairosquad.repository.utils.sharedDto.local.ReviewCacheDto
+import javax.inject.Inject
 
-class SeriesLocalDataSourceImpl(
+class SeriesLocalDataSourceImpl @Inject constructor(
     private val seriesCacheDao: SeriesCacheDao,
     private val cacheCodeDao: CacheCodeDao,
     private val genreDao: GenreDao,

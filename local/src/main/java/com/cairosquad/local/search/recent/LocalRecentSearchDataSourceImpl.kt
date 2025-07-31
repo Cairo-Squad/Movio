@@ -1,10 +1,11 @@
 package com.cairosquad.local.search.recent
 
 import com.cairosquad.local.search.recent.dao.LocalRecentSearchDao
-import com.cairosquad.repository.search.data_source.local.dto.RecentSearchEntity
 import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
+import com.cairosquad.repository.search.data_source.local.dto.RecentSearchEntity
+import javax.inject.Inject
 
-class LocalRecentSearchDataSourceImpl(
+class LocalRecentSearchDataSourceImpl @Inject constructor(
     private val dao: LocalRecentSearchDao
 ) : LocalRecentSearchDataSource {
 

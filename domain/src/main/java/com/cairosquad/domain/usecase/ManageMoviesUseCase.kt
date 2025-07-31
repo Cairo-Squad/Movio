@@ -8,8 +8,9 @@ import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Review
+import javax.inject.Inject
 
-class ManageMoviesUseCase(
+class ManageMoviesUseCase @Inject constructor(
     private val moviesRepository: MoviesRepository,
     private val searchRepository: SearchRepository,
     private val artistRepository: ArtistsRepository

@@ -1,8 +1,8 @@
 package com.cairosquad.viewmodel.details.movie
 
 import com.cairosquad.domain.exception.MovioException
-import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.LoginUseCase
+import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Review
@@ -10,15 +10,26 @@ import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.movie.MovieScreenState.ScreenStatus
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import javax.inject.Inject
 
-class MovieViewModel(
+@HiltViewModel(assistedFactory = MovieViewModel.Factory::class)
+class MovieViewModel @AssistedInject constructor(
     private val movieUseCase: ManageMoviesUseCase,
-	private val loginUseCase: LoginUseCase,
-	movieId: Long
+    private val loginUseCase: LoginUseCase,
+    @Assisted private val movieId: Long = 0
 ) : BaseViewModel<MovieScreenState, MovieEffect>(MovieScreenState()),
     MovieInteractionListener {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(movieId: Long): MovieViewModel
+    }
 
     init {
         loadMovieData(movieId)
@@ -131,61 +142,67 @@ class MovieViewModel(
         updateState { it.copy(isShareBottomSheetOpen = true) }
     }
 
-	override fun onFavoriteClick() {
-		tryToCall(
-			block = loginUseCase::isUserLoggedIn,
-			onSuccess = {authed ->
-				if (!authed) {
-					updateState { it.copy(isNoAccountBottomSheetOpen = true) }
-				} else {}
-			},
-			onError = {}
-		)
-	}
+    override fun onFavoriteClick() {
+        tryToCall(
+            block = loginUseCase::isUserLoggedIn,
+            onSuccess = { authed ->
+                if (!authed) {
+                    updateState { it.copy(isNoAccountBottomSheetOpen = true) }
+                } else {
+                }
+            },
+            onError = {}
+        )
+    }
 
-	override fun onRateItClick() {
-		tryToCall(
-			block = loginUseCase::isUserLoggedIn,
-			onSuccess = {authed ->
-				if (!authed) {
-					updateState { it.copy(isNoAccountBottomSheetOpen = true) }
-				} else {
-					updateState { it.copy(isRateBottomSheetOpen = true) }
-				}
-			},
-			onError = {}
-		)
-	}
+    override fun onRateItClick() {
+        tryToCall(
+            block = loginUseCase::isUserLoggedIn,
+            onSuccess = { authed ->
+                if (!authed) {
+                    updateState { it.copy(isNoAccountBottomSheetOpen = true) }
+                } else {
+                    updateState { it.copy(isRateBottomSheetOpen = true) }
+                }
+            },
+            onError = {}
+        )
+    }
 
-	override fun onPlayClick() {
-		sendEffect(MovieEffect.PlayTrailer)
-	}
+    override fun onPlayClick() {
+        sendEffect(MovieEffect.PlayTrailer)
+    }
 
-	override fun onAddToListClick() {
-		tryToCall(
-			block = loginUseCase::isUserLoggedIn,
-			onSuccess = {authed ->
-				if (!authed) {
-					updateState { it.copy(isNoAccountBottomSheetOpen = true) }
-				} else {
-					updateState { it.copy(isAddToListBottomSheetOpen = true) }
-				}
-			},
-			onError = {}
-		)
-	}
+    override fun onAddToListClick() {
+        tryToCall(
+            block = loginUseCase::isUserLoggedIn,
+            onSuccess = { authed ->
+                if (!authed) {
+                    updateState { it.copy(isNoAccountBottomSheetOpen = true) }
+                } else {
+                    updateState { it.copy(isAddToListBottomSheetOpen = true) }
+                }
+            },
+            onError = {}
+        )
+    }
 
-	override fun onCreateListClicked() {
-		updateState { it.copy(isAddToListBottomSheetOpen = false, showCreateListBottomSheet = true) }
-	}
+    override fun onCreateListClicked() {
+        updateState {
+            it.copy(
+                isAddToListBottomSheetOpen = false,
+                showCreateListBottomSheet = true
+            )
+        }
+    }
 
-	override fun onDismissCreateListBottomSheet() {
-		updateState { it.copy(showCreateListBottomSheet = false) }
-	}
+    override fun onDismissCreateListBottomSheet() {
+        updateState { it.copy(showCreateListBottomSheet = false) }
+    }
 
-	override fun onListValueChange(listName: String) {
-		updateState { it.copy(listName = listName) }
-	}
+    override fun onListValueChange(listName: String) {
+        updateState { it.copy(listName = listName) }
+    }
 
     override fun onSeeAllCastClick(movieId: Long) {
         sendEffect(MovieEffect.NavigateToAllActors(movieId))
@@ -207,31 +224,31 @@ class MovieViewModel(
         sendEffect(MovieEffect.NavigateToMovie(movieId))
     }
 
-	override fun onCopy(message: String, isSuccessful: Boolean) {
-		tryToCall(
-			onStart = {
-				onDismissShareBottomSheet()
-				delay(500)
-				updateState {
-					it.copy(
-						showSnackBar = true,
-						snackMessage = message,
-						isProcessSuccess = isSuccessful
-					)
-				}
-			},
-			block = { delay(2000) },
-			onSuccess = {
-				updateState {
-					it.copy(
-						showSnackBar = false,
-						snackMessage = message
-					)
-				}
-			},
-			onError = {},
-		)
-	}
+    override fun onCopy(message: String, isSuccessful: Boolean) {
+        tryToCall(
+            onStart = {
+                onDismissShareBottomSheet()
+                delay(500)
+                updateState {
+                    it.copy(
+                        showSnackBar = true,
+                        snackMessage = message,
+                        isProcessSuccess = isSuccessful
+                    )
+                }
+            },
+            block = { delay(2000) },
+            onSuccess = {
+                updateState {
+                    it.copy(
+                        showSnackBar = false,
+                        snackMessage = message
+                    )
+                }
+            },
+            onError = {},
+        )
+    }
 
     override fun onDismissShareBottomSheet() {
         updateState { it.copy(isShareBottomSheetOpen = false) }
@@ -257,28 +274,28 @@ class MovieViewModel(
         updateState { it.copy(isRateBottomSheetOpen = false) }
     }
 
-	override fun onNavigateToLogin() {
-		sendEffect(MovieEffect.NavigateToLogin)
-	}
+    override fun onNavigateToLogin() {
+        sendEffect(MovieEffect.NavigateToLogin)
+    }
 
-	private fun setError(
-		throwable: Throwable,
-		updateSection: MovieScreenState.() -> MovieScreenState
-	) {
-		updateState {
-			it.updateSection().copy(
-				errorStatus = handleDetailsException(throwable)
-			)
-		}
-	}
+    private fun setError(
+        throwable: Throwable,
+        updateSection: MovieScreenState.() -> MovieScreenState
+    ) {
+        updateState {
+            it.updateSection().copy(
+                errorStatus = handleDetailsException(throwable)
+            )
+        }
+    }
 
-	fun handleDetailsException(e: Throwable): ErrorStatus {
-		return when (e) {
-			is MovioException -> {
-				exceptionToErrorStatus(e)
-			}
+    fun handleDetailsException(e: Throwable): ErrorStatus {
+        return when (e) {
+            is MovioException -> {
+                exceptionToErrorStatus(e)
+            }
 
-			else -> ErrorStatus.UNKNOWN_ERROR
-		}
-	}
+            else -> ErrorStatus.UNKNOWN_ERROR
+        }
+    }
 }

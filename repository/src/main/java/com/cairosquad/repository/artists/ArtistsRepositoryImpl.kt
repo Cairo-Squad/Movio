@@ -14,8 +14,9 @@ import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfArtistsByQu
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfMovieTopCast
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSeriesTopCast
 import java.util.Date
+import javax.inject.Inject
 
-class ArtistsRepositoryImpl(
+class ArtistsRepositoryImpl @Inject constructor(
     private val artistsRemoteDataSource: ArtistsRemoteDataSource,
     private val artistsLocalDataSource: ArtistsLocalDataSource
 ) : ArtistsRepository {

@@ -6,8 +6,9 @@ import androidx.paging.PagingData
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.entity.Movie
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class ForYouPager(
+class ForYouPager @Inject constructor(
     private val manageMoviesUseCase: ManageMoviesUseCase
 ) {
 

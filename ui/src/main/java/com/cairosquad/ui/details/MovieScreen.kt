@@ -45,6 +45,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.basic_component.ExpandableText
@@ -84,20 +85,21 @@ import com.cairosquad.viewmodel.details.movie.MovieEffect
 import com.cairosquad.viewmodel.details.movie.MovieInteractionListener
 import com.cairosquad.viewmodel.details.movie.MovieScreenState
 import com.cairosquad.viewmodel.details.movie.MovieViewModel
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
 fun MovieScreen(
-	movieId: Long,
-	viewModel: MovieViewModel = koinViewModel { parametersOf(movieId) }
+    movieId: Long,
 ) {
-	val navController = LocalNavController.current
-	val context = LocalContext.current
-	val state by viewModel.screenState.collectAsState()
-	val movieUrl = "$MOVIE_URL${movieId}"
-	val message = stringResource(R.string.check_out_this_amazing_movie)
-	val encodedMessageAndUrl = Uri.encode("$message $movieUrl")
+	val viewModel: MovieViewModel =
+        hiltViewModel<MovieViewModel, MovieViewModel.Factory> { factory ->
+            factory.create(movieId)
+        }
+    val navController = LocalNavController.current
+    val context = LocalContext.current
+    val state by viewModel.screenState.collectAsState()
+    val movieUrl = "$MOVIE_URL${movieId}"
+    val message = stringResource(R.string.check_out_this_amazing_movie)
+    val encodedMessageAndUrl = Uri.encode("$message $movieUrl")
 
 
 	ObserveAsEffect(viewModel.effect) { effect ->

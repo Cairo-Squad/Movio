@@ -10,8 +10,9 @@ import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class SearchPager(
+class SearchPager @Inject constructor(
     private val manageMoviesUseCase: ManageMoviesUseCase,
     private val manageSeriesUseCase: ManageSeriesUseCase,
     private val manageArtistUseCase: ManageArtistUseCase
