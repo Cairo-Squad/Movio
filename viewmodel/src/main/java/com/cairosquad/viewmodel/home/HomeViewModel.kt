@@ -3,7 +3,6 @@ package com.cairosquad.viewmodel.home
 
 import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
-import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Movie
@@ -12,14 +11,12 @@ import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import com.cairosquad.viewmodel.home.HomeScreenState.ScreenStatus
-import com.cairosquad.viewmodel.see_all.SeeAllScreenState
 import com.cairosquad.viewmodel.util.MediaContentType
 import com.cairosquad.viewmodel.util.MediaType
-import com.cairosquad.viewmodel.util.combineTwoList
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -264,13 +261,15 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun onRetry() {
-        updateState { it.copy(isRefreshing = true) }
+    override fun onRefresh() {
+        updateState { it.copy(isRefreshing = true, screenStatus = ScreenStatus.LOADING) }
         loadHomeScreenData()
-    }
-
-    fun onRefresh() {
-        updateState { it.copy(isRefreshing = true) }
-        loadHomeScreenData()
+        screenState.value.sections.forEach {
+            fetchSectionData(it.key)
+        }
+        viewModelScope.launch {
+            delay(500L)
+            updateState { it.copy(isRefreshing = false) }
+        }
     }
 }

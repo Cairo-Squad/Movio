@@ -18,11 +18,13 @@ import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.cairosquad.design_system.basic_component.RefreshBox
 import com.cairosquad.design_system.basic_component.TabRow
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.R
 import com.cairosquad.ui.movio_component.AppBar
 import com.cairosquad.ui.movio_component.MediaSectionLayoutType
+import com.cairosquad.ui.see_all_screen.SeeAllLoadingScreen
 import com.cairosquad.viewmodel.home.HomeInteractionsListener
 import com.cairosquad.viewmodel.home.HomeScreenState
 import com.cairosquad.viewmodel.util.MediaContentType
@@ -33,45 +35,75 @@ fun HomeScreenContent(
     listener: HomeInteractionsListener,
 ) {
     val scrollState = rememberScrollState()
+    RefreshBox(
+        isRefreshing = screenState.isRefreshing,
+        onRefresh = { listener.onRefresh() }
+    ) {
 
-    Crossfade(screenState.selectedTab) { selectedTab ->
-        when (selectedTab) {
+        Crossfade(targetState = screenState.screenStatus) { screenStatus ->
+            when (screenStatus) {
+                HomeScreenState.ScreenStatus.FAILED -> {
+                    HomeFailContent(
+                        modifier = Modifier
+                            .statusBarsPadding()
+                            .padding(top = 48.dp)
+                            .padding(top = 36.dp),
+                        errorStatus = screenState.errorStatus,
+                    )
+                }
 
-            HomeScreenState.Tab.MOVIES -> {
-                HomeScreenContentMoviesTab(
-                    screenState = screenState,
-                    listener = listener,
-                    scrollState = scrollState
-                )
-            }
+                HomeScreenState.ScreenStatus.LOADING -> {
+                    SeeAllLoadingScreen(
+                        modifier = Modifier
+                            .statusBarsPadding()
+                            .padding(top = 48.dp)
+                            .padding(top = 36.dp)
+                    )
+                }
 
-            HomeScreenState.Tab.TV_SHOWS -> {
-                HomeScreenContentSeriesTab(
-                    screenState = screenState,
-                    listener = listener,
-                    scrollState = scrollState
-                )
-            }
+                else -> {
+                    Crossfade(screenState.selectedTab) { selectedTab ->
+                        when (selectedTab) {
 
-            HomeScreenState.Tab.CATEGORIES -> {
-                HomeScreenContentCategoriesTab(
-                    modifier = Modifier
-                        .statusBarsPadding()
-                        .padding(top = 48.dp)
-                        .padding(top = 36.dp),
-                    screenState = screenState,
-                    listener = listener,
-                    scrollState = scrollState
-                )
+                            HomeScreenState.Tab.MOVIES -> {
+                                HomeScreenContentMoviesTab(
+                                    screenState = screenState,
+                                    listener = listener,
+                                    scrollState = scrollState
+                                )
+                            }
+
+                            HomeScreenState.Tab.TV_SHOWS -> {
+                                HomeScreenContentSeriesTab(
+                                    screenState = screenState,
+                                    listener = listener,
+                                    scrollState = scrollState
+                                )
+                            }
+
+                            HomeScreenState.Tab.CATEGORIES -> {
+                                HomeScreenContentCategoriesTab(
+                                    modifier = Modifier
+                                        .statusBarsPadding()
+                                        .padding(top = 48.dp)
+                                        .padding(top = 36.dp),
+                                    screenState = screenState,
+                                    listener = listener,
+                                    scrollState = scrollState
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
-    }
 
-    TobContent(
-        screenState = screenState,
-        listener = listener,
-        scrollState = scrollState
-    )
+        TobContent(
+            screenState = screenState,
+            listener = listener,
+            scrollState = scrollState
+        )
+    }
 }
 
 @Composable
