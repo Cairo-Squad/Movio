@@ -32,8 +32,9 @@ import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfUpcomingMov
 import com.cairosquad.repository.utils.sharedDto.local.toCacheCodeWithReviewsCacheDto
 import com.cairosquad.repository.utils.sharedDto.local.toEntityList
 import java.util.Date
+import javax.inject.Inject
 
-class MovieRepositoryImpl(
+class MovieRepositoryImpl @Inject constructor(
     private val moviesRemoteDataSource: MoviesRemoteDataSource,
     private val moviesLocalDataSource: MoviesLocalDataSource
 ) : MoviesRepository {

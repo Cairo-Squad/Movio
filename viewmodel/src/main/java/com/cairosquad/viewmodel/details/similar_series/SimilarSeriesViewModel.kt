@@ -6,9 +6,12 @@ import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.similar_series.SimilarSeriesScreenState.ScreenStatus
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import javax.inject.Inject
 
-class SimilarSeriesViewModel(
+@HiltViewModel
+class SimilarSeriesViewModel @Inject constructor(
     private val manageSeriesUseCase: ManageSeriesUseCase
 ) : BaseViewModel<SimilarSeriesScreenState, SimilarSeriesEffect>(SimilarSeriesScreenState()),
     SimilarSeriesInteractionListener {

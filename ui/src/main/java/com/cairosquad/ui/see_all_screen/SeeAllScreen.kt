@@ -27,6 +27,7 @@ import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -48,14 +49,13 @@ import com.cairosquad.viewmodel.see_all.SeeAllScreenState
 import com.cairosquad.viewmodel.see_all.SeeAllViewModel
 import com.cairosquad.viewmodel.util.MediaContentType
 import com.cairosquad.viewmodel.util.MediaType
-import org.koin.androidx.compose.koinViewModel
 import java.util.Locale
 
 @Composable
 fun SeeAllScreen(
-    contentType: MediaContentType,
-    mediaType: MediaType,
-    viewModel: SeeAllViewModel = koinViewModel()
+	contentType: MediaContentType,
+	mediaType: MediaType,
+	viewModel: SeeAllViewModel = hiltViewModel()
 ) {
     val state by viewModel.screenState.collectAsState()
 

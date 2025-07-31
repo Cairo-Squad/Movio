@@ -16,10 +16,13 @@ import com.cairosquad.viewmodel.see_all.SeeAllScreenState
 import com.cairosquad.viewmodel.util.MediaContentType
 import com.cairosquad.viewmodel.util.MediaType
 import com.cairosquad.viewmodel.util.combineTwoList
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class HomeViewModel(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
     private val manageMoviesUseCase: ManageMoviesUseCase,
     private val manageSeriesUseCase: ManageSeriesUseCase,
     private val unifiedMediaPager: UnifiedMediaPager
@@ -270,5 +273,4 @@ class HomeViewModel(
         updateState { it.copy(isRefreshing = true) }
         loadHomeScreenData()
     }
-
 }

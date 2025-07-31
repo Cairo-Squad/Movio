@@ -14,13 +14,16 @@ import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import com.cairosquad.viewmodel.see_all.SeeAllScreenState.GenreUiState.Companion.defaultGenre
 import com.cairosquad.viewmodel.util.MediaContentType
 import com.cairosquad.viewmodel.util.MediaType
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
-class SeeAllViewModel(
+@HiltViewModel
+class SeeAllViewModel @Inject constructor(
     private val manageMoviesUseCase: ManageMoviesUseCase,
     private val manageSeriesUseCase: ManageSeriesUseCase,
     private val seeAllMoviesPager: SeeAllMoviesPager,

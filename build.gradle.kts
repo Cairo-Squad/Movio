@@ -14,6 +14,12 @@ plugins {
     alias(libs.plugins.ksp) apply false
 }
 
+buildscript {
+    dependencies {
+        classpath(libs.hilt.android.gradle.plugin)
+    }
+}
+
 kover {
     reports {
         filters {
@@ -29,6 +35,13 @@ kover {
                     "**.entity.**",
                     "**.local.**",
                     "**.safe_image_viewer.**",
+                    "**.build.**",
+                    "dagger.hilt.internal.aggregatedroot.codegen.*",
+                    "hilt_aggregated_deps.*",
+                    "*_HiltModules*",
+                    "*Hilt_*",
+                    "*_Factory*",
+                    "*BuildConfig*"
                 )
             }
         }

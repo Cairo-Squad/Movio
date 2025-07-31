@@ -7,8 +7,9 @@ import com.cairosquad.repository.movie.data_source.remote.dto.MovieDetailsRemote
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
 import java.time.LocalDate
+import javax.inject.Inject
 
-class MoviesRemoteDataSourceImpl(
+class MoviesRemoteDataSourceImpl @Inject constructor(
     private val apiService: MovieApiService,
 ) : MoviesRemoteDataSource {
 

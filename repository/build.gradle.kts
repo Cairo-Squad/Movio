@@ -7,6 +7,7 @@ plugins {
     id("androidx.room") version "2.7.1"
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kover)
+    id("org.jetbrains.kotlin.kapt")
 }
 
 android {
@@ -59,4 +60,9 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+
 }

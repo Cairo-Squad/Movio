@@ -37,8 +37,9 @@ import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfTrendingSer
 import com.cairosquad.repository.utils.sharedDto.local.toCacheCodeWithReviewsCacheDto
 import com.cairosquad.repository.utils.sharedDto.local.toEntityList
 import java.util.Date
+import javax.inject.Inject
 
-class SeriesRepositoryImpl(
+class SeriesRepositoryImpl @Inject constructor(
     private val seriesRemoteDataSource: SeriesRemoteDataSource,
     private val seriesLocalDataSource: SeriesLocalDataSource,
     private val seasonEpisodeLocalDataSource: SeasonEpisodeLocalDataSource
