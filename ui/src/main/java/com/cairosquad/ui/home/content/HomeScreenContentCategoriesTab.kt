@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -25,20 +26,24 @@ import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.LazyPagingItems
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.R
 import com.cairosquad.ui.movio_component.CategoriesChips
 import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.viewmodel.home.HomeInteractionsListener
 import com.cairosquad.viewmodel.home.HomeScreenState
+import com.cairosquad.viewmodel.see_all.SeeAllScreenState
 
 @Composable
 fun HomeScreenContentCategoriesTab(
     screenState: HomeScreenState,
+    media: LazyPagingItems<HomeScreenState.MediaUiState>,
     listener: HomeInteractionsListener,
     scrollState: ScrollState,
     modifier: Modifier = Modifier
 ) {
+
     Box(modifier = modifier.fillMaxSize()) {
         Box(
             modifier = Modifier
@@ -53,10 +58,12 @@ fun HomeScreenContentCategoriesTab(
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {
+
             CategoriesChips(
                 modifier = Modifier.padding(top = 16.dp),
-                categories = listOf(stringResource(R.string.genre_all))
-                        + screenState.genres.drop(1).map { it.name },
+                categories = listOf(stringResource(R.string.genre_all)) + screenState.genres.drop(
+                    1
+                ).map { it.name },
                 selectedChipIndex = screenState.selectedGenreIndex,
                 onChipSelected = { index ->
                     listener.onGenreSelected(index)
@@ -68,10 +75,11 @@ fun HomeScreenContentCategoriesTab(
                 onChipSelected = { index ->
                     listener.onSortingSelected(HomeScreenState.SortingType.entries[index])
                 })
+
             LazyVerticalGrid(
                 modifier = Modifier
-                    .heightIn(max = 10000.dp)
                     .fillMaxWidth()
+                    .heightIn(max = 10_000.dp)
                     .padding(horizontal = 16.dp),
                 columns = GridCells.Adaptive(minSize = 101.33.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -79,17 +87,22 @@ fun HomeScreenContentCategoriesTab(
                 contentPadding = PaddingValues(bottom = 12.dp),
                 userScrollEnabled = false
             ) {
-                items(screenState.categoriesMedia) { moreRecommended ->
-                    MovieCard(
-                        modifier = Modifier.clickable {
-                            listener.onClickMedia(moreRecommended.id, moreRecommended.isMovie)
-                        },
-                        title = moreRecommended.title,
-                        vote = moreRecommended.rating,
-                        imgUrl = moreRecommended.posterPath,
-                        width = null,
-                        aspectRatio = 0.743f
-                    )
+                items(media.itemCount) { index ->
+                    media[index]?.let { moreRecommended ->
+                        MovieCard(
+                            modifier = Modifier.clickable {
+                                listener.onClickMedia(
+                                    moreRecommended.id, moreRecommended.isMovie
+                                )
+                            },
+                            title = moreRecommended.title,
+                            vote = moreRecommended.rating,
+                            imgUrl = moreRecommended.posterPath,
+                            width = null,
+                            aspectRatio = 0.743f
+                        )
+                    }
+
                 }
             }
         }
