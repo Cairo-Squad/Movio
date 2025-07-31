@@ -155,7 +155,7 @@ private fun AllResultsTabContent(
                 StateMessage(
                     imageDrawable = R.drawable.no_result,
                     titleId = R.string.no_results_found,
-                    descriptionId = R.string.no_results_found_description
+                    descriptionId = R.string.no_search_results_found_description
                 )
             }
         }
@@ -224,7 +224,7 @@ private fun MoviesTabContent(
                 StateMessage(
                     imageDrawable = R.drawable.no_result,
                     titleId = R.string.no_results_found,
-                    descriptionId = R.string.no_results_found_description
+                    descriptionId = R.string.no_search_results_found_description
                 )
             }
         }
@@ -300,7 +300,7 @@ private fun SeriesTabContent(
                 StateMessage(
                     imageDrawable = R.drawable.no_result,
                     titleId = R.string.no_results_found,
-                    descriptionId = R.string.no_results_found_description
+                    descriptionId = R.string.no_search_results_found_description
                 )
             }
         }
@@ -374,7 +374,7 @@ private fun ArtistsTabContent(
                 StateMessage(
                     imageDrawable = R.drawable.no_result,
                     titleId = R.string.no_results_found,
-                    descriptionId = R.string.no_results_found_description
+                    descriptionId = R.string.no_search_results_found_description
                 )
             }
         }

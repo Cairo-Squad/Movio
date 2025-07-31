@@ -1,14 +1,14 @@
-package com.cairosquad.viewmodel.foryou
+package com.cairosquad.viewmodel.see_all
 
 import com.cairosquad.viewmodel.base.BasePagingSource
 
-class ForYouPagingSource<T : Any>(
-    private val fetcher: suspend (Int) -> List<T>
+class SeeAllPagingSource<T : Any>(
+    private val fetcher: suspend (Int, Long?) -> List<T>
 ) : BasePagingSource<T>() {
     override suspend fun fetchData(
         page: Int,
         genreId: Long?
     ): List<T> {
-        return fetcher(page)
+        return fetcher(page, genreId)
     }
 }

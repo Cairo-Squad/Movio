@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="no_results_found">No results found</string>
-    <string name="no_results_found_description">We couldn’t find anything matching your search. Try checking the spelling or explore something else!</string>
+    <string name="no_search_results_found_description">We couldn’t find anything matching your search. Try checking the spelling or explore something else!</string>
+    <string name="no_results_for_category">We couldn’t find any content in this category. Try exploring another one!</string>
     <string name="internet_is_not_available">Internet is not available</string>
     <string name="internet_is_not_available_description">Please make sure you are connected to the internet and try again.</string>
     <string name="log_in_to_unlock_your_personal_library">Log in to unlock your personal library</string>
