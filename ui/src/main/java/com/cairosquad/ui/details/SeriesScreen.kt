@@ -381,6 +381,19 @@ private fun SeriesScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .windowInsetsPadding(WindowInsets.statusBars)
+                        .then(
+                            if (
+                                uiState.showCreateListBottomSheet
+                                || uiState.showRateBottomSheet
+                                || uiState.showLoginBottomSheet
+                                || uiState.showShareBottomSheet
+                                || uiState.showAddToListBottomSheet
+                            ) {
+                                Modifier.blur(4.dp)
+                            } else {
+                                Modifier
+                            }
+                        )
                         .heightIn(max = 10000.dp),
                     horizontalAlignment = Alignment.Start,
                     userScrollEnabled = false

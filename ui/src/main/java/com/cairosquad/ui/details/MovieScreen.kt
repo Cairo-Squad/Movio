@@ -88,18 +88,18 @@ import com.cairosquad.viewmodel.details.movie.MovieViewModel
 
 @Composable
 fun MovieScreen(
-    movieId: Long,
+	movieId: Long,
 ) {
 	val viewModel: MovieViewModel =
-        hiltViewModel<MovieViewModel, MovieViewModel.Factory> { factory ->
-            factory.create(movieId)
-        }
-    val navController = LocalNavController.current
-    val context = LocalContext.current
-    val state by viewModel.screenState.collectAsState()
-    val movieUrl = "$MOVIE_URL${movieId}"
-    val message = stringResource(R.string.check_out_this_amazing_movie)
-    val encodedMessageAndUrl = Uri.encode("$message $movieUrl")
+		hiltViewModel<MovieViewModel, MovieViewModel.Factory> { factory ->
+			factory.create(movieId)
+		}
+	val navController = LocalNavController.current
+	val context = LocalContext.current
+	val state by viewModel.screenState.collectAsState()
+	val movieUrl = "$MOVIE_URL${movieId}"
+	val message = stringResource(R.string.check_out_this_amazing_movie)
+	val encodedMessageAndUrl = Uri.encode("$message $movieUrl")
 
 
 	ObserveAsEffect(viewModel.effect) { effect ->
@@ -327,12 +327,15 @@ fun MovieContent(
 										.height(400.dp)
 										.then(
 											if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-												Modifier.blur(16.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
+												Modifier.blur(
+													16.dp,
+													edgeTreatment = BlurredEdgeTreatment.Unbounded
+												)
 											} else {
 												Modifier
 											}
 										)
-										.offset(y = (-28).dp),
+										.offset(y = (- 28).dp),
 									model = BuildConfig.IMAGE_BASE_URL + uiState.movie.posterPath,
 									contentDescription = "",
 									blur = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) 16 else 0,
@@ -374,6 +377,19 @@ fun MovieContent(
 					modifier = Modifier
 						.fillMaxWidth()
 						.windowInsetsPadding(WindowInsets.statusBars)
+						.then(
+							if (
+								uiState.showCreateListBottomSheet
+								|| uiState.isAddToListBottomSheetOpen
+								|| uiState.isRateBottomSheetOpen
+								|| uiState.isShareBottomSheetOpen
+								|| uiState.isNoAccountBottomSheetOpen
+								) {
+								Modifier.blur(4.dp)
+							} else {
+								Modifier
+							}
+						)
 						.heightIn(max = 10000.dp),
 					horizontalAlignment = Alignment.Start,
 					userScrollEnabled = false
