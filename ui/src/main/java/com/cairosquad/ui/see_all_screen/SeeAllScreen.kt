@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -191,7 +189,7 @@ private fun SeeAllMediaItems(
                 StateMessage(
                     imageDrawable = R.drawable.no_result,
                     titleId = R.string.no_results_found,
-                    descriptionId = R.string.no_results_found_description
+                    descriptionId = R.string.no_results_for_category
                 )
             }
         }
@@ -230,7 +228,7 @@ private fun TrendingContentList(
                 StateMessage(
                     imageDrawable = R.drawable.no_result,
                     titleId = R.string.no_results_found,
-                    descriptionId = R.string.no_results_found_description
+                    descriptionId = R.string.no_results_for_category
                 )
             }
         }
