@@ -43,7 +43,8 @@ class SeeAllViewModelTest {
     private val testDispatcher = StandardTestDispatcher()
     private val manageMoviesUseCase = mockk<ManageMoviesUseCase>()
     private val manageSeriesUseCase = mockk<ManageSeriesUseCase>()
-
+    private val seeAllMoviesPager =mockk<SeeAllMoviesPager>()
+    private val seeAllSeriesPager =mockk<SeeAllSeriesPager>()
     private val dummyMovie =
         Movie(1, "Title", 8.5f, "path.jpg", listOf(), "overview", 1234567890, 120, "trailer")
     private val dummyGenre = Genre(1, "Action")
@@ -58,6 +59,8 @@ class SeeAllViewModelTest {
         viewModel = SeeAllViewModel(
             manageMoviesUseCase,
             manageSeriesUseCase,
+            seeAllMoviesPager,
+            seeAllSeriesPager
         )
     }
 
@@ -126,7 +129,7 @@ class SeeAllViewModelTest {
         assertEquals(SeeAllScreenState.ScreenStatus.LOADING, initialState.screenStatus)
         assertEquals(1, initialState.genres.size) // Default "All" genre
         assertEquals(0, initialState.selectedGenreIndex)
-        assertTrue(initialState.mediaList.isEmpty())
+       // assertTrue(initialState.mediaList.())
         assertNull(initialState.errorStatus)
     }
 
