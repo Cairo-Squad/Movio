@@ -27,11 +27,12 @@ import com.cairosquad.design_system.theme.Theme
 
 @Composable
 fun RecommendationSearchItem(
-    modifier: Modifier = Modifier,
-    isRecentSearch: Boolean = false,
     recommendationItem: String,
     query: String,
     onSearchRecommendationItemClicked: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    isRecentSearch: Boolean = false
+
 ) {
     val recentItemText = buildAnnotatedString {
         val startIndex = recommendationItem.indexOf(query)
@@ -48,7 +49,7 @@ fun RecommendationSearchItem(
                     append(recommendationItem.substring(0, startIndex))
                 }
             }
-          withStyle(style = SpanStyle(color = Theme.color.surfaces.onSurface)) {
+            withStyle(style = SpanStyle(color = Theme.color.surfaces.onSurface)) {
                 append(recommendationItem.substring(startIndex, endIndex))
             }
 
@@ -60,7 +61,9 @@ fun RecommendationSearchItem(
         }
     }
     val headIcon =
-        if (isRecentSearch) ImageVector.vectorResource(R.drawable.recent) else ImageVector.vectorResource(R.drawable.search_bottom_nav)
+        if (isRecentSearch) ImageVector.vectorResource(R.drawable.recent) else ImageVector.vectorResource(
+            R.drawable.search_bottom_nav
+        )
 
     Row(
         modifier = modifier
