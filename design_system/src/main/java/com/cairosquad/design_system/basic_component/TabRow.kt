@@ -114,6 +114,10 @@ fun TabRow(
                         isLightTheme && isSelected && scrollProgress > 0.5f ->
                             Theme.color.brand.onPrimaryContainer
                         isSelected ->
+                            if (selectedTabTitle == stringResource(com.cairosquad.design_system.R.string.categories))
+                                Theme.color.brand.onPrimaryContainer
+                        else
+
                             Theme.color.brand.onPrimary
                         else ->
                             Theme.color.surfaces.onSurfaceVariant
