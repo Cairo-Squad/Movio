@@ -108,7 +108,12 @@ private fun EpisodesScreenContent(
     modifier: Modifier = Modifier,
 
     ) {
-    val seasonOptions = uiState.seasons.map { "Season ${it.seasonNumber}" }
+    val seasonOptions = uiState.seasons.map {
+        stringResource(
+            com.cairosquad.ui.R.string.season,
+            it.seasonNumber
+        )
+    }
 
     val listState = rememberScrollState()
     val density = LocalDensity.current
@@ -163,7 +168,10 @@ private fun EpisodesScreenContent(
                                         .height(400.dp)
                                         .then(
                                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                                Modifier.blur(16.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
+                                                Modifier.blur(
+                                                    16.dp,
+                                                    edgeTreatment = BlurredEdgeTreatment.Unbounded
+                                                )
                                             } else {
                                                 Modifier
                                             }
@@ -298,12 +306,17 @@ private fun EpisodesScreenContent(
                                 )
                                 Spacer(modifier = Modifier.weight(1f))
                                 AppDropDownMenu(
-                                    selectedText = "Season ${uiState.selectedSeasonNumber}",
+                                    selectedText = stringResource(
+                                        R.string.season,
+                                        uiState.selectedSeasonNumber
+                                    ),
                                     options = seasonOptions,
                                     imgRes = R.drawable.drop_down_arrow,
-                                    onOptionSelected = { selected ->
+                                    onOptionSelected = { selectedSeason ->
                                         val seasonNum =
-                                            selected.removePrefix("Season ").toIntOrNull() ?: 1
+                                            seasonOptions.indexOfFirst {
+                                                selectedSeason == it
+                                            }.takeIf { it != -1 } ?: 1
                                         listener.onSeasonSelected(seriesId, seasonNum)
                                     },
                                 )
@@ -416,7 +429,7 @@ fun EpisodeCard(
                     modifier = Modifier.size(16.dp)
                 )
                 BasicText(
-                    text = "$episodeRating",
+                    text = episodeRating,
                     style = Theme.textStyle.label.smallRegular12.copy(color = Theme.color.surfaces.onSurface)
                 )
             }
@@ -425,7 +438,7 @@ fun EpisodeCard(
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 BasicText(
-                    text = "Episode $episodeNumber",
+                    text = stringResource(com.cairosquad.ui.R.string.episode, episodeNumber),
                     style = Theme.textStyle.label.smallRegular12.copy(
                         color = Theme.color.surfaces.onSurfaceContainer,
                     )
@@ -437,7 +450,7 @@ fun EpisodeCard(
                     )
                 )
                 BasicText(
-                    text = "${episodeDuration}m",
+                    text = stringResource(com.cairosquad.ui.R.string.m, episodeDuration),
                     style = Theme.textStyle.label.smallRegular12.copy(
                         color = Theme.color.surfaces.onSurfaceContainer,
                     )
