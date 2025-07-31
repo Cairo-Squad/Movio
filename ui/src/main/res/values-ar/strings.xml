@@ -51,4 +51,5 @@
     <string name="read_less_with_dotes_behind">... اقرء اقل </string>
     <string name="no_trailer_found_for_this_movie">لم يتم العثور على عرض تشويقي لهذا الفيلم</string>
     <string name="no_trailer_found_for_this_series">لم يتم العثور على عرض تشويقي لهذا المسلسل</string>
+    <string name="something_went_wrong">حدث خطأ ما</string>
 </resources>
