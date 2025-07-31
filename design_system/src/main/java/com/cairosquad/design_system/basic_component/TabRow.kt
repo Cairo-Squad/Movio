@@ -3,6 +3,7 @@ package com.cairosquad.design_system.basic_component
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -32,10 +33,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 
 @Composable
@@ -43,6 +42,7 @@ fun TabRow(
     tabs: List<String>,
     selectedTabIndex: Int,
     onTabSelected: (Int) -> Unit,
+    scrollState: ScrollState,
     modifier: Modifier = Modifier,
 ) {
     val tabPositions = remember { mutableStateMapOf<Int, Pair<Int, Int>>() }
@@ -74,16 +74,27 @@ fun TabRow(
         animationSpec = tween(200)
     )
 
+    val scrollThresholdPx = with(density) { 275.dp.toPx() }
+    val scrollProgress = (scrollState.value / scrollThresholdPx).coerceIn(0f, 1f)
 
     val selectedTabTitle = tabs.getOrNull(selectedTabIndex)
-    val indicatorBrush = if (selectedTabTitle ==  stringResource(com.cairosquad.design_system.R.string.categories)) {
-        Theme.color.gradiant.horizontalCategoriesGradient
+    val indicatorBrush = if (selectedTabTitle == stringResource(com.cairosquad.design_system.R.string.categories)) {
+
+        if (scrollProgress >= 0.5f) {
+            Theme.color.gradiant.horizontalCategoriesGradient
+        } else {
+            Theme.color.gradiant.horizontalCategoriesGradient
+        }
     } else {
-        Theme.color.gradiant.horizontalGradient
+
+        if (scrollProgress >= 0.5f) {
+            Theme.color.gradiant.horizontalCategoriesGradient
+        } else {
+            Theme.color.gradiant.horizontalGradient
+        }
     }
 
     Box(modifier = modifier.fillMaxWidth()) {
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -139,26 +150,6 @@ fun TabRow(
                     .width(indicatorWidth)
                     .align(Alignment.BottomStart)
                     .background(brush = indicatorBrush)
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun TabRowPreview() {
-    MovioTheme(isDarkTheme = true) {
-        val tabs = listOf("All", "Movies", "Series", "Categories")
-        var selectedTabIndex by remember { mutableIntStateOf(3) }
-        Box(
-            Modifier
-                .background(Theme.color.surfaces.surface)
-                .padding(16.dp)
-        ) {
-            TabRow(
-                tabs = tabs,
-                selectedTabIndex = selectedTabIndex,
-                onTabSelected = { selectedTabIndex = it }
             )
         }
     }

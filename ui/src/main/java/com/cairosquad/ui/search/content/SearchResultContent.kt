@@ -46,6 +46,7 @@ fun SearchResultContent(
     listener: SearchInteractionListener,
     modifier: Modifier = Modifier
 ) {
+    val scrollState = rememberScrollState()
     val movies = state.movies.collectAsLazyPagingItems()
     val artists = state.artists.collectAsLazyPagingItems()
     val series = state.series.collectAsLazyPagingItems()
@@ -94,7 +95,9 @@ fun SearchResultContent(
                     stringResource(R.string.artists),
                 ),
                 selectedTabIndex = selectedTabIndex,
-                onTabSelected = { listener.onTabSelected(it) }
+                onTabSelected = { listener.onTabSelected(it) },
+                scrollState = scrollState
+
             )
 
             when (selectedTabIndex) {
