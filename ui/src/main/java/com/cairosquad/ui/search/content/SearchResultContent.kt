@@ -57,13 +57,14 @@ fun SearchResultContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(start = 16.dp, top = 16.dp, end = 16.dp)
+            .padding(top = 16.dp)
     ) {
 
         InputField(
             modifier = Modifier
                 .background(Theme.color.surfaces.surface)
-                .padding(bottom = 12.dp),
+                .padding( bottom = 12.dp)
+                .padding(horizontal = 16.dp),
             value = state.query,
             onValueChange = { },
             placeholder = stringResource(R.string.search_with_dotes_ahead),
@@ -165,7 +166,11 @@ private fun AllResultsTabContent(
                 columns = GridCells.Adaptive(minSize = 101.33.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(bottom = 16.dp)
+                contentPadding = PaddingValues(
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp
+                )
             ) {
                 items(movies.itemCount) { index ->
                     movies[index]?.let { result ->
@@ -230,7 +235,11 @@ private fun MoviesTabContent(
                 columns = GridCells.Adaptive(minSize = 101.33.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(bottom = 16.dp)
+                contentPadding = PaddingValues(
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp
+                )
             ) {
                 items(movies.itemCount) { index ->
                     movies[index]?.let { movie ->
@@ -302,7 +311,11 @@ private fun SeriesTabContent(
                 columns = GridCells.Adaptive(minSize = 101.33.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(bottom = 16.dp)
+                contentPadding = PaddingValues(
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp
+                )
             ) {
                 items(series.itemCount) { index ->
                     series[index]?.let { series ->
@@ -368,11 +381,15 @@ private fun ArtistsTabContent(
 
         else -> {
             LazyVerticalGrid(
-                modifier = modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize() ,
                 columns = GridCells.Adaptive(minSize = 101.33.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(bottom = 16.dp)
+                contentPadding = PaddingValues(
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp
+                )
             ) {
                 items(artist.itemCount) { index ->
                     artist[index]?.let { artist ->
@@ -436,7 +453,7 @@ fun SearchResultText(
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier.padding(bottom = 16.dp),
+        modifier = modifier.padding(bottom = 16.dp).padding(horizontal =  16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         BasicText(

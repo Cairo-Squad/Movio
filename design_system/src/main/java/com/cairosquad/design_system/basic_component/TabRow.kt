@@ -12,6 +12,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -102,7 +103,7 @@ fun TabRow(
                 .height(36.dp)
                 .horizontalScroll(horizontalScrollingState)
                 .onGloballyPositioned { rowWidthPx = it.size.width },
-            horizontalArrangement = Arrangement.SpaceAround,
+            horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
             tabs.forEachIndexed { index, title ->
