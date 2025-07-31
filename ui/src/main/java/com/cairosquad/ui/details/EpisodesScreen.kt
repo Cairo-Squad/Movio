@@ -312,9 +312,11 @@ private fun EpisodesScreenContent(
                                     ),
                                     options = seasonOptions,
                                     imgRes = R.drawable.drop_down_arrow,
-                                    onOptionSelected = { selected ->
+                                    onOptionSelected = { selectedSeason ->
                                         val seasonNum =
-                                            selected.removePrefix("Season ").toIntOrNull() ?: 1
+                                            seasonOptions.indexOfFirst {
+                                                selectedSeason == it
+                                            }.takeIf { it != -1 } ?: 1
                                         listener.onSeasonSelected(seriesId, seasonNum)
                                     },
                                 )
