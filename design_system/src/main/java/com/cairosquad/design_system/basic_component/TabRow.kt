@@ -44,7 +44,6 @@ fun TabRow(
     selectedTabIndex: Int,
     onTabSelected: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
 
     val tabPositions = remember { mutableStateMapOf<Int, Pair<Int, Int>>() }
@@ -85,7 +84,7 @@ fun TabRow(
                 .height(36.dp)
                 .horizontalScroll(horizontalScrollingState)
                 .onGloballyPositioned { rowWidthPx = it.size.width },
-            horizontalArrangement = Arrangement.SpaceAround,
+            horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
             tabs.forEachIndexed { index, title ->
