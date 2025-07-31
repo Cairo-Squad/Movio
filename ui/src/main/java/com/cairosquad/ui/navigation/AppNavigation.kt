@@ -27,9 +27,7 @@ import com.cairosquad.ui.details.similar_movies.SimilarMoviesScreen
 import com.cairosquad.ui.details.similar_series.SimilarSeriesScreen
 import com.cairosquad.ui.search.ForYouScreen
 import com.cairosquad.ui.see_all_screen.SeeAllScreen
-import com.cairosquad.ui.splash.SplashScreen
 import com.cairosquad.viewmodel.auth_gate.AuthGate
-import kotlinx.coroutines.launch
 
 
 @Composable
@@ -38,8 +36,6 @@ fun AppNavigation(
 ) {
 
     val navController = rememberNavController()
-
-    val coroutineScope = rememberCoroutineScope()
 
     CompositionLocalProvider(
         LocalNavController provides navController
