@@ -75,7 +75,6 @@ fun SearchResultContent(
             readOnly = true
         )
         TabRow(
-            modifier = Modifier.padding(bottom = 12.dp),
             tabs = listOf(
                 stringResource(R.string.top_Results),
                 stringResource(R.string.movies),
@@ -83,7 +82,8 @@ fun SearchResultContent(
                 stringResource(R.string.artists),
             ),
             selectedTabIndex = selectedTabIndex,
-            onTabSelected = { listener.onTabSelected(it) }
+            onTabSelected = { listener.onTabSelected(it) },
+            contentPadding = PaddingValues(bottom = 12.dp)
         )
 
         when (selectedTabIndex) {

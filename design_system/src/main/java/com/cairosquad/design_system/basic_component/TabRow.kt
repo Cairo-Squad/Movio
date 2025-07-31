@@ -10,6 +10,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -43,6 +44,7 @@ fun TabRow(
     selectedTabIndex: Int,
     onTabSelected: (Int) -> Unit,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
 
     val tabPositions = remember { mutableStateMapOf<Int, Pair<Int, Int>>() }
