@@ -77,7 +77,7 @@ jobs:
           echo "IMAGE_BASE_URL = \"$IMAGE_BASE_URL\"" >> secret.properties
 
           # Build signed release APK
-          ./gradlew build  testClasses  --build-cache
+          ./gradlew build --build-cache
 
   test:
 
