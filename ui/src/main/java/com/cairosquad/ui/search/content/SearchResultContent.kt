@@ -44,6 +44,7 @@ fun SearchResultContent(
     listener: SearchInteractionListener,
     modifier: Modifier = Modifier
 ) {
+    val scrollState = rememberScrollState()
     val movies = state.movies.collectAsLazyPagingItems()
     val artists = state.artists.collectAsLazyPagingItems()
     val series = state.series.collectAsLazyPagingItems()
@@ -74,17 +75,19 @@ fun SearchResultContent(
             },
             readOnly = true
         )
-        TabRow(
-            modifier = Modifier.padding(bottom = 12.dp),
-            tabs = listOf(
-                stringResource(R.string.top_Results),
-                stringResource(R.string.movies),
-                stringResource(R.string.series),
-                stringResource(R.string.artists),
-            ),
-            selectedTabIndex = selectedTabIndex,
-            onTabSelected = { listener.onTabSelected(it) }
-        )
+            TabRow(
+                modifier = Modifier.padding(bottom = 12.dp),
+                tabs = listOf(
+                    stringResource(R.string.top_Results),
+                    stringResource(R.string.movies),
+                    stringResource(R.string.series),
+                    stringResource(R.string.artists),
+                ),
+                selectedTabIndex = selectedTabIndex,
+                onTabSelected = { listener.onTabSelected(it) },
+                scrollState = scrollState
+
+            )
 
         when (selectedTabIndex) {
             0 -> {
@@ -208,7 +211,6 @@ private fun MoviesTabContent(
                 errorStatus = state.errorStatus
             )
         }
-
         isEmpty -> {
             Box(
                 modifier = modifier.fillMaxSize(),
@@ -276,13 +278,11 @@ private fun SeriesTabContent(
                 modifier = modifier
             )
         }
-
-        isError -> {
+        isError ->{
             SearchResultFail(
                 errorStatus = state.errorStatus
             )
         }
-
         isEmpty -> {
             Box(
                 modifier = modifier.fillMaxSize(),
@@ -348,13 +348,11 @@ private fun ArtistsTabContent(
                 modifier = modifier
             )
         }
-
-        isError -> {
+        isError ->{
             SearchResultFail(
                 errorStatus = state.errorStatus
             )
         }
-
         isEmpty -> {
             Box(
                 modifier = modifier.fillMaxSize(),
@@ -394,7 +392,7 @@ private fun ArtistsTabContent(
 @Composable
 private fun SearchResultFail(
     errorStatus: ErrorStatus?
-) {
+){
     Box(
         Modifier
             .fillMaxSize()
@@ -432,7 +430,6 @@ private fun SearchResultFail(
         )
     }
 }
-
 @Composable
 fun SearchResultText(
     noOfResults: Int,

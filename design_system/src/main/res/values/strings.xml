@@ -75,5 +75,5 @@
     <string name="similar_series">Similar Series</string>
     <string name="unauthorized_access">Wrong credentials</string>
     <string name="error_parsing_data">Something went wrong while processing data</string>
-
-</resources>
+    <string name="categories">Categories</string>
+ </resources>
