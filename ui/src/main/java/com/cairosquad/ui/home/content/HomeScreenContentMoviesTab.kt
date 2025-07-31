@@ -77,7 +77,7 @@ fun HomeScreenContentMoviesTab(
                         } else {
                             MediaSection(
                                 modifier = Modifier.padding(bottom = 32.dp),
-                                mediaList = MediaSectionItem.fromHomeSectionUiState(sectionState),
+                                mediaList = sectionState.movies.map(MediaSectionItem::fromHomeMediaUiState),
                                 sectionTitle = stringResource(sectionType.titleId),
                                 mediaSectionLayoutType = getMediaSectionLayout(sectionType),
                                 onClickMedia = listener::onClickMedia,

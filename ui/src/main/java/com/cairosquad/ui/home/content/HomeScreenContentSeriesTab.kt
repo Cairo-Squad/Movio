@@ -79,7 +79,7 @@ fun HomeScreenContentSeriesTab(
                         } else {
                             MediaSection(
                                 modifier = Modifier.padding(bottom = 32.dp),
-                                mediaList = MediaSectionItem.fromHomeSectionUiState(sectionState),
+                                mediaList = sectionState.series.map(MediaSectionItem::fromHomeMediaUiState),
                                 sectionTitle = stringResource(sectionType.titleId),
                                 mediaSectionLayoutType = getMediaSectionLayout(sectionType),
                                 onClickMedia = listener::onClickMedia,
@@ -93,6 +93,5 @@ fun HomeScreenContentSeriesTab(
                 }
             }
         }
-
     }
 }
