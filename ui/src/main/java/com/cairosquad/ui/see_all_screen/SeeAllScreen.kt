@@ -181,7 +181,7 @@ private fun SeeAllMediaItems(
         }
 
         state.screenStatus == SeeAllScreenState.ScreenStatus.LOADING -> {
-            SeeAllLoadingScreen(modifier)
+            SeeAllLoadingScreen(Modifier.padding(top = 16.dp))
         }
 
         state.screenStatus == SeeAllScreenState.ScreenStatus.Empty ->{
@@ -220,7 +220,7 @@ private fun TrendingContentList(
         }
 
         state.screenStatus == SeeAllScreenState.ScreenStatus.LOADING -> {
-            SeeAllLoadingScreen(modifier)
+            SeeAllLoadingScreen(modifier = Modifier.padding(top = 16.dp))
         }
 
         state.screenStatus == SeeAllScreenState.ScreenStatus.Empty -> {

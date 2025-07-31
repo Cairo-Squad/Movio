@@ -76,4 +76,5 @@
     <string name="top_cast">أفضل الممثلين</string>
     <string name="unauthorized_access">أنت غير مصرح لك بتنفيذ هذا الإجراء</string>
     <string name="error_parsing_data">حدث خطأ أثناء معالجة البيانات</string>
+    <string name="categories">الأصناف</string>
 </resources>

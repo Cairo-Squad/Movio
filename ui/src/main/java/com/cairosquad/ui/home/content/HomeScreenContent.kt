@@ -144,7 +144,9 @@ private fun TobContent(
             modifier = Modifier,
             tabs = tabsList.map { stringResource(it) },
             selectedTabIndex = screenState.selectedTab.ordinal,
-            onTabSelected = listener::onClickTab
+            onTabSelected = listener::onClickTab,
+            scrollState = scrollState
+
         )
     }
 }
