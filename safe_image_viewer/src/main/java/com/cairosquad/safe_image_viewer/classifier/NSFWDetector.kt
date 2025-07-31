@@ -37,9 +37,9 @@ object NSFWDetector {
 			.getOnDeviceAutoMLImageLabeler(options)
 	}
 
-	private val imageCache = LruCache<String, Boolean>(50)
+	private val imageCache = LruCache<String, Boolean>(100)
 
-	private val executorService = Executors.newFixedThreadPool(4)
+	private val executorService = Executors.newFixedThreadPool(10)
 
 	fun isNSFWCancellable(
 		bitmap: Bitmap,
