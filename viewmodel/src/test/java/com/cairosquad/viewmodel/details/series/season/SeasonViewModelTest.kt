@@ -59,7 +59,7 @@ class SeasonViewModelTest {
         coEvery { manageSeriesUseCase.getEpisodes(any(), any()) } returns mockEpisodes
 
         // Act
-        viewModel = SeasonsViewModel(manageSeriesUseCase, testDispatcher, seriesId)
+        viewModel = SeasonsViewModel(manageSeriesUseCase, seriesId, testDispatcher)
 
         advanceUntilIdle()
 
@@ -75,7 +75,7 @@ class SeasonViewModelTest {
         coEvery { manageSeriesUseCase.getEpisodes(any(), any()) } returns emptyList()
 
         // Act
-        viewModel = SeasonsViewModel(manageSeriesUseCase, testDispatcher, seriesId)
+        viewModel = SeasonsViewModel(manageSeriesUseCase, seriesId, testDispatcher)
         advanceUntilIdle()
 
         // Assert
@@ -86,7 +86,7 @@ class SeasonViewModelTest {
 
     @Test
     fun `should emit NavigateBack effect manually`() = runTest {
-        viewModel = SeasonsViewModel(manageSeriesUseCase, testDispatcher, seriesId)
+        viewModel = SeasonsViewModel(manageSeriesUseCase, seriesId, testDispatcher)
         advanceUntilIdle()
 
         var emittedEffect: SeasonDetailEffect? = null
@@ -115,7 +115,7 @@ class SeasonViewModelTest {
         coEvery { manageSeriesUseCase.getEpisodes(any(), any()) } returns listOf(mockEpisode)
 
         // Act
-        viewModel = SeasonsViewModel(manageSeriesUseCase, testDispatcher, seriesId)
+        viewModel = SeasonsViewModel(manageSeriesUseCase, seriesId, testDispatcher)
         advanceUntilIdle()
 
         // Assert
@@ -130,7 +130,7 @@ class SeasonViewModelTest {
         // Arrange
         val episodeId = 123L
         val seasonNumber = 1
-        viewModel = SeasonsViewModel(manageSeriesUseCase, testDispatcher, seriesId)
+        viewModel = SeasonsViewModel(manageSeriesUseCase, seriesId, testDispatcher)
         advanceUntilIdle()
 
         var emittedEffect: SeasonDetailEffect? = null

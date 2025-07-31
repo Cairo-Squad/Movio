@@ -4,6 +4,7 @@ plugins {
     id("java-library")
     alias(libs.plugins.jetbrains.kotlin.jvm)
     alias(libs.plugins.kover)
+    id("org.jetbrains.kotlin.kapt")
 }
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -22,4 +23,8 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.truth)
+
+    // Dagger
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
 }

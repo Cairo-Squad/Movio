@@ -44,6 +44,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
@@ -87,14 +88,15 @@ import com.cairosquad.viewmodel.details.series.SeriesDetailEffect
 import com.cairosquad.viewmodel.details.series.SeriesDetailsInteractionListener
 import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState
 import com.cairosquad.viewmodel.details.series.SeriesDetailsViewModel
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
 fun SeriesScreen(
     seriesId: Long,
-    viewModel: SeriesDetailsViewModel = koinViewModel { parametersOf(seriesId) }
 ) {
+    val viewModel: SeriesDetailsViewModel =
+        hiltViewModel<SeriesDetailsViewModel, SeriesDetailsViewModel.Factory> { factory ->
+            factory.create(seriesId)
+        }
     val navController = LocalNavController.current
     val context = LocalContext.current
     val uiState by viewModel.screenState.collectAsStateWithLifecycle()

@@ -3,8 +3,9 @@ package com.cairosquad.remote.artists
 import com.cairosquad.remote.utils.retrofit.safeCallApi
 import com.cairosquad.repository.artists.data_source.remote.ArtistsRemoteDataSource
 import com.cairosquad.repository.artists.data_source.remote.dto.ArtistRemoteDto
+import javax.inject.Inject
 
-class RemoteArtistDataSourceImpl(
+class RemoteArtistDataSourceImpl @Inject constructor(
     private val apiService: ArtistsApiService
 ) : ArtistsRemoteDataSource {
     override suspend fun getArtistsByQuery(

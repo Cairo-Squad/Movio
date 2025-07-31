@@ -7,8 +7,9 @@ import com.cairosquad.repository.utils.mappers.tryToCall
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LoginRepositoryImpl(
+class LoginRepositoryImpl @Inject constructor(
     private val remoteLoginDataSource: RemoteLoginDataSource,
     private val localAuthenticationDataSource: LocalAuthenticationDataSource
 ) : LoginRepository {

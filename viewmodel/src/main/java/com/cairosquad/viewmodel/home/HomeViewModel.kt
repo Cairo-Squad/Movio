@@ -1,6 +1,5 @@
 package com.cairosquad.viewmodel.home
 
-import android.util.Log
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
@@ -14,8 +13,11 @@ import com.cairosquad.viewmodel.home.HomeScreenState.ScreenStatus
 import com.cairosquad.viewmodel.util.MediaContentType
 import com.cairosquad.viewmodel.util.MediaType
 import com.cairosquad.viewmodel.util.combineTwoList
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class HomeViewModel(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
     private val manageMoviesUseCase: ManageMoviesUseCase,
     private val manageSeriesUseCase: ManageSeriesUseCase
 ) : BaseViewModel<HomeScreenState, HomeEffect>(initialState = HomeScreenState()),
@@ -258,30 +260,42 @@ class HomeViewModel(
     private fun sortCategoriesMedia() {
         val genre = screenState.value.genres[screenState.value.selectedGenreIndex]
         tryToCall(
-            block = { when (screenState.value.selectedSortingType) {
-                HomeScreenState.SortingType.ALL -> {
-                     Pair(
-                        manageMoviesUseCase.getAllMovies(page = 1, genreId = genre.id),
-                        manageSeriesUseCase.getAllSeries(page = 1, genreId = genre.id)
-                    )
+            block = {
+                when (screenState.value.selectedSortingType) {
+                    HomeScreenState.SortingType.ALL -> {
+                        Pair(
+                            manageMoviesUseCase.getAllMovies(page = 1, genreId = genre.id),
+                            manageSeriesUseCase.getAllSeries(page = 1, genreId = genre.id)
+                        )
+                    }
+
+                    HomeScreenState.SortingType.POPULARITY -> {
+                        Pair(
+                            manageMoviesUseCase.getAllMovies(
+                                page = 1, genreId = genre.id,
+                                SortType.POPULAR
+                            ),
+                            manageSeriesUseCase.getAllSeries(
+                                page = 1, genreId = genre.id,
+                                SortType.POPULAR
+                            )
+                        )
+                    }
+
+                    HomeScreenState.SortingType.LATEST -> {
+                        Pair(
+                            manageMoviesUseCase.getAllMovies(
+                                page = 1, genreId = genre.id,
+                                SortType.LATEST
+                            ),
+                            manageSeriesUseCase.getAllSeries(
+                                page = 1, genreId = genre.id,
+                                SortType.LATEST
+                            )
+                        )
+                    }
                 }
-                HomeScreenState.SortingType.POPULARITY -> {
-                    Pair(
-                        manageMoviesUseCase.getAllMovies(page = 1, genreId = genre.id,
-                            SortType.POPULAR),
-                        manageSeriesUseCase.getAllSeries(page = 1, genreId = genre.id,
-                            SortType.POPULAR)
-                    )
-                }
-                HomeScreenState.SortingType.LATEST -> {
-                    Pair(
-                        manageMoviesUseCase.getAllMovies(page = 1, genreId = genre.id,
-                            SortType.LATEST),
-                        manageSeriesUseCase.getAllSeries(page = 1, genreId = genre.id,
-                            SortType.LATEST)
-                    )
-                }
-            } },
+            },
             onSuccess = { (movies, series) ->
                 updateState {
                     it.copy(
@@ -290,7 +304,7 @@ class HomeViewModel(
                             list2 = series.map(Series::toHomeMediaUiState)
                         ),
 
-                    )
+                        )
                 }
             },
             onError = ::handleError
@@ -351,7 +365,6 @@ class HomeViewModel(
         updateState { it.copy(isRefreshing = true) }
         loadAllData()
     }
-
 
 
 }

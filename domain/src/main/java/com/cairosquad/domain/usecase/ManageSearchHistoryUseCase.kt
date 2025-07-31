@@ -1,8 +1,9 @@
 package com.cairosquad.domain.usecase
 
 import com.cairosquad.domain.repository.SearchRepository
+import javax.inject.Inject
 
-class ManageSearchHistoryUseCase(
+class ManageSearchHistoryUseCase @Inject constructor(
     private val searchRepository: SearchRepository
 ) {
     suspend fun clearAllHistory() {
