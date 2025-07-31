@@ -6,8 +6,9 @@ import androidx.paging.PagingData
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Series
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class SeeAllSeriesPager(
+class SeeAllSeriesPager @Inject constructor(
     private val manageSeriesUseCase: ManageSeriesUseCase
 ) {
     fun getTopRatingSeries(genreId: Long?): Flow<PagingData<Series>> =

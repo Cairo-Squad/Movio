@@ -8,8 +8,9 @@ import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class UnifiedMediaPager(
+class UnifiedMediaPager @Inject constructor(
     private val manageMoviesUseCase: ManageMoviesUseCase,
     private val manageSeriesUseCase: ManageSeriesUseCase
 ) {

@@ -6,8 +6,9 @@ import androidx.paging.PagingData
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.entity.Movie
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class SeeAllMoviesPager(
+class SeeAllMoviesPager @Inject constructor(
     private val manageMoviesUseCase: ManageMoviesUseCase
 ) {
     fun getTopRatingMovies(genreId: Long?): Flow<PagingData<Movie>> =
