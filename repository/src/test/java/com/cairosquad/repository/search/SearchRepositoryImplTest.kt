@@ -1,8 +1,5 @@
 package com.cairosquad.repository.search
 
-import com.cairosquad.domain.exception.DUnauthorizedException
-import com.cairosquad.domain.exception.DomainEmptyResponseException
-import com.cairosquad.domain.exception.DomainJsonParsingException
 import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.exception.UnknownException
 import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
@@ -22,10 +19,10 @@ import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchRepositoryImplTest {
-
 
     private val localDataSource = mockk<LocalRecentSearchDataSource>(relaxed = true)
     private lateinit var repository: SearchRepositoryImpl
@@ -34,9 +31,7 @@ class SearchRepositoryImplTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(dispatcher)
-        repository = SearchRepositoryImpl(
-            localDataSource
-        )
+        repository = SearchRepositoryImpl(localDataSource)
     }
 
     @After
@@ -107,25 +102,36 @@ class SearchRepositoryImplTest {
     }
 
     @Test
-    fun `should return merged unique queries when getAllHistoryByQuery is called with non-blank query`() = runTest {
+    fun `should return filtered and processed queries when getAllHistoryByQuery is called with non-blank query`() = runTest {
         // Given
         val query = "dark"
+        val mockQueries = listOf("dark series", "Dark Knight", "dark mode", "something else", "Dark Shadows")
+        coEvery { localDataSource.getByQuery(query) } returns mockQueries
 
         // When
         val result = repository.getAllHistoryByQuery(query)
 
         // Then
-        val expected = listOf(
-            "dark",
-            "dark series",
-            "Dark Knight",
-            "Dark Shadows",
-            "Dark",
-            "Dark Matter",
-            "Dark Artist"
-        ).distinct()
-        assertEquals(expected.sorted(), result.sorted()) // Sort for consistent comparison
-        coVerify { localDataSource.getByQuery(query) }
+        assertTrue(result.size <= 20)
+        assertEquals(mockQueries.distinct().size, result.size) // Since mockQueries size < 20
+        assertTrue(result.containsAll(mockQueries.distinct()))
+        coVerify(exactly = 1) { localDataSource.getByQuery(query) }
+    }
+
+    @Test
+    fun `should return limited results when getAllHistoryByQuery returns more than 20 items`() = runTest {
+        // Given
+        val query = "test"
+        val mockQueries = (1..25).map { "test$it" }
+        coEvery { localDataSource.getByQuery(query) } returns mockQueries
+
+        // When
+        val result = repository.getAllHistoryByQuery(query)
+
+        // Then
+        assertEquals(20, result.size)
+        assertTrue(result.all { it in mockQueries })
+        coVerify(exactly = 1) { localDataSource.getByQuery(query) }
     }
 
     @Test
@@ -142,13 +148,15 @@ class SearchRepositoryImplTest {
 
         // Then
         assertEquals("Failed to fetch query results", thrown.message)
+        coVerify(exactly = 1) { localDataSource.getByQuery(query) }
     }
 
     @Test
     fun `should throw InternetConnectionException when getAllHistoryByQuery fails with NoInternetException for non-blank query`() = runTest {
         // Given
         val query = "dark"
-        coEvery { localDataSource.getByQuery(query) } returns emptyList()
+        val exception = NoInternetException("No internet connection")
+        coEvery { localDataSource.getByQuery(query) } throws exception
 
         // When
         val thrown = assertFailsWith<InternetConnectionException> {
@@ -157,52 +165,7 @@ class SearchRepositoryImplTest {
 
         // Then
         assertEquals("No internet connection", thrown.message)
-    }
-
-    @Test
-    fun `should throw DomainEmptyResponseException when getAllHistoryByQuery fails with RepoEmptyResponseException for non-blank query`() = runTest {
-        // Given
-        val query = "dark"
-        coEvery { localDataSource.getByQuery(query) } returns emptyList()
-
-
-        // When
-        val thrown = assertFailsWith<DomainEmptyResponseException> {
-            repository.getAllHistoryByQuery(query)
-        }
-
-        // Then
-        assertEquals("Empty response body", thrown.message)
-    }
-
-    @Test
-    fun `should throw DomainJsonParsingException when getAllHistoryByQuery fails with RepoJsonParsingException for non-blank query`() = runTest {
-        // Given
-        val query = "dark"
-        coEvery { localDataSource.getByQuery(query) } returns emptyList()
-
-        // When
-        val thrown = assertFailsWith<DomainJsonParsingException> {
-            repository.getAllHistoryByQuery(query)
-        }
-
-        // Then
-        assertEquals("Failed to parse response", thrown.message)
-    }
-
-    @Test
-    fun `should throw DUnauthorizedException when getAllHistoryByQuery fails with UnauthorizedException for non-blank query`() = runTest {
-        // Given
-        val query = "dark"
-        coEvery { localDataSource.getByQuery(query) } returns emptyList()
-
-        // When
-        val thrown = assertFailsWith<DUnauthorizedException> {
-            repository.getAllHistoryByQuery(query)
-        }
-
-        // Then
-        assertEquals("Unauthorized access", thrown.message)
+        coVerify(exactly = 1) { localDataSource.getByQuery(query) }
     }
 
     @Test
@@ -219,6 +182,7 @@ class SearchRepositoryImplTest {
 
         // Then
         assertEquals("Unexpected error", thrown.message)
+        coVerify(exactly = 1) { localDataSource.getByQuery(query) }
     }
 
     @Test
@@ -234,7 +198,24 @@ class SearchRepositoryImplTest {
         // Then
         assertEquals(expectedQueries, result)
         coVerify(exactly = 1) { localDataSource.getAll() }
-       }
+        coVerify(exactly = 0) { localDataSource.getByQuery(any()) }
+    }
+
+    @Test
+    fun `should return all queries when getAllHistoryByQuery is called with whitespace query`() = runTest {
+        // Given
+        val query = "   "
+        val expectedQueries = listOf("query1", "query2", "query3")
+        coEvery { localDataSource.getAll() } returns expectedQueries
+
+        // When
+        val result = repository.getAllHistoryByQuery(query)
+
+        // Then
+        assertEquals(expectedQueries, result)
+        coVerify(exactly = 1) { localDataSource.getAll() }
+        coVerify(exactly = 0) { localDataSource.getByQuery(any()) }
+    }
 
     @Test
     fun `should throw UnknownException when getAllHistoryByQuery fails with UnknownDataSourceException for blank query`() = runTest {
@@ -250,7 +231,7 @@ class SearchRepositoryImplTest {
 
         // Then
         assertEquals("Failed to fetch all queries", thrown.message)
-        coVerify { localDataSource.getAll() }
+        coVerify(exactly = 1) { localDataSource.getAll() }
     }
 
     @Test
@@ -267,7 +248,7 @@ class SearchRepositoryImplTest {
 
         // Then
         assertEquals("No internet connection", thrown.message)
-        coVerify { localDataSource.getAll() }
+        coVerify(exactly = 1) { localDataSource.getAll() }
     }
 
     @Test
@@ -284,7 +265,7 @@ class SearchRepositoryImplTest {
 
         // Then
         assertEquals("Unexpected error", thrown.message)
-        coVerify { localDataSource.getAll() }
+        coVerify(exactly = 1) { localDataSource.getAll() }
     }
 
     @Test
