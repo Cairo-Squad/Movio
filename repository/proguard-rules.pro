@@ -19,6 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
 ##########################################
 # 🌟 Kotlinx Serialization
 ##########################################
@@ -31,7 +32,6 @@
     @kotlinx.serialization.Serializable *;
 }
 
-
 ##########################################
 # 🌟 Multi-Module References
 ##########################################
@@ -43,13 +43,16 @@
 ##########################################
 -dontwarn org.junit.**
 -dontwarn com.google.common.truth.**
--dontwarn org.koin.test.**
 -dontwarn io.ktor.client.mock.**
-
 -dontwarn java.lang.invoke.StringConcatFactory
 
--dontwarn kotlinx.**
--dontwarn okhttp3.**
--dontwarn org.jetbrains.kotlin.**
--keep class kotlinx.** { *; }
--keepclassmembers class kotlinx.** { *; }
+
+# -keep class kotlinx.** { *; }
+# -keepclassmembers class kotlinx.** { *; }
+
+# Added Hilt-specific rules
+-keep class dagger.hilt.** { *; }
+-dontwarn dagger.hilt.**
+
+-keep @dagger.hilt.android.AndroidEntryPoint class * { *; }
+-keep @dagger.hilt.android.lifecycle.HiltViewModel class * { *; }

@@ -1,5 +1,6 @@
 package com.cairosquad.ui.details
 
+import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,7 +27,9 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.cairosquad.design_system.basic_component.AppBar
+import com.cairosquad.design_system.modifier.dropShadow
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.R
 import com.cairosquad.ui.movio_component.LoadingReviewCard
@@ -39,141 +42,160 @@ import com.cairosquad.viewmodel.details.reviews.ReviewsEffect
 import com.cairosquad.viewmodel.details.reviews.ReviewsInteractionListener
 import com.cairosquad.viewmodel.details.reviews.ReviewsScreenState
 import com.cairosquad.viewmodel.details.reviews.ReviewsViewModel
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
+import kotlinx.coroutines.Dispatchers
 
 @Composable
 fun ReviewsScreen(
     mediaId: Long,
     isMovie: Boolean,
-    viewModel: ReviewsViewModel = koinViewModel(
-        parameters = { parametersOf(mediaId, isMovie) }
-    )
 ) {
+	val viewModel: ReviewsViewModel =
+        hiltViewModel<ReviewsViewModel, ReviewsViewModel.Factory> { factory ->
+            factory.create(
+                mediaId = mediaId,
+                isMovie = isMovie,
+                dispatcher = Dispatchers.IO
+            )
+        }
     val navController = LocalNavController.current
     val state = viewModel.screenState.collectAsState()
     val context = LocalContext.current
 
 
-    LaunchedEffect(Unit) {
-        viewModel.getReviews()
-    }
+	LaunchedEffect(Unit) {
+		viewModel.getReviews()
+	}
 
-    ObserveAsEffect(viewModel.effect) { effect ->
-        when (effect) {
-            is ReviewsEffect.ErrorHappened -> {
-                Toast.makeText(
-                    context,
-                    context.getString(errorStatusToMessageResource(effect.message)),
-                    Toast.LENGTH_LONG
-                ).show()
-            }
+	ObserveAsEffect(viewModel.effect) { effect ->
+		when (effect) {
+			is ReviewsEffect.ErrorHappened -> {
+				Toast.makeText(
+					context,
+					context.getString(errorStatusToMessageResource(effect.message)),
+					Toast.LENGTH_LONG
+				).show()
+			}
 
-            is ReviewsEffect.NavigateBack -> navController.popBackStack()
+			is ReviewsEffect.NavigateBack -> navController.popBackStack()
 
-        }
+		}
 
-    }
+	}
 
-    ReviewsContent(
-        listener = viewModel,
-        state = state.value,
-    )
+	ReviewsContent(
+		listener = viewModel,
+		state = state.value,
+	)
 }
 
 @Composable
 private fun ReviewsContent(
-    listener: ReviewsInteractionListener,
-    state: ReviewsScreenState
+	listener: ReviewsInteractionListener,
+	state: ReviewsScreenState
 ) {
-    when {
-        state.isLoading -> {
-            ReviewsLoadingContent()
-        }
-        state.error != null -> {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp), //
-                contentAlignment = Alignment.Center
-            ) {
-                StateMessage(
-                    imageDrawable = com.cairosquad.design_system.R.drawable.no_internet,
-                    titleId = com.cairosquad.design_system.R.string.no_internet_connection,
-                    descriptionId = com.cairosquad.design_system.R.string.internet_is_not_available_description
-                )
-            }
-        }
+	when {
+		state.isLoading -> {
+			ReviewsLoadingContent()
+		}
 
-        else -> Box {
-            Box(
-                modifier = Modifier
-                    .windowInsetsPadding(WindowInsets.statusBars)
-                    .size(230.dp)
-                    .blur(264.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
-                    .background(
-                        color = Theme.color.surfaces.onSurfaceAt5,
-                        shape = CircleShape
-                    )
-                    .align(Alignment.TopEnd)
-            )
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
+		state.error != null -> {
+			Box(
+				modifier = Modifier
+					.fillMaxSize()
+					.padding(horizontal = 16.dp),
+				contentAlignment = Alignment.Center
+			) {
+				StateMessage(
+					imageDrawable = com.cairosquad.design_system.R.drawable.no_internet,
+					titleId = com.cairosquad.design_system.R.string.no_internet_connection,
+					descriptionId = com.cairosquad.design_system.R.string.internet_is_not_available_description
+				)
+			}
+		}
 
-                    .systemBarsPadding(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                AppBar(
-                    title = stringResource(R.string.reviews),
-                    onBackButtonClicked = listener::onClickBack,
-                )
-                LazyColumn(
-                    modifier = Modifier.padding(
-                        top = 12.dp,
-                        bottom = 12.dp,
-                        start = 16.dp,
-                        end = 16.dp
-                    ),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    items(state.reviews) { review ->
-                        ReviewCard(
-                            modifier = Modifier.fillMaxWidth(),
-                            imgUrl = review.reviewerImageUrl,
-                            rating = review.rating,
-                            reviewDate = review.reviewDate,
-                            reviewText = review.reviewText,
-                            reviewerName = review.reviewerName
-                        )
-                    }
-                }
-            }
-        }
+		else -> Box {
+			Box(
+				modifier = Modifier
+					.windowInsetsPadding(WindowInsets.statusBars)
+					.size(230.dp)
+					.align(Alignment.TopEnd)
+					.then(
+						if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+							Modifier.dropShadow(
+								shape = CircleShape,
+								color = Theme.color.surfaces.onSurfaceAt5,
+								blur = 264.dp,
+								offsetX = 0.dp,
+								offsetY = 0.dp,
+								alpha = 0.10f
+							)
+						} else {
+							Modifier
+								.blur(264.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
+								.background(
+									color = Theme.color.surfaces.onSurfaceAt5,
+									shape = CircleShape
+								)
+						}
+					)
+			)
+			Column(
+				modifier = Modifier
+					.fillMaxSize()
 
-    }
+					.systemBarsPadding(),
+				horizontalAlignment = Alignment.CenterHorizontally
+			) {
+				AppBar(
+					title = stringResource(R.string.reviews),
+					onBackButtonClicked = listener::onClickBack,
+				)
+				LazyColumn(
+					modifier = Modifier.padding(
+						top = 12.dp,
+						bottom = 12.dp,
+						start = 16.dp,
+						end = 16.dp
+					),
+					verticalArrangement = Arrangement.spacedBy(12.dp)
+				) {
+					items(state.reviews) { review ->
+						ReviewCard(
+							modifier = Modifier.fillMaxWidth(),
+							imgUrl = review.reviewerImageUrl,
+							rating = review.rating,
+							reviewDate = review.reviewDate,
+							reviewText = review.reviewText,
+							reviewerName = review.reviewerName
+						)
+					}
+				}
+			}
+		}
+
+	}
 }
 
 @Composable
 private fun ReviewsLoadingContent() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .systemBarsPadding(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        LazyColumn(
-            modifier = Modifier.padding(
-                top = 12.dp,
-                bottom = 12.dp,
-                start = 16.dp,
-                end = 16.dp
-            ),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(12) {
-                LoadingReviewCard()
-            }
-        }
-    }
+	Column(
+		modifier = Modifier
+			.fillMaxWidth()
+			.systemBarsPadding(),
+		horizontalAlignment = Alignment.CenterHorizontally
+	) {
+		LazyColumn(
+			modifier = Modifier.padding(
+				top = 12.dp,
+				bottom = 12.dp,
+				start = 16.dp,
+				end = 16.dp
+			),
+			verticalArrangement = Arrangement.spacedBy(12.dp)
+		) {
+			items(12) {
+				LoadingReviewCard()
+			}
+		}
+	}
 }

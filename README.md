@@ -64,12 +64,12 @@ We created a new module: `safe_image_viewer`
 
 ## 🧰 Libraries We Used
 
-| Purpose         | Library   |
-|----------------|-----------|
-| Networking      | ktor      |
-| Dependency Injection | koin  |
-| Navigation      | Navigation 2 |
-| Image Loading   | Coil      |
+| Purpose              | Library       |
+|----------------------|---------------|
+| Networking           | ktor          |
+| Dependency Injection | Dagger & Hilt |
+| Navigation           | Navigation 2  |
+| Image Loading        | Coil          |
 
 ---
 

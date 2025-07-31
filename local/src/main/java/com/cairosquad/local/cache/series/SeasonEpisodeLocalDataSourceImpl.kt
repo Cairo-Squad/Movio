@@ -8,8 +8,9 @@ import com.cairosquad.repository.series.data_source.local.dto.CacheCodeWithEpiso
 import com.cairosquad.repository.series.data_source.local.dto.CacheCodeWithSeasonsCacheDto
 import com.cairosquad.repository.series.data_source.local.dto.EpisodeCacheDto
 import com.cairosquad.repository.series.data_source.local.dto.SeasonCacheDto
+import javax.inject.Inject
 
-class SeasonEpisodeLocalDataSourceImpl(
+class SeasonEpisodeLocalDataSourceImpl @Inject constructor(
     private val seasonEpisodeCacheDao: SeasonEpisodeCacheDao,
     private val cacheCodeDao: CacheCodeDao
 ) : SeasonEpisodeLocalDataSource {

@@ -1,7 +1,6 @@
 package com.cairosquad.ui.search.content
 
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,7 +18,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,17 +48,8 @@ fun SearchResultContent(
     val movies = state.movies.collectAsLazyPagingItems()
     val artists = state.artists.collectAsLazyPagingItems()
     val series = state.series.collectAsLazyPagingItems()
-    val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
-    DisposableEffect(backPressedDispatcher) {
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                listener.onBackClicked()
-            }
-        }
-        backPressedDispatcher?.addCallback(callback)
-        onDispose {
-            callback.remove()
-        }
+    BackHandler(enabled = true) {
+        listener.onBackClicked()
     }
 
     val selectedTabIndex = state.selectedTabIndex
@@ -76,7 +65,7 @@ fun SearchResultContent(
                 .background(Theme.color.surfaces.surface)
                 .padding(bottom = 12.dp),
             value = state.query,
-            onValueChange = listener::onQueryTextChanged,
+            onValueChange = { },
             placeholder = stringResource(R.string.search_with_dotes_ahead),
             leadingIcon = R.drawable.search_bottom_nav,
             onFocusChanged = {
@@ -100,27 +89,27 @@ fun SearchResultContent(
 
             )
 
-            when (selectedTabIndex) {
-                0 -> {
-                    SearchResultText(noOfResults = movies.itemCount)
-                    AllResultsTabContent(movies = movies, listener = listener, state = state)
-                }
-
-                1 -> {
-                    SearchResultText(noOfResults = movies.itemCount)
-                    MoviesTabContent(movies = movies, listener = listener, state = state)
-                }
-
-                2 -> {
-                    SearchResultText(noOfResults = series.itemCount)
-                    SeriesTabContent(series = series, listener = listener, state = state)
-                }
-
-                3 -> {
-                    SearchResultText(noOfResults = artists.itemCount)
-                    ArtistsTabContent(artist = artists, listener = listener, state = state)
-                }
+        when (selectedTabIndex) {
+            0 -> {
+                SearchResultText(noOfResults = movies.itemCount)
+                AllResultsTabContent(movies = movies, listener = listener, state = state)
             }
+
+            1 -> {
+                SearchResultText(noOfResults = movies.itemCount)
+                MoviesTabContent(movies = movies, listener = listener, state = state)
+            }
+
+            2 -> {
+                SearchResultText(noOfResults = series.itemCount)
+                SeriesTabContent(series = series, listener = listener, state = state)
+            }
+
+            3 -> {
+                SearchResultText(noOfResults = artists.itemCount)
+                ArtistsTabContent(artist = artists, listener = listener, state = state)
+            }
+        }
     }
 }
 
@@ -150,11 +139,13 @@ private fun AllResultsTabContent(
                 modifier = modifier
             )
         }
-        isError ->{
+
+        isError -> {
             SearchResultFail(
                 errorStatus = state.errorStatus
             )
         }
+
         isEmpty -> {
             Box(
                 modifier = modifier.fillMaxSize(),
@@ -214,11 +205,13 @@ private fun MoviesTabContent(
                 modifier = modifier
             )
         }
-        isError ->{
+
+        isError -> {
             SearchResultFail(
                 errorStatus = state.errorStatus
             )
         }
+
         isEmpty -> {
             Box(
                 modifier = modifier.fillMaxSize(),
@@ -286,11 +279,13 @@ private fun SeriesTabContent(
                 modifier = modifier
             )
         }
-        isError ->{
+
+        isError -> {
             SearchResultFail(
                 errorStatus = state.errorStatus
             )
         }
+
         isEmpty -> {
             Box(
                 modifier = modifier.fillMaxSize(),
@@ -356,11 +351,13 @@ private fun ArtistsTabContent(
                 modifier = modifier
             )
         }
-        isError ->{
+
+        isError -> {
             SearchResultFail(
                 errorStatus = state.errorStatus
             )
         }
+
         isEmpty -> {
             Box(
                 modifier = modifier.fillMaxSize(),
@@ -400,7 +397,7 @@ private fun ArtistsTabContent(
 @Composable
 private fun SearchResultFail(
     errorStatus: ErrorStatus?
-){
+) {
     Box(
         Modifier
             .fillMaxSize()
@@ -438,6 +435,7 @@ private fun SearchResultFail(
         )
     }
 }
+
 @Composable
 fun SearchResultText(
     noOfResults: Int,

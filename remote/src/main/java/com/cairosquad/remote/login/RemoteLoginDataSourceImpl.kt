@@ -5,8 +5,9 @@ import com.cairosquad.remote.utils.retrofit.safeCallApi
 import com.cairosquad.repository.login.data_source.remote.RemoteLoginDataSource
 import com.cairosquad.repository.login.data_source.remote.dto.RequestTokenResponse
 import com.cairosquad.repository.login.data_source.remote.dto.SessionIdResponse
+import javax.inject.Inject
 
-class RemoteLoginDataSourceImpl(
+class RemoteLoginDataSourceImpl @Inject constructor(
     private val loginApiService: LoginApiService
 ) : RemoteLoginDataSource {
     override suspend fun createRequestToken(): RequestTokenResponse {

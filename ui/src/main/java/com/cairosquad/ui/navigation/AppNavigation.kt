@@ -30,12 +30,11 @@ import com.cairosquad.ui.see_all_screen.SeeAllScreen
 import com.cairosquad.ui.splash.SplashScreen
 import com.cairosquad.viewmodel.auth_gate.AuthGate
 import kotlinx.coroutines.launch
-import org.koin.compose.getKoin
 
 
 @Composable
 fun AppNavigation(
-    authGate: AuthGate = getKoin().get()
+    authGate: AuthGate
 ) {
 
     val navController = rememberNavController()
