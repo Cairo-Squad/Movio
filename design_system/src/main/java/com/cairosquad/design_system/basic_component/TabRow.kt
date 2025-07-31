@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -106,13 +107,20 @@ fun TabRow(
         ) {
             tabs.forEachIndexed { index, title ->
                 val isSelected = selectedTabIndex == index
+                val isLightTheme = !isSystemInDarkTheme()
+
                 val textColor by animateColorAsState(
-                    targetValue = if (isSelected)
-                        Theme.color.brand.onPrimaryContainer
-                    else
-                        Theme.color.surfaces.onSurfaceVariant,
+                    targetValue = when {
+                        isLightTheme && isSelected && scrollProgress > 0.5f ->
+                            Theme.color.brand.onPrimaryContainer
+                        isSelected ->
+                            Theme.color.brand.onPrimary
+                        else ->
+                            Theme.color.surfaces.onSurfaceVariant
+                    },
                     animationSpec = tween(300)
                 )
+
                 val textStyle = if (isSelected)
                     Theme.textStyle.title.mediumMedium16
                 else
