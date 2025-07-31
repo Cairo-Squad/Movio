@@ -174,7 +174,7 @@ private fun SeeAllMediaItems(
 		}
 
 		state.isLoading -> {
-			SeeAllLoadingScreen(modifier)
+			SeeAllLoadingScreen(Modifier.padding(top = 16.dp))
 		}
 
 		! state.isLoading && state.mediaList.isEmpty() -> {
@@ -237,7 +237,7 @@ private fun TrendingContentList(
 		}
 
 		state.isLoading -> {
-			SeeAllLoadingScreen(modifier)
+			SeeAllLoadingScreen(modifier = Modifier.padding(top = 16.dp))
 		}
 
 		! state.isLoading && state.mediaList.isEmpty() -> {
