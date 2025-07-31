@@ -8,8 +8,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.ui.navigation.AppNavigation
+import com.cairosquad.viewmodel.auth_gate.AuthGate
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject
+    lateinit var authGate: AuthGate
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -32,7 +39,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MovioTheme {
-                AppNavigation()
+                AppNavigation(authGate)
             }
         }
     }

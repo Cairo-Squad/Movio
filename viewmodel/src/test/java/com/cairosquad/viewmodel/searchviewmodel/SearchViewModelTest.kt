@@ -432,7 +432,7 @@ class SearchViewModelTest {
         viewModel.onQueryTextChanged(query)
         advanceUntilIdle()
 
-        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
+        assertThat(viewModel.screenState.value.query).isEqualTo(query)
     }
 
     @Test

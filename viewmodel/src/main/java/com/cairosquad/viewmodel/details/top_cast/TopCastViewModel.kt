@@ -5,16 +5,32 @@ import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.top_cast.TopCastScreenState.ScreenStatus
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import javax.inject.Inject
 
-class TopCastViewModel(
-    private val mediaId: Long,
-    private val isMovie: Boolean,
+@HiltViewModel(assistedFactory = TopCastViewModel.Factory::class)
+class TopCastViewModel @AssistedInject constructor(
     private val manageMoviesUseCase: ManageMoviesUseCase,
     private val manageSeriesUseCase: ManageSeriesUseCase,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    @Assisted private val mediaId: Long,
+    @Assisted private val isMovie: Boolean,
+    @Assisted private val dispatcher: CoroutineDispatcher,
 ) : BaseViewModel<TopCastScreenState, Nothing>(TopCastScreenState()) {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            mediaId: Long,
+            isMovie: Boolean,
+            dispatcher: CoroutineDispatcher
+        ): TopCastViewModel
+    }
+
     init {
         getTopCast()
     }

@@ -1,8 +1,9 @@
 package com.cairosquad.domain.usecase
 
 import com.cairosquad.domain.repository.LoginRepository
+import javax.inject.Inject
 
-class LoginUseCase(
+class LoginUseCase @Inject constructor(
     private val loginRepository: LoginRepository
 ) {
 

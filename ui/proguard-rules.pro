@@ -19,6 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
 ##########################################
 # 🌟 Jetpack Compose
 ##########################################
@@ -54,17 +55,23 @@
 }
 
 ##########################################
-# 🌟 Koin (Reflection heavy)
+# 🌟 Dagger Hilt
 ##########################################
-# Keep Koin generated modules
--keep class org.koin.** { *; }
--dontwarn org.koin.**
+# Keep Hilt's generated code
+-keep class dagger.hilt.** { *; }
+-dontwarn dagger.hilt.**
 
-# Keep your DI modules if annotated with @Module or @Single
--keep @org.koin.core.annotation.* class * {*;}
--keepclassmembers class * {
-    @org.koin.core.annotation.* *;
-}
+# Preserve Hilt entry points (activities, fragments, etc.)
+-keep @dagger.hilt.android.AndroidEntryPoint class * { *; }
+
+# Preserve Hilt ViewModel annotations
+-keep @dagger.hilt.android.lifecycle.HiltViewModel class * { *; }
+# Optional: Add if you use Hilt's @EntryPoint or @InstallIn
+-keep @dagger.hilt.EntryPoint class * { *; }
+-keep @dagger.hilt.InstallIn class * { *; }
+
+# Optional: Add if you use Hilt's @HiltAndroidApp in the app module
+-keep @dagger.hilt.android.HiltAndroidApp class * { *; }
 
 ##########################################
 # 🌟 Multi-module dependencies
@@ -74,8 +81,10 @@
 -keep class com.cairosquad.domain.** { *; }
 -dontwarn com.cairosquad.**
 
--dontwarn kotlinx.**
+# Keep dependencies for Ktor, OkHttp, etc.
 -dontwarn okhttp3.**
 -dontwarn org.jetbrains.kotlin.**
--keep class kotlinx.** { *; }
--keepclassmembers class kotlinx.** { *; }
+
+-keep @dagger.hilt.android.HiltAndroidApp class * { *; }
+-keep @dagger.hilt.EntryPoint class * { *; }
+-keep @dagger.hilt.InstallIn class * { *; }
