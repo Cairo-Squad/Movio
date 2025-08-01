@@ -626,7 +626,7 @@ private fun SeriesScreenContent(
                                     SimilarSeriesSection(
                                         similarSeries = uiState.similarSeries,
                                         onSeriesClicked = listener::onSeriesClicked,
-                                        onActionClicked = { listener.onSeeAllSimilarClicked(seriesId = uiState.series.id) }
+                                        onActionClicked = { listener.onSeeAllSimilarClicked(seriesId = uiState.series.id) },
                                     )
                                 }
                             }

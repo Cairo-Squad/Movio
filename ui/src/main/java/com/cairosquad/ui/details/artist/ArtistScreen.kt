@@ -400,8 +400,9 @@ private fun ArtistScreenContent(
 							)
 							LazyRow(
 								horizontalArrangement = Arrangement.spacedBy(12.dp),
-								contentPadding = PaddingValues(horizontal = 16.dp)
-							) {
+								contentPadding = PaddingValues(horizontal = 16.dp),
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            ) {
 								items(state.knownForMovies) { movie ->
 									MovieCard(
 										title = movie.title,
