@@ -23,6 +23,7 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.InputField
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.RecentSearchItem
+import com.cairosquad.ui.movio_component.RecommendationSearchItem
 import com.cairosquad.ui.movio_component.SectionHeader
 import com.cairosquad.viewmodel.search.SearchInteractionListener
 import com.cairosquad.viewmodel.search.SearchScreenState
@@ -59,7 +60,7 @@ fun SearchContent(
                 onDone = { listener.onSearch() }
             )
         )
-        if (state.recentSearch.isNotEmpty()) {
+        if (state.recentSearch.isNotEmpty() && state.query.isBlank()) {
             SectionHeader(
                 title = stringResource(R.string.recent_search),
                 actionText = stringResource(R.string.clear_all),
@@ -74,15 +75,26 @@ fun SearchContent(
             contentPadding = PaddingValues(vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            items(state.recentSearch) {
-                RecentSearchItem(
-                    recentItem = it,
-                    query = state.query,
-                    onRemoveHistoryItem = listener::onRemoveHistoryItem,
-                    onRecentSearchItemClicked = listener::onRecentSearchItemClicked
-                )
+            if (state.query.isBlank()) {
+                items(state.recentSearch) {
+                    RecentSearchItem(
+                        recentItem = it,
+                        query = state.query,
+                        onRemoveHistoryItem = listener::onRemoveHistoryItem,
+                        onRecentSearchItemClicked = listener::onRecentSearchItemClicked
+                    )
+                }
+            } else {
+                items(state.searchRecommendation) { item ->
+                    val isRecent = item in state.recentSearch
+                    RecommendationSearchItem(
+                        recommendationItem = item,
+                        query = state.query,
+                        isRecentSearch = isRecent,
+                        onSearchRecommendationItemClicked = listener::onRecentSearchItemClicked
+                    )
+                }
             }
         }
     }
 }
-
