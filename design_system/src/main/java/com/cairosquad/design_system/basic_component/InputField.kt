@@ -146,7 +146,7 @@ fun InputField(
                     }
 
                 textFieldValue = filteredValue
-                onValueChange(filteredValue.text)
+                onValueChange(filteredValue.text.trimStart())
             },
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
