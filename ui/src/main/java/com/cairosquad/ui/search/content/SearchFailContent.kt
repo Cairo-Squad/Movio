@@ -56,9 +56,9 @@ fun SearchFailContent(
                     ErrorStatus.NETWORK_ERROR -> R.drawable.no_result
                     ErrorStatus.UNKNOWN_ERROR -> R.drawable.no_result
                     null -> R.drawable.no_result
-                    ErrorStatus.UNAUTHORIZED -> TODO()
+                    ErrorStatus.UNAUTHORIZED -> R.drawable.no_result //TODO()
                     ErrorStatus.EMPTY -> R.drawable.no_result
-                    ErrorStatus.PARSING_ERROR -> TODO()
+                    ErrorStatus.PARSING_ERROR -> R.drawable.no_result //TODO()
                 },
                 titleId = when (state.errorStatus) {
                     ErrorStatus.NO_INTERNET -> R.string.no_internet_connection
