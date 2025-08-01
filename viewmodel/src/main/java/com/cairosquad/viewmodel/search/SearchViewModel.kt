@@ -88,9 +88,11 @@ class SearchViewModel @Inject constructor(
     }
 
     override fun onQueryTextChanged(query: String) {
-        if (query == screenState.value.query) return
-        enterSearchMode(query)
-        debounceSearchSuggestions(query)
+        val trimmedQuery = query.trim()
+        if (trimmedQuery == screenState.value.query.trim()) return
+
+        enterSearchMode(trimmedQuery)
+        debounceSearchSuggestions(trimmedQuery)
     }
 
     private fun enterSearchMode(query: String) {
@@ -129,8 +131,8 @@ class SearchViewModel @Inject constructor(
     }
 
     override fun onSearch() {
-        val query = screenState.value.query
-        if (query.isBlank()) return
+        val query = screenState.value.query.trim()
+        if (query.isEmpty()) return
 
         setLoading()
 
