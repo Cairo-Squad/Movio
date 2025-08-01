@@ -135,8 +135,6 @@ private fun AllResultsTabContent(
     when {
         isLoading -> {
             SearchLoadingContent(
-                state = state,
-                listener = listener,
                 modifier = modifier
             )
         }
@@ -205,8 +203,6 @@ private fun MoviesTabContent(
     when {
         isLoading -> {
             SearchLoadingContent(
-                state = state,
-                listener = listener,
                 modifier = modifier
             )
         }
@@ -282,8 +278,6 @@ private fun SeriesTabContent(
     when {
         isLoading -> {
             SearchLoadingContent(
-                state = state,
-                listener = listener,
                 modifier = modifier
             )
         }
@@ -356,8 +350,6 @@ private fun ArtistsTabContent(
     when {
         isLoading -> {
             SearchLoadingContent(
-                state = state,
-                listener = listener,
                 modifier = modifier
             )
         }
