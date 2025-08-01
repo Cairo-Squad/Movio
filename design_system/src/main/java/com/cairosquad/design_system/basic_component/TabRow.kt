@@ -28,6 +28,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalDensity
@@ -44,7 +46,12 @@ fun TabRow(
     selectedTabIndex: Int,
     onTabSelected: (Int) -> Unit,
     scrollState: ScrollState,
+    tabColorWithNoScroll:Color,
+    tabColorWithScroll:Color,
+    indicatorColorWithScroll:Brush,
+    indicatorColorWithNoScroll:Brush,
     modifier: Modifier = Modifier,
+
 ) {
     val tabPositions = remember { mutableStateMapOf<Int, Pair<Int, Int>>() }
     var rowWidthPx by remember { mutableIntStateOf(0) }
@@ -82,16 +89,16 @@ fun TabRow(
     val indicatorBrush = if (selectedTabTitle == stringResource(com.cairosquad.design_system.R.string.categories)) {
 
         if (scrollProgress >= 0.5f) {
-            Theme.color.gradiant.horizontalCategoriesGradient
+            indicatorColorWithScroll
         } else {
-            Theme.color.gradiant.horizontalCategoriesGradient
+            indicatorColorWithScroll
         }
     } else {
 
         if (scrollProgress >= 0.5f) {
-            Theme.color.gradiant.horizontalCategoriesGradient
+            indicatorColorWithScroll
         } else {
-            Theme.color.gradiant.horizontalGradient
+            indicatorColorWithNoScroll
         }
     }
 
@@ -112,13 +119,12 @@ fun TabRow(
                 val textColor by animateColorAsState(
                     targetValue = when {
                         isLightTheme && isSelected && scrollProgress > 0.5f ->
-                            Theme.color.brand.onPrimaryContainer
+                            tabColorWithScroll
                         isSelected ->
                             if (selectedTabTitle == stringResource(com.cairosquad.design_system.R.string.categories))
                                 Theme.color.brand.onPrimaryContainer
                         else
-
-                            Theme.color.brand.onPrimary
+                            tabColorWithNoScroll
                         else ->
                             Theme.color.surfaces.onSurfaceVariant
                     },
