@@ -61,7 +61,10 @@ fun RateBottomSheet(
             )
             Text(
                 modifier = Modifier.padding(bottom = 16.dp),
-                text = "Add your overall rating for this ${if (isMovie) "movie" else "series"}",
+                text = stringResource(
+                    R.string.add_your_overall_rating_for_this,
+                    if (isMovie) stringResource(R.string.movie) else stringResource(R.string.series)
+                ),
                 style = Theme.textStyle.label.smallRegular14,
                 color = Theme.color.surfaces.onSurfaceContainer
             )

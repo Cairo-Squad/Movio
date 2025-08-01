@@ -51,4 +51,11 @@
     <string name="read_less_with_dotes_behind"> ... Read Less</string>
     <string name="no_trailer_found_for_this_movie">No trailer found for this movie</string>
     <string name="no_trailer_found_for_this_series">No trailer found for this series</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="episode">Episode %1$s</string>
+    <string name="m">%1$dm</string>
+    <string name="thank_you_for_your_rating">Thank you for your rating!</string>
+    <string name="add_your_overall_rating_for_this">Add your overall rating for this %1$s</string>
+    <string name="share_via">Share via</string>
+    <string name="season">Season %1$d</string>
 </resources>

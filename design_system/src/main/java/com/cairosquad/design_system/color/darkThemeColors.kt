@@ -47,6 +47,13 @@ val darkThemeColors = MovioColors(
                 Color(0x33FFFFFF)
             )
         ),
+        horizontalCategoriesGradient = Brush.horizontalGradient(
+            colors = listOf(
+                Color(0x33EBE6FE),
+                Color(0xFFF5F3FF),
+                Color(0x33FFFFFF)
+            )
+        ),
         shimmerGradientColors = listOf(
             Color.Transparent,
             Color(0xFF080D24),
