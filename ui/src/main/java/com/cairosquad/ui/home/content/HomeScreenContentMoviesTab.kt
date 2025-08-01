@@ -40,22 +40,21 @@ fun HomeScreenContentMoviesTab(
             MediaContentType.MORE_RECOMMENDED
         )
     }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState),
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(), state = lazyListState
     ) {
-        MediaHorizontalPager(
-            modifier = Modifier,
-            mediaList = screenState.popularMovies.map(MediaHorizontalPagerItem::fromHomeMediaUiState)
-                .take(7),
-            initialPage = 3,
-            onClickMedia = listener::onClickMedia
-        )
-        LazyColumn(
-            modifier = Modifier.heightIn(max = 10_000.dp), state = lazyListState
-        ) {
-            sections.forEach { sectionType ->
+        item {
+            MediaHorizontalPager(
+                modifier = Modifier,
+                mediaList = screenState.popularSeries
+                    .map(MediaHorizontalPagerItem::fromHomeMediaUiState)
+                    .take(7),
+                initialPage = 3,
+                onClickMedia = listener::onClickMedia
+            )
+        }
+
+        sections.forEach { sectionType ->
                 item {
                     SectionContainer(
                         listState = lazyListState, index = 0, onVisible = {
@@ -91,5 +90,5 @@ fun HomeScreenContentMoviesTab(
                 }
             }
         }
-    }
+   // }
 }

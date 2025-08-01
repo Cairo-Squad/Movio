@@ -41,22 +41,27 @@ fun HomeScreenContentSeriesTab(
         )
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState),
-    ) {
-        MediaHorizontalPager(
-            modifier = Modifier,
-            mediaList = screenState.popularSeries
-                .map(MediaHorizontalPagerItem::fromHomeMediaUiState)
-                .take(7),
-            initialPage = 3,
-            onClickMedia = listener::onClickMedia
-        )
+//    Column(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .verticalScroll(scrollState),
+//    ) {
+
         LazyColumn(
-            modifier = Modifier.heightIn(max = 10_000.dp), state = lazyListState
+            modifier = Modifier.fillMaxSize(), state = lazyListState
         ) {
+            item {
+                MediaHorizontalPager(
+                    modifier = Modifier,
+                    mediaList = screenState.popularSeries
+                        .map(MediaHorizontalPagerItem::fromHomeMediaUiState)
+                        .take(7),
+                    initialPage = 3,
+                    onClickMedia = listener::onClickMedia
+                )
+            }
+
+
             sections.forEach { sectionType ->
                 item {
                     SectionContainer(
@@ -93,5 +98,5 @@ fun HomeScreenContentSeriesTab(
                 }
             }
         }
-    }
+  //  }
 }

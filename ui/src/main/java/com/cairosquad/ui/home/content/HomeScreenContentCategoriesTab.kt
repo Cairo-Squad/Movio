@@ -79,7 +79,7 @@ fun HomeScreenContentCategoriesTab(
             LazyVerticalGrid(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 10_000.dp)
+                    .heightIn(max = 700.dp)
                     .padding(horizontal = 16.dp),
                 columns = GridCells.Adaptive(minSize = 101.33.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
