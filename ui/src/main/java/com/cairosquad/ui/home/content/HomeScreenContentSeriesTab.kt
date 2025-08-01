@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -29,9 +30,8 @@ import com.cairosquad.viewmodel.util.MediaType
 fun HomeScreenContentSeriesTab(
     screenState: HomeScreenState,
     listener: HomeInteractionsListener,
-    scrollState: ScrollState
+  lazyListState: LazyListState
 ) {
-    val lazyListState = rememberLazyListState()
     val sections = remember {
         listOf(
             MediaContentType.TOP_RATING,

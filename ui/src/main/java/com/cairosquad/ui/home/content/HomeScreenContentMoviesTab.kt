@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -29,7 +30,7 @@ import com.cairosquad.viewmodel.util.MediaType
 fun HomeScreenContentMoviesTab(
     screenState: HomeScreenState,
     listener: HomeInteractionsListener,
-    scrollState: ScrollState
+    lazyListState: LazyListState
 ) {
     val lazyListState = rememberLazyListState()
     val sections = remember {
@@ -54,10 +55,10 @@ fun HomeScreenContentMoviesTab(
             )
         }
 
-        sections.forEach { sectionType ->
+        sections.forEachIndexed { index,sectionType ->
                 item {
                     SectionContainer(
-                        listState = lazyListState, index = 0, onVisible = {
+                        listState = lazyListState, index = index + 1, onVisible = {
                             if (!screenState.sections.containsKey(sectionType)) {
                                 listener.onSectionVisible(sectionType)
                             }

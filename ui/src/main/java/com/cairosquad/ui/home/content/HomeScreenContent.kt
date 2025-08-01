@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -35,6 +36,8 @@ fun HomeScreenContent(
     listener: HomeInteractionsListener,
 ) {
     val scrollState = rememberScrollState()
+    val moviesListState = rememberLazyListState()
+    val tvShowsListState = rememberLazyListState()
     RefreshBox(
         isRefreshing = screenState.isRefreshing,
         onRefresh = { listener.onRefresh() }
@@ -69,7 +72,7 @@ fun HomeScreenContent(
                                 HomeScreenContentMoviesTab(
                                     screenState = screenState,
                                     listener = listener,
-                                    scrollState = scrollState
+                                  lazyListState = moviesListState
                                 )
                             }
 
@@ -77,7 +80,7 @@ fun HomeScreenContent(
                                 HomeScreenContentSeriesTab(
                                     screenState = screenState,
                                     listener = listener,
-                                    scrollState = scrollState
+                                   lazyListState = tvShowsListState
                                 )
                             }
 
