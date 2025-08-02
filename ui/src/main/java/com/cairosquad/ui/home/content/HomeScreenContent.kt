@@ -146,7 +146,11 @@ private fun TobContent(
             tabs = tabsList.map { stringResource(it) },
             selectedTabIndex = screenState.selectedTab.ordinal,
             onTabSelected = listener::onClickTab,
-            scrollState = scrollState
+            scrollState = scrollState,
+            tabColorWithScroll =  Theme.color.brand.onPrimaryContainer,
+            tabColorWithNoScroll =  Theme.color.brand.onPrimary,
+            indicatorColorWithScroll = Theme.color.gradiant.horizontalCategoriesGradient,
+            indicatorColorWithNoScroll = Theme.color.gradiant.horizontalGradient
         )
     }
 }

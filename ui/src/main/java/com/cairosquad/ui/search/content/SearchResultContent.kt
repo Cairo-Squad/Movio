@@ -87,7 +87,11 @@ fun SearchResultContent(
             ),
             selectedTabIndex = selectedTabIndex,
             onTabSelected = { listener.onTabSelected(it) },
-            scrollState = scrollState
+            scrollState = scrollState,
+                tabColorWithScroll =  Theme.color.brand.onPrimaryContainer,
+                tabColorWithNoScroll =  Theme.color.brand.onPrimaryContainer,
+                indicatorColorWithNoScroll = Theme.color.gradiant.horizontalCategoriesGradient,
+                indicatorColorWithScroll = Theme.color.gradiant.horizontalCategoriesGradient
 
         )
 
