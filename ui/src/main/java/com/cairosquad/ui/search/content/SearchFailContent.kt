@@ -1,8 +1,9 @@
 package com.cairosquad.ui.search.content
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -13,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
+import com.cairosquad.design_system.basic_component.Button
 import com.cairosquad.design_system.basic_component.InputField
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.StateMessage
@@ -26,14 +28,16 @@ fun SearchFailContent(
     listener: SearchInteractionListener,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier,
+    ) {
 
         InputField(
             modifier = Modifier
                 .background(Theme.color.surfaces.surface)
                 .padding(16.dp),
             value = state.query,
-            onValueChange = {  },
+            onValueChange = { },
             placeholder = stringResource(R.string.search_with_dotes_ahead),
             leadingIcon = R.drawable.search_bottom_nav,
             onFocusChanged = {
@@ -44,11 +48,13 @@ fun SearchFailContent(
             readOnly = true
         )
 
-        Box(
+        Column(
             Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
-            contentAlignment = Alignment.Center
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+
         ) {
             StateMessage(
                 imageDrawable = when (state.errorStatus) {
@@ -56,9 +62,9 @@ fun SearchFailContent(
                     ErrorStatus.NETWORK_ERROR -> R.drawable.no_result
                     ErrorStatus.UNKNOWN_ERROR -> R.drawable.no_result
                     null -> R.drawable.no_result
-                    ErrorStatus.UNAUTHORIZED -> TODO()
+                    ErrorStatus.UNAUTHORIZED -> R.drawable.no_result //TODO()
                     ErrorStatus.EMPTY -> R.drawable.no_result
-                    ErrorStatus.PARSING_ERROR -> TODO()
+                    ErrorStatus.PARSING_ERROR -> R.drawable.no_result //TODO()
                 },
                 titleId = when (state.errorStatus) {
                     ErrorStatus.NO_INTERNET -> R.string.no_internet_connection
@@ -78,6 +84,17 @@ fun SearchFailContent(
                     ErrorStatus.EMPTY -> R.string.no_results_found
                     ErrorStatus.PARSING_ERROR -> R.string.error_parsing_data
                 }
+            )
+        }
+        if (state.errorStatus == ErrorStatus.NO_INTERNET) {
+            Spacer(Modifier.weight(1f))
+            Button(
+                text = stringResource(R.string.try_again),
+                onClick = { listener::onRefresh },
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(bottom = 32.dp)
+                    .padding(horizontal = 16.dp)
             )
         }
     }
