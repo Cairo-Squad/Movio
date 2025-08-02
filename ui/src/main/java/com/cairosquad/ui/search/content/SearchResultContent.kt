@@ -421,6 +421,7 @@ private fun SearchResultFail(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        Spacer(Modifier.weight(1f))
         StateMessage(
             imageDrawable = when (errorStatus) {
                 ErrorStatus.NO_INTERNET -> R.drawable.no_internet
@@ -450,8 +451,8 @@ private fun SearchResultFail(
                 ErrorStatus.PARSING_ERROR -> R.string.error_parsing_data
             }
         )
+        Spacer(Modifier.weight(1f))
         if (errorStatus == ErrorStatus.NO_INTERNET) {
-            Spacer(Modifier.weight(1f))
             Button(
                 text = stringResource(R.string.try_again),
                 onClick = { listener::onRefresh },
