@@ -1,15 +1,11 @@
 package com.cairosquad.ui.home.content
 
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -29,9 +25,8 @@ import com.cairosquad.viewmodel.util.MediaType
 fun HomeScreenContentMoviesTab(
     screenState: HomeScreenState,
     listener: HomeInteractionsListener,
-    scrollState: ScrollState
+    scrollState: LazyListState
 ) {
-    val lazyListState = rememberLazyListState()
     val sections = remember {
         listOf(
             MediaContentType.TOP_RATING,
@@ -41,7 +36,7 @@ fun HomeScreenContentMoviesTab(
         )
     }
     LazyColumn(
-        modifier = Modifier.fillMaxSize(), state = lazyListState
+        modifier = Modifier.fillMaxSize(), state = scrollState
     ) {
         item {
             MediaHorizontalPager(
@@ -57,7 +52,7 @@ fun HomeScreenContentMoviesTab(
         sections.forEach { sectionType ->
                 item {
                     SectionContainer(
-                        listState = lazyListState, index = 0, onVisible = {
+                        listState = scrollState, index = 0, onVisible = {
                             if (!screenState.sections.containsKey(sectionType)) {
                                 listener.onSectionVisible(sectionType)
                             }

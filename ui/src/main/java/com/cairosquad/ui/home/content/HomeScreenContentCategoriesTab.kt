@@ -1,4 +1,3 @@
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,10 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -26,7 +24,6 @@ import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.R
@@ -34,15 +31,15 @@ import com.cairosquad.ui.movio_component.CategoriesChips
 import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.viewmodel.home.HomeInteractionsListener
 import com.cairosquad.viewmodel.home.HomeScreenState
-import com.cairosquad.viewmodel.see_all.SeeAllScreenState
 
 @Composable
 fun HomeScreenContentCategoriesTab(
     screenState: HomeScreenState,
     listener: HomeInteractionsListener,
-    scrollState: ScrollState,
     modifier: Modifier = Modifier
 ) {
+    val scrollState = rememberScrollState()
+
     val media = screenState.categoriesMedia.collectAsLazyPagingItems()
     Box(modifier = modifier.fillMaxSize()) {
         Box(

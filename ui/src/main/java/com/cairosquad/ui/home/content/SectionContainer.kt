@@ -17,7 +17,7 @@ fun SectionContainer(
     onVisible: () -> Unit,
     content: @Composable () -> Unit
 ) {
-    val layoutInfo = listState.layoutInfo
+    val layoutInfo by remember { derivedStateOf { listState.layoutInfo } }
     val isVisible = remember(layoutInfo) {
         derivedStateOf {
             layoutInfo.visibleItemsInfo.any { it.index == index }
