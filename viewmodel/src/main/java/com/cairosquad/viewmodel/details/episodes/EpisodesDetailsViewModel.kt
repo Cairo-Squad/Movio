@@ -4,18 +4,27 @@ import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Episode
 import com.cairosquad.viewmodel.base.BaseViewModel
-import com.cairosquad.viewmodel.details.artist.ArtistScreenState
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState.ScreenStatus
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 
-class EpisodesDetailsViewModel(
+@HiltViewModel(assistedFactory = EpisodesDetailsViewModel.Factory::class)
+class EpisodesDetailsViewModel @AssistedInject constructor(
     private val manageSeriesUseCase: ManageSeriesUseCase,
-    seriesId: Long,
-    private var seasonNumber: Int
+    @Assisted private val seriesId: Long,
+    @Assisted private var seasonNumber: Int = 0
 ) : BaseViewModel<EpisodesDetailsScreenState, EpisodesDetailEffect>(EpisodesDetailsScreenState()),
     EpisodesDetailsInteractionListener {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(seriesId: Long, seasonNumber: Int): EpisodesDetailsViewModel
+    }
 
     init {
         getSeasons(seriesId)
@@ -107,6 +116,11 @@ class EpisodesDetailsViewModel(
             )
         }
         getEpisodes(seriesId, seasonNumber)
+    }
+
+    override fun onRefresh() {
+            getSeasons(seriesId)
+            getEpisodes(seriesId, seasonNumber)
     }
 
 

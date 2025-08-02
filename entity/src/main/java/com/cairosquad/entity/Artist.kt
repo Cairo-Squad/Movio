@@ -5,7 +5,7 @@ data class Artist(
     val name: String,
     val photoPath: String,
     val country: String,
-    val birthDate: Long,
+    val birthDate: Long? = null,
     val biography: String,
     val department: String,
 )

@@ -1,8 +1,10 @@
 package com.cairosquad.ui.movio_component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -45,6 +47,7 @@ fun ArtistCard(
                     .padding(horizontal = 6.67.dp)
                     .size(88.dp)
                     .clip(CircleShape),
+
                 contentDescription = stringResource(R.string.artist_image),
                 nudeThreshold = 0.0,
                 nonNudeThreshold = 0.0,
@@ -74,11 +77,32 @@ fun ArtistCard(
                 .fillMaxWidth()
                 .padding(top = 8.dp),
             text = name,
-            textAlign = TextAlign.Center,
+            textAlign = TextAlign.Start,
             style = Theme.textStyle.title.mediumMedium14,
             color = Theme.color.surfaces.onSurface,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1
         )
+    }
+}
+@Composable
+@androidx.compose.ui.tooling.preview.Preview(showBackground = true)
+fun ArtistCardPreview_EnglishAndArabic() {
+    com.cairosquad.design_system.theme.MovioTheme {
+        Row(
+            modifier = Modifier
+                .background(Color.White),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            ArtistCard(
+                name = "ڤينسنت دونوفريو الممثل الأمريكي الشهير جداً جداً",
+                imgUrl = null
+            )
+            ArtistCard(
+                name = "Vincent D'Onofrio",
+                imgUrl = null
+            )
+
+        }
     }
 }

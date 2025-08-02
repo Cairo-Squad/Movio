@@ -11,8 +11,10 @@ plugins {
     alias(libs.plugins.google.firebase.perf)
     alias(libs.plugins.google.firebase.appdistribution)
     alias(libs.plugins.ksp)
+    id("org.jetbrains.kotlin.kapt")
     alias(libs.plugins.kotlin.serialization)
     id("androidx.room") version "2.7.1"
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -24,7 +26,7 @@ android {
         minSdk = 26
         targetSdk = 35
         versionCode = 1
-        versionName = "1.1"
+        versionName = "1.1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -88,8 +90,8 @@ android {
     }
 }
 
-ksp {
-    arg("KOIN_CONFIG_CHECK", "true")
+hilt {
+    enableAggregatingTask = false
 }
 
 dependencies {
@@ -112,12 +114,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.foundation.layout.android)
 
-    // koin
-    implementation(libs.koin.androidx.compose)
-    implementation(libs.koin.android)
-    implementation(libs.koin.test)
-    implementation(libs.koin.annotations)
-    ksp(libs.koin.ksp)
     implementation(libs.logging.interceptor)
 
     // --- Retrofit 3 ---
@@ -130,6 +126,13 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+
+    // Dagger & Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    kapt(libs.androidx.hilt.compiler)
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
 
     implementation(project(":design_system"))
     implementation(project(":domain"))

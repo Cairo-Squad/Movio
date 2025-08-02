@@ -17,6 +17,8 @@ object NSFWDetector {
 	private const val TAG = "NSFWDetector"
 	private const val LABEL_SFW = "nude"
 	private const val LABEL_NSFW = "nonnude"
+	private const val NUMBER_OF_THREADS = 10
+	private const val NUMBER_OF_CACHES_IMAGES = 100
 
 	// Lazy initialization - only create when first used
 	private val localModel by lazy {
@@ -37,9 +39,9 @@ object NSFWDetector {
 			.getOnDeviceAutoMLImageLabeler(options)
 	}
 
-	private val imageCache = LruCache<String, Boolean>(50)
+	private val imageCache = LruCache<String, Boolean>(NUMBER_OF_CACHES_IMAGES)
 
-	private val executorService = Executors.newFixedThreadPool(4)
+	private val executorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS)
 
 	fun isNSFWCancellable(
 		bitmap: Bitmap,

@@ -31,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.cairosquad.design_system.basic_component.Button
 import com.cairosquad.design_system.basic_component.Icon
 import com.cairosquad.design_system.basic_component.InputField
@@ -51,13 +52,12 @@ import com.cairosquad.viewmodel.login.LoginEffect
 import com.cairosquad.viewmodel.login.LoginInteractionListener
 import com.cairosquad.viewmodel.login.LoginScreenState
 import com.cairosquad.viewmodel.login.LoginViewModel
-import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    viewModel: LoginViewModel = koinViewModel()
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
     val navController = LocalNavController.current
     val uiState by viewModel.screenState.collectAsState()
@@ -172,7 +172,9 @@ private fun LoginScreenContent(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .weight(1f)
             ) {
                 AnimatedVisibility(
                     visible = passwordError != null,
@@ -250,6 +252,7 @@ private fun LoginScreenContent(
             borderColor = Theme.color.surfaces.onSurfaceAt3
         )
         Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(12.dp))
         Row(
             modifier = Modifier
                 .wrapContentWidth()
@@ -272,8 +275,8 @@ private fun LoginScreenContent(
 
     }
 }
-
-@Preview
+@Preview(device = "spec:width=411dp,height=891dp")
+@Preview(device = "spec:width=360dp,height=600dp,dpi=440")
 @Composable
 private fun PreviewLoginScreen() {
     MovioTheme {

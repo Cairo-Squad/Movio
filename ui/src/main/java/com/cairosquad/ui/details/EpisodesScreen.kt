@@ -1,5 +1,6 @@
 package com.cairosquad.ui.details
 
+import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -31,9 +32,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -44,6 +46,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
@@ -53,7 +56,6 @@ import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import com.cairosquad.ui.BuildConfig
 import com.cairosquad.ui.movio_component.LoadingMovieImage
-import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.ui.utils.errorStatusToMessageResource
@@ -61,15 +63,16 @@ import com.cairosquad.viewmodel.details.episodes.EpisodesDetailEffect
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsInteractionListener
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsViewModel
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
 fun EpisodesScreen(
     seriesId: Long,
     seasonNumber: Int,
-    viewModel: EpisodesDetailsViewModel = koinViewModel { parametersOf(seriesId, seasonNumber) }
 ) {
+    val viewModel: EpisodesDetailsViewModel =
+        hiltViewModel<EpisodesDetailsViewModel, EpisodesDetailsViewModel.Factory> { factory ->
+            factory.create(seriesId, seasonNumber)
+        }
     val navController = LocalNavController.current
     val context = LocalContext.current
     val uiState by viewModel.screenState.collectAsStateWithLifecycle()
@@ -103,7 +106,12 @@ private fun EpisodesScreenContent(
     modifier: Modifier = Modifier,
 
     ) {
-    val seasonOptions = uiState.seasons.map { "Season ${it.seasonNumber}" }
+    val seasonOptions = uiState.seasons.map {
+        stringResource(
+            com.cairosquad.ui.R.string.season,
+            it.seasonNumber
+        )
+    }
 
     val listState = rememberScrollState()
     val density = LocalDensity.current
@@ -120,23 +128,13 @@ private fun EpisodesScreenContent(
         stop = Theme.color.surfaces.surface,
         fraction = progress
     )
-    val animatedBrush = Brush.verticalGradient(
+    val animatedBrush = verticalGradient(
         colors = listOf(animatedStartColor, animatedEndColor)
     )
     when (uiState.episodesSectionState) {
         EpisodesDetailsScreenState.ScreenStatus.ERROR -> {
-            Box(
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                StateMessage(
-                    imageDrawable = R.drawable.no_internet,
-                    titleId = R.string.no_internet_connection,
-                    descriptionId = R.string.internet_is_not_available_description
-                )
-            }
+            DetailsFailContent(onTryAgainClick = listener::onRefresh)
+
         }
     else->{
         Box(
@@ -151,15 +149,48 @@ private fun EpisodesScreenContent(
                     EpisodesDetailsScreenState.ScreenStatus.LOADING -> {}
                     EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
                         if (uiState.season.posterUrl.isNotEmpty()) {
-                            SafeImageViewer(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(400.dp)
-                                    .blur(16.dp)
-                                    .offset(y = (-20).dp),
-                                model = BuildConfig.IMAGE_BASE_URL + uiState.season.posterUrl,
-                                contentDescription = "",
-                            )
+                            Box {
+                                SafeImageViewer(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(400.dp)
+                                        .then(
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                                Modifier.blur(
+                                                    16.dp,
+                                                    edgeTreatment = BlurredEdgeTreatment.Unbounded
+                                                )
+                                            } else {
+                                                Modifier
+                                            }
+                                        )
+                                        .offset(y = (-28).dp),
+                                    model = BuildConfig.IMAGE_BASE_URL + uiState.season.posterUrl,
+                                    contentDescription = "",
+                                    blur = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) 16 else 0,
+                                    isBlurForced = true
+                                )
+                                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(60.dp)
+                                            .align(Alignment.BottomCenter)
+                                            .background(
+                                                brush = verticalGradient(
+                                                    colors = listOf(
+                                                        Theme.color.surfaces.surface.copy(alpha = 0.00f),
+                                                        Theme.color.surfaces.surface.copy(alpha = 0.10f),
+                                                        Theme.color.surfaces.surface.copy(alpha = 0.50f),
+                                                        Theme.color.surfaces.surface.copy(alpha = 0.90f),
+                                                        Theme.color.surfaces.surface,
+                                                    )
+                                                )
+                                            )
+                                    )
+                                }
+
+                            }
                         }
                     }
 
@@ -263,12 +294,17 @@ private fun EpisodesScreenContent(
                                 )
                                 Spacer(modifier = Modifier.weight(1f))
                                 AppDropDownMenu(
-                                    selectedText = "Season ${uiState.selectedSeasonNumber}",
+                                    selectedText = stringResource(
+                                        R.string.season,
+                                        uiState.selectedSeasonNumber
+                                    ),
                                     options = seasonOptions,
                                     imgRes = R.drawable.drop_down_arrow,
-                                    onOptionSelected = { selected ->
+                                    onOptionSelected = { selectedSeason ->
                                         val seasonNum =
-                                            selected.removePrefix("Season ").toIntOrNull() ?: 1
+                                            seasonOptions.indexOfFirst {
+                                                selectedSeason == it
+                                            }.takeIf { it != -1 } ?: 1
                                         listener.onSeasonSelected(seriesId, seasonNum)
                                     },
                                 )
@@ -381,7 +417,7 @@ fun EpisodeCard(
                     modifier = Modifier.size(16.dp)
                 )
                 BasicText(
-                    text = "$episodeRating",
+                    text = episodeRating,
                     style = Theme.textStyle.label.smallRegular12.copy(color = Theme.color.surfaces.onSurface)
                 )
             }
@@ -390,7 +426,7 @@ fun EpisodeCard(
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 BasicText(
-                    text = "Episode $episodeNumber",
+                    text = stringResource(com.cairosquad.ui.R.string.episode, episodeNumber),
                     style = Theme.textStyle.label.smallRegular12.copy(
                         color = Theme.color.surfaces.onSurfaceContainer,
                     )
@@ -402,7 +438,7 @@ fun EpisodeCard(
                     )
                 )
                 BasicText(
-                    text = "${episodeDuration}m",
+                    text = stringResource(com.cairosquad.ui.R.string.m, episodeDuration),
                     style = Theme.textStyle.label.smallRegular12.copy(
                         color = Theme.color.surfaces.onSurfaceContainer,
                     )

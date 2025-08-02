@@ -5,8 +5,9 @@ import com.cairosquad.repository.artists.data_source.local.ArtistsLocalDataSourc
 import com.cairosquad.repository.artists.data_source.local.dto.ArtistCacheDto
 import com.cairosquad.repository.artists.data_source.local.dto.CacheCodeArtistCrossRef
 import com.cairosquad.repository.artists.data_source.local.dto.CacheCodeWithArtistsCacheDto
+import javax.inject.Inject
 
-class ArtistsLocalDataSourceImpl(
+class ArtistsLocalDataSourceImpl @Inject constructor(
     private val artistsCacheDao: ArtistsCacheDao,
     private val cacheCodeDao: CacheCodeDao
 ) : ArtistsLocalDataSource {

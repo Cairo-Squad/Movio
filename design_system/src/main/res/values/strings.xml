@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="no_results_found">No results found</string>
-    <string name="no_results_found_description">We couldn’t find anything matching your search. Try checking the spelling or explore something else!</string>
+    <string name="no_search_results_found_description">We couldn’t find anything matching your search. Try checking the spelling or explore something else!</string>
+    <string name="no_results_for_category">We couldn’t find any content in this category. Try exploring another one!</string>
     <string name="internet_is_not_available">Internet is not available</string>
     <string name="internet_is_not_available_description">Please make sure you are connected to the internet and try again.</string>
     <string name="log_in_to_unlock_your_personal_library">Log in to unlock your personal library</string>
@@ -36,6 +37,7 @@
     <string name="error_loading_image">Error Loading Image</string>
     <string name="recent_item_icon">Recent Item Icon</string>
     <string name="clear_search_result">Clear Search result</string>
+    <string name="recommendation_icon">Recommendation Icon</string>
     <string name="no_internet_connection">No internet connection</string>
     <string name="an_error_occured_while_getting_results">An error occurred while getting results</string>
     <string name="an_unexpected_error_occurred">An unexpected error occurred</string>
@@ -75,5 +77,6 @@
     <string name="similar_series">Similar Series</string>
     <string name="unauthorized_access">Wrong credentials</string>
     <string name="error_parsing_data">Something went wrong while processing data</string>
-
-</resources>
+    <string name="categories">Categories</string>
+    <string name="try_again">Try Again</string>
+ </resources>

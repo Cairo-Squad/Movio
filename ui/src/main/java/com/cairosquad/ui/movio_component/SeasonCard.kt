@@ -30,6 +30,7 @@ import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import com.cairosquad.ui.BuildConfig
+import java.util.Locale
 
 @Composable
 fun SeasonCard(
@@ -67,7 +68,7 @@ fun SeasonCard(
         } else {
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .size(width = 76.dp, height = 100.dp)
                     .clip(RoundedCornerShape(8.dp))
                     .background(Theme.color.system.defaultImageBackground),
                 contentAlignment = Alignment.Center
@@ -138,7 +139,7 @@ fun SeasonCard(
                     tint = Theme.color.system.warning,
                 )
                 BasicText(
-                    text = seasonRate.toString(),
+                    text = String.format(Locale.getDefault(), "%.1f", seasonRate),
                     style = Theme.textStyle.label.smallRegular12.copy(
                         color = Theme.color.system.onWarning,
                     )

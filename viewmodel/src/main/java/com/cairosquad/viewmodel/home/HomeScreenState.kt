@@ -1,16 +1,20 @@
 package com.cairosquad.viewmodel.home
 
 import androidx.compose.ui.res.stringResource
+import androidx.paging.PagingData
 import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.exception.ErrorStatus
+import com.cairosquad.viewmodel.see_all.SeeAllScreenState
 import com.cairosquad.viewmodel.util.MediaContentType
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 
 data class HomeScreenState(
 
     val popularMovies: List<MediaUiState> = emptyList(),
     val popularSeries: List<MediaUiState> = emptyList(),
 
-    val categoriesMedia: List<MediaUiState> = emptyList(),
+    val categoriesMedia: Flow<PagingData<HomeScreenState.MediaUiState>> = flowOf(PagingData.empty()),
 
     val sections: Map<MediaContentType, SectionUiState> = mapOf(),
 
@@ -21,13 +25,14 @@ data class HomeScreenState(
     val genres: List<GenreUiState> = listOf(GenreUiState.defaultGenre),
 
     val selectedSortingType: SortingType = SortingType.ALL,
-    val selectedTab: Tab = Tab.ALL,
+    val selectedTab: Tab = Tab.MOVIES,
     val isRefreshing: Boolean = false
 ) {
 
     data class SectionUiState(
         val movies: List<MediaUiState> = emptyList(),
         val series: List<MediaUiState> = emptyList(),
+        val isLoading: Boolean = false
     )
 
     data class MediaUiState(
@@ -59,7 +64,6 @@ data class HomeScreenState(
     }
 
     enum class Tab {
-        ALL,
         MOVIES,
         TV_SHOWS,
         CATEGORIES

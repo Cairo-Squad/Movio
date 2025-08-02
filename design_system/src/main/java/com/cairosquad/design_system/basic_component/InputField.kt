@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,6 +38,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -50,6 +53,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.preview.MultiThemePreviews
 import com.cairosquad.design_system.theme.MovioTheme
@@ -79,6 +83,9 @@ fun InputField(
         mutableStateOf(TextFieldValue(text = value, selection = TextRange(value.length)))
     }
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
+
+    val fontScale = LocalConfiguration.current.fontScale
+    val chipHeight = (48 - 28) * fontScale + 28
 
     val hasFocusGradientColors = listOf(
         Theme.color.brand.onPrimary,
@@ -139,7 +146,7 @@ fun InputField(
                     }
 
                 textFieldValue = filteredValue
-                onValueChange(filteredValue.text)
+                onValueChange(filteredValue.text.trimStart())
             },
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
@@ -159,12 +166,15 @@ fun InputField(
                         Modifier
                     }
                 )
-                .padding(horizontal = 12.dp, vertical = 14.dp),
+                .padding(horizontal = 12.dp)
+                .height(chipHeight.dp),
             singleLine = isSingleLine,
+            maxLines = 1,
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
             textStyle = Theme.textStyle.label.smallRegular14.copy(
                 color = Theme.color.surfaces.onSurface,
+                lineHeight = 20.sp,
                 letterSpacing = if (isPasswordField) TextUnit(2f, TextUnitType.Sp)
                 else TextUnit.Unspecified
             ),
@@ -188,7 +198,8 @@ fun InputField(
                             Text(
                                 text = placeholder,
                                 style = Theme.textStyle.label.smallRegular14.copy(
-                                    color =textColor
+                                    color =textColor,
+                                    lineHeight = 20.sp
                                 )
                             )
                         }

@@ -36,7 +36,8 @@ fun SimilarSeriesSection(
     )
     LazyRow(
         contentPadding = PaddingValues(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start)
+        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
+       modifier = Modifier.padding(bottom = 32.dp)
     ) {
         items(similarSeries) {
             MovieCard(
@@ -70,7 +71,8 @@ fun SimilarMoviesSection(
     )
     LazyRow(
         contentPadding = PaddingValues(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start)
+        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
+        modifier = Modifier.padding(bottom = 32.dp)
     ) {
         items(similarMovies) {
             MovieCard(

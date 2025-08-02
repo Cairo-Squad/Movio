@@ -5,18 +5,28 @@ import com.cairosquad.domain.usecase.ManageArtistUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 
-class ArtistViewModel(
+@HiltViewModel(assistedFactory = ArtistViewModel.Factory::class)
+class ArtistViewModel @AssistedInject constructor(
     private val manageArtistUseCase: ManageArtistUseCase,
-    artistId: Long
+    @Assisted private val artistId: Long,
 ) : BaseViewModel<ArtistScreenState, ArtistEffect>(initialState = ArtistScreenState()),
-	ArtistInteractionListener {
+    ArtistInteractionListener {
 
-	init {
-		loadArtistDetails(artistId)
-		loadArtistMovies(artistId)
-		loadArtistSeries(artistId)
-	}
+    @AssistedFactory
+    interface Factory {
+        fun create(artistId: Long): ArtistViewModel
+    }
+
+    init {
+        loadArtistDetails(artistId)
+        loadArtistMovies(artistId)
+        loadArtistSeries(artistId)
+    }
 
     fun loadArtistDetails(artistId: Long) {
         tryToCall(
@@ -78,7 +88,7 @@ class ArtistViewModel(
             },
             onSuccess = { series ->
                 updateState {
-                    it.copy(KnownForSeries = series)
+                    it.copy(knownForSeries = series)
                 }
             },
             onError = { e ->
@@ -92,27 +102,30 @@ class ArtistViewModel(
         )
     }
 
-	override fun onClickBack() {
-		sendEffect(ArtistEffect.NavigateBack)
-	}
+    override fun onClickBack() {
+        sendEffect(ArtistEffect.NavigateBack)
+    }
 
-	override fun onMovieClick(movieId: Long) {
-		sendEffect(ArtistEffect.NavigateToMovieDetails(movieId))
-	}
+    override fun onMovieClick(movieId: Long) {
+        sendEffect(ArtistEffect.NavigateToMovieDetails(movieId))
+    }
 
-	override fun onSeriesClick(seriesId: Long) {
-		sendEffect(ArtistEffect.NavigateToSeriesDetails(seriesId))
-	}
+    override fun onSeriesClick(seriesId: Long) {
+        sendEffect(ArtistEffect.NavigateToSeriesDetails(seriesId))
+    }
 
-	private fun handleArtistException(e: Throwable): ErrorStatus {
-		return when (e) {
-			is MovioException -> {
-				exceptionToErrorStatus(e)
-			}
+    override fun onRefresh() {
+            loadArtistDetails(artistId)
+            loadArtistMovies(artistId)
+            loadArtistSeries(artistId)
+    }
+    private fun handleArtistException(e: Throwable): ErrorStatus {
+        return when (e) {
+            is MovioException -> {
+                exceptionToErrorStatus(e)
+            }
 
-			else -> ErrorStatus.UNKNOWN_ERROR
-		}
-	}
+            else -> ErrorStatus.UNKNOWN_ERROR
+        }
+    }
 }
-
-

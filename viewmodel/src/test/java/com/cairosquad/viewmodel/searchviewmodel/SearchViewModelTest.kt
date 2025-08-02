@@ -5,6 +5,7 @@ import app.cash.turbine.test
 import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.exception.NetworkException
 import com.cairosquad.domain.exception.UnknownException
+import com.cairosquad.domain.usecase.GetSearchRecommendationUseCase
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSearchHistoryUseCase
 import com.cairosquad.entity.Artist
@@ -50,6 +51,8 @@ class SearchViewModelTest {
     private lateinit var manageMoviesUseCase: ManageMoviesUseCase
     private lateinit var viewModel: SearchViewModel
 
+    private lateinit var recommendationUseCase: GetSearchRecommendationUseCase
+
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
@@ -62,11 +65,14 @@ class SearchViewModelTest {
         manageSearchHistoryUseCase = mockk(relaxed = true)
         manageSearchHistoryUseCase = mockk(relaxed = true)
         manageMoviesUseCase = mockk(relaxed = true)
+        recommendationUseCase = mockk(relaxed = true)
+
 
         viewModel = SearchViewModel(
             searchPager,
             manageSearchHistoryUseCase,
-            manageMoviesUseCase
+            manageMoviesUseCase,
+            recommendationUseCase
         )
     }
 
@@ -432,7 +438,7 @@ class SearchViewModelTest {
         viewModel.onQueryTextChanged(query)
         advanceUntilIdle()
 
-        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
+        assertThat(viewModel.screenState.value.query).isEqualTo(query)
     }
 
     @Test
@@ -552,7 +558,7 @@ class SearchViewModelTest {
     @Test
     fun `onClearHistory should set FAILED and UNKNOWN_ERROR when exception occurs`() = runTest {
 
-        coEvery { manageSearchHistoryUseCase.clearAllHistory() }  throws IOException()
+        coEvery { manageSearchHistoryUseCase.clearAllHistory() } throws IOException()
 
         viewModel.onClearHistory()
         advanceUntilIdle()

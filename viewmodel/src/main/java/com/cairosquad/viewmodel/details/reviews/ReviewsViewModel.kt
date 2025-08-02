@@ -4,18 +4,30 @@ import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Review
 import com.cairosquad.viewmodel.base.BaseViewModel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 
-class ReviewsViewModel(
-    private val mediaId: Long,
-    private val isMovie: Boolean,
+@HiltViewModel(assistedFactory = ReviewsViewModel.Factory::class)
+class ReviewsViewModel @AssistedInject constructor(
     private val manageMoviesUseCase: ManageMoviesUseCase,
     private val manageSeriesUseCase: ManageSeriesUseCase,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
-
+    @Assisted private val mediaId: Long,
+    @Assisted private val isMovie: Boolean = false,
+    @Assisted private val dispatcher: CoroutineDispatcher,
 ) : BaseViewModel<ReviewsScreenState, ReviewsEffect>(initialState = ReviewsScreenState()),
     ReviewsInteractionListener {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            mediaId: Long,
+            isMovie: Boolean,
+            dispatcher: CoroutineDispatcher,
+        ): ReviewsViewModel
+    }
 
     fun getReviews() {
         updateState { it.copy(isLoading = true, error = null) }
@@ -54,5 +66,10 @@ class ReviewsViewModel(
 
     override fun onClickBack() {
         sendEffect(ReviewsEffect.NavigateBack)
+    }
+
+    override fun onRefresh() {
+            getReviews()
+
     }
 }

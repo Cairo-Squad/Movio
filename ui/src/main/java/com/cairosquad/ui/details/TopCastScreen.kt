@@ -1,5 +1,6 @@
 package com.cairosquad.ui.details
 
+import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -24,9 +26,11 @@ import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
+import com.cairosquad.design_system.modifier.dropShadow
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.ArtistCard
 import com.cairosquad.ui.movio_component.LoadingArtistCard
@@ -34,18 +38,23 @@ import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.ui.navigation.ArtistRoute
 import com.cairosquad.viewmodel.details.top_cast.TopCastScreenState
 import com.cairosquad.viewmodel.details.top_cast.TopCastViewModel
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
+import kotlinx.coroutines.Dispatchers
 
 @Composable
 fun TopCastScreen(
     mediaId: Long,
     isMovie: Boolean,
     navController: NavHostController,
-    viewmodel: TopCastViewModel = koinViewModel<TopCastViewModel>(
-        parameters = { parametersOf(mediaId, isMovie) }
-    )
 ) {
+    val viewmodel: TopCastViewModel =
+        hiltViewModel<TopCastViewModel, TopCastViewModel.Factory> { factory ->
+            factory.create(
+                mediaId = mediaId,
+                isMovie = isMovie,
+                dispatcher = Dispatchers.IO
+            )
+        }
+
     val state by viewmodel.screenState.collectAsState()
 
     TopCastContent(
@@ -63,12 +72,29 @@ private fun TopCastContent(
 ) {
     Box {
         Box(
-            Modifier
+            modifier = Modifier
                 .windowInsetsPadding(WindowInsets.statusBars)
-                .align(Alignment.TopEnd)
-                .blur(264.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
                 .size(230.dp)
-                .background(Theme.color.surfaces.onSurfaceAt5)
+                .align(Alignment.TopEnd)
+                .then(
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                        Modifier.dropShadow(
+                            shape = CircleShape,
+                            color = Theme.color.surfaces.onSurfaceAt5,
+                            blur = 264.dp,
+                            offsetX = 0.dp,
+                            offsetY = 0.dp,
+                            alpha = 0.10f
+                        )
+                    } else {
+                        Modifier
+                            .blur(264.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
+                            .background(
+                                color = Theme.color.surfaces.onSurfaceAt5,
+                                shape = CircleShape
+                            )
+                    }
+                )
         )
 
         LazyVerticalGrid(

@@ -1,6 +1,7 @@
 package com.cairosquad.ui.details
 
 import android.net.Uri
+import android.os.Build
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -31,9 +32,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -42,6 +44,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.basic_component.ExpandableText
@@ -61,7 +64,6 @@ import com.cairosquad.ui.movio_component.LoadingArtistCard
 import com.cairosquad.ui.movio_component.LoadingMovieCard
 import com.cairosquad.ui.movio_component.LoadingMovieImage
 import com.cairosquad.ui.movio_component.LoadingReviewCard
-import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.ui.movio_component.bottom_sheet.CreateListBottomSheet
 import com.cairosquad.ui.movio_component.bottom_sheet.ListBottomSheet
 import com.cairosquad.ui.movio_component.bottom_sheet.LoginBottomSheet
@@ -81,14 +83,15 @@ import com.cairosquad.viewmodel.details.movie.MovieEffect
 import com.cairosquad.viewmodel.details.movie.MovieInteractionListener
 import com.cairosquad.viewmodel.details.movie.MovieScreenState
 import com.cairosquad.viewmodel.details.movie.MovieViewModel
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
 fun MovieScreen(
     movieId: Long,
-    viewModel: MovieViewModel = koinViewModel { parametersOf(movieId) }
 ) {
+    val viewModel: MovieViewModel =
+        hiltViewModel<MovieViewModel, MovieViewModel.Factory> { factory ->
+            factory.create(movieId)
+        }
     val navController = LocalNavController.current
     val context = LocalContext.current
     val state by viewModel.screenState.collectAsState()
@@ -240,9 +243,9 @@ fun MovieScreen(
         }
         AnimatedVisibility(
             modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .windowInsetsPadding(WindowInsets.navigationBars)
-                .padding(16.dp),
+				.align(Alignment.BottomCenter)
+				.windowInsetsPadding(WindowInsets.navigationBars)
+				.padding(16.dp),
             visible = state.showSnackBar,
             enter = slideInVertically(
                 initialOffsetY = { fullHeight -> fullHeight },
@@ -284,56 +287,73 @@ fun MovieContent(
         stop = Theme.color.surfaces.surface,
         fraction = progress
     )
-    val animatedBrush = Brush.verticalGradient(
+    val animatedBrush = verticalGradient(
         colors = listOf(animatedStartColor, animatedEndColor)
     )
     when (uiState.basicDetailsSectionState) {
         MovieScreenState.ScreenStatus.ERROR -> {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                StateMessage(
-                    imageDrawable = R.drawable.no_internet,
-                    titleId = R.string.no_internet_connection,
-                    descriptionId = R.string.internet_is_not_available_description
-                )
-            }
+            DetailsFailContent(onTryAgainClick = { interactionListener.onRefresh() })
         }
 
         else -> {
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .background(Theme.color.surfaces.surface)
-                    .windowInsetsPadding(WindowInsets.navigationBars)
-                    .verticalScroll(listState)
+					.fillMaxSize()
+					.background(Theme.color.surfaces.surface)
+					.windowInsetsPadding(WindowInsets.navigationBars)
+					.verticalScroll(listState)
             ) {
                 when (uiState.basicDetailsSectionState) {
                     MovieScreenState.ScreenStatus.LOADING -> {}
                     MovieScreenState.ScreenStatus.SUCCESS -> {
                         if (uiState.movie.posterPath.isNotEmpty()) {
-                            SafeImageViewer(
-                                modifier = Modifier
-                                    .blur(16.dp)
-                                    .fillMaxWidth()
-                                    .height(400.dp)
-                                    .offset(y = (-28).dp),
-                                model = "https://image.tmdb.org/t/p/w500/${uiState.movie.posterPath}",
-                                contentDescription = "",
-                                blur = 0,
-                                nudeThreshold = 0.0,
-                                nonNudeThreshold = 0.0
-                            )
+                            Box {
+                                SafeImageViewer(
+                                    modifier = Modifier
+										.fillMaxWidth()
+										.height(400.dp)
+										.then(
+											if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+												Modifier.blur(
+													16.dp,
+													edgeTreatment = BlurredEdgeTreatment.Unbounded
+												)
+											} else {
+												Modifier
+											}
+										)
+										.offset(y = (-28).dp),
+                                    model = BuildConfig.IMAGE_BASE_URL + uiState.movie.posterPath,
+                                    contentDescription = "",
+                                    blur = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) 16 else 0,
+                                    isBlurForced = true
+                                )
+                                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                                    Box(
+                                        modifier = Modifier
+											.fillMaxWidth()
+											.height(50.dp)
+											.align(Alignment.BottomCenter)
+											.background(
+												brush = verticalGradient(
+													colors = listOf(
+														Theme.color.surfaces.surface.copy(alpha = 0.35f),
+														Theme.color.surfaces.surface.copy(alpha = 0.50f),
+														Theme.color.surfaces.surface.copy(alpha = 0.90f),
+														Theme.color.surfaces.surface,
+													)
+												)
+											)
+                                    )
+                                }
+                            }
                         } else {
                             Box(
                                 modifier = Modifier
-                                    .blur(16.dp)
-                                    .fillMaxWidth()
-                                    .height(400.dp)
-                                    .offset(y = (-28).dp),
+									.blur(16.dp)
+									.fillMaxWidth()
+									.height(400.dp)
+									.offset(y = (-28).dp),
                             )
                         }
                     }
@@ -342,9 +362,22 @@ fun MovieContent(
                 }
                 LazyColumn(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .windowInsetsPadding(WindowInsets.statusBars)
-                        .heightIn(max = 10000.dp),
+						.fillMaxWidth()
+						.windowInsetsPadding(WindowInsets.statusBars)
+						.then(
+							if (
+								uiState.showCreateListBottomSheet
+								|| uiState.isAddToListBottomSheetOpen
+								|| uiState.isRateBottomSheetOpen
+								|| uiState.isShareBottomSheetOpen
+								|| uiState.isNoAccountBottomSheetOpen
+							) {
+								Modifier.blur(4.dp)
+							} else {
+								Modifier
+							}
+						)
+						.heightIn(max = 10000.dp),
                     horizontalAlignment = Alignment.Start,
                     userScrollEnabled = false
                 ) {
@@ -353,8 +386,8 @@ fun MovieContent(
                             MovieScreenState.ScreenStatus.LOADING -> {
                                 Column(
                                     modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(top = 56.dp, bottom = 24.dp),
+										.fillMaxWidth()
+										.padding(top = 56.dp, bottom = 24.dp),
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
                                     LoadingMovieImage(
@@ -366,15 +399,15 @@ fun MovieContent(
                             MovieScreenState.ScreenStatus.SUCCESS -> {
                                 Column(
                                     modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(top = 56.dp, bottom = 24.dp),
+										.fillMaxWidth()
+										.padding(top = 56.dp, bottom = 24.dp),
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
                                     if (uiState.movie.posterPath.isNotEmpty()) {
                                         SafeImageViewer(
                                             modifier = Modifier
-                                                .size(height = 260.dp, width = 200.dp)
-                                                .clip(RoundedCornerShape(8.dp)),
+												.size(height = 260.dp, width = 200.dp)
+												.clip(RoundedCornerShape(8.dp)),
                                             model = BuildConfig.IMAGE_BASE_URL + uiState.movie.posterPath,
                                             contentDescription = "",
                                             loadingPlaceholder = {
@@ -389,9 +422,9 @@ fun MovieContent(
                                     } else {
                                         Box(
                                             modifier = Modifier
-                                                .size(height = 260.dp, width = 200.dp)
-                                                .clip(RoundedCornerShape(8.dp))
-                                                .background(Theme.color.system.defaultImageBackground),
+												.size(height = 260.dp, width = 200.dp)
+												.clip(RoundedCornerShape(8.dp))
+												.background(Theme.color.system.defaultImageBackground),
                                             contentAlignment = Alignment.Center
                                         ) {
                                             Icon(
@@ -435,18 +468,18 @@ fun MovieContent(
                             MovieScreenState.ScreenStatus.LOADING -> {
                                 LoadingMovieImage(
                                     modifier = Modifier
-                                        .padding(horizontal = 16.dp)
-                                        .fillMaxWidth()
-                                        .height(height = 200.dp)
-                                        .padding(bottom = 32.dp)
+										.padding(horizontal = 16.dp)
+										.fillMaxWidth()
+										.height(height = 200.dp)
+										.padding(bottom = 32.dp)
                                 )
                             }
 
                             MovieScreenState.ScreenStatus.SUCCESS -> {
                                 ExpandableText(
                                     modifier = Modifier
-                                        .padding(horizontal = 16.dp)
-                                        .padding(top = 16.dp),
+										.padding(horizontal = 16.dp)
+										.padding(top = 16.dp),
                                     text = uiState.movie.overview,
                                     showMoreText = stringResource(R.string.read_more_with_dots_behind),
                                     showLessText = stringResource(R.string.read_less_with_dots_behind),
@@ -557,9 +590,9 @@ fun MovieContent(
     }
     AppBar(
         modifier = Modifier
-            .background(animatedBrush)
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .fillMaxWidth(),
+			.background(animatedBrush)
+			.windowInsetsPadding(WindowInsets.statusBars)
+			.fillMaxWidth(),
         onBackButtonClicked = interactionListener::onBackClick,
         onShareButtonClicked = interactionListener::onShareClick,
         onFavoriteButtonClicked = interactionListener::onFavoriteClick

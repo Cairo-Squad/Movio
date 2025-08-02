@@ -7,8 +7,9 @@ import com.cairosquad.domain.repository.SeriesRepository
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
+import javax.inject.Inject
 
-class ManageArtistUseCase(
+class ManageArtistUseCase @Inject constructor(
     private val artistsRepository: ArtistsRepository,
     private val searchRepository: SearchRepository,
     private val moviesRepository: MoviesRepository,

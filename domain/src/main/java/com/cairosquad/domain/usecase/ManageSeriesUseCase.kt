@@ -10,8 +10,9 @@ import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Review
 import com.cairosquad.entity.Season
 import com.cairosquad.entity.Series
+import javax.inject.Inject
 
-class ManageSeriesUseCase(
+class ManageSeriesUseCase @Inject constructor(
     private val seriesRepository: SeriesRepository,
     private val searchRepository: SearchRepository,
     private val artistsRepository: ArtistsRepository

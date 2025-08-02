@@ -132,7 +132,7 @@ class ArtistViewModelTest {
 
         advanceUntilIdle()
 
-        assertThat(viewModel.screenState.value.KnownForSeries).isEqualTo(series.map { it.toArtistSeriesUiState() })
+        assertThat(viewModel.screenState.value.knownForSeries).isEqualTo(series.map { it.toArtistSeriesUiState() })
     }
 
     @Test

@@ -1,8 +1,8 @@
 package com.cairosquad.viewmodel.home
 
-import android.util.Log
+
+import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
-import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Movie
@@ -13,124 +13,67 @@ import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import com.cairosquad.viewmodel.home.HomeScreenState.ScreenStatus
 import com.cairosquad.viewmodel.util.MediaContentType
 import com.cairosquad.viewmodel.util.MediaType
-import com.cairosquad.viewmodel.util.combineTwoList
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
     private val manageMoviesUseCase: ManageMoviesUseCase,
-    private val manageSeriesUseCase: ManageSeriesUseCase
+    private val manageSeriesUseCase: ManageSeriesUseCase,
+    private val unifiedMediaPager: UnifiedMediaPager
 ) : BaseViewModel<HomeScreenState, HomeEffect>(initialState = HomeScreenState()),
     HomeInteractionsListener {
 
     init {
-        loadAllData()
+        loadHomeScreenData()
     }
 
-    private fun loadAllData(genreId: Long? = null) {
-        fetchPopularMedia(genreId)
-
-        MediaContentType.entries.forEach {
-            fetchSectionData(it)
-        }
-
+    fun loadHomeScreenData() {
+        fetchPopularMedia(null)
         loadGenres()
+    }
+
+    private fun setSectionLoading(sectionType: MediaContentType) {
+        updateState {
+            val newSection = HomeScreenState.SectionUiState(isLoading = true)
+            it.copy(
+                sections = (it.sections + (sectionType to newSection))
+                    .entries.sortedBy { entry -> entry.key.ordinal }
+                    .associate { it -> it.key to it.value }
+            )
+        }
     }
 
     suspend fun getDataOfSection(
         sectionType: MediaContentType,
         genreId: Long? = null
     ): Pair<List<Movie>, List<Series>> {
-        return when (sectionType) {
-            MediaContentType.TOP_RATING -> {
-                Pair(
-                    manageMoviesUseCase.getTopRatingMovies(
-                        page = 1,
-                        genreId = genreId
-                    ),
-                    manageSeriesUseCase.getTopRatingSeries(
-                        page = 1,
-                        genreId = genreId
-                    ),
-                )
-            }
+        val page = 1
 
-            MediaContentType.TRENDING -> {
-                Pair(
-                    manageMoviesUseCase.getTrendingMovies(
-                        page = 1,
-                        genreId = genreId
-                    ),
-                    manageSeriesUseCase.getTrendingSeries(
-                        page = 1,
-                        genreId = genreId
-                    ),
-                )
-            }
-
-            MediaContentType.FREE_TO_WATCH -> {
-                Pair(
-                    manageMoviesUseCase.getFreeToWatchMovies(
-                        page = 1,
-                        genreId = genreId
-                    ),
-                    emptyList()
-                )
-            }
-
-            MediaContentType.UPCOMING -> {
-                Pair(
-                    manageMoviesUseCase.getUpcomingMovies(
-                        page = 1,
-                        genreId = genreId
-                    ),
-                    manageSeriesUseCase.getFreeToWatchSeries(
-                        page = 1,
-                        genreId = genreId
-                    )
-                )
-            }
-
-            MediaContentType.NOW_PLAYING -> {
-                Pair(
-                    manageMoviesUseCase.getNowPlayingMovies(
-                        page = 1,
-                        genreId = genreId
-                    ),
-                    emptyList(),
-                )
-            }
-
-            MediaContentType.MORE_RECOMMENDED -> {
-                Pair(
-                    manageMoviesUseCase.getMoreRecommendedMovies(
-                        page = 1,
-                        genreId = genreId
-                    ),
-                    manageSeriesUseCase.getMoreRecommendedSeries(
-                        page = 1,
-                        genreId = genreId
-                    ),
-                )
-            }
-
-            MediaContentType.AIRING_TODAY -> {
-                Pair(
-                    emptyList(),
-                    manageSeriesUseCase.getAiringTodaySeries(
-                        page = 1,
-                        genreId = genreId
-                    ),
-                )
-            }
-
-            MediaContentType.ON_TV -> {
-                Pair(
-                    emptyList(),
-                    manageSeriesUseCase.getOnTvSeries(page = 1, genreId = genreId),
-                )
-            }
+        val movies: List<Movie> = when (sectionType) {
+            MediaContentType.TOP_RATING -> manageMoviesUseCase.getTopRatingMovies(page, genreId)
+            MediaContentType.TRENDING -> manageMoviesUseCase.getTrendingMovies(page, genreId)
+            MediaContentType.FREE_TO_WATCH -> manageMoviesUseCase.getFreeToWatchMovies(page, genreId)
+            MediaContentType.UPCOMING -> manageMoviesUseCase.getUpcomingMovies(page, genreId)
+            MediaContentType.NOW_PLAYING -> manageMoviesUseCase.getNowPlayingMovies(page, genreId)
+            MediaContentType.MORE_RECOMMENDED -> manageMoviesUseCase.getMoreRecommendedMovies(page, genreId)
+            else -> emptyList()
         }
-    }
 
+        val series: List<Series> = when (sectionType) {
+            MediaContentType.TOP_RATING -> manageSeriesUseCase.getTopRatingSeries(page, genreId)
+            MediaContentType.TRENDING -> manageSeriesUseCase.getTrendingSeries(page, genreId)
+            MediaContentType.UPCOMING -> manageSeriesUseCase.getFreeToWatchSeries(page, genreId)
+            MediaContentType.MORE_RECOMMENDED -> manageSeriesUseCase.getMoreRecommendedSeries(page, genreId)
+            MediaContentType.AIRING_TODAY -> manageSeriesUseCase.getAiringTodaySeries(page, genreId)
+            MediaContentType.ON_TV -> manageSeriesUseCase.getOnTvSeries(page, genreId)
+            else -> emptyList()
+        }
+
+        return Pair(movies, series)
+    }
     private fun fetchPopularMedia(genreId: Long? = null) {
         tryToCall(
             block = { fetchPopularMediaBlock(genreId) },
@@ -138,7 +81,7 @@ class HomeViewModel(
             onError = ::handleError
         )
     }
-
+// TODO edit media type and get data in home screen for every one in here screen
     private suspend fun fetchPopularMediaBlock(genreId: Long? = null): Pair<List<Movie>, List<Series>> {
         val series = manageSeriesUseCase.getPopularSeries(
             page = 1,
@@ -150,7 +93,6 @@ class HomeViewModel(
         )
         return Pair(movies, series)
     }
-
     private fun onSuccessFetchPopularMedia(moviesAndSeries: Pair<List<Movie>, List<Series>>) {
         updateState {
             it.copy(
@@ -161,7 +103,6 @@ class HomeViewModel(
             )
         }
     }
-
     private fun loadGenres() {
         tryToCall(
             block = ::loadGenresBlock,
@@ -206,40 +147,31 @@ class HomeViewModel(
         )
     }
 
-
-    override fun onClickTab(tabIndex: Int) {
-
-        if (tabIndex == HomeScreenState.Tab.CATEGORIES.ordinal) {
-            fetchMediaByCategory()
-        }
-
-        updateState {
-            it.copy(selectedTab = HomeScreenState.Tab.entries[tabIndex])
-        }
-    }
-
     override fun onGenreSelected(genreIndex: Int) {
-        if (genreIndex == screenState.value.selectedGenreIndex) return
+        fetchMediaByCategory(screenState.value.genres[genreIndex].id)
         updateState {
             it.copy(
                 selectedGenreIndex = genreIndex
             )
         }
-        fetchMediaByCategory(screenState.value.genres[genreIndex].id)
     }
-
+    override fun onClickTab(tabIndex: Int) {
+        if (tabIndex == HomeScreenState.Tab.CATEGORIES.ordinal) {
+            fetchMediaByCategory()
+        }
+        updateState {
+            it.copy(selectedTab = HomeScreenState.Tab.entries[tabIndex])
+        }
+    }
     private fun fetchMediaByCategory(genreId: Long? = null) {
         tryToCall(
             block = {
-                Pair(
-                    manageMoviesUseCase.getAllMovies(page = 1, genreId = genreId),
-                    manageSeriesUseCase.getAllSeries(page = 1, genreId = genreId)
-                )
+                unifiedMediaPager.getCombinedMedia(genreId)
             },
-            onSuccess = { (movies, series) ->
+            onSuccess = { media ->
                 updateState {
                     it.copy(
-                        categoriesMedia = movies.map(Movie::toHomeMediaUiState) + series.map(Series::toHomeMediaUiState)
+                        categoriesMedia =media
                     )
                 }
             },
@@ -254,58 +186,46 @@ class HomeViewModel(
         }
         sortCategoriesMedia()
     }
-
     private fun sortCategoriesMedia() {
         val genre = screenState.value.genres[screenState.value.selectedGenreIndex]
         tryToCall(
             block = { when (screenState.value.selectedSortingType) {
                 HomeScreenState.SortingType.ALL -> {
-                     Pair(
-                        manageMoviesUseCase.getAllMovies(page = 1, genreId = genre.id),
-                        manageSeriesUseCase.getAllSeries(page = 1, genreId = genre.id)
-                    )
+                    unifiedMediaPager.getCombinedMedia(genreId = genre.id)
                 }
                 HomeScreenState.SortingType.POPULARITY -> {
-                    Pair(
-                        manageMoviesUseCase.getAllMovies(page = 1, genreId = genre.id,
-                            SortType.POPULAR),
-                        manageSeriesUseCase.getAllSeries(page = 1, genreId = genre.id,
-                            SortType.POPULAR)
-                    )
+                    unifiedMediaPager.getCombinedMedia(genreId = genre.id)
                 }
                 HomeScreenState.SortingType.LATEST -> {
-                    Pair(
-                        manageMoviesUseCase.getAllMovies(page = 1, genreId = genre.id,
-                            SortType.LATEST),
-                        manageSeriesUseCase.getAllSeries(page = 1, genreId = genre.id,
-                            SortType.LATEST)
-                    )
+                    unifiedMediaPager.getCombinedMedia(genreId = genre.id)
                 }
-            } },
-            onSuccess = { (movies, series) ->
+            }},
+            onSuccess = { media ->
                 updateState {
-                    it.copy(
-                        categoriesMedia = combineTwoList(
-                            list1 = movies.map(Movie::toHomeMediaUiState),
-                            list2 = series.map(Series::toHomeMediaUiState)
-                        ),
-
-                    )
+                    it.copy(categoriesMedia =media)
                 }
             },
             onError = ::handleError
         )
 
     }
+    override fun onSectionVisible(sectionType: MediaContentType) {
+        if (screenState.value.sections.containsKey(sectionType)) return
+        fetchSectionData(sectionType)
+    }
+
+
 
     private fun fetchSectionData(
         sectionType: MediaContentType,
     ) {
-        tryToCall(
-            block = { getDataOfSection(sectionType) },
-            onSuccess = { onSuccessFetchData(it, sectionType) },
-            onError = ::handleError
-        )
+            setSectionLoading(sectionType)
+            tryToCall(
+                block = { getDataOfSection(sectionType) },
+                onSuccess = { onSuccessFetchData(it, sectionType) },
+                onError = ::handleError
+            )
+
     }
 
     private fun onSuccessFetchData(
@@ -324,7 +244,6 @@ class HomeViewModel(
             )
         }
     }
-
     private fun handleError(throwable: Throwable) {
         updateState {
             it.copy(
@@ -342,16 +261,15 @@ class HomeViewModel(
         }
     }
 
-    fun onRetry() {
-        updateState { it.copy(isRefreshing = true) }
-        loadAllData()
+    override fun onRefresh() {
+        updateState { it.copy(isRefreshing = true, screenStatus = ScreenStatus.LOADING) }
+        loadHomeScreenData()
+        screenState.value.sections.forEach {
+            fetchSectionData(it.key)
+        }
+        viewModelScope.launch {
+            delay(500L)
+            updateState { it.copy(isRefreshing = false) }
+        }
     }
-
-    fun onRefresh() {
-        updateState { it.copy(isRefreshing = true) }
-        loadAllData()
-    }
-
-
-
 }

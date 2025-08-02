@@ -52,7 +52,7 @@ fun ShareBottomSheet(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             BasicText(
-                text = "Share via",
+                text = stringResource(com.cairosquad.ui.R.string.share_via),
                 style = Theme.textStyle.body.mediumMedium14.copy(
                     color = Theme.color.surfaces.onSurface,
                 ),
