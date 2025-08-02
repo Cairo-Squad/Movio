@@ -78,4 +78,6 @@
     <string name="unauthorized_access">أنت غير مصرح لك بتنفيذ هذا الإجراء</string>
     <string name="error_parsing_data">حدث خطأ أثناء معالجة البيانات</string>
     <string name="categories">الأصناف</string>
+    <string name="try_again">حاول مجددا</string>
+
 </resources>

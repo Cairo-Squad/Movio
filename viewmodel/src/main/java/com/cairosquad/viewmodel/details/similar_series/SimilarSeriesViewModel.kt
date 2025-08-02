@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.details.similar_series
 
+import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
@@ -8,6 +9,8 @@ import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -56,5 +59,14 @@ class SimilarSeriesViewModel @Inject constructor(
 
     override fun onSeriesClicked(seriesId: Long) {
         sendEffect(SimilarSeriesEffect.NavigateToSeriesDetails(seriesId))
+    }
+
+    override fun onRefresh(seriesId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            updateState { it.copy(isRefreshing = true) }
+            fetchSimilarSeries(seriesId)
+            delay(500L)
+            updateState { it.copy(isRefreshing = false) }
+        }
     }
 }

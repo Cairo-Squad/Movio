@@ -27,6 +27,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.cairosquad.design_system.R
+import com.cairosquad.design_system.basic_component.Button
 import com.cairosquad.design_system.basic_component.InputField
 import com.cairosquad.design_system.basic_component.TabRow
 import com.cairosquad.design_system.text_style.defaultTextStyle
@@ -63,7 +64,7 @@ fun SearchResultContent(
         InputField(
             modifier = Modifier
                 .background(Theme.color.surfaces.surface)
-                .padding( bottom = 12.dp)
+                .padding(bottom = 12.dp)
                 .padding(horizontal = 16.dp),
             value = state.query,
             onValueChange = { },
@@ -76,23 +77,23 @@ fun SearchResultContent(
             },
             readOnly = true
         )
-            TabRow(
-                modifier = Modifier.padding(bottom = 12.dp),
-                tabs = listOf(
-                    stringResource(R.string.top_Results),
-                    stringResource(R.string.movies),
-                    stringResource(R.string.series),
-                    stringResource(R.string.artists),
-                ),
-                selectedTabIndex = selectedTabIndex,
-                onTabSelected = { listener.onTabSelected(it) },
-                scrollState = scrollState,
-                tabColorWithScroll =  Theme.color.brand.onPrimaryContainer,
-                tabColorWithNoScroll =  Theme.color.brand.onPrimaryContainer,
-                indicatorColorWithNoScroll = Theme.color.gradiant.horizontalCategoriesGradient,
-                indicatorColorWithScroll = Theme.color.gradiant.horizontalCategoriesGradient
+        TabRow(
+            modifier = Modifier.padding(bottom = 12.dp),
+            tabs = listOf(
+                stringResource(R.string.top_Results),
+                stringResource(R.string.movies),
+                stringResource(R.string.series),
+                stringResource(R.string.artists),
+            ),
+            selectedTabIndex = selectedTabIndex,
+            onTabSelected = { listener.onTabSelected(it) },
+            scrollState = scrollState,
+            tabColorWithScroll = Theme.color.brand.onPrimaryContainer,
+            tabColorWithNoScroll = Theme.color.brand.onPrimaryContainer,
+            indicatorColorWithNoScroll = Theme.color.gradiant.horizontalCategoriesGradient,
+            indicatorColorWithScroll = Theme.color.gradiant.horizontalCategoriesGradient
 
-            )
+        )
 
         when (selectedTabIndex) {
             0 -> {
@@ -139,15 +140,14 @@ private fun AllResultsTabContent(
     when {
         isLoading -> {
             SearchLoadingContent(
-                state = state,
-                listener = listener,
                 modifier = modifier
             )
         }
 
         isError -> {
             SearchResultFail(
-                errorStatus = state.errorStatus
+                errorStatus = state.errorStatus,
+                listener
             )
         }
 
@@ -209,17 +209,17 @@ private fun MoviesTabContent(
     when {
         isLoading -> {
             SearchLoadingContent(
-                state = state,
-                listener = listener,
                 modifier = modifier
             )
         }
 
         isError -> {
             SearchResultFail(
-                errorStatus = state.errorStatus
+                errorStatus = state.errorStatus,
+                listener
             )
         }
+
         isEmpty -> {
             Box(
                 modifier = modifier.fillMaxSize(),
@@ -286,16 +286,17 @@ private fun SeriesTabContent(
     when {
         isLoading -> {
             SearchLoadingContent(
-                state = state,
-                listener = listener,
                 modifier = modifier
             )
         }
-        isError ->{
+
+        isError -> {
             SearchResultFail(
-                errorStatus = state.errorStatus
+                errorStatus = state.errorStatus,
+                listener
             )
         }
+
         isEmpty -> {
             Box(
                 modifier = modifier.fillMaxSize(),
@@ -360,16 +361,17 @@ private fun ArtistsTabContent(
     when {
         isLoading -> {
             SearchLoadingContent(
-                state = state,
-                listener = listener,
                 modifier = modifier
             )
         }
-        isError ->{
+
+        isError -> {
             SearchResultFail(
-                errorStatus = state.errorStatus
+                errorStatus = state.errorStatus,
+                listener
             )
         }
+
         isEmpty -> {
             Box(
                 modifier = modifier.fillMaxSize(),
@@ -385,7 +387,7 @@ private fun ArtistsTabContent(
 
         else -> {
             LazyVerticalGrid(
-                modifier = modifier.fillMaxSize() ,
+                modifier = modifier.fillMaxSize(),
                 columns = GridCells.Adaptive(minSize = 101.33.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -412,14 +414,18 @@ private fun ArtistsTabContent(
 
 @Composable
 private fun SearchResultFail(
-    errorStatus: ErrorStatus?
-){
-    Box(
-        Modifier
+    errorStatus: ErrorStatus?,
+    listener: SearchInteractionListener,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
-        contentAlignment = Alignment.Center
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
+        Spacer(Modifier.weight(1f))
         StateMessage(
             imageDrawable = when (errorStatus) {
                 ErrorStatus.NO_INTERNET -> R.drawable.no_internet
@@ -449,15 +455,30 @@ private fun SearchResultFail(
                 ErrorStatus.PARSING_ERROR -> R.string.error_parsing_data
             }
         )
+        Spacer(Modifier.weight(1f))
+        if (errorStatus == ErrorStatus.NO_INTERNET) {
+            Button(
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(bottom = 32.dp)
+                    .padding(horizontal = 16.dp),
+                text = stringResource(R.string.try_again),
+                onClick = listener::onRefresh
+            )
+        }
     }
 }
+
+
 @Composable
 fun SearchResultText(
     noOfResults: Int,
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier.padding(bottom = 16.dp).padding(horizontal =  16.dp),
+        modifier = modifier
+            .padding(bottom = 16.dp)
+            .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         BasicText(

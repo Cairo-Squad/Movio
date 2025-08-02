@@ -2,7 +2,6 @@ package com.cairosquad.ui.details.similar_movies
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -25,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
+import com.cairosquad.design_system.basic_component.Button
 import com.cairosquad.ui.movio_component.LoadingMovieCard
 import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.ui.movio_component.StateMessage
@@ -57,7 +57,7 @@ fun SimilarMoviesScreen(
         modifier = Modifier
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.systemBars)
-    ){
+    ) {
         AppBar(
             title = stringResource(R.string.similar_movies),
             onBackButtonClicked = { viewModel.onClickBack() },
@@ -94,10 +94,10 @@ fun SimilarMoviesScreen(
 
                 SimilarMoviesScreenState.ScreenStatus.ERROR -> {
                     item {
-                        Box(
+                        Column(
                             modifier = Modifier
                                 .fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             StateMessage(
                                 imageDrawable = R.drawable.no_internet,
@@ -105,6 +105,14 @@ fun SimilarMoviesScreen(
                                 descriptionId = R.string.internet_is_not_available_description
                             )
                         }
+                        Button(
+                            modifier = Modifier
+                                .align(Alignment.End)
+                                .padding(bottom = 32.dp)
+                                .padding(horizontal = 16.dp),
+                            text = stringResource(R.string.try_again),
+                            onClick = { viewModel.onRefresh(movieId) },
+                        )
                     }
                 }
             }

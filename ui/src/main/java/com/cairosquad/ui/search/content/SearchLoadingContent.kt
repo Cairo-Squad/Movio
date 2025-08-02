@@ -18,8 +18,6 @@ import com.cairosquad.viewmodel.search.SearchScreenState
 
 @Composable
 fun SearchLoadingContent(
-    state: SearchScreenState,
-    listener: SearchInteractionListener,
     modifier: Modifier = Modifier
 ) {
 

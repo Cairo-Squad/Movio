@@ -5,6 +5,7 @@ import com.cairosquad.viewmodel.exception.ErrorStatus
 data class SimilarMoviesScreenState(
     val movies: List<SimilarMovieUiState> = emptyList(),
     val screenStatus: ScreenStatus = ScreenStatus.LOADING,
+    val isRefreshing: Boolean = false,
     val errorStatus: ErrorStatus? = null
 ) {
     data class SimilarMovieUiState(

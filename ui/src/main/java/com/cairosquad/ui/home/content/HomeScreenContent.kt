@@ -49,6 +49,7 @@ fun HomeScreenContent(
                             .padding(top = 48.dp)
                             .padding(top = 36.dp),
                         errorStatus = screenState.errorStatus,
+                        listener = listener
                     )
                 }
 
