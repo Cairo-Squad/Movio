@@ -455,18 +455,7 @@ private fun SeriesScreenContent(
                             }
 
                             SeriesDetailsScreenState.SectionStatus.ERROR -> {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(horizontal = 16.dp),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    StateMessage(
-                                        imageDrawable = R.drawable.no_internet,
-                                        titleId = R.string.no_internet_connection,
-                                        descriptionId = R.string.internet_is_not_available_description
-                                    )
-                                }
+                                DetailsFailContent(onTryAgainClick = listener::onRefresh)
                             }
                         }
                     }
@@ -489,7 +478,9 @@ private fun SeriesScreenContent(
                                 )
                             }
 
-                            SeriesDetailsScreenState.SectionStatus.ERROR -> {}
+                            SeriesDetailsScreenState.SectionStatus.ERROR -> {
+                                DetailsFailContent(onTryAgainClick = listener::onRefresh)
+                            }
                         }
                     }
                     item {
@@ -522,7 +513,9 @@ private fun SeriesScreenContent(
                                 }
                             }
 
-                            SeriesDetailsScreenState.SectionStatus.ERROR -> {}
+                            SeriesDetailsScreenState.SectionStatus.ERROR -> {
+                                DetailsFailContent(onTryAgainClick = listener::onRefresh)
+                            }
                         }
                     }
                     item {
@@ -546,7 +539,9 @@ private fun SeriesScreenContent(
                                 }
                             }
 
-                            SeriesDetailsScreenState.SectionStatus.ERROR -> {}
+                            SeriesDetailsScreenState.SectionStatus.ERROR -> {
+                                DetailsFailContent(onTryAgainClick = listener::onRefresh)
+                            }
                         }
                     }
                     item {
@@ -577,7 +572,9 @@ private fun SeriesScreenContent(
                                 }
                             }
 
-                            SeriesDetailsScreenState.SectionStatus.ERROR -> {}
+                            SeriesDetailsScreenState.SectionStatus.ERROR -> {
+                                DetailsFailContent(onTryAgainClick = listener::onRefresh)
+                            }
                         }
                     }
                     item {
@@ -605,7 +602,9 @@ private fun SeriesScreenContent(
                                 }
                             }
 
-                            SeriesDetailsScreenState.SectionStatus.ERROR -> {}
+                            SeriesDetailsScreenState.SectionStatus.ERROR -> {
+                                DetailsFailContent(onTryAgainClick = listener::onRefresh)
+                            }
                         }
                     }
                     item {
@@ -631,7 +630,9 @@ private fun SeriesScreenContent(
                                 }
                             }
 
-                            SeriesDetailsScreenState.SectionStatus.ERROR -> {}
+                            SeriesDetailsScreenState.SectionStatus.ERROR -> {
+                                DetailsFailContent(onTryAgainClick = listener::onRefresh)
+                            }
                         }
                     }
                 }

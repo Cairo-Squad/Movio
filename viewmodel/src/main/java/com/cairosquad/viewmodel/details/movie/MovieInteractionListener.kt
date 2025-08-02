@@ -31,4 +31,6 @@ interface MovieInteractionListener {
     fun onRateChange(rate: Int)
     fun onSubmitRateClicked(rate: Int)
     fun onNavigateToLogin()
+
+    fun onRefresh()
 }

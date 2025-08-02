@@ -26,6 +26,7 @@ import androidx.navigation.NavController
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.basic_component.Button
+import com.cairosquad.ui.details.DetailsFailContent
 import com.cairosquad.ui.movio_component.LoadingMovieCard
 import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.ui.movio_component.StateMessage
@@ -93,29 +94,7 @@ fun SimilarSeriesScreen(
                 }
 
                 SimilarSeriesScreenState.ScreenStatus.ERROR -> {
-                    item {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Spacer(Modifier.weight(1f))
-                            StateMessage(
-                                imageDrawable = R.drawable.no_internet,
-                                titleId = R.string.no_internet_connection,
-                                descriptionId = R.string.internet_is_not_available_description
-                            )
-                            Spacer(Modifier.weight(1f))
-                            Button(
-                                modifier = Modifier
-                                    .align(Alignment.End)
-                                    .padding(bottom = 32.dp)
-                                    .padding(horizontal = 16.dp),
-                                text = stringResource(R.string.try_again),
-                                onClick = { viewModel.onRefresh(seriesId) }
-                            )
-                        }
-                    }
+                    item { DetailsFailContent(onTryAgainClick ={ viewModel.onRefresh(seriesId) })}
                 }
             }
         }

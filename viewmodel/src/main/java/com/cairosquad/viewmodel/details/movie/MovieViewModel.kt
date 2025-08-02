@@ -16,7 +16,6 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import javax.inject.Inject
 
 @HiltViewModel(assistedFactory = MovieViewModel.Factory::class)
 class MovieViewModel @AssistedInject constructor(
@@ -276,6 +275,10 @@ class MovieViewModel @AssistedInject constructor(
 
     override fun onNavigateToLogin() {
         sendEffect(MovieEffect.NavigateToLogin)
+    }
+
+    override fun onRefresh() {
+        loadMovieData(movieId)
     }
 
     private fun setError(

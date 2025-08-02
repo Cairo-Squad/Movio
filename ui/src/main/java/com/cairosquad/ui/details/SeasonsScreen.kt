@@ -33,7 +33,6 @@ import com.cairosquad.design_system.modifier.dropShadow
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.LoadingMovieImage
 import com.cairosquad.ui.movio_component.SeasonCard
-import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.ui.navigation.EpisodesRoute
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.utils.ObserveAsEffect
@@ -72,14 +71,14 @@ fun SeasonsScreen(
 
     SeasonScreenContent(
         uiState = uiState,
-        listener = viewModel
+        listener = viewModel,
     )
 }
 
 @Composable
 fun SeasonScreenContent(
     uiState: SeasonDetailsScreenState,
-    listener: SeasonDetailsInteractionListener
+    listener: SeasonDetailsInteractionListener,
 ) {
     Box {
         Box(
@@ -151,20 +150,9 @@ fun SeasonScreenContent(
                     }
 
                 }
-
                 SeasonDetailsScreenState.ScreenStatus.ERROR -> {
                    item {
-                       Box(
-                           modifier = Modifier
-                               .fillMaxSize(),
-                           contentAlignment = Alignment.Center
-                       ) {
-                           StateMessage(
-                               imageDrawable = R.drawable.no_internet,
-                               titleId = R.string.no_internet_connection,
-                               descriptionId = R.string.internet_is_not_available_description
-                           )
-                       }
+                       DetailsFailContent(onTryAgainClick = listener::onRefresh)
                    }
 
                 }
