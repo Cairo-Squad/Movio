@@ -56,6 +56,7 @@ fun SearchFailContent(
             verticalArrangement = Arrangement.Center
 
         ) {
+            Spacer(Modifier.weight(1f))
             StateMessage(
                 imageDrawable = when (state.errorStatus) {
                     ErrorStatus.NO_INTERNET -> R.drawable.no_internet
@@ -85,17 +86,17 @@ fun SearchFailContent(
                     ErrorStatus.PARSING_ERROR -> R.string.error_parsing_data
                 }
             )
-        }
-        if (state.errorStatus == ErrorStatus.NO_INTERNET) {
             Spacer(Modifier.weight(1f))
-            Button(
-                text = stringResource(R.string.try_again),
-                onClick = { listener::onRefresh },
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(bottom = 32.dp)
-                    .padding(horizontal = 16.dp)
-            )
+            if (state.errorStatus == ErrorStatus.NO_INTERNET) {
+                Button(
+                    text = stringResource(R.string.try_again),
+                    onClick = { listener::onRefresh },
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .padding(bottom = 32.dp)
+                        .padding(horizontal = 16.dp)
+                )
+            }
         }
     }
 }

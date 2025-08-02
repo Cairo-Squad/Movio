@@ -2,9 +2,9 @@ package com.cairosquad.ui.details.similar_series
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -99,11 +99,13 @@ fun SimilarSeriesScreen(
                                 .fillMaxSize(),
                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
+                            Spacer(Modifier.weight(1f))
                             StateMessage(
                                 imageDrawable = R.drawable.no_internet,
                                 titleId = R.string.no_internet_connection,
                                 descriptionId = R.string.internet_is_not_available_description
                             )
+                            Spacer(Modifier.weight(1f))
                             Button(
                                 text = stringResource(R.string.try_again),
                                 onClick = { viewModel.onRefresh(seriesId) },
