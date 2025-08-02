@@ -135,18 +135,8 @@ private fun EpisodesScreenContent(
     )
     when (uiState.episodesSectionState) {
         EpisodesDetailsScreenState.ScreenStatus.ERROR -> {
-            Box(
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                StateMessage(
-                    imageDrawable = R.drawable.no_internet,
-                    titleId = R.string.no_internet_connection,
-                    descriptionId = R.string.internet_is_not_available_description
-                )
-            }
+            DetailsFailContent(onTryAgainClick = listener::onRefresh)
+
         }
     else->{
         Box(

@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.details.episodes
 
+import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Episode
@@ -13,6 +14,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = EpisodesDetailsViewModel.Factory::class)
 class EpisodesDetailsViewModel @AssistedInject constructor(
@@ -117,6 +119,13 @@ class EpisodesDetailsViewModel @AssistedInject constructor(
             )
         }
         getEpisodes(seriesId, seasonNumber)
+    }
+
+    override fun onRefresh() {
+        viewModelScope.launch(Dispatchers.IO) {
+            getSeasons(seriesId)
+            getEpisodes(seriesId, seasonNumber)
+        }
     }
 
 
