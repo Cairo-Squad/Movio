@@ -35,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
@@ -57,7 +56,6 @@ import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import com.cairosquad.ui.BuildConfig
 import com.cairosquad.ui.movio_component.LoadingMovieImage
-import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.ui.utils.errorStatusToMessageResource
@@ -130,7 +128,7 @@ private fun EpisodesScreenContent(
         stop = Theme.color.surfaces.surface,
         fraction = progress
     )
-    val animatedBrush = Brush.verticalGradient(
+    val animatedBrush = verticalGradient(
         colors = listOf(animatedStartColor, animatedEndColor)
     )
     when (uiState.episodesSectionState) {

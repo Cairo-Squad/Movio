@@ -72,7 +72,6 @@ fun SeasonsScreen(
     SeasonScreenContent(
         uiState = uiState,
         listener = viewModel,
-        seriesId = seriesId
     )
 }
 
@@ -80,7 +79,6 @@ fun SeasonsScreen(
 fun SeasonScreenContent(
     uiState: SeasonDetailsScreenState,
     listener: SeasonDetailsInteractionListener,
-    seriesId: Long
 ) {
     Box {
         Box(
