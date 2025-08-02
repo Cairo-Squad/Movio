@@ -69,7 +69,7 @@ fun HomeFailContent(
                     .padding(bottom = 32.dp)
                     .padding(horizontal = 16.dp),
                 text = stringResource(R.string.try_again),
-                onClick = { listener::onRefresh }
+                onClick = listener::onRefresh
             )
 
         }
