@@ -1,6 +1,5 @@
 package com.cairosquad.viewmodel.details.series
 
-import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.LoginUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
@@ -18,7 +17,6 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = SeriesDetailsViewModel.Factory::class)
 class SeriesDetailsViewModel @AssistedInject constructor(
@@ -201,9 +199,7 @@ class SeriesDetailsViewModel @AssistedInject constructor(
     }
 
     override fun onRefresh() {
-        viewModelScope.launch(Dispatchers.IO) {
             loadDetails(seriesId)
-        }
     }
 
     private fun getSeriesDetails(seriesId: Long) {

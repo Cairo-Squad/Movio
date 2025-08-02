@@ -1,6 +1,5 @@
 package com.cairosquad.viewmodel.details.artist
 
-import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.ManageArtistUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
@@ -10,9 +9,6 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = ArtistViewModel.Factory::class)
 class ArtistViewModel @AssistedInject constructor(
@@ -119,12 +115,9 @@ class ArtistViewModel @AssistedInject constructor(
     }
 
     override fun onRefresh() {
-        viewModelScope.launch(Dispatchers.IO) {
             loadArtistDetails(artistId)
             loadArtistMovies(artistId)
             loadArtistSeries(artistId)
-            delay(500L)
-        }
     }
     private fun handleArtistException(e: Throwable): ErrorStatus {
         return when (e) {

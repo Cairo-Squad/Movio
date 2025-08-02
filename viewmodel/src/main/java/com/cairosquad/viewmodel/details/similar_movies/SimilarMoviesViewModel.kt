@@ -1,6 +1,5 @@
 package com.cairosquad.viewmodel.details.similar_movies
 
-import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
@@ -9,8 +8,6 @@ import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -70,11 +67,8 @@ class SimilarMoviesViewModel @Inject constructor(
     }
 
     override fun onRefresh(movieId: Long) {
-        viewModelScope.launch(Dispatchers.IO) {
             updateState { it.copy(isRefreshing = true) }
             fetchSimilarMovies(movieId)
-            delay(500L)
             updateState { it.copy(isRefreshing = false) }
-        }
     }
 }

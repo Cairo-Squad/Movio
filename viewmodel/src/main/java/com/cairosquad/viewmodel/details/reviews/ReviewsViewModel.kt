@@ -1,6 +1,5 @@
 package com.cairosquad.viewmodel.details.reviews
 
-import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Review
@@ -10,8 +9,6 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = ReviewsViewModel.Factory::class)
 class ReviewsViewModel @AssistedInject constructor(
@@ -72,8 +69,7 @@ class ReviewsViewModel @AssistedInject constructor(
     }
 
     override fun onRefresh() {
-        viewModelScope.launch(Dispatchers.IO) {
             getReviews()
-        }
+
     }
 }
