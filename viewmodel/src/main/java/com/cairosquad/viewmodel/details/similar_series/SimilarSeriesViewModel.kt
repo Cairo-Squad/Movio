@@ -57,4 +57,11 @@ class SimilarSeriesViewModel @Inject constructor(
     override fun onSeriesClicked(seriesId: Long) {
         sendEffect(SimilarSeriesEffect.NavigateToSeriesDetails(seriesId))
     }
+
+    override fun onRefresh(seriesId: Long) {
+            updateState { it.copy(isRefreshing = true) }
+            fetchSimilarSeries(seriesId)
+            updateState { it.copy(isRefreshing = false) }
+
+    }
 }

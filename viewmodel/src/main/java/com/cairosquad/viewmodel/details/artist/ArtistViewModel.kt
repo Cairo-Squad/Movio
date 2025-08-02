@@ -114,6 +114,11 @@ class ArtistViewModel @AssistedInject constructor(
         sendEffect(ArtistEffect.NavigateToSeriesDetails(seriesId))
     }
 
+    override fun onRefresh() {
+            loadArtistDetails(artistId)
+            loadArtistMovies(artistId)
+            loadArtistSeries(artistId)
+    }
     private fun handleArtistException(e: Throwable): ErrorStatus {
         return when (e) {
             is MovioException -> {

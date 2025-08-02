@@ -70,7 +70,6 @@ fun ForYouScreen(
             is ForYouEffect.NavigateToMovieDetails -> {
                 navController.navigate(MovieRoute(effect.movieId))
             }
-            // Add other effects if needed
         }
     }
 
@@ -132,6 +131,7 @@ private fun MoviesList(
             state.screenStatus == ScreenStatus.FAILED -> {
                 ForYouFailedContent(
                     errorStatus = state.errorStatus,
+                    listener = listener,
                     modifier = modifier
                 )
             }

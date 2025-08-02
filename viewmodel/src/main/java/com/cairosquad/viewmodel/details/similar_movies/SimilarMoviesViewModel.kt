@@ -39,9 +39,10 @@ class SimilarMoviesViewModel @Inject constructor(
                 updateState {
                     it.copy(
                         screenStatus = ScreenStatus.ERROR,
-                        errorStatus = when(e){
+                        errorStatus = when (e) {
                             is MovioException ->
                                 exceptionToErrorStatus(e)
+
                             else -> ErrorStatus.UNKNOWN_ERROR
 
                         }
@@ -65,5 +66,9 @@ class SimilarMoviesViewModel @Inject constructor(
         sendEffect(SimilarMoviesEffect.NavigateToMovieDetails(movieId))
     }
 
-
+    override fun onRefresh(movieId: Long) {
+            updateState { it.copy(isRefreshing = true) }
+            fetchSimilarMovies(movieId)
+            updateState { it.copy(isRefreshing = false) }
+    }
 }

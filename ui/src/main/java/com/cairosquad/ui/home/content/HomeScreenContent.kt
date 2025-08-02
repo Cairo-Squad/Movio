@@ -49,6 +49,7 @@ fun HomeScreenContent(
                             .padding(top = 48.dp)
                             .padding(top = 36.dp),
                         errorStatus = screenState.errorStatus,
+                        listener = listener
                     )
                 }
 
@@ -145,7 +146,11 @@ private fun TobContent(
             tabs = tabsList.map { stringResource(it) },
             selectedTabIndex = screenState.selectedTab.ordinal,
             onTabSelected = listener::onClickTab,
-            scrollState = scrollState
+            scrollState = scrollState,
+            tabColorWithScroll =  Theme.color.brand.onPrimaryContainer,
+            tabColorWithNoScroll =  Theme.color.brand.onPrimary,
+            indicatorColorWithScroll = Theme.color.gradiant.horizontalCategoriesGradient,
+            indicatorColorWithNoScroll = Theme.color.gradiant.horizontalGradient
         )
     }
 }
