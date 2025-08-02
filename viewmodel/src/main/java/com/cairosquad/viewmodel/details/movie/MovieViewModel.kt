@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.details.movie
 
+import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.LoginUseCase
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
@@ -16,7 +17,7 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = MovieViewModel.Factory::class)
 class MovieViewModel @AssistedInject constructor(
@@ -278,6 +279,11 @@ class MovieViewModel @AssistedInject constructor(
         sendEffect(MovieEffect.NavigateToLogin)
     }
 
+    override fun onRefresh() {
+        viewModelScope.launch(Dispatchers.IO) {
+            loadMovieData(movieId)
+    }
+        }
     private fun setError(
         throwable: Throwable,
         updateSection: MovieScreenState.() -> MovieScreenState
