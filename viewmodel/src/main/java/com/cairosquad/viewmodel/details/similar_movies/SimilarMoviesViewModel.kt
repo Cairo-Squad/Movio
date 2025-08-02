@@ -70,12 +70,11 @@ class SimilarMoviesViewModel @Inject constructor(
     }
 
     override fun onRefresh(movieId: Long) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             updateState { it.copy(isRefreshing = true) }
             fetchSimilarMovies(movieId)
             delay(500L)
             updateState { it.copy(isRefreshing = false) }
         }
     }
-
 }

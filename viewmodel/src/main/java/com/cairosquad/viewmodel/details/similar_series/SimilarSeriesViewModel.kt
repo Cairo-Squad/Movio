@@ -62,7 +62,7 @@ class SimilarSeriesViewModel @Inject constructor(
     }
 
     override fun onRefresh(seriesId: Long) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             updateState { it.copy(isRefreshing = true) }
             fetchSimilarSeries(seriesId)
             delay(500L)
