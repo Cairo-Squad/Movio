@@ -106,12 +106,12 @@ fun SimilarMoviesScreen(
                             )
                         }
                         Button(
-                            text = stringResource(R.string.try_again),
-                            onClick = { viewModel.onRefresh(movieId) },
                             modifier = Modifier
                                 .align(Alignment.End)
                                 .padding(bottom = 32.dp)
-                                .padding(horizontal = 16.dp)
+                                .padding(horizontal = 16.dp),
+                            text = stringResource(R.string.try_again),
+                            onClick = { viewModel.onRefresh(movieId) },
                         )
                     }
                 }

@@ -94,10 +94,10 @@ fun SimilarSeriesScreen(
 
                 SimilarSeriesScreenState.ScreenStatus.ERROR -> {
                     item {
-                        Column (
+                        Column(
                             modifier = Modifier
                                 .fillMaxSize(),
-                           horizontalAlignment = Alignment.CenterHorizontally
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Spacer(Modifier.weight(1f))
                             StateMessage(
@@ -107,12 +107,12 @@ fun SimilarSeriesScreen(
                             )
                             Spacer(Modifier.weight(1f))
                             Button(
-                                text = stringResource(R.string.try_again),
-                                onClick = { viewModel.onRefresh(seriesId) },
                                 modifier = Modifier
                                     .align(Alignment.End)
                                     .padding(bottom = 32.dp)
-                                    .padding(horizontal = 16.dp)
+                                    .padding(horizontal = 16.dp),
+                                text = stringResource(R.string.try_again),
+                                onClick = { viewModel.onRefresh(seriesId) }
                             )
                         }
                     }

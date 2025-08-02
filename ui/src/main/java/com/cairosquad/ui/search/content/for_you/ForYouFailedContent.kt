@@ -40,12 +40,13 @@ fun ForYouFailedContent(
         Spacer(Modifier.weight(1f))
         if (errorStatus == ErrorStatus.NO_INTERNET) {
             Button(
-                text = stringResource(R.string.try_again),
-                onClick = { listener::onRefresh },
                 modifier = Modifier
                     .align(Alignment.End)
                     .padding(bottom = 32.dp)
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 16.dp),
+                text = stringResource(R.string.try_again),
+                onClick = { listener::onRefresh }
+
             )
         }
     }
