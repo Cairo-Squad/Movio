@@ -67,4 +67,9 @@ class ReviewsViewModel @AssistedInject constructor(
     override fun onClickBack() {
         sendEffect(ReviewsEffect.NavigateBack)
     }
+
+    override fun onRefresh() {
+            getReviews()
+
+    }
 }

@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.details.series.season
 
+import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Season
 import com.cairosquad.viewmodel.base.BaseViewModel
@@ -10,6 +11,8 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = SeasonsViewModel.Factory::class)
 class SeasonsViewModel @AssistedInject constructor(
@@ -87,5 +90,11 @@ class SeasonsViewModel @AssistedInject constructor(
 
     override fun onSeasonClicked(seriesId: Long, seasonNumber: Int) {
         sendEffect(SeasonDetailEffect.NavigateToEpisodesScreen(seriesId, seasonNumber))
+    }
+
+    override fun onRefresh() {
+        viewModelScope.launch(Dispatchers.IO) {
+            loadSeasonDetails(seriesId)
+        }
     }
 }

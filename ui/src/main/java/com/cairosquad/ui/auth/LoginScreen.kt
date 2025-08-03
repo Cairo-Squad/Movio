@@ -252,6 +252,7 @@ private fun LoginScreenContent(
             borderColor = Theme.color.surfaces.onSurfaceAt3
         )
         Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(12.dp))
         Row(
             modifier = Modifier
                 .wrapContentWidth()
@@ -274,8 +275,8 @@ private fun LoginScreenContent(
 
     }
 }
-
-@Preview
+@Preview(device = "spec:width=411dp,height=891dp")
+@Preview(device = "spec:width=360dp,height=600dp,dpi=440")
 @Composable
 private fun PreviewLoginScreen() {
     MovioTheme {

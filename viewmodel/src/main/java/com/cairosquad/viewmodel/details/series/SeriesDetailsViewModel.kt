@@ -17,7 +17,6 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import javax.inject.Inject
 
 @HiltViewModel(assistedFactory = SeriesDetailsViewModel.Factory::class)
 class SeriesDetailsViewModel @AssistedInject constructor(
@@ -197,6 +196,10 @@ class SeriesDetailsViewModel @AssistedInject constructor(
 
     override fun onNavigateToLogin() {
         sendEffect(SeriesDetailEffect.NavigateToLogin)
+    }
+
+    override fun onRefresh() {
+            loadDetails(seriesId)
     }
 
     private fun getSeriesDetails(seriesId: Long) {

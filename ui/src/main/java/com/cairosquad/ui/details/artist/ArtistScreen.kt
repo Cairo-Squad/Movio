@@ -53,10 +53,10 @@ import com.cairosquad.design_system.modifier.CustomBrush
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import com.cairosquad.ui.BuildConfig
+import com.cairosquad.ui.details.DetailsFailContent
 import com.cairosquad.ui.movio_component.LoadingMovieCard
 import com.cairosquad.ui.movio_component.LoadingMovieImage
 import com.cairosquad.ui.movio_component.MovieCard
-import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.ui.navigation.MovieRoute
 import com.cairosquad.ui.navigation.SeriesRoute
 import com.cairosquad.ui.utils.ObserveAsEffect
@@ -127,14 +127,9 @@ private fun ArtistScreenContent(
 	val animatedBrush = verticalGradient(colors = listOf(animatedStartColor, animatedEndColor))
 	Box(modifier = modifier.fillMaxSize()) {
 		if (state.screenStatus == ArtistScreenState.ScreenStatus.FAILED) {
-			Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-				StateMessage(
-					imageDrawable = R.drawable.no_internet,
-					titleId = R.string.no_internet_connection,
-					descriptionId = R.string.internet_is_not_available_description
-				)
-			}
-		}
+            DetailsFailContent(onTryAgainClick = listener::onRefresh)
+
+        }
 		else{
 			Column(
 				modifier = modifier
