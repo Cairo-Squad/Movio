@@ -150,7 +150,7 @@ fun SafeImageViewer(
 
 		try {
 			// Load bitmap with cancellation check
-			withContext(Dispatchers.Unconfined) {
+			withContext(Dispatchers.Default) {
 				if (!isActive) return@withContext
 				bitmap = CoilImageLoader(context).loadBitmap(model)
 			}
@@ -169,17 +169,18 @@ fun SafeImageViewer(
 
 			// Perform NSFW detection with cancellation support
 			withContext(Dispatchers.Default) {
-				if (!isActive) return@withContext
+				if (! isActive) return@withContext
 
 				NSFWDetector.isNSFWCancellable(
-					bitmap = bitmap!!,
+					bitmap = bitmap !!,
 					enableLog = enableLog,
 					nudeThreshold = nudeThreshold,
 					nonNudeThreshold = nonNudeThreshold,
+					imageUrl = model,
 					isActive = { isActive },
 					callback = { isNSFW ->
 						if (isActive) {
-							isImageSafe = !isNSFW
+							isImageSafe = ! isNSFW
 							hasClassificationCompleted = true
 						}
 					}

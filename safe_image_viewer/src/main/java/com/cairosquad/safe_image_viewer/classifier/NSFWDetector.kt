@@ -47,6 +47,7 @@ object NSFWDetector {
 		bitmap: Bitmap,
 		nudeThreshold: Double,
 		nonNudeThreshold: Double,
+		imageUrl: String,
 		enableLog: Boolean = false,
 		isActive: () -> Boolean,
 		callback: (isNSFW: Boolean) -> Unit
@@ -58,7 +59,7 @@ object NSFWDetector {
 		}
 
 		// Generate cache key based on bitmap properties
-		val cacheKey = generateCacheKey(bitmap)
+		val cacheKey = "cached image: $imageUrl"
 
 		// Check cache first
 		imageCache.get(cacheKey)?.let { cachedResult ->
@@ -99,7 +100,8 @@ object NSFWDetector {
 							return@execute
 						}
 
-						val result = processLabels(labels, nudeThreshold, nonNudeThreshold, enableLog)
+						val result =
+							processLabels(labels, nudeThreshold, nonNudeThreshold, enableLog)
 
 						imageCache.put(cacheKey, result)
 
@@ -185,10 +187,5 @@ object NSFWDetector {
 		} else {
 			bitmap
 		}
-	}
-
-	private fun generateCacheKey(bitmap: Bitmap): String {
-		// Simple hash based on bitmap properties
-		return "${bitmap.width}x${bitmap.height}_${bitmap.config}_${bitmap.hashCode()}"
 	}
 }
