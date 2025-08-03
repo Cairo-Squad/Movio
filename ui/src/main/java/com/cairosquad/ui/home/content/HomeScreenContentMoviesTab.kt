@@ -41,7 +41,7 @@ fun HomeScreenContentMoviesTab(
         item {
             MediaHorizontalPager(
                 modifier = Modifier,
-                mediaList = screenState.popularSeries
+                mediaList = screenState.popularMovies
                     .map(MediaHorizontalPagerItem::fromHomeMediaUiState)
                     .take(7),
                 initialPage = 3,
