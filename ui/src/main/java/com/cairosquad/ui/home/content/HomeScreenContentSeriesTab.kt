@@ -35,8 +35,6 @@ fun HomeScreenContentSeriesTab(
             MediaContentType.MORE_RECOMMENDED
         )
     }
-
-
         LazyColumn(
             modifier = Modifier.fillMaxSize(), state = scrollState
         ) {
@@ -50,8 +48,6 @@ fun HomeScreenContentSeriesTab(
                     onClickMedia = listener::onClickMedia
                 )
             }
-
-
             sections.forEach { sectionType ->
                 item {
                     SectionContainer(

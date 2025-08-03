@@ -17,7 +17,7 @@ object NSFWDetector {
 	private const val TAG = "NSFWDetector"
 	private const val LABEL_SFW = "nude"
 	private const val LABEL_NSFW = "nonnude"
-	private const val NUMBER_OF_THREADS = 4
+	private const val NUMBER_OF_THREADS = 10
 	private const val NUMBER_OF_CACHES_IMAGES = 100
 
 	// Lazy initialization - only create when first used
