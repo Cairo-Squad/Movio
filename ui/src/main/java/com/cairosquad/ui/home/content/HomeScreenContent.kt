@@ -131,7 +131,10 @@ private fun TobContent(
             .fillMaxWidth()
             .background(animatedBrush)
     ) {
-        AppBar(modifier = Modifier.statusBarsPadding())
+        AppBar(
+            modifier = Modifier.statusBarsPadding(),
+            userImage = screenState.profileImage
+        )
 
         val tabsList = remember {
             listOf(
@@ -147,8 +150,8 @@ private fun TobContent(
             selectedTabIndex = screenState.selectedTab.ordinal,
             onTabSelected = listener::onClickTab,
             scrollState = scrollState,
-            tabColorWithScroll =  Theme.color.brand.onPrimaryContainer,
-            tabColorWithNoScroll =  Theme.color.brand.onPrimary,
+            tabColorWithScroll = Theme.color.brand.onPrimaryContainer,
+            tabColorWithNoScroll = Theme.color.brand.onPrimary,
             indicatorColorWithScroll = Theme.color.gradiant.horizontalCategoriesGradient,
             indicatorColorWithNoScroll = Theme.color.gradiant.horizontalGradient
         )

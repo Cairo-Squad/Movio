@@ -7,6 +7,8 @@ import com.cairosquad.entity.Series
 interface AccountRepository {
 	suspend fun getAccountDetails(): Account
 
+	suspend fun getAccountId(): Long
+
 	suspend fun getLists()
 
 	suspend fun getFavoriteMovies(): List<Movie>

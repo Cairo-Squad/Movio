@@ -7,17 +7,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class AccountDto(
 	@SerialName("avatar")
-	val avatar: Avatar,
+	val avatar: Avatar? = null,
 	@SerialName("id")
-	val id: Long,
-	@SerialName("include_adult")
-	val includeAdult: Boolean,
-	@SerialName("iso_3166_1")
-	val iso31661: String,
-	@SerialName("iso_639_1")
-	val iso6391: String,
+	val id: Long? = null,
 	@SerialName("name")
-	val name: String,
+	val name: String? = null,
 	@SerialName("username")
-	val username: String
+	val username: String? = null
 )

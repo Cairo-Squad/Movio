@@ -11,10 +11,10 @@ import retrofit2.http.Path
 interface AccountApiService {
 
 	@GET("account")
-	fun getAccountDetails(): AccountDto
+	suspend fun getAccountDetails(): AccountDto
 
 	@POST("account/{accountId}/favorite")
-	fun addItemToFavorite(
+	suspend fun addItemToFavorite(
 		@Path("accountId")
 		accountId: Long,
 		@Body
