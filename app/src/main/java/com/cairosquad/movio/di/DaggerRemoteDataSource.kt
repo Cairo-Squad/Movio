@@ -1,5 +1,7 @@
 package com.cairosquad.movio.di
 
+import com.cairosquad.remote.account.AccountApiService
+import com.cairosquad.remote.account.AccountRemoteDataSourceImpl
 import com.cairosquad.remote.artists.ArtistsApiService
 import com.cairosquad.remote.artists.RemoteArtistDataSourceImpl
 import com.cairosquad.remote.login.LoginApiService
@@ -9,6 +11,7 @@ import com.cairosquad.remote.movie.MoviesRemoteDataSourceImpl
 import com.cairosquad.remote.series.SeriesApiService
 import com.cairosquad.remote.series.SeriesRemoteDataSourceImpl
 import com.cairosquad.remote.utils.retrofit.retrofitProvider
+import com.cairosquad.repository.account.data_source.remote.AccountRemoteDataSource
 import com.cairosquad.repository.artists.data_source.remote.ArtistsRemoteDataSource
 import com.cairosquad.repository.login.data_source.remote.RemoteLoginDataSource
 import com.cairosquad.repository.movie.data_source.remote.MoviesRemoteDataSource
@@ -50,6 +53,11 @@ abstract class RemoteDataSourceModule {
         @Singleton
         fun provideMovieApiService(retrofit: Retrofit): MovieApiService =
             retrofit.create(MovieApiService::class.java)
+
+        @Provides
+        @Singleton
+        fun provideAccountApiService(retrofit: Retrofit): AccountApiService =
+            retrofit.create(AccountApiService::class.java)
     }
 
     @Binds
@@ -75,4 +83,10 @@ abstract class RemoteDataSourceModule {
     abstract fun bindSeriesRemoteDataSource(
         impl: SeriesRemoteDataSourceImpl
     ): SeriesRemoteDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindAccountRemoteDataSource(
+        impl: AccountRemoteDataSourceImpl
+    ): AccountRemoteDataSource
 }
