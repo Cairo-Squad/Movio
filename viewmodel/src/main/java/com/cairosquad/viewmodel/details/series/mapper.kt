@@ -1,6 +1,7 @@
 package com.cairosquad.viewmodel.details.series
 
 import com.cairosquad.entity.Artist
+import com.cairosquad.entity.MediaList
 import com.cairosquad.entity.Review
 import com.cairosquad.entity.Season
 import com.cairosquad.entity.Series
@@ -44,4 +45,9 @@ fun Review.toUiState() = SeriesDetailsScreenState.ReviewUiState(
     rating = rating.roundToFirstDecimalPlace(),
     date = TimeUtil.convertLongToNamedDate(date),
     description = description
+)
+
+fun MediaList.toUiState() = SeriesDetailsScreenState.SeriesList(
+    id = id,
+    name = name
 )

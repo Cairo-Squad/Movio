@@ -18,7 +18,8 @@ data class SeriesDetailsScreenState(
     val showCreateListBottomSheet: Boolean = false,
 
     val rating: Int = 0,
-    val listName: String = "",
+    val newListName: String = "",
+    val seriesLists: List<SeriesList> = emptyList(),
 
     val showSnackBar: Boolean = false,
     val snackMessage: String = "",
@@ -72,4 +73,9 @@ data class SeriesDetailsScreenState(
         SUCCESS,
         ERROR
     }
+
+    data class SeriesList(
+        val id: Long,
+        val name: String
+    )
 }

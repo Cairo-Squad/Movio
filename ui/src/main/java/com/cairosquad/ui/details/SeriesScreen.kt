@@ -239,7 +239,7 @@ fun SeriesScreen(
                 isVisible = uiState.showCreateListBottomSheet,
                 onDismiss = viewModel::onDismissCreateListBottomSheet,
                 isMovie = false,
-                value = uiState.listName,
+                value = uiState.newListName,
                 onValueChange = viewModel::onValueChange,
                 onSubmit = { viewModel.onDismissCreateListBottomSheet() }
             )

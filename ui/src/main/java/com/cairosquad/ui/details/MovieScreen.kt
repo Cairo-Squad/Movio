@@ -206,7 +206,7 @@ fun MovieScreen(
             ListBottomSheet(
                 isVisible = state.isAddToListBottomSheetOpen,
                 onDismiss = viewModel::onDismissAddToListBottomSheet,
-                lists = emptyList(),
+                lists = state.moviesLists.map { it.name },
                 onListClicked = {},
                 onCreateNewList = viewModel::onCreateListClicked
             )

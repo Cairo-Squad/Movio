@@ -1,6 +1,7 @@
 package com.cairosquad.viewmodel.details.series
 
 import com.cairosquad.domain.exception.MovioException
+import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.domain.usecase.LoginUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Artist
@@ -22,6 +23,7 @@ import kotlinx.coroutines.delay
 class SeriesDetailsViewModel @AssistedInject constructor(
     private val manageSeriesUseCase: ManageSeriesUseCase,
     private val loginUseCase: LoginUseCase,
+    private val accountUseCase: AccountUseCase,
     @Assisted private val seriesId: Long,
 ) : BaseViewModel<SeriesDetailsScreenState, SeriesDetailEffect>(SeriesDetailsScreenState()),
     SeriesDetailsInteractionListener {
@@ -90,7 +92,21 @@ class SeriesDetailsViewModel @AssistedInject constructor(
                 if (!authed) {
                     updateState { it.copy(showLoginBottomSheet = true) }
                 } else {
-                    updateState { it.copy(showAddToListBottomSheet = true) }
+                    loadSeriesLists()
+                }
+            },
+            onError = {}
+        )
+    }
+
+    private fun loadSeriesLists() {
+        tryToCall(
+            block = accountUseCase::getSeriesLists,
+            onSuccess = { mediaLists ->
+                updateState {
+                    it.copy(
+                        showAddToListBottomSheet = true,
+                        seriesLists = mediaLists.map { list -> list.toUiState() })
                 }
             },
             onError = {}
@@ -123,7 +139,7 @@ class SeriesDetailsViewModel @AssistedInject constructor(
     }
 
     override fun onValueChange(listName: String) {
-        updateState { it.copy(listName = listName) }
+        updateState { it.copy(newListName = listName) }
     }
 
     override fun onRateChange(rate: Int) {
@@ -199,7 +215,7 @@ class SeriesDetailsViewModel @AssistedInject constructor(
     }
 
     override fun onRefresh() {
-            loadDetails(seriesId)
+        loadDetails(seriesId)
     }
 
     private fun getSeriesDetails(seriesId: Long) {
@@ -262,14 +278,14 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         )
     }
 
-	private fun setSeasonToUiState(seasons: List<Season>) {
-		updateState {
-			it.copy(
-				seasonsSectionState = SectionStatus.SUCCESS,
-				seasons = seasons.map { it.toUiState() }
-			)
-		}
-	}
+    private fun setSeasonToUiState(seasons: List<Season>) {
+        updateState {
+            it.copy(
+                seasonsSectionState = SectionStatus.SUCCESS,
+                seasons = seasons.map { it.toUiState() }
+            )
+        }
+    }
 
     private fun getReviews(seriesId: Long) {
         tryToCall(

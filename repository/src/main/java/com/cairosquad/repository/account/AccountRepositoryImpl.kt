@@ -2,6 +2,7 @@ package com.cairosquad.repository.account
 
 import com.cairosquad.domain.repository.AccountRepository
 import com.cairosquad.entity.Account
+import com.cairosquad.entity.MediaList
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import com.cairosquad.repository.account.data_source.local.AccountLocalDataSource
@@ -28,12 +29,18 @@ class AccountRepositoryImpl @Inject constructor(
                 }
     }
 
-    override suspend fun getAccountId(): Long {
-        return accountLocalDataSource.getAccountId() ?: 0L
+    override suspend fun getMovieLists(page: Int): List<MediaList> {
+        accountLocalDataSource.getAccountId()?.also { accountId ->
+            return accountRemoteDataSource.getMovieLists(accountId, page).map { it.toEntity() }
+        }
+        return emptyList()
     }
 
-    override suspend fun getLists() {
-        TODO("Not yet implemented")
+    override suspend fun getSeriesLists(page: Int): List<MediaList> {
+        accountLocalDataSource.getAccountId()?.also { accountId ->
+            return accountRemoteDataSource.getSeriesLists(accountId, page).map { it.toEntity() }
+        }
+        return emptyList()
     }
 
     override suspend fun getFavoriteMovies(): List<Movie> {

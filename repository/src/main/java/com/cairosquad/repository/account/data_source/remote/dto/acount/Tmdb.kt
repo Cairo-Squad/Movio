@@ -1,4 +1,4 @@
-package com.cairosquad.repository.account.data_source.remote.dto
+package com.cairosquad.repository.account.data_source.remote.dto.acount
 
 
 import kotlinx.serialization.SerialName

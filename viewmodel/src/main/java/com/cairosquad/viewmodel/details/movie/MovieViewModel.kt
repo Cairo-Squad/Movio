@@ -1,6 +1,8 @@
 package com.cairosquad.viewmodel.details.movie
 
+import android.util.Log
 import com.cairosquad.domain.exception.MovioException
+import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.domain.usecase.LoginUseCase
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.entity.Artist
@@ -21,6 +23,7 @@ import kotlinx.coroutines.delay
 class MovieViewModel @AssistedInject constructor(
     private val movieUseCase: ManageMoviesUseCase,
     private val loginUseCase: LoginUseCase,
+    private val accountUseCase: AccountUseCase,
     @Assisted private val movieId: Long = 0
 ) : BaseViewModel<MovieScreenState, MovieEffect>(MovieScreenState()),
     MovieInteractionListener {
@@ -179,10 +182,29 @@ class MovieViewModel @AssistedInject constructor(
                 if (!authed) {
                     updateState { it.copy(isNoAccountBottomSheetOpen = true) }
                 } else {
-                    updateState { it.copy(isAddToListBottomSheetOpen = true) }
+                    loadMovieLists()
                 }
             },
             onError = {}
+        )
+    }
+
+    private fun loadMovieLists() {
+        tryToCall(
+            block = accountUseCase::getMoviesLists,
+
+                onSuccess = { mediaLists ->
+                    Log.d("DEBUG", "Lists: $mediaLists")
+                    val uiLists = mediaLists.map { list -> list.toUiState() }
+                    Log.d("DEBUG", "Mapped: $uiLists")
+                updateState {
+                    it.copy(
+                        isAddToListBottomSheetOpen = true,
+                        moviesLists = uiLists)
+                }
+            },
+            onError = {},
+            dispatcher = Dispatchers.Main
         )
     }
 
