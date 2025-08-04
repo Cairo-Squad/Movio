@@ -10,7 +10,6 @@ import com.cairosquad.repository.artists.data_source.remote.toEntity
 import com.cairosquad.repository.artists.data_source.remote.toEntityList
 import com.cairosquad.repository.utils.mappers.tryToCall
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfArtist
-import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfArtistsByQuery
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfMovieTopCast
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSeriesTopCast
 import java.util.Date
@@ -22,12 +21,9 @@ class ArtistsRepositoryImpl @Inject constructor(
 ) : ArtistsRepository {
 
     override suspend fun getArtistsByQuery(query: String, page: Int): List<Artist> {
-        return getArtists(
-            remoteFetcher = {
-                artistsRemoteDataSource.getArtistsByQuery(query, page).toEntityList()
-            },
-            cacheCode = getCacheCodeOfArtistsByQuery(query, page)
-        )
+        return tryToCall {
+            artistsRemoteDataSource.getArtistsByQuery(query, page).toEntityList()
+        }
     }
 
     override suspend fun getArtistById(id: Long): Artist {
@@ -89,6 +85,6 @@ class ArtistsRepositoryImpl @Inject constructor(
     }
 
     private companion object {
-        private const val CACHE_EXPIRATION_MILLIS = 3_600_000
+        private const val CACHE_EXPIRATION_MILLIS = 86_400_000
     }
 }
