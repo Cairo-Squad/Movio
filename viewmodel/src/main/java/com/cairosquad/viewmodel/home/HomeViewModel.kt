@@ -81,7 +81,6 @@ class HomeViewModel @Inject constructor(
             onError = ::handleError
         )
     }
-// TODO edit media type and get data in home screen for every one in here screen
     private suspend fun fetchPopularMediaBlock(genreId: Long? = null): Pair<List<Movie>, List<Series>> {
         val series = manageSeriesUseCase.getPopularSeries(
             page = 1,

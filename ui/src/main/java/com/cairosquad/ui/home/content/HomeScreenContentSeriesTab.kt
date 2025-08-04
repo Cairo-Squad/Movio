@@ -35,53 +35,60 @@ fun HomeScreenContentSeriesTab(
             MediaContentType.MORE_RECOMMENDED
         )
     }
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(), state = scrollState
-        ) {
-            item {
-                MediaHorizontalPager(
-                    modifier = Modifier,
-                    mediaList = screenState.popularSeries
-                        .map(MediaHorizontalPagerItem::fromHomeMediaUiState)
-                        .take(7),
-                    initialPage = 3,
-                    onClickMedia = listener::onClickMedia
-                )
-            }
-            sections.forEach { sectionType ->
-                item {
-                    SectionContainer(
-                        listState = scrollState, index = 0, onVisible = {
-                            if (!screenState.sections.containsKey(sectionType)) {
-                                listener.onSectionVisible(sectionType)
-                            }
-                        }) {
-                        val sectionState = screenState.sections[sectionType]
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(), state = scrollState
+    ) {
+        item {
+            MediaHorizontalPager(
+                modifier = Modifier,
+                mediaList = screenState.popularSeries
+                    .map(MediaHorizontalPagerItem::fromHomeMediaUiState)
+                    .take(7),
+                initialPage = 3,
+                onClickMedia = listener::onClickMedia
+            )
+        }
+        val baseIndex = 1
 
-                        if (sectionState == null || sectionState.isLoading) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 32.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
+        sections.forEachIndexed { sectionIndex, sectionType ->
+            val actualIndex = baseIndex + sectionIndex
 
-                            }
-                        } else {
-                            MediaSection(
-                                modifier = Modifier.padding(bottom = 32.dp),
-                                mediaList = sectionState.series.map(MediaSectionItem::fromHomeMediaUiState),
-                                sectionTitle = stringResource(sectionType.titleId),
-                                mediaSectionLayoutType = getMediaSectionLayout(sectionType),
-                                onClickMedia = listener::onClickMedia,
-                                seeAllAction = {
-                                    listener.onClickSeeAll(
-                                        sectionType, MediaType.SERIES
-                                    )
-                                })
+            item(key = sectionType.ordinal) {
+                SectionContainer(
+                    listState = scrollState,
+                    index = actualIndex,
+                    onVisible = {
+                        if (!screenState.sections.containsKey(sectionType)) {
+                            listener.onSectionVisible(sectionType)
                         }
+                    }
+                ) {
+                    val sectionState = screenState.sections[sectionType]
+
+                    if (sectionState == null || sectionState.isLoading) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 32.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+
+                        }
+                    } else {
+                        MediaSection(
+                            modifier = Modifier.padding(bottom = 32.dp),
+                            mediaList = sectionState.series.map(MediaSectionItem::fromHomeMediaUiState),
+                            sectionTitle = stringResource(sectionType.titleId),
+                            mediaSectionLayoutType = getMediaSectionLayout(sectionType),
+                            onClickMedia = listener::onClickMedia,
+                            seeAllAction = {
+                                listener.onClickSeeAll(
+                                    sectionType, MediaType.SERIES
+                                )
+                            })
                     }
                 }
             }
         }
+    }
 }

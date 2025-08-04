@@ -49,41 +49,44 @@ fun HomeScreenContentMoviesTab(
             )
         }
 
-        sections.forEach { sectionType ->
-                item {
-                    SectionContainer(
-                        listState = scrollState, index = 0, onVisible = {
-                            if (!screenState.sections.containsKey(sectionType)) {
-                                listener.onSectionVisible(sectionType)
-                            }
-                        }) {
-                        val sectionState = screenState.sections[sectionType]
+        val baseIndex = 1
 
-                        if (sectionState == null || sectionState.isLoading) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 32.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
+        sections.forEachIndexed { sectionIndex, sectionType ->
+            val actualIndex = baseIndex + sectionIndex
 
-                            }
-                        } else {
-                            MediaSection(
-                                modifier = Modifier.padding(bottom = 32.dp),
-                                mediaList = sectionState.movies.map(MediaSectionItem::fromHomeMediaUiState),
-                                sectionTitle = stringResource(sectionType.titleId),
-                                mediaSectionLayoutType = getMediaSectionLayout(sectionType),
-                                onClickMedia = listener::onClickMedia,
-                                seeAllAction = {
-                                    listener.onClickSeeAll(
-                                        sectionType, MediaType.MOVIES
-                                    )
-                                })
+            item(key = sectionType.ordinal) {
+                SectionContainer(
+                    listState = scrollState, index = actualIndex, onVisible = {
+                        if (!screenState.sections.containsKey(sectionType)) {
+                            listener.onSectionVisible(sectionType)
                         }
+                    }) {
+                    val sectionState = screenState.sections[sectionType]
+
+                    if (sectionState == null || sectionState.isLoading) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 32.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+
+                        }
+                    } else {
+                        MediaSection(
+                            modifier = Modifier.padding(bottom = 32.dp),
+                            mediaList = sectionState.movies.map(MediaSectionItem::fromHomeMediaUiState),
+                            sectionTitle = stringResource(sectionType.titleId),
+                            mediaSectionLayoutType = getMediaSectionLayout(sectionType),
+                            onClickMedia = listener::onClickMedia,
+                            seeAllAction = {
+                                listener.onClickSeeAll(
+                                    sectionType, MediaType.MOVIES
+                                )
+                            })
                     }
                 }
             }
         }
-   // }
+    }
 }
