@@ -39,15 +39,17 @@ class ArtistsRepositoryImplTest {
     }
 
     @Test
-    fun `should return  artists when getArtistsByQuery is called from remote`() = runTest {
+    fun `should return artists when getArtistsByQuery is called from remote`() = runTest {
         val query = "John"
         val page = 1
+        coEvery { remoteDataSource.getArtistsByQuery(query, page) } returns listOf(artistRemoteDto)
 
         val result = repository.getArtistsByQuery(query, page)
 
         assertThat(result).isEqualTo(listOf(expectedArtist))
         coVerify(exactly = 1) { remoteDataSource.getArtistsByQuery(any(), any()) }
     }
+
 
     @Test
     fun `should fetch data from remote when getArtistsByQuery is called`() = runTest {

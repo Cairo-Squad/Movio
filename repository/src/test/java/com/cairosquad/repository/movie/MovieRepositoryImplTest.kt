@@ -447,15 +447,18 @@ class MovieRepositoryImplTest {
     }
 
     @Test
-    fun `should return movies when getMoviesByQuery is called `() = runTest {
+    fun `should return movies when getMoviesByQuery is called`() = runTest {
         val query = "Test"
         val page = 1
+
+        coEvery { remoteDataSource.getMoviesByQuery(query, page) } returns listOf(movieRemoteDto)
 
         val result = repository.getMoviesByQuery(query, page)
 
         assertThat(result).isEqualTo(listOf(expectedMovie))
         coVerify(exactly = 1) { remoteDataSource.getMoviesByQuery(any(), any()) }
     }
+
 
     @Test
     fun `should fetch data  when getMoviesByQuery is called`() = runTest {
