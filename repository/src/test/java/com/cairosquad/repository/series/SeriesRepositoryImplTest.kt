@@ -433,17 +433,6 @@ class SeriesRepositoryImplTest {
     }
 
     @Test
-    fun `should return  series when getSeriesByQuery is called`() = runTest {
-        val query = "Test"
-        val page = 1
-
-        val result = repository.getSeriesByQuery(query, page)
-
-        assertThat(result).isEqualTo(listOf(expectedSeries))
-        coVerify(exactly = 1) { remoteDataSource.getSeriesByQuery(any(), any()) }
-    }
-
-    @Test
     fun `should fetch data from remote when getSeriesByQuery is called`() = runTest {
         val query = "Test"
         val page = 1
