@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -54,7 +53,7 @@ fun HomeScreenContentCategoriesTab(
             columns = GridCells.Adaptive(minSize = 101.33.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(bottom = 16.dp)
+            contentPadding = PaddingValues(vertical = 16.dp)
         ) {
 
             item(span = { GridItemSpan(maxLineSpan) }) {
@@ -89,14 +88,14 @@ fun HomeScreenContentCategoriesTab(
             }
 
             items(media.itemCount) { index ->
-                media[index]?.let { moreRecommended ->
+                media[index]?.let { media ->
                     MovieCard(
                         modifier = Modifier.clickable {
-                            listener.onClickMedia(moreRecommended.id, moreRecommended.isMovie)
+                            listener.onClickMedia(media.id, media.isMovie)
                         },
-                        title = moreRecommended.title,
-                        vote = moreRecommended.rating,
-                        imgUrl = moreRecommended.posterPath,
+                        title = media.title,
+                        vote = media.rating,
+                        imgUrl = media.posterPath,
                         width = null,
                         aspectRatio = 0.743f
                     )

@@ -3,6 +3,7 @@ package com.cairosquad.viewmodel.home
 
 import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
+import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Movie
@@ -170,7 +171,7 @@ class HomeViewModel @Inject constructor(
             onSuccess = { media ->
                 updateState {
                     it.copy(
-                        categoriesMedia =media
+                        categoriesMedia = media
                     )
                 }
             },
@@ -193,10 +194,10 @@ class HomeViewModel @Inject constructor(
                     unifiedMediaPager.getCombinedMedia(genreId = genre.id)
                 }
                 HomeScreenState.SortingType.POPULARITY -> {
-                    unifiedMediaPager.getCombinedMedia(genreId = genre.id)
+                    unifiedMediaPager.getCombinedMedia(genreId = genre.id, SortType.POPULAR)
                 }
                 HomeScreenState.SortingType.LATEST -> {
-                    unifiedMediaPager.getCombinedMedia(genreId = genre.id)
+                    unifiedMediaPager.getCombinedMedia(genreId = genre.id, SortType.LATEST)
                 }
             }},
             onSuccess = { media ->
