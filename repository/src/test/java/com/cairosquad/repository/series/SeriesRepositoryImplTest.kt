@@ -31,7 +31,6 @@ import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfFreeToWatch
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfMoreRecommendedSeries
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfOnTvSeries
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfPopularSeries
-import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSearchedSeries
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSeries
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSeriesByCategory
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSeriesOfArtist
@@ -285,95 +284,125 @@ class SeriesRepositoryImplTest {
 
             val result = repository.getTopRatingSeries(page, genreId)
 
-            assertThat(result).isEqualTo(listOf(expectedSeries.copy(trailerPath = "", seasonsCount = 1)))
+            assertThat(result).isEqualTo(
+                listOf(
+                    expectedSeries.copy(
+                        trailerPath = "",
+                        seasonsCount = 1
+                    )
+                )
+            )
             coVerify(exactly = 1) { remoteDataSource.getTopRatingSeries(page, genreId) }
             coVerify(exactly = 1) { localDataSource.insertCacheCodeWithSeries(any()) }
         }
 
     @Test
-    fun `should return cached series when getSimilarSeries is called and cache is available`() = runTest {
-        val seriesId = 1L
-        val page = 1
-        val cacheCode = getCacheCodeOfSimilarSeries(seriesId, page)
-        val cachedSeries = listOf(cachedSeriesDto)
-        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-        coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
+    fun `should return cached series when getSimilarSeries is called and cache is available`() =
+        runTest {
+            val seriesId = 1L
+            val page = 1
+            val cacheCode = getCacheCodeOfSimilarSeries(seriesId, page)
+            val cachedSeries = listOf(cachedSeriesDto)
+            coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+            coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
 
-        val result = repository.getSimilarSeries(seriesId, page)
+            val result = repository.getSimilarSeries(seriesId, page)
 
-        assertThat(result).isEqualTo(listOf(expectedSeries))
-        coVerify(exactly = 1) { localDataSource.getSeriesByCacheCode(cacheCode) }
-        coVerify(exactly = 0) { remoteDataSource.getSimilarSeries(any(), any()) }
-    }
-
-    @Test
-    fun `should fetch data from remote when getSimilarSeries is called and cache is empty`() = runTest {
-        val seriesId = 1L
-        val page = 1
-        val cacheCode = getCacheCodeOfSimilarSeries(seriesId, page)
-        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-        coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
-        coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
-        coEvery { remoteDataSource.getSimilarSeries(seriesId, page) } returns listOf(seriesRemoteDto)
-        coEvery { localDataSource.insertCacheCodeWithSeries(any()) } just Runs
-
-        val result = repository.getSimilarSeries(seriesId, page)
-
-        assertThat(result).isEqualTo(listOf(expectedSeries.copy(trailerPath = "", seasonsCount = 1)))
-        coVerify(exactly = 1) { remoteDataSource.getSimilarSeries(seriesId, page) }
-        coVerify(exactly = 1) { localDataSource.insertCacheCodeWithSeries(any()) }
-    }
+            assertThat(result).isEqualTo(listOf(expectedSeries))
+            coVerify(exactly = 1) { localDataSource.getSeriesByCacheCode(cacheCode) }
+            coVerify(exactly = 0) { remoteDataSource.getSimilarSeries(any(), any()) }
+        }
 
     @Test
-    fun `should return cached series when getTrendingSeries is called and cache is available`() = runTest {
-        val page = 1
-        val genreId: Long? = null
-        val cacheCode = getCacheCodeOfTrendingSeries(page, genreId)
-        val cachedSeries = listOf(cachedSeriesDto)
-        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-        coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
+    fun `should fetch data from remote when getSimilarSeries is called and cache is empty`() =
+        runTest {
+            val seriesId = 1L
+            val page = 1
+            val cacheCode = getCacheCodeOfSimilarSeries(seriesId, page)
+            coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+            coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
+            coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
+            coEvery { remoteDataSource.getSimilarSeries(seriesId, page) } returns listOf(
+                seriesRemoteDto
+            )
+            coEvery { localDataSource.insertCacheCodeWithSeries(any()) } just Runs
 
-        val result = repository.getTrendingSeries(page, genreId)
+            val result = repository.getSimilarSeries(seriesId, page)
 
-        assertThat(result).isEqualTo(listOf(expectedSeries))
-        coVerify(exactly = 1) { localDataSource.getSeriesByCacheCode(cacheCode) }
-        coVerify(exactly = 0) { remoteDataSource.getTrendingSeries(any(), any()) }
-    }
-
-    @Test
-    fun `should fetch data from remote when getTrendingSeries is called and cache is empty`() = runTest {
-        val page = 1
-        val genreId: Long? = null
-        val cacheCode = getCacheCodeOfTrendingSeries(page, genreId)
-        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-        coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
-        coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
-        coEvery { remoteDataSource.getTrendingSeries(page, genreId) } returns listOf(seriesRemoteDto)
-        coEvery { localDataSource.insertCacheCodeWithSeries(any()) } just Runs
-
-        val result = repository.getTrendingSeries(page, genreId)
-
-        assertThat(result).isEqualTo(listOf(expectedSeries.copy(trailerPath = "", seasonsCount = 1)))
-        coVerify(exactly = 1) { remoteDataSource.getTrendingSeries(page, genreId) }
-        coVerify(exactly = 1) { localDataSource.insertCacheCodeWithSeries(any()) }
-    }
+            assertThat(result).isEqualTo(
+                listOf(
+                    expectedSeries.copy(
+                        trailerPath = "",
+                        seasonsCount = 1
+                    )
+                )
+            )
+            coVerify(exactly = 1) { remoteDataSource.getSimilarSeries(seriesId, page) }
+            coVerify(exactly = 1) { localDataSource.insertCacheCodeWithSeries(any()) }
+        }
 
     @Test
-    fun `should return cached series when getAllSeries is called and cache is available`() = runTest {
-        val page = 1
-        val genreId: Long? = null
-        val sortType: SortType? = null
-        val cacheCode = getCacheCodeOfAllSeries(page, genreId, sortType)
-        val cachedSeries = listOf(cachedSeriesDto)
-        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-        coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
+    fun `should return cached series when getTrendingSeries is called and cache is available`() =
+        runTest {
+            val page = 1
+            val genreId: Long? = null
+            val cacheCode = getCacheCodeOfTrendingSeries(page, genreId)
+            val cachedSeries = listOf(cachedSeriesDto)
+            coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+            coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
 
-        val result = repository.getAllSeries(page, genreId, sortType)
+            val result = repository.getTrendingSeries(page, genreId)
 
-        assertThat(result).isEqualTo(listOf(expectedSeries))
-        coVerify(exactly = 1) { localDataSource.getSeriesByCacheCode(cacheCode) }
-        coVerify(exactly = 0) { remoteDataSource.getAllSeries(any(), any(), any()) }
-    }
+            assertThat(result).isEqualTo(listOf(expectedSeries))
+            coVerify(exactly = 1) { localDataSource.getSeriesByCacheCode(cacheCode) }
+            coVerify(exactly = 0) { remoteDataSource.getTrendingSeries(any(), any()) }
+        }
+
+    @Test
+    fun `should fetch data from remote when getTrendingSeries is called and cache is empty`() =
+        runTest {
+            val page = 1
+            val genreId: Long? = null
+            val cacheCode = getCacheCodeOfTrendingSeries(page, genreId)
+            coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+            coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
+            coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
+            coEvery { remoteDataSource.getTrendingSeries(page, genreId) } returns listOf(
+                seriesRemoteDto
+            )
+            coEvery { localDataSource.insertCacheCodeWithSeries(any()) } just Runs
+
+            val result = repository.getTrendingSeries(page, genreId)
+
+            assertThat(result).isEqualTo(
+                listOf(
+                    expectedSeries.copy(
+                        trailerPath = "",
+                        seasonsCount = 1
+                    )
+                )
+            )
+            coVerify(exactly = 1) { remoteDataSource.getTrendingSeries(page, genreId) }
+            coVerify(exactly = 1) { localDataSource.insertCacheCodeWithSeries(any()) }
+        }
+
+    @Test
+    fun `should return cached series when getAllSeries is called and cache is available`() =
+        runTest {
+            val page = 1
+            val genreId: Long? = null
+            val sortType: SortType? = null
+            val cacheCode = getCacheCodeOfAllSeries(page, genreId, sortType)
+            val cachedSeries = listOf(cachedSeriesDto)
+            coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+            coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
+
+            val result = repository.getAllSeries(page, genreId, sortType)
+
+            assertThat(result).isEqualTo(listOf(expectedSeries))
+            coVerify(exactly = 1) { localDataSource.getSeriesByCacheCode(cacheCode) }
+            coVerify(exactly = 0) { remoteDataSource.getAllSeries(any(), any(), any()) }
+        }
 
     @Test
     fun `should fetch data from remote when getAllSeries is called and cache is empty`() = runTest {
@@ -384,318 +413,409 @@ class SeriesRepositoryImplTest {
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
         coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
-        coEvery { remoteDataSource.getAllSeries(page, genreId, sortType?.sortBy) } returns listOf(seriesRemoteDto)
+        coEvery { remoteDataSource.getAllSeries(page, genreId, sortType?.sortBy) } returns listOf(
+            seriesRemoteDto
+        )
         coEvery { localDataSource.insertCacheCodeWithSeries(any()) } just Runs
 
         val result = repository.getAllSeries(page, genreId, sortType)
 
-        assertThat(result).isEqualTo(listOf(expectedSeries.copy(trailerPath = "", seasonsCount = 1)))
+        assertThat(result).isEqualTo(
+            listOf(
+                expectedSeries.copy(
+                    trailerPath = "",
+                    seasonsCount = 1
+                )
+            )
+        )
         coVerify(exactly = 1) { remoteDataSource.getAllSeries(page, genreId, sortType?.sortBy) }
         coVerify(exactly = 1) { localDataSource.insertCacheCodeWithSeries(any()) }
     }
 
     @Test
-    fun `should return cached series when getSeriesByQuery is called and cache is available`() = runTest {
+    fun `should return  series when getSeriesByQuery is called`() = runTest {
         val query = "Test"
         val page = 1
-        val cacheCode = getCacheCodeOfSearchedSeries(query, page)
-        val cachedSeries = listOf(cachedSeriesDto)
-        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-        coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
 
         val result = repository.getSeriesByQuery(query, page)
 
         assertThat(result).isEqualTo(listOf(expectedSeries))
-        coVerify(exactly = 1) { localDataSource.getSeriesByCacheCode(cacheCode) }
-        coVerify(exactly = 0) { remoteDataSource.getSeriesByQuery(any(), any()) }
+        coVerify(exactly = 1) { remoteDataSource.getSeriesByQuery(any(), any()) }
     }
 
     @Test
-    fun `should fetch data from remote when getSeriesByQuery is called and cache is empty`() = runTest {
+    fun `should fetch data from remote when getSeriesByQuery is called`() = runTest {
         val query = "Test"
         val page = 1
-        val cacheCode = getCacheCodeOfSearchedSeries(query, page)
-        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-        coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
         coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
         coEvery { remoteDataSource.getSeriesByQuery(query, page) } returns listOf(seriesRemoteDto)
-        coEvery { localDataSource.insertCacheCodeWithSeries(any()) } just Runs
 
         val result = repository.getSeriesByQuery(query, page)
 
-        assertThat(result).isEqualTo(listOf(expectedSeries.copy(trailerPath = "", seasonsCount = 1)))
+        assertThat(result).isEqualTo(
+            listOf(
+                expectedSeries.copy(
+                    trailerPath = "",
+                    seasonsCount = 1
+                )
+            )
+        )
         coVerify(exactly = 1) { remoteDataSource.getSeriesByQuery(query, page) }
-        coVerify(exactly = 1) { localDataSource.insertCacheCodeWithSeries(any()) }
     }
 
     @Test
-    fun `should return cached series when getSeriesOfArtist is called and cache is available`() = runTest {
-        val artistId = 100L
-        val cacheCode = getCacheCodeOfSeriesOfArtist(artistId)
-        val cachedSeries = listOf(cachedSeriesDto)
-        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-        coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
+    fun `should return cached series when getSeriesOfArtist is called and cache is available`() =
+        runTest {
+            val artistId = 100L
+            val cacheCode = getCacheCodeOfSeriesOfArtist(artistId)
+            val cachedSeries = listOf(cachedSeriesDto)
+            coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+            coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
 
-        val result = repository.getSeriesOfArtist(artistId)
+            val result = repository.getSeriesOfArtist(artistId)
 
-        assertThat(result).isEqualTo(listOf(expectedSeries))
-        coVerify(exactly = 1) { localDataSource.getSeriesByCacheCode(cacheCode) }
-        coVerify(exactly = 0) { remoteDataSource.getSeriesOfArtist(any()) }
-    }
-
-    @Test
-    fun `should fetch data from remote when getSeriesOfArtist is called and cache is empty`() = runTest {
-        val artistId = 100L
-        val cacheCode = getCacheCodeOfSeriesOfArtist(artistId)
-        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-        coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
-        coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
-        coEvery { remoteDataSource.getSeriesOfArtist(artistId) } returns listOf(seriesRemoteDto)
-        coEvery { localDataSource.insertCacheCodeWithSeries(any()) } just Runs
-
-        val result = repository.getSeriesOfArtist(artistId)
-
-        assertThat(result).isEqualTo(listOf(expectedSeries.copy(trailerPath = "", seasonsCount = 1)))
-        coVerify(exactly = 1) { remoteDataSource.getSeriesOfArtist(artistId) }
-        coVerify(exactly = 1) { localDataSource.insertCacheCodeWithSeries(any()) }
-    }
-
-    @Test
-    fun `should throw DomainEmptyResponseException when getSeriesOfArtist is called and remote returns empty`() = runTest {
-        val artistId = 100L
-        val cacheCode = getCacheCodeOfSeriesOfArtist(artistId)
-        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-        coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
-        coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
-        coEvery { remoteDataSource.getSeriesOfArtist(artistId) } throws RepoEmptyResponseException()
-
-        assertFailsWith<DomainEmptyResponseException> {
-            repository.getSeriesOfArtist(artistId)
+            assertThat(result).isEqualTo(listOf(expectedSeries))
+            coVerify(exactly = 1) { localDataSource.getSeriesByCacheCode(cacheCode) }
+            coVerify(exactly = 0) { remoteDataSource.getSeriesOfArtist(any()) }
         }
-        coVerify(exactly = 1) { remoteDataSource.getSeriesOfArtist(artistId) }
-        coVerify(exactly = 0) { localDataSource.insertCacheCodeWithSeries(any()) }
-    }
 
     @Test
-    fun `should return cached series when getMoreRecommendedSeries is called and cache is available`() = runTest {
-        val page = 1
-        val genreId: Long? = null
-        val cacheCode = getCacheCodeOfMoreRecommendedSeries(page, genreId)
-        val cachedSeries = listOf(cachedSeriesDto)
-        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-        coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
+    fun `should fetch data from remote when getSeriesOfArtist is called and cache is empty`() =
+        runTest {
+            val artistId = 100L
+            val cacheCode = getCacheCodeOfSeriesOfArtist(artistId)
+            coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+            coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
+            coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
+            coEvery { remoteDataSource.getSeriesOfArtist(artistId) } returns listOf(seriesRemoteDto)
+            coEvery { localDataSource.insertCacheCodeWithSeries(any()) } just Runs
 
-        val result = repository.getMoreRecommendedSeries(page, genreId)
+            val result = repository.getSeriesOfArtist(artistId)
 
-        assertThat(result).isEqualTo(listOf(expectedSeries))
-        coVerify(exactly = 1) { localDataSource.getSeriesByCacheCode(cacheCode) }
-        coVerify(exactly = 0) { remoteDataSource.getMoreRecommendedSeries(any(), any()) }
-    }
-
-    @Test
-    fun `should fetch data from remote when getMoreRecommendedSeries is called and cache is empty`() = runTest {
-        val page = 1
-        val genreId: Long? = null
-        val cacheCode = getCacheCodeOfMoreRecommendedSeries(page, genreId)
-        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-        coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
-        coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
-        coEvery { remoteDataSource.getMoreRecommendedSeries(page, genreId) } returns listOf(seriesRemoteDto)
-        coEvery { localDataSource.insertCacheCodeWithSeries(any()) } just Runs
-
-        val result = repository.getMoreRecommendedSeries(page, genreId)
-
-        assertThat(result).isEqualTo(listOf(expectedSeries.copy(trailerPath = "", seasonsCount = 1)))
-        coVerify(exactly = 1) { remoteDataSource.getMoreRecommendedSeries(page, genreId) }
-        coVerify(exactly = 1) { localDataSource.insertCacheCodeWithSeries(any()) }
-    }
-
-    @Test
-    fun `should throw DomainEmptyResponseException when getMoreRecommendedSeries is called and remote returns empty`() = runTest {
-        val page = 1
-        val genreId: Long? = null
-        val cacheCode = getCacheCodeOfMoreRecommendedSeries(page, genreId)
-        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-        coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
-        coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
-        coEvery { remoteDataSource.getMoreRecommendedSeries(page, genreId) } throws RepoEmptyResponseException()
-
-        assertFailsWith<DomainEmptyResponseException> {
-            repository.getMoreRecommendedSeries(page, genreId)
+            assertThat(result).isEqualTo(
+                listOf(
+                    expectedSeries.copy(
+                        trailerPath = "",
+                        seasonsCount = 1
+                    )
+                )
+            )
+            coVerify(exactly = 1) { remoteDataSource.getSeriesOfArtist(artistId) }
+            coVerify(exactly = 1) { localDataSource.insertCacheCodeWithSeries(any()) }
         }
-        coVerify(exactly = 1) { remoteDataSource.getMoreRecommendedSeries(page, genreId) }
-        coVerify(exactly = 0) { localDataSource.insertCacheCodeWithSeries(any()) }
-    }
 
     @Test
-    fun `should return cached series when getOnTvSeries is called and cache is available`() = runTest {
-        val page = 1
-        val genreId: Long? = null
-        val cacheCode = getCacheCodeOfOnTvSeries(page, genreId)
-        val cachedSeries = listOf(cachedSeriesDto)
-        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-        coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
+    fun `should throw DomainEmptyResponseException when getSeriesOfArtist is called and remote returns empty`() =
+        runTest {
+            val artistId = 100L
+            val cacheCode = getCacheCodeOfSeriesOfArtist(artistId)
+            coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+            coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
+            coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
+            coEvery { remoteDataSource.getSeriesOfArtist(artistId) } throws RepoEmptyResponseException()
 
-        val result = repository.getOnTvSeries(page, genreId)
-
-        assertThat(result).isEqualTo(listOf(expectedSeries))
-        coVerify(exactly = 1) { localDataSource.getSeriesByCacheCode(cacheCode) }
-        coVerify(exactly = 0) { remoteDataSource.getOnTvSeries(any(), any()) }
-    }
-
-    @Test
-    fun `should fetch data from remote when getOnTvSeries is called and cache is empty`() = runTest {
-        val page = 1
-        val genreId: Long? = null
-        val cacheCode = getCacheCodeOfOnTvSeries(page, genreId)
-        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-        coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
-        coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
-        coEvery { remoteDataSource.getOnTvSeries(page, genreId) } returns listOf(seriesRemoteDto)
-        coEvery { localDataSource.insertCacheCodeWithSeries(any()) } just Runs
-
-        val result = repository.getOnTvSeries(page, genreId)
-
-        assertThat(result).isEqualTo(listOf(expectedSeries.copy(trailerPath = "", seasonsCount = 1)))
-        coVerify(exactly = 1) { remoteDataSource.getOnTvSeries(page, genreId) }
-        coVerify(exactly = 1) { localDataSource.insertCacheCodeWithSeries(any()) }
-    }
+            assertFailsWith<DomainEmptyResponseException> {
+                repository.getSeriesOfArtist(artistId)
+            }
+            coVerify(exactly = 1) { remoteDataSource.getSeriesOfArtist(artistId) }
+            coVerify(exactly = 0) { localDataSource.insertCacheCodeWithSeries(any()) }
+        }
 
     @Test
-    fun `should return cached series when getAiringTodaySeries is called and cache is available`() = runTest {
-        val page = 1
-        val genreId: Long? = null
-        val cacheCode = getCacheCodeOfAiringTodaySeries(page, genreId)
-        val cachedSeries = listOf(cachedSeriesDto)
-        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-        coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
+    fun `should return cached series when getMoreRecommendedSeries is called and cache is available`() =
+        runTest {
+            val page = 1
+            val genreId: Long? = null
+            val cacheCode = getCacheCodeOfMoreRecommendedSeries(page, genreId)
+            val cachedSeries = listOf(cachedSeriesDto)
+            coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+            coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
 
-        val result = repository.getAiringTodaySeries(page, genreId)
+            val result = repository.getMoreRecommendedSeries(page, genreId)
 
-        assertThat(result).isEqualTo(listOf(expectedSeries))
-        coVerify(exactly = 1) { localDataSource.getSeriesByCacheCode(cacheCode) }
-        coVerify(exactly = 0) { remoteDataSource.getAiringTodaySeries(any(), any()) }
-    }
-
-    @Test
-    fun `should fetch data from remote when getAiringTodaySeries is called and cache is empty`() = runTest {
-        val page = 1
-        val genreId: Long? = null
-        val cacheCode = getCacheCodeOfAiringTodaySeries(page, genreId)
-        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-        coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
-        coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
-        coEvery { remoteDataSource.getAiringTodaySeries(page, genreId) } returns listOf(seriesRemoteDto)
-        coEvery { localDataSource.insertCacheCodeWithSeries(any()) } just Runs
-
-        val result = repository.getAiringTodaySeries(page, genreId)
-
-        assertThat(result).isEqualTo(listOf(expectedSeries.copy(trailerPath = "", seasonsCount = 1)))
-        coVerify(exactly = 1) { remoteDataSource.getAiringTodaySeries(page, genreId) }
-        coVerify(exactly = 1) { localDataSource.insertCacheCodeWithSeries(any()) }
-    }
+            assertThat(result).isEqualTo(listOf(expectedSeries))
+            coVerify(exactly = 1) { localDataSource.getSeriesByCacheCode(cacheCode) }
+            coVerify(exactly = 0) { remoteDataSource.getMoreRecommendedSeries(any(), any()) }
+        }
 
     @Test
-    fun `should return cached series when getFreeToWatchSeries is called and cache is available`() = runTest {
-        val page = 1
-        val genreId: Long? = null
-        val cacheCode = getCacheCodeOfFreeToWatchSeries(page, genreId)
-        val cachedSeries = listOf(cachedSeriesDto)
-        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-        coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
+    fun `should fetch data from remote when getMoreRecommendedSeries is called and cache is empty`() =
+        runTest {
+            val page = 1
+            val genreId: Long? = null
+            val cacheCode = getCacheCodeOfMoreRecommendedSeries(page, genreId)
+            coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+            coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
+            coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
+            coEvery { remoteDataSource.getMoreRecommendedSeries(page, genreId) } returns listOf(
+                seriesRemoteDto
+            )
+            coEvery { localDataSource.insertCacheCodeWithSeries(any()) } just Runs
 
-        val result = repository.getFreeToWatchSeries(page, genreId)
+            val result = repository.getMoreRecommendedSeries(page, genreId)
 
-        assertThat(result).isEqualTo(listOf(expectedSeries))
-        coVerify(exactly = 1) { localDataSource.getSeriesByCacheCode(cacheCode) }
-        coVerify(exactly = 0) { remoteDataSource.getFreeToWatchSeries(any(), any()) }
-    }
-
-    @Test
-    fun `should fetch data from remote when getFreeToWatchSeries is called and cache is empty`() = runTest {
-        val page = 1
-        val genreId: Long? = null
-        val cacheCode = getCacheCodeOfFreeToWatchSeries(page, genreId)
-        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-        coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
-        coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
-        coEvery { remoteDataSource.getFreeToWatchSeries(page, genreId) } returns listOf(seriesRemoteDto)
-        coEvery { localDataSource.insertCacheCodeWithSeries(any()) } just Runs
-
-        val result = repository.getFreeToWatchSeries(page, genreId)
-
-        assertThat(result).isEqualTo(listOf(expectedSeries.copy(trailerPath = "", seasonsCount = 1)))
-        coVerify(exactly = 1) { remoteDataSource.getFreeToWatchSeries(page, genreId) }
-        coVerify(exactly = 1) { localDataSource.insertCacheCodeWithSeries(any()) }
-    }
+            assertThat(result).isEqualTo(
+                listOf(
+                    expectedSeries.copy(
+                        trailerPath = "",
+                        seasonsCount = 1
+                    )
+                )
+            )
+            coVerify(exactly = 1) { remoteDataSource.getMoreRecommendedSeries(page, genreId) }
+            coVerify(exactly = 1) { localDataSource.insertCacheCodeWithSeries(any()) }
+        }
 
     @Test
-    fun `should return cached series when getSeriesByCategory is called and cache is available`() = runTest {
-        val genreId = 1L
-        val page = 1
-        val cacheCode = getCacheCodeOfSeriesByCategory(page, genreId)
-        val cachedSeries = listOf(cachedSeriesDto)
-        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-        coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
+    fun `should throw DomainEmptyResponseException when getMoreRecommendedSeries is called and remote returns empty`() =
+        runTest {
+            val page = 1
+            val genreId: Long? = null
+            val cacheCode = getCacheCodeOfMoreRecommendedSeries(page, genreId)
+            coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+            coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
+            coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
+            coEvery {
+                remoteDataSource.getMoreRecommendedSeries(
+                    page,
+                    genreId
+                )
+            } throws RepoEmptyResponseException()
 
-        val result = repository.getSeriesByCategory(genreId, page)
-
-        assertThat(result).isEqualTo(listOf(expectedSeries))
-        coVerify(exactly = 1) { localDataSource.getSeriesByCacheCode(cacheCode) }
-        coVerify(exactly = 0) { remoteDataSource.getSeriesByCategory(any(), any()) }
-    }
-
-    @Test
-    fun `should fetch data from remote when getSeriesByCategory is called and cache is empty`() = runTest {
-        val genreId = 1L
-        val page = 1
-        val cacheCode = getCacheCodeOfSeriesByCategory(page, genreId)
-        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-        coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
-        coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
-        coEvery { remoteDataSource.getSeriesByCategory(genreId, page) } returns listOf(seriesRemoteDto)
-        coEvery { localDataSource.insertCacheCodeWithSeries(any()) } just Runs
-
-        val result = repository.getSeriesByCategory(genreId, page)
-
-        assertThat(result).isEqualTo(listOf(expectedSeries.copy(trailerPath = "", seasonsCount = 1)))
-        coVerify(exactly = 1) { remoteDataSource.getSeriesByCategory(genreId, page) }
-        coVerify(exactly = 1) { localDataSource.insertCacheCodeWithSeries(any()) }
-    }
+            assertFailsWith<DomainEmptyResponseException> {
+                repository.getMoreRecommendedSeries(page, genreId)
+            }
+            coVerify(exactly = 1) { remoteDataSource.getMoreRecommendedSeries(page, genreId) }
+            coVerify(exactly = 0) { localDataSource.insertCacheCodeWithSeries(any()) }
+        }
 
     @Test
-    fun `should return cached series when getPopularSeries is called and cache is available`() = runTest {
-        val page = 1
-        val genreId: Long? = null
-        val cacheCode = getCacheCodeOfPopularSeries(page, genreId)
-        val cachedSeries = listOf(cachedSeriesDto)
-        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-        coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
+    fun `should return cached series when getOnTvSeries is called and cache is available`() =
+        runTest {
+            val page = 1
+            val genreId: Long? = null
+            val cacheCode = getCacheCodeOfOnTvSeries(page, genreId)
+            val cachedSeries = listOf(cachedSeriesDto)
+            coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+            coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
 
-        val result = repository.getPopularSeries(page, genreId)
+            val result = repository.getOnTvSeries(page, genreId)
 
-        assertThat(result).isEqualTo(listOf(expectedSeries))
-        coVerify(exactly = 1) { localDataSource.getSeriesByCacheCode(cacheCode) }
-        coVerify(exactly = 0) { remoteDataSource.getPopularSeries(any(), any()) }
-    }
+            assertThat(result).isEqualTo(listOf(expectedSeries))
+            coVerify(exactly = 1) { localDataSource.getSeriesByCacheCode(cacheCode) }
+            coVerify(exactly = 0) { remoteDataSource.getOnTvSeries(any(), any()) }
+        }
 
     @Test
-    fun `should fetch data from remote when getPopularSeries is called and cache is empty`() = runTest {
-        val page = 1
-        val genreId: Long? = null
-        val cacheCode = getCacheCodeOfPopularSeries(page, genreId)
-        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-        coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
-        coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
-        coEvery { remoteDataSource.getPopularSeries(page, genreId) } returns listOf(seriesRemoteDto)
-        coEvery { localDataSource.insertCacheCodeWithSeries(any()) } just Runs
+    fun `should fetch data from remote when getOnTvSeries is called and cache is empty`() =
+        runTest {
+            val page = 1
+            val genreId: Long? = null
+            val cacheCode = getCacheCodeOfOnTvSeries(page, genreId)
+            coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+            coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
+            coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
+            coEvery {
+                remoteDataSource.getOnTvSeries(
+                    page,
+                    genreId
+                )
+            } returns listOf(seriesRemoteDto)
+            coEvery { localDataSource.insertCacheCodeWithSeries(any()) } just Runs
 
-        val result = repository.getPopularSeries(page, genreId)
+            val result = repository.getOnTvSeries(page, genreId)
 
-        assertThat(result).isEqualTo(listOf(expectedSeries.copy(trailerPath = "", seasonsCount = 1)))
-        coVerify(exactly = 1) { remoteDataSource.getPopularSeries(page, genreId) }
-        coVerify(exactly = 1) { localDataSource.insertCacheCodeWithSeries(any()) }
-    }
+            assertThat(result).isEqualTo(
+                listOf(
+                    expectedSeries.copy(
+                        trailerPath = "",
+                        seasonsCount = 1
+                    )
+                )
+            )
+            coVerify(exactly = 1) { remoteDataSource.getOnTvSeries(page, genreId) }
+            coVerify(exactly = 1) { localDataSource.insertCacheCodeWithSeries(any()) }
+        }
+
+    @Test
+    fun `should return cached series when getAiringTodaySeries is called and cache is available`() =
+        runTest {
+            val page = 1
+            val genreId: Long? = null
+            val cacheCode = getCacheCodeOfAiringTodaySeries(page, genreId)
+            val cachedSeries = listOf(cachedSeriesDto)
+            coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+            coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
+
+            val result = repository.getAiringTodaySeries(page, genreId)
+
+            assertThat(result).isEqualTo(listOf(expectedSeries))
+            coVerify(exactly = 1) { localDataSource.getSeriesByCacheCode(cacheCode) }
+            coVerify(exactly = 0) { remoteDataSource.getAiringTodaySeries(any(), any()) }
+        }
+
+    @Test
+    fun `should fetch data from remote when getAiringTodaySeries is called and cache is empty`() =
+        runTest {
+            val page = 1
+            val genreId: Long? = null
+            val cacheCode = getCacheCodeOfAiringTodaySeries(page, genreId)
+            coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+            coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
+            coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
+            coEvery { remoteDataSource.getAiringTodaySeries(page, genreId) } returns listOf(
+                seriesRemoteDto
+            )
+            coEvery { localDataSource.insertCacheCodeWithSeries(any()) } just Runs
+
+            val result = repository.getAiringTodaySeries(page, genreId)
+
+            assertThat(result).isEqualTo(
+                listOf(
+                    expectedSeries.copy(
+                        trailerPath = "",
+                        seasonsCount = 1
+                    )
+                )
+            )
+            coVerify(exactly = 1) { remoteDataSource.getAiringTodaySeries(page, genreId) }
+            coVerify(exactly = 1) { localDataSource.insertCacheCodeWithSeries(any()) }
+        }
+
+    @Test
+    fun `should return cached series when getFreeToWatchSeries is called and cache is available`() =
+        runTest {
+            val page = 1
+            val genreId: Long? = null
+            val cacheCode = getCacheCodeOfFreeToWatchSeries(page, genreId)
+            val cachedSeries = listOf(cachedSeriesDto)
+            coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+            coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
+
+            val result = repository.getFreeToWatchSeries(page, genreId)
+
+            assertThat(result).isEqualTo(listOf(expectedSeries))
+            coVerify(exactly = 1) { localDataSource.getSeriesByCacheCode(cacheCode) }
+            coVerify(exactly = 0) { remoteDataSource.getFreeToWatchSeries(any(), any()) }
+        }
+
+    @Test
+    fun `should fetch data from remote when getFreeToWatchSeries is called and cache is empty`() =
+        runTest {
+            val page = 1
+            val genreId: Long? = null
+            val cacheCode = getCacheCodeOfFreeToWatchSeries(page, genreId)
+            coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+            coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
+            coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
+            coEvery { remoteDataSource.getFreeToWatchSeries(page, genreId) } returns listOf(
+                seriesRemoteDto
+            )
+            coEvery { localDataSource.insertCacheCodeWithSeries(any()) } just Runs
+
+            val result = repository.getFreeToWatchSeries(page, genreId)
+
+            assertThat(result).isEqualTo(
+                listOf(
+                    expectedSeries.copy(
+                        trailerPath = "",
+                        seasonsCount = 1
+                    )
+                )
+            )
+            coVerify(exactly = 1) { remoteDataSource.getFreeToWatchSeries(page, genreId) }
+            coVerify(exactly = 1) { localDataSource.insertCacheCodeWithSeries(any()) }
+        }
+
+    @Test
+    fun `should return cached series when getSeriesByCategory is called and cache is available`() =
+        runTest {
+            val genreId = 1L
+            val page = 1
+            val cacheCode = getCacheCodeOfSeriesByCategory(page, genreId)
+            val cachedSeries = listOf(cachedSeriesDto)
+            coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+            coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
+
+            val result = repository.getSeriesByCategory(genreId, page)
+
+            assertThat(result).isEqualTo(listOf(expectedSeries))
+            coVerify(exactly = 1) { localDataSource.getSeriesByCacheCode(cacheCode) }
+            coVerify(exactly = 0) { remoteDataSource.getSeriesByCategory(any(), any()) }
+        }
+
+    @Test
+    fun `should fetch data from remote when getSeriesByCategory is called and cache is empty`() =
+        runTest {
+            val genreId = 1L
+            val page = 1
+            val cacheCode = getCacheCodeOfSeriesByCategory(page, genreId)
+            coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+            coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
+            coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
+            coEvery { remoteDataSource.getSeriesByCategory(genreId, page) } returns listOf(
+                seriesRemoteDto
+            )
+            coEvery { localDataSource.insertCacheCodeWithSeries(any()) } just Runs
+
+            val result = repository.getSeriesByCategory(genreId, page)
+
+            assertThat(result).isEqualTo(
+                listOf(
+                    expectedSeries.copy(
+                        trailerPath = "",
+                        seasonsCount = 1
+                    )
+                )
+            )
+            coVerify(exactly = 1) { remoteDataSource.getSeriesByCategory(genreId, page) }
+            coVerify(exactly = 1) { localDataSource.insertCacheCodeWithSeries(any()) }
+        }
+
+    @Test
+    fun `should return cached series when getPopularSeries is called and cache is available`() =
+        runTest {
+            val page = 1
+            val genreId: Long? = null
+            val cacheCode = getCacheCodeOfPopularSeries(page, genreId)
+            val cachedSeries = listOf(cachedSeriesDto)
+            coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+            coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
+
+            val result = repository.getPopularSeries(page, genreId)
+
+            assertThat(result).isEqualTo(listOf(expectedSeries))
+            coVerify(exactly = 1) { localDataSource.getSeriesByCacheCode(cacheCode) }
+            coVerify(exactly = 0) { remoteDataSource.getPopularSeries(any(), any()) }
+        }
+
+    @Test
+    fun `should fetch data from remote when getPopularSeries is called and cache is empty`() =
+        runTest {
+            val page = 1
+            val genreId: Long? = null
+            val cacheCode = getCacheCodeOfPopularSeries(page, genreId)
+            coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
+            coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
+            coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
+            coEvery { remoteDataSource.getPopularSeries(page, genreId) } returns listOf(
+                seriesRemoteDto
+            )
+            coEvery { localDataSource.insertCacheCodeWithSeries(any()) } just Runs
+
+            val result = repository.getPopularSeries(page, genreId)
+
+            assertThat(result).isEqualTo(
+                listOf(
+                    expectedSeries.copy(
+                        trailerPath = "",
+                        seasonsCount = 1
+                    )
+                )
+            )
+            coVerify(exactly = 1) { remoteDataSource.getPopularSeries(page, genreId) }
+            coVerify(exactly = 1) { localDataSource.insertCacheCodeWithSeries(any()) }
+        }
 
     private companion object {
         private val seriesRemoteDto = SeriesRemoteDto(

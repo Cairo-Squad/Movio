@@ -25,7 +25,6 @@ import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfFreeToWatch
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfMoreRecommendedSeries
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfOnTvSeries
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfPopularSeries
-import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSearchedSeries
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSeries
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSeriesByCategory
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSeriesOfArtist
@@ -54,7 +53,7 @@ class SeriesRepositoryImpl @Inject constructor(
 
     override suspend fun getTopRatingSeries(page: Int, genreId: Long?): List<Series> {
         return getSeries(
-            remoteFetcher = { seriesRemoteDataSource.getTopRatingSeries(page,genreId) },
+            remoteFetcher = { seriesRemoteDataSource.getTopRatingSeries(page, genreId) },
             cacheCode = getCacheCodeOfTopRatedSeries(page, genreId)
         )
     }
@@ -78,7 +77,7 @@ class SeriesRepositoryImpl @Inject constructor(
         genreId: Long?
     ): List<Series> {
         return getSeries(
-            remoteFetcher = { seriesRemoteDataSource.getOnTvSeries(page,genreId) },
+            remoteFetcher = { seriesRemoteDataSource.getOnTvSeries(page, genreId) },
             cacheCode = getCacheCodeOfOnTvSeries(page, genreId)
         )
     }
@@ -88,7 +87,7 @@ class SeriesRepositoryImpl @Inject constructor(
         genreId: Long?
     ): List<Series> {
         return getSeries(
-            remoteFetcher = { seriesRemoteDataSource.getAiringTodaySeries(page,genreId) },
+            remoteFetcher = { seriesRemoteDataSource.getAiringTodaySeries(page, genreId) },
             cacheCode = getCacheCodeOfAiringTodaySeries(page, genreId)
         )
     }
@@ -114,18 +113,29 @@ class SeriesRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun getAllSeries(page: Int, genreId: Long?, sortType: SortType?): List<Series> {
+    override suspend fun getAllSeries(
+        page: Int,
+        genreId: Long?,
+        sortType: SortType?
+    ): List<Series> {
         return getSeries(
-            remoteFetcher = { seriesRemoteDataSource.getAllSeries(page, genreId, sortType?.sortBy) },
+            remoteFetcher = {
+                seriesRemoteDataSource.getAllSeries(
+                    page,
+                    genreId,
+                    sortType?.sortBy
+                )
+            },
             cacheCode = getCacheCodeOfAllSeries(page, genreId, sortType)
         )
     }
 
     override suspend fun getSeriesByQuery(query: String, page: Int): List<Series> {
-        return getSeries(
-            remoteFetcher = { seriesRemoteDataSource.getSeriesByQuery(query, page) },
-            cacheCode = getCacheCodeOfSearchedSeries(query, page)
-        )
+        return tryToCall {
+            val genres = seriesRemoteDataSource.getSeriesGenres().map { it.toEntity() }
+            seriesRemoteDataSource.getSeriesByQuery(query, page)
+                .map { it.toEntity(genres) }
+        }
     }
 
     override suspend fun getSeriesOfArtist(artistId: Long): List<Series> {
@@ -138,7 +148,7 @@ class SeriesRepositoryImpl @Inject constructor(
     private suspend fun getSeries(
         remoteFetcher: suspend () -> List<SeriesRemoteDto>,
         cacheCode: String
-    ):List<Series> {
+    ): List<Series> {
         seriesLocalDataSource.deleteExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
         return seriesLocalDataSource
             .getSeriesByCacheCode(cacheCode = cacheCode)
@@ -174,12 +184,13 @@ class SeriesRepositoryImpl @Inject constructor(
                 )
             }
     }
+
     override suspend fun getSeriesReviews(seriesId: Long, page: Int): List<Review> {
         return seriesLocalDataSource
             .getSeriesReviewsByCacheCode(getCacheCodeOfSeriesReviews(page, seriesId))
             .toEntityList()
             .takeIf { it.isNotEmpty() }
-            ?:tryToCall {
+            ?: tryToCall {
                 seriesRemoteDataSource.getSeriesReviews(seriesId, page).map { it.toEntity() }
             }.also {
                 seriesLocalDataSource.insertCacheCodeWithReviews(
@@ -241,6 +252,6 @@ class SeriesRepositoryImpl @Inject constructor(
     }
 
     private companion object {
-        private const val CACHE_EXPIRATION_MILLIS = 3_600_000
+        private const val CACHE_EXPIRATION_MILLIS = 86_400_000
     }
 }
