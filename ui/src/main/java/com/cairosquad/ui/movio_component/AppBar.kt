@@ -23,9 +23,14 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.Icon
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
+import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
+import com.cairosquad.ui.BuildConfig
 
 @Composable
-fun AppBar(modifier: Modifier = Modifier) {
+fun AppBar(
+    userImage: String,
+    modifier: Modifier = Modifier
+) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -50,18 +55,38 @@ fun AppBar(modifier: Modifier = Modifier) {
                 brush = Theme.color.gradiant.logo
             )
         )
-        Image(
-            modifier = Modifier
-                .size(40.dp)
-                .padding(8.dp)
-                .clip(CircleShape)
-                .background(
-                    brush = Theme.color.gradiant.logo
-                ),
-            painter = painterResource(com.cairosquad.ui.R.drawable.user_profile),
-            contentDescription =  stringResource(com.cairosquad.ui.R.string.user_profile_image)
-        )
-
+        if (userImage.isNotBlank()) {
+            SafeImageViewer(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .size(40.dp)
+                    .background(brush = Theme.color.gradiant.logo),
+                model = BuildConfig.IMAGE_BASE_URL + userImage,
+                contentDescription = "User Profile",
+                nudeThreshold = 0.0,
+                nonNudeThreshold = 0.0,
+                loadingPlaceholder = {
+                    LoadingMovieImage(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .padding(8.dp)
+                            .clip(CircleShape)
+                    )
+                }
+            )
+        } else {
+            Image(
+                modifier = Modifier
+                    .size(40.dp)
+                    .padding(8.dp)
+                    .clip(CircleShape)
+                    .background(
+                        brush = Theme.color.gradiant.logo
+                    ),
+                painter = painterResource(com.cairosquad.ui.R.drawable.user_profile),
+                contentDescription = stringResource(com.cairosquad.ui.R.string.user_profile_image)
+            )
+        }
     }
 }
 
@@ -69,6 +94,6 @@ fun AppBar(modifier: Modifier = Modifier) {
 @Composable
 private fun AppBarPrev() {
     MovioTheme(isDarkTheme = true) {
-        AppBar()
+        AppBar(userImage = "")
     }
 }
