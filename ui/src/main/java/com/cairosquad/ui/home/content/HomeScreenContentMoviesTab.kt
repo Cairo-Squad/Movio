@@ -1,15 +1,11 @@
 package com.cairosquad.ui.home.content
 
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -29,9 +25,8 @@ import com.cairosquad.viewmodel.util.MediaType
 fun HomeScreenContentMoviesTab(
     screenState: HomeScreenState,
     listener: HomeInteractionsListener,
-    scrollState: ScrollState
+    scrollState: LazyListState
 ) {
-    val lazyListState = rememberLazyListState()
     val sections = remember {
         listOf(
             MediaContentType.TOP_RATING,
@@ -40,53 +35,55 @@ fun HomeScreenContentMoviesTab(
             MediaContentType.MORE_RECOMMENDED
         )
     }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState),
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(), state = scrollState
     ) {
-        MediaHorizontalPager(
-            modifier = Modifier,
-            mediaList = screenState.popularMovies.map(MediaHorizontalPagerItem::fromHomeMediaUiState)
-                .take(7),
-            initialPage = 3,
-            onClickMedia = listener::onClickMedia
-        )
-        LazyColumn(
-            modifier = Modifier.heightIn(max = 10_000.dp), state = lazyListState
-        ) {
-            sections.forEach { sectionType ->
-                item {
-                    SectionContainer(
-                        listState = lazyListState, index = 0, onVisible = {
-                            if (!screenState.sections.containsKey(sectionType)) {
-                                listener.onSectionVisible(sectionType)
-                            }
-                        }) {
-                        val sectionState = screenState.sections[sectionType]
+        item {
+            MediaHorizontalPager(
+                modifier = Modifier,
+                mediaList = screenState.popularMovies
+                    .map(MediaHorizontalPagerItem::fromHomeMediaUiState)
+                    .take(7),
+                initialPage = 3,
+                onClickMedia = listener::onClickMedia
+            )
+        }
 
-                        if (sectionState == null || sectionState.isLoading) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 32.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
+        val baseIndex = 1
 
-                            }
-                        } else {
-                            MediaSection(
-                                modifier = Modifier.padding(bottom = 32.dp),
-                                mediaList = sectionState.movies.map(MediaSectionItem::fromHomeMediaUiState),
-                                sectionTitle = stringResource(sectionType.titleId),
-                                mediaSectionLayoutType = getMediaSectionLayout(sectionType),
-                                onClickMedia = listener::onClickMedia,
-                                seeAllAction = {
-                                    listener.onClickSeeAll(
-                                        sectionType, MediaType.MOVIES
-                                    )
-                                })
+        sections.forEachIndexed { sectionIndex, sectionType ->
+            val actualIndex = baseIndex + sectionIndex
+
+            item(key = sectionType.ordinal) {
+                SectionContainer(
+                    listState = scrollState, index = actualIndex, onVisible = {
+                        if (!screenState.sections.containsKey(sectionType)) {
+                            listener.onSectionVisible(sectionType)
                         }
+                    }) {
+                    val sectionState = screenState.sections[sectionType]
+
+                    if (sectionState == null || sectionState.isLoading) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 32.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+
+                        }
+                    } else {
+                        MediaSection(
+                            modifier = Modifier.padding(bottom = 32.dp),
+                            mediaList = sectionState.movies.map(MediaSectionItem::fromHomeMediaUiState),
+                            sectionTitle = stringResource(sectionType.titleId),
+                            mediaSectionLayoutType = getMediaSectionLayout(sectionType),
+                            onClickMedia = listener::onClickMedia,
+                            seeAllAction = {
+                                listener.onClickSeeAll(
+                                    sectionType, MediaType.MOVIES
+                                )
+                            })
                     }
                 }
             }

@@ -3,6 +3,7 @@ package com.cairosquad.viewmodel.home
 
 import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
+import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Movie
@@ -81,7 +82,6 @@ class HomeViewModel @Inject constructor(
             onError = ::handleError
         )
     }
-// TODO edit media type and get data in home screen for every one in here screen
     private suspend fun fetchPopularMediaBlock(genreId: Long? = null): Pair<List<Movie>, List<Series>> {
         val series = manageSeriesUseCase.getPopularSeries(
             page = 1,
@@ -171,7 +171,7 @@ class HomeViewModel @Inject constructor(
             onSuccess = { media ->
                 updateState {
                     it.copy(
-                        categoriesMedia =media
+                        categoriesMedia = media
                     )
                 }
             },
@@ -194,10 +194,10 @@ class HomeViewModel @Inject constructor(
                     unifiedMediaPager.getCombinedMedia(genreId = genre.id)
                 }
                 HomeScreenState.SortingType.POPULARITY -> {
-                    unifiedMediaPager.getCombinedMedia(genreId = genre.id)
+                    unifiedMediaPager.getCombinedMedia(genreId = genre.id, SortType.POPULAR)
                 }
                 HomeScreenState.SortingType.LATEST -> {
-                    unifiedMediaPager.getCombinedMedia(genreId = genre.id)
+                    unifiedMediaPager.getCombinedMedia(genreId = genre.id, SortType.LATEST)
                 }
             }},
             onSuccess = { media ->

@@ -1,15 +1,18 @@
 package com.cairosquad.ui.home.content
 
 import HomeScreenContentCategoriesTab
+import android.util.Log
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -34,7 +37,7 @@ fun HomeScreenContent(
     screenState: HomeScreenState,
     listener: HomeInteractionsListener,
 ) {
-    val scrollState = rememberScrollState()
+    val scrollState = rememberLazyListState()
     RefreshBox(
         isRefreshing = screenState.isRefreshing,
         onRefresh = { listener.onRefresh() }
@@ -89,8 +92,7 @@ fun HomeScreenContent(
                                         .padding(top = 48.dp)
                                         .padding(top = 36.dp),
                                     screenState = screenState,
-                                    listener = listener,
-                                    scrollState = scrollState
+                                    listener = listener
                                 )
                             }
                         }
@@ -111,12 +113,25 @@ fun HomeScreenContent(
 private fun TobContent(
     screenState: HomeScreenState,
     listener: HomeInteractionsListener,
-    scrollState: ScrollState,
+    scrollState: LazyListState,
     modifier: Modifier = Modifier
 ) {
     val density = LocalDensity.current
-    val scrollThresholdPx = with(density) { 275.dp.toPx() }
-    val progress = (scrollState.value / scrollThresholdPx).coerceIn(0f, 1f)
+    val scrollThresholdPx = with(density) { 50.dp.toPx() }
+
+    val progress by remember {
+        derivedStateOf {
+            val layoutInfo = scrollState.layoutInfo
+            val totalScrollRange = layoutInfo.totalItemsCount * scrollThresholdPx
+            val currentScroll = scrollThresholdPx * scrollState.firstVisibleItemScrollOffset
+            if (totalScrollRange > 0) {
+                if (scrollState.firstVisibleItemIndex == 0) currentScroll / totalScrollRange / scrollThresholdPx else 1f
+            }
+            else 0f
+        }
+    }
+
+    Log.d("asdasd", "TobContent: $progress")
     val animatedEndColor = lerp(
         start = Color.Transparent,
         stop = Theme.color.surfaces.surface,
@@ -146,7 +161,7 @@ private fun TobContent(
             tabs = tabsList.map { stringResource(it) },
             selectedTabIndex = screenState.selectedTab.ordinal,
             onTabSelected = listener::onClickTab,
-            scrollState = scrollState,
+            scrollProgress = progress,
             tabColorWithScroll =  Theme.color.brand.onPrimaryContainer,
             tabColorWithNoScroll =  Theme.color.brand.onPrimary,
             indicatorColorWithScroll = Theme.color.gradiant.horizontalCategoriesGradient,
