@@ -1,4 +1,4 @@
-package com.cairosquad.ui.see_all_screen
+package com.cairosquad.ui.utils
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 import com.cairosquad.ui.movio_component.LoadingMovieCard
 
 @Composable
-fun SeeAllLoadingScreen(
+fun LoadingMoviesGrid(
     modifier: Modifier = Modifier
 ) {
     LazyVerticalGrid(

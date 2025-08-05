@@ -11,7 +11,7 @@ import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
-import com.cairosquad.viewmodel.home.HomeScreenState.ScreenStatus
+import com.cairosquad.viewmodel.home.HomeScreenState.DateRequestStatus
 import com.cairosquad.viewmodel.util.MediaContentType
 import com.cairosquad.viewmodel.util.MediaType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -99,7 +99,7 @@ class HomeViewModel @Inject constructor(
                 popularMovies = moviesAndSeries.first.map(Movie::toHomeMediaUiState),
                 popularSeries = moviesAndSeries.second.map(Series::toHomeMediaUiState),
                 isRefreshing = false,
-                screenStatus = ScreenStatus.SUCCESS
+                dataRequestStatus = DateRequestStatus.SUCCESS
             )
         }
     }
@@ -248,7 +248,7 @@ class HomeViewModel @Inject constructor(
         updateState {
             it.copy(
                 errorStatus = handleHomeException(throwable),
-                screenStatus = ScreenStatus.FAILED,
+                dataRequestStatus = DateRequestStatus.FAILED,
                 isRefreshing = false
             )
         }
@@ -262,7 +262,7 @@ class HomeViewModel @Inject constructor(
     }
 
     override fun onRefresh() {
-        updateState { it.copy(isRefreshing = true, screenStatus = ScreenStatus.LOADING) }
+        updateState { it.copy(isRefreshing = true, dataRequestStatus = DateRequestStatus.LOADING) }
         loadHomeScreenData()
         screenState.value.sections.forEach {
             fetchSectionData(it.key)
@@ -271,5 +271,23 @@ class HomeViewModel @Inject constructor(
             delay(500L)
             updateState { it.copy(isRefreshing = false) }
         }
+    }
+
+    companion object {
+        const val HORIZONTAL_PAGER_COUNT = 7
+
+        val homePageMoviesSections = listOf(
+            MediaContentType.TOP_RATING,
+            MediaContentType.NOW_PLAYING,
+            MediaContentType.UPCOMING,
+            MediaContentType.MORE_RECOMMENDED
+        )
+
+        val homePageSeriesSections = listOf(
+            MediaContentType.TOP_RATING,
+            MediaContentType.AIRING_TODAY,
+            MediaContentType.ON_TV,
+            MediaContentType.MORE_RECOMMENDED
+        )
     }
 }
