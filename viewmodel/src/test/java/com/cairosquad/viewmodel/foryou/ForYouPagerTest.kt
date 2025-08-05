@@ -1,7 +1,7 @@
 package com.cairosquad.viewmodel.foryou
 
 import androidx.paging.testing.asSnapshot
-import com.cairosquad.domain.usecase.movies.GetPersonalizedMoviesUseCase
+import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.entity.Movie
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -15,13 +15,13 @@ import kotlin.test.assertEquals
 @OptIn(ExperimentalCoroutinesApi::class)
 class ForYouPagerTest {
 
-    private lateinit var getPersonalizedMoviesUseCase: GetPersonalizedMoviesUseCase
+    private lateinit var manageMoviesUseCase: ManageMoviesUseCase
     private lateinit var forYouPager: ForYouPager
 
     @Before
     fun setUp() {
-        getPersonalizedMoviesUseCase = mockk()
-        forYouPager = ForYouPager(getPersonalizedMoviesUseCase)
+        manageMoviesUseCase = mockk(relaxed = true)
+        forYouPager = ForYouPager(manageMoviesUseCase)
     }
 
     @Test
@@ -42,8 +42,8 @@ class ForYouPagerTest {
                 runtimeMinutes = 0,
                 trailerPath = "")
         )
-        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(1) } returns expected
-        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(match { it != 1 }) } returns emptyList()
+        coEvery { manageMoviesUseCase.getPersonalizedMovies(1) } returns expected
+        coEvery { manageMoviesUseCase.getPersonalizedMovies(match { it != 1 }) } returns emptyList()
 
         val flow = forYouPager.movies()
         val result = flow.asSnapshot()
@@ -54,7 +54,7 @@ class ForYouPagerTest {
 
     @Test
     fun `movies should handle empty results`() = runTest {
-        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(any()) } returns emptyList()
+        coEvery { manageMoviesUseCase.getPersonalizedMovies(any()) } returns emptyList()
 
         val flow = forYouPager.movies()
         val result = flow.asSnapshot()
@@ -65,7 +65,7 @@ class ForYouPagerTest {
     @Test
     fun `movies should propagate errors from use case`() = runTest {
         val testException = RuntimeException("Test error")
-        coEvery { getPersonalizedMoviesUseCase.getPersonalizedMovies(any()) } throws testException
+        coEvery { manageMoviesUseCase.getPersonalizedMovies(any()) } throws testException
 
         val flow = forYouPager.movies()
         val result = runCatching { flow.asSnapshot() }

@@ -1,42 +1,33 @@
 package com.cairosquad.viewmodel.see_all
 
+import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.cairosquad.domain.exception.MovioException
-import com.cairosquad.domain.usecase.movies.GetFreeToWatchMoviesUseCase
-import com.cairosquad.domain.usecase.movies.GetMoreRecommendedMoviesUseCase
-import com.cairosquad.domain.usecase.movies.GetMoviesGenresUseCase
-import com.cairosquad.domain.usecase.movies.GetNowPlayingMoviesUseCase
-import com.cairosquad.domain.usecase.movies.GetTopRatingMoviesUseCase
-import com.cairosquad.domain.usecase.movies.GetTrendingMoviesUseCase
-import com.cairosquad.domain.usecase.movies.GetUpcomingMoviesUseCase
-import com.cairosquad.domain.usecase.series.GetAiringTodaySeriesUseCase
-import com.cairosquad.domain.usecase.series.GetMoreRecommendedSeriesUseCase
-import com.cairosquad.domain.usecase.series.GetOnTvSeriesUseCase
-import com.cairosquad.domain.usecase.series.GetSeriesGenresUseCase
-import com.cairosquad.domain.usecase.series.GetTopRatingSeriesUseCase
-import com.cairosquad.domain.usecase.series.GetTrendingSeriesUseCase
-import com.cairosquad.entity.Genre
+import com.cairosquad.domain.usecase.ManageMoviesUseCase
+import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
+import com.cairosquad.viewmodel.see_all.SeeAllScreenState.GenreUiState.Companion.defaultGenre
 import com.cairosquad.viewmodel.util.MediaContentType
 import com.cairosquad.viewmodel.util.MediaType
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
-class SeeAllViewModel(
-    private val getFreeToWatchMoviesUseCase: GetFreeToWatchMoviesUseCase,
-    private val getMoreRecommendedMoviesUseCase: GetMoreRecommendedMoviesUseCase,
-    private val getTopRatingMoviesUseCase: GetTopRatingMoviesUseCase,
-    private val getTrendingMoviesUseCase: GetTrendingMoviesUseCase,
-    private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase,
-    private val getNowPlayingMoviesUseCase: GetNowPlayingMoviesUseCase,
-    private val getAiringTodaySeriesUseCase: GetAiringTodaySeriesUseCase,
-    private val getMoreRecommendedSeriesUseCase: GetMoreRecommendedSeriesUseCase,
-    private val getOnTvSeriesUseCase: GetOnTvSeriesUseCase,
-    private val getTopRatingSeriesUseCase: GetTopRatingSeriesUseCase,
-    private val getMoviesGenresUseCase: GetMoviesGenresUseCase,
-    private val getSeriesGenresUseCase: GetSeriesGenresUseCase,
-    private val getTrendingSeriesUseCase: GetTrendingSeriesUseCase
+@HiltViewModel
+class SeeAllViewModel @Inject constructor(
+    private val manageMoviesUseCase: ManageMoviesUseCase,
+    private val manageSeriesUseCase: ManageSeriesUseCase,
+    private val seeAllMoviesPager: SeeAllMoviesPager,
+    private val seeAllSeriesPager: SeeAllSeriesPager
 ) : BaseViewModel<SeeAllScreenState, SeeAllEffect>(SeeAllScreenState()),
     SeeAllInteractionsListener {
 
@@ -47,73 +38,128 @@ class SeeAllViewModel(
         sendEffect(SeeAllEffect.NavigateBack)
     }
 
+    override fun onRefresh(genreIndex: Int) {
+        val genreId = screenState.value.genres.getOrNull(genreIndex)?.id
+        viewModelScope.launch {
+            updateState { it.copy(isRefreshing = true) }
+            loadData(contentType, mediaType, genreId = genreId)
+            delay(500L)
+            updateState { it.copy(isRefreshing = false) }
+        }
+    }
+
+    fun updateScreenStatus(status: SeeAllScreenState.ScreenStatus) {
+        updateState { it.copy(screenStatus = status) }
+    }
+
+    fun updateErrorStatus(errorStatus: ErrorStatus?) {
+        updateState { it.copy(errorStatus = errorStatus) }
+    }
+
+
     override fun onClickMedia(mediaId: Long, isMovie: Boolean) {
         sendEffect(SeeAllEffect.NavigateMediaDetails(mediaId, isMovie))
     }
 
     override fun onGenreSelected(genreIndex: Int) {
+        if (genreIndex == screenState.value.selectedGenreIndex) return
         val genreId = screenState.value.genres.getOrNull(genreIndex)?.id
-        loadData(contentType, mediaType, page = 1, genreId = genreId)
         updateState { it.copy(selectedGenreIndex = genreIndex) }
+        loadData(contentType, mediaType, genreId = genreId)
     }
 
     fun loadData(
         contentType: MediaContentType,
         mediaType: MediaType,
-        page: Int = 1,
         genreId: Long? = null
     ) {
         this.mediaType = mediaType
         this.contentType = contentType
         loadGenres()
+        updateScreenStatus(SeeAllScreenState.ScreenStatus.LOADING)
+        updateErrorStatus(null)
         tryToCall(
-            onStart = {
+            onStart = { updateState { it.copy(screenStatus = SeeAllScreenState.ScreenStatus.LOADING) } },
+            block = {
+                val media = loadDataFlow(genreId)
+                media
+            },
+            onSuccess = { media ->
                 updateState {
                     it.copy(
-                        screenStatus = SeeAllScreenState.ScreenStatus.LOADING,
-                        isLoading = true
+                        mediaList = media,
+                        screenStatus = SeeAllScreenState.ScreenStatus.SUCCESS
                     )
                 }
             },
-            block = { loadDataBlock(page, genreId) },
-            onSuccess = { result ->
-                updateState {
-                    it.copy(
-                        mediaList = result,
-                        screenStatus = SeeAllScreenState.ScreenStatus.SUCCESS,
-                        isLoading = false
-                    )
-                }
-            },
-            onError = ::handleError
-        )
+            onError = ::handleError,
+
+            )
     }
 
-    private suspend fun loadDataBlock(
-        page: Int = 1,
-        genreId: Long? = null
-    ): List<SeeAllScreenState.MediaUiState> {
-        val (moviesFetcher, seriesFetcher) = getDataFetcher(contentType)
+    private fun loadDataFlow(genreId: Long?): Flow<PagingData<SeeAllScreenState.MediaUiState>> {
+        val (moviesFlowGetter, seriesFlowGetter) = getDataPagerFetcher2(contentType, genreId)
 
         return when (mediaType) {
-            MediaType.MOVIES -> moviesFetcher(page, genreId).map(Movie::toSeeAllMediaUiState)
-            MediaType.SERIES -> seriesFetcher(page, genreId).map(Series::toSeeAllMediaUiState)
-            MediaType.BOTH -> combineTwoList(
-                moviesFetcher(page, genreId).map(Movie::toSeeAllMediaUiState),
-                seriesFetcher(page, genreId).map(Series::toSeeAllMediaUiState)
-            )
+            MediaType.MOVIES -> {
+                moviesFlowGetter().map { pagingData ->
+                    pagingData.map { it.toSeeAllMediaUiState() }
+                }
+            }
+
+            MediaType.SERIES -> {
+                seriesFlowGetter().map { pagingData ->
+                    pagingData.map { it.toSeeAllMediaUiState() }
+                }
+            }
         }
     }
 
-    private fun <T> combineTwoList(list1: List<T>, list2: List<T>): List<T> {
-        val mergedList = mutableListOf<T>()
-        val i1 = list1.iterator()
-        val i2 = list2.iterator()
-        while (i1.hasNext() || i2.hasNext()) {
-            if (i1.hasNext()) mergedList.add(i1.next())
-            if (i2.hasNext()) mergedList.add(i2.next())
+    fun getDataPagerFetcher2(
+        contentType: MediaContentType,
+        genreId: Long?
+    ): Pair<() -> Flow<PagingData<Movie>>, () -> Flow<PagingData<Series>>> {
+        return when (contentType) {
+            MediaContentType.TOP_RATING -> Pair(
+                { seeAllMoviesPager.getTopRatingMovies(genreId) },
+                { seeAllSeriesPager.getTopRatingSeries(genreId) }
+            )
+
+            MediaContentType.TRENDING -> Pair(
+                { seeAllMoviesPager.getTrendingMovies(genreId) },
+                { seeAllSeriesPager.getTrendingSeries(genreId) }
+            )
+
+            MediaContentType.FREE_TO_WATCH -> Pair(
+                { seeAllMoviesPager.getFreeToWatchMovies(genreId) },
+                { seeAllSeriesPager.getFreeToWatchSeries(genreId) }
+            )
+
+            MediaContentType.UPCOMING -> Pair(
+                { seeAllMoviesPager.getUpcomingMovies(genreId) },
+                { flowOf(PagingData.empty()) }
+            )
+
+            MediaContentType.NOW_PLAYING -> Pair(
+                { seeAllMoviesPager.getNowPlayingMovies(genreId) },
+                { flowOf(PagingData.empty()) }
+            )
+
+            MediaContentType.MORE_RECOMMENDED -> Pair(
+                { seeAllMoviesPager.getMoreRecommendedMovies(genreId) },
+                { seeAllSeriesPager.getMoreRecommendedSeries(genreId) }
+            )
+
+            MediaContentType.AIRING_TODAY -> Pair(
+                { flowOf(PagingData.empty()) },
+                { seeAllSeriesPager.getAiringTodaySeries(genreId) }
+            )
+
+            MediaContentType.ON_TV -> Pair(
+                { flowOf(PagingData.empty()) },
+                { seeAllSeriesPager.getOnTvSeries(genreId) }
+            )
         }
-        return mergedList
     }
 
     fun getDataFetcher(
@@ -122,39 +168,39 @@ class SeeAllViewModel(
         return when (contentType) {
             MediaContentType.TOP_RATING -> Pair(
                 { page, genreId ->
-                    getTopRatingMoviesUseCase.getTopRatingMovies(
+                    manageMoviesUseCase.getTopRatingMovies(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 },
                 { page, genreId ->
-                    getTopRatingSeriesUseCase.getTopRatingSeries(
+                    manageSeriesUseCase.getTopRatingSeries(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 }
             )
 
             MediaContentType.TRENDING -> Pair(
                 { page, genreId ->
-                    getTrendingMoviesUseCase.getTrendingMovies(
+                    manageMoviesUseCase.getTrendingMovies(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 },
                 { page, genreId ->
-                    getTrendingSeriesUseCase.getTrendingSeries(
+                    manageSeriesUseCase.getTrendingSeries(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 }
             )
 
             MediaContentType.FREE_TO_WATCH -> Pair(
                 { page, genreId ->
-                    getFreeToWatchMoviesUseCase.getFreeToWatchMovies(
+                    manageMoviesUseCase.getFreeToWatchMovies(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 },
                 { _, _ -> emptyList() }
@@ -162,9 +208,9 @@ class SeeAllViewModel(
 
             MediaContentType.UPCOMING -> Pair(
                 { page, genreId ->
-                    getUpcomingMoviesUseCase.getUpcomingMovies(
+                    manageMoviesUseCase.getUpcomingMovies(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 },
                 { _, _ -> emptyList() }
@@ -172,9 +218,9 @@ class SeeAllViewModel(
 
             MediaContentType.NOW_PLAYING -> Pair(
                 { page, genreId ->
-                    getNowPlayingMoviesUseCase.getNowPlayingMovies(
+                    manageMoviesUseCase.getNowPlayingMovies(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 },
                 { _, _ -> emptyList() }
@@ -182,15 +228,15 @@ class SeeAllViewModel(
 
             MediaContentType.MORE_RECOMMENDED -> Pair(
                 { page, genreId ->
-                    getMoreRecommendedMoviesUseCase.getMoreRecommendedMovies(
+                    manageMoviesUseCase.getMoreRecommendedMovies(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 },
                 { page, genreId ->
-                    getMoreRecommendedSeriesUseCase.getMoreRecommendedSeries(
+                    manageSeriesUseCase.getMoreRecommendedSeries(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 }
             )
@@ -198,16 +244,16 @@ class SeeAllViewModel(
             MediaContentType.AIRING_TODAY -> Pair(
                 { _, _ -> emptyList() },
                 { page, genreId ->
-                    getAiringTodaySeriesUseCase.getAiringTodaySeries(
+                    manageSeriesUseCase.getAiringTodaySeries(
                         page,
-                        genreId?.toString()
+                        genreId
                     )
                 }
             )
 
             MediaContentType.ON_TV -> Pair(
                 { _, _ -> emptyList() },
-                { page, genreId -> getOnTvSeriesUseCase.getOnTvSeries(page, genreId?.toString()) }
+                { page, genreId -> manageSeriesUseCase.getOnTvSeries(page, genreId) }
             )
         }
     }
@@ -221,19 +267,20 @@ class SeeAllViewModel(
     }
 
     private suspend fun loadGenresBlock(): List<SeeAllScreenState.GenreUiState> {
+
         return when (mediaType) {
-            MediaType.MOVIES -> getMoviesGenresUseCase.getMoviesGenres()
-                .map(Genre::toSeeAllGenreUiState)
-
-            MediaType.SERIES -> getSeriesGenresUseCase.getSeriesGenres()
-                .map(Genre::toSeeAllGenreUiState)
-
-            MediaType.BOTH -> {
-                val movieGenres = getMoviesGenresUseCase.getMoviesGenres()
-                val seriesGenres = getSeriesGenresUseCase.getSeriesGenres()
+            MediaType.MOVIES -> {
+                val movieGenres = manageMoviesUseCase.getMoviesGenres()
                 buildSet {
-                    add(SeeAllScreenState.GenreUiState.defaultGenre)
+                    add(defaultGenre)
                     movieGenres.mapTo(this) { it.toSeeAllGenreUiState() }
+                }.toList()
+            }
+
+            MediaType.SERIES -> {
+                val seriesGenres = manageSeriesUseCase.getSeriesGenres()
+                buildSet {
+                    add(defaultGenre)
                     seriesGenres.mapTo(this) { it.toSeeAllGenreUiState() }
                 }.toList()
             }
@@ -244,13 +291,18 @@ class SeeAllViewModel(
         updateState {
             it.copy(
                 errorStatus = handleHomeException(e),
-                screenStatus = SeeAllScreenState.ScreenStatus.FAILED
+                screenStatus = SeeAllScreenState.ScreenStatus.FAILED,
             )
         }
     }
 
-    private fun handleHomeException(e: Throwable): ErrorStatus {
-        return if (e is MovioException) exceptionToErrorStatus(e)
-        else ErrorStatus.UNKNOWN_ERROR
+    fun handleHomeException(e: Throwable): ErrorStatus {
+        return when (e) {
+            is MovioException -> {
+                exceptionToErrorStatus(e)
+            }
+
+            else -> ErrorStatus.UNKNOWN_ERROR
+        }
     }
 }

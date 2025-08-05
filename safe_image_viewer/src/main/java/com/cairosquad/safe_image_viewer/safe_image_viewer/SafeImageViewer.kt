@@ -1,11 +1,13 @@
 package com.cairosquad.safe_image_viewer.safe_image_viewer
 
 import android.graphics.Bitmap
+import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,7 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.cairosquad.safe_image_viewer.R
-import com.cairosquad.safe_image_viewer.classifier.SafeImageClassifier
+import com.cairosquad.safe_image_viewer.classifier.NSFWDetector
 import com.cairosquad.safe_image_viewer.loader.CoilImageLoader
 import com.cairosquad.safe_image_viewer.modifier.imageBlur
 import kotlinx.coroutines.Dispatchers
@@ -86,98 +88,157 @@ import kotlinx.coroutines.withContext
 
 @Composable
 fun SafeImageViewer(
-    // required core
-    model: String,
-    contentDescription: String,
-    // appearance and layout
-    modifier: Modifier = Modifier,
-    contentScale: ContentScale = ContentScale.Crop,
-    alignment: Alignment = Alignment.Center,
-    alpha: Float = DefaultAlpha,
-    filterQuality: FilterQuality = DefaultFilterQuality,
-    colorFilter: ColorFilter? = null,
-    // NSFW and blur behavior
-    blur: Int = 25,
-    nudeThreshold: Double = 0.16,
-    nonNudeThreshold: Double = 0.79,
-    enableLog: Boolean = false,
-    // UI-related
-    placeholder: Painter = painterResource(R.drawable.placeholder),
-    error: Painter = painterResource(R.drawable.error),
-    onIsImageSafeChanged: (Boolean) -> Unit = {},
-    loadingPlaceholder: @Composable () -> Unit = {},
-    onToggleBlur: (@Composable () -> Unit)? = null,
+	// required core
+	model: String,
+	contentDescription: String,
+	// appearance and layout
+	modifier: Modifier = Modifier,
+	contentScale: ContentScale = ContentScale.Crop,
+	alignment: Alignment = Alignment.Center,
+	alpha: Float = DefaultAlpha,
+	filterQuality: FilterQuality = DefaultFilterQuality,
+	colorFilter: ColorFilter? = null,
+	// NSFW and blur behavior
+	blur: Int = 25,
+	nudeThreshold: Double = 0.16,
+	nonNudeThreshold: Double = 0.79,
+	enableLog: Boolean = true,
+	isBlurForced: Boolean = false,
+	// UI-related
+	placeholder: Painter = painterResource(R.drawable.placeholder),
+	error: Painter = painterResource(R.drawable.error),
+	onIsImageSafeChanged: (Boolean) -> Unit = {},
+	loadingPlaceholder: @Composable () -> Unit = {},
+	onToggleBlur: (@Composable () -> Unit)? = null,
 ) {
-    val context = LocalContext.current
+	val context = LocalContext.current
 
-    var isImageSafe by remember { mutableStateOf(true) }
-    var hasClassificationCompleted by remember { mutableStateOf(false) }
-    var isBlurEnabled by remember { mutableStateOf(true) }
-    var bitmap by remember { mutableStateOf<Bitmap?>(null) }
+	var isImageSafe by remember { mutableStateOf(true) }
+	var hasClassificationCompleted by remember { mutableStateOf(false) }
+	var isBlurEnabled by remember { mutableStateOf(true) }
+	var bitmap by remember { mutableStateOf<Bitmap?>(null) }
 
-    LaunchedEffect(isImageSafe) { onIsImageSafeChanged(isImageSafe) }
+	// Track if this composable is still active
+	var isActive by remember { mutableStateOf(true) }
 
-    LaunchedEffect(model) {
-        hasClassificationCompleted = false
-        withContext(Dispatchers.IO) {
-            val classifier = SafeImageClassifier(context)
-            bitmap = CoilImageLoader(context).loadBitmap(model)
+	// Reset state when model changes
+	LaunchedEffect(model) {
+		isActive = true
+		hasClassificationCompleted = false
+		bitmap = null
+		isImageSafe = true
+		isBlurEnabled = true
+	}
 
-            if (bitmap != null && nudeThreshold != 0.0 && nonNudeThreshold != 0.0) {
-                withContext(Dispatchers.Unconfined) {
-                    isImageSafe = classifier.isInappropriate(
-                        bitmap = bitmap!!,
-                        nsfwThreshold = nudeThreshold,
-                        sfwThreshold = nonNudeThreshold,
-                        isLogEnabled = enableLog
-                    )
-                }
-            }
-        }
-        hasClassificationCompleted = true
-    }
-    Crossfade(
-        modifier = modifier,
-        targetState = hasClassificationCompleted
-    ) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            if (it) {
-                if (bitmap != null) {
-                    AsyncImage(
-                        modifier = Modifier
-                            .matchParentSize()
-                            .imageBlur(
-                                isBlurEnabled = isBlurEnabled,
-                                isImageSafe = isImageSafe,
-                                blur = blur.dp,
-                                bitmap = bitmap!!
-                            ),
-                        model = bitmap,
-                        contentDescription = contentDescription,
-                        contentScale = contentScale,
-                        filterQuality = filterQuality,
-                        alpha = alpha,
-                        alignment = alignment,
-                        colorFilter = colorFilter,
-                        placeholder = placeholder,
-                        error = error,
-                    )
-                    if (!isImageSafe && onToggleBlur != null) {
-                        Box(
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .clickable { isBlurEnabled = !isBlurEnabled }
-                        ) {
-                            onToggleBlur()
-                        }
-                    }
-                }
-            } else {
-                loadingPlaceholder()
-            }
-        }
-    }
+	// Cancel operations when composable is disposed
+	DisposableEffect(model) {
+		onDispose {
+			isActive = false
+		}
+	}
+
+	LaunchedEffect(isImageSafe) {
+		if (isActive) {
+			onIsImageSafeChanged(isImageSafe)
+		}
+	}
+
+	LaunchedEffect(model) {
+		if (!isActive) return@LaunchedEffect
+
+		hasClassificationCompleted = false
+
+		try {
+			// Load bitmap with cancellation check
+			withContext(Dispatchers.Default) {
+				if (!isActive) return@withContext
+				bitmap = CoilImageLoader(context).loadBitmap(model)
+			}
+
+			// Early exit if composable is no longer active
+			if (!isActive || bitmap == null) {
+				hasClassificationCompleted = true
+				return@LaunchedEffect
+			}
+
+			// Skip NSFW detection if thresholds are disabled
+			if (nudeThreshold == 0.0 && nonNudeThreshold == 0.0) {
+				hasClassificationCompleted = true
+				return@LaunchedEffect
+			}
+
+			// Perform NSFW detection with cancellation support
+			withContext(Dispatchers.Default) {
+				if (! isActive) return@withContext
+
+				NSFWDetector.isNSFWCancellable(
+					bitmap = bitmap !!,
+					enableLog = enableLog,
+					nudeThreshold = nudeThreshold,
+					nonNudeThreshold = nonNudeThreshold,
+					imageUrl = model,
+					isActive = { isActive },
+					callback = { isNSFW ->
+						if (isActive) {
+							isImageSafe = ! isNSFW
+							hasClassificationCompleted = true
+						}
+					}
+				)
+			}
+		} catch (e: Exception) {
+			if (isActive) {
+				if (enableLog) {
+					Log.e("SafeImageViewer", "Error processing image: ${e.localizedMessage}")
+				}
+				hasClassificationCompleted = true
+			}
+		}
+	}
+
+	Crossfade(
+		modifier = modifier,
+		targetState = hasClassificationCompleted
+	) {
+		Box(
+			modifier = Modifier.fillMaxSize(),
+			contentAlignment = Alignment.Center
+		) {
+			if (it) {
+				if (bitmap != null) {
+					AsyncImage(
+						modifier = Modifier
+							.matchParentSize()
+							.imageBlur(
+								isBlurEnabled = isBlurEnabled,
+								isImageSafe = isImageSafe,
+								blur = blur.dp,
+								isBlurForced = isBlurForced,
+								bitmap = bitmap !!
+							),
+						model = bitmap,
+						contentDescription = contentDescription,
+						contentScale = contentScale,
+						filterQuality = filterQuality,
+						alpha = alpha,
+						alignment = alignment,
+						colorFilter = colorFilter,
+						placeholder = placeholder,
+						error = error,
+					)
+					if (! isImageSafe && onToggleBlur != null) {
+						Box(
+							modifier = Modifier
+								.align(Alignment.Center)
+								.clickable { isBlurEnabled = ! isBlurEnabled }
+						) {
+							onToggleBlur()
+						}
+					}
+				}
+			} else {
+				loadingPlaceholder()
+			}
+		}
+	}
 }

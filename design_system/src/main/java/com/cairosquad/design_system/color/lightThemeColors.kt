@@ -14,7 +14,7 @@ val lightThemeColors = MovioColors(
         surface = Color(0xFFFFFFFF),
         onSurface = Color(0xFF221D36),
         surfaceContainer = Color(0xFFFAF9FF),
-        onSurfaceContainer = Color(0xFF7D7777),
+        onSurfaceContainer = Color(0xFFA7A4A4),
         surfaceVariant = Color(0xFFE7E7EE),
         onSurfaceVariant = Color(0xFF929292),
         outline = Color(0xFFF9F8FA),
@@ -43,6 +43,13 @@ val lightThemeColors = MovioColors(
     ),
     Gradiant(
         horizontalGradient = Brush.horizontalGradient(
+            colors = listOf(
+                Color(0x33E6DFFF),
+                Color(0xFFE6DFFF),
+                Color(0x33E6DFFF)
+            )
+        ),
+        horizontalCategoriesGradient = Brush.horizontalGradient(
             colors = listOf(
                 Color(0x3349378A),
                 Color(0xFF49378A),

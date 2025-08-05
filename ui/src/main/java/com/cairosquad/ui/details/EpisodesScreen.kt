@@ -1,5 +1,6 @@
 package com.cairosquad.ui.details
 
+import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -31,9 +32,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -44,6 +46,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
@@ -60,15 +63,16 @@ import com.cairosquad.viewmodel.details.episodes.EpisodesDetailEffect
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsInteractionListener
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsViewModel
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
 fun EpisodesScreen(
     seriesId: Long,
     seasonNumber: Int,
-    viewModel: EpisodesDetailsViewModel = koinViewModel { parametersOf(seriesId, seasonNumber) }
 ) {
+    val viewModel: EpisodesDetailsViewModel =
+        hiltViewModel<EpisodesDetailsViewModel, EpisodesDetailsViewModel.Factory> { factory ->
+            factory.create(seriesId, seasonNumber)
+        }
     val navController = LocalNavController.current
     val context = LocalContext.current
     val uiState by viewModel.screenState.collectAsStateWithLifecycle()
@@ -98,9 +102,16 @@ fun EpisodesScreen(
 private fun EpisodesScreenContent(
     uiState: EpisodesDetailsScreenState,
     listener: EpisodesDetailsInteractionListener,
-    seriesId: Long
-) {
-    val seasonOptions = uiState.seasons.map { "Season ${it.seasonNumber}" }
+    seriesId: Long,
+    modifier: Modifier = Modifier,
+
+    ) {
+    val seasonOptions = uiState.seasons.map {
+        stringResource(
+            com.cairosquad.ui.R.string.season,
+            it.seasonNumber
+        )
+    }
 
     val listState = rememberScrollState()
     val density = LocalDensity.current
@@ -117,84 +128,68 @@ private fun EpisodesScreenContent(
         stop = Theme.color.surfaces.surface,
         fraction = progress
     )
-    val animatedBrush = Brush.verticalGradient(
+    val animatedBrush = verticalGradient(
         colors = listOf(animatedStartColor, animatedEndColor)
     )
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Theme.color.surfaces.surface)
-            .windowInsetsPadding(WindowInsets.navigationBars)
-            .verticalScroll(listState)
-    ) {
-        Box {
-            when (uiState.basicDetailsSectionState) {
-                EpisodesDetailsScreenState.ScreenStatus.LOADING -> {}
-                EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
-                    if (uiState.season.posterUrl.isNotEmpty()) {
-                        SafeImageViewer(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(400.dp)
-                                .blur(16.dp)
-                                .offset(y = (-20).dp),
-                            model = BuildConfig.IMAGE_BASE_URL + uiState.season.posterUrl,
-                            contentDescription = "",
-                        )
-                    }
-                }
+    when (uiState.episodesSectionState) {
+        EpisodesDetailsScreenState.ScreenStatus.ERROR -> {
+            DetailsFailContent(onTryAgainClick = listener::onRefresh)
 
-                EpisodesDetailsScreenState.ScreenStatus.ERROR -> {}
-            }
         }
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .windowInsetsPadding(WindowInsets.systemBars)
-                .heightIn(max = 10000.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            userScrollEnabled = false,
+    else->{
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .background(Theme.color.surfaces.surface)
+                .windowInsetsPadding(WindowInsets.navigationBars)
+                .verticalScroll(listState)
         ) {
-            item {
+            Box {
                 when (uiState.basicDetailsSectionState) {
-                    EpisodesDetailsScreenState.ScreenStatus.LOADING -> {
-                        LoadingMovieImage(
-                            Modifier
-                                .padding(top = 56.dp, bottom = 24.dp)
-                                .size(height = 260.dp, width = 200.dp)
-                        )
-                    }
-
+                    EpisodesDetailsScreenState.ScreenStatus.LOADING -> {}
                     EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
                         if (uiState.season.posterUrl.isNotEmpty()) {
-                            SafeImageViewer(
-                                modifier = Modifier
-                                    .padding(top = 56.dp, bottom = 24.dp)
-                                    .size(height = 260.dp, width = 200.dp)
-                                    .clip(RoundedCornerShape(8.dp)),
-                                model = BuildConfig.IMAGE_BASE_URL + uiState.season.posterUrl,
-                                contentDescription = "",
-                                loadingPlaceholder = {
-                                    LoadingMovieImage(
-                                        Modifier.size(height = 260.dp, width = 200.dp)
+                            Box {
+                                SafeImageViewer(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(400.dp)
+                                        .then(
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                                Modifier.blur(
+                                                    16.dp,
+                                                    edgeTreatment = BlurredEdgeTreatment.Unbounded
+                                                )
+                                            } else {
+                                                Modifier
+                                            }
+                                        )
+                                        .offset(y = (-28).dp),
+                                    model = BuildConfig.IMAGE_BASE_URL + uiState.season.posterUrl,
+                                    contentDescription = "",
+                                    blur = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) 16 else 0,
+                                    isBlurForced = true
+                                )
+                                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(60.dp)
+                                            .align(Alignment.BottomCenter)
+                                            .background(
+                                                brush = verticalGradient(
+                                                    colors = listOf(
+                                                        Theme.color.surfaces.surface.copy(alpha = 0.00f),
+                                                        Theme.color.surfaces.surface.copy(alpha = 0.10f),
+                                                        Theme.color.surfaces.surface.copy(alpha = 0.50f),
+                                                        Theme.color.surfaces.surface.copy(alpha = 0.90f),
+                                                        Theme.color.surfaces.surface,
+                                                    )
+                                                )
+                                            )
                                     )
                                 }
-                            )
-                        } else {
-                            Box(
-                                modifier = Modifier
-                                    .padding(top = 56.dp, bottom = 24.dp)
-                                    .size(height = 260.dp, width = 200.dp)
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(Theme.color.system.defaultImageBackground),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    modifier = Modifier.size(24.dp),
-                                    imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
-                                    contentDescription = stringResource(R.string.default_image_icon),
-                                    tint = Color(0xFFEFF1F5)
-                                )
+
                             }
                         }
                     }
@@ -202,56 +197,143 @@ private fun EpisodesScreenContent(
                     EpisodesDetailsScreenState.ScreenStatus.ERROR -> {}
                 }
             }
-            item {
-                when (uiState.basicDetailsSectionState) {
-                    EpisodesDetailsScreenState.ScreenStatus.LOADING -> {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .windowInsetsPadding(WindowInsets.systemBars)
+                    .heightIn(max = 10000.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                userScrollEnabled = false,
+            ) {
+                item {
+                    when (uiState.basicDetailsSectionState) {
+                        EpisodesDetailsScreenState.ScreenStatus.LOADING -> {
                             LoadingMovieImage(
-                                modifier = Modifier
-                                    .clip(CircleShape)
-                                    .size(height = 26.dp, width = 32.dp)
+                                Modifier
+                                    .padding(top = 56.dp, bottom = 24.dp)
+                                    .size(height = 260.dp, width = 200.dp)
                             )
-                            Spacer(modifier = Modifier.weight(1f))
+                        }
+
+                        EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
+                            if (uiState.season.posterUrl.isNotEmpty()) {
+                                SafeImageViewer(
+                                    modifier = Modifier
+                                        .padding(top = 56.dp, bottom = 24.dp)
+                                        .size(height = 260.dp, width = 200.dp)
+                                        .clip(RoundedCornerShape(8.dp)),
+                                    model = BuildConfig.IMAGE_BASE_URL + uiState.season.posterUrl,
+                                    contentDescription = "",
+                                    loadingPlaceholder = {
+                                        LoadingMovieImage(
+                                            Modifier.size(height = 260.dp, width = 200.dp)
+                                        )
+                                    }
+                                )
+                            } else {
+                                Box(
+                                    modifier = Modifier
+                                        .padding(top = 56.dp, bottom = 24.dp)
+                                        .size(height = 260.dp, width = 200.dp)
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .background(Theme.color.system.defaultImageBackground),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        modifier = Modifier.size(24.dp),
+                                        imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
+                                        contentDescription = stringResource(R.string.default_image_icon),
+                                        tint = Color(0xFFEFF1F5)
+                                    )
+                                }
+                            }
+                        }
+
+                        EpisodesDetailsScreenState.ScreenStatus.ERROR -> {}
+                    }
+                }
+                item {
+                    when (uiState.basicDetailsSectionState) {
+                        EpisodesDetailsScreenState.ScreenStatus.LOADING -> {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 16.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                LoadingMovieImage(
+                                    modifier = Modifier
+                                        .clip(CircleShape)
+                                        .size(height = 26.dp, width = 32.dp)
+                                )
+                                Spacer(modifier = Modifier.weight(1f))
+                                LoadingMovieImage(
+                                    modifier = Modifier
+                                        .clip(CircleShape)
+                                        .size(height = 26.dp, width = 96.dp)
+                                )
+                            }
+                        }
+
+                        EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 16.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                BasicText(
+                                    modifier = Modifier.padding(bottom = 8.dp),
+                                    text = stringResource(
+                                        com.cairosquad.ui.R.string.episodes,
+                                        uiState.season.episodesCount
+                                    ),
+                                    style = Theme.textStyle.headline.mediumMedium18.copy(
+                                        color = Theme.color.surfaces.onSurface
+                                    )
+                                )
+                                Spacer(modifier = Modifier.weight(1f))
+                                AppDropDownMenu(
+                                    selectedText = stringResource(
+                                        R.string.season,
+                                        uiState.selectedSeasonNumber
+                                    ),
+                                    options = seasonOptions,
+                                    imgRes = R.drawable.drop_down_arrow,
+                                    onOptionSelected = { selectedSeason ->
+                                        val seasonNum =
+                                            seasonOptions.indexOfFirst {
+                                                selectedSeason == it
+                                            }.takeIf { it != -1 } ?: 1
+                                        listener.onSeasonSelected(seriesId, seasonNum)
+                                    },
+                                )
+                            }
+                        }
+
+                        EpisodesDetailsScreenState.ScreenStatus.ERROR -> {}
+                    }
+                }
+                when (uiState.episodesSectionState) {
+                    EpisodesDetailsScreenState.ScreenStatus.LOADING -> {
+                        items(10) {
                             LoadingMovieImage(
                                 modifier = Modifier
-                                    .clip(CircleShape)
-                                    .size(height = 26.dp, width = 96.dp)
+                                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                                    .height(74.dp)
+                                    .fillMaxSize(),
                             )
                         }
                     }
 
                     EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            BasicText(
-                                modifier = Modifier.padding(bottom = 8.dp),
-                                text = stringResource(
-                                    com.cairosquad.ui.R.string.episodes,
-                                    uiState.season.episodesCount
-                                ),
-                                style = Theme.textStyle.headline.mediumMedium18.copy(
-                                    color = Theme.color.surfaces.onSurface
-                                )
-                            )
-                            Spacer(modifier = Modifier.weight(1f))
-                            AppDropDownMenu(
-                                selectedText = "Season ${uiState.selectedSeasonNumber}",
-                                options = seasonOptions,
-                                imgRes = R.drawable.drop_down_arrow,
-                                onOptionSelected = { selected ->
-                                    val seasonNum =
-                                        selected.removePrefix("Season ").toIntOrNull() ?: 1
-                                    listener.onSeasonSelected(seriesId, seasonNum)
-                                },
+                        items(uiState.episodes) { episode ->
+                            EpisodeCard(
+                                episodeNumber = episode.number.toString().padStart(2, '0'),
+                                episodeImageUrl = BuildConfig.IMAGE_BASE_URL + episode.imageUrl,
+                                episodeName = episode.name,
+                                episodeDuration = episode.runtime,
+                                episodeRating = String.format("%.1f", episode.rating),
                             )
                         }
                     }
@@ -259,33 +341,7 @@ private fun EpisodesScreenContent(
                     EpisodesDetailsScreenState.ScreenStatus.ERROR -> {}
                 }
             }
-            when (uiState.episodesSectionState) {
-                EpisodesDetailsScreenState.ScreenStatus.LOADING -> {
-                    items(10) {
-                        LoadingMovieImage(
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp, vertical = 12.dp)
-                                .height(74.dp)
-                                .fillMaxSize(),
-                        )
-                    }
-                }
-
-                EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
-                    items(uiState.episodes) { episode ->
-                        EpisodeCard(
-                            episodeNumber = episode.number.toString().padStart(2, '0'),
-                            episodeImageUrl = BuildConfig.IMAGE_BASE_URL + episode.imageUrl,
-                            episodeName = episode.name,
-                            episodeDuration = episode.runtime,
-                            episodeRating = String.format("%.1f", episode.rating),
-                        )
-                    }
-                }
-
-                EpisodesDetailsScreenState.ScreenStatus.ERROR -> {}
-            }
-        }
+        }}
     }
     AppBar(
         modifier = Modifier
@@ -361,7 +417,7 @@ fun EpisodeCard(
                     modifier = Modifier.size(16.dp)
                 )
                 BasicText(
-                    text = "$episodeRating",
+                    text = episodeRating,
                     style = Theme.textStyle.label.smallRegular12.copy(color = Theme.color.surfaces.onSurface)
                 )
             }
@@ -370,7 +426,7 @@ fun EpisodeCard(
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 BasicText(
-                    text = "Episode $episodeNumber",
+                    text = stringResource(com.cairosquad.ui.R.string.episode, episodeNumber),
                     style = Theme.textStyle.label.smallRegular12.copy(
                         color = Theme.color.surfaces.onSurfaceContainer,
                     )
@@ -382,7 +438,7 @@ fun EpisodeCard(
                     )
                 )
                 BasicText(
-                    text = "${episodeDuration}m",
+                    text = stringResource(com.cairosquad.ui.R.string.m, episodeDuration),
                     style = Theme.textStyle.label.smallRegular12.copy(
                         color = Theme.color.surfaces.onSurfaceContainer,
                     )

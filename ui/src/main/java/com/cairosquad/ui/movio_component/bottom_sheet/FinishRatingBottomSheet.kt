@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -14,6 +15,7 @@ import com.cairosquad.design_system.basic_component.BottomSheet
 import com.cairosquad.design_system.basic_component.Button
 import com.cairosquad.design_system.basic_component.Text
 import com.cairosquad.design_system.theme.Theme
+import com.cairosquad.ui.R
 import com.cairosquad.ui.movio_component.RatingBar
 
 @Composable
@@ -39,7 +41,7 @@ fun FinishRatingBottomSheet(
             )
             Text(
                 modifier = Modifier.padding(bottom = 16.dp),
-                text = "Thank you for your rating!",
+                text = stringResource(R.string.thank_you_for_your_rating),
                 style = Theme.textStyle.label.smallRegular14,
                 color = Theme.color.surfaces.onSurfaceContainer
             )
@@ -51,7 +53,7 @@ fun FinishRatingBottomSheet(
                 isRateLarge = true
             )
             Button(
-                text = "Submit",
+                text = stringResource(R.string.submit),
                 onClick = onDismiss
             )
         }

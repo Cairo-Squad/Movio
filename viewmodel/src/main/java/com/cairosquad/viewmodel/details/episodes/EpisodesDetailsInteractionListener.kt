@@ -5,4 +5,5 @@ interface EpisodesDetailsInteractionListener {
     fun onVideoClick(videoId: String)
     fun onSeasonsDropdownClick()
     fun onSeasonSelected(seriesId: Long, seasonNumber: Int)
+    fun onRefresh()
 }

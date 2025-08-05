@@ -76,8 +76,8 @@ fun ExploreScreenContent(
                     .background(Theme.color.surfaces.surface)
                     .padding(16.dp),
                 value = state.query,
-                onValueChange = listener::onQueryTextChanged,
-                placeholder = stringResource(R.string.search),
+                onValueChange = {  },
+                placeholder = stringResource(R.string.search_with_dotes_ahead),
                 leadingIcon = R.drawable.search_bottom_nav,
                 onFocusChanged = {
                     if (it) {

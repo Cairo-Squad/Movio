@@ -17,7 +17,7 @@ fun EmptyMoviesContent(modifier: Modifier = Modifier) {
         StateMessage(
             imageDrawable = R.drawable.no_result,
             titleId = R.string.no_results_found,
-            descriptionId = R.string.no_results_found_description
+            descriptionId = R.string.no_search_results_found_description
         )
     }
 }

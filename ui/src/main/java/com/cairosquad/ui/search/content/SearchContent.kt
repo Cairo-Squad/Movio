@@ -1,7 +1,6 @@
 package com.cairosquad.ui.search.content
 
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,7 +12,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -25,6 +23,7 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.InputField
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.RecentSearchItem
+import com.cairosquad.ui.movio_component.RecommendationSearchItem
 import com.cairosquad.ui.movio_component.SectionHeader
 import com.cairosquad.viewmodel.search.SearchInteractionListener
 import com.cairosquad.viewmodel.search.SearchScreenState
@@ -37,17 +36,8 @@ fun SearchContent(
 ) {
     val focusRequester = remember { FocusRequester() }
 
-    val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
-    DisposableEffect(backPressedDispatcher) {
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                listener.onBackClicked()
-            }
-        }
-        backPressedDispatcher?.addCallback(callback)
-        onDispose {
-            callback.remove()
-        }
+    BackHandler(enabled = true) {
+        listener.onBackClicked()
     }
 
     Column(modifier = modifier.fillMaxSize()) {
@@ -62,21 +52,21 @@ fun SearchContent(
                 },
             value = state.query,
             onValueChange = listener::onQueryTextChanged,
-            placeholder = stringResource(R.string.search),
+            placeholder = stringResource(R.string.search_with_dotes_ahead),
             leadingIcon = R.drawable.search_bottom_nav,
             trailingIcon = R.drawable.ic_close,
-            onTrailingIconClick = { listener.onBackClicked() },
+            onTrailingIconClick = { listener.onCancelSearch() },
             keyboardActions = KeyboardActions(
                 onDone = { listener.onSearch() }
             )
         )
-
-        SectionHeader(
-            title = stringResource(R.string.recent_search),
-            actionText = stringResource(R.string.clear_all),
-            onActionClick = listener::onClearHistory
-        )
-
+        if (state.recentSearch.isNotEmpty() && state.query.isBlank()) {
+            SectionHeader(
+                title = stringResource(R.string.recent_search),
+                actionText = stringResource(R.string.clear_all),
+                onActionClick = listener::onClearHistory
+            )
+        }
         LazyColumn(
             modifier = Modifier
                 .weight(1f)
@@ -85,15 +75,26 @@ fun SearchContent(
             contentPadding = PaddingValues(vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            items(state.recentSearch) {
-                RecentSearchItem(
-                    recentItem = it,
-                    query = state.query,
-                    onRemoveHistoryItem = listener::onRemoveHistoryItem,
-                    onRecentSearchItemClicked = listener::onRecentSearchItemClicked
-                )
+            if (state.query.isBlank()) {
+                items(state.recentSearch) {
+                    RecentSearchItem(
+                        recentItem = it,
+                        query = state.query,
+                        onRemoveHistoryItem = listener::onRemoveHistoryItem,
+                        onRecentSearchItemClicked = listener::onRecentSearchItemClicked
+                    )
+                }
+            } else {
+                items(state.searchRecommendation) { item ->
+                    val isRecent = item in state.recentSearch
+                    RecommendationSearchItem(
+                        recommendationItem = item,
+                        query = state.query,
+                        isRecentSearch = isRecent,
+                        onSearchRecommendationItemClicked = listener::onRecentSearchItemClicked
+                    )
+                }
             }
         }
     }
 }
-

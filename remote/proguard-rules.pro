@@ -32,12 +32,6 @@
 }
 
 ##########################################
-# 🌟 AndroidX DataStore
-##########################################
--keep class androidx.datastore.** { *; }
--dontwarn androidx.datastore.**
-
-##########################################
 # 🌟 Ktor
 ##########################################
 # Keep Ktor client classes
@@ -74,7 +68,6 @@
 ##########################################
 -dontwarn org.junit.**
 -dontwarn com.google.common.truth.**
--dontwarn org.koin.test.**
 -dontwarn io.ktor.client.mock.**
 
 -dontwarn java.lang.invoke.StringConcatFactory
@@ -84,3 +77,6 @@
 -dontwarn org.jetbrains.kotlin.**
 -keep class kotlinx.** { *; }
 -keepclassmembers class kotlinx.** { *; }
+-keep @dagger.hilt.android.HiltAndroidApp class * { *; }
+-keep @dagger.hilt.EntryPoint class * { *; }
+-keep @dagger.hilt.InstallIn class * { *; }

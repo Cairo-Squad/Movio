@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="no_results_found">لم يتم العثور على نتائج</string>
-    <string name="no_results_found_description">لم نتمكن من العثور على أي شيء يطابق بحثك. حاول التحقق من التهجئة أو استكشاف شيء آخر!</string>
+    <string name="no_search_results_found_description">لم نتمكن من العثور على أي شيء يطابق بحثك. حاول التحقق من التهجئة أو استكشاف شيء آخر!</string>
+    <string name="no_results_for_category">لم نعثر على أي محتوى في هذا التصنيف. جرّب استكشاف تصنيف آخر!</string>
     <string name="internet_is_not_available">الاتصال بالإنترنت غير متوفر</string>
     <string name="internet_is_not_available_description">يرجى التأكد من أنك متصل بالإنترنت وحاول مرة أخرى.</string>
     <string name="log_in_to_unlock_your_personal_library">سجّل الدخول لفتح مكتبتك الشخصية</string>
@@ -13,6 +14,7 @@
     <string name="state_message_image">صورة رسالة الحالة</string>
     <string name="home">الرئيسية</string>
     <string name="search">بحث</string>
+    <string name="search_with_dotes_ahead">بحث ...</string>
     <string name="search_result">نتيجة البحث</string>
     <string name="number_of_items">%d عناصر</string>
     <string name="top_Results">أفضل النتائج</string>
@@ -22,6 +24,7 @@
     <string name="artists">فنانون</string>
     <string name="library">المكتبة</string>
     <string name="more">المزيد</string>
+    <string name="more_with_dotes_behind">... المزيد </string>
     <string name="icon">ايقونة</string>
     <string name="movie_poster">بوستر العرض</string>
     <string name="artist_image">صورة الفنان</string>
@@ -34,6 +37,7 @@
     <string name="error_loading_image">خطأ في تحميل الصورة</string>
     <string name="recent_item_icon">ايقونة العنصر الحديث</string>
     <string name="clear_search_result">مسح نتائج البحث</string>
+    <string name="recommendation_icon">ايقونة الاقتراحات</string>
     <string name="no_internet_connection">لا يوجد اتصال بالأنترنت</string>
     <string name="an_error_occured_while_getting_results">هناك خطأ حدث عند جلب نتائج البحث</string>
     <string name="an_unexpected_error_occurred">خطأ غير متوقع حدث</string>
@@ -67,10 +71,13 @@
     <string name="reviews">المراجعات</string>
     <string name="similar_series">المسلسلات مشابهة</string>
     <string name="known_for">معروف بالتالي</string>
-    <string name="less">أقل</string>
-    <string name="read_less">اقرأأقل</string>
-    <string name="read_more">اقرأأكثر</string>
+    <string name="less_with_dotes_behind"> ... أقل</string>
+    <string name="read_less_with_dots_behind"> ... اقرأأقل</string>
+    <string name="read_more_with_dots_behind"> ... اقرأأكثر</string>
     <string name="top_cast">أفضل الممثلين</string>
     <string name="unauthorized_access">أنت غير مصرح لك بتنفيذ هذا الإجراء</string>
     <string name="error_parsing_data">حدث خطأ أثناء معالجة البيانات</string>
+    <string name="categories">الأصناف</string>
+    <string name="try_again">حاول مجددا</string>
+
 </resources>

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -45,6 +46,7 @@ fun Button(
     Box(
         modifier = modifier
             .fillMaxWidth()
+            .heightIn(min = 52.dp)
             .clip(CircleShape)
             .border(1.dp, borderColor, CircleShape)
             .clickable(onClick = onClick)

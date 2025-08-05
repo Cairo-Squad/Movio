@@ -1,15 +1,18 @@
 package com.cairosquad.viewmodel.details.similar_series
 
 import com.cairosquad.domain.exception.MovioException
-import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
+import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.similar_series.SimilarSeriesScreenState.ScreenStatus
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import javax.inject.Inject
 
-class SimilarSeriesViewModel(
-    private val getSeriesDetailsUseCase: GetSeriesDetailsUseCase
+@HiltViewModel
+class SimilarSeriesViewModel @Inject constructor(
+    private val manageSeriesUseCase: ManageSeriesUseCase
 ) : BaseViewModel<SimilarSeriesScreenState, SimilarSeriesEffect>(SimilarSeriesScreenState()),
     SimilarSeriesInteractionListener {
 
@@ -23,7 +26,7 @@ class SimilarSeriesViewModel(
                 }
             },
             block = {
-                getSeriesDetailsUseCase.getSimilarSeries(seriesId, 1)
+                manageSeriesUseCase.getSimilarSeries(seriesId, 1)
             }, onSuccess = { seriesList ->
                 updateState {
                     it.copy(
@@ -53,5 +56,12 @@ class SimilarSeriesViewModel(
 
     override fun onSeriesClicked(seriesId: Long) {
         sendEffect(SimilarSeriesEffect.NavigateToSeriesDetails(seriesId))
+    }
+
+    override fun onRefresh(seriesId: Long) {
+            updateState { it.copy(isRefreshing = true) }
+            fetchSimilarSeries(seriesId)
+            updateState { it.copy(isRefreshing = false) }
+
     }
 }

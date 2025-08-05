@@ -10,7 +10,7 @@
     <string name="now_playing">يبث الان</string>
     <string name="tv_shows">برامج تلفزيونية</string>
     <string name="sorting_type_all">الكل</string>
-    <string name="popularity">الشهرة</string>
+    <string name="popularity">الأشهر</string>
     <string name="latest">الاحدث</string>
 
 </resources>

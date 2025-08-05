@@ -3,6 +3,7 @@ package com.cairosquad.ui.home
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.cairosquad.ui.home.content.HomeScreenContent
 import com.cairosquad.ui.navigation.LocalNavController
@@ -12,11 +13,10 @@ import com.cairosquad.ui.navigation.SeriesRoute
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.viewmodel.home.HomeEffect
 import com.cairosquad.viewmodel.home.HomeViewModel
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = koinViewModel()
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
 
     val navController = LocalNavController.current

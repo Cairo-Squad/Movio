@@ -5,7 +5,7 @@ import androidx.paging.PagingState
 
 abstract class BasePagingSource<T : Any> : PagingSource<Int, T>() {
 
-    abstract suspend fun fetchData(page: Int): List<T>
+    abstract suspend fun fetchData(page: Int,genreId :Long? = null): List<T>
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, T> {
         val page = params.key ?: 1

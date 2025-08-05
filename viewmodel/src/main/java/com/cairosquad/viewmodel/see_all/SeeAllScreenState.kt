@@ -1,13 +1,17 @@
 package com.cairosquad.viewmodel.see_all
 
+import androidx.paging.PagingData
+import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.exception.ErrorStatus
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import com.cairosquad.viewmodel.home.HomeScreenState.GenreUiState
 
 data class SeeAllScreenState(
-    val mediaList: List<MediaUiState> = emptyList(),
-
+    val mediaList: Flow<PagingData<MediaUiState>> = flowOf(PagingData.empty()),
     val screenStatus: ScreenStatus = ScreenStatus.LOADING,
     val errorStatus: ErrorStatus? = null,
-    val isLoading: Boolean = false,
+    val isRefreshing: Boolean = false,
     val genres: List<GenreUiState> = listOf(GenreUiState.defaultGenre),
     val selectedGenreIndex: Int = 0,
 ) {
@@ -27,7 +31,7 @@ data class SeeAllScreenState(
         companion object {
             val defaultGenre = GenreUiState(
                 id = null,
-                name = "All"
+                name ="",
             )
         }
     }
@@ -35,6 +39,7 @@ data class SeeAllScreenState(
     enum class ScreenStatus {
         LOADING,
         SUCCESS,
-        FAILED
+        FAILED,
+        Empty
     }
 }

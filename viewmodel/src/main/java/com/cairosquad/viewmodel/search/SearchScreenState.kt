@@ -11,6 +11,7 @@ data class SearchScreenState(
     val screenStatus: ScreenStatus = ScreenStatus.LOADING,
     val errorStatus: ErrorStatus? = null,
     val recentSearch: List<String> = emptyList(),
+    val searchRecommendation: List<String> = emptyList(),
     val forYou: List<MovieUiState> = emptyList(),
     val exploreMore: List<MovieUiState> = emptyList(),
     val movies: Flow<PagingData<MovieUiState>> = flowOf(PagingData.empty()),

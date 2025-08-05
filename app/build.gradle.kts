@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -10,8 +11,10 @@ plugins {
     alias(libs.plugins.google.firebase.perf)
     alias(libs.plugins.google.firebase.appdistribution)
     alias(libs.plugins.ksp)
+    id("org.jetbrains.kotlin.kapt")
     alias(libs.plugins.kotlin.serialization)
     id("androidx.room") version "2.7.1"
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -23,7 +26,7 @@ android {
         minSdk = 26
         targetSdk = 35
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.1.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -74,8 +77,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
     }
     buildFeatures {
         compose = true
@@ -85,8 +90,8 @@ android {
     }
 }
 
-ksp {
-    arg("KOIN_CONFIG_CHECK", "true")
+hilt {
+    enableAggregatingTask = false
 }
 
 dependencies {
@@ -109,27 +114,25 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.foundation.layout.android)
 
-    // koin
-    implementation(libs.koin.androidx.compose)
-    implementation(libs.koin.android)
-    implementation(libs.koin.test)
-    implementation(libs.koin.annotations)
-    ksp(libs.koin.ksp)
-    implementation(libs.logging.interceptor)
     implementation(libs.logging.interceptor)
 
     // --- Retrofit 3 ---
     implementation(libs.retrofit)
     implementation(libs.converter.kotlinx.serialization)
-
     implementation(libs.kotlinx.serialization.json)
-
     implementation (libs.okhttp)
 
     // Room
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+
+    // Dagger & Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    kapt(libs.androidx.hilt.compiler)
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
 
     implementation(project(":design_system"))
     implementation(project(":domain"))

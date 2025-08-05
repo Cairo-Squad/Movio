@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
 plugins {
@@ -6,6 +7,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kover)
+    alias(libs.plugins.ksp)
+    id("org.jetbrains.kotlin.kapt")
 }
 android {
     namespace = "com.cairosquad.remote"
@@ -40,8 +43,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
     }
     buildFeatures {
         compose = true
@@ -63,9 +68,6 @@ android {
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
 
-    implementation(libs.androidx.datastore.preferences)
-    implementation(libs.androidx.datastore)
-
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.runtime)
     implementation(libs.logging.interceptor)
@@ -81,14 +83,15 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
 
     testImplementation(libs.junit.jupiter)
-    testImplementation(libs.junit.junit)
-    testImplementation(libs.junit.junit)
-    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit)
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${libs.versions.junitJupiter.get()}")
     testImplementation(libs.truth)
-    testImplementation(libs.koin.test)
     testImplementation(libs.mockk)
     implementation(libs.logging.interceptor)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
 
     implementation(project(":repository"))
 }

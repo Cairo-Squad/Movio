@@ -1,22 +1,13 @@
 package com.cairosquad.repository.search
 
-import com.cairosquad.entity.Artist
-import com.cairosquad.entity.Movie
-import com.cairosquad.entity.Series
-import com.cairosquad.repository.search.data_source.local.CacheDataSource
+import com.cairosquad.domain.exception.InternetConnectionException
+import com.cairosquad.domain.exception.UnknownException
 import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
-import com.cairosquad.repository.search.data_source.local.dto.ArtistCacheDto
-import com.cairosquad.repository.search.data_source.local.dto.MovieCacheDto
-import com.cairosquad.repository.search.data_source.local.dto.SeriesCacheDto
-import com.cairosquad.repository.search.data_source.remote.RemoteSearchDataSource
-import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.SeriesRemoteDto
+import com.cairosquad.repository.utils.exception.NoInternetException
+import com.cairosquad.repository.utils.exception.UnknownDataSourceException
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.just
 import io.mockk.mockk
-import io.mockk.runs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -24,240 +15,37 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import java.time.Instant
-import java.util.Date
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchRepositoryImplTest {
 
-    private val remoteDS = mockk<RemoteSearchDataSource>()
     private val localDataSource = mockk<LocalRecentSearchDataSource>(relaxed = true)
-    private val cacheDS = mockk<CacheDataSource>()
     private lateinit var repository: SearchRepositoryImpl
     private val dispatcher = StandardTestDispatcher()
 
     @Before
     fun setUp() {
         Dispatchers.setMain(dispatcher)
-        repository = SearchRepositoryImpl(remoteDS, cacheDS, localDataSource)
+        repository = SearchRepositoryImpl(localDataSource)
     }
 
     @After
-    fun tearDown() = Dispatchers.resetMain()
-
-    @Test
-    fun `should return cached series list when series are found in cache`() = runTest {
-        //Given
-        val page = 1
-        coEvery { cacheDS.getCachedSeries(QUERY1,page) } returns listOf(cacheDto1)
-        coEvery { cacheDS.clearExpiredCache(any()) } returns Unit
-        //When
-        val result = repository.getSeries(QUERY1,page)
-
-        //Then
-        assertEquals(
-            listOf(
-                Series(
-                    42, "Dark", 8.8f, "/dark.jpg",
-                    trailerPath = "",
-                    genres = emptyList(),
-                    overview = "",
-                    releaseDate = 0L,
-                    seasonsCount = 1
-                )
-            ), result
-        )
-        coVerify { cacheDS.getCachedSeries(QUERY1,page) }
-        coVerify(exactly = 0) { remoteDS.getSeries(any(),page) }
+    fun tearDown() {
+        Dispatchers.resetMain()
     }
 
     @Test
-    fun `should fetch and cache series list when series not found in cache`() = runTest {
-        //Given
-        val page = 1
-        coEvery { cacheDS.getCachedSeries(QUERY2,page) } returns emptyList()
-        coEvery { remoteDS.getSeries(QUERY2,page) } returns listOf(remoteDto2)
-        coEvery { cacheDS.cacheSeries(any()) } just runs
-        coEvery { cacheDS.clearExpiredCache(any()) } returns Unit
-        //When
-        val result = repository.getSeries(QUERY2,page)
-
-        //Then
-        assertEquals(listOf(Series(
-            7, "Lost", 8.3f, "/lost.jpg",
-            trailerPath = "",
-            genres = emptyList(),
-            overview = "",
-            releaseDate = 0L,
-            seasonsCount = 1
-        )), result)
-        coVerify { remoteDS.getSeries(QUERY2,page) }
-        assertEquals(
-            listOf(
-                Series(
-                    7, "Lost", 8.3f, "/lost.jpg",
-                    trailerPath = "",
-                    genres = emptyList(),
-                    overview = "",
-                    releaseDate = 0L,
-                    seasonsCount = 1
-                )
-            ), result
-        )
-        coVerify { cacheDS.cacheSeries(any()) }
-    }
-
-
-    @Test
-    fun `should return cached movies list when movies are found in cache`() = runTest {
-        //Given
-        val page = 1
-        coEvery { cacheDS.getCachedMovies(QUERY3, page) } returns listOf(cacheDto3)
-        coEvery { cacheDS.clearExpiredCache(any()) } returns Unit
-        //When
-        val result = repository.getMovies(QUERY3,page)
-
-        //Then
-        assertEquals(
-            listOf(
-                Movie(
-                    1, "Inception", 8.8f, "/inc.jpg",
-                    genres = emptyList(),
-                    overview = "",
-                    releaseDate = 0L,
-                    runtimeMinutes = 0,
-                    trailerPath = ""
-                )
-            ), result
-        )
-        coVerify(exactly = 0) { remoteDS.getMovies(any(),page) }
-    }
-
-    @Test
-    fun `should fetch and cache movies list when movies not found in cache`() = runTest {
-        //Given
-        val page = 1
-        coEvery { cacheDS.getCachedMovies(QUERY4,page) } returns emptyList()
-        coEvery { remoteDS.getMovies(QUERY4, page) } returns listOf(remoteDto4)
-        coEvery { cacheDS.cacheMovies(any()) } just runs
-        coEvery { cacheDS.clearExpiredCache(any()) } returns Unit
-        //When
-        val result = repository.getMovies(QUERY4,page)
-
-        //Then
-        assertEquals(
-            listOf(
-                Movie(
-                    99, "Matrix", rating = 8.7f, "/mx.jpg",
-                    genres = emptyList(),
-                    overview = "",
-                    releaseDate = 0L,
-                    runtimeMinutes = 0,
-                    trailerPath = ""
-                )
-            ), result
-        )
-        coVerify { remoteDS.getMovies(QUERY4,page) }
-        coVerify { cacheDS.cacheMovies(any()) }
-    }
-
-    @Test
-    fun `should return cached artists list when artists are found in cache`() = runTest {
-        //Given
-        val page = 1
-        coEvery { cacheDS.getCachedArtists(QUERY5,page) } returns listOf(cacheDto5)
-        coEvery { cacheDS.clearExpiredCache(any()) } returns Unit
-        //When
-        val result = repository.getArtists(QUERY5,page)
-
-        //Then
-        assertEquals(listOf(Artist(5, "The Weeknd", "/w.jpg")), result)
-        coVerify(exactly = 0) { remoteDS.getArtists(any(),page) }
-    }
-
-    @Test
-    fun `should fetch and cache artists list when artists not found in cache`() = runTest {
-        //Given
-        val page = 1
-        coEvery { cacheDS.getCachedArtists(QUERY6,page) } returns emptyList()
-        coEvery { remoteDS.getArtists(QUERY6,page) } returns listOf(remoteDto6)
-        coEvery { cacheDS.cacheArtist(any()) } just runs
-        coEvery { cacheDS.clearExpiredCache(any()) } returns Unit
-        //When
-        val result = repository.getArtists(QUERY6,page)
-        //Then
-        assertEquals(listOf(Artist(8, "Adele", "/a.jpg")), result)
-        coVerify { remoteDS.getArtists(QUERY6,page) }
-        coVerify { cacheDS.cacheArtist(any()) }
-    }
-
-    private companion object {
-        const val QUERY1 = "dark"
-        val page = 1
-        val cacheDto1 = SeriesCacheDto(
-            id = 42,
-            page = page,
-            name = "Dark",
-            query = QUERY1,
-            posterPath = "/dark.jpg",
-            voteAverage = 8.8,
-            timestamp = Date().time
-        )
-        const val QUERY2 = "lost"
-        val remoteDto2 = SeriesRemoteDto(
-            id = 7,
-            name = "Lost",
-            posterPath = "/lost.jpg",
-            voteAverage = 8.3,
-        )
-        const val QUERY3 = "inception"
-        val cacheDto3 = MovieCacheDto(
-            id = 1,
-            title = "Inception",
-            query = QUERY3,
-            page = 1,
-            posterPath = "/inc.jpg",
-            voteAverage = 8.8,
-            timestamp = Instant.now().toEpochMilli()
-        )
-        const val QUERY4 = "matrix"
-        val remoteDto4 = MovieRemoteDto(
-            id = 99,
-            title = "Matrix",
-            posterPath = "/mx.jpg",
-            voteAverage = 8.7,
-        )
-        const val QUERY5 = "weeknd"
-        val cacheDto5 = ArtistCacheDto(
-            id = 5,
-            name = "The Weeknd",
-            query = QUERY5,
-            page = 1,
-            photoPath = "/w.jpg",
-            timestamp = Instant.now().toEpochMilli(),
-            country = "",
-            birthDate = 0L,
-            biography = "",
-            department = ""
-        )
-        const val QUERY6 = "adele"
-        val remoteDto6 = ArtistRemoteDto(
-            id = 8,
-            name = "Adele",
-            profilePath = "/a.jpg",
-        )
-    }
-
-    @Test
-    fun `should return all queries when getAll is called`() = runTest {
+    fun `should return all queries when getAllHistory is called`() = runTest {
         // Given
         val expectedQueries = listOf("query1", "query2", "query3")
         coEvery { localDataSource.getAll() } returns expectedQueries
 
-        //When
+        // When
         val result = repository.getAllHistory()
 
         // Then
@@ -266,16 +54,218 @@ class SearchRepositoryImplTest {
     }
 
     @Test
-    fun `should return all queries when getByQuery is called with blank query`() = runTest {
+    fun `should throw UnknownException when getAllHistory fails with UnknownDataSourceException`() = runTest {
         // Given
-        val expectedQueries = emptyList<String>()
-        val blankQuery = ""
+        val exception = UnknownDataSourceException("Failed to fetch history")
+        coEvery { localDataSource.getAll() } throws exception
+
+        // When
+        val thrown = assertFailsWith<UnknownException> {
+            repository.getAllHistory()
+        }
+
+        // Then
+        assertEquals("Failed to fetch history", thrown.message)
+        coVerify(exactly = 1) { localDataSource.getAll() }
+    }
+
+    @Test
+    fun `should throw InternetConnectionException when getAllHistory fails with NoInternetException`() = runTest {
+        // Given
+        val exception = NoInternetException("No internet connection")
+        coEvery { localDataSource.getAll() } throws exception
+
+        // When
+        val thrown = assertFailsWith<InternetConnectionException> {
+            repository.getAllHistory()
+        }
+
+        // Then
+        assertEquals("No internet connection", thrown.message)
+        coVerify(exactly = 1) { localDataSource.getAll() }
+    }
+
+    @Test
+    fun `should throw UnknownException when getAllHistory fails with non-DataSourceException`() = runTest {
+        // Given
+        val exception = RuntimeException("Unexpected error")
+        coEvery { localDataSource.getAll() } throws exception
+
+        // When
+        val thrown = assertFailsWith<UnknownException> {
+            repository.getAllHistory()
+        }
+
+        // Then
+        assertEquals("Unexpected error", thrown.message)
+        coVerify(exactly = 1) { localDataSource.getAll() }
+    }
+
+    @Test
+    fun `should return filtered and processed queries when getAllHistoryByQuery is called with non-blank query`() = runTest {
+        // Given
+        val query = "dark"
+        val mockQueries = listOf("dark series", "Dark Knight", "dark mode", "something else", "Dark Shadows")
+        coEvery { localDataSource.getByQuery(query) } returns mockQueries
+
+        // When
+        val result = repository.getAllHistoryByQuery(query)
+
+        // Then
+        assertTrue(result.size <= 20)
+        assertEquals(mockQueries.distinct().size, result.size) // Since mockQueries size < 20
+        assertTrue(result.containsAll(mockQueries.distinct()))
+        coVerify(exactly = 1) { localDataSource.getByQuery(query) }
+    }
+
+    @Test
+    fun `should return limited results when getAllHistoryByQuery returns more than 20 items`() = runTest {
+        // Given
+        val query = "test"
+        val mockQueries = (1..25).map { "test$it" }
+        coEvery { localDataSource.getByQuery(query) } returns mockQueries
+
+        // When
+        val result = repository.getAllHistoryByQuery(query)
+
+        // Then
+        assertEquals(20, result.size)
+        assertTrue(result.all { it in mockQueries })
+        coVerify(exactly = 1) { localDataSource.getByQuery(query) }
+    }
+
+    @Test
+    fun `should throw UnknownException when getAllHistoryByQuery fails with UnknownDataSourceException for non-blank query`() = runTest {
+        // Given
+        val query = "dark"
+        val exception = UnknownDataSourceException("Failed to fetch query results")
+        coEvery { localDataSource.getByQuery(query) } throws exception
+
+        // When
+        val thrown = assertFailsWith<UnknownException> {
+            repository.getAllHistoryByQuery(query)
+        }
+
+        // Then
+        assertEquals("Failed to fetch query results", thrown.message)
+        coVerify(exactly = 1) { localDataSource.getByQuery(query) }
+    }
+
+    @Test
+    fun `should throw InternetConnectionException when getAllHistoryByQuery fails with NoInternetException for non-blank query`() = runTest {
+        // Given
+        val query = "dark"
+        val exception = NoInternetException("No internet connection")
+        coEvery { localDataSource.getByQuery(query) } throws exception
+
+        // When
+        val thrown = assertFailsWith<InternetConnectionException> {
+            repository.getAllHistoryByQuery(query)
+        }
+
+        // Then
+        assertEquals("No internet connection", thrown.message)
+        coVerify(exactly = 1) { localDataSource.getByQuery(query) }
+    }
+
+    @Test
+    fun `should throw UnknownException when getAllHistoryByQuery fails with non-DataSourceException for non-blank query`() = runTest {
+        // Given
+        val query = "dark"
+        val exception = RuntimeException("Unexpected error")
+        coEvery { localDataSource.getByQuery(query) } throws exception
+
+        // When
+        val thrown = assertFailsWith<UnknownException> {
+            repository.getAllHistoryByQuery(query)
+        }
+
+        // Then
+        assertEquals("Unexpected error", thrown.message)
+        coVerify(exactly = 1) { localDataSource.getByQuery(query) }
+    }
+
+    @Test
+    fun `should return all queries when getAllHistoryByQuery is called with blank query`() = runTest {
+        // Given
+        val query = ""
+        val expectedQueries = listOf("query1", "query2", "query3")
         coEvery { localDataSource.getAll() } returns expectedQueries
-        //When
-        val result = repository.getAllHistoryByQuery(blankQuery)
+
+        // When
+        val result = repository.getAllHistoryByQuery(query)
 
         // Then
         assertEquals(expectedQueries, result)
+        coVerify(exactly = 1) { localDataSource.getAll() }
+        coVerify(exactly = 0) { localDataSource.getByQuery(any()) }
+    }
+
+    @Test
+    fun `should return all queries when getAllHistoryByQuery is called with whitespace query`() = runTest {
+        // Given
+        val query = "   "
+        val expectedQueries = listOf("query1", "query2", "query3")
+        coEvery { localDataSource.getAll() } returns expectedQueries
+
+        // When
+        val result = repository.getAllHistoryByQuery(query)
+
+        // Then
+        assertEquals(expectedQueries, result)
+        coVerify(exactly = 1) { localDataSource.getAll() }
+        coVerify(exactly = 0) { localDataSource.getByQuery(any()) }
+    }
+
+    @Test
+    fun `should throw UnknownException when getAllHistoryByQuery fails with UnknownDataSourceException for blank query`() = runTest {
+        // Given
+        val query = ""
+        val exception = UnknownDataSourceException("Failed to fetch all queries")
+        coEvery { localDataSource.getAll() } throws exception
+
+        // When
+        val thrown = assertFailsWith<UnknownException> {
+            repository.getAllHistoryByQuery(query)
+        }
+
+        // Then
+        assertEquals("Failed to fetch all queries", thrown.message)
+        coVerify(exactly = 1) { localDataSource.getAll() }
+    }
+
+    @Test
+    fun `should throw InternetConnectionException when getAllHistoryByQuery fails with NoInternetException for blank query`() = runTest {
+        // Given
+        val query = ""
+        val exception = NoInternetException("No internet connection")
+        coEvery { localDataSource.getAll() } throws exception
+
+        // When
+        val thrown = assertFailsWith<InternetConnectionException> {
+            repository.getAllHistoryByQuery(query)
+        }
+
+        // Then
+        assertEquals("No internet connection", thrown.message)
+        coVerify(exactly = 1) { localDataSource.getAll() }
+    }
+
+    @Test
+    fun `should throw UnknownException when getAllHistoryByQuery fails with non-DataSourceException for blank query`() = runTest {
+        // Given
+        val query = ""
+        val exception = RuntimeException("Unexpected error")
+        coEvery { localDataSource.getAll() } throws exception
+
+        // When
+        val thrown = assertFailsWith<UnknownException> {
+            repository.getAllHistoryByQuery(query)
+        }
+
+        // Then
+        assertEquals("Unexpected error", thrown.message)
+        coVerify(exactly = 1) { localDataSource.getAll() }
     }
 
     @Test
@@ -287,6 +277,54 @@ class SearchRepositoryImplTest {
         repository.clearAll()
 
         // Then
+        coVerify(exactly = 1) { localDataSource.clearAll() }
+    }
+
+    @Test
+    fun `should throw UnknownException when clearAll fails with UnknownDataSourceException`() = runTest {
+        // Given
+        val exception = UnknownDataSourceException("Failed to clear history")
+        coEvery { localDataSource.clearAll() } throws exception
+
+        // When
+        val thrown = assertFailsWith<UnknownException> {
+            repository.clearAll()
+        }
+
+        // Then
+        assertEquals("Failed to clear history", thrown.message)
+        coVerify(exactly = 1) { localDataSource.clearAll() }
+    }
+
+    @Test
+    fun `should throw InternetConnectionException when clearAll fails with NoInternetException`() = runTest {
+        // Given
+        val exception = NoInternetException("No internet connection")
+        coEvery { localDataSource.clearAll() } throws exception
+
+        // When
+        val thrown = assertFailsWith<InternetConnectionException> {
+            repository.clearAll()
+        }
+
+        // Then
+        assertEquals("No internet connection", thrown.message)
+        coVerify(exactly = 1) { localDataSource.clearAll() }
+    }
+
+    @Test
+    fun `should throw UnknownException when clearAll fails with non-DataSourceException`() = runTest {
+        // Given
+        val exception = RuntimeException("Unexpected error")
+        coEvery { localDataSource.clearAll() } throws exception
+
+        // When
+        val thrown = assertFailsWith<UnknownException> {
+            repository.clearAll()
+        }
+
+        // Then
+        assertEquals("Unexpected error", thrown.message)
         coVerify(exactly = 1) { localDataSource.clearAll() }
     }
 
@@ -304,6 +342,57 @@ class SearchRepositoryImplTest {
     }
 
     @Test
+    fun `should throw UnknownException when removeQuery fails with UnknownDataSourceException`() = runTest {
+        // Given
+        val queryToRemove = "old query"
+        val exception = UnknownDataSourceException("Failed to remove query")
+        coEvery { localDataSource.removeQuery(queryToRemove) } throws exception
+
+        // When
+        val thrown = assertFailsWith<UnknownException> {
+            repository.removeQuery(queryToRemove)
+        }
+
+        // Then
+        assertEquals("Failed to remove query", thrown.message)
+        coVerify(exactly = 1) { localDataSource.removeQuery(queryToRemove) }
+    }
+
+    @Test
+    fun `should throw InternetConnectionException when removeQuery fails with NoInternetException`() = runTest {
+        // Given
+        val queryToRemove = "old query"
+        val exception = NoInternetException("No internet connection")
+        coEvery { localDataSource.removeQuery(queryToRemove) } throws exception
+
+        // When
+        val thrown = assertFailsWith<InternetConnectionException> {
+            repository.removeQuery(queryToRemove)
+        }
+
+        // Then
+        assertEquals("No internet connection", thrown.message)
+        coVerify(exactly = 1) { localDataSource.removeQuery(queryToRemove) }
+    }
+
+    @Test
+    fun `should throw UnknownException when removeQuery fails with non-DataSourceException`() = runTest {
+        // Given
+        val queryToRemove = "old query"
+        val exception = RuntimeException("Unexpected error")
+        coEvery { localDataSource.removeQuery(queryToRemove) } throws exception
+
+        // When
+        val thrown = assertFailsWith<UnknownException> {
+            repository.removeQuery(queryToRemove)
+        }
+
+        // Then
+        assertEquals("Unexpected error", thrown.message)
+        coVerify(exactly = 1) { localDataSource.removeQuery(queryToRemove) }
+    }
+
+    @Test
     fun `should add query when addQuery is called`() = runTest {
         // Given
         val queryToAdd = "new query"
@@ -313,6 +402,57 @@ class SearchRepositoryImplTest {
         repository.addQuery(queryToAdd)
 
         // Then
+        coVerify(exactly = 1) { localDataSource.addQuery(queryToAdd) }
+    }
+
+    @Test
+    fun `should throw UnknownException when addQuery fails with UnknownDataSourceException`() = runTest {
+        // Given
+        val queryToAdd = "new query"
+        val exception = UnknownDataSourceException("Failed to add query")
+        coEvery { localDataSource.addQuery(queryToAdd) } throws exception
+
+        // When
+        val thrown = assertFailsWith<UnknownException> {
+            repository.addQuery(queryToAdd)
+        }
+
+        // Then
+        assertEquals("Failed to add query", thrown.message)
+        coVerify(exactly = 1) { localDataSource.addQuery(queryToAdd) }
+    }
+
+    @Test
+    fun `should throw InternetConnectionException when addQuery fails with NoInternetException`() = runTest {
+        // Given
+        val queryToAdd = "new query"
+        val exception = NoInternetException("No internet connection")
+        coEvery { localDataSource.addQuery(queryToAdd) } throws exception
+
+        // When
+        val thrown = assertFailsWith<InternetConnectionException> {
+            repository.addQuery(queryToAdd)
+        }
+
+        // Then
+        assertEquals("No internet connection", thrown.message)
+        coVerify(exactly = 1) { localDataSource.addQuery(queryToAdd) }
+    }
+
+    @Test
+    fun `should throw UnknownException when addQuery fails with non-DataSourceException`() = runTest {
+        // Given
+        val queryToAdd = "new query"
+        val exception = RuntimeException("Unexpected error")
+        coEvery { localDataSource.addQuery(queryToAdd) } throws exception
+
+        // When
+        val thrown = assertFailsWith<UnknownException> {
+            repository.addQuery(queryToAdd)
+        }
+
+        // Then
+        assertEquals("Unexpected error", thrown.message)
         coVerify(exactly = 1) { localDataSource.addQuery(queryToAdd) }
     }
 }

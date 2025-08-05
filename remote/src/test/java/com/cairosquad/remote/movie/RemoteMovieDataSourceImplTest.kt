@@ -1,13 +1,12 @@
 package com.cairosquad.remote.movie
 
-import com.cairosquad.repository.movie.data_source.remote.dto.CreditResponse
+import com.cairosquad.remote.artists.MoviesListResponse
 import com.cairosquad.repository.movie.data_source.remote.dto.GenreDto
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieDetailsRemoteDto
+import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.ArtistRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.GenreResponse
-import com.cairosquad.repository.search.data_source.remote.dto.MovieRemoteDto
-import com.cairosquad.repository.search.data_source.remote.dto.ResultResponse
+import com.cairosquad.repository.utils.sharedDto.remote.GenreResponse
+import com.cairosquad.repository.utils.sharedDto.remote.ResultResponse
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -21,12 +20,30 @@ import java.time.LocalDate
 class RemoteMovieDataSourceImplTest {
 
     private lateinit var apiService: MovieApiService
-    private lateinit var dataSource: RemoteMovieDataSourceImpl
+    private lateinit var dataSource: MoviesRemoteDataSourceImpl
 
     @Before
     fun setUp() {
         apiService = mockk(relaxed = true)
-        dataSource = spyk(RemoteMovieDataSourceImpl(apiService))
+        dataSource = spyk(MoviesRemoteDataSourceImpl(apiService))
+    }
+
+    @Test
+    fun `getMoviesOfArtist should return list with non-null IDs`() = runTest {
+        // Given
+        val artistId = 99L
+        val response = MoviesListResponse(
+            movies = listOf(remoteMovies)
+        )
+
+        coEvery { apiService.getMoviesOfArtist(artistId) } returns response
+
+        // When
+        val result = dataSource.getMoviesOfArtist(artistId)
+
+        // Then
+        assertThat(result).hasSize(1)
+        assertThat(result.first().id).isEqualTo(1)
     }
 
     @Test
@@ -40,9 +57,9 @@ class RemoteMovieDataSourceImplTest {
             releaseDate = "2023-07-21",
             voteAverage = 9.2
         )
-        coEvery { apiService.getMovie(movieId) } returns expected
+        coEvery { apiService.getMovieById(movieId) } returns expected
 
-        val result = dataSource.getMovie(movieId)
+        val result = dataSource.getMovieById(movieId)
 
         assertThat(result.id).isEqualTo(10)
         assertThat(result.title).isEqualTo("Oppenheimer")
@@ -85,23 +102,6 @@ class RemoteMovieDataSourceImplTest {
         assertThat(result[0].title).isEqualTo("Tenet")
     }
 
-    @Test
-    fun `getMovieTopCast should return cast list`() = runTest {
-        val movieId = 10L
-        val expected = CreditResponse(
-            id = 10, cast = listOf(
-                ArtistRemoteDto(id = 1, name = "Cillian Murphy", profilePath = null),
-                ArtistRemoteDto(id = 2, name = "Emily Blunt", profilePath = null)
-            )
-        )
-        coEvery { apiService.getMovieTopCast(movieId, page) } returns expected
-
-        val result = dataSource.getMovieTopCast(movieId, page)
-
-        assertThat(result).hasSize(2)
-        assertThat(result[0].name).isEqualTo("Cillian Murphy")
-        assertThat(result[1].name).isEqualTo("Emily Blunt")
-    }
 
     @Test
     fun `getMovieReviews should return all valid items`() = runTest {
@@ -147,33 +147,9 @@ class RemoteMovieDataSourceImplTest {
     }
 
     @Test
-    fun `getMovieTopCast filters out null items in cast list`() = runTest {
-
-        val artist1 = ArtistRemoteDto(id = 1, name = "Actor A")
-        val artist2 = ArtistRemoteDto(id = 2, name = "Actor B")
-        val response = CreditResponse(cast = listOf(artist1, null, artist2), id = 1)
-        coEvery { apiService.getMovieTopCast(1L, 1) } returns response
-
-        val result = dataSource.getMovieTopCast(1L, 1)
-
-        assertThat(result).containsExactly(artist1, artist2)
-    }
-
-    @Test
-    fun `getMovieTopCast returns empty list when cast is null`() = runTest {
-
-        val response = CreditResponse(cast = null, id = 2)
-        coEvery { apiService.getMovieTopCast(1L, 1) } returns response
-
-        val result = dataSource.getMovieTopCast(1L, 1)
-
-        assertThat(result).isEmpty()
-    }
-
-    @Test
     fun `getTopRatingMovies should return filtered list of movies`() = runTest {
 
-        val categoryId = "28"
+        val genreId = 28L
         val expected = ResultResponse(
             results = listOf(
                 MovieRemoteDto(id = 1, title = "The Shawshank Redemption", voteAverage = 9.3),
@@ -181,9 +157,9 @@ class RemoteMovieDataSourceImplTest {
                 null
             )
         )
-        coEvery { apiService.getTopRatingMovies(page, categoryId) } returns expected
+        coEvery { apiService.getTopRatingMovies(page, genreId) } returns expected
 
-        val result = dataSource.getTopRatingMovies(page, categoryId)
+        val result = dataSource.getTopRatingMovies(page, genreId)
 
         assertThat(result).hasSize(2)
         assertThat(result[0].title).isEqualTo("The Shawshank Redemption")
@@ -200,7 +176,7 @@ class RemoteMovieDataSourceImplTest {
             )
         } returns ResultResponse(results = null)
 
-        val result = dataSource.getTopRatingMovies(page, "122")
+        val result = dataSource.getTopRatingMovies(page, 122L)
 
         assertThat(result).isEmpty()
     }
@@ -235,7 +211,7 @@ class RemoteMovieDataSourceImplTest {
             apiService.getUpcomingMovies(any(), any(), any(), any())
         } returns ResultResponse(results = null)
 
-        val result = dataSource.getUpcomingMovies(1, "122")
+        val result = dataSource.getUpcomingMovies(1, 122L)
 
         assertThat(result).isEmpty()
     }
@@ -243,7 +219,7 @@ class RemoteMovieDataSourceImplTest {
     @Test
     fun `getMoreRecommendedMovies should pass correct parameters`() = runTest {
 
-        val categoryId = "28"
+        val genreId = 35L
         val expectedMovies = listOf(
             MovieRemoteDto(id = 1, title = "Inception"),
             MovieRemoteDto(id = 2, title = "Interstellar")
@@ -251,14 +227,14 @@ class RemoteMovieDataSourceImplTest {
         coEvery {
             apiService.getMoreRecommendedMovies(
                 page,
-                withGenres = categoryId
+                withGenres = genreId
             )
         } returns ResultResponse(results = expectedMovies)
 
-        val result = dataSource.getMoreRecommendedMovies(page, categoryId)
+        val result = dataSource.getMoreRecommendedMovies(page, genreId)
 
         assertThat(result).hasSize(2)
-        coVerify { apiService.getMoreRecommendedMovies(page, withGenres = categoryId) }
+        coVerify { apiService.getMoreRecommendedMovies(page, withGenres = genreId) }
     }
 
     @Test
@@ -273,29 +249,29 @@ class RemoteMovieDataSourceImplTest {
         )
         coEvery { apiService.getFreeToWatchMovies(page, any()) } returns response
 
-        val result = dataSource.getFreeToWatchMovies(page, "123")
+        val result = dataSource.getFreeToWatchMovies(page, 123L)
 
         assertThat(result).hasSize(2)
         assertThat(result[0].title).isEqualTo("Free Movie 1")
     }
 
     @Test
-    fun `getMoviesByCategory should pass categoryId correctly`() = runTest {
+    fun `getMoviesByCategory should pass genreId correctly`() = runTest {
 
-        val categoryId = "35"
+        val genreId = 35L
         val page = 2
         val expected = listOf(MovieRemoteDto(id = 1, title = "Comedy Movie"))
         coEvery {
-            apiService.getMoviesByCategory(
-                categoryId,
+            apiService.getMoviesByGenre(
+                genreId,
                 page
             )
         } returns ResultResponse(results = expected)
 
-        val result = dataSource.getMoviesByCategory(categoryId, page)
+        val result = dataSource.getMoviesByCategory(genreId, page)
 
         assertThat(result).hasSize(1)
-        coVerify { apiService.getMoviesByCategory(categoryId, page) }
+        coVerify { apiService.getMoviesByGenre(genreId, page) }
     }
 
     @Test
@@ -315,22 +291,22 @@ class RemoteMovieDataSourceImplTest {
     @Test
     fun `getAllMovies should handle all parameters`() = runTest {
 
-        val categoryId = "18"
+        val genreId = 35L
         val expected = listOf(
             MovieRemoteDto(id = 1, title = "Movie 1"), MovieRemoteDto(id = 2, title = "Movie 2")
         )
         coEvery {
             apiService.getAllMovies(
                 page,
-                categoryId,
+                genreId,
                 sortBy
             )
         } returns ResultResponse(results = expected)
 
-        val result = dataSource.getAllMovies(page, categoryId, sortBy)
+        val result = dataSource.getAllMovies(page, genreId, sortBy)
 
         assertThat(result).hasSize(2)
-        coVerify { apiService.getAllMovies(page, categoryId, sortBy) }
+        coVerify { apiService.getAllMovies(page, genreId, sortBy) }
     }
 
     @Test
@@ -353,7 +329,7 @@ class RemoteMovieDataSourceImplTest {
             )
         } returns ResultResponse(results = null)
 
-        val result = dataSource.getMoreRecommendedMovies(1, "122")
+        val result = dataSource.getMoreRecommendedMovies(1, 122L)
 
         assertThat(result).isEmpty()
     }
@@ -361,7 +337,7 @@ class RemoteMovieDataSourceImplTest {
     @Test
     fun `getUpcomingMovies should use correct date range`() = runTest {
 
-        val categoryId = "28"
+        val genreId = 35L
         val today = LocalDate.now()
         val thirtyDaysFromNow = today.plusDays(30)
         val expectedMovies = listOf(
@@ -371,12 +347,12 @@ class RemoteMovieDataSourceImplTest {
 
         coEvery {
             apiService.getUpcomingMovies(
-                page = page, withGenres = categoryId,  // This was missing in your test
+                page = page, withGenres = genreId,  // This was missing in your test
                 minDate = today.toString(), maxDate = thirtyDaysFromNow.toString()
             )
         } returns ResultResponse(results = expectedMovies)
 
-        val result = dataSource.getUpcomingMovies(page, categoryId)
+        val result = dataSource.getUpcomingMovies(page, genreId)
 
         assertThat(result).hasSize(2)
         assertThat(result[0].title).isEqualTo("Dune: Part Two")
@@ -384,7 +360,7 @@ class RemoteMovieDataSourceImplTest {
         coVerify {
             apiService.getUpcomingMovies(
                 page = page,
-                withGenres = categoryId,
+                withGenres = genreId,
                 minDate = today.toString(),
                 maxDate = thirtyDaysFromNow.toString()
             )
@@ -407,13 +383,13 @@ class RemoteMovieDataSourceImplTest {
         coEvery {
             apiService.getUpcomingMovies(
                 page = page,
-                withGenres = categoryId,
+                withGenres = genreId,
                 minDate = today.toString(),
                 maxDate = thirtyDaysFromNow.toString()
             )
         } returns response
 
-        val result = dataSource.getUpcomingMovies(page, categoryId)
+        val result = dataSource.getUpcomingMovies(page, genreId)
 
         assertThat(result).hasSize(2)
         assertThat(result[0].title).isEqualTo("Valid Movie")
@@ -422,7 +398,7 @@ class RemoteMovieDataSourceImplTest {
         coVerify {
             apiService.getUpcomingMovies(
                 page = page,
-                withGenres = categoryId,
+                withGenres = genreId,
                 minDate = today.toString(),
                 maxDate = thirtyDaysFromNow.toString()
             )
@@ -431,7 +407,7 @@ class RemoteMovieDataSourceImplTest {
 
     @Test
     fun `getNowPlayingMovies should use correct date range`() = runTest {
-        val categoryId = "28"
+        val genreId = 35L
         val today = LocalDate.now()
         val twoWeeksAgo = today.minusWeeks(2)
         val expectedMovies = listOf(
@@ -442,13 +418,13 @@ class RemoteMovieDataSourceImplTest {
         coEvery {
             apiService.getNowPlayingMovies(
                 page = page,
-                withGenres = categoryId,
+                withGenres = genreId,
                 minDate = twoWeeksAgo.toString(),
                 maxDate = today.toString()
             )
         } returns ResultResponse(results = expectedMovies)
 
-        val result = dataSource.getNowPlayingMovies(page, categoryId)
+        val result = dataSource.getNowPlayingMovies(page, genreId)
 
         assertThat(result).hasSize(2)
         assertThat(result[0].title).isEqualTo("Spider-Man: No Way Home")
@@ -456,7 +432,7 @@ class RemoteMovieDataSourceImplTest {
         coVerify {
             apiService.getNowPlayingMovies(
                 page = page,
-                withGenres = categoryId,
+                withGenres = genreId,
                 minDate = twoWeeksAgo.toString(),
                 maxDate = today.toString()
             )
@@ -476,13 +452,13 @@ class RemoteMovieDataSourceImplTest {
         coEvery {
             apiService.getTrendingMovies(
                 page = page,
-                withGenres = categoryId,
+                withGenres = genreId,
                 minDate = lastMonth.toString(),
                 maxDate = today.toString()
             )
         } returns ResultResponse(results = expectedMovies)
 
-        val result = dataSource.getTrendingMovies(page, categoryId)
+        val result = dataSource.getTrendingMovies(page, genreId)
 
         assertThat(result).hasSize(2)
         assertThat(result[0].title).isEqualTo("Everything Everywhere All at Once")
@@ -490,7 +466,7 @@ class RemoteMovieDataSourceImplTest {
         coVerify {
             apiService.getTrendingMovies(
                 page = page,
-                withGenres = categoryId,
+                withGenres = genreId,
                 minDate = lastMonth.toString(),
                 maxDate = today.toString()
             )
@@ -498,22 +474,22 @@ class RemoteMovieDataSourceImplTest {
     }
 
     @Test
-    fun `getPopularMovies should handle null categoryId`() = runTest {
+    fun `getPopularMovies should handle null genreId`() = runTest {
 
         val expected = listOf(MovieRemoteDto(id = 1, title = "Popular Movie"))
 
         coEvery {
             apiService.getPopularMovies(
                 page,
-                categoryId
+                genreId
             )
         } returns ResultResponse(results = expected)
 
-        val result = dataSource.getPopularMovies(page, categoryId)
+        val result = dataSource.getPopularMovies(page, genreId)
 
         assertThat(result).hasSize(1)
 
-        coVerify { apiService.getPopularMovies(page, categoryId) }
+        coVerify { apiService.getPopularMovies(page, genreId) }
     }
 
     @Test
@@ -524,40 +500,42 @@ class RemoteMovieDataSourceImplTest {
         coEvery {
             apiService.getAllMovies(
                 page,
-                categoryId,
+                genreId,
                 sortBy
             )
         } returns ResultResponse(results = expected)
 
-        val result = dataSource.getAllMovies(page, categoryId, sortBy)
+        val result = dataSource.getAllMovies(page, genreId, sortBy)
 
         assertThat(result).hasSize(1)
 
-        coVerify { apiService.getAllMovies(page, categoryId, sortBy) }
+        coVerify { apiService.getAllMovies(page, genreId, sortBy) }
     }
 
     @Test
-    fun `getFreeToWatchMovies should handle categoryId`() = runTest {
+    fun `getFreeToWatchMovies should handle genreId`() = runTest {
 
         val expected = listOf(MovieRemoteDto(id = 1, title = "Free Movie"))
 
         coEvery {
             apiService.getFreeToWatchMovies(
                 page,
-                categoryId
+                genreId
             )
         } returns ResultResponse(results = expected)
 
-        val result = dataSource.getFreeToWatchMovies(page, categoryId)
+        val result = dataSource.getFreeToWatchMovies(page, genreId)
 
         assertThat(result).hasSize(1)
 
-        coVerify { apiService.getFreeToWatchMovies(page, categoryId) }
+        coVerify { apiService.getFreeToWatchMovies(page, genreId) }
     }
 
     private companion object {
+
+        val remoteMovies = MovieRemoteDto(id = 1, title = "Movie 1", posterPath = null)
         const val page = 1
-        const val categoryId = "122"
+        const val genreId = 122L
         const val sortBy = "popularity.desc"
     }
 }

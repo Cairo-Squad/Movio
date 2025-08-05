@@ -26,15 +26,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 
 @Composable
@@ -42,15 +43,22 @@ fun TabRow(
     tabs: List<String>,
     selectedTabIndex: Int,
     onTabSelected: (Int) -> Unit,
+    scrollProgress: Float,
+    tabColorWithNoScroll:Color,
+    tabColorWithScroll:Color,
+    indicatorColorWithScroll:Brush,
+    indicatorColorWithNoScroll:Brush,
     modifier: Modifier = Modifier,
+
 ) {
-
     val tabPositions = remember { mutableStateMapOf<Int, Pair<Int, Int>>() }
-
     var rowWidthPx by remember { mutableIntStateOf(0) }
 
     val layoutDirection = LocalLayoutDirection.current
     val density = LocalDensity.current
+
+    val horizontalScrollingState = rememberScrollState()
+    val horizontalScrollingValueDp = with(density) { horizontalScrollingState.value.toDp() }
 
     val indicatorOffsetX by animateDpAsState(
         targetValue = with(density) {
@@ -72,26 +80,53 @@ fun TabRow(
         animationSpec = tween(200)
     )
 
-    Box(modifier = modifier.fillMaxWidth()) {
 
+    val selectedTabTitle = tabs.getOrNull(selectedTabIndex)
+    val indicatorBrush = if (selectedTabTitle == stringResource(com.cairosquad.design_system.R.string.categories)) {
+
+        if (scrollProgress >= 0.5f) {
+            indicatorColorWithScroll
+        } else {
+            indicatorColorWithScroll
+        }
+    } else {
+
+        if (scrollProgress >= 0.5f) {
+            indicatorColorWithScroll
+        } else {
+            indicatorColorWithNoScroll
+        }
+    }
+
+    Box(modifier = modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(36.dp)
-                .horizontalScroll(rememberScrollState())
+                .horizontalScroll(horizontalScrollingState)
                 .onGloballyPositioned { rowWidthPx = it.size.width },
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
             tabs.forEachIndexed { index, title ->
                 val isSelected = selectedTabIndex == index
+                val isLightTheme = !Theme.isDark
+
                 val textColor by animateColorAsState(
-                    targetValue = if (isSelected)
-                        Theme.color.brand.onPrimaryContainer
-                    else
-                        Theme.color.surfaces.onSurfaceVariant,
+                    targetValue = when {
+                        isLightTheme && isSelected && scrollProgress > 0.5f ->
+                            tabColorWithScroll
+                        isSelected ->
+                            if (selectedTabTitle == stringResource(com.cairosquad.design_system.R.string.categories))
+                                Theme.color.brand.onPrimaryContainer
+                        else
+                            tabColorWithNoScroll
+                        else ->
+                            Theme.color.surfaces.onSurfaceVariant
+                    },
                     animationSpec = tween(300)
                 )
+
                 val textStyle = if (isSelected)
                     Theme.textStyle.title.mediumMedium16
                 else
@@ -124,31 +159,11 @@ fun TabRow(
         if (tabPositions.containsKey(selectedTabIndex)) {
             Box(
                 modifier = Modifier
-                    .offset(x = indicatorOffsetX)
+                    .offset(x = indicatorOffsetX - horizontalScrollingValueDp)
                     .height(1.dp)
                     .width(indicatorWidth)
                     .align(Alignment.BottomStart)
-                    .background(brush = Theme.color.gradiant.horizontalGradient)
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun TabRowPreview() {
-    MovioTheme(isDarkTheme = true) {
-        val tabs = listOf("Top Results", "Movies", "Series", "Artists")
-        var selectedTabIndex by remember { mutableIntStateOf(0) }
-        Box(
-            Modifier
-                .background(Theme.color.surfaces.surface)
-                .padding(16.dp)
-        ) {
-            TabRow(
-                tabs = tabs,
-                selectedTabIndex = selectedTabIndex,
-                onTabSelected = { selectedTabIndex = it }
+                    .background(brush = indicatorBrush)
             )
         }
     }

@@ -1,7 +1,8 @@
 package com.cairosquad.viewmodel.details.series
 
 import com.cairosquad.domain.exception.MovioException
-import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
+import com.cairosquad.domain.usecase.LoginUseCase
+import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Review
 import com.cairosquad.entity.Season
@@ -10,14 +11,25 @@ import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState.SectionStatus
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 
-class SeriesDetailsViewModel(
-    private val seriesDetailsUseCase: GetSeriesDetailsUseCase,
-    seriesId: Long
+@HiltViewModel(assistedFactory = SeriesDetailsViewModel.Factory::class)
+class SeriesDetailsViewModel @AssistedInject constructor(
+    private val manageSeriesUseCase: ManageSeriesUseCase,
+    private val loginUseCase: LoginUseCase,
+    @Assisted private val seriesId: Long,
 ) : BaseViewModel<SeriesDetailsScreenState, SeriesDetailEffect>(SeriesDetailsScreenState()),
     SeriesDetailsInteractionListener {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(seriesId: Long): SeriesDetailsViewModel
+    }
 
     init {
         loadDetails(seriesId)
@@ -40,11 +52,31 @@ class SeriesDetailsViewModel(
     }
 
     override fun onFavoriteClicked() {
-        updateState { it.copy(showLoginBottomSheet = true) }
+        tryToCall(
+            block = loginUseCase::isUserLoggedIn,
+            onSuccess = { authed ->
+                if (!authed) {
+                    updateState { it.copy(showLoginBottomSheet = true) }
+                } else {
+
+                }
+            },
+            onError = {}
+        )
     }
 
     override fun onRateClicked() {
-        updateState { it.copy(showRateBottomSheet = true) }
+        tryToCall(
+            block = loginUseCase::isUserLoggedIn,
+            onSuccess = { authed ->
+                if (!authed) {
+                    updateState { it.copy(showLoginBottomSheet = true) }
+                } else {
+                    updateState { it.copy(showRateBottomSheet = true) }
+                }
+            },
+            onError = {}
+        )
     }
 
     override fun onPlayTrailerClicked() {
@@ -52,8 +84,23 @@ class SeriesDetailsViewModel(
     }
 
     override fun onAddToListClicked() {
-        updateState { it.copy(showAddToListBottomSheet = true) }
+        tryToCall(
+            block = loginUseCase::isUserLoggedIn,
+            onSuccess = { authed ->
+                if (!authed) {
+                    updateState { it.copy(showLoginBottomSheet = true) }
+                } else {
+                    updateState { it.copy(showAddToListBottomSheet = true) }
+                }
+            },
+            onError = {}
+        )
     }
+
+    override fun onCreateListClicked() {
+        updateState { it.copy(showAddToListBottomSheet = false, showCreateListBottomSheet = true) }
+    }
+
 
     override fun onDismissShareBottomSheet() {
         updateState { it.copy(showShareBottomSheet = false) }
@@ -69,6 +116,14 @@ class SeriesDetailsViewModel(
 
     override fun onDismissAddToListBottomSheet() {
         updateState { it.copy(showAddToListBottomSheet = false) }
+    }
+
+    override fun onDismissCreateListBottomSheet() {
+        updateState { it.copy(showCreateListBottomSheet = false) }
+    }
+
+    override fun onValueChange(listName: String) {
+        updateState { it.copy(listName = listName) }
     }
 
     override fun onRateChange(rate: Int) {
@@ -93,7 +148,14 @@ class SeriesDetailsViewModel(
                 }
             },
             block = { delay(2000) },
-            onSuccess = { updateState { it.copy(showSnackBar = false, snackMessage = message) } },
+            onSuccess = {
+                updateState {
+                    it.copy(
+                        showSnackBar = false,
+                        snackMessage = message
+                    )
+                }
+            },
             onError = {},
         )
     }
@@ -132,12 +194,20 @@ class SeriesDetailsViewModel(
         sendEffect(SeriesDetailEffect.NavigateToAllSimilar(seriesId))
     }
 
+    override fun onNavigateToLogin() {
+        sendEffect(SeriesDetailEffect.NavigateToLogin)
+    }
+
+    override fun onRefresh() {
+            loadDetails(seriesId)
+    }
+
     private fun getSeriesDetails(seriesId: Long) {
         tryToCall(
             onStart = {
                 updateState { it.copy(basicDetailsSectionState = SectionStatus.LOADING) }
             },
-            block = { seriesDetailsUseCase.getSeries(seriesId) },
+            block = { manageSeriesUseCase.getSeriesById(seriesId) },
             onSuccess = ::setBasicSeriesDetailsToUiState,
             onError = { throwable ->
                 setError(throwable) { copy(basicDetailsSectionState = SectionStatus.ERROR) }
@@ -160,7 +230,7 @@ class SeriesDetailsViewModel(
             onStart = {
                 updateState { it.copy(castSectionState = SectionStatus.LOADING) }
             },
-            block = { seriesDetailsUseCase.getSeriesTopCast(seriesId, 1) },
+            block = { manageSeriesUseCase.getSeriesTopCast(seriesId, 1) },
             onSuccess = ::setTopCastToUiState,
             onError = { throwable ->
                 setError(throwable) { copy(castSectionState = SectionStatus.ERROR) }
@@ -183,7 +253,7 @@ class SeriesDetailsViewModel(
             onStart = {
                 updateState { it.copy(seasonsSectionState = SectionStatus.LOADING) }
             },
-            block = { seriesDetailsUseCase.getSeriesSeasons(seriesId) },
+            block = { manageSeriesUseCase.getSeriesSeasons(seriesId) },
             onSuccess = ::setSeasonToUiState,
             onError = { throwable ->
                 setError(throwable) { copy(seasonsSectionState = SectionStatus.ERROR) }
@@ -192,21 +262,21 @@ class SeriesDetailsViewModel(
         )
     }
 
-    private fun setSeasonToUiState(seasons: List<Season>) {
-        updateState {
-            it.copy(
-                seasonsSectionState = SectionStatus.SUCCESS,
-                seasons = seasons.map { it.toUiState() }.reversed()
-            )
-        }
-    }
+	private fun setSeasonToUiState(seasons: List<Season>) {
+		updateState {
+			it.copy(
+				seasonsSectionState = SectionStatus.SUCCESS,
+				seasons = seasons.map { it.toUiState() }
+			)
+		}
+	}
 
     private fun getReviews(seriesId: Long) {
         tryToCall(
             onStart = {
                 updateState { it.copy(reviewsSectionState = SectionStatus.LOADING) }
             },
-            block = { seriesDetailsUseCase.getSeriesReviews(seriesId, 1) },
+            block = { manageSeriesUseCase.getSeriesReviews(seriesId, 1) },
             onSuccess = ::setReviewsToUiState,
             onError = { throwable ->
                 setError(throwable) { copy(reviewsSectionState = SectionStatus.ERROR) }
@@ -229,7 +299,7 @@ class SeriesDetailsViewModel(
             onStart = {
                 updateState { it.copy(similarSeriesSectionState = SectionStatus.LOADING) }
             },
-            block = { seriesDetailsUseCase.getSimilarSeries(seriesId, 1) },
+            block = { manageSeriesUseCase.getSimilarSeries(seriesId, 1) },
             onSuccess = ::setSimilarSeriesToUiState,
             onError = { throwable ->
                 setError(throwable) { copy(similarSeriesSectionState = SectionStatus.ERROR) }

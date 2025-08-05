@@ -6,7 +6,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -16,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import com.cairosquad.design_system.R
+
 @Composable
 fun ExpandableText(
     text: String,
@@ -23,17 +29,17 @@ fun ExpandableText(
     style: TextStyle,
     modifier: Modifier = Modifier,
     collapsedMaxLine: Int = 4,
-    showMoreText: String = stringResource(R.string.more),
+    showMoreText: String = stringResource(R.string.more_with_dotes_behind),
     showMoreStyle: TextStyle =TextStyle(fontWeight = FontWeight.W500),
     showMoreColor: Color = color,
-    showLessText: String =stringResource(R.string.less),
+    showLessText: String =stringResource(R.string.less_with_dotes_behind),
     showLessStyle: TextStyle = showMoreStyle,
     showLessColor: Color = color,
     textAlign: TextAlign? = null,
 ) {
-    var isExpanded by remember { mutableStateOf(false) }
-    var isOverflowing by remember { mutableStateOf(false) }
-    var lastCharIndex by remember { mutableIntStateOf(0) }
+    var isExpanded by rememberSaveable { mutableStateOf(false) }
+    var isOverflowing by rememberSaveable { mutableStateOf(false) }
+    var lastCharIndex by rememberSaveable { mutableIntStateOf(0) }
 
     Box(
         modifier = modifier.clickable(enabled = isOverflowing) {
@@ -51,6 +57,7 @@ fun ExpandableText(
                         withStyle(
                             style = showLessStyle.toSpanStyle().copy(color = showLessColor)
                         ) {
+                            append(" ")
                             append(showLessText)
                         }
                     } else {
@@ -59,6 +66,7 @@ fun ExpandableText(
                         val visibleText = text.substring(0, safeEnd)
                             .dropLastWhile { it.isWhitespace() || it == '.' }
                         append(visibleText)
+                        append(" ")
 
                         withStyle(
                             style = showMoreStyle.toSpanStyle().copy(color = showMoreColor)

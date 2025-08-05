@@ -1,16 +1,26 @@
 package com.cairosquad.viewmodel.details.artist
 
 import com.cairosquad.domain.exception.MovioException
-import com.cairosquad.domain.usecase.artists.GetArtistDetailsUseCase
+import com.cairosquad.domain.usecase.ManageArtistUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 
-class ArtistViewModel(
-    private val getArtistDetailsUseCase: GetArtistDetailsUseCase,
-    artistId: Long
+@HiltViewModel(assistedFactory = ArtistViewModel.Factory::class)
+class ArtistViewModel @AssistedInject constructor(
+    private val manageArtistUseCase: ManageArtistUseCase,
+    @Assisted private val artistId: Long,
 ) : BaseViewModel<ArtistScreenState, ArtistEffect>(initialState = ArtistScreenState()),
     ArtistInteractionListener {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(artistId: Long): ArtistViewModel
+    }
 
     init {
         loadArtistDetails(artistId)
@@ -24,7 +34,7 @@ class ArtistViewModel(
                 updateState { it.copy(screenStatus = ArtistScreenState.ScreenStatus.LOADING) }
             },
             block = {
-                getArtistDetailsUseCase.getArtist(artistId).toArtistUiState()
+                manageArtistUseCase.getArtistById(artistId).toArtistUiState()
             },
             onSuccess = { artist ->
                 updateState {
@@ -47,7 +57,7 @@ class ArtistViewModel(
                 updateState { it.copy(screenStatus = ArtistScreenState.ScreenStatus.LOADING) }
             },
             block = {
-                getArtistDetailsUseCase.getMoviesOfArtist(artistId)
+                manageArtistUseCase.getMoviesOfArtist(artistId)
             },
             onSuccess = { movies ->
                 updateState {
@@ -71,14 +81,14 @@ class ArtistViewModel(
                 updateState { it.copy(screenStatus = ArtistScreenState.ScreenStatus.LOADING) }
             },
             block = {
-                val series = getArtistDetailsUseCase
+                val series = manageArtistUseCase
                     .getSeriesOfArtist(artistId)
                     .map { it.toArtistSeriesUiState() }
                 series
             },
             onSuccess = { series ->
                 updateState {
-                    it.copy(KnownForSeries = series)
+                    it.copy(knownForSeries = series)
                 }
             },
             onError = { e ->
@@ -96,10 +106,19 @@ class ArtistViewModel(
         sendEffect(ArtistEffect.NavigateBack)
     }
 
-    override fun onMovieClick(movieID: Long) {
-        sendEffect(ArtistEffect.NavigateToMovieDetails(movieID))
+    override fun onMovieClick(movieId: Long) {
+        sendEffect(ArtistEffect.NavigateToMovieDetails(movieId))
     }
 
+    override fun onSeriesClick(seriesId: Long) {
+        sendEffect(ArtistEffect.NavigateToSeriesDetails(seriesId))
+    }
+
+    override fun onRefresh() {
+            loadArtistDetails(artistId)
+            loadArtistMovies(artistId)
+            loadArtistSeries(artistId)
+    }
     private fun handleArtistException(e: Throwable): ErrorStatus {
         return when (e) {
             is MovioException -> {
@@ -110,5 +129,3 @@ class ArtistViewModel(
         }
     }
 }
-
-

@@ -1,6 +1,6 @@
 package com.cairosquad.viewmodel.details.series.season
 
-import com.cairosquad.domain.usecase.series.GetSeriesDetailsUseCase
+import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Episode
 import com.cairosquad.entity.Season
 import com.cairosquad.viewmodel.details.series.season.SeasonDetailsScreenState.ScreenStatus
@@ -28,7 +28,7 @@ class SeasonViewModelTest {
 
     private val testDispatcher = StandardTestDispatcher()
 
-    private lateinit var getSeriesDetailsUseCase: GetSeriesDetailsUseCase
+    private lateinit var manageSeriesUseCase: ManageSeriesUseCase
     private lateinit var viewModel: SeasonsViewModel
 
     private val seriesId = 1L
@@ -38,7 +38,7 @@ class SeasonViewModelTest {
         Dispatchers.setMain(testDispatcher)
         mockkStatic(Dispatchers::class)
         every { Dispatchers.IO } returns testDispatcher
-        getSeriesDetailsUseCase = mockk(relaxed = true)
+        manageSeriesUseCase = mockk(relaxed = true)
     }
 
     @After
@@ -55,11 +55,11 @@ class SeasonViewModelTest {
         val mockEpisodes = listOf(
             Episode(1, 1, "e1.jpg", "Ep1", 45, 8.0f, 2, 1)
         )
-        coEvery { getSeriesDetailsUseCase.getSeriesSeasons(any()) } returns mockSeasons
-        coEvery { getSeriesDetailsUseCase.getEpisodes(any(), any()) } returns mockEpisodes
+        coEvery { manageSeriesUseCase.getSeriesSeasons(any()) } returns mockSeasons
+        coEvery { manageSeriesUseCase.getEpisodes(any(), any()) } returns mockEpisodes
 
         // Act
-        viewModel = SeasonsViewModel(getSeriesDetailsUseCase, testDispatcher, seriesId)
+        viewModel = SeasonsViewModel(manageSeriesUseCase, seriesId, testDispatcher)
 
         advanceUntilIdle()
 
@@ -71,11 +71,11 @@ class SeasonViewModelTest {
     @Test
     fun `should show error state when getSeriesSeasons throws exception`() = runTest {
         // Arrange
-        coEvery { getSeriesDetailsUseCase.getSeriesSeasons(any()) } throws IOException()
-        coEvery { getSeriesDetailsUseCase.getEpisodes(any(), any()) } returns emptyList()
+        coEvery { manageSeriesUseCase.getSeriesSeasons(any()) } throws IOException()
+        coEvery { manageSeriesUseCase.getEpisodes(any(), any()) } returns emptyList()
 
         // Act
-        viewModel = SeasonsViewModel(getSeriesDetailsUseCase, testDispatcher, seriesId)
+        viewModel = SeasonsViewModel(manageSeriesUseCase, seriesId, testDispatcher)
         advanceUntilIdle()
 
         // Assert
@@ -86,7 +86,7 @@ class SeasonViewModelTest {
 
     @Test
     fun `should emit NavigateBack effect manually`() = runTest {
-        viewModel = SeasonsViewModel(getSeriesDetailsUseCase, testDispatcher, seriesId)
+        viewModel = SeasonsViewModel(manageSeriesUseCase, seriesId, testDispatcher)
         advanceUntilIdle()
 
         var emittedEffect: SeasonDetailEffect? = null
@@ -111,11 +111,11 @@ class SeasonViewModelTest {
         val mockSeason = Season(1, 2, "S2", 10, 8.0f, "path.jpg", "overview", 2020L)
         val mockEpisode = Episode(1, 1, "e1.jpg", "Ep1", 45, 8.0f, 2, 1)
 
-        coEvery { getSeriesDetailsUseCase.getSeriesSeasons(any()) } returns listOf(mockSeason)
-        coEvery { getSeriesDetailsUseCase.getEpisodes(any(), any()) } returns listOf(mockEpisode)
+        coEvery { manageSeriesUseCase.getSeriesSeasons(any()) } returns listOf(mockSeason)
+        coEvery { manageSeriesUseCase.getEpisodes(any(), any()) } returns listOf(mockEpisode)
 
         // Act
-        viewModel = SeasonsViewModel(getSeriesDetailsUseCase, testDispatcher, seriesId)
+        viewModel = SeasonsViewModel(manageSeriesUseCase, seriesId, testDispatcher)
         advanceUntilIdle()
 
         // Assert
@@ -130,7 +130,7 @@ class SeasonViewModelTest {
         // Arrange
         val episodeId = 123L
         val seasonNumber = 1
-        viewModel = SeasonsViewModel(getSeriesDetailsUseCase, testDispatcher, seriesId)
+        viewModel = SeasonsViewModel(manageSeriesUseCase, seriesId, testDispatcher)
         advanceUntilIdle()
 
         var emittedEffect: SeasonDetailEffect? = null

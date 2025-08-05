@@ -1,7 +1,6 @@
 package com.cairosquad.ui.search.content
 
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,17 +14,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.cairosquad.design_system.R
+import com.cairosquad.design_system.basic_component.Button
 import com.cairosquad.design_system.basic_component.InputField
 import com.cairosquad.design_system.basic_component.TabRow
 import com.cairosquad.design_system.text_style.defaultTextStyle
@@ -33,6 +36,7 @@ import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.ArtistCard
 import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.ui.movio_component.StateMessage
+import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.search.SearchInteractionListener
 import com.cairosquad.viewmodel.search.SearchScreenState
 
@@ -42,37 +46,33 @@ fun SearchResultContent(
     listener: SearchInteractionListener,
     modifier: Modifier = Modifier
 ) {
+    val scrollState = rememberScrollState()
     val movies = state.movies.collectAsLazyPagingItems()
     val artists = state.artists.collectAsLazyPagingItems()
     val series = state.series.collectAsLazyPagingItems()
-    val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
-    DisposableEffect(backPressedDispatcher) {
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                listener.onBackClicked()
-            }
-        }
-        backPressedDispatcher?.addCallback(callback)
-        onDispose {
-            callback.remove()
-        }
+    BackHandler(enabled = true) {
+        listener.onBackClicked()
     }
 
     val selectedTabIndex = state.selectedTabIndex
+    val density = LocalDensity.current
+    val scrollThresholdPx = with(density) { 275.dp.toPx() }
+    val progress = (scrollState.value / scrollThresholdPx).coerceIn(0f, 1f)
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(start = 16.dp, top = 16.dp, end = 16.dp)
+            .padding(top = 16.dp)
     ) {
 
         InputField(
             modifier = Modifier
                 .background(Theme.color.surfaces.surface)
-                .padding(bottom = 12.dp),
+                .padding(bottom = 12.dp)
+                .padding(horizontal = 16.dp),
             value = state.query,
-            onValueChange = listener::onQueryTextChanged,
-            placeholder = stringResource(R.string.search),
+            onValueChange = { },
+            placeholder = stringResource(R.string.search_with_dotes_ahead),
             leadingIcon = R.drawable.search_bottom_nav,
             onFocusChanged = {
                 if (it) {
@@ -81,7 +81,6 @@ fun SearchResultContent(
             },
             readOnly = true
         )
-
         TabRow(
             modifier = Modifier.padding(bottom = 12.dp),
             tabs = listOf(
@@ -91,7 +90,13 @@ fun SearchResultContent(
                 stringResource(R.string.artists),
             ),
             selectedTabIndex = selectedTabIndex,
-            onTabSelected = { listener.onTabSelected(it) }
+            onTabSelected = { listener.onTabSelected(it) },
+            scrollProgress = progress,
+            tabColorWithScroll = Theme.color.brand.onPrimaryContainer,
+            tabColorWithNoScroll = Theme.color.brand.onPrimaryContainer,
+            indicatorColorWithNoScroll = Theme.color.gradiant.horizontalCategoriesGradient,
+            indicatorColorWithScroll = Theme.color.gradiant.horizontalCategoriesGradient
+
         )
 
         when (selectedTabIndex) {
@@ -128,13 +133,25 @@ private fun AllResultsTabContent(
     val isLoading = movies.loadState.refresh is LoadState.Loading
     val isError = movies.loadState.refresh is LoadState.Error
     val isEmpty = movies.itemCount == 0 && !isLoading && !isError
+    val error = (movies.loadState.refresh as? LoadState.Error)?.error
+
+    LaunchedEffect(error) {
+        if (error != null) {
+            listener.onTabPagingError(error)
+        }
+    }
 
     when {
         isLoading -> {
             SearchLoadingContent(
-                state = state,
-                listener = listener,
                 modifier = modifier
+            )
+        }
+
+        isError -> {
+            SearchResultFail(
+                errorStatus = state.errorStatus,
+                listener
             )
         }
 
@@ -146,7 +163,7 @@ private fun AllResultsTabContent(
                 StateMessage(
                     imageDrawable = R.drawable.no_result,
                     titleId = R.string.no_results_found,
-                    descriptionId = R.string.no_results_found_description
+                    descriptionId = R.string.no_search_results_found_description
                 )
             }
         }
@@ -157,7 +174,11 @@ private fun AllResultsTabContent(
                 columns = GridCells.Adaptive(minSize = 101.33.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(bottom = 16.dp)
+                contentPadding = PaddingValues(
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp
+                )
             ) {
                 items(movies.itemCount) { index ->
                     movies[index]?.let { result ->
@@ -192,11 +213,17 @@ private fun MoviesTabContent(
     when {
         isLoading -> {
             SearchLoadingContent(
-                state = state,
-                listener = listener,
                 modifier = modifier
             )
         }
+
+        isError -> {
+            SearchResultFail(
+                errorStatus = state.errorStatus,
+                listener
+            )
+        }
+
         isEmpty -> {
             Box(
                 modifier = modifier.fillMaxSize(),
@@ -205,7 +232,7 @@ private fun MoviesTabContent(
                 StateMessage(
                     imageDrawable = R.drawable.no_result,
                     titleId = R.string.no_results_found,
-                    descriptionId = R.string.no_results_found_description
+                    descriptionId = R.string.no_search_results_found_description
                 )
             }
         }
@@ -216,7 +243,11 @@ private fun MoviesTabContent(
                 columns = GridCells.Adaptive(minSize = 101.33.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(bottom = 16.dp)
+                contentPadding = PaddingValues(
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp
+                )
             ) {
                 items(movies.itemCount) { index ->
                     movies[index]?.let { movie ->
@@ -248,13 +279,25 @@ private fun SeriesTabContent(
     val isLoading = series.loadState.refresh is LoadState.Loading
     val isError = series.loadState.refresh is LoadState.Error
     val isEmpty = series.itemCount == 0 && !isLoading && !isError
+    val error = (series.loadState.refresh as? LoadState.Error)?.error
+
+    LaunchedEffect(error) {
+        if (error != null) {
+            listener.onTabPagingError(error)
+        }
+    }
 
     when {
         isLoading -> {
             SearchLoadingContent(
-                state = state,
-                listener = listener,
                 modifier = modifier
+            )
+        }
+
+        isError -> {
+            SearchResultFail(
+                errorStatus = state.errorStatus,
+                listener
             )
         }
 
@@ -266,7 +309,7 @@ private fun SeriesTabContent(
                 StateMessage(
                     imageDrawable = R.drawable.no_result,
                     titleId = R.string.no_results_found,
-                    descriptionId = R.string.no_results_found_description
+                    descriptionId = R.string.no_search_results_found_description
                 )
             }
         }
@@ -277,7 +320,11 @@ private fun SeriesTabContent(
                 columns = GridCells.Adaptive(minSize = 101.33.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(bottom = 16.dp)
+                contentPadding = PaddingValues(
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp
+                )
             ) {
                 items(series.itemCount) { index ->
                     series[index]?.let { series ->
@@ -307,13 +354,25 @@ private fun ArtistsTabContent(
     val isLoading = artist.loadState.refresh is LoadState.Loading
     val isError = artist.loadState.refresh is LoadState.Error
     val isEmpty = artist.itemCount == 0 && !isLoading && !isError
+    val error = (artist.loadState.refresh as? LoadState.Error)?.error
+
+    LaunchedEffect(error) {
+        if (error != null) {
+            listener.onTabPagingError(error)
+        }
+    }
 
     when {
         isLoading -> {
             SearchLoadingContent(
-                state = state,
-                listener = listener,
                 modifier = modifier
+            )
+        }
+
+        isError -> {
+            SearchResultFail(
+                errorStatus = state.errorStatus,
+                listener
             )
         }
 
@@ -325,7 +384,7 @@ private fun ArtistsTabContent(
                 StateMessage(
                     imageDrawable = R.drawable.no_result,
                     titleId = R.string.no_results_found,
-                    descriptionId = R.string.no_results_found_description
+                    descriptionId = R.string.no_search_results_found_description
                 )
             }
         }
@@ -336,7 +395,11 @@ private fun ArtistsTabContent(
                 columns = GridCells.Adaptive(minSize = 101.33.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(bottom = 16.dp)
+                contentPadding = PaddingValues(
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp
+                )
             ) {
                 items(artist.itemCount) { index ->
                     artist[index]?.let { artist ->
@@ -353,6 +416,63 @@ private fun ArtistsTabContent(
     }
 }
 
+@Composable
+private fun SearchResultFail(
+    errorStatus: ErrorStatus?,
+    listener: SearchInteractionListener,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Spacer(Modifier.weight(1f))
+        StateMessage(
+            imageDrawable = when (errorStatus) {
+                ErrorStatus.NO_INTERNET -> R.drawable.no_internet
+                ErrorStatus.NETWORK_ERROR -> R.drawable.no_result
+                ErrorStatus.UNKNOWN_ERROR -> R.drawable.no_result
+                null -> R.drawable.no_result
+                ErrorStatus.UNAUTHORIZED -> R.drawable.no_result
+                ErrorStatus.EMPTY -> R.drawable.no_result
+                ErrorStatus.PARSING_ERROR -> R.drawable.no_result
+            },
+            titleId = when (errorStatus) {
+                ErrorStatus.NO_INTERNET -> R.string.no_internet_connection
+                ErrorStatus.NETWORK_ERROR -> R.string.an_error_occured_while_getting_results
+                ErrorStatus.UNKNOWN_ERROR -> R.string.an_unexpected_error_occurred
+                null -> R.string.an_unexpected_error_occurred
+                ErrorStatus.EMPTY -> R.string.no_results_found
+                ErrorStatus.PARSING_ERROR -> R.string.error_parsing_data
+                ErrorStatus.UNAUTHORIZED -> R.drawable.no_result
+            },
+            descriptionId = when (errorStatus) {
+                ErrorStatus.NO_INTERNET -> R.string.internet_is_not_available_description
+                ErrorStatus.NETWORK_ERROR -> R.string.internet_is_not_available_description
+                ErrorStatus.UNKNOWN_ERROR -> R.string.an_unexpected_error_occurred_description
+                null -> R.string.an_unexpected_error_occurred_description
+                ErrorStatus.UNAUTHORIZED -> R.string.unauthorized_access
+                ErrorStatus.EMPTY -> R.string.no_results_found
+                ErrorStatus.PARSING_ERROR -> R.string.error_parsing_data
+            }
+        )
+        Spacer(Modifier.weight(1f))
+        if (errorStatus == ErrorStatus.NO_INTERNET) {
+            Button(
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(bottom = 32.dp)
+                    .padding(horizontal = 16.dp),
+                text = stringResource(R.string.try_again),
+                onClick = listener::onRefresh
+            )
+        }
+    }
+}
+
 
 @Composable
 fun SearchResultText(
@@ -360,7 +480,9 @@ fun SearchResultText(
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier.padding(bottom = 16.dp),
+        modifier = modifier
+            .padding(bottom = 16.dp)
+            .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         BasicText(

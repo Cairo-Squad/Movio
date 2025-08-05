@@ -1,8 +1,10 @@
 package com.cairosquad.ui.details
 
+import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,9 +25,11 @@ import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
+import com.cairosquad.design_system.modifier.dropShadow
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.LoadingMovieImage
 import com.cairosquad.ui.movio_component.SeasonCard
@@ -35,14 +40,19 @@ import com.cairosquad.viewmodel.details.series.season.SeasonDetailEffect
 import com.cairosquad.viewmodel.details.series.season.SeasonDetailsInteractionListener
 import com.cairosquad.viewmodel.details.series.season.SeasonDetailsScreenState
 import com.cairosquad.viewmodel.details.series.season.SeasonsViewModel
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
+import kotlinx.coroutines.Dispatchers
 
 @Composable
 fun SeasonsScreen(
     seriesId: Long,
-    viewModel: SeasonsViewModel = koinViewModel { parametersOf(seriesId) }
 ) {
+    val viewModel: SeasonsViewModel =
+        hiltViewModel<SeasonsViewModel, SeasonsViewModel.Factory> { factory ->
+            factory.create(
+                seriesId = seriesId,
+                dispatcher = Dispatchers.IO
+            )
+        }
     val uiState by viewModel.screenState.collectAsStateWithLifecycle()
     val navController = LocalNavController.current
 
@@ -61,40 +71,55 @@ fun SeasonsScreen(
 
     SeasonScreenContent(
         uiState = uiState,
-        listener = viewModel
+        listener = viewModel,
     )
 }
 
 @Composable
 fun SeasonScreenContent(
     uiState: SeasonDetailsScreenState,
-    listener: SeasonDetailsInteractionListener
+    listener: SeasonDetailsInteractionListener,
 ) {
     Box {
         Box(
             modifier = Modifier
                 .windowInsetsPadding(WindowInsets.statusBars)
                 .size(230.dp)
-                .blur(264.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
-                .background(
-                    color = Theme.color.surfaces.onSurfaceAt5,
-                    shape = CircleShape
-                )
                 .align(Alignment.TopEnd)
+                .then(
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                        Modifier.dropShadow(
+                            shape = CircleShape,
+                            color = Theme.color.surfaces.onSurfaceAt5,
+                            blur = 264.dp,
+                            offsetX = 0.dp,
+                            offsetY = 0.dp,
+                            alpha = 0.10f
+                        )
+                    } else {
+                        Modifier
+                            .blur(264.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
+                            .background(
+                                color = Theme.color.surfaces.onSurfaceAt5,
+                                shape = CircleShape
+                            )
+                    }
+                )
         )
+        Column( modifier = Modifier
+            .fillMaxWidth()
+            .windowInsetsPadding(WindowInsets.systemBars)
+        ) {
+            AppBar(
+                title = stringResource(R.string.current_season),
+                onBackButtonClicked = listener::onBackClicked,
+            )
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.statusBars),
+                .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp)
         ) {
-            stickyHeader {
-                AppBar(
-                    title = stringResource(R.string.current_season),
-                    onBackButtonClicked = listener::onBackClicked
-                )
-            }
             when (uiState.seasonSectionState) {
                 SeasonDetailsScreenState.ScreenStatus.LOADING -> {
                     items(10) {
@@ -125,9 +150,14 @@ fun SeasonScreenContent(
                     }
 
                 }
+                SeasonDetailsScreenState.ScreenStatus.ERROR -> {
+                   item {
+                       DetailsFailContent(onTryAgainClick = listener::onRefresh)
+                   }
 
-                SeasonDetailsScreenState.ScreenStatus.ERROR -> {}
+                }
             }
+        }
         }
     }
 }

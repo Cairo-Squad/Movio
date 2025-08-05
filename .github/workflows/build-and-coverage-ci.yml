@@ -75,13 +75,12 @@ jobs:
           echo "IMAGE_BASE_URL = \"$IMAGE_BASE_URL\"" >> local.properties
 
           # Build signed release APK
-          ./gradlew assembleRelease  testClasses  --build-cache
+          ./gradlew assembleDebug --build-cache
 
   test:
 
     name: Verify Coverage
     runs-on: ubuntu-latest
-    needs: build
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4

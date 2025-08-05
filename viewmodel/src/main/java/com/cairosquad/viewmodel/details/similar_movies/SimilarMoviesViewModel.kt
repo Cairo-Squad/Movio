@@ -1,18 +1,20 @@
 package com.cairosquad.viewmodel.details.similar_movies
 
 import com.cairosquad.domain.exception.MovioException
-import com.cairosquad.domain.usecase.movies.GetMovieDetailsUseCase
+import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.similar_movies.SimilarMoviesScreenState.ScreenStatus
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import javax.inject.Inject
 
-class SimilarMoviesViewModel(
-    private val getMoviesDetailsUseCase: GetMovieDetailsUseCase
+@HiltViewModel
+class SimilarMoviesViewModel @Inject constructor(
+    private val manageMoviesUseCase: ManageMoviesUseCase
 ) : BaseViewModel<SimilarMoviesScreenState, SimilarMoviesEffect>(SimilarMoviesScreenState()),
     SimilarMoviesInteractionListener {
-
 
     fun fetchSimilarMovies(movieId: Long) {
         tryToCall(
@@ -24,7 +26,7 @@ class SimilarMoviesViewModel(
                 }
             },
             block = {
-                getMoviesDetailsUseCase.getSimilarMovies(movieId)
+                manageMoviesUseCase.getSimilarMovies(movieId)
             }, onSuccess = { movies ->
                 updateState {
                     it.copy(
@@ -37,9 +39,10 @@ class SimilarMoviesViewModel(
                 updateState {
                     it.copy(
                         screenStatus = ScreenStatus.ERROR,
-                        errorStatus = when(e){
+                        errorStatus = when (e) {
                             is MovioException ->
                                 exceptionToErrorStatus(e)
+
                             else -> ErrorStatus.UNKNOWN_ERROR
 
                         }
@@ -63,5 +66,9 @@ class SimilarMoviesViewModel(
         sendEffect(SimilarMoviesEffect.NavigateToMovieDetails(movieId))
     }
 
-
+    override fun onRefresh(movieId: Long) {
+            updateState { it.copy(isRefreshing = true) }
+            fetchSimilarMovies(movieId)
+            updateState { it.copy(isRefreshing = false) }
+    }
 }

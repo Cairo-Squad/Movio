@@ -13,4 +13,7 @@ object Theme {
 
     val textStyle: MovioTextStyle
         @Composable @ReadOnlyComposable get() = LocalMovioTextStyle.current
+
+    val isDark: Boolean
+        @Composable @ReadOnlyComposable get() = LocalIsDark.current
 }

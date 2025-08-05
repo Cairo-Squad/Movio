@@ -16,6 +16,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.cairosquad.design_system.R
@@ -35,13 +36,12 @@ import com.cairosquad.viewmodel.foryou.ForYouState
 import com.cairosquad.viewmodel.foryou.ForYouState.MovieUiState
 import com.cairosquad.viewmodel.foryou.ForYouState.ScreenStatus
 import com.cairosquad.viewmodel.foryou.ForYouViewModel
-import org.koin.androidx.compose.koinViewModel
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun ForYouScreen(
     modifier: Modifier = Modifier,
-    forYouViewModel: ForYouViewModel = koinViewModel(),
+    forYouViewModel: ForYouViewModel = hiltViewModel(),
 ) {
     val navController = LocalNavController.current
     val forYou = forYouViewModel.screenState.collectAsState()
@@ -70,7 +70,6 @@ fun ForYouScreen(
             is ForYouEffect.NavigateToMovieDetails -> {
                 navController.navigate(MovieRoute(effect.movieId))
             }
-            // Add other effects if needed
         }
     }
 
@@ -132,6 +131,7 @@ private fun MoviesList(
             state.screenStatus == ScreenStatus.FAILED -> {
                 ForYouFailedContent(
                     errorStatus = state.errorStatus,
+                    listener = listener,
                     modifier = modifier
                 )
             }

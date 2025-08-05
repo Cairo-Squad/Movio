@@ -12,14 +12,14 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class BasePagingSourceTest {
     private val pagingSource = object : BasePagingSource<String>() {
-        override suspend fun fetchData(page: Int): List<String> = emptyList()
+        override suspend fun fetchData(page: Int,genreId:Long?): List<String> = emptyList()
     }
 
     class TestPagingSource(
         private val data: Map<Int, List<String>>,
         private val throwError: Boolean = false
     ) : BasePagingSource<String>() {
-        override suspend fun fetchData(page: Int): List<String> {
+        override suspend fun fetchData(page: Int,genreId:Long?): List<String> {
             if (throwError) throw RuntimeException("Test error")
             return data[page] ?: emptyList()
         }
@@ -47,7 +47,6 @@ class BasePagingSourceTest {
             nextKey = 2
         )
 
-        // Assertions
         assertTrue(result is PagingSource.LoadResult.Page)
         result as PagingSource.LoadResult.Page
         assertEquals(expected.data, result.data)
@@ -159,8 +158,8 @@ class BasePagingSourceTest {
     @Test
     fun `getRefreshKey returns null when closestPageToPosition is null`() {
         val pagingSource = object : BasePagingSource<String>() {
-            override suspend fun fetchData(page: Int): List<String> = emptyList()
-            override fun getRefreshKey(state: PagingState<Int, String>): Int? = null // force null
+            override suspend fun fetchData(page: Int,genreId:Long?): List<String> = emptyList()
+            override fun getRefreshKey(state: PagingState<Int, String>): Int? = null
         }
 
         val state = PagingState<Int, String>(
@@ -175,7 +174,7 @@ class BasePagingSourceTest {
     }
     @Test
     fun `getRefreshKey returns correct key from closest page`() {
-        // Given
+
         val page1 = PagingSource.LoadResult.Page(
             data = listOf("A", "B"),
             prevKey = null,
@@ -189,16 +188,15 @@ class BasePagingSourceTest {
 
         val state = PagingState(
             pages = listOf(page1, page2),
-            anchorPosition = 2, // Index داخل الصفحة الثانية
+            anchorPosition = 2,
             config = PagingConfig(pageSize = 2),
             leadingPlaceholderCount = 0
         )
 
-        // When
         val refreshKey = pagingSource.getRefreshKey(state)
 
-        // Then
-        assertEquals(2, refreshKey) // لأن prevKey للصفحة هو 1 + 1 = 2
+
+        assertEquals(2, refreshKey)
     }
     @Test
     fun `getRefreshKey uses nextKey when prevKey is null`() {
@@ -215,7 +213,7 @@ class BasePagingSourceTest {
         )
 
         val key = pagingSource.getRefreshKey(state)
-        assertEquals(4, key) // 5 - 1
+        assertEquals(4, key)
     }
     @Test
     fun `getRefreshKey returns null when both prevKey and nextKey are null`() {

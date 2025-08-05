@@ -15,8 +15,10 @@ data class SeriesDetailsScreenState(
     val showRateBottomSheet: Boolean = false,
     val showAddToListBottomSheet: Boolean = false,
     val showLoginBottomSheet: Boolean = false,
+    val showCreateListBottomSheet: Boolean = false,
 
     val rating: Int = 0,
+    val listName: String = "",
 
     val showSnackBar: Boolean = false,
     val snackMessage: String = "",
