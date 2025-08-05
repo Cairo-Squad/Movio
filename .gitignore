@@ -22,3 +22,5 @@ local.properties
 movio-cairo.jks
 secret.properties
 google-services.json
+
+app/release

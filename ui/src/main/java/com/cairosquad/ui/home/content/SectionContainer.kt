@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.mapNotNull
 fun SectionContainer(
     listState: LazyListState,
     index: Int,
+    baseIndex: Int = 0,
     onVisible: () -> Unit,
     content: @Composable () -> Unit
 ) {
@@ -23,7 +24,7 @@ fun SectionContainer(
     LaunchedEffect(listState) {
         snapshotFlow { listState.layoutInfo.visibleItemsInfo }
             .mapNotNull { visibleItems ->
-                if (!triggered && visibleItems.any { it.index == index }) true else null
+                if (!triggered && visibleItems.any { it.index == index + baseIndex}) true else null
             }
             .collect {
                 triggered = true
