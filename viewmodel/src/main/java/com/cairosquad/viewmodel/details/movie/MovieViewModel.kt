@@ -1,6 +1,5 @@
 package com.cairosquad.viewmodel.details.movie
 
-import android.util.Log
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.domain.usecase.LoginUseCase
@@ -35,6 +34,7 @@ class MovieViewModel @AssistedInject constructor(
 
     init {
         loadMovieData(movieId)
+        addMovieToHistory(movieId)
     }
 
     private fun loadMovieData(movieId: Long) {
@@ -42,6 +42,14 @@ class MovieViewModel @AssistedInject constructor(
         getActors(movieId)
         getReviews(movieId)
         getSimilarMovies(movieId)
+    }
+
+    private fun addMovieToHistory(movieId: Long) {
+        tryToCall(
+            block = { accountUseCase.addMovieToHistory(movieId) },
+            onSuccess = {},
+            onError = {}
+        )
     }
 
     private fun getBasicDetails(movieId: Long) {
@@ -192,11 +200,8 @@ class MovieViewModel @AssistedInject constructor(
     private fun loadMovieLists() {
         tryToCall(
             block = accountUseCase::getMoviesLists,
-
-                onSuccess = { mediaLists ->
-                    Log.d("DEBUG", "Lists: $mediaLists")
-                    val uiLists = mediaLists.map { list -> list.toUiState() }
-                    Log.d("DEBUG", "Mapped: $uiLists")
+            onSuccess = { mediaLists ->
+                val uiLists = mediaLists.map { list -> list.toUiState() }
                 updateState {
                     it.copy(isAddToListBottomSheetOpen = true, moviesLists = uiLists)
                 }

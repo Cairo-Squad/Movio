@@ -35,6 +35,7 @@ class SeriesDetailsViewModel @AssistedInject constructor(
 
     init {
         loadDetails(seriesId)
+        addSeriesToHistory(seriesId)
     }
 
     fun loadDetails(seriesId: Long) {
@@ -43,6 +44,14 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         getSeasons(seriesId)
         getReviews(seriesId)
         getSimilarSeries(seriesId)
+    }
+
+    private fun addSeriesToHistory(seriesId: Long) {
+        tryToCall(
+            block = { accountUseCase.addSeriesToHistory(seriesId) },
+            onSuccess = {},
+            onError = {}
+        )
     }
 
     override fun onBackClicked() {

@@ -1,8 +1,10 @@
 package com.cairosquad.remote.account
 
+import android.util.Log
 import com.cairosquad.remote.utils.retrofit.safeCallApi
 import com.cairosquad.repository.account.data_source.remote.AccountRemoteDataSource
 import com.cairosquad.repository.account.data_source.remote.dto.FavoriteRequest
+import com.cairosquad.repository.account.data_source.remote.dto.HistoryRequest
 import com.cairosquad.repository.account.data_source.remote.dto.MediaListDto
 import com.cairosquad.repository.account.data_source.remote.dto.acount.AccountDto
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
@@ -61,6 +63,50 @@ class AccountRemoteDataSourceImpl @Inject constructor(
     ): List<SeriesRemoteDto> {
         return safeCallApi {
             apiService.getFavoriteSeries(accountId, page)
+                .results
+                ?.filterNotNull()
+                ?: emptyList()
+        }
+    }
+
+    override suspend fun addMovieToHistory(accountId: Long, movieId: Long) {
+        safeCallApi {
+            apiService.addItemToHistory(
+                accountId,
+                HistoryRequest("movie", movieId, true)
+            )
+        }
+    }
+
+    override suspend fun addSeriesToHistory(accountId: Long, seriesId: Long) {
+        safeCallApi {
+            apiService.addItemToHistory(
+                accountId,
+                HistoryRequest("tv", seriesId, true)
+            )
+        }
+    }
+
+    override suspend fun getHistoryMovies(
+        accountId: Long,
+        page: Int
+    ): List<MovieRemoteDto> {
+        val asd = safeCallApi {
+            apiService.getMovieHistory(accountId, page)
+                .results
+                ?.filterNotNull()
+                ?: emptyList()
+        }
+        Log.d("History Remote", "getHistoryMovies remote data source: $asd")
+        return asd
+    }
+
+    override suspend fun getHistorySeries(
+        accountId: Long,
+        page: Int
+    ): List<SeriesRemoteDto> {
+        return safeCallApi {
+            apiService.getSeriesHistory(accountId, page)
                 .results
                 ?.filterNotNull()
                 ?: emptyList()

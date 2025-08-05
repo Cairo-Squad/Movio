@@ -1,6 +1,7 @@
 package com.cairosquad.remote.account
 
 import com.cairosquad.repository.account.data_source.remote.dto.FavoriteRequest
+import com.cairosquad.repository.account.data_source.remote.dto.HistoryRequest
 import com.cairosquad.repository.account.data_source.remote.dto.MediaListResponse
 import com.cairosquad.repository.account.data_source.remote.dto.acount.AccountDto
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
@@ -60,6 +61,30 @@ interface AccountApiService {
 
 	@GET("account/{accountId}/rated/tv")
 	suspend fun getRatedSeries(
+		@Path("accountId")
+		accountId: Long,
+		@Query("page")
+		page: Int
+	): ResultResponse<SeriesRemoteDto>
+
+	@GET("account/{accountId}/watchlist/movies")
+	suspend fun getMovieHistory(
+		@Path("accountId")
+		accountId: Long,
+		@Query("page")
+		page: Int
+	): ResultResponse<MovieRemoteDto>
+
+	@POST("account/{accountId}/watchlist")
+	suspend fun addItemToHistory(
+		@Path("accountId")
+		accountId: Long,
+		@Body
+		body: HistoryRequest
+	): Response<Unit>
+
+	@GET("account/{accountId}/watchlist/tv")
+	suspend fun getSeriesHistory(
 		@Path("accountId")
 		accountId: Long,
 		@Query("page")

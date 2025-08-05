@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -40,6 +41,11 @@ import com.cairosquad.viewmodel.library.LibraryViewModel
 fun LibraryScreen() {
 	val viewModel: LibraryViewModel = hiltViewModel()
 	val screenState by viewModel.screenState.collectAsStateWithLifecycle()
+
+	LaunchedEffect(Unit) {
+		viewModel.loadScreenState()
+	}
+
 	LibraryScreenContent(
 		screenState = screenState
 	)
@@ -190,7 +196,7 @@ private fun LibraryScreenContent(screenState: LibraryScreenState) {
 					)
 				}
                 LibraryScreenState.SectionStatus.SUCCESS -> {
-					if (screenState.favoriteMovies.isEmpty() && screenState.favoriteSeries.isEmpty()) {
+					if (screenState.historyMovies.isEmpty() && screenState.historySeries.isEmpty()) {
 						SectionHeader(
 							modifier = Modifier.padding(top = 24.dp),
 							sectionTitle = "History",
@@ -227,26 +233,30 @@ private fun LibraryScreenContent(screenState: LibraryScreenState) {
 					}
 				}
                 LibraryScreenState.SectionStatus.SUCCESS -> {
-					if (screenState.historyMovies.isNotEmpty() && screenState.historySeries.isNotEmpty()) {
+					if (screenState.historyMovies.isNotEmpty() || screenState.historySeries.isNotEmpty()) {
 						LazyRow(
 							horizontalArrangement = Arrangement.spacedBy(12.dp),
 							contentPadding = PaddingValues(horizontal = 16.dp)
 						) {
 							items(screenState.historyMovies) {
 								MovieCard(
+									modifier = Modifier
+										.width(124.dp),
 									title = it.title,
 									vote = it.rating,
 									imgUrl = it.posterPath,
-									width = null,
+									width = 124.dp,
 									aspectRatio = 0.775f
 								)
 							}
 							items(screenState.historySeries) {
 								MovieCard(
+									modifier = Modifier
+										.width(124.dp),
 									title = it.title,
 									vote = it.rating,
 									imgUrl = it.posterPath,
-									width = null,
+									width = 124.dp,
 									aspectRatio = 0.775f
 								)
 							}

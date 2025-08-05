@@ -71,6 +71,32 @@ class AccountRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun addMovieToHistory(movieId: Long) {
+        accountLocalDataSource.getAccountId()?.also { accountId ->
+            accountRemoteDataSource.addMovieToHistory(accountId, movieId)
+        }
+    }
+
+    override suspend fun addSeriesToHistory(seriesId: Long) {
+        accountLocalDataSource.getAccountId()?.also { accountId ->
+            accountRemoteDataSource.addSeriesToHistory(accountId, seriesId)
+        }    }
+
+    override suspend fun getHistoryMovies(page: Int): List<Movie> {
+        accountLocalDataSource.getAccountId()?.also { accountId ->
+            val asd = accountRemoteDataSource.getHistoryMovies(accountId, page).map { it.toEntity() }
+            return asd
+        }
+        return emptyList()
+    }
+
+    override suspend fun getHistorySeries(page: Int): List<Series> {
+        accountLocalDataSource.getAccountId()?.also { accountId ->
+            return accountRemoteDataSource.getHistorySeries(accountId, page).map { it.toEntity() }
+        }
+        return emptyList()
+    }
+
     override suspend fun getRatedItems(page: Int): Pair<List<Movie>, List<Series>> {
         accountLocalDataSource.getAccountId()?.also { accountId ->
             return Pair(
