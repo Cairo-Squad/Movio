@@ -30,8 +30,6 @@ fun HomeScreen(
     )
 }
 
-
-
 private fun effectHandler(
     effect: HomeEffect,
     navController: NavController
