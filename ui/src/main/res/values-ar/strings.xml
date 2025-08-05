@@ -58,4 +58,8 @@
     <string name="add_your_overall_rating_for_this">أعطنا تقييمك لهذا الـ%1$s</string>
     <string name="share_via">شارك عبر</string>
     <string name="season">الموسم %1$d</string>
+    <string name="favorite">المفضلة</string>
+    <string name="this_list_has_empty">هذة القائمة فارغة</string>
+    <string name="library">المكتبه</string>
+    <string name="watchlist">قائمة المشاهدة</string>
 </resources>

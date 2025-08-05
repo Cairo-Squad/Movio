@@ -12,13 +12,13 @@ interface AccountRepository {
 
 	suspend fun getSeriesLists(page: Int): List<MediaList>
 
-	suspend fun getFavoriteMovies(): List<Movie>
+	suspend fun getFavoriteMovies(page: Int): List<Movie>
 
-	suspend fun getFavoriteSeries(): List<Series>
+	suspend fun getFavoriteSeries(page: Int): List<Series>
 
 	suspend fun addMovieToFavorite(movieId: Long)
 
 	suspend fun addSeriesToFavorite(seriesId: Long)
 
-	suspend fun getRatedItems()
+	suspend fun getRatedItems(page: Int): Pair<List<Movie>, List<Series>>
 }

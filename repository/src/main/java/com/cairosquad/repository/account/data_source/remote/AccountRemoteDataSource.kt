@@ -2,6 +2,8 @@ package com.cairosquad.repository.account.data_source.remote
 
 import com.cairosquad.repository.account.data_source.remote.dto.MediaListDto
 import com.cairosquad.repository.account.data_source.remote.dto.acount.AccountDto
+import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
+import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 
 interface AccountRemoteDataSource {
 
@@ -10,4 +12,16 @@ interface AccountRemoteDataSource {
     suspend fun getMovieLists(accountId: Long, page: Int): List<MediaListDto>
 
     suspend fun getSeriesLists(accountId: Long, page: Int): List<MediaListDto>
+
+    suspend fun addMovieToFavorite(accountId: Long, movieId: Long)
+
+    suspend fun addSeriesToFavorite(accountId: Long, seriesId: Long)
+
+    suspend fun getFavoriteMovies(accountId: Long, page: Int): List<MovieRemoteDto>
+
+    suspend fun getFavoriteSeries(accountId: Long, page: Int): List<SeriesRemoteDto>
+
+    suspend fun getRatedMovies(accountId: Long, page: Int): List<MovieRemoteDto>
+
+    suspend fun getRatedSeries(accountId: Long, page: Int): List<SeriesRemoteDto>
 }

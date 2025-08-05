@@ -198,9 +198,7 @@ class MovieViewModel @AssistedInject constructor(
                     val uiLists = mediaLists.map { list -> list.toUiState() }
                     Log.d("DEBUG", "Mapped: $uiLists")
                 updateState {
-                    it.copy(
-                        isAddToListBottomSheetOpen = true,
-                        moviesLists = uiLists)
+                    it.copy(isAddToListBottomSheetOpen = true, moviesLists = uiLists)
                 }
             },
             onError = {},

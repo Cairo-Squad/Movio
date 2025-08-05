@@ -9,7 +9,7 @@ data class MediaListDto(
     val id: Long,
     @SerialName("name")
     val name: String,
-    @SerialName("media_count")
+    @SerialName("item_count")
     val mediaCount: Long,
     @SerialName("list_type")
     val listType: String

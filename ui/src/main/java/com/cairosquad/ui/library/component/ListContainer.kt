@@ -32,7 +32,7 @@ import com.cairosquad.design_system.theme.Theme
 
 @Composable
 fun ListContainer(
-	numberOfItems: Int,
+	numberOfItems: Long,
 	listName: String,
 	onListClicked: () -> Unit,
 	modifier: Modifier = Modifier,

@@ -10,6 +10,8 @@ import com.cairosquad.repository.account.data_source.local.toCacheDto
 import com.cairosquad.repository.account.data_source.local.toEntity
 import com.cairosquad.repository.account.data_source.remote.AccountRemoteDataSource
 import com.cairosquad.repository.account.data_source.remote.toEntity
+import com.cairosquad.repository.movie.data_source.remote.toEntity
+import com.cairosquad.repository.series.data_source.remote.toEntity
 import javax.inject.Inject
 
 class AccountRepositoryImpl @Inject constructor(
@@ -43,23 +45,39 @@ class AccountRepositoryImpl @Inject constructor(
         return emptyList()
     }
 
-    override suspend fun getFavoriteMovies(): List<Movie> {
-        TODO("Not yet implemented")
+    override suspend fun getFavoriteMovies(page: Int): List<Movie> {
+        accountLocalDataSource.getAccountId()?.also { accountId ->
+            return accountRemoteDataSource.getFavoriteMovies(accountId, page).map { it.toEntity() }
+        }
+        return emptyList()
     }
 
-    override suspend fun getFavoriteSeries(): List<Series> {
-        TODO("Not yet implemented")
+    override suspend fun getFavoriteSeries(page: Int): List<Series> {
+        accountLocalDataSource.getAccountId()?.also { accountId ->
+            return accountRemoteDataSource.getFavoriteSeries(accountId, page).map { it.toEntity() }
+        }
+        return emptyList()
     }
 
     override suspend fun addMovieToFavorite(movieId: Long) {
-        TODO("Not yet implemented")
+        accountLocalDataSource.getAccountId()?.also { accountId ->
+            accountRemoteDataSource.addMovieToFavorite(accountId, movieId)
+        }
     }
 
     override suspend fun addSeriesToFavorite(seriesId: Long) {
-        TODO("Not yet implemented")
+        accountLocalDataSource.getAccountId()?.also { accountId ->
+            accountRemoteDataSource.addSeriesToFavorite(accountId, seriesId)
+        }
     }
 
-    override suspend fun getRatedItems() {
-        TODO("Not yet implemented")
+    override suspend fun getRatedItems(page: Int): Pair<List<Movie>, List<Series>> {
+        accountLocalDataSource.getAccountId()?.also { accountId ->
+            return Pair(
+                accountRemoteDataSource.getRatedMovies(accountId, page).map { it.toEntity() },
+                accountRemoteDataSource.getRatedSeries(accountId, page).map { it.toEntity() }
+            )
+        }
+        return Pair(emptyList(), emptyList())
     }
 }

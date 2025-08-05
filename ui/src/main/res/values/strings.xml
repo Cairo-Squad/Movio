@@ -58,4 +58,8 @@
     <string name="add_your_overall_rating_for_this">Add your overall rating for this %1$s</string>
     <string name="share_via">Share via</string>
     <string name="season">Season %1$d</string>
+    <string name="favorite">Favorite</string>
+    <string name="this_list_has_empty">This list has empty</string>
+    <string name="library">Library</string>
+    <string name="watchlist">Watchlist</string>
 </resources>
