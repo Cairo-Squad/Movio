@@ -27,7 +27,6 @@ import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfMoviesOfArt
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfNowPlayingMovies
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfPersonalizedMovies
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfPopularMovies
-import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSearchedMovies
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSimilarMovies
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSuggestedMovies
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfTopRatedMovies
@@ -325,22 +324,6 @@ class MovieRepositoryImplTest {
         coVerify(exactly = 1) { localDataSource.insertCacheCodeWithMovies(any()) }
     }
 
-//    @Test
-//    fun `should return cached movies when getFreeToWatchMovies is called and cache is available`() = runTest {
-//        val page = 1
-//        val genreId: Long? = null
-//        val cacheCode = getCacheCodeOfFreeToWatchMovies(page, genreId)
-//        _details = listOf(cachedMovieDto)
-//        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-//        coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns cachedMovies
-//
-//        val result = repository.getFreeToWatchMovies(page, genreId)
-//
-//        assertThat(result).isEqualTo(listOf(expectedMovie))
-//        coVerify(exactly = 1) { localDataSource.getMoviesByCacheCode(cacheCode) }
-//        coVerify(exactly = 0) { remoteDataSource.getFreeToWatchMovies(any(), any()) }
-//    }
-
     @Test
     fun `should fetch data from remote when getFreeToWatchMovies is called and cache is empty`() = runTest {
         val page = 1
@@ -463,38 +446,18 @@ class MovieRepositoryImplTest {
         coVerify(exactly = 1) { localDataSource.insertCacheCodeWithMovies(any()) }
     }
 
-    @Test
-    fun `should return cached movies when getMoviesByQuery is called and cache is available`() = runTest {
-        val query = "Test"
-        val page = 1
-        val cacheCode = getCacheCodeOfSearchedMovies(query, page)
-        val cachedMovies = listOf(cachedMovieDto)
-        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-        coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns cachedMovies
-
-        val result = repository.getMoviesByQuery(query, page)
-
-        assertThat(result).isEqualTo(listOf(expectedMovie))
-        coVerify(exactly = 1) { localDataSource.getMoviesByCacheCode(cacheCode) }
-        coVerify(exactly = 0) { remoteDataSource.getMoviesByQuery(any(), any()) }
-    }
 
     @Test
-    fun `should fetch data from remote when getMoviesByQuery is called and cache is empty`() = runTest {
+    fun `should fetch data  when getMoviesByQuery is called`() = runTest {
         val query = "Test"
         val page = 1
-        val cacheCode = getCacheCodeOfSearchedMovies(query, page)
-        coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
-        coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns emptyList()
         coEvery { remoteDataSource.getMoviesGenres() } returns listOf(genreRemoteDto)
         coEvery { remoteDataSource.getMoviesByQuery(query, page) } returns listOf(movieRemoteDto)
-        coEvery { localDataSource.insertCacheCodeWithMovies(any()) } just Runs
 
         val result = repository.getMoviesByQuery(query, page)
 
         assertThat(result).isEqualTo(listOf(expectedMovie.copy(trailerPath = "", runtimeMinutes = 0)))
         coVerify(exactly = 1) { remoteDataSource.getMoviesByQuery(query, page) }
-        coVerify(exactly = 1) { localDataSource.insertCacheCodeWithMovies(any()) }
     }
 
     @Test

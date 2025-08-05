@@ -3,6 +3,7 @@ package com.cairosquad.viewmodel.home
 
 import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
+import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Movie
@@ -10,7 +11,7 @@ import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
-import com.cairosquad.viewmodel.home.HomeScreenState.ScreenStatus
+import com.cairosquad.viewmodel.home.HomeScreenState.DateRequestStatus
 import com.cairosquad.viewmodel.util.MediaContentType
 import com.cairosquad.viewmodel.util.MediaType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -81,7 +82,6 @@ class HomeViewModel @Inject constructor(
             onError = ::handleError
         )
     }
-// TODO edit media type and get data in home screen for every one in here screen
     private suspend fun fetchPopularMediaBlock(genreId: Long? = null): Pair<List<Movie>, List<Series>> {
         val series = manageSeriesUseCase.getPopularSeries(
             page = 1,
@@ -99,7 +99,7 @@ class HomeViewModel @Inject constructor(
                 popularMovies = moviesAndSeries.first.map(Movie::toHomeMediaUiState),
                 popularSeries = moviesAndSeries.second.map(Series::toHomeMediaUiState),
                 isRefreshing = false,
-                screenStatus = ScreenStatus.SUCCESS
+                dataRequestStatus = DateRequestStatus.SUCCESS
             )
         }
     }
@@ -171,7 +171,7 @@ class HomeViewModel @Inject constructor(
             onSuccess = { media ->
                 updateState {
                     it.copy(
-                        categoriesMedia =media
+                        categoriesMedia = media
                     )
                 }
             },
@@ -194,10 +194,10 @@ class HomeViewModel @Inject constructor(
                     unifiedMediaPager.getCombinedMedia(genreId = genre.id)
                 }
                 HomeScreenState.SortingType.POPULARITY -> {
-                    unifiedMediaPager.getCombinedMedia(genreId = genre.id)
+                    unifiedMediaPager.getCombinedMedia(genreId = genre.id, SortType.POPULAR)
                 }
                 HomeScreenState.SortingType.LATEST -> {
-                    unifiedMediaPager.getCombinedMedia(genreId = genre.id)
+                    unifiedMediaPager.getCombinedMedia(genreId = genre.id, SortType.LATEST)
                 }
             }},
             onSuccess = { media ->
@@ -248,7 +248,7 @@ class HomeViewModel @Inject constructor(
         updateState {
             it.copy(
                 errorStatus = handleHomeException(throwable),
-                screenStatus = ScreenStatus.FAILED,
+                dataRequestStatus = DateRequestStatus.FAILED,
                 isRefreshing = false
             )
         }
@@ -262,7 +262,7 @@ class HomeViewModel @Inject constructor(
     }
 
     override fun onRefresh() {
-        updateState { it.copy(isRefreshing = true, screenStatus = ScreenStatus.LOADING) }
+        updateState { it.copy(isRefreshing = true, dataRequestStatus = DateRequestStatus.LOADING) }
         loadHomeScreenData()
         screenState.value.sections.forEach {
             fetchSectionData(it.key)
@@ -271,5 +271,23 @@ class HomeViewModel @Inject constructor(
             delay(500L)
             updateState { it.copy(isRefreshing = false) }
         }
+    }
+
+    companion object {
+        const val HORIZONTAL_PAGER_COUNT = 7
+
+        val homePageMoviesSections = listOf(
+            MediaContentType.TOP_RATING,
+            MediaContentType.NOW_PLAYING,
+            MediaContentType.UPCOMING,
+            MediaContentType.MORE_RECOMMENDED
+        )
+
+        val homePageSeriesSections = listOf(
+            MediaContentType.TOP_RATING,
+            MediaContentType.AIRING_TODAY,
+            MediaContentType.ON_TV,
+            MediaContentType.MORE_RECOMMENDED
+        )
     }
 }

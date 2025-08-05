@@ -42,6 +42,7 @@ import com.cairosquad.ui.movio_component.TrendingMovieCard
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.MovieRoute
 import com.cairosquad.ui.navigation.SeriesRoute
+import com.cairosquad.ui.utils.LoadingMoviesGrid
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.viewmodel.see_all.SeeAllEffect
 import com.cairosquad.viewmodel.see_all.SeeAllInteractionsListener
@@ -181,7 +182,7 @@ private fun SeeAllMediaItems(
         }
 
         state.screenStatus == SeeAllScreenState.ScreenStatus.LOADING -> {
-            SeeAllLoadingScreen(Modifier.padding(top = 16.dp))
+            LoadingMoviesGrid(Modifier.padding(top = 16.dp))
         }
 
         state.screenStatus == SeeAllScreenState.ScreenStatus.Empty ->{
@@ -220,7 +221,7 @@ private fun TrendingContentList(
         }
 
         state.screenStatus == SeeAllScreenState.ScreenStatus.LOADING -> {
-            SeeAllLoadingScreen(modifier = Modifier.padding(top = 16.dp))
+            LoadingMoviesGrid(modifier = Modifier.padding(top = 16.dp))
         }
 
         state.screenStatus == SeeAllScreenState.ScreenStatus.Empty -> {

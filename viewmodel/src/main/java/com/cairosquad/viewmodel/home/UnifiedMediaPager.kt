@@ -3,6 +3,7 @@ package com.cairosquad.viewmodel.home
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Movie
@@ -14,12 +15,12 @@ class UnifiedMediaPager @Inject constructor(
     private val manageMoviesUseCase: ManageMoviesUseCase,
     private val manageSeriesUseCase: ManageSeriesUseCase
 ) {
-
-    fun getCombinedMedia(genreId: Long?): Flow<PagingData<HomeScreenState.MediaUiState>> =
-        createPager(
+    fun getCombinedMedia(genreId: Long?, sortingType: SortType? = null): Flow<PagingData<HomeScreenState.MediaUiState>> {
+        return createPager(
             genreId = genreId,
-            getMoviesPage = { page, genre -> manageMoviesUseCase.getPopularMovies(page, genre) },
-            getSeriesPage = { page, genre -> manageSeriesUseCase.getPopularSeries(page, genre) })
+            getMoviesPage = { page, genre -> manageMoviesUseCase.getAllMovies(page, genre, sortingType) },
+            getSeriesPage = { page, genre -> manageSeriesUseCase.getAllSeries(page, genre, sortingType) })
+    }
 
     fun createPager(
         genreId: Long? = null,
