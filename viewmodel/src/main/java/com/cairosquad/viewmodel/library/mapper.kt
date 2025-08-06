@@ -24,7 +24,7 @@ fun Series.toUiState() = LibraryScreenState.SeriesUiState(
 )
 
 fun Movie.toUiState() = LibraryScreenState.MovieUiState(
-    id = 0,
+    id = id,
     title = title,
     rating = rating,
     posterPath = posterPath,
