@@ -199,7 +199,7 @@ class MovieViewModel @AssistedInject constructor(
 
     private fun loadMovieLists() {
         tryToCall(
-            block = accountUseCase::getMoviesLists,
+            block = { accountUseCase.getMoviesLists(1) },
             onSuccess = { mediaLists ->
                 val uiLists = mediaLists.map { list -> list.toUiState() }
                 updateState {

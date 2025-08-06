@@ -110,7 +110,7 @@ class SeriesDetailsViewModel @AssistedInject constructor(
 
     private fun loadSeriesLists() {
         tryToCall(
-            block = accountUseCase::getSeriesLists,
+            block = { accountUseCase.getSeriesLists(1) },
             onSuccess = { mediaLists ->
                 updateState {
                     it.copy(

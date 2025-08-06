@@ -1,6 +1,5 @@
 package com.cairosquad.viewmodel.library
 
-import android.util.Log
 import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.entity.MediaList
 import com.cairosquad.entity.Movie
@@ -22,13 +21,15 @@ class LibraryViewModel @Inject constructor(
     fun loadScreenState() {
         loadMoviesLists()
         loadSeriesLists()
+        loadFavoriteMovies()
+        loadFavoriteSeries()
         loadHistoryMovies()
         loadHistorySeries()
     }
 
     private fun loadMoviesLists() {
         tryToCall(
-            block = accountUseCase::getMoviesLists,
+            block = { accountUseCase.getMoviesLists(1) },
             onSuccess = ::onLoadingMoviesListsSuccess,
             onError = {
                 updateState { it.copy(listsSectionState = LibraryScreenState.SectionStatus.ERROR) }
@@ -48,7 +49,7 @@ class LibraryViewModel @Inject constructor(
 
     private fun loadSeriesLists() {
         tryToCall(
-            block = accountUseCase::getSeriesLists,
+            block = { accountUseCase.getSeriesLists(1) },
             onSuccess = ::onLoadingSeriesListsSuccess,
             onError = {
                 updateState { it.copy(listsSectionState = LibraryScreenState.SectionStatus.ERROR) }
@@ -65,6 +66,44 @@ class LibraryViewModel @Inject constructor(
         }
     }
 
+    private fun loadFavoriteMovies() {
+        tryToCall(
+            block = { accountUseCase.getFavoriteMovies(1) },
+            onSuccess = ::onLoadingFavoriteMoviesSuccess,
+            onError = {
+                updateState { it.copy(favoritesSectionState = LibraryScreenState.SectionStatus.ERROR) }
+            }
+        )
+    }
+
+    private fun onLoadingFavoriteMoviesSuccess(movies: List<Movie>){
+        updateState {
+            it.copy(
+                favoriteMovies = movies.map { it.toUiState() },
+                favoritesSectionState = LibraryScreenState.SectionStatus.SUCCESS
+            )
+        }
+    }
+
+    private fun loadFavoriteSeries() {
+        tryToCall(
+            block = { accountUseCase.getFavoriteSeries(1) },
+            onSuccess = ::onLoadingFavoriteSeriesSuccess,
+            onError = {
+                updateState { it.copy(favoritesSectionState = LibraryScreenState.SectionStatus.ERROR) }
+            }
+        )
+    }
+
+    private fun onLoadingFavoriteSeriesSuccess(series: List<Series>){
+        updateState {
+            it.copy(
+                favoriteSeries = series.map { it.toUiState() },
+                favoritesSectionState = LibraryScreenState.SectionStatus.SUCCESS
+            )
+        }
+    }
+
     private fun loadHistoryMovies() {
         tryToCall(
             block = { accountUseCase.getHistoryMovies(1) },
@@ -76,7 +115,6 @@ class LibraryViewModel @Inject constructor(
     }
 
     private fun onLoadingHistoryMoviesSuccess(movies: List<Movie>) {
-        Log.d("history remote", "onLoadingHistoryMoviesSuccess viewModel: $movies")
         updateState {
             it.copy(
                 historyMovies = movies.map { movie -> movie.toUiState() },

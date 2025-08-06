@@ -15,12 +15,28 @@ class AccountUseCase @Inject constructor(
         return accountRepository.getAccountDetails()
     }
 
-    suspend fun getSeriesLists(): List<MediaList> {
-        return accountRepository.getSeriesLists(1)
+    suspend fun getSeriesLists(page: Int): List<MediaList> {
+        return accountRepository.getSeriesLists(page)
     }
 
-    suspend fun getMoviesLists(): List<MediaList> {
-        return accountRepository.getMovieLists(1)
+    suspend fun getMoviesLists(page: Int): List<MediaList> {
+        return accountRepository.getMovieLists(page)
+    }
+
+    suspend fun getFavoriteMovies(page: Int): List<Movie> {
+        return accountRepository.getFavoriteMovies(page)
+    }
+
+    suspend fun getFavoriteSeries(page: Int): List<Series> {
+        return accountRepository.getFavoriteSeries(page)
+    }
+
+    suspend fun addMovieToFavorite(movieId: Long) {
+        accountRepository.addSeriesToFavorite(movieId)
+    }
+
+    suspend fun addSeriesToFavorite(seriesId: Long) {
+        accountRepository.addSeriesToFavorite(seriesId)
     }
 
     suspend fun addMovieToHistory(movieId: Long) {

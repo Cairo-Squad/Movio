@@ -156,26 +156,30 @@ private fun LibraryScreenContent(screenState: LibraryScreenState) {
 					}
 				}
 				LibraryScreenState.SectionStatus.SUCCESS -> {
-					if (screenState.favoriteMovies.isNotEmpty() && screenState.favoriteSeries.isNotEmpty()) {
+					if (screenState.favoriteMovies.isNotEmpty() || screenState.favoriteSeries.isNotEmpty()) {
 						LazyRow(
 							horizontalArrangement = Arrangement.spacedBy(12.dp),
 							contentPadding = PaddingValues(horizontal = 16.dp)
 						) {
 							items(screenState.favoriteMovies) {
 								MovieCard(
+									modifier = Modifier
+										.width(124.dp),
 									title = it.title,
 									vote = it.rating,
 									imgUrl = it.posterPath,
-									width = null,
+									width = 124.dp,
 									aspectRatio = 0.775f
 								)
 							}
 							items(screenState.favoriteSeries) {
 								MovieCard(
+									modifier = Modifier
+										.width(124.dp),
 									title = it.title,
 									vote = it.rating,
 									imgUrl = it.posterPath,
-									width = null,
+									width = 124.dp,
 									aspectRatio = 0.775f
 								)
 							}
