@@ -9,5 +9,5 @@ data class Avatar(
     @SerialName("gravatar")
     val gravatar: Gravatar,
     @SerialName("tmdb")
-    val tmdb: Tmdb
+    val avatarPath: AvatarPath
 )

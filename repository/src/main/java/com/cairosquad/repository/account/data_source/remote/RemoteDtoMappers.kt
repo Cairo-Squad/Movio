@@ -9,7 +9,7 @@ internal fun AccountDto.toEntity() = Account(
     id = id ?: 0,
     name = name ?: "",
     username = username ?: "",
-    avatarPath = avatar?.tmdb?.avatarPath ?: ""
+    avatarPath = avatar?.avatarPath?.avatarPath ?: ""
 )
 
 internal fun MediaListDto.toEntity() = MediaList(
