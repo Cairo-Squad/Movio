@@ -531,6 +531,36 @@ class RemoteMovieDataSourceImplTest {
         coVerify { apiService.getFreeToWatchMovies(page, genreId) }
     }
 
+    @Test
+    fun `getMoviesByQuery SHOULD return list of movieRemoteDto`() = runTest {
+        val expectedMovies = listOf(MovieRemoteDto(id = 123, title = "Let's goo"))
+        coEvery { apiService.getMoviesByQuery("let", 1) } returns ResultResponse<MovieRemoteDto>(results = expectedMovies)
+
+        val result = dataSource.getMoviesByQuery("let", 1)
+
+        assertThat(result).isEqualTo(expectedMovies)
+    }
+
+    @Test
+    fun `getPersonalizedMovies Should return list of movieRemoteDto`() = runTest{
+        val expectedMovies = listOf(MovieRemoteDto(id = 123, title = "Let's goo"))
+        coEvery { apiService.getPersonalizedMovies(1) } returns ResultResponse<MovieRemoteDto>(results = expectedMovies)
+
+        val result = dataSource.getPersonalizedMovies(1)
+
+        assertThat(result).isEqualTo(expectedMovies)
+    }
+
+    @Test
+    fun `getSuggestedMovies Should return list of movieRemoteDto`() = runTest{
+        val expectedMovies = listOf(MovieRemoteDto(id = 123, title = "Let's goo"))
+        coEvery { apiService.getSuggestedMovies() } returns ResultResponse<MovieRemoteDto>(results = expectedMovies)
+
+        val result = dataSource.getSuggestedMovies()
+
+        assertThat(result).isEqualTo(expectedMovies)
+    }
+
     private companion object {
 
         val remoteMovies = MovieRemoteDto(id = 1, title = "Movie 1", posterPath = null)
