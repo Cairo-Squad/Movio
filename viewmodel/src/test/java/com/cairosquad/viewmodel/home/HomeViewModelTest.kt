@@ -2,6 +2,7 @@ package com.cairosquad.viewmodel.home
 
 import app.cash.turbine.test
 import com.cairosquad.domain.exception.NetworkException
+import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Genre
@@ -34,6 +35,7 @@ class HomeViewModelTest {
     private lateinit var manageSeriesUseCase: ManageSeriesUseCase
 
     private lateinit var unifiedMediaPager: UnifiedMediaPager
+    private lateinit var accountUseCase: AccountUseCase
 
     private lateinit var viewModel: HomeViewModel
 
@@ -47,9 +49,11 @@ class HomeViewModelTest {
         manageMoviesUseCase = mockk(relaxed = true)
         manageSeriesUseCase = mockk(relaxed = true)
         unifiedMediaPager = mockk(relaxed = true)
+        accountUseCase = mockk(relaxed = true)
         viewModel = HomeViewModel(
             manageMoviesUseCase,
             manageSeriesUseCase,
+            accountUseCase,
             unifiedMediaPager
         )
     }
@@ -80,6 +84,7 @@ class HomeViewModelTest {
         viewModel = HomeViewModel(
             manageMoviesUseCase,
             manageSeriesUseCase,
+            accountUseCase,
             unifiedMediaPager
         )
         advanceUntilIdle()
@@ -100,6 +105,7 @@ class HomeViewModelTest {
         viewModel = HomeViewModel(
             manageMoviesUseCase,
             manageSeriesUseCase,
+            accountUseCase,
             unifiedMediaPager
         )
         advanceUntilIdle()
@@ -160,6 +166,7 @@ class HomeViewModelTest {
         viewModel = HomeViewModel(
             manageMoviesUseCase,
             manageSeriesUseCase,
+            accountUseCase,
             unifiedMediaPager
         )
         advanceUntilIdle()

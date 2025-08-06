@@ -84,8 +84,7 @@ class AccountRepositoryImpl @Inject constructor(
 
     override suspend fun getHistoryMovies(page: Int): List<Movie> {
         accountLocalDataSource.getAccountId()?.also { accountId ->
-            val asd = accountRemoteDataSource.getHistoryMovies(accountId, page).map { it.toEntity() }
-            return asd
+            return accountRemoteDataSource.getHistoryMovies(accountId, page).map { it.toEntity() }
         }
         return emptyList()
     }
