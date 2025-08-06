@@ -1,6 +1,5 @@
 package com.cairosquad.remote.account
 
-import android.util.Log
 import com.cairosquad.remote.utils.retrofit.safeCallApi
 import com.cairosquad.repository.account.data_source.remote.AccountRemoteDataSource
 import com.cairosquad.repository.account.data_source.remote.dto.FavoriteRequest
@@ -19,7 +18,6 @@ class AccountRemoteDataSourceImpl @Inject constructor(
     }
 
     override suspend fun getMovieLists(accountId: Long, page: Int): List<MediaListDto> {
-
         return safeCallApi { getListsByType(accountId, page, "movie") }
     }
 
@@ -97,7 +95,6 @@ class AccountRemoteDataSourceImpl @Inject constructor(
                 ?.filterNotNull()
                 ?: emptyList()
         }
-        Log.d("History Remote", "getHistoryMovies remote data source: $asd")
         return asd
     }
 
