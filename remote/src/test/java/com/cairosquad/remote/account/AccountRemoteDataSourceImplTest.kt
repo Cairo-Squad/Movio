@@ -52,6 +52,20 @@ class AccountRemoteDataSourceImplTest {
     }
 
     @Test
+    fun `getFavoriteMovies should return empty list when results are null`() = runTest {
+        val movies = listOf(
+            null,
+            null,
+            null
+        )
+        coEvery { apiService.getFavoriteMovies(1, 1) } returns ResultResponse<MovieRemoteDto>(results = movies)
+
+        val result = remoteDataSource.getFavoriteMovies(1, 1)
+
+        assertThat(result).isEqualTo(emptyList<MovieRemoteDto>())
+    }
+
+    @Test
     fun `getFavoriteSeries should return non-null filtered results`() = runTest {
         val series = listOf(
             SeriesRemoteDto(id = 1, name = "Series 1"),

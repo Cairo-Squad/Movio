@@ -2,6 +2,9 @@ package com.cairosquad.repository.account
 
 import com.cairosquad.repository.account.data_source.local.AccountLocalDataSource
 import com.cairosquad.repository.account.data_source.remote.AccountRemoteDataSource
+import com.cairosquad.repository.account.data_source.remote.dto.MediaListDto
+import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
+import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 import com.google.common.truth.Truth.assertThat
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -59,6 +62,26 @@ class AccountRepositoryImplTest {
     }
 
     @Test
+    fun `getMoviesLists returns list if account id is not null`() = runTest {
+        coEvery { localDataSource.getAccountId() } returns 123
+        coEvery { remoteDataSource.getMovieLists(123, 1) } returns listOf(MediaListDto(id = 123, "", 1, ""))
+
+        val result = repository.getMovieLists(1)
+
+        assertThat(result).isNotEmpty()
+    }
+
+    @Test
+    fun `getSeriesLists returns list if account id is not null`() = runTest {
+        coEvery { localDataSource.getAccountId() } returns 123
+        coEvery { remoteDataSource.getSeriesLists(123, 1) } returns listOf(MediaListDto(id = 123, "", 1, ""))
+
+        val result = repository.getSeriesLists(1)
+
+        assertThat(result).isNotEmpty()
+    }
+
+    @Test
     fun `getFavoriteMovies returns empty list if account id is null`() = runTest {
         coEvery { localDataSource.getAccountId() } returns null
 
@@ -76,6 +99,26 @@ class AccountRepositoryImplTest {
 
         assertThat(result).isEmpty()
         coVerify(exactly = 0) { remoteDataSource.getFavoriteSeries(any(), any()) }
+    }
+
+    @Test
+    fun `getFavoriteMovies returns list of Movies if account id is not null`() = runTest {
+        coEvery { localDataSource.getAccountId() } returns 123
+        coEvery { remoteDataSource.getFavoriteMovies(123, 1) } returns listOf(MovieRemoteDto())
+
+        val result = repository.getFavoriteMovies(1)
+
+        assertThat(result).isNotEmpty()
+    }
+
+    @Test
+    fun `getFavoriteSeries returns list of Movies if account id is not null`() = runTest {
+        coEvery { localDataSource.getAccountId() } returns 123
+        coEvery { remoteDataSource.getFavoriteSeries(123, 1) } returns listOf(SeriesRemoteDto())
+
+        val result = repository.getFavoriteSeries(1)
+
+        assertThat(result).isNotEmpty()
     }
 
     @Test
@@ -100,7 +143,6 @@ class AccountRepositoryImplTest {
         coVerify { remoteDataSource.addMovieToFavorite(accountId, movieId) }
     }
 
-    // addSeriesToFavorite tests
     @Test
     fun `addSeriesToFavorite does nothing when account id is null`() = runTest {
         val seriesId = 123L
@@ -123,7 +165,6 @@ class AccountRepositoryImplTest {
         coVerify { remoteDataSource.addSeriesToFavorite(accountId, seriesId) }
     }
 
-    // addMovieToHistory tests
     @Test
     fun `addMovieToHistory does nothing when account id is null`() = runTest {
         val movieId = 123L
@@ -190,6 +231,26 @@ class AccountRepositoryImplTest {
     }
 
     @Test
+    fun `getHistoryMovies returns list if account id is not null`() = runTest {
+        coEvery { localDataSource.getAccountId() } returns 123
+        coEvery { remoteDataSource.getHistoryMovies(123, 1) } returns listOf(MovieRemoteDto())
+
+        val result = repository.getHistoryMovies(1)
+
+        assertThat(result).isNotEmpty()
+    }
+
+    @Test
+    fun `getHistorySeries returns list if account id is not null`() = runTest {
+        coEvery { localDataSource.getAccountId() } returns 123
+        coEvery { remoteDataSource.getHistorySeries(123, 1) } returns listOf(SeriesRemoteDto())
+
+        val result = repository.getHistorySeries(1)
+
+        assertThat(result).isNotEmpty()
+    }
+
+    @Test
     fun `getRatedItems returns empty lists if account id is null`() = runTest {
         coEvery { localDataSource.getAccountId() } returns null
 
@@ -199,5 +260,18 @@ class AccountRepositoryImplTest {
         assertThat(result.second).isEmpty()
         coVerify(exactly = 0) { remoteDataSource.getRatedMovies(any(), any()) }
         coVerify(exactly = 0) { remoteDataSource.getRatedSeries(any(), any()) }
+    }
+
+    @Test
+    fun `get getRatedItems returns lists if account id is not null`() = runTest {
+        coEvery { localDataSource.getAccountId() } returns 123
+        coEvery { remoteDataSource.getRatedMovies(123, 1) } returns listOf(MovieRemoteDto())
+        coEvery { remoteDataSource.getRatedSeries(123, 1) } returns listOf(SeriesRemoteDto())
+
+
+        val result = repository.getRatedItems(1)
+
+        assertThat(result.first).isNotEmpty()
+        assertThat(result.second).isNotEmpty()
     }
 }
