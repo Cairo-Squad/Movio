@@ -8,13 +8,13 @@ import javax.inject.Inject
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
     private val onboardingUseCase: OnboardingUseCase
-) : BaseViewModel<Unit, OnboardingEffect>(Unit), OnboardingInteractionListener {
+) : BaseViewModel<DummyState, OnboardingEffect>(DummyState()), OnboardingInteractionListener {
     init {
         tryToCall(
             block = { onboardingUseCase.getOnboardingState() },
             onSuccess = { isCompleted ->
                 if (isCompleted) {
-                    sendEffect(OnboardingEffect.NavigateToAuth)
+                    sendEffect(OnboardingEffect.NavigateToAuthOrHome)
                 }
             },
             onError = { }
@@ -24,8 +24,8 @@ class OnboardingViewModel @Inject constructor(
     override fun onCompleteOnboarding() {
         tryToCall(
             block = { onboardingUseCase.setOnboardingStateAsCompleted() },
-            onSuccess = { sendEffect(OnboardingEffect.NavigateToAuth) },
-            onError = { sendEffect(OnboardingEffect.NavigateToAuth) }
+            onSuccess = { sendEffect(OnboardingEffect.NavigateToAuthOrHome) },
+            onError = { sendEffect(OnboardingEffect.NavigateToAuthOrHome) }
         )
     }
 

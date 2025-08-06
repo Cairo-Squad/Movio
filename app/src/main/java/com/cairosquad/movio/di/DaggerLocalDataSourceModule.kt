@@ -136,7 +136,7 @@ object LocalDataSourceModule {
     @Provides
     @Singleton
     fun provideOnboardingDataSource(
-        context: Context
+        @ApplicationContext context: Context
     ): OnboardingDataSource = OnboardingDataSourceImpl(
         context = context
     )

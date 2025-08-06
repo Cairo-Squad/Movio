@@ -25,6 +25,7 @@ import com.cairosquad.ui.details.TopCastScreen
 import com.cairosquad.ui.details.artist.ArtistScreen
 import com.cairosquad.ui.details.similar_movies.SimilarMoviesScreen
 import com.cairosquad.ui.details.similar_series.SimilarSeriesScreen
+import com.cairosquad.ui.onboarding.OnboardingScreen
 import com.cairosquad.ui.search.ForYouScreen
 import com.cairosquad.ui.see_all_screen.SeeAllScreen
 import com.cairosquad.ui.splash.SplashScreen
@@ -52,10 +53,22 @@ fun AppNavigation(
             composable<SplashRoute> {
                 SplashScreen(
                     onNavigateNext = {
+                        navController.navigate(OnboardingRoute) {
+                            popUpTo(SplashRoute) {
+                                inclusive = true
+                            }
+                        }
+                    }
+                )
+            }
+
+            composable<OnboardingRoute> {
+                OnboardingScreen(
+                    navigateToAuthOrHome = {
                         coroutineScope.launch {
                             val route = if (authGate.isUserLoggedIn()) AppRoute else LoginRoute
                             navController.navigate(route) {
-                                popUpTo(SplashRoute) {
+                                popUpTo(OnboardingRoute) {
                                     inclusive = true
                                 }
 
