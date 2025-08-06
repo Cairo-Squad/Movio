@@ -48,8 +48,7 @@ class AccountUseCase @Inject constructor(
     }
 
     suspend fun getHistoryMovies(page: Int): List<Movie> {
-        val asd = accountRepository.getHistoryMovies(page)
-        return asd
+        return accountRepository.getHistoryMovies(page)
     }
 
     suspend fun getHistorySeries(page: Int): List<Series> {
