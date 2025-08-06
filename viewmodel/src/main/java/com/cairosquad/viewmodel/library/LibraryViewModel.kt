@@ -1,11 +1,14 @@
 package com.cairosquad.viewmodel.library
 
+import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.domain.usecase.LoginUseCase
 import com.cairosquad.entity.MediaList
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.base.BaseViewModel
+import com.cairosquad.viewmodel.exception.ErrorStatus
+import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -24,9 +27,24 @@ class LibraryViewModel @Inject constructor(
         tryToCall(
             block = loginUseCase::isUserLoggedIn,
             onSuccess = { authed ->
-                updateState { it.copy(isUserAuthed = authed) }
+                updateState {
+                    it.copy(isUserAuthed = authed)
+                }
+                loadScreenData()
             },
-            onError = {}
+            onError = { throwable ->
+                handleError(throwable) { copy(screenStatus = LibraryScreenState.SectionStatus.ERROR) }
+            }
+        )
+    }
+
+    private fun loadScreenData() {
+        tryToCall(
+            block = ::loadScreenState,
+            onSuccess = { updateState { it.copy(screenStatus = LibraryScreenState.SectionStatus.SUCCESS) } },
+            onError = { throwable ->
+                handleError(throwable) { copy(screenStatus = LibraryScreenState.SectionStatus.SUCCESS) }
+            }
         )
     }
 
@@ -55,6 +73,10 @@ class LibraryViewModel @Inject constructor(
         sendEffect(LibraryEffect.NavigateToLogin)
     }
 
+    override fun onRefresh() {
+        loadScreenState()
+    }
+
     override fun onListClicked(listId: Long) {
         sendEffect(LibraryEffect.NavigateToListDetails(listId))
     }
@@ -71,10 +93,9 @@ class LibraryViewModel @Inject constructor(
         tryToCall(
             block = { accountUseCase.getMoviesLists(1) },
             onSuccess = ::onLoadingMoviesListsSuccess,
-            onError = {
-                updateState { it.copy(listsSectionState = LibraryScreenState.SectionStatus.ERROR) }
-            },
-            onEnd = {}
+            onError = { throwable ->
+                handleError(throwable) { copy(listsSectionState = LibraryScreenState.SectionStatus.ERROR) }
+            }
         )
     }
 
@@ -91,8 +112,8 @@ class LibraryViewModel @Inject constructor(
         tryToCall(
             block = { accountUseCase.getSeriesLists(1) },
             onSuccess = ::onLoadingSeriesListsSuccess,
-            onError = {
-                updateState { it.copy(listsSectionState = LibraryScreenState.SectionStatus.ERROR) }
+            onError = { throwable ->
+                handleError(throwable) { copy(listsSectionState = LibraryScreenState.SectionStatus.ERROR) }
             },
         )
     }
@@ -110,8 +131,8 @@ class LibraryViewModel @Inject constructor(
         tryToCall(
             block = { accountUseCase.getFavoriteMovies(1) },
             onSuccess = ::onLoadingFavoriteMoviesSuccess,
-            onError = {
-                updateState { it.copy(favoritesSectionState = LibraryScreenState.SectionStatus.ERROR) }
+            onError = { throwable ->
+                handleError(throwable) { copy(favoritesSectionState = LibraryScreenState.SectionStatus.ERROR) }
             }
         )
     }
@@ -129,8 +150,8 @@ class LibraryViewModel @Inject constructor(
         tryToCall(
             block = { accountUseCase.getFavoriteSeries(1) },
             onSuccess = ::onLoadingFavoriteSeriesSuccess,
-            onError = {
-                updateState { it.copy(favoritesSectionState = LibraryScreenState.SectionStatus.ERROR) }
+            onError = { throwable ->
+                handleError(throwable) { copy(favoritesSectionState = LibraryScreenState.SectionStatus.ERROR) }
             }
         )
     }
@@ -148,8 +169,8 @@ class LibraryViewModel @Inject constructor(
         tryToCall(
             block = { accountUseCase.getHistoryMovies(1) },
             onSuccess = ::onLoadingHistoryMoviesSuccess,
-            onError = {
-                updateState { it.copy(historySectionState = LibraryScreenState.SectionStatus.ERROR) }
+            onError = { throwable ->
+                handleError(throwable) { copy(historySectionState = LibraryScreenState.SectionStatus.ERROR) }
             }
         )
     }
@@ -167,8 +188,8 @@ class LibraryViewModel @Inject constructor(
         tryToCall(
             block = { accountUseCase.getHistorySeries(1) },
             onSuccess = ::onLoadingHistorySeriesSuccess,
-            onError = {
-                updateState { it.copy(historySectionState = LibraryScreenState.SectionStatus.ERROR) }
+            onError = { throwable ->
+                handleError(throwable) { copy(historySectionState = LibraryScreenState.SectionStatus.ERROR) }
             }
         )
     }
@@ -179,6 +200,25 @@ class LibraryViewModel @Inject constructor(
                 historySeries = series.map { series -> series.toUiState() },
                 historySectionState = LibraryScreenState.SectionStatus.SUCCESS
             )
+        }
+    }
+
+    private fun handleError(
+        throwable: Throwable,
+        updateSection: LibraryScreenState.() -> LibraryScreenState
+    ) {
+        updateState {
+            it.updateSection().copy(
+                errorStatus = handleLibraryException(throwable),
+                isRefreshing = false
+            )
+        }
+    }
+
+    private fun handleLibraryException(e: Throwable): ErrorStatus {
+        return when (e) {
+            is MovioException -> exceptionToErrorStatus(e)
+            else -> ErrorStatus.UNKNOWN_ERROR
         }
     }
 }

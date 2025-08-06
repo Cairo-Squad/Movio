@@ -3,11 +3,14 @@ package com.cairosquad.viewmodel.library
 import com.cairosquad.viewmodel.exception.ErrorStatus
 
 data class LibraryScreenState(
+    val screenStatus: SectionStatus = SectionStatus.LOADING,
     val listsSectionState: SectionStatus = SectionStatus.LOADING,
     val favoritesSectionState: SectionStatus = SectionStatus.LOADING,
     val historySectionState: SectionStatus = SectionStatus.LOADING,
-    val isUserAuthed: Boolean = false,
+    val dataRequestStatus: SectionStatus = SectionStatus.LOADING,
 
+    val isUserAuthed: Boolean = false,
+    val isRefreshing: Boolean = false,
     val errorStatus: ErrorStatus? = null,
 
     val movieLists: List<ListsUiState> = emptyList(),

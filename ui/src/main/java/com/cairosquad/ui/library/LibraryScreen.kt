@@ -37,6 +37,7 @@ import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.library.component.EmptyListContainer
 import com.cairosquad.ui.library.component.ListContainer
 import com.cairosquad.ui.library.component.SectionHeader
+import com.cairosquad.ui.library.content.LibraryFailContent
 import com.cairosquad.ui.movio_component.LoadingMovieCard
 import com.cairosquad.ui.movio_component.LoadingMovieImage
 import com.cairosquad.ui.movio_component.MovieCard
@@ -122,37 +123,60 @@ private fun LibraryScreenContent(
                 title = stringResource(com.cairosquad.ui.R.string.library)
             )
         }
-        if (screenState.isUserAuthed) {
-            item { ListsSection(listener, screenState) }
-            item { FavoriteSection(screenState, listener) }
-            item { HistorySection(screenState, listener) }
-        } else {
-            item {
+        when (screenState.screenStatus) {
+            LibraryScreenState.SectionStatus.LOADING -> {}
+            LibraryScreenState.SectionStatus.SUCCESS -> {
+                if (screenState.isUserAuthed) {
+                    item { ListsSection(listener, screenState) }
+                    item { FavoriteSection(screenState, listener) }
+                    item { HistorySection(screenState, listener) }
+                }
+            }
+
+            LibraryScreenState.SectionStatus.ERROR -> {
+                item {
+                    LibraryFailContent(
+                        screenState.errorStatus,
+                        listener = listener
+                    )
+                }
+            }
+        }
+    }
+    when (screenState.screenStatus) {
+        LibraryScreenState.SectionStatus.LOADING -> {}
+        LibraryScreenState.SectionStatus.SUCCESS -> {
+            if (!screenState.isUserAuthed) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .windowInsetsPadding(WindowInsets.statusBars)
                         .padding(horizontal = 16.dp)
-                        .background(Theme.color.surfaces.surface),
+                        .padding(top = 40.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
+                    Spacer(modifier = Modifier.weight(1f))
                     StateMessage(
                         imageDrawable = R.drawable.logo,
                         titleId = com.cairosquad.ui.R.string.log_in_to_unlock_your_personal_library,
-                        descriptionId = com.cairosquad.ui.R.string.access_your_watch_history_favorites_and_watchlist_all_in_one_place
+                        descriptionId = com.cairosquad.ui.R.string.access_your_watch_history_favorites_and_watchlist_all_in_one_place,
+                        width = 80.dp,
+                        height = 88.dp
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     Button(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 32.dp),
+                            .padding(bottom = 32.dp),
                         text = stringResource(com.cairosquad.ui.R.string.login),
                         onClick = listener::onLoginClicked
                     )
                 }
             }
         }
+
+        LibraryScreenState.SectionStatus.ERROR -> {}
     }
 }
 
