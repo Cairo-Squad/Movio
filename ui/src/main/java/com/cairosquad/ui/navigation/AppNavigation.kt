@@ -25,6 +25,10 @@ import com.cairosquad.ui.details.TopCastScreen
 import com.cairosquad.ui.details.artist.ArtistScreen
 import com.cairosquad.ui.details.similar_movies.SimilarMoviesScreen
 import com.cairosquad.ui.details.similar_series.SimilarSeriesScreen
+import com.cairosquad.ui.library.list.ListScreen
+import com.cairosquad.ui.library.view_all.ViewAllFavorite
+import com.cairosquad.ui.library.view_all.ViewAllHistory
+import com.cairosquad.ui.library.view_all.ViewAllLists
 import com.cairosquad.ui.search.ForYouScreen
 import com.cairosquad.ui.see_all_screen.SeeAllScreen
 import com.cairosquad.ui.splash.SplashScreen
@@ -143,6 +147,20 @@ fun AppNavigation(
                 SeeAllScreen(
                     contentType = backStackEntry.toRoute<SeeAllScreenRoute>().contentType,
                     mediaType = backStackEntry.toRoute<SeeAllScreenRoute>().mediaType
+                )
+            }
+            composable<ViewAllListsRoute> {
+                ViewAllLists()
+            }
+            composable<ViewAllFavoritesRoute> {
+                ViewAllFavorite()
+            }
+            composable<ViewAllHistoryRoute> {
+                ViewAllHistory()
+            }
+            composable<ListRoute> {backStackEntry ->
+                ListScreen(
+                    listId = backStackEntry.toRoute<ListRoute>().listId
                 )
             }
         }

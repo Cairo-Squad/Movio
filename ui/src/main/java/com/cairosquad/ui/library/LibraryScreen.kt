@@ -1,6 +1,7 @@
 package com.cairosquad.ui.library
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -13,20 +14,20 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
-import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.library.component.EmptyListContainer
 import com.cairosquad.ui.library.component.ListContainer
@@ -34,6 +35,16 @@ import com.cairosquad.ui.library.component.SectionHeader
 import com.cairosquad.ui.movio_component.LoadingMovieCard
 import com.cairosquad.ui.movio_component.LoadingMovieImage
 import com.cairosquad.ui.movio_component.MovieCard
+import com.cairosquad.ui.navigation.ListRoute
+import com.cairosquad.ui.navigation.LocalNavController
+import com.cairosquad.ui.navigation.MovieRoute
+import com.cairosquad.ui.navigation.SeriesRoute
+import com.cairosquad.ui.navigation.ViewAllFavoritesRoute
+import com.cairosquad.ui.navigation.ViewAllHistoryRoute
+import com.cairosquad.ui.navigation.ViewAllListsRoute
+import com.cairosquad.ui.utils.ObserveAsEffect
+import com.cairosquad.viewmodel.library.LibraryEffect
+import com.cairosquad.viewmodel.library.LibraryInteractionListener
 import com.cairosquad.viewmodel.library.LibraryScreenState
 import com.cairosquad.viewmodel.library.LibraryViewModel
 
@@ -41,18 +52,46 @@ import com.cairosquad.viewmodel.library.LibraryViewModel
 fun LibraryScreen() {
 	val viewModel: LibraryViewModel = hiltViewModel()
 	val screenState by viewModel.screenState.collectAsStateWithLifecycle()
+	val navController = LocalNavController.current
 
 	LaunchedEffect(Unit) {
 		viewModel.loadScreenState()
 	}
 
+	ObserveAsEffect(viewModel.effect) {
+		when (it) {
+            LibraryEffect.NavigateToFavorites -> {
+				navController.navigate(ViewAllFavoritesRoute)
+			}
+            LibraryEffect.NavigateToHistory -> {
+				navController.navigate(ViewAllHistoryRoute)
+			}
+            LibraryEffect.NavigateToLists -> {
+				navController.navigate(ViewAllListsRoute)
+			}
+			is LibraryEffect.NavigateToListDetails -> {
+				navController.navigate(ListRoute(it.listId))
+			}
+			is LibraryEffect.NavigateToMovieDetails -> {
+				navController.navigate(MovieRoute(it.movieId))
+			}
+            is LibraryEffect.NavigateToSeriesDetails -> {
+				navController.navigate(SeriesRoute(it.seriesId))
+			}
+        }
+	}
+
 	LibraryScreenContent(
-		screenState = screenState
+		screenState = screenState,
+		listener = viewModel
 	)
 }
 
 @Composable
-private fun LibraryScreenContent(screenState: LibraryScreenState) {
+private fun LibraryScreenContent(
+	screenState: LibraryScreenState,
+	listener: LibraryInteractionListener
+) {
 	LazyColumn(
 		modifier = Modifier
 			.fillMaxSize()
@@ -67,7 +106,7 @@ private fun LibraryScreenContent(screenState: LibraryScreenState) {
 				modifier = Modifier.padding(top = 16.dp, bottom = 12.dp),
 				sectionTitle = stringResource(com.cairosquad.ui.R.string.watchlist),
 				sectionIcon = ImageVector.vectorResource(R.drawable.ic_list),
-				onSectionClick = {}
+				onSectionClick = listener::onListsViewAllClick
 			)
 		}
 		item {
@@ -92,14 +131,14 @@ private fun LibraryScreenContent(screenState: LibraryScreenState) {
 								ListContainer(
                                     listName = it.name,
                                     numberOfItems = it.mediaCount,
-                                    onListClicked = {}
+                                    onListClicked = {listener.onListClicked(it.id)}
                                 )
 							}
 							items(screenState.seriesLists) {
 								ListContainer(
 									listName = it.name,
 									numberOfItems = it.mediaCount,
-									onListClicked = {}
+									onListClicked = {listener.onListClicked(it.id)}
 								)
 							}
 						}
@@ -115,7 +154,7 @@ private fun LibraryScreenContent(screenState: LibraryScreenState) {
 						modifier = Modifier.padding(top = 24.dp, bottom = 12.dp),
 						sectionTitle = stringResource(com.cairosquad.ui.R.string.favorite),
 						sectionIcon = ImageVector.vectorResource(R.drawable.heart_icon_round),
-						onSectionClick = {}
+						onSectionClick = listener::onFavoritesViewAllClick
 					)
 				}
 				LibraryScreenState.SectionStatus.SUCCESS -> {
@@ -125,14 +164,14 @@ private fun LibraryScreenContent(screenState: LibraryScreenState) {
 							sectionTitle = stringResource(com.cairosquad.ui.R.string.favorite),
 							sectionDescription = stringResource(com.cairosquad.ui.R.string.this_list_has_empty),
 							sectionIcon = ImageVector.vectorResource(R.drawable.heart_icon_round),
-							onSectionClick = {}
+							onSectionClick = listener::onFavoritesViewAllClick
 						)
 					} else {
 						SectionHeader(
 							modifier = Modifier.padding(top = 24.dp, bottom = 12.dp),
 							sectionTitle = stringResource(com.cairosquad.ui.R.string.favorite),
 							sectionIcon = ImageVector.vectorResource(R.drawable.heart_icon_round),
-							onSectionClick = {}
+							onSectionClick = listener::onFavoritesViewAllClick
 						)
 
 					}
@@ -164,7 +203,9 @@ private fun LibraryScreenContent(screenState: LibraryScreenState) {
 							items(screenState.favoriteMovies) {
 								MovieCard(
 									modifier = Modifier
-										.width(124.dp),
+										.clip(RoundedCornerShape(8.dp))
+										.width(124.dp)
+										.clickable(onClick = {listener.onMovieClicked(it.id)}),
 									title = it.title,
 									vote = it.rating,
 									imgUrl = it.posterPath,
@@ -175,7 +216,9 @@ private fun LibraryScreenContent(screenState: LibraryScreenState) {
 							items(screenState.favoriteSeries) {
 								MovieCard(
 									modifier = Modifier
-										.width(124.dp),
+										.clip(RoundedCornerShape(8.dp))
+										.width(124.dp)
+										.clickable(onClick = {listener.onSeriesClicked(it.id)}),
 									title = it.title,
 									vote = it.rating,
 									imgUrl = it.posterPath,
@@ -196,7 +239,7 @@ private fun LibraryScreenContent(screenState: LibraryScreenState) {
 						modifier = Modifier.padding(top = 24.dp, bottom = 12.dp),
 						sectionTitle = "History",
 						sectionIcon = ImageVector.vectorResource(R.drawable.recent),
-						onSectionClick = {}
+						onSectionClick = listener::onHistoryViewAllClick
 					)
 				}
                 LibraryScreenState.SectionStatus.SUCCESS -> {
@@ -206,14 +249,14 @@ private fun LibraryScreenContent(screenState: LibraryScreenState) {
 							sectionTitle = "History",
 							sectionDescription = stringResource(com.cairosquad.ui.R.string.this_list_has_empty),
 							sectionIcon = ImageVector.vectorResource(R.drawable.recent),
-							onSectionClick = {}
+							onSectionClick = listener::onHistoryViewAllClick
 						)
 					} else {
 						SectionHeader(
 							modifier = Modifier.padding(top = 24.dp, bottom = 12.dp),
 							sectionTitle = "History",
 							sectionIcon = ImageVector.vectorResource(R.drawable.recent),
-							onSectionClick = {}
+							onSectionClick = listener::onHistoryViewAllClick
 						)
 
 					}
@@ -244,8 +287,10 @@ private fun LibraryScreenContent(screenState: LibraryScreenState) {
 						) {
 							items(screenState.historyMovies) {
 								MovieCard(
-									modifier = Modifier
-										.width(124.dp),
+									modifier =Modifier
+										.clip(RoundedCornerShape(8.dp))
+										.width(124.dp)
+										.clickable(onClick = {listener.onMovieClicked(it.id)}),
 									title = it.title,
 									vote = it.rating,
 									imgUrl = it.posterPath,
@@ -256,7 +301,9 @@ private fun LibraryScreenContent(screenState: LibraryScreenState) {
 							items(screenState.historySeries) {
 								MovieCard(
 									modifier = Modifier
-										.width(124.dp),
+										.clip(RoundedCornerShape(8.dp))
+										.width(124.dp)
+										.clickable(onClick = {listener.onSeriesClicked(it.id)}),
 									title = it.title,
 									vote = it.rating,
 									imgUrl = it.posterPath,
@@ -270,16 +317,5 @@ private fun LibraryScreenContent(screenState: LibraryScreenState) {
                 LibraryScreenState.SectionStatus.ERROR -> {}
             }
 		}
-	}
-}
-
-
-@Preview
-@Composable
-private fun LibraryScreenPreview() {
-	MovioTheme(isDarkTheme = true) {
-		LibraryScreenContent(LibraryScreenState(
-			favoritesSectionState = LibraryScreenState.SectionStatus.SUCCESS
-		))
 	}
 }

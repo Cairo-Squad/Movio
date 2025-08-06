@@ -27,6 +27,30 @@ class LibraryViewModel @Inject constructor(
         loadHistorySeries()
     }
 
+    override fun onListsViewAllClick() {
+        sendEffect(LibraryEffect.NavigateToLists)
+    }
+
+    override fun onFavoritesViewAllClick() {
+        sendEffect(LibraryEffect.NavigateToFavorites)
+    }
+
+    override fun onHistoryViewAllClick() {
+        sendEffect(LibraryEffect.NavigateToHistory)
+    }
+
+    override fun onListClicked(listId: Long) {
+        sendEffect(LibraryEffect.NavigateToListDetails(listId))
+    }
+
+    override fun onMovieClicked(movieId: Long) {
+        sendEffect(LibraryEffect.NavigateToMovieDetails(movieId))
+    }
+
+    override fun onSeriesClicked(seriesId: Long) {
+        sendEffect(LibraryEffect.NavigateToSeriesDetails(seriesId))
+    }
+
     private fun loadMoviesLists() {
         tryToCall(
             block = { accountUseCase.getMoviesLists(1) },
@@ -76,7 +100,7 @@ class LibraryViewModel @Inject constructor(
         )
     }
 
-    private fun onLoadingFavoriteMoviesSuccess(movies: List<Movie>){
+    private fun onLoadingFavoriteMoviesSuccess(movies: List<Movie>) {
         updateState {
             it.copy(
                 favoriteMovies = movies.map { it.toUiState() },
@@ -95,7 +119,7 @@ class LibraryViewModel @Inject constructor(
         )
     }
 
-    private fun onLoadingFavoriteSeriesSuccess(series: List<Series>){
+    private fun onLoadingFavoriteSeriesSuccess(series: List<Series>) {
         updateState {
             it.copy(
                 favoriteSeries = series.map { it.toUiState() },

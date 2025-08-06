@@ -1,4 +1,12 @@
 package com.cairosquad.viewmodel.library
 
 interface LibraryInteractionListener {
+
+    fun onListsViewAllClick()
+    fun onFavoritesViewAllClick()
+    fun onHistoryViewAllClick()
+
+    fun onListClicked(listId: Long)
+    fun onMovieClicked(movieId: Long)
+    fun onSeriesClicked(seriesId: Long)
 }
