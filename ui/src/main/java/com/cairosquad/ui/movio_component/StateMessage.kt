@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.Text
@@ -29,7 +30,9 @@ fun StateMessage(
     @DrawableRes imageDrawable: Int,
     @StringRes titleId: Int,
     @StringRes descriptionId: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    width: Dp = 180.dp,
+    height: Dp = 150.dp
 ) {
     Column(
         modifier = modifier
@@ -40,7 +43,7 @@ fun StateMessage(
     ) {
         Image(
             modifier = Modifier
-                .size(width = 180.dp, height = 150.dp)
+                .size(width = width, height = height)
                 .padding(bottom = 16.dp),
             imageVector = ImageVector.vectorResource(imageDrawable),
             contentDescription = stringResource(R.string.state_message_image)

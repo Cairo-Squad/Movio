@@ -79,3 +79,19 @@ data class SeeAllScreenRoute(
     val contentType: MediaContentType,
     val mediaType: MediaType
 )
+
+@Serializable
+data object ViewAllListsRoute
+
+
+@Serializable
+data object ViewAllFavoritesRoute
+
+
+@Serializable
+data object ViewAllHistoryRoute
+
+@Serializable
+data class ListRoute(
+    val listId: Long
+)

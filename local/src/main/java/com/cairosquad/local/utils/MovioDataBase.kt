@@ -2,6 +2,7 @@ package com.cairosquad.local.utils
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.cairosquad.local.account.AccountCacheDao
 import com.cairosquad.local.cache.artist.ArtistsCacheDao
 import com.cairosquad.local.cache.cacheCode.CacheCodeDao
 import com.cairosquad.local.cache.genre.GenreDao
@@ -11,6 +12,7 @@ import com.cairosquad.local.cache.series.SeasonEpisodeCacheDao
 import com.cairosquad.local.cache.series.SeriesCacheDao
 import com.cairosquad.local.login.dao.LoginDao
 import com.cairosquad.local.search.recent.dao.LocalRecentSearchDao
+import com.cairosquad.repository.account.data_source.local.dto.AccountLocalDto
 import com.cairosquad.repository.artists.data_source.local.dto.ArtistCacheDto
 import com.cairosquad.repository.artists.data_source.local.dto.CacheCodeArtistCrossRef
 import com.cairosquad.repository.login.data_source.local.dto.SessionIdDto
@@ -38,6 +40,7 @@ import com.cairosquad.repository.utils.sharedDto.local.ReviewCacheDto
         RecentSearchEntity::class,
         SessionIdDto::class,
         CacheCodeDto::class,
+        AccountLocalDto::class,
         MovieWithoutGenreCacheDto::class,
         CacheCodeMovieCrossRef::class,
         GenreOfMovieCacheDto::class,
@@ -75,4 +78,6 @@ abstract class MovioDataBase : RoomDatabase() {
     abstract fun cacheCodeDao(): CacheCodeDao
 
     abstract fun reviewDao(): ReviewDao
+
+    abstract fun accountCacheDao(): AccountCacheDao
 }

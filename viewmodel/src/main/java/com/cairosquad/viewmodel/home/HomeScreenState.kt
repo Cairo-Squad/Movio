@@ -11,8 +11,9 @@ data class HomeScreenState(
 
     val popularMovies: List<MediaUiState> = emptyList(),
     val popularSeries: List<MediaUiState> = emptyList(),
+    val profileImage: String = "",
 
-    val categoriesMedia: Flow<PagingData<HomeScreenState.MediaUiState>> = flowOf(PagingData.empty()),
+    val categoriesMedia: Flow<PagingData<MediaUiState>> = flowOf(PagingData.empty()),
 
     val sections: Map<MediaContentType, SectionUiState> = mapOf(),
 

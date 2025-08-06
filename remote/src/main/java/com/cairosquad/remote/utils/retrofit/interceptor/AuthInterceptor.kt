@@ -4,12 +4,6 @@ import okhttp3.Interceptor
 import okhttp3.Response
 
 class AuthInterceptor : Interceptor {
-    companion object {
-        private var token = ""
-        fun updateToken(newToken: String) {
-            token = newToken
-        }
-    }
     override fun intercept(chain: Interceptor.Chain): Response {
 
         val currentToken = token
@@ -27,5 +21,11 @@ class AuthInterceptor : Interceptor {
             .build()
 
         return chain.proceed(newRequest)
+    }
+    companion object {
+        private var token = ""
+        fun updateToken(newToken: String) {
+            token = newToken
+        }
     }
 }

@@ -58,4 +58,11 @@
     <string name="add_your_overall_rating_for_this">أعطنا تقييمك لهذا الـ%1$s</string>
     <string name="share_via">شارك عبر</string>
     <string name="season">الموسم %1$d</string>
+    <string name="favorite">المفضلة</string>
+    <string name="this_list_has_empty">هذة القائمة فارغة</string>
+    <string name="library">المكتبه</string>
+    <string name="watchlist">قائمة المشاهدة</string>
+    <string name="log_in_to_unlock_your_personal_library">قم بالتسجيل حتى تستطيع ان تستخدم مكتبتك الشخصية</string>
+    <string name="access_your_watch_history_favorites_and_watchlist_all_in_one_place">يمكنك الوصول إلى سجل المشاهدة والمفضلة وقائمة المشاهدة كل ذلك في مكان واحد.</string>
+    <string name="history">سجل المشاهدة</string>
 </resources>

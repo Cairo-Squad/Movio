@@ -23,6 +23,7 @@ data class MovieScreenState(
 
     val rate: Int = 0,
     val listName: String = "",
+    val moviesLists: List<MoviesList> = emptyList(),
 
     val errorStatus: ErrorStatus? = null,
 
@@ -62,4 +63,9 @@ data class MovieScreenState(
         SUCCESS,
         ERROR
     }
+
+    data class MoviesList(
+        val id: Long,
+        val name: String
+    )
 }

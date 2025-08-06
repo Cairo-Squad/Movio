@@ -29,11 +29,10 @@ class LoginRepositoryImpl @Inject constructor(
                 password = password,
                 requestToken = requestTokenResponse.toEntity()
             )
-            remoteLoginDataSource.createSessionId(requestTokenResponse.toEntity())
-            localAuthenticationDataSource.saveSessionId(requestTokenResponse.toEntity())
-            remoteLoginDataSource.updateInterceptorToken(requestTokenResponse.toEntity())
+            val sessionId = remoteLoginDataSource.createSessionId(requestTokenResponse.toEntity())
+            localAuthenticationDataSource.saveSessionId(sessionId.sessionId ?: "")
+            remoteLoginDataSource.updateInterceptorToken(sessionId.sessionId ?: "")
         }
-
     }
 
     override suspend fun isUserLoggedIn(): Boolean {

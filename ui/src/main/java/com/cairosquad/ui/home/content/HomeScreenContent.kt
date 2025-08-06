@@ -165,7 +165,10 @@ private fun TobContent(
             .fillMaxWidth()
             .background(animatedBrush)
     ) {
-        AppBar(modifier = Modifier.statusBarsPadding())
+        AppBar(
+            modifier = Modifier.statusBarsPadding(),
+            userImage = screenState.profileImage
+        )
 
         TabRow(
             modifier = Modifier,
