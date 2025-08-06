@@ -151,7 +151,7 @@ class LoginRepositoryImplTest {
         loginRepository.login(USERNAME, PASSWORD)
         coVerify(exactly = 1) {
             localAuthenticationDataSource.saveSessionId(
-                requestTokenResponse.requestToken ?: ""
+                sessionId.sessionId ?: ""
             )
         }
     }
