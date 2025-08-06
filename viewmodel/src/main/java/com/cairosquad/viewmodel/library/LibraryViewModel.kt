@@ -1,6 +1,7 @@
 package com.cairosquad.viewmodel.library
 
 import com.cairosquad.domain.usecase.AccountUseCase
+import com.cairosquad.domain.usecase.LoginUseCase
 import com.cairosquad.entity.MediaList
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
@@ -10,12 +11,23 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LibraryViewModel @Inject constructor(
-    private val accountUseCase: AccountUseCase
+    private val accountUseCase: AccountUseCase,
+    private val loginUseCase: LoginUseCase
 ) : BaseViewModel<LibraryScreenState, LibraryEffect>(LibraryScreenState()),
     LibraryInteractionListener {
 
     init {
-        loadScreenState()
+        isUserLoggedIn()
+    }
+
+    private fun isUserLoggedIn() {
+        tryToCall(
+            block = loginUseCase::isUserLoggedIn,
+            onSuccess = { authed ->
+                updateState { it.copy(isUserAuthed = authed) }
+            },
+            onError = {}
+        )
     }
 
     fun loadScreenState() {
@@ -37,6 +49,10 @@ class LibraryViewModel @Inject constructor(
 
     override fun onHistoryViewAllClick() {
         sendEffect(LibraryEffect.NavigateToHistory)
+    }
+
+    override fun onLoginClicked() {
+        sendEffect(LibraryEffect.NavigateToLogin)
     }
 
     override fun onListClicked(listId: Long) {

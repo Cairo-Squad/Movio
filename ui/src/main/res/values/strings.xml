@@ -62,4 +62,7 @@
     <string name="this_list_has_empty">This list has empty</string>
     <string name="library">Library</string>
     <string name="watchlist">Watchlist</string>
+    <string name="log_in_to_unlock_your_personal_library">Log in to unlock your personal library</string>
+    <string name="access_your_watch_history_favorites_and_watchlist_all_in_one_place">Access your watch history, favorites, and watchlist  all in one place.</string>
+    <string name="history">History</string>
 </resources>

@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -30,6 +32,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
+import com.cairosquad.design_system.basic_component.Button
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.library.component.EmptyListContainer
 import com.cairosquad.ui.library.component.ListContainer
@@ -37,8 +40,10 @@ import com.cairosquad.ui.library.component.SectionHeader
 import com.cairosquad.ui.movio_component.LoadingMovieCard
 import com.cairosquad.ui.movio_component.LoadingMovieImage
 import com.cairosquad.ui.movio_component.MovieCard
+import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.ui.navigation.ListRoute
 import com.cairosquad.ui.navigation.LocalNavController
+import com.cairosquad.ui.navigation.LoginRoute
 import com.cairosquad.ui.navigation.MovieRoute
 import com.cairosquad.ui.navigation.SeriesRoute
 import com.cairosquad.ui.navigation.ViewAllFavoritesRoute
@@ -74,6 +79,10 @@ fun LibraryScreen() {
                 navController.navigate(ViewAllListsRoute)
             }
 
+            LibraryEffect.NavigateToLogin -> {
+                navController.navigate(LoginRoute)
+            }
+
             is LibraryEffect.NavigateToListDetails -> {
                 navController.navigate(ListRoute(it.listId))
             }
@@ -85,6 +94,7 @@ fun LibraryScreen() {
             is LibraryEffect.NavigateToSeriesDetails -> {
                 navController.navigate(SeriesRoute(it.seriesId))
             }
+
         }
     }
 
@@ -99,6 +109,7 @@ private fun LibraryScreenContent(
     screenState: LibraryScreenState,
     listener: LibraryInteractionListener
 ) {
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -111,9 +122,37 @@ private fun LibraryScreenContent(
                 title = stringResource(com.cairosquad.ui.R.string.library)
             )
         }
-        item { ListsSection(listener, screenState) }
-        item { FavoriteSection(screenState, listener) }
-        item { HistorySection(screenState, listener) }
+        if (screenState.isUserAuthed) {
+            item { ListsSection(listener, screenState) }
+            item { FavoriteSection(screenState, listener) }
+            item { HistorySection(screenState, listener) }
+        } else {
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .windowInsetsPadding(WindowInsets.statusBars)
+                        .padding(horizontal = 16.dp)
+                        .background(Theme.color.surfaces.surface),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    StateMessage(
+                        imageDrawable = R.drawable.logo,
+                        titleId = com.cairosquad.ui.R.string.log_in_to_unlock_your_personal_library,
+                        descriptionId = com.cairosquad.ui.R.string.access_your_watch_history_favorites_and_watchlist_all_in_one_place
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Button(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 32.dp),
+                        text = stringResource(com.cairosquad.ui.R.string.login),
+                        onClick = listener::onLoginClicked
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -263,7 +302,7 @@ private fun HistorySection(
             LibraryScreenState.SectionStatus.LOADING -> {
                 SectionHeader(
                     modifier = Modifier.padding(top = 24.dp, bottom = 12.dp),
-                    sectionTitle = "History",
+                    sectionTitle = stringResource(com.cairosquad.ui.R.string.history),
                     sectionIcon = ImageVector.vectorResource(R.drawable.recent),
                     onSectionClick = listener::onHistoryViewAllClick
                 )
@@ -284,7 +323,7 @@ private fun HistorySection(
                 if (screenState.historyMovies.isEmpty() && screenState.historySeries.isEmpty()) {
                     SectionHeader(
                         modifier = Modifier.padding(top = 24.dp),
-                        sectionTitle = "History",
+                        sectionTitle = stringResource(com.cairosquad.ui.R.string.history),
                         sectionDescription = stringResource(com.cairosquad.ui.R.string.this_list_has_empty),
                         sectionIcon = ImageVector.vectorResource(R.drawable.recent),
                         onSectionClick = listener::onHistoryViewAllClick
@@ -292,7 +331,7 @@ private fun HistorySection(
                 } else {
                     SectionHeader(
                         modifier = Modifier.padding(top = 24.dp, bottom = 12.dp),
-                        sectionTitle = "History",
+                        sectionTitle = stringResource(com.cairosquad.ui.R.string.history),
                         sectionIcon = ImageVector.vectorResource(R.drawable.recent),
                         onSectionClick = listener::onHistoryViewAllClick
                     )

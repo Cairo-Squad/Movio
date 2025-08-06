@@ -50,8 +50,6 @@ class AccountRemoteDataSourceImpl @Inject constructor(
         page: Int
     ): List<MovieRemoteDto> {
         return safeCallApi {
-            Log.d("favorite remote", "getFavoriteMovies: API")
-
             apiService.getFavoriteMovies(accountId, page)
                 .results
                 ?.filterNotNull()
@@ -64,7 +62,6 @@ class AccountRemoteDataSourceImpl @Inject constructor(
         page: Int
     ): List<SeriesRemoteDto> {
         return safeCallApi {
-            Log.d("favorite remote", "getFavoriteSeries: API")
             apiService.getFavoriteSeries(accountId, page)
                 .results
                 ?.filterNotNull()

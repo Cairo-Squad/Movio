@@ -6,6 +6,7 @@ data class LibraryScreenState(
     val listsSectionState: SectionStatus = SectionStatus.LOADING,
     val favoritesSectionState: SectionStatus = SectionStatus.LOADING,
     val historySectionState: SectionStatus = SectionStatus.LOADING,
+    val isUserAuthed: Boolean = false,
 
     val errorStatus: ErrorStatus? = null,
 
