@@ -3,6 +3,7 @@ package com.cairosquad.viewmodel.home
 
 import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
+import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
@@ -11,7 +12,7 @@ import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
-import com.cairosquad.viewmodel.home.HomeScreenState.ScreenStatus
+import com.cairosquad.viewmodel.home.HomeScreenState.DateRequestStatus
 import com.cairosquad.viewmodel.util.MediaContentType
 import com.cairosquad.viewmodel.util.MediaType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,9 +42,10 @@ class HomeViewModel @Inject constructor(
     private fun getAccountDetails() {
         tryToCall(
             block = { accountUseCase.getAccountDetails() },
-            onSuccess = {accountDetails ->
+            onSuccess = { accountDetails ->
 
-                updateState { it.copy(profileImage = accountDetails.avatarPath) } },
+                updateState { it.copy(profileImage = accountDetails.avatarPath) }
+            },
             onError = {}
         )
     }
@@ -68,10 +70,18 @@ class HomeViewModel @Inject constructor(
         val movies: List<Movie> = when (sectionType) {
             MediaContentType.TOP_RATING -> manageMoviesUseCase.getTopRatingMovies(page, genreId)
             MediaContentType.TRENDING -> manageMoviesUseCase.getTrendingMovies(page, genreId)
-            MediaContentType.FREE_TO_WATCH -> manageMoviesUseCase.getFreeToWatchMovies(page, genreId)
+            MediaContentType.FREE_TO_WATCH -> manageMoviesUseCase.getFreeToWatchMovies(
+                page,
+                genreId
+            )
+
             MediaContentType.UPCOMING -> manageMoviesUseCase.getUpcomingMovies(page, genreId)
             MediaContentType.NOW_PLAYING -> manageMoviesUseCase.getNowPlayingMovies(page, genreId)
-            MediaContentType.MORE_RECOMMENDED -> manageMoviesUseCase.getMoreRecommendedMovies(page, genreId)
+            MediaContentType.MORE_RECOMMENDED -> manageMoviesUseCase.getMoreRecommendedMovies(
+                page,
+                genreId
+            )
+
             else -> emptyList()
         }
 
@@ -79,7 +89,11 @@ class HomeViewModel @Inject constructor(
             MediaContentType.TOP_RATING -> manageSeriesUseCase.getTopRatingSeries(page, genreId)
             MediaContentType.TRENDING -> manageSeriesUseCase.getTrendingSeries(page, genreId)
             MediaContentType.UPCOMING -> manageSeriesUseCase.getFreeToWatchSeries(page, genreId)
-            MediaContentType.MORE_RECOMMENDED -> manageSeriesUseCase.getMoreRecommendedSeries(page, genreId)
+            MediaContentType.MORE_RECOMMENDED -> manageSeriesUseCase.getMoreRecommendedSeries(
+                page,
+                genreId
+            )
+
             MediaContentType.AIRING_TODAY -> manageSeriesUseCase.getAiringTodaySeries(page, genreId)
             MediaContentType.ON_TV -> manageSeriesUseCase.getOnTvSeries(page, genreId)
             else -> emptyList()
@@ -87,6 +101,7 @@ class HomeViewModel @Inject constructor(
 
         return Pair(movies, series)
     }
+
     private fun fetchPopularMedia(genreId: Long? = null) {
         tryToCall(
             block = { fetchPopularMediaBlock(genreId) },
@@ -95,7 +110,6 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    // TODO edit media type and get data in home screen for every one in here screen
     private suspend fun fetchPopularMediaBlock(genreId: Long? = null): Pair<List<Movie>, List<Series>> {
         val series = manageSeriesUseCase.getPopularSeries(
             page = 1,
@@ -114,7 +128,7 @@ class HomeViewModel @Inject constructor(
                 popularMovies = moviesAndSeries.first.map(Movie::toHomeMediaUiState),
                 popularSeries = moviesAndSeries.second.map(Series::toHomeMediaUiState),
                 isRefreshing = false,
-                screenStatus = ScreenStatus.SUCCESS
+                dataRequestStatus = DateRequestStatus.SUCCESS
             )
         }
     }
@@ -215,11 +229,11 @@ class HomeViewModel @Inject constructor(
                     }
 
                     HomeScreenState.SortingType.POPULARITY -> {
-                        unifiedMediaPager.getCombinedMedia(genreId = genre.id)
+                        unifiedMediaPager.getCombinedMedia(genreId = genre.id, SortType.POPULAR)
                     }
 
                     HomeScreenState.SortingType.LATEST -> {
-                        unifiedMediaPager.getCombinedMedia(genreId = genre.id)
+                        unifiedMediaPager.getCombinedMedia(genreId = genre.id, SortType.LATEST)
                     }
                 }
             },
@@ -232,6 +246,7 @@ class HomeViewModel @Inject constructor(
         )
 
     }
+
 
     override fun onSectionVisible(sectionType: MediaContentType) {
         if (screenState.value.sections.containsKey(sectionType)) return
@@ -268,11 +283,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+
     private fun handleError(throwable: Throwable) {
         updateState {
             it.copy(
                 errorStatus = handleHomeException(throwable),
-                screenStatus = ScreenStatus.FAILED,
+                dataRequestStatus = DateRequestStatus.FAILED,
                 isRefreshing = false
             )
         }
@@ -286,7 +302,7 @@ class HomeViewModel @Inject constructor(
     }
 
     override fun onRefresh() {
-        updateState { it.copy(isRefreshing = true, screenStatus = ScreenStatus.LOADING) }
+        updateState { it.copy(isRefreshing = true, dataRequestStatus = DateRequestStatus.LOADING) }
         loadHomeScreenData()
         screenState.value.sections.forEach {
             fetchSectionData(it.key)
@@ -295,5 +311,23 @@ class HomeViewModel @Inject constructor(
             delay(500L)
             updateState { it.copy(isRefreshing = false) }
         }
+    }
+
+    companion object {
+        const val HORIZONTAL_PAGER_COUNT = 7
+
+        val homePageMoviesSections = listOf(
+            MediaContentType.TOP_RATING,
+            MediaContentType.NOW_PLAYING,
+            MediaContentType.UPCOMING,
+            MediaContentType.MORE_RECOMMENDED
+        )
+
+        val homePageSeriesSections = listOf(
+            MediaContentType.TOP_RATING,
+            MediaContentType.AIRING_TODAY,
+            MediaContentType.ON_TV,
+            MediaContentType.MORE_RECOMMENDED
+        )
     }
 }

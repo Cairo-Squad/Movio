@@ -3,7 +3,6 @@ package com.cairosquad.ui.movio_component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
@@ -28,16 +27,15 @@ fun CategoriesChips(
         contentPadding = PaddingValues(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        itemsIndexed(categories) { index, categoryTitle  ->
+        itemsIndexed(categories) { index, categoryTitle ->
             val isSelected = selectedChipIndex == index
             Chip(
-                title = categoryTitle ,
+                title = categoryTitle,
                 isSelected = isSelected,
             ) {
                 onChipSelected(index)
             }
         }
-
     }
 }
 
@@ -49,12 +47,13 @@ private fun CategoriesChipsPreviewAr() {
         "أكشن",
         "رسوم متحركة",
         "جريمة",
-        "رعب","كوميدي"
+        "رعب", "كوميدي"
     )
     MovioTheme(isDarkTheme = true) {
         CategoriesChips(arabicGenres, 0, {})
     }
 }
+
 @Preview(locale = "en")
 @Composable
 private fun CategoriesChipsPreviewEn() {

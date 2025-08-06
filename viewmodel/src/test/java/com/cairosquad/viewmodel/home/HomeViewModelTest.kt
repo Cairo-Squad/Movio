@@ -165,7 +165,7 @@ class HomeViewModelTest {
         advanceUntilIdle()
 
         val state = viewModel.screenState.value
-        assertThat(state.screenStatus).isEqualTo(HomeScreenState.ScreenStatus.FAILED)
+        assertThat(state.dataRequestStatus).isEqualTo(HomeScreenState.DateRequestStatus.FAILED)
         assertThat(state.errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
     }
 

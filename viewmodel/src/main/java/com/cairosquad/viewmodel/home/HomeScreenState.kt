@@ -17,7 +17,7 @@ data class HomeScreenState(
 
     val sections: Map<MediaContentType, SectionUiState> = mapOf(),
 
-    val screenStatus: ScreenStatus = ScreenStatus.LOADING,
+    val dataRequestStatus: DateRequestStatus = DateRequestStatus.LOADING,
     val errorStatus: ErrorStatus? = null,
 
     val selectedGenreIndex: Int = 0,
@@ -51,12 +51,12 @@ data class HomeScreenState(
         companion object {
             val defaultGenre = GenreUiState(
                 id = null,
-                name ="",
+                name = "ALL GENRE",
             )
         }
     }
 
-    enum class ScreenStatus {
+    enum class DateRequestStatus {
         LOADING,
         SUCCESS,
         FAILED
