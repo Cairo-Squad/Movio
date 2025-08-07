@@ -22,7 +22,7 @@ class UnifiedMediaPager @Inject constructor(
             getSeriesPage = { page, genre -> manageSeriesUseCase.getAllSeries(page, genre, sortingType) })
     }
 
-    fun createPager(
+    private fun createPager(
         genreId: Long? = null,
         getMoviesPage: suspend (page: Int, genreId: Long?) -> List<Movie>,
         getSeriesPage: suspend (page: Int, genreId: Long?) -> List<Series>,

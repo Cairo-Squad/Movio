@@ -1,9 +1,6 @@
 package com.cairosquad.viewmodel.library.view_all_history
 
-import androidx.paging.PagingData
 import com.cairosquad.viewmodel.exception.ErrorStatus
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 
 data class ViewAllHistoryScreenState (
     val screenStatus: SectionStatus = SectionStatus.LOADING,
@@ -11,9 +8,9 @@ data class ViewAllHistoryScreenState (
 
     val isRefreshing: Boolean = false,
 
-    val movies: Flow<PagingData<MovieUiState>> = flowOf(PagingData.empty()),
+    val movies: List<MovieUiState> = emptyList(),
     val deletedMoviesIds: List<Long> = emptyList(),
-    val series: Flow<PagingData<SeriesUiState>> = flowOf(PagingData.empty()),
+    val series: List<SeriesUiState> = emptyList(),
     val deletedSeriesIds: List<Long> = emptyList(),
     ) {
 
@@ -36,7 +33,7 @@ data class ViewAllHistoryScreenState (
         val posterPath: String = "",
         val genres: List<String> = emptyList(),
         val overview: String = "",
-        val releaseDate: String = "0",
+        val releaseDate: String = "",
         val runtimeMinutes: String = "",
         val trailerPath: String = ""
     )

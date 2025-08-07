@@ -1,5 +1,6 @@
 package com.cairosquad.remote.account
 
+import android.util.Log
 import com.cairosquad.remote.utils.retrofit.safeCallApi
 import com.cairosquad.repository.account.data_source.remote.AccountRemoteDataSource
 import com.cairosquad.repository.account.data_source.remote.dto.FavoriteRequest
@@ -123,6 +124,7 @@ class AccountRemoteDataSourceImpl @Inject constructor(
                 ?.filterNotNull()
                 ?: emptyList()
         }
+        Log.d("asdasd", "getHistoryMovies: $accountId, $page , $asd")
         return asd
     }
 

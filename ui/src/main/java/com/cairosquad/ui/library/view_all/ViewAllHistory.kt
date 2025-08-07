@@ -27,8 +27,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.modifier.dropShadow
 import com.cairosquad.design_system.theme.Theme
@@ -50,8 +48,6 @@ fun ViewAllHistory(
 ) {
 
     val uiState by viewModel.screenState.collectAsStateWithLifecycle()
-    val movies = uiState.movies.collectAsLazyPagingItems()
-    val series = uiState.series.collectAsLazyPagingItems()
 
     val navController = LocalNavController.current
 
@@ -73,8 +69,6 @@ fun ViewAllHistory(
 
     ViewAllHistoryContent(
         screenState = uiState,
-        movies = movies,
-        series = series,
         listener = viewModel
     )
 }
@@ -82,10 +76,12 @@ fun ViewAllHistory(
 @Composable
 private fun ViewAllHistoryContent(
     screenState: ViewAllHistoryScreenState,
-    movies: LazyPagingItems<ViewAllHistoryScreenState.MovieUiState>,
-    series: LazyPagingItems<ViewAllHistoryScreenState.SeriesUiState>,
     listener: ViewAllHistoryInteractionListener
 ) {
+
+    val movies = screenState.movies
+    val series = screenState.series
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -129,14 +125,15 @@ private fun ViewAllHistoryContent(
 
                 }
                 ViewAllHistoryScreenState.SectionStatus.SUCCESS -> {
-                    if (movies.itemCount != 0 || series.itemCount != 0) {
+                    if (movies.isNotEmpty() || series.isNotEmpty()) {
                         LazyVerticalGrid (
                             modifier = Modifier.padding(top = 12.dp),
                             columns = GridCells.Adaptive(minSize = 101.33.dp),
                             verticalArrangement = Arrangement.spacedBy(12.dp),
-                            contentPadding = PaddingValues(vertical = 16.dp)
+                            contentPadding = PaddingValues(vertical = 16.dp, horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
-                            items(movies.itemCount) { index ->
+                            items(movies.size) { index ->
                                 movies[index]?.let { movie ->
                                     MovieCard(
                                         modifier = Modifier.clickable {
@@ -150,7 +147,7 @@ private fun ViewAllHistoryContent(
                                     )
                                 }
                             }
-                            items(series.itemCount) { index ->
+                            items(series.size) { index ->
                                 series[index]?.let { series ->
                                     MovieCard(
                                         modifier = Modifier.clickable {

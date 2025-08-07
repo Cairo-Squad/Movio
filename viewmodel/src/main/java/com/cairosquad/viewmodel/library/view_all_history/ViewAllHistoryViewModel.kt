@@ -1,26 +1,21 @@
 package com.cairosquad.viewmodel.library.view_all_history
 
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import androidx.paging.map
 import com.cairosquad.domain.exception.MovioException
+import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 @HiltViewModel
 class ViewAllHistoryViewModel @Inject constructor(
-    private val viewAllHistoryPager: ViewAllHistoryPager,
-) : BaseViewModel<ViewAllHistoryScreenState, ViewAllHistoryEffect>(ViewAllHistoryScreenState()),
+    private val accountUseCase: AccountUseCase,
+    ) : BaseViewModel<ViewAllHistoryScreenState, ViewAllHistoryEffect>(ViewAllHistoryScreenState()),
     ViewAllHistoryInteractionListener {
 
     init {
@@ -35,15 +30,14 @@ class ViewAllHistoryViewModel @Inject constructor(
     private fun loadHistoryMovies() {
         tryToCall(
             block = {
-                cacheMappedPagingData(
-                    scope = viewModelScope,
-                    fetch = { viewAllHistoryPager.movies() },
-                    map = { it.toUiState() }
-                )
+                accountUseCase.getHistoryMovies(1)
             },
-            onSuccess = {
+            onSuccess = { movies ->
                 updateState {
-                    it.copy(movies = it.movies)
+                    it.copy(
+                        movies = movies.map { movie -> movie.toUiState() },
+                        screenStatus = ViewAllHistoryScreenState.SectionStatus.SUCCESS
+                    )
                 }
                 updateScreenStatus(ViewAllHistoryScreenState.SectionStatus.SUCCESS)
             },
@@ -57,17 +51,15 @@ class ViewAllHistoryViewModel @Inject constructor(
     private fun loadHistorySeries() {
         tryToCall(
             block = {
-                cacheMappedPagingData(
-                    scope = viewModelScope,
-                    fetch = { viewAllHistoryPager.series() },
-                    map = { it.toUiState() }
-                )
+                accountUseCase.getHistorySeries(1)
             },
-            onSuccess = {
+            onSuccess = { seriesList ->
                 updateState {
-                    it.copy(series = it.series)
+                    it.copy(
+                        series = seriesList.map { series -> series.toUiState() },
+                        screenStatus = ViewAllHistoryScreenState.SectionStatus.SUCCESS
+                    )
                 }
-                updateScreenStatus(ViewAllHistoryScreenState.SectionStatus.SUCCESS)
             },
             onError = {
                 updateScreenStatus(ViewAllHistoryScreenState.SectionStatus.ERROR)
@@ -106,14 +98,6 @@ class ViewAllHistoryViewModel @Inject constructor(
     fun updateErrorStatus(throwable: Throwable) {
         handleError(throwable) { copy(screenStatus = ViewAllHistoryScreenState.SectionStatus.ERROR) }
     }
-
-    private fun <T : Any, R : Any> cacheMappedPagingData(
-        scope: CoroutineScope,
-        fetch: () -> Flow<PagingData<T>>,
-        map: (T) -> R
-    ): Flow<PagingData<R>> = fetch()
-        .map { pagingData -> pagingData.map(map) }
-        .cachedIn(scope)
 
     private fun handleError(
         throwable: Throwable,
