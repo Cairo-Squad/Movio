@@ -3,7 +3,6 @@
 package com.cairosquad.design_system.basic_component
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -43,11 +42,10 @@ fun WebView(
                         val isTmdbDomain = uri.host?.contains("themoviedb.org") == true
 
                         return if (isTmdbDomain) {
-                            false // allow
+                            false
                         } else {
                             Toast.makeText(context, "Navigation blocked", Toast.LENGTH_SHORT).show()
-                            Log.d("WebView", "Navigation blocked: $uri")
-                            true // block
+                            true
                         }
                     }
 
