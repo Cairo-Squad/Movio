@@ -95,3 +95,6 @@ data object ViewAllHistoryRoute
 data class ListRoute(
     val listId: Long
 )
+
+@Serializable
+data object MyRatingsRoute
