@@ -67,4 +67,6 @@
     <string name="history">History</string>
     <string name="start_watching_movies_and_shows_and_we_ll_keep_track_of_your_viewing_history_here">Start watching movies and shows, and we’ll keep track of your viewing history here.</string>
     <string name="no_watch_history_yet">No watch history yet</string>
+    <string name="nothing_here_yet">🎬 Nothing here yet!</string>
+    <string name="add_movies_and_tv_shows_to_build_your_personal_watchlist_the_perfect_binge_starts_here">Add movies and TV shows to build your personal watchlist. The perfect binge starts here!</string>
 </resources>

@@ -23,6 +23,9 @@ class ViewAllHistoryViewModel @Inject constructor(
 ) : BaseViewModel<ViewAllHistoryScreenState, ViewAllHistoryEffect>(ViewAllHistoryScreenState()),
     ViewAllHistoryInteractionListener {
 
+    init {
+        loadHistory()
+    }
 
     private fun loadHistory() {
         loadHistoryMovies()
@@ -88,7 +91,7 @@ class ViewAllHistoryViewModel @Inject constructor(
     override fun onRefresh() {
         viewModelScope.launch {
             updateState { it.copy(isRefreshing = true) }
-            loadHistoryMovies()
+            loadHistory()
             delay(500L)
             updateState { it.copy(isRefreshing = true) }
 

@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,30 +18,77 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.basic_component.Icon
 import com.cairosquad.design_system.modifier.dropShadow
-import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.library.component.ListContainer
+import com.cairosquad.ui.movio_component.StateMessage
+import com.cairosquad.ui.navigation.ListRoute
+import com.cairosquad.ui.navigation.LocalNavController
+import com.cairosquad.ui.utils.ObserveAsEffect
+import com.cairosquad.viewmodel.library.LibraryScreenState
+import com.cairosquad.viewmodel.library.view_all_lists.ViewAllListsEffect
+import com.cairosquad.viewmodel.library.view_all_lists.ViewAllListsScreenState
+import com.cairosquad.viewmodel.library.view_all_lists.ViewAllListsViewModel
 
 @Composable
-fun ViewAllLists() {
-    ViewAllListsContent()
+fun ViewAllLists(
+    viewModel: ViewAllListsViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.screenState.collectAsStateWithLifecycle()
+    val moviesLists = uiState.movieLists.collectAsLazyPagingItems()
+    val seriesLists = uiState.seriesLists.collectAsLazyPagingItems()
+
+    val navController = LocalNavController.current
+
+    ObserveAsEffect(viewModel.effect) { effect ->
+        when (effect) {
+            is ViewAllListsEffect.OnMovieListClicked -> {
+                navController.navigate(ListRoute(effect.listId, effect.listName))
+            }
+
+            ViewAllListsEffect.OnNavigateBack -> {
+                navController.popBackStack()
+            }
+
+            is ViewAllListsEffect.OnSeriesListClicked -> {
+                navController.navigate(ListRoute(effect.listId, effect.listName))
+            }
+        }
+    }
+
+    ViewAllListsContent(
+        screenState = uiState,
+        moviesLists = moviesLists,
+        seriesLists = seriesLists,
+        listener = viewModel
+    )
 }
 
 @Composable
-private fun ViewAllListsContent(modifier: Modifier = Modifier) {
+private fun ViewAllListsContent(
+    screenState: ViewAllListsScreenState,
+    moviesLists: LazyPagingItems<LibraryScreenState.ListsUiState>,
+    seriesLists: LazyPagingItems<LibraryScreenState.ListsUiState>,
+    listener: ViewAllListsViewModel,
+    modifier: Modifier = Modifier
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -71,68 +119,101 @@ private fun ViewAllListsContent(modifier: Modifier = Modifier) {
                     }
                 )
         )
-        AppBar(
-            modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars),
-            title = "Watch Later",
-            onBackButtonClicked = { },
-            onShareButtonClicked = null,
-            onFavoriteButtonClicked = null
-        )
-        LazyVerticalGrid(
-            modifier = Modifier
-                .windowInsetsPadding(WindowInsets.statusBars)
-                .padding(top = 48.dp),
-            columns = GridCells.Adaptive(minSize = 158.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(16.dp)
-        ) {
-            items(
-                10,
-                key = { it -> it }
-            ) {
-                ListContainer(
-                    listName = "Action",
-                    numberOfItems = 10,
-                    onListClicked = {}
-                )
-            }
-            items(
-                5,
-                key = { it -> it }
-            ) {
-                ListContainer(
-                    listName = "Action",
-                    numberOfItems = 10,
-                    onListClicked = {}
-                )
-            }
-        }
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(vertical = 32.dp, horizontal = 24.dp)
-                .windowInsetsPadding(WindowInsets.navigationBars)
-                .size(60.dp)
-                .clip(CircleShape)
-                .background(Theme.color.brand.primary)
-                .clickable(onClick = {}),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                modifier = Modifier.size(32.dp),
-                imageVector = ImageVector.vectorResource(R.drawable.ic_add),
-                contentDescription = "Add Icon",
-                tint = Theme.color.brand.onPrimary
+        Column {
+            AppBar(
+                modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars),
+                title = "Watch Later",
+                onBackButtonClicked = listener::onNavigateBack,
+                onShareButtonClicked = null,
+                onFavoriteButtonClicked = null
             )
-        }
-    }
-}
+            when (screenState.screenStatus) {
+                ViewAllListsScreenState.SectionStatus.LOADING -> {
 
-@Preview
-@Composable
-private fun ViewAllListsPreview(modifier: Modifier = Modifier) {
-    MovioTheme(isDarkTheme = true) {
-        ViewAllListsContent()
+                }
+
+                ViewAllListsScreenState.SectionStatus.SUCCESS -> {
+                    if (moviesLists.itemCount != 0 || seriesLists.itemCount != 0){
+                        LazyVerticalGrid(
+                            modifier = Modifier
+                                .windowInsetsPadding(WindowInsets.statusBars)
+                                .padding(top = 12.dp),
+                            columns = GridCells.Adaptive(minSize = 158.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            contentPadding = PaddingValues(16.dp)
+                        ) {
+                            items(
+                                moviesLists.itemCount
+                            ) { index ->
+                                moviesLists[index]?.let { movieList ->
+                                    ListContainer(
+                                        listName = movieList.name,
+                                        numberOfItems = movieList.mediaCount,
+                                        onListClicked = {
+                                            listener.onMovieListClicked(
+                                                movieList.id,
+                                                movieList.name
+                                            )
+                                        }
+                                    )
+                                }
+                            }
+                            items(
+                                seriesLists.itemCount
+                            ) { index ->
+                                seriesLists[index]?.let { seriesList ->
+
+                                    ListContainer(
+                                        listName = seriesList.name,
+                                        numberOfItems = seriesList.mediaCount,
+                                        onListClicked = {
+                                            listener.onSeriesListClicked(
+                                                seriesList.id,
+                                                seriesList.name
+                                            )
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    } else {
+                        StateMessage(
+                            imageDrawable = R.drawable.favorite_list_empty,
+                            title = stringResource(com.cairosquad.ui.R.string.nothing_here_yet),
+                            description = stringResource(com.cairosquad.ui.R.string.add_movies_and_tv_shows_to_build_your_personal_watchlist_the_perfect_binge_starts_here)
+                        )
+                    }
+
+                }
+
+                ViewAllListsScreenState.SectionStatus.ERROR -> {}
+            }
+        }
+        when (screenState.screenStatus) {
+            ViewAllListsScreenState.SectionStatus.LOADING -> {}
+            ViewAllListsScreenState.SectionStatus.SUCCESS -> {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(vertical = 32.dp, horizontal = 24.dp)
+                        .windowInsetsPadding(WindowInsets.navigationBars)
+                        .size(60.dp)
+                        .clip(CircleShape)
+                        .background(Theme.color.brand.primary)
+                        .clickable(onClick = {}),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        modifier = Modifier.size(32.dp),
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_add),
+                        contentDescription = "Add Icon",
+                        tint = Theme.color.brand.onPrimary
+                    )
+                }
+            }
+
+            ViewAllListsScreenState.SectionStatus.ERROR -> {}
+        }
     }
 }

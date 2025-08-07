@@ -23,6 +23,10 @@ class ViewAllFavoriteViewModel @Inject constructor(
 ) : BaseViewModel<ViewAllFavoriteScreenState, ViewAllFavoriteEffect>(ViewAllFavoriteScreenState()),
     ViewAllFavoriteInteractionListener {
 
+    init {
+        getFavorites()
+    }
+
     private fun getFavorites() {
         getFavoriteMovies()
         getFavoriteSeries()

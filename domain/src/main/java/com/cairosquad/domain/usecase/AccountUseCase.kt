@@ -56,9 +56,7 @@ class AccountUseCase @Inject constructor(
     }
 
     suspend fun getMoviesOfList(listId: Long, page: Int): List<Movie> {
-        val asd = accountRepository.getMoviesOfList(listId, page)
-        println("Remote lists items asdjioasbnd asjiodbasndjawsnd oia $asd")
-        return  asd
+        return accountRepository.getMoviesOfList(listId, page)
     }
 
     suspend fun getSeriesOfList(listId: Long, page: Int): List<Series> {
