@@ -17,6 +17,7 @@ import com.cairosquad.local.cache.series.SeriesCacheDao
 import com.cairosquad.local.cache.series.SeriesLocalDataSourceImpl
 import com.cairosquad.local.login.LocalAuthenticationDataSourceImpl
 import com.cairosquad.local.login.dao.LoginDao
+import com.cairosquad.local.onboarding.OnboardingDataSourceImpl
 import com.cairosquad.local.search.recent.LocalRecentSearchDataSourceImpl
 import com.cairosquad.local.search.recent.dao.LocalRecentSearchDao
 import com.cairosquad.local.utils.MovioDataBase
@@ -24,6 +25,7 @@ import com.cairosquad.repository.account.data_source.local.AccountLocalDataSourc
 import com.cairosquad.repository.artists.data_source.local.ArtistsLocalDataSource
 import com.cairosquad.repository.login.data_source.local.LocalAuthenticationDataSource
 import com.cairosquad.repository.movie.data_source.local.MoviesLocalDataSource
+import com.cairosquad.repository.onboarding.data_source.local.OnboardingDataSource
 import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
 import com.cairosquad.repository.series.data_source.local.SeasonEpisodeLocalDataSource
 import com.cairosquad.repository.series.data_source.local.SeriesLocalDataSource
@@ -135,6 +137,14 @@ object LocalDataSourceModule {
     ): ArtistsLocalDataSource = ArtistsLocalDataSourceImpl(
         artistsCacheDao = artistsCacheDao,
         cacheCodeDao = cacheCodeDao
+    )
+
+    @Provides
+    @Singleton
+    fun provideOnboardingDataSource(
+        @ApplicationContext context: Context
+    ): OnboardingDataSource = OnboardingDataSourceImpl(
+        context = context
     )
 
     @Provides

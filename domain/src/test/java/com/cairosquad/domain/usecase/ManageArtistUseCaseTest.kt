@@ -45,7 +45,17 @@ class ManageArtistUseCaseTest {
 
     @Test
     fun `getArtistsByQuery SHOULD return list of artist`() = runTest {
-        val expectedArtist = listOf(Artist(id = 123, name = "Youssef", photoPath = "path.png"))
+        val expectedArtist = listOf(
+            Artist(
+                id = 123,
+                name = "Youssef",
+                photoPath = "path.png",
+                country = "Tunisia",
+                birthDate = 123L,
+                biography = "bio",
+                department = "actor"
+            )
+        )
         coEvery {artistsRepository.getArtistsByQuery("Youssef", 1)} returns expectedArtist
 
         val result = useCase.getArtistsByQuery("Youssef", 1)

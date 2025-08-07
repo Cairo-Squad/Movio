@@ -4,6 +4,7 @@ import com.cairosquad.domain.repository.AccountRepository
 import com.cairosquad.domain.repository.ArtistsRepository
 import com.cairosquad.domain.repository.LoginRepository
 import com.cairosquad.domain.repository.MoviesRepository
+import com.cairosquad.domain.repository.OnboardingRepository
 import com.cairosquad.domain.repository.SearchRecommendationRepository
 import com.cairosquad.domain.repository.SearchRepository
 import com.cairosquad.domain.repository.SeriesRepository
@@ -11,6 +12,7 @@ import com.cairosquad.repository.account.AccountRepositoryImpl
 import com.cairosquad.repository.artists.ArtistsRepositoryImpl
 import com.cairosquad.repository.login.LoginRepositoryImpl
 import com.cairosquad.repository.movie.MovieRepositoryImpl
+import com.cairosquad.repository.onboarding.OnboardingRepositoryImpl
 import com.cairosquad.repository.search.SearchRecommendationRepositoryImpl
 import com.cairosquad.repository.search.SearchRepositoryImpl
 import com.cairosquad.repository.series.SeriesRepositoryImpl
@@ -59,6 +61,12 @@ abstract class RepositoryModule {
     abstract fun bindArtistsRepository(
         impl: ArtistsRepositoryImpl
     ): ArtistsRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindOnboardingRepository(
+        impl: OnboardingRepositoryImpl
+    ): OnboardingRepository
 
     @Binds
     @Singleton
