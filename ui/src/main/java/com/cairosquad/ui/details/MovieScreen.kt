@@ -228,9 +228,7 @@ fun MovieScreen(
         ) {
             SnackBar(
                 imageVector = ImageVector.vectorResource(if (state.isProcessSuccess) R.drawable.archive_tick else R.drawable.danger),
-                message = state.snackMessage.ifEmpty {
-                    stringResource(state.snackMessageId)
-                },
+                message = stringResource(state.snackMessageId),
                 action = {}
             )
         }

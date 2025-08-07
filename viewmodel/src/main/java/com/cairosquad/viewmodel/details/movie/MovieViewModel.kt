@@ -337,14 +337,15 @@ class MovieViewModel @AssistedInject constructor(
                         isAddToListBottomSheetOpen = false,
                         isProcessSuccess = isAdded,
                         showSnackBar = true,
-                        snackMessage = if (isAdded) "Added to list" else "Movie already in list"
+                        snackMessageId =
+                            if (isAdded) R.string.added_to_list
+                            else R.string.movie_already_in_list
                     )
                 }
                 delay(2000L)
                 updateState {
                     it.copy(
                         showSnackBar = false,
-                        snackMessage = "",
                         isProcessSuccess = isAdded
                     )
                 }
@@ -355,14 +356,13 @@ class MovieViewModel @AssistedInject constructor(
                         isAddToListBottomSheetOpen = false,
                         isProcessSuccess = false,
                         showSnackBar = true,
-                        snackMessage = "Error adding movie to list"
+                        snackMessageId = R.string.error_adding_movie_to_list
                     )
                 }
                 delay(2000L)
                 updateState {
                     it.copy(
                         showSnackBar = false,
-                        snackMessage = "",
                         isProcessSuccess = false
                     )
                 }
@@ -392,14 +392,6 @@ class MovieViewModel @AssistedInject constructor(
                         showCreateListBottomSheet = false,
                         isAddToListBottomSheetOpen = true,
                         listName = "",
-                    )
-                }
-                delay(2000L)
-                updateState {
-                    it.copy(
-                        showSnackBar = false,
-                        snackMessage = "",
-                        isProcessSuccess = false
                     )
                 }
             }
@@ -442,7 +434,7 @@ class MovieViewModel @AssistedInject constructor(
                 updateState {
                     it.copy(
                         showSnackBar = true,
-                        snackMessage = message,
+                        snackMessageId = R.string.copied_to_clip_board_successfully,
                         isProcessSuccess = isSuccessful
                     )
                 }
@@ -452,7 +444,6 @@ class MovieViewModel @AssistedInject constructor(
                 updateState {
                     it.copy(
                         showSnackBar = false,
-                        snackMessage = message
                     )
                 }
             },
