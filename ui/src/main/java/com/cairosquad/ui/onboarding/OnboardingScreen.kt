@@ -74,17 +74,20 @@ private fun OnboardingContent(
                     .padding(bottom = 40.dp)
             )
 
-            Row {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
                     text = stringResource(R.string.open_with_space_end),
                     style = Theme.textStyle.display.mediumMedium20,
                     color = Theme.color.surfaces.onSurface,
+                    modifier = Modifier.padding(end = 6.dp)
                 )
 
                 Text(
                     text = stringResource(R.string.movio),
                     style = Theme.textStyle.display.largeBold24.copy(
-                        brush = Brush.linearGradient(
+                        brush = Brush.verticalGradient(
                             colors = listOf(
                                 Theme.color.brand.onPrimary,
                                 Theme.color.brand.primary
