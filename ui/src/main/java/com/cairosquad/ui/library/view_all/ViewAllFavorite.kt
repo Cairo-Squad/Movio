@@ -25,8 +25,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.modifier.dropShadow
 import com.cairosquad.design_system.theme.Theme
@@ -47,9 +45,6 @@ fun ViewAllFavorite(
     val uiState by viewModel.screenState.collectAsStateWithLifecycle()
     val navController = LocalNavController.current
 
-    val movies = uiState.movies.collectAsLazyPagingItems()
-    val series = uiState.series.collectAsLazyPagingItems()
-
     ObserveAsEffect(viewModel.effect) { effect ->
         when (effect) {
             ViewAllFavoriteEffect.OnNavigateBack -> {
@@ -67,16 +62,14 @@ fun ViewAllFavorite(
         }
     }
     ViewAllFavoriteContent(
-        movies = movies,
-        series = series,
+        uiState = uiState,
         listener = viewModel,
     )
 }
 
 @Composable
 fun ViewAllFavoriteContent(
-    movies: LazyPagingItems<ViewAllFavoriteScreenState.MovieUiState>,
-    series: LazyPagingItems<ViewAllFavoriteScreenState.SeriesUiState>,
+    uiState: ViewAllFavoriteScreenState,
     listener: ViewAllFavoriteViewModel
 ) {
     Box(
@@ -120,13 +113,13 @@ fun ViewAllFavoriteContent(
             LazyColumn(
                 modifier = Modifier.padding(top = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(vertical = 16.dp)
+                contentPadding = PaddingValues(vertical = 16.dp, horizontal = 16.dp)
             ) {
                 items(
-                    movies.itemCount,
-                    key = { "${movies[it]?.id}" }
+                    uiState.movies.size,
+                    key = { "${uiState.movies[it]?.id}" }
                 ) { index ->
-                    movies[index]?.let { movie ->
+                    uiState.movies[index]?.let { movie ->
                         SwipeToDeleteContainer(
                             onDelete = { listener.onMovieDelete(movie.id) },
                         ) {
@@ -144,10 +137,10 @@ fun ViewAllFavoriteContent(
                     }
                 }
                 items(
-                    series.itemCount,
-                    key = { "${series[it]?.id}" }
+                    uiState.series.size,
+                    key = { "${uiState.series[it]?.id}" }
                 ) { index ->
-                    series[index]?.let { series ->
+                    uiState.series[index]?.let { series ->
                         SwipeToDeleteContainer(
                             onDelete = { listener.onSeriesDelete(series.id) },
                         ) {

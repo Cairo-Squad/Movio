@@ -3,9 +3,9 @@ package com.cairosquad.viewmodel.library.view_all_favorite
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import androidx.paging.filter
 import androidx.paging.map
 import com.cairosquad.domain.exception.MovioException
+import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ViewAllFavoriteViewModel @Inject constructor(
-    private val viewAllFavoritePager: ViewAllFavoritePager,
+    private val accountUseCase: AccountUseCase
 ) : BaseViewModel<ViewAllFavoriteScreenState, ViewAllFavoriteEffect>(ViewAllFavoriteScreenState()),
     ViewAllFavoriteInteractionListener {
 
@@ -35,20 +35,18 @@ class ViewAllFavoriteViewModel @Inject constructor(
     private fun getFavoriteSeries() {
         tryToCall(
             block = {
-                cacheMappedPagingData(
-                    scope = viewModelScope,
-                    fetch = { viewAllFavoritePager.series() },
-                    map = { it.toUiState() }
-                )
+                accountUseCase.getFavoriteSeries(1)
             },
-            onSuccess = {
-                val filteredSeries = screenState.value.series.map { pagingData ->
-                    pagingData.filter { movie -> movie.id !in screenState.value.deletedSeriesIds }
-                }
+            onSuccess = { seriesList ->
+                val filteredSeries = seriesList.filterNot { series ->
+                    series.id in screenState.value.deletedSeriesIds
+                }.map { it.toUiState() }
                 updateState {
-                    it.copy(series = filteredSeries)
+                    it.copy(
+                        series = filteredSeries,
+                        screenStatus = ViewAllFavoriteScreenState.SectionStatus.SUCCESS
+                    )
                 }
-                updateScreenStatus(ViewAllFavoriteScreenState.SectionStatus.SUCCESS)
             },
             onError = {
                 updateScreenStatus(ViewAllFavoriteScreenState.SectionStatus.ERROR)
@@ -60,20 +58,18 @@ class ViewAllFavoriteViewModel @Inject constructor(
     private fun getFavoriteMovies() {
         tryToCall(
             block = {
-                cacheMappedPagingData(
-                    scope = viewModelScope,
-                    fetch = { viewAllFavoritePager.movies() },
-                    map = { it.toUiState() }
-                )
+                accountUseCase.getFavoriteMovies(1)
             },
-            onSuccess = {
-                val filteredMovies = screenState.value.movies.map { pagingData ->
-                    pagingData.filter { movie -> movie.id !in screenState.value.deletedMoviesIds }
-                }
+            onSuccess = { movies ->
+                val filteredMovies = movies.filterNot { movie ->
+                    movie.id in screenState.value.deletedMoviesIds
+                }.map { it.toUiState() }
                 updateState {
-                    it.copy(movies = filteredMovies)
+                    it.copy(
+                        movies = filteredMovies,
+                        screenStatus = ViewAllFavoriteScreenState.SectionStatus.SUCCESS
+                    )
                 }
-                updateScreenStatus(ViewAllFavoriteScreenState.SectionStatus.SUCCESS)
             },
             onError = {
                 updateScreenStatus(ViewAllFavoriteScreenState.SectionStatus.ERROR)
