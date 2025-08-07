@@ -1,6 +1,7 @@
 package com.cairosquad.local.language
 
 import android.content.Context
+import android.os.Build
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -9,6 +10,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.cairosquad.repository.language.LanguageDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.util.Locale
 import javax.inject.Inject
 
 val Context.languageDataStore: DataStore<Preferences> by preferencesDataStore(name = "language_prefs")
@@ -31,7 +33,20 @@ class LanguageDataStoreSourceImpl @Inject constructor(
 
     override fun getLanguage(): Flow<String> {
         return dataStore.data.map { preferences ->
-            preferences[LANGUAGE_KEY] ?: "en"
+            preferences[LANGUAGE_KEY] ?: getDefaultLanguageBasedOnDevice()
         }
+    }
+
+    private fun getDefaultLanguageBasedOnDevice(): String {
+        // Get device locale
+        val deviceLocale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            context.resources.configuration.locales[0]
+        } else {
+            @Suppress("DEPRECATION")
+            context.resources.configuration.locale
+        }
+
+        // Default to Arabic if device language is Arabic, otherwise English
+        return if (deviceLocale.language == "ar") "ar" else "en"
     }
 }
