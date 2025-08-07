@@ -36,4 +36,8 @@ interface AccountRemoteDataSource {
     suspend fun getRatedMovies(accountId: Long, page: Int): List<MovieRemoteDto>
 
     suspend fun getRatedSeries(accountId: Long, page: Int): List<SeriesRemoteDto>
+
+    suspend fun addMovieToList(listId: Long, movieId: Long)
+
+    suspend fun createList(listName: String)
 }

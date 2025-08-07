@@ -3,6 +3,8 @@ package com.cairosquad.remote.account
 import android.util.Log
 import com.cairosquad.remote.utils.retrofit.safeCallApi
 import com.cairosquad.repository.account.data_source.remote.AccountRemoteDataSource
+import com.cairosquad.repository.account.data_source.remote.dto.AddToListRequest
+import com.cairosquad.repository.account.data_source.remote.dto.CreateListRequest
 import com.cairosquad.repository.account.data_source.remote.dto.FavoriteRequest
 import com.cairosquad.repository.account.data_source.remote.dto.HistoryRequest
 import com.cairosquad.repository.account.data_source.remote.dto.MediaListDto
@@ -161,6 +163,18 @@ class AccountRemoteDataSourceImpl @Inject constructor(
                 .results
                 ?.filterNotNull()
                 ?: emptyList()
+        }
+    }
+
+    override suspend fun addMovieToList(listId: Long, movieId: Long) {
+        safeCallApi {
+            apiService.addMovieToList(listId, AddToListRequest(movieId))
+        }
+    }
+
+    override suspend fun createList(listName: String) {
+        safeCallApi {
+            apiService.createList(CreateListRequest(name = listName, language = "en"))
         }
     }
 

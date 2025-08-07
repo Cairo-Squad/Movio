@@ -126,4 +126,12 @@ class AccountRepositoryImpl @Inject constructor(
         }
         return Pair(emptyList(), emptyList())
     }
+
+    override suspend fun addMovieToList(listId: Long, movieId: Long) {
+        accountRemoteDataSource.addMovieToList(listId, movieId)
+    }
+
+    override suspend fun createList(listName: String) {
+        accountRemoteDataSource.createList(listName)
+    }
 }

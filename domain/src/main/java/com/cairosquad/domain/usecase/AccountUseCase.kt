@@ -62,4 +62,12 @@ class AccountUseCase @Inject constructor(
     suspend fun getSeriesOfList(listId: Long, page: Int): List<Series> {
         return accountRepository.getSeriesOfList(listId, page)
     }
+
+    suspend fun addMovieToList(listId: Long, movieId: Long) {
+        accountRepository.addMovieToList(listId, movieId)
+    }
+
+    suspend fun createList(listName: String) {
+        accountRepository.createList(listName)
+    }
 }
