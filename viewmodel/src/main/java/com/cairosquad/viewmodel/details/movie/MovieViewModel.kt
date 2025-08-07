@@ -256,6 +256,92 @@ class MovieViewModel @AssistedInject constructor(
         }
     }
 
+    override fun onClickList(id: Long) {
+        tryToCall(
+            block = {
+                val movies = accountUseCase.getMoviesOfList(id, 1)
+                if (screenState.value.movie.id in movies.map { it.id }) {
+                    false
+                } else {
+                    accountUseCase.addMovieToList(id, screenState.value.movie.id)
+                    true
+                }
+            },
+            onSuccess = { isAdded ->
+                updateState {
+                    it.copy(
+                        isAddToListBottomSheetOpen = false,
+                        isProcessSuccess = isAdded,
+                        showSnackBar = true,
+                        snackMessage = if (isAdded) "Added to list" else "Movie already in list"
+                    )
+                }
+                delay(2000L)
+                updateState {
+                    it.copy(
+                        showSnackBar = false,
+                        snackMessage = "",
+                        isProcessSuccess = isAdded
+                    )
+                }
+            },
+            onError = {
+                updateState {
+                    it.copy(
+                        isAddToListBottomSheetOpen = false,
+                        isProcessSuccess = false,
+                        showSnackBar = true,
+                        snackMessage = "Error adding movie to list"
+                    )
+                }
+                delay(2000L)
+                updateState {
+                    it.copy(
+                        showSnackBar = false,
+                        snackMessage = "",
+                        isProcessSuccess = false
+                    )
+                }
+            }
+        )
+    }
+
+    override fun onSubmitCreateListClicked() {
+        tryToCall(
+            block = {
+                accountUseCase.createList(screenState.value.listName)
+                accountUseCase.getMoviesLists(1)
+            },
+            onSuccess = { moviesLists ->
+                updateState {
+                    it.copy(
+                        showCreateListBottomSheet = false,
+                        isAddToListBottomSheetOpen = true,
+                        listName = "",
+                        moviesLists = moviesLists.map { list -> list.toUiState() }
+                    )
+                }
+            },
+            onError = {
+                updateState {
+                    it.copy(
+                        showCreateListBottomSheet = false,
+                        isAddToListBottomSheetOpen = true,
+                        listName = "",
+                    )
+                }
+                delay(2000L)
+                updateState {
+                    it.copy(
+                        showSnackBar = false,
+                        snackMessage = "",
+                        isProcessSuccess = false
+                    )
+                }
+            }
+        )
+    }
+
     override fun onDismissCreateListBottomSheet() {
         updateState { it.copy(showCreateListBottomSheet = false) }
     }

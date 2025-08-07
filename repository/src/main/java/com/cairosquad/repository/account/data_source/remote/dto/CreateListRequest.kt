@@ -10,5 +10,5 @@ data class CreateListRequest(
     @SerialName("iso_639_1")
     val language: String,
     @SerialName("description")
-    val description: String = "",
+    val description: String = " ",
 )

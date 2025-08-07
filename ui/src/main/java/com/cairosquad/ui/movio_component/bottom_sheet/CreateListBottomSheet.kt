@@ -23,8 +23,9 @@ fun CreateListBottomSheet(
     isMovie: Boolean,
     onDismiss: () -> Unit,
     onValueChange: (String) -> Unit,
-    onSubmit: (String) -> Unit,
+    onSubmit: () -> Unit,
 ) {
+
     BottomSheet(
         isVisible = isVisible,
         onDismiss = onDismiss,
@@ -65,7 +66,7 @@ fun CreateListBottomSheet(
             Button(
                 text = stringResource(com.cairosquad.ui.R.string.create),
                 onClick = {
-                    onSubmit(value)
+                    onSubmit()
                 }
             )
         }

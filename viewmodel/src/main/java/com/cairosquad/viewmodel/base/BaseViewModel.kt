@@ -42,8 +42,8 @@ abstract class BaseViewModel<T, E>(
 
     protected fun <R> tryToCall(
         block: suspend () -> R,
-        onSuccess: (R) -> Unit,
-        onError: (Throwable) -> Unit,
+        onSuccess: suspend (R) -> Unit,
+        onError: suspend (Throwable) -> Unit,
         onStart: suspend () -> Unit = {},
         onEnd: suspend () -> Unit = {},
         dispatcher: CoroutineDispatcher = Dispatchers.IO
@@ -51,8 +51,8 @@ abstract class BaseViewModel<T, E>(
         return viewModelScope.launch(dispatcher) {
             onStart()
             runCatching { block() }
-                .onSuccess(onSuccess)
-                .onFailure(onError)
+                .onSuccess({ onSuccess(it) })
+                .onFailure({ onError(it) })
             onEnd()
         }
     }
