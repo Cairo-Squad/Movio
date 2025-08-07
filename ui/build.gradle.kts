@@ -22,8 +22,7 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
     val properties = Properties()
-    properties.load(rootProject.file("secret.properties").inputStream())
-    properties.getProperty("IMAGE_BASE_URL")
+    properties.load(rootProject.file("local.properties").inputStream())
 
     buildTypes {
         release {

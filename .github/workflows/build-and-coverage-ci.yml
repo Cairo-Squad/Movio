@@ -58,23 +58,21 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           MOVIES_API_KEY: ${{ secrets.MOVIES_API_KEY }}
           IMAGE_BASE_URL: ${{secrets.IMAGE_BASE_URL}}
-          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
-          FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
         run: |
           # Cleanup existing files
-          rm -f app/movio-cairo.jks secret.properties release_notes.txt
+          rm -f app/movio-cairo.jks local.properties release_notes.txt
 
           # Decode keystore and verify
           echo "$KEYSTORE" | base64 -d > app/movio-cairo.jks
 
-          # Create secret.properties with necessary properties
-          echo "BASE_URL = \"https://api.themoviedb.org/3/\"" >> secret.properties
-          echo "KEYSTORE_FILE = movio-cairo.jks" >> secret.properties
-          echo "KEYSTORE_PASSWORD = $KEYSTORE_PASSWORD" >> secret.properties
-          echo "KEY_ALIAS = $KEY_ALIAS" >> secret.properties
-          echo "KEY_PASSWORD = $KEYSTORE_PASSWORD" >> secret.properties
-          echo "API_KEY = \"$MOVIES_API_KEY\"" >> secret.properties
-          echo "IMAGE_BASE_URL = \"$IMAGE_BASE_URL\"" >> secret.properties
+          # Create local.properties with necessary properties
+          echo "BASE_URL = \"https://api.themoviedb.org/3/\"" >> local.properties
+          echo "KEYSTORE_FILE = movio-cairo.jks" >> local.properties
+          echo "KEYSTORE_PASSWORD = $KEYSTORE_PASSWORD" >> local.properties
+          echo "KEY_ALIAS = $KEY_ALIAS" >> local.properties
+          echo "KEY_PASSWORD = $KEYSTORE_PASSWORD" >> local.properties
+          echo "API_KEY = \"$MOVIES_API_KEY\"" >> local.properties
+          echo "IMAGE_BASE_URL = \"$IMAGE_BASE_URL\"" >> local.properties
 
           # Build signed release APK
           ./gradlew assembleDebug --build-cache
@@ -124,23 +122,21 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           MOVIES_API_KEY: ${{ secrets.MOVIES_API_KEY }}
-          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
-          FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
           IMAGE_BASE_URL: ${{secrets.IMAGE_BASE_URL}}
         run: |
           # Cleanup existing files
-          rm -f app/movio-cairo.jks secret.properties release_notes.txt
+          rm -f app/movio-cairo.jks local.properties release_notes.txt
 
           # Decode keystore and verify
           echo "$KEYSTORE" | base64 -d > app/movio-cairo.jks
 
-          # Create secret.properties with necessary properties
-          echo "BASE_URL = \"https://api.themoviedb.org/3/\"" >> secret.properties
-          echo "KEYSTORE_PASSWORD = $KEYSTORE_PASSWORD" >> secret.properties
-          echo "KEY_ALIAS = $KEY_ALIAS" >> secret.properties
-          echo "KEY_PASSWORD = $KEYSTORE_PASSWORD" >> secret.properties
-          echo "API_KEY = \"$MOVIES_API_KEY\"" >> secret.properties
-          echo "IMAGE_BASE_URL = \"$IMAGE_BASE_URL\"" >> secret.properties
+          # Create local.properties with necessary properties
+          echo "BASE_URL = \"https://api.themoviedb.org/3/\"" >> local.properties
+          echo "KEYSTORE_PASSWORD = $KEYSTORE_PASSWORD" >> local.properties
+          echo "KEY_ALIAS = $KEY_ALIAS" >> local.properties
+          echo "KEY_PASSWORD = $KEYSTORE_PASSWORD" >> local.properties
+          echo "API_KEY = \"$MOVIES_API_KEY\"" >> local.properties
+          echo "IMAGE_BASE_URL = \"$IMAGE_BASE_URL\"" >> local.properties
 
           # Build signed release APK
           ./gradlew test koverHtmlReport --build-cache

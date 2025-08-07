@@ -31,19 +31,19 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    val secretsFile = file("${rootProject.projectDir}/secret.properties")
-    val secrets = Properties().apply {
-        if (secretsFile.exists()) {
-            load(FileInputStream(secretsFile))
+    val localFile = file("${rootProject.projectDir}/local.properties")
+    val locals = Properties().apply {
+        if (localFile.exists()) {
+            load(FileInputStream(localFile))
         }
     }
 
     signingConfigs {
         create("release") {
             storeFile = file("movio-cairo.jks")
-            storePassword = secrets.getProperty("KEYSTORE_PASSWORD")
-            keyAlias = secrets.getProperty("KEY_ALIAS")
-            keyPassword = secrets.getProperty("KEY_PASSWORD")
+            storePassword = locals.getProperty("KEYSTORE_PASSWORD")
+            keyAlias = locals.getProperty("KEY_ALIAS")
+            keyPassword = locals.getProperty("KEY_PASSWORD")
         }
     }
 

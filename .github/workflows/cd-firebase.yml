@@ -43,26 +43,23 @@ jobs:
           echo "$GOOGLE_SERVICES_JSON_BASE64" | base64 --decode > app/google-services.json
         shell: bash
 
-      - name: Decode Keystore and Create secret.properties
+      - name: Decode Keystore and Create local.properties
         env:
           KEYSTORE: ${{ secrets.KEYSTORE }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           MOVIES_API_KEY: ${{ secrets.MOVIES_API_KEY }}
-          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
-          FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
           IMAGE_BASE_URL: ${{secrets.IMAGE_BASE_URL}}
-
         run: |
-          rm -f app/movio-cairo.jks secret.properties release_notes.txt
+          rm -f app/movio-cairo.jks local.properties release_notes.txt
           echo "$KEYSTORE" | base64 -d > app/movio-cairo.jks
-          echo "BASE_URL = \"https://api.themoviedb.org/3/\"" >> secret.properties
-          echo "KEYSTORE_PASSWORD = $KEYSTORE_PASSWORD" >> secret.properties
-          echo "KEY_ALIAS = $KEY_ALIAS" >> secret.properties
-          echo "KEY_PASSWORD = $KEY_PASSWORD" >> secret.properties
-          echo "API_KEY = \"$MOVIES_API_KEY\"" >> secret.properties
-          echo "IMAGE_BASE_URL = \"$IMAGE_BASE_URL\"" >> secret.properties
+          echo "BASE_URL = \"https://api.themoviedb.org/3/\"" >> local.properties
+          echo "KEYSTORE_PASSWORD = $KEYSTORE_PASSWORD" >> local.properties
+          echo "KEY_ALIAS = $KEY_ALIAS" >> local.properties
+          echo "KEY_PASSWORD = $KEY_PASSWORD" >> local.properties
+          echo "API_KEY = \"$MOVIES_API_KEY\"" >> local.properties
+          echo "IMAGE_BASE_URL = \"$IMAGE_BASE_URL\"" >> local.properties
 
       - name: Generate Signed APK
         env:
@@ -71,8 +68,6 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           MOVIES_API_KEY: ${{ secrets.MOVIES_API_KEY }}
-          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
-          FIREBASE_AUTH_TOKEN: ${{ secrets.FIREBASE_AUTH_TOKEN }}
         run: |
           ./gradlew assembleRelease --build-cache -x test -x lint
           ls -l app/build/outputs/apk/release/app-release.apk || { echo "apk not generated"; exit 1; }      
