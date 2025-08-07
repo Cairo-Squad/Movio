@@ -83,12 +83,14 @@ fun EpisodesScreen(
                 navController.popBackStack()
             }
 
-            is EpisodesDetailEffect.ShowToast -> {
-                Toast.makeText(
-                    context,
-                    context.getString(errorStatusToMessageResource(effect.message)),
-                    Toast.LENGTH_LONG
-                ).show()
+            is EpisodesDetailEffect.ShowSnackBar -> {
+                viewModel.updateState {
+                    it.copy(
+                        showSnackBar = true,
+                        snackMessage = context.getString(errorStatusToMessageResource(effect.message)),
+                        isProcessSuccess = false
+                    )
+                }
             }
 
             EpisodesDetailEffect.PlayEpisode -> {}
