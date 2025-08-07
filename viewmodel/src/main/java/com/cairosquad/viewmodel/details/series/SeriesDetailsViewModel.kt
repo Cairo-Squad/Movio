@@ -1,6 +1,5 @@
 package com.cairosquad.viewmodel.details.series
 
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.AccountUseCase
@@ -100,22 +99,27 @@ class SeriesDetailsViewModel @AssistedInject constructor(
                 if (!authed) {
                     updateState { it.copy(showLoginBottomSheet = true) }
                 } else {
-                    addToFavorite(seriesId)
+                    if(screenState.value.isFavorite) {
+                        removeFromFavorite(seriesId)
+                    } else {
+                        addToFavorite(seriesId)
+                    }
                 }
             },
             onError = {}
         )
     }
 
-    private fun addToFavorite(seriesId: Long) {
+    private fun removeFromFavorite(seriesId: Long) {
         tryToCall(
-            block = { accountUseCase.addSeriesToFavorite(seriesId) },
+            block = { accountUseCase.removeSeriesFromFavorite(seriesId) },
             onSuccess = {
                 viewModelScope.launch {
                     updateState {
                         it.copy(
                             showSnackBar = true, isProcessSuccess = true,
-                            snackMessage = stringResource(R.string.series_favorite_success)
+                            snackMessageId = R.string.series_favorite_remove_success,
+                            isFavorite = true
                         )
                     }
                     delay(2000)
@@ -128,8 +132,39 @@ class SeriesDetailsViewModel @AssistedInject constructor(
                         it.copy(
                             showSnackBar = true,
                             isProcessSuccess = false,
-                            snackMessage = stringResource(R.string.series_favorite_fail),
+                            snackMessageId = R.string.series_favorite_remove_fail,
+                        )
+                    }
+                    delay(2000)
+                    updateState { it.copy(showSnackBar = false) }
+                }
+            }
+        )
+    }
+
+    private fun addToFavorite(seriesId: Long) {
+        tryToCall(
+            block = { accountUseCase.addSeriesToFavorite(seriesId) },
+            onSuccess = {
+                viewModelScope.launch {
+                    updateState {
+                        it.copy(
+                            showSnackBar = true, isProcessSuccess = true,
+                            snackMessageId = R.string.series_favorite_success,
                             isFavorite = true
+                        )
+                    }
+                    delay(2000)
+                    updateState { it.copy(showSnackBar = false) }
+                }
+            },
+            onError = {
+                viewModelScope.launch {
+                    updateState {
+                        it.copy(
+                            showSnackBar = true,
+                            isProcessSuccess = false,
+                            snackMessageId = R.string.series_favorite_fail,
                         )
                     }
                     delay(2000)

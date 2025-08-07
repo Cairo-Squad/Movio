@@ -23,6 +23,7 @@ data class SeriesDetailsScreenState(
 
     val showSnackBar: Boolean = false,
     val snackMessage: String = "",
+    val snackMessageId: Int = 0,
     val isProcessSuccess: Boolean = false,
 
     val isFavorite: Boolean = false,

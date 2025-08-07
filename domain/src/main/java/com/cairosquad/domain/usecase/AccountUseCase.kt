@@ -39,6 +39,14 @@ class AccountUseCase @Inject constructor(
         accountRepository.addSeriesToFavorite(seriesId)
     }
 
+    suspend fun removeMovieFromFavorite(movieId: Long) {
+        accountRepository.removeMovieFromFavorite(movieId)
+    }
+
+    suspend fun removeSeriesFromFavorite(seriesId: Long) {
+        accountRepository.removeSeriesFromFavorite(seriesId)
+    }
+
     suspend fun addMovieToHistory(movieId: Long) {
         accountRepository.addMovieToHistory(movieId)
     }

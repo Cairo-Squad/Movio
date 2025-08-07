@@ -92,6 +92,18 @@ class AccountRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun removeMovieFromFavorite(movieId: Long) {
+        accountLocalDataSource.getAccountId()?.also { accountId ->
+            accountRemoteDataSource.removeMovieFromFavorite(accountId, movieId)
+        }
+    }
+
+    override suspend fun removeSeriesFromFavorite(seriesId: Long) {
+        accountLocalDataSource.getAccountId()?.also { accountId ->
+            accountRemoteDataSource.removeSeriesFromFavorite(accountId, seriesId)
+        }
+    }
+
     override suspend fun addMovieToHistory(movieId: Long) {
         accountLocalDataSource.getAccountId()?.also { accountId ->
             accountRemoteDataSource.addMovieToHistory(accountId, movieId)

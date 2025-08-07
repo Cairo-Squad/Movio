@@ -16,4 +16,8 @@
     <string name="series_favorite_fail">تعذر إضافة المسلسل إلى المفضلة.</string>
     <string name="movie_favorite_success">تمت إضافة الفيلم إلى المفضلة بنجاح.</string>
     <string name="movie_favorite_fail">تعذر إضافة الفيلم إلى المفضلة.</string>
+    <string name="series_favorite_remove_success">تمت إزالة المسلسل بنجاح من قائمة المفضلة لديك.</string>
+    <string name="series_favorite_remove_fail">تعذّر إزالة المسلسل من قائمة المفضلة لديك.</string>
+    <string name="movie_favorite_remove_success">تمت إزالة الفيلم بنجاح من قائمة المفضلة لديك.</string>
+    <string name="movie_favorite_remove_fail">تعذّر إزالة الفيلم من قائمة المفضلة لديك.</string>
 </resources>

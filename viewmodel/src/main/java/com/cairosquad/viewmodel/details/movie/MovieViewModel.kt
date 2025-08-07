@@ -1,6 +1,5 @@
 package com.cairosquad.viewmodel.details.movie
 
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.AccountUseCase
@@ -46,6 +45,7 @@ class MovieViewModel @AssistedInject constructor(
         getActors(movieId)
         getReviews(movieId)
         getSimilarMovies(movieId)
+        getMovieInFavorite(movieId)
     }
 
     private fun addMovieToHistory(movieId: Long) {
@@ -55,6 +55,33 @@ class MovieViewModel @AssistedInject constructor(
             onError = {}
         )
     }
+
+    private fun getMovieInFavorite(movieId: Long) {
+        checkUserLoggedIn {
+            loadFavoriteMovies(movieId)
+        }
+    }
+
+    private fun checkUserLoggedIn(onLoggedIn: () -> Unit) {
+        tryToCall(
+            block = loginUseCase::isUserLoggedIn,
+            onSuccess = { isLoggedIn ->
+                if (isLoggedIn) onLoggedIn()
+            },
+            onError = {}
+        )
+    }
+
+    private fun loadFavoriteMovies(movieId: Long) {
+        tryToCall(
+            block = { accountUseCase.getFavoriteMovies(1) },
+            onSuccess = { series ->
+                updateState { it.copy(isFavorite = series.any { it.id == movieId }) }
+            },
+            onError = {}
+        )
+    }
+
 
     private fun getBasicDetails(movieId: Long) {
         tryToCall(
@@ -163,22 +190,27 @@ class MovieViewModel @AssistedInject constructor(
                 if (!authed) {
                     updateState { it.copy(isNoAccountBottomSheetOpen = true) }
                 } else {
-                    addToFavorite(movieId)
+                    if(screenState.value.isFavorite) {
+
+                    } else {
+                        addToFavorite(movieId)
+                    }
                 }
             },
             onError = {}
         )
     }
 
-    private fun addToFavorite(movieId: Long) {
+    private fun removeFromFavorite(seriesId: Long) {
         tryToCall(
-            block = { accountUseCase.addMovieToFavorite(movieId) },
+            block = { accountUseCase.removeMovieFromFavorite(seriesId) },
             onSuccess = {
                 viewModelScope.launch {
                     updateState {
                         it.copy(
                             showSnackBar = true, isProcessSuccess = true,
-                            snackMessage = stringResource(R.string.movie_favorite_success)
+                            snackMessageId = R.string.movie_favorite_remove_success,
+                            isFavorite = true
                         )
                     }
                     delay(2000)
@@ -191,7 +223,39 @@ class MovieViewModel @AssistedInject constructor(
                         it.copy(
                             showSnackBar = true,
                             isProcessSuccess = false,
-                            snackMessage = stringResource(R.string.movie_favorite_fail)
+                            snackMessageId = R.string.movie_favorite_remove_fail,
+                        )
+                    }
+                    delay(2000)
+                    updateState { it.copy(showSnackBar = false) }
+                }
+            }
+        )
+    }
+
+    private fun addToFavorite(movieId: Long) {
+        tryToCall(
+            block = { accountUseCase.addMovieToFavorite(movieId) },
+            onSuccess = {
+                viewModelScope.launch {
+                    updateState {
+                        it.copy(
+                            showSnackBar = true, isProcessSuccess = true,
+                            snackMessageId = R.string.movie_favorite_success,
+                            isFavorite = true
+                        )
+                    }
+                    delay(2000)
+                    updateState { it.copy(showSnackBar = false) }
+                }
+            },
+            onError = {
+                viewModelScope.launch {
+                    updateState {
+                        it.copy(
+                            showSnackBar = true,
+                            isProcessSuccess = false,
+                            snackMessageId = R.string.movie_favorite_fail
                         )
                     }
                     delay(2000)

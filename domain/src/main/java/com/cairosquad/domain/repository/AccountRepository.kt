@@ -24,6 +24,10 @@ interface AccountRepository {
 
     suspend fun addSeriesToFavorite(seriesId: Long)
 
+    suspend fun removeMovieFromFavorite(movieId: Long)
+
+    suspend fun removeSeriesFromFavorite(seriesId: Long)
+
     suspend fun addMovieToHistory(movieId: Long)
 
     suspend fun addSeriesToHistory(seriesId: Long)

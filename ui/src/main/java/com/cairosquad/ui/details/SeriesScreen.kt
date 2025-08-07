@@ -277,7 +277,9 @@ fun SeriesScreen(
         ) {
             SnackBar(
                 imageVector = ImageVector.vectorResource(if (uiState.isProcessSuccess) R.drawable.archive_tick else R.drawable.danger),
-                message = uiState.snackMessage,
+                message = uiState.snackMessage.ifEmpty {
+                    stringResource(uiState.snackMessageId)
+                },
                 action = {}
             )
         }
@@ -343,7 +345,10 @@ private fun SeriesScreenContent(
                                         .height(400.dp)
                                         .then(
                                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                                Modifier.blur(16.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
+                                                Modifier.blur(
+                                                    16.dp,
+                                                    edgeTreatment = BlurredEdgeTreatment.Unbounded
+                                                )
                                             } else {
                                                 Modifier
                                             }
@@ -375,6 +380,7 @@ private fun SeriesScreenContent(
                             }
                         }
                     }
+
                     SeriesDetailsScreenState.SectionStatus.ERROR -> {}
                 }
                 LazyColumn(

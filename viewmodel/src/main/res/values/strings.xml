@@ -14,6 +14,10 @@
     <string name="latest">Latest</string>
     <string name="series_favorite_success">The TV show has been successfully added to your favorites.</string>
     <string name="series_favorite_fail">The TV show could not be added to your favorites.</string>
+    <string name="series_favorite_remove_success">The TV show been removed successfully from your favorites.</string>
+    <string name="series_favorite_remove_fail">The TV show could not be removed from your favorites.</string>
     <string name="movie_favorite_success">The movie has been successfully added to your favorites.</string>
     <string name="movie_favorite_fail">The movie could not be added to your favorites.</string>
+    <string name="movie_favorite_remove_success">The movie has been removed successfully from your favorites.</string>
+    <string name="movie_favorite_remove_fail">The movie could not be removed from your favorites.</string>
 </resources>

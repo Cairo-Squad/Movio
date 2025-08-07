@@ -74,6 +74,24 @@ class AccountRemoteDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun removeMovieFromFavorite(accountId: Long, movieId: Long) {
+        safeCallApi {
+            apiService.addItemToFavorite(
+                accountId,
+                FavoriteRequest("movie", movieId, false)
+            )
+        }
+    }
+
+    override suspend fun removeSeriesFromFavorite(accountId: Long, seriesId: Long) {
+        safeCallApi {
+            apiService.addItemToFavorite(
+                accountId,
+                FavoriteRequest("tv", seriesId, false)
+            )
+        }
+    }
+
     override suspend fun getFavoriteMovies(
         accountId: Long,
         page: Int

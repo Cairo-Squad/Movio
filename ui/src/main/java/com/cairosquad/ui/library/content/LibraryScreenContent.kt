@@ -48,13 +48,14 @@ fun LibraryScreenContent(
 
     Column {
         AppBar(
-            modifier = Modifier.background(Theme.color.surfaces.surface),
+            modifier = Modifier
+                .windowInsetsPadding(WindowInsets.statusBars)
+                .background(Theme.color.surfaces.surface),
             title = stringResource(com.cairosquad.ui.R.string.library)
         )
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.statusBars)
                 .background(Theme.color.surfaces.surface)
         ) {
             when (screenState.screenStatus) {

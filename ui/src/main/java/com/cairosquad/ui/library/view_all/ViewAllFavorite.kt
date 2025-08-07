@@ -117,7 +117,7 @@ fun ViewAllFavoriteContent(
             ) {
                 items(
                     uiState.movies.size,
-                    key = { "${uiState.movies[it]?.id}" }
+                    key = { "${uiState.movies[it]?.id} + movie" }
                 ) { index ->
                     uiState.movies[index]?.let { movie ->
                         SwipeToDeleteContainer(
@@ -138,7 +138,7 @@ fun ViewAllFavoriteContent(
                 }
                 items(
                     uiState.series.size,
-                    key = { "${uiState.series[it]?.id}" }
+                    key = { "${uiState.series[it]?.id} + series" }
                 ) { index ->
                     uiState.series[index]?.let { series ->
                         SwipeToDeleteContainer(
