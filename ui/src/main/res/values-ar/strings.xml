@@ -65,6 +65,10 @@
     <string name="log_in_to_unlock_your_personal_library">قم بالتسجيل حتى تستطيع ان تستخدم مكتبتك الشخصية</string>
     <string name="access_your_watch_history_favorites_and_watchlist_all_in_one_place">يمكنك الوصول إلى سجل المشاهدة والمفضلة وقائمة المشاهدة كل ذلك في مكان واحد.</string>
     <string name="history">سجل المشاهدة</string>
+    <string name="open_with_space_end">افتح</string>
+    <string name="movio">موفيو</string>
+    <string name="and_let_the_noise_fade_away">ودع صخب الحياة يتلاشى.</string>
+    <string name="swipe_pick_dive_in_and_be_the_star_of_the_scene">اسحب, اختر، غُص.. وكن نجم المشهد.</string>
     <string name="start_watching_movies_and_shows_and_we_ll_keep_track_of_your_viewing_history_here">قم ببدء مشاهدة الأفلام والمسلسلات، ونحن سنظل نتابع سجل مشاهدتك هنا.</string>
     <string name="no_watch_history_yet">لا يوجد لديك سجل مشاهدة بعد</string>
     <string name="nothing_here_yet">🎬 لا يوجد شيء هنا!</string>

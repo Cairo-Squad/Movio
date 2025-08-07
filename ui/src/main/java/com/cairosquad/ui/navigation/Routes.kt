@@ -8,6 +8,9 @@ import kotlinx.serialization.Serializable
 data object SplashRoute
 
 @Serializable
+data object OnboardingRoute
+
+@Serializable
 data object LoginRoute
 
 @Serializable

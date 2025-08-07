@@ -45,7 +45,7 @@ import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
-fun StartSwipeButton(
+fun SwitchToStartButton(
     modifier: Modifier = Modifier,
     text: String = stringResource(id = R.string.start_now),
     icon: Painter = painterResource(id = R.drawable.popcorn_ic),
@@ -201,5 +201,5 @@ fun StartSwipeButton(
 @Preview(device = "id:pixel_5")
 @Composable
 private fun Preview() {
-    StartSwipeButton { }
+    SwitchToStartButton { }
 }
