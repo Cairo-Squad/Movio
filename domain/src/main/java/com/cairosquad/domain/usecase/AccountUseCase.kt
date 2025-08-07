@@ -32,7 +32,7 @@ class AccountUseCase @Inject constructor(
     }
 
     suspend fun addMovieToFavorite(movieId: Long) {
-        accountRepository.addSeriesToFavorite(movieId)
+        accountRepository.addMovieToFavorite(movieId)
     }
 
     suspend fun addSeriesToFavorite(seriesId: Long) {

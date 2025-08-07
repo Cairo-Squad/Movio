@@ -1,5 +1,7 @@
 package com.cairosquad.viewmodel.details.series
 
+import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.domain.usecase.LoginUseCase
@@ -8,6 +10,7 @@ import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Review
 import com.cairosquad.entity.Season
 import com.cairosquad.entity.Series
+import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState.SectionStatus
 import com.cairosquad.viewmodel.exception.ErrorStatus
@@ -18,6 +21,7 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = SeriesDetailsViewModel.Factory::class)
 class SeriesDetailsViewModel @AssistedInject constructor(
@@ -44,6 +48,33 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         getSeasons(seriesId)
         getReviews(seriesId)
         getSimilarSeries(seriesId)
+        getSeriesInFavorite(seriesId)
+    }
+
+    private fun getSeriesInFavorite(seriesId: Long) {
+        checkUserLoggedIn {
+            loadFavoriteSeries(seriesId)
+        }
+    }
+
+    private fun checkUserLoggedIn(onLoggedIn: () -> Unit) {
+        tryToCall(
+            block = loginUseCase::isUserLoggedIn,
+            onSuccess = { isLoggedIn ->
+                if (isLoggedIn) onLoggedIn()
+            },
+            onError = {}
+        )
+    }
+
+    private fun loadFavoriteSeries(seriesId: Long) {
+        tryToCall(
+            block = { accountUseCase.getFavoriteSeries(1) },
+            onSuccess = { series ->
+                updateState { it.copy(isFavorite = series.any { it.id == seriesId }) }
+            },
+            onError = {}
+        )
     }
 
     private fun addSeriesToHistory(seriesId: Long) {
@@ -69,10 +100,42 @@ class SeriesDetailsViewModel @AssistedInject constructor(
                 if (!authed) {
                     updateState { it.copy(showLoginBottomSheet = true) }
                 } else {
-
+                    addToFavorite(seriesId)
                 }
             },
             onError = {}
+        )
+    }
+
+    private fun addToFavorite(seriesId: Long) {
+        tryToCall(
+            block = { accountUseCase.addSeriesToFavorite(seriesId) },
+            onSuccess = {
+                viewModelScope.launch {
+                    updateState {
+                        it.copy(
+                            showSnackBar = true, isProcessSuccess = true,
+                            snackMessage = stringResource(R.string.series_favorite_success)
+                        )
+                    }
+                    delay(2000)
+                    updateState { it.copy(showSnackBar = false) }
+                }
+            },
+            onError = {
+                viewModelScope.launch {
+                    updateState {
+                        it.copy(
+                            showSnackBar = true,
+                            isProcessSuccess = false,
+                            snackMessage = stringResource(R.string.series_favorite_fail),
+                            isFavorite = true
+                        )
+                    }
+                    delay(2000)
+                    updateState { it.copy(showSnackBar = false) }
+                }
+            }
         )
     }
 

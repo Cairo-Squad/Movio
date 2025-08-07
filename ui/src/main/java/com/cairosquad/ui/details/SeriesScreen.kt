@@ -646,6 +646,7 @@ private fun SeriesScreenContent(
             .fillMaxWidth(),
         onBackButtonClicked = listener::onBackClicked,
         onShareButtonClicked = listener::onShareClicked,
-        onFavoriteButtonClicked = listener::onFavoriteClicked
+        onFavoriteButtonClicked = listener::onFavoriteClicked,
+        isFavorite = uiState.isFavorite
     )
 }

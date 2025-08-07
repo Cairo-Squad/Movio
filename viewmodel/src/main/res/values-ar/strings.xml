@@ -12,5 +12,8 @@
     <string name="sorting_type_all">الكل</string>
     <string name="popularity">الأشهر</string>
     <string name="latest">الاحدث</string>
-
+    <string name="series_favorite_success">تمت إضافة المسلسل إلى المفضلة بنجاح.</string>
+    <string name="series_favorite_fail">تعذر إضافة المسلسل إلى المفضلة.</string>
+    <string name="movie_favorite_success">تمت إضافة الفيلم إلى المفضلة بنجاح.</string>
+    <string name="movie_favorite_fail">تعذر إضافة الفيلم إلى المفضلة.</string>
 </resources>

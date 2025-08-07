@@ -1,5 +1,7 @@
 package com.cairosquad.viewmodel.details.movie
 
+import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.domain.usecase.LoginUseCase
@@ -7,6 +9,7 @@ import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Review
+import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.movie.MovieScreenState.ScreenStatus
 import com.cairosquad.viewmodel.exception.ErrorStatus
@@ -17,6 +20,7 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = MovieViewModel.Factory::class)
 class MovieViewModel @AssistedInject constructor(
@@ -159,9 +163,41 @@ class MovieViewModel @AssistedInject constructor(
                 if (!authed) {
                     updateState { it.copy(isNoAccountBottomSheetOpen = true) }
                 } else {
+                    addToFavorite(movieId)
                 }
             },
             onError = {}
+        )
+    }
+
+    private fun addToFavorite(movieId: Long) {
+        tryToCall(
+            block = { accountUseCase.addMovieToFavorite(movieId) },
+            onSuccess = {
+                viewModelScope.launch {
+                    updateState {
+                        it.copy(
+                            showSnackBar = true, isProcessSuccess = true,
+                            snackMessage = stringResource(R.string.movie_favorite_success)
+                        )
+                    }
+                    delay(2000)
+                    updateState { it.copy(showSnackBar = false) }
+                }
+            },
+            onError = {
+                viewModelScope.launch {
+                    updateState {
+                        it.copy(
+                            showSnackBar = true,
+                            isProcessSuccess = false,
+                            snackMessage = stringResource(R.string.movie_favorite_fail)
+                        )
+                    }
+                    delay(2000)
+                    updateState { it.copy(showSnackBar = false) }
+                }
+            }
         )
     }
 
