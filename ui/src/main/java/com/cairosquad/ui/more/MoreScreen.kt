@@ -45,11 +45,11 @@ import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import com.cairosquad.ui.BuildConfig
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.LoginRoute
+import com.cairosquad.ui.navigation.MyRatingsRoute
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.viewmodel.more.MoreScreenEffect
 import com.cairosquad.viewmodel.more.MoreScreenInteractionListener
 import com.cairosquad.viewmodel.more.MoreScreenState
-import com.cairosquad.viewmodel.more.MoreScreenState.Theme.Companion.toThemeString
 import com.cairosquad.viewmodel.more.MoreViewModel
 
 @Composable
@@ -71,7 +71,9 @@ fun MoreScreen(
                 }
             }
 
-            MoreScreenEffect.NavigateToMyRatings -> TODO()
+            MoreScreenEffect.NavigateToMyRatings -> {
+                navController.navigate(MyRatingsRoute)
+            }
 
         }
 
@@ -106,14 +108,17 @@ fun MoreScreenContent(state: MoreScreenState, listener: MoreScreenInteractionLis
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 SafeImageViewer(
+                    nudeThreshold = 0.0,
+                    nonNudeThreshold = 0.0,
                     model = state.userProfileImage
                         ?.takeIf { it.isNotBlank() }
                         ?.let { BuildConfig.IMAGE_BASE_URL + it }.toString(),                    placeholder = painterResource(com.cairosquad.ui.R.drawable.user_profile),
                     contentDescription = stringResource(com.cairosquad.ui.R.string.profile_image),
                     modifier = Modifier
+                        .padding(bottom = 8.dp)
                         .clip(RoundedCornerShape(100))
                         .size(100.dp)
-                        .padding(bottom = 8.dp)
+
                 )
                 Text(
                     text = state.userName,
@@ -133,7 +138,7 @@ fun MoreScreenContent(state: MoreScreenState, listener: MoreScreenInteractionLis
                 SettingsItem(
                     icon = painterResource(id = com.cairosquad.ui.R.drawable.palette),
                     title = stringResource(com.cairosquad.ui.R.string.theme),
-                    trailingText = state.currentTheme.toThemeString(),
+                    trailingText = stringResource(state.currentTheme.stringResId),
                     trailingIcon = painterResource(id = R.drawable.arrow),
                     modifier = Modifier.padding(bottom = 12.dp),
                     onClick = listener::onThemeClick
