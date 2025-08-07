@@ -3,8 +3,8 @@
 package com.cairosquad.design_system.basic_component
 
 import android.annotation.SuppressLint
-import android.net.Uri
 import android.util.Log
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
@@ -38,22 +38,19 @@ fun WebView(
                 settings.javaScriptEnabled = true
                 settings.domStorageEnabled = true
                 webViewClient = object : WebViewClient() {
-                    override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                        val uri = Uri.parse(url)
-                        val isTmdbDomain = uri.host == "www.themoviedb.org"
-                        val allowedPaths = listOf(
-                            "signup", "reset-password"
-                        )
+                    override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+                        val uri = request.url
+                        val isTmdbDomain = uri.host?.contains("themoviedb.org") == true
 
-                        val isAllowed = isTmdbDomain && (uri.path in allowedPaths)
-
-                        if (!isAllowed) {
-                            Log.d("WebView","Navigation blocked: $url")
+                        return if (isTmdbDomain) {
+                            false // allow
+                        } else {
                             Toast.makeText(context, "Navigation blocked", Toast.LENGTH_SHORT).show()
+                            Log.d("WebView", "Navigation blocked: $uri")
+                            true // block
                         }
-
-                        return !isAllowed // true = block, false = allow
                     }
+
                 }
 
                 loadUrl(webPageUrl)
