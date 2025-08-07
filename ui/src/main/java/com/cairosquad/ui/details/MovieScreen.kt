@@ -5,8 +5,6 @@ import android.os.Build
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
@@ -156,91 +154,63 @@ fun MovieScreen(
             uiState = state,
             interactionListener = viewModel
         )
-        AnimatedVisibility(
-            visible = state.isShareBottomSheetOpen,
-            enter = fadeIn(),
-            exit = fadeOut()
-        ) {
-            ShareBottomSheet(
-                isVisible = state.isShareBottomSheetOpen,
-                onDismiss = viewModel::onDismissShareBottomSheet,
-                onCopyLinkClick = {
-                    ShareUtil.copyLink(
-                        seriesUrl = movieUrl,
-                        context = context,
-                        onDismiss = viewModel::onCopy
-                    )
-                },
-                onShareFacebookClick = {
-                    ShareUtil.shareOnFacebook(
-                        encodedMessageAndUrl = encodedMessageAndUrl,
-                        context = context,
-                        onDismiss = viewModel::onDismissShareBottomSheet
-                    )
-                },
-                onShareXClick = {
-                    ShareUtil.shareOnX(
-                        encodedMessageAndUrl = encodedMessageAndUrl,
-                        context = context,
-                        onDismiss = viewModel::onDismissShareBottomSheet
-                    )
-                }
-            )
-        }
-        AnimatedVisibility(
-            visible = state.isNoAccountBottomSheetOpen,
-            enter = fadeIn(),
-            exit = fadeOut()
-        ) {
-            LoginBottomSheet(
-                isVisible = state.isNoAccountBottomSheetOpen,
-                onDismiss = viewModel::onDismissLoginBottomSheet,
-                onLoginClick = viewModel::onNavigateToLogin
-            )
-        }
-        AnimatedVisibility(
-            visible = state.isAddToListBottomSheetOpen,
-            enter = fadeIn(),
-            exit = fadeOut()
-        ) {
-            ListBottomSheet(
-                isVisible = state.isAddToListBottomSheetOpen,
-                onDismiss = viewModel::onDismissAddToListBottomSheet,
-                lists = state.moviesLists.map { it.name },
-                onListClicked = {},
-                onCreateNewList = viewModel::onCreateListClicked
-            )
-        }
-        AnimatedVisibility(
-            visible = state.showCreateListBottomSheet,
-            enter = fadeIn(),
-            exit = fadeOut()
-        ) {
-            CreateListBottomSheet(
-                isVisible = state.showCreateListBottomSheet,
-                onDismiss = viewModel::onDismissCreateListBottomSheet,
-                value = state.listName,
-                onValueChange = viewModel::onListValueChange,
-                onSubmit = { viewModel::onDismissCreateListBottomSheet },
-                isMovie = true
-            )
-        }
-        AnimatedVisibility(
-            visible = state.isRateBottomSheetOpen,
-            enter = fadeIn(),
-            exit = fadeOut()
-        ) {
-            RateBottomSheet(
-                isVisible = state.isRateBottomSheetOpen,
-                onDismiss = viewModel::onDismissRateBottomSheet,
-                rating = state.rate,
-                imageUrl = BuildConfig.IMAGE_BASE_URL + state.movie.posterPath,
-                name = state.movie.title,
-                isMovie = true,
-                onRatingChange = viewModel::onRateChange,
-                onSubmitClicked = viewModel::onSubmitRateClicked,
-            )
-        }
+        ShareBottomSheet(
+            isVisible = state.isShareBottomSheetOpen,
+            onDismiss = viewModel::onDismissShareBottomSheet,
+            onCopyLinkClick = {
+                ShareUtil.copyLink(
+                    seriesUrl = movieUrl,
+                    context = context,
+                    onDismiss = viewModel::onCopy
+                )
+            },
+            onShareFacebookClick = {
+                ShareUtil.shareOnFacebook(
+                    encodedMessageAndUrl = encodedMessageAndUrl,
+                    context = context,
+                    onDismiss = viewModel::onDismissShareBottomSheet
+                )
+            },
+            onShareXClick = {
+                ShareUtil.shareOnX(
+                    encodedMessageAndUrl = encodedMessageAndUrl,
+                    context = context,
+                    onDismiss = viewModel::onDismissShareBottomSheet
+                )
+            }
+        )
+        LoginBottomSheet(
+            isVisible = state.isNoAccountBottomSheetOpen,
+            onDismiss = viewModel::onDismissLoginBottomSheet,
+            onLoginClick = viewModel::onNavigateToLogin
+        )
+        ListBottomSheet(
+            isVisible = state.isAddToListBottomSheetOpen,
+            onDismiss = viewModel::onDismissAddToListBottomSheet,
+            lists = state.moviesLists.map { it.name },
+            onListClicked = { index ->
+                viewModel.onClickList(state.moviesLists[index].id)
+            },
+            onCreateNewList = viewModel::onCreateListClicked
+        )
+        CreateListBottomSheet(
+            isVisible = state.showCreateListBottomSheet,
+            onDismiss = viewModel::onDismissCreateListBottomSheet,
+            value = state.listName,
+            onValueChange = viewModel::onListValueChange,
+            onSubmit = { viewModel.onSubmitCreateListClicked() },
+            isMovie = true
+        )
+        RateBottomSheet(
+            isVisible = state.isRateBottomSheetOpen,
+            onDismiss = viewModel::onDismissRateBottomSheet,
+            rating = state.rate,
+            imageUrl = BuildConfig.IMAGE_BASE_URL + state.movie.posterPath,
+            name = state.movie.title,
+            isMovie = true,
+            onRatingChange = viewModel::onRateChange,
+            onSubmitClicked = viewModel::onSubmitRateClicked,
+        )
         AnimatedVisibility(
             modifier = Modifier
                 .align(Alignment.BottomCenter)

@@ -144,7 +144,6 @@ class AccountRemoteDataSourceImpl @Inject constructor(
                 ?.filterNotNull()
                 ?: emptyList()
         }
-        Log.d("asdasd", "getHistoryMovies: $accountId, $page , $asd")
         return asd
     }
 
@@ -191,8 +190,15 @@ class AccountRemoteDataSourceImpl @Inject constructor(
     }
 
     override suspend fun createList(listName: String) {
+        Log.d("asdasd", "createList: $listName")
         safeCallApi {
-            apiService.createList(CreateListRequest(name = listName, language = "en"))
+            apiService.createList(
+                CreateListRequest(
+                    name = listName,
+                    language = "en",
+                    description = " "
+                )
+            )
         }
     }
 
