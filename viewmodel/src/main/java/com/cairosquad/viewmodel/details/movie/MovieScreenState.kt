@@ -28,7 +28,6 @@ data class MovieScreenState(
     val errorStatus: ErrorStatus? = null,
 
     val showSnackBar: Boolean = false,
-    val snackMessage: String = "",
     val snackMessageId: Int = 0,
     val isProcessSuccess: Boolean = false,
 ) {

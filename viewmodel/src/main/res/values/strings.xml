@@ -18,6 +18,10 @@
     <string name="series_favorite_remove_fail">The TV show could not be removed from your favorites.</string>
     <string name="movie_favorite_success">The movie has been successfully added to your favorites.</string>
     <string name="movie_favorite_fail">The movie could not be added to your favorites.</string>
+    <string name="added_to_list">Added to list</string>
+    <string name="movie_already_in_list">Movie already in list</string>
+    <string name="error_adding_movie_to_list">Error adding movie to list</string>
+    <string name="copied_to_clip_board_successfully">Copied To clip board successfully</string>
     <string name="movie_favorite_remove_success">The movie has been removed successfully from your favorites.</string>
     <string name="movie_favorite_remove_fail">The movie could not be removed from your favorites.</string>
 </resources>
