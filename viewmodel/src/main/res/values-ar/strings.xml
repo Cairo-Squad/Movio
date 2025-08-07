@@ -12,12 +12,12 @@
     <string name="sorting_type_all">الكل</string>
     <string name="popularity">الأشهر</string>
     <string name="latest">الاحدث</string>
-    <string name="series_favorite_success">تمت إضافة المسلسل إلى المفضلة بنجاح.</string>
-    <string name="series_favorite_fail">تعذر إضافة المسلسل إلى المفضلة.</string>
-    <string name="movie_favorite_success">تمت إضافة الفيلم إلى المفضلة بنجاح.</string>
-    <string name="movie_favorite_fail">تعذر إضافة الفيلم إلى المفضلة.</string>
-    <string name="series_favorite_remove_success">تمت إزالة المسلسل بنجاح من قائمة المفضلة لديك.</string>
-    <string name="series_favorite_remove_fail">تعذّر إزالة المسلسل من قائمة المفضلة لديك.</string>
-    <string name="movie_favorite_remove_success">تمت إزالة الفيلم بنجاح من قائمة المفضلة لديك.</string>
-    <string name="movie_favorite_remove_fail">تعذّر إزالة الفيلم من قائمة المفضلة لديك.</string>
+    <string name="series_favorite_success">تمت إضافة العنصر.</string>
+    <string name="series_favorite_fail">تعذّر إضافة العنصر.</string>
+    <string name="series_favorite_remove_success">تم حذف العنصر.</string>
+    <string name="series_favorite_remove_fail">تعذّر حذف العنصر.</string>
+    <string name="movie_favorite_success">تمت إضافة العنصر.</string>
+    <string name="movie_favorite_fail">تعذّر إضافة العنصر.</string>
+    <string name="movie_favorite_remove_success">تم حذف العنصر.</string>
+    <string name="movie_favorite_remove_fail">تعذّر حذف العنصر.</string>
 </resources>

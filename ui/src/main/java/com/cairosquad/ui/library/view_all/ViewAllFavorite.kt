@@ -1,6 +1,10 @@
 package com.cairosquad.ui.library.view_all
 
 import android.os.Build
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
@@ -21,11 +26,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.design_system.basic_component.AppBar
+import com.cairosquad.design_system.basic_component.SnackBar
+import com.cairosquad.design_system.basic_component.Text
 import com.cairosquad.design_system.modifier.dropShadow
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.R
@@ -61,10 +71,45 @@ fun ViewAllFavorite(
             }
         }
     }
-    ViewAllFavoriteContent(
-        uiState = uiState,
-        listener = viewModel,
-    )
+    Box{
+        ViewAllFavoriteContent(
+            uiState = uiState,
+            listener = viewModel,
+        )
+        AnimatedVisibility(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .windowInsetsPadding(WindowInsets.navigationBars)
+                .padding(16.dp),
+            visible = uiState.showSnackBar,
+            enter = slideInVertically(
+                initialOffsetY = { fullHeight -> fullHeight },
+                animationSpec = tween(durationMillis = 600)
+            ),
+            exit = slideOutVertically(
+                targetOffsetY = { fullHeight -> fullHeight },
+                animationSpec = tween(durationMillis = 600)
+            )
+        ) {
+            SnackBar(
+                imageVector = ImageVector.vectorResource(com.cairosquad.design_system.R.drawable.danger),
+                message = stringResource(uiState.snackMessageId),
+                action = {
+                    Box(
+                        modifier = Modifier.clip(CircleShape)
+                            .clickable(onClick = viewModel::onUndoClicked)
+                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                    ) {
+                        Text(
+                            text = "Undo",
+                            style = Theme.textStyle.label.smallRegular14,
+                            color = Theme.color.brand.primary
+                        )
+                    }
+                }
+            )
+        }
+    }
 }
 
 @Composable
@@ -125,7 +170,6 @@ fun ViewAllFavoriteContent(
                         ) {
                             TrendingMovieCard(
                                 modifier = Modifier
-                                    .padding(horizontal = 16.dp)
                                     .clickable(onClick = { listener.onMovieClicked(movie.id) }),
                                 imgUrl = movie.posterPath,
                                 movieTitle = movie.title,
@@ -146,7 +190,6 @@ fun ViewAllFavoriteContent(
                         ) {
                             TrendingMovieCard(
                                 modifier = Modifier
-                                    .padding(horizontal = 16.dp)
                                     .clickable(onClick = { listener.onSeriesDelete(series.id) }),
                                 imgUrl = series.posterPath,
                                 movieTitle = series.title,

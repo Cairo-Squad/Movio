@@ -12,12 +12,12 @@
     <string name="sorting_type_all">All</string>
     <string name="popularity">Popularity</string>
     <string name="latest">Latest</string>
-    <string name="series_favorite_success">The TV show has been successfully added to your favorites.</string>
-    <string name="series_favorite_fail">The TV show could not be added to your favorites.</string>
-    <string name="series_favorite_remove_success">The TV show been removed successfully from your favorites.</string>
-    <string name="series_favorite_remove_fail">The TV show could not be removed from your favorites.</string>
-    <string name="movie_favorite_success">The movie has been successfully added to your favorites.</string>
-    <string name="movie_favorite_fail">The movie could not be added to your favorites.</string>
-    <string name="movie_favorite_remove_success">The movie has been removed successfully from your favorites.</string>
-    <string name="movie_favorite_remove_fail">The movie could not be removed from your favorites.</string>
+    <string name="series_favorite_success">Item has been added.</string>
+    <string name="series_favorite_fail">Item could not be added.</string>
+    <string name="series_favorite_remove_success">Item has been deleted.</string>
+    <string name="series_favorite_remove_fail">Item could not be deleted.</string>
+    <string name="movie_favorite_success">Item has been added.</string>
+    <string name="movie_favorite_fail">Item could not be added.</string>
+    <string name="movie_favorite_remove_success">Item has been deleted.</string>
+    <string name="movie_favorite_remove_fail">Item could not be deleted.</string>
 </resources>

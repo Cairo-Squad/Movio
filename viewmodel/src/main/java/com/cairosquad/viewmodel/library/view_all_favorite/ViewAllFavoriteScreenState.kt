@@ -12,8 +12,10 @@ data class ViewAllFavoriteScreenState(
     val deletedMoviesIds: List<Long> = emptyList(),
     val series: List<SeriesUiState> = emptyList(),
     val deletedSeriesIds: List<Long> = emptyList(),
-
-    ) {
+    val showSnackBar: Boolean = false,
+    val isProcessSuccess: Boolean = false,
+    val snackMessageId: Int = 0,
+) {
 
     data class SeriesUiState(
         val id: Long = 0L,

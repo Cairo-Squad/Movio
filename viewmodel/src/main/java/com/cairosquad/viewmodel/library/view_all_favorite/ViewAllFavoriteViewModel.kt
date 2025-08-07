@@ -1,11 +1,13 @@
 package com.cairosquad.viewmodel.library.view_all_favorite
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.AccountUseCase
+import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
@@ -93,18 +95,66 @@ class ViewAllFavoriteViewModel @Inject constructor(
     override fun onMovieDelete(movieId: Long) {
         tryToCall(
             onStart = { updateState { it.copy(deletedMoviesIds = it.deletedMoviesIds + movieId) } },
-            block = {},
-            onSuccess = {},
-            onError = {}
+            block = {
+                accountUseCase.removeMovieFromFavorite(movieId)
+            },
+            onSuccess = {
+                viewModelScope.launch {
+                    updateState {
+                        it.copy(
+                            showSnackBar = true, isProcessSuccess = true,
+                            snackMessageId = R.string.series_favorite_remove_success,
+                        )
+                    }
+                    delay(2000)
+                    updateState { it.copy(showSnackBar = false) }
+                }
+            },
+            onError = {
+                viewModelScope.launch {
+                    updateState {
+                        it.copy(
+                            showSnackBar = true, isProcessSuccess = false,
+                            snackMessageId = R.string.series_favorite_remove_success,
+                        )
+                    }
+                    delay(2000)
+                    updateState { it.copy(showSnackBar = false) }
+                }
+            }
         )
     }
 
     override fun onSeriesDelete(seriesId: Long) {
         tryToCall(
             onStart = { updateState { it.copy(deletedSeriesIds = it.deletedSeriesIds + seriesId) } },
-            block = {},
-            onSuccess = {},
-            onError = {}
+            block = {
+                accountUseCase.removeSeriesFromFavorite(seriesId)
+            },
+            onSuccess = {
+                viewModelScope.launch {
+                    updateState {
+                        it.copy(
+                            showSnackBar = true, isProcessSuccess = true,
+                            snackMessageId = R.string.series_favorite_remove_success,
+                        )
+                    }
+                    delay(2000)
+                    updateState { it.copy(showSnackBar = false) }
+                }
+            },
+            onError = {
+                viewModelScope.launch {
+                    updateState {
+                        it.copy(
+                            showSnackBar = true, isProcessSuccess = false,
+                            snackMessageId = R.string.series_favorite_remove_success,
+                        )
+                    }
+                    delay(2000)
+                    updateState { it.copy(showSnackBar = false) }
+                }
+            }
         )
     }
 
@@ -115,6 +165,10 @@ class ViewAllFavoriteViewModel @Inject constructor(
             delay(500L)
             updateState { it.copy(isRefreshing = true) }
         }
+    }
+
+    override fun onUndoClicked() {
+        Log.d("ViewModel", "onUndoClicked: ${screenState.value.deletedSeriesIds.last()}")
     }
 
     fun updateScreenStatus(status: ViewAllFavoriteScreenState.SectionStatus) {
