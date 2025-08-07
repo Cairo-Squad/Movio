@@ -1,5 +1,6 @@
 package com.cairosquad.repository.account
 
+import android.util.Log
 import com.cairosquad.domain.repository.AccountRepository
 import com.cairosquad.entity.Account
 import com.cairosquad.entity.MediaList
@@ -57,6 +58,26 @@ class AccountRepositoryImpl @Inject constructor(
             return accountRemoteDataSource.getFavoriteSeries(accountId, page).map { it.toEntity() }
         }
         return emptyList()
+    }
+
+    override suspend fun getMoviesOfList(
+        listId: Long,
+        page: Int
+    ): List<Movie> {
+        accountLocalDataSource.getAccount().also {  accountId ->
+            val asd =  accountRemoteDataSource.getMoviesOfList(listId, page).map { it.toEntity() }
+            Log.d("REmote lists", "getMoviesOfList: Repository $asd")
+            return asd
+        }
+    }
+
+    override suspend fun getSeriesOfList(
+        listId: Long,
+        page: Int
+    ): List<Series> {
+        accountLocalDataSource.getAccount().also {  accountId ->
+            return accountRemoteDataSource.getSeriesOfList(listId, page).map { it.toEntity() }
+        }
     }
 
     override suspend fun addMovieToFavorite(movieId: Long) {

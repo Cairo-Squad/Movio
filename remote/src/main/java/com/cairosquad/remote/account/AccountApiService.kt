@@ -4,6 +4,7 @@ import com.cairosquad.repository.account.data_source.remote.dto.FavoriteRequest
 import com.cairosquad.repository.account.data_source.remote.dto.HistoryRequest
 import com.cairosquad.repository.account.data_source.remote.dto.MediaListResponse
 import com.cairosquad.repository.account.data_source.remote.dto.acount.AccountDto
+import com.cairosquad.repository.account.data_source.remote.dto.list_details.ListDetailsResponse
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 import com.cairosquad.repository.utils.sharedDto.remote.ResultResponse
@@ -90,4 +91,12 @@ interface AccountApiService {
 		@Query("page")
 		page: Int
 	): ResultResponse<SeriesRemoteDto>
+
+	@GET("list/{listId}")
+	suspend fun getListDetails(
+		@Path("listId")
+		listId: Long,
+		@Query("page")
+		page: Int
+	): ListDetailsResponse
 }

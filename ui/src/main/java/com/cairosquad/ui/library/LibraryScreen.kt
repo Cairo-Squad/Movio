@@ -47,7 +47,7 @@ fun LibraryScreen() {
             }
 
             is LibraryEffect.NavigateToListDetails -> {
-                navController.navigate(ListRoute(it.listId))
+                navController.navigate(ListRoute(it.listId, it.listName))
             }
 
             is LibraryEffect.NavigateToMovieDetails -> {

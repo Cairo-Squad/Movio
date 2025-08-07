@@ -160,7 +160,8 @@ fun AppNavigation(
             }
             composable<ListRoute> {backStackEntry ->
                 ListScreen(
-                    listId = backStackEntry.toRoute<ListRoute>().listId
+                    listId = backStackEntry.toRoute<ListRoute>().listId,
+                    listName = backStackEntry.toRoute<ListRoute>().listName
                 )
             }
         }

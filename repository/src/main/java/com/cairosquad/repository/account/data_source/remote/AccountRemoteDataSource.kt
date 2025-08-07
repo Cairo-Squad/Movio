@@ -13,6 +13,10 @@ interface AccountRemoteDataSource {
 
     suspend fun getSeriesLists(accountId: Long, page: Int): List<MediaListDto>
 
+    suspend fun getMoviesOfList(listId: Long, page: Int): List<MovieRemoteDto>
+
+    suspend fun getSeriesOfList(listId: Long, page: Int): List<SeriesRemoteDto>
+
     suspend fun addMovieToFavorite(accountId: Long, movieId: Long)
 
     suspend fun addSeriesToFavorite(accountId: Long, seriesId: Long)

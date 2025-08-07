@@ -149,7 +149,7 @@ private fun ListsSection(
                                 modifier = Modifier.width(158.dp),
                                 listName = it.name,
                                 numberOfItems = it.mediaCount,
-                                onListClicked = { listener.onListClicked(it.id) }
+                                onListClicked = { listener.onListClicked(it.id, it.name) }
                             )
                         }
                         items(screenState.seriesLists) {
@@ -157,7 +157,7 @@ private fun ListsSection(
                                 modifier = Modifier.width(158.dp),
                                 listName = it.name,
                                 numberOfItems = it.mediaCount,
-                                onListClicked = { listener.onListClicked(it.id) }
+                                onListClicked = { listener.onListClicked(it.id, it.name) }
                             )
                         }
                     }

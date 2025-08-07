@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MovieRemoteDto(
     @SerialName("id")
-    val id: Int? = null,
+    val id: Long? = null,
     @SerialName("poster_path")
     val posterPath: String? = null,
     @SerialName("title")

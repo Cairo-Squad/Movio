@@ -6,6 +6,8 @@ import com.cairosquad.repository.account.data_source.remote.dto.FavoriteRequest
 import com.cairosquad.repository.account.data_source.remote.dto.HistoryRequest
 import com.cairosquad.repository.account.data_source.remote.dto.MediaListDto
 import com.cairosquad.repository.account.data_source.remote.dto.acount.AccountDto
+import com.cairosquad.repository.account.data_source.remote.dto.list_details.toRemoteMovieDto
+import com.cairosquad.repository.account.data_source.remote.dto.list_details.toRemoteSeriesDto
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 import javax.inject.Inject
@@ -23,6 +25,32 @@ class AccountRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getSeriesLists(accountId: Long, page: Int): List<MediaListDto> {
         return safeCallApi { getListsByType(accountId, page, "tv") }
+    }
+
+    override suspend fun getMoviesOfList(
+        listId: Long,
+        page: Int
+    ): List<MovieRemoteDto> {
+        return safeCallApi {
+            apiService.getListDetails(listId, page)
+                .items
+                ?.filter { it.mediaType == "movie" }
+                ?.map { it.toRemoteMovieDto() }
+                ?: emptyList()
+        }
+    }
+
+    override suspend fun getSeriesOfList(
+        listId: Long,
+        page: Int
+    ): List<SeriesRemoteDto> {
+        return safeCallApi {
+            apiService.getListDetails(listId, page)
+                .items
+                ?.filter { it.mediaType == "tv" }
+                ?.map { it.toRemoteSeriesDto() }
+                ?: emptyList()
+        }
     }
 
     override suspend fun addMovieToFavorite(accountId: Long, movieId: Long) {

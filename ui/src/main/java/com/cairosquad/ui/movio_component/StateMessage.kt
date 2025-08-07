@@ -63,6 +63,44 @@ fun StateMessage(
     }
 }
 
+@Composable
+fun StateMessage(
+    @DrawableRes imageDrawable: Int,
+    title: String,
+    description: String,
+    modifier: Modifier = Modifier,
+    width: Dp = 180.dp,
+    height: Dp = 150.dp
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            modifier = Modifier
+                .size(width = width, height = height)
+                .padding(bottom = 16.dp),
+            imageVector = ImageVector.vectorResource(imageDrawable),
+            contentDescription = stringResource(R.string.state_message_image)
+        )
+        Text(
+            modifier = Modifier.padding(bottom = 8.dp),
+            text = title,
+            color = Theme.color.surfaces.onSurface,
+            style = Theme.textStyle.title.mediumMedium16
+        )
+        Text(
+            text = description,
+            color = Theme.color.surfaces.onSurfaceContainer,
+            style = Theme.textStyle.label.smallRegular12,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
 @MultiThemePreviews
 @Composable
 private fun NoResultPreview() {

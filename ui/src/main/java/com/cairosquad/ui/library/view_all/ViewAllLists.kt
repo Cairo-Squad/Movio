@@ -36,7 +36,7 @@ import com.cairosquad.ui.library.component.ListContainer
 
 @Composable
 fun ViewAllLists() {
-
+    ViewAllListsContent()
 }
 
 @Composable

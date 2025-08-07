@@ -93,5 +93,6 @@ data object ViewAllHistoryRoute
 
 @Serializable
 data class ListRoute(
-    val listId: Long
+    val listId: Long,
+    val listName: String
 )
