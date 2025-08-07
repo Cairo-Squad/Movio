@@ -102,8 +102,20 @@ class SearchPagerTest {
     fun `artists should emit PagingData with correct artist items`() = runTest {
         // Given
         val expected = listOf(
-            Artist(1, "Christian Bale", ""),
-            Artist(2, "Christopher Nolan", "")
+            Artist(
+                1, "Christian Bale", "",
+                country = "",
+                birthDate = 0L,
+                biography = "",
+                department = ""
+            ),
+            Artist(
+                2, "Christopher Nolan", "",
+                country = "",
+                birthDate = 0L,
+                biography = "",
+                department = ""
+            )
         )
         coEvery { manageArtistUseCase.getArtistsByQuery(testQuery, 1) } returns expected
         coEvery { manageArtistUseCase.getArtistsByQuery(testQuery, match { it != 1 }) } returns emptyList()
