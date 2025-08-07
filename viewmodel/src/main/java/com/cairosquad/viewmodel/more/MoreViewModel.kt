@@ -9,8 +9,10 @@ import com.cairosquad.domain.usecase.ThemeManagerUseCase
 import com.cairosquad.entity.Theme
 import com.cairosquad.viewmodel.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 @HiltViewModel
 class MoreViewModel @Inject constructor(
@@ -38,21 +40,34 @@ class MoreViewModel @Inject constructor(
         updateState {
             it.copy(appVersion = versionUseCase.getAppVersion())
         }
-        viewModelScope.launch {
-            val account = account.getAccountDetails()
-            val profileImageLink = account.avatarPath
-            val userName = account.name
-            updateState {
-                it.copy(userProfileImage = profileImageLink, userName = userName)
-            }
-        }
-
     }
 
     private fun checkUserLoggedInStatus() {
         viewModelScope.launch {
             val isUserLoggedIn = loginUseCase.isUserLoggedIn()
             updateState { it.copy(isUserLoggedIn = isUserLoggedIn) }
+
+            // Only fetch account details if the user is logged in
+            if (isUserLoggedIn) {
+                try {
+                    val accountDetails = account.getAccountDetails()
+                    updateState {
+                        it.copy(
+                            userProfileImage = accountDetails.avatarPath,
+                            userName = accountDetails.name
+                        )
+                    }
+                } catch (e: Exception) {
+                    // Handle potential errors when fetching account details
+                    // This prevents crashes when there are API issues
+                    updateState {
+                        it.copy(
+                            userProfileImage = null,
+                            userName = ""
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -106,7 +121,9 @@ class MoreViewModel @Inject constructor(
     override fun onLogoutConfirm() {
         viewModelScope.launch {
             loginUseCase.logout()
-
+            withContext(Dispatchers.IO){
+                account.removeAccountDetails()
+            }
             checkUserLoggedInStatus()
             updateState { it.copy( isLogoutButtonVisible = false) }
         }
