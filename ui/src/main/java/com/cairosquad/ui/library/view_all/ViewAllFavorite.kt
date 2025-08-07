@@ -2,8 +2,10 @@ package com.cairosquad.ui.library.view_all
 
 import android.os.Build
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,35 +16,69 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.cairosquad.design_system.basic_component.AppBar
-import com.cairosquad.design_system.basic_component.Text
 import com.cairosquad.design_system.modifier.dropShadow
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.R
 import com.cairosquad.ui.movio_component.SwipeToDeleteContainer
 import com.cairosquad.ui.movio_component.TrendingMovieCard
+import com.cairosquad.ui.navigation.LocalNavController
+import com.cairosquad.ui.navigation.MovieRoute
+import com.cairosquad.ui.utils.ObserveAsEffect
+import com.cairosquad.viewmodel.library.view_all_favorite.ViewAllFavoriteEffect
+import com.cairosquad.viewmodel.library.view_all_favorite.ViewAllFavoriteScreenState
+import com.cairosquad.viewmodel.library.view_all_favorite.ViewAllFavoriteViewModel
 
 @Composable
-fun ViewAllFavorite() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text("All Favorite",
-            style = Theme.textStyle.title.largeBold16,
-            color = Theme.color.surfaces.onSurface
-        )
+fun ViewAllFavorite(
+    viewModel: ViewAllFavoriteViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.screenState.collectAsStateWithLifecycle()
+    val navController = LocalNavController.current
+
+    val movies = uiState.movies.collectAsLazyPagingItems()
+    val series = uiState.series.collectAsLazyPagingItems()
+
+    ObserveAsEffect(viewModel.effect) { effect ->
+        when (effect) {
+            ViewAllFavoriteEffect.OnNavigateBack -> {
+                navController.popBackStack()
+            }
+
+            is ViewAllFavoriteEffect.OnMovieClicked -> {
+                navController.navigate(MovieRoute(effect.movieId))
+            }
+
+            is ViewAllFavoriteEffect.OnSeriesClicked -> {
+                navController.navigate(MovieRoute(effect.seriesId))
+
+            }
+        }
     }
+    ViewAllFavoriteContent(
+        movies = movies,
+        series = series,
+        listener = viewModel,
+    )
 }
 
 @Composable
-fun ViewAllFavoriteContent() {
+fun ViewAllFavoriteContent(
+    movies: LazyPagingItems<ViewAllFavoriteScreenState.MovieUiState>,
+    series: LazyPagingItems<ViewAllFavoriteScreenState.SeriesUiState>,
+    listener: ViewAllFavoriteViewModel
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -73,50 +109,59 @@ fun ViewAllFavoriteContent() {
                     }
                 )
         )
-        AppBar(
-            modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars),
-            title = stringResource(R.string.favorite),
-            onBackButtonClicked = { },
-            onShareButtonClicked = null,
-            onFavoriteButtonClicked = null
-        )
-        LazyColumn(
-            modifier = Modifier.padding(top = 48.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(vertical = 16.dp)
-        ) {
-            items(
-                10,
-                key = { it -> it }
+        Column {
+            AppBar(
+                modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars),
+                title = stringResource(R.string.favorite),
+                onBackButtonClicked = listener::onBackClicked,
+                onShareButtonClicked = null,
+                onFavoriteButtonClicked = null
+            )
+            LazyColumn(
+                modifier = Modifier.padding(top = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(vertical = 16.dp)
             ) {
-                SwipeToDeleteContainer(
-                    onDelete = {},
-                ) {
-                    TrendingMovieCard(
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp),
-                        imgUrl = "",
-                        movieTitle = "ASD",
-                        movieCategory = "Action",
-                        rating = "8.9"
-                    )
+                items(
+                    movies.itemCount,
+                    key = { "${movies[it]?.id}" }
+                ) { index ->
+                    movies[index]?.let { movie ->
+                        SwipeToDeleteContainer(
+                            onDelete = { listener.onMovieDelete(movie.id) },
+                        ) {
+                            TrendingMovieCard(
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp)
+                                    .clickable(onClick = { listener.onMovieClicked(movie.id) }),
+                                imgUrl = movie.posterPath,
+                                movieTitle = movie.title,
+                                movieCategory = movie.trailerPath,
+                                rating = movie.rating.toString()
+                            )
+                        }
+
+                    }
                 }
-            }
-            items(
-                10,
-                key = { it -> it }
-            ) {
-                SwipeToDeleteContainer(
-                    onDelete = {},
-                ) {
-                    TrendingMovieCard(
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp),
-                        imgUrl = "",
-                        movieTitle = "ASD",
-                        movieCategory = "Action",
-                        rating = "8.9"
-                    )
+                items(
+                    series.itemCount,
+                    key = { "${series[it]?.id}" }
+                ) { index ->
+                    series[index]?.let { series ->
+                        SwipeToDeleteContainer(
+                            onDelete = { listener.onSeriesDelete(series.id) },
+                        ) {
+                            TrendingMovieCard(
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp)
+                                    .clickable(onClick = { listener.onSeriesDelete(series.id) }),
+                                imgUrl = series.posterPath,
+                                movieTitle = series.title,
+                                movieCategory = series.trailerPath,
+                                rating = series.rating.toString()
+                            )
+                        }
+                    }
                 }
             }
         }
