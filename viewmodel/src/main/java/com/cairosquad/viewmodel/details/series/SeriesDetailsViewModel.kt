@@ -1,5 +1,7 @@
 package com.cairosquad.viewmodel.details.series
 
+import android.R.id.message
+import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.domain.usecase.LoginUseCase
@@ -18,6 +20,7 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = SeriesDetailsViewModel.Factory::class)
 class SeriesDetailsViewModel @AssistedInject constructor(
@@ -160,10 +163,16 @@ class SeriesDetailsViewModel @AssistedInject constructor(
     }
 
     override fun onCopy(message: String, isSuccessful: Boolean) {
+        onDismissShareBottomSheet()
+        viewModelScope.launch {
+            delay(500)
+            showSnackBar(message, isSuccessful)
+        }
+    }
+
+    fun showSnackBar(message: String, isSuccessful: Boolean, durationMillis: Long = 2000) {
         tryToCall(
             onStart = {
-                onDismissShareBottomSheet()
-                delay(500)
                 updateState {
                     it.copy(
                         showSnackBar = true,
@@ -175,13 +184,10 @@ class SeriesDetailsViewModel @AssistedInject constructor(
             block = { delay(2000) },
             onSuccess = {
                 updateState {
-                    it.copy(
-                        showSnackBar = false,
-                        snackMessage = message
-                    )
+                    it.copy(showSnackBar = false)
                 }
             },
-            onError = {},
+            onError = {}
         )
     }
 
