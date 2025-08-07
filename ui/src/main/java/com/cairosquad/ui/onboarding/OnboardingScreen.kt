@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.cairosquad.design_system.basic_component.Text
+import com.cairosquad.design_system.modifier.dropShadow
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.R
@@ -67,6 +69,15 @@ private fun OnboardingContent(
             contentDescription = null,
             contentScale = ContentScale.FillHeight,
             modifier = Modifier
+                .dropShadow(
+                    shape = CircleShape,
+                    color = Theme.color.brand.primary,
+                    alpha = 0.09f,
+                    blur = 24.dp,
+                    offsetX = 0.dp,
+                    offsetY = (-112).dp,
+                    spread = 16.dp
+                )
                 .fillMaxWidth()
                 .fillMaxHeight(0.5f)
                 .padding(bottom = 40.dp)
