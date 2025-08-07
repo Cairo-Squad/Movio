@@ -9,18 +9,6 @@ import javax.inject.Inject
 class OnboardingViewModel @Inject constructor(
     private val onboardingUseCase: OnboardingUseCase
 ) : BaseViewModel<DummyState, OnboardingEffect>(DummyState()), OnboardingInteractionListener {
-    init {
-        tryToCall(
-            block = { onboardingUseCase.getOnboardingState() },
-            onSuccess = { isCompleted ->
-                if (isCompleted) {
-                    sendEffect(OnboardingEffect.NavigateToAuthOrHome)
-                }
-            },
-            onError = { }
-        )
-    }
-
     override fun onCompleteOnboarding() {
         tryToCall(
             block = { onboardingUseCase.setOnboardingStateAsCompleted() },

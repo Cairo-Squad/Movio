@@ -57,9 +57,15 @@ fun AppNavigation(
             composable<SplashRoute> {
                 SplashScreen(
                     onNavigateNext = {
-                        navController.navigate(OnboardingRoute) {
-                            popUpTo(SplashRoute) {
-                                inclusive = true
+                        coroutineScope.launch {
+                            val secondRoute = if (authGate.isUserLoggedIn()) AppRoute else LoginRoute
+                            val firstRoute = if (authGate.isOnboardingStateComplete()) secondRoute else OnboardingRoute
+                            navController.navigate(firstRoute) {
+                                popUpTo(SplashRoute) {
+                                    inclusive = true
+                                }
+
+                                launchSingleTop = true
                             }
                         }
                     }
