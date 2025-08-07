@@ -277,7 +277,11 @@ class ArtistViewModelTest {
         val artist = Artist(
             id = 1,
             name = "Tom Hanks",
-            photoPath = "/img.jpg"
+            photoPath = "/img.jpg",
+            country = "",
+            birthDate = 0L,
+            biography = "",
+            department = ""
         )
 
         val movie1 = Movie(

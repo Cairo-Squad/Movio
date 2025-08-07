@@ -86,7 +86,11 @@ class SearchUiStateMapperTest {
         val artist = Artist(
             id = 303L,
             name = "Emma Watson",
-            photoPath = "/emma.jpg"
+            photoPath = "/emma.jpg",
+            country = "",
+            birthDate = 0L,
+            biography = "",
+            department = ""
         )
     }
 
