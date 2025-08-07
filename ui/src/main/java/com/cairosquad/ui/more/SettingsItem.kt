@@ -10,9 +10,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.Icon
@@ -29,6 +32,7 @@ fun SettingsItem(
     trailingIcon: Painter? = null,
     onClick: () -> Unit
 ) {
+    val layoutDirections = LocalLayoutDirection.current
     Row(
         modifier
             .fillMaxWidth()
@@ -68,7 +72,14 @@ fun SettingsItem(
                 modifier = Modifier
                     .padding(vertical = 12.dp)
                     .padding(end = 16.dp)
-                    .size(16.dp), tint = Theme.color.surfaces.onSurfaceVariant)
+                    .size(16.dp)
+                    .graphicsLayer {
+                        if (layoutDirections == LayoutDirection.Rtl) {
+                            scaleX = -1f
+                        }
+                    },
+                tint = Theme.color.surfaces.onSurfaceVariant
+            )
         }
 
     }
