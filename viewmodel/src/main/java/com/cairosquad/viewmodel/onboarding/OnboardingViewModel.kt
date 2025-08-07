@@ -16,5 +16,4 @@ class OnboardingViewModel @Inject constructor(
             onError = { sendEffect(OnboardingEffect.NavigateToAuthOrHome) }
         )
     }
-
 }

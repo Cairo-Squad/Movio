@@ -42,8 +42,8 @@ object MovioDataStore {
 
     suspend fun getPrefValue(context: Context?, key: String, defaultValue: Any): Any {
         val contextWeakReference = WeakReference(context)
-        return contextWeakReference.get()?.let { ctx ->
-            val dataStoreValue: Flow<Any> = ctx.dataStore.data.map { preferences ->
+        return contextWeakReference.get()?.let { context ->
+            val dataStoreValue: Flow<Any> = context.dataStore.data.map { preferences ->
                 when (defaultValue) {
                     is String -> preferences[stringPreferencesKey(key)] ?: defaultValue
                     is Int -> preferences[intPreferencesKey(key)] ?: defaultValue
