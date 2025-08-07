@@ -76,6 +76,7 @@ fun TrendingMovieCard(
         Column(
             modifier = Modifier
                 .fillMaxHeight()
+                .weight(1f)
                 .padding(start = 8.dp, top = 4.dp, bottom = 4.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
@@ -102,9 +103,7 @@ fun TrendingMovieCard(
                         color = Theme.color.system.onWarning,
                         style = Theme.textStyle.label.smallRegular12
                     )
-
                 }
-
             }
             if (movieCategory.isNotEmpty()) {
                 Chip(
@@ -131,6 +130,7 @@ private fun TrendingMovieCardPrevNight() {
         )
     }
 }
+
 
 @Preview
 @Composable
