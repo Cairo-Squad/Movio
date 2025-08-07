@@ -95,7 +95,9 @@ fun ReviewCard(
 				Text(
 					text = reviewerName,
 					color = color.surfaces.onSurface,
-					style = textStyle.title.mediumMedium14
+					style = textStyle.title.mediumMedium14,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
 				)
 				Text(
 					modifier = Modifier.padding(top = 4.dp),
