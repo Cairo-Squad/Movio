@@ -2,6 +2,8 @@ package com.cairosquad.movio.di
 
 import android.content.Context
 import androidx.room.Room
+import com.cairosquad.local.account.AccountCacheDao
+import com.cairosquad.local.account.AccountLocalDataSourceImpl
 import com.cairosquad.local.cache.artist.ArtistsCacheDao
 import com.cairosquad.local.cache.artist.ArtistsLocalDataSourceImpl
 import com.cairosquad.local.cache.cacheCode.CacheCodeDao
@@ -19,6 +21,7 @@ import com.cairosquad.local.onboarding.OnboardingDataSourceImpl
 import com.cairosquad.local.search.recent.LocalRecentSearchDataSourceImpl
 import com.cairosquad.local.search.recent.dao.LocalRecentSearchDao
 import com.cairosquad.local.utils.MovioDataBase
+import com.cairosquad.repository.account.data_source.local.AccountLocalDataSource
 import com.cairosquad.repository.artists.data_source.local.ArtistsLocalDataSource
 import com.cairosquad.repository.login.data_source.local.LocalAuthenticationDataSource
 import com.cairosquad.repository.movie.data_source.local.MoviesLocalDataSource
@@ -72,6 +75,9 @@ object LocalDataSourceModule {
 
     @Provides
     fun provideLocalRecentSearchDao(db: MovioDataBase): LocalRecentSearchDao = db.recentSearchDao()
+
+    @Provides
+    fun provideAccountCacheDao(db: MovioDataBase): AccountCacheDao = db.accountCacheDao()
 
     @Provides
     @Singleton
@@ -140,4 +146,10 @@ object LocalDataSourceModule {
     ): OnboardingDataSource = OnboardingDataSourceImpl(
         context = context
     )
+
+    @Provides
+    @Singleton
+    fun provideAccountLocalDataSource(
+        accountCacheDao: AccountCacheDao
+    ): AccountLocalDataSource = AccountLocalDataSourceImpl(accountCacheDao)
 }

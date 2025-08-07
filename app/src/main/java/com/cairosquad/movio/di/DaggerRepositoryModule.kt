@@ -1,5 +1,6 @@
 package com.cairosquad.movio.di
 
+import com.cairosquad.domain.repository.AccountRepository
 import com.cairosquad.domain.repository.ArtistsRepository
 import com.cairosquad.domain.repository.LoginRepository
 import com.cairosquad.domain.repository.MoviesRepository
@@ -7,6 +8,7 @@ import com.cairosquad.domain.repository.OnboardingRepository
 import com.cairosquad.domain.repository.SearchRecommendationRepository
 import com.cairosquad.domain.repository.SearchRepository
 import com.cairosquad.domain.repository.SeriesRepository
+import com.cairosquad.repository.account.AccountRepositoryImpl
 import com.cairosquad.repository.artists.ArtistsRepositoryImpl
 import com.cairosquad.repository.login.LoginRepositoryImpl
 import com.cairosquad.repository.movie.MovieRepositoryImpl
@@ -65,4 +67,10 @@ abstract class RepositoryModule {
     abstract fun bindOnboardingRepository(
         impl: OnboardingRepositoryImpl
     ): OnboardingRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindAccountRepository(
+        impl: AccountRepositoryImpl
+    ): AccountRepository
 }

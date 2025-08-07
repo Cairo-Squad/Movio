@@ -3,12 +3,10 @@ package com.cairosquad.design_system.basic_component
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,7 +43,7 @@ fun TabRow(
     tabs: List<String>,
     selectedTabIndex: Int,
     onTabSelected: (Int) -> Unit,
-    scrollState: ScrollState,
+    scrollProgress: Float,
     tabColorWithNoScroll:Color,
     tabColorWithScroll:Color,
     indicatorColorWithScroll:Brush,
@@ -82,8 +80,6 @@ fun TabRow(
         animationSpec = tween(200)
     )
 
-    val scrollThresholdPx = with(density) { 275.dp.toPx() }
-    val scrollProgress = (scrollState.value / scrollThresholdPx).coerceIn(0f, 1f)
 
     val selectedTabTitle = tabs.getOrNull(selectedTabIndex)
     val indicatorBrush = if (selectedTabTitle == stringResource(com.cairosquad.design_system.R.string.categories)) {
@@ -114,7 +110,7 @@ fun TabRow(
         ) {
             tabs.forEachIndexed { index, title ->
                 val isSelected = selectedTabIndex == index
-                val isLightTheme = !isSystemInDarkTheme()
+                val isLightTheme = !Theme.isDark
 
                 val textColor by animateColorAsState(
                     targetValue = when {

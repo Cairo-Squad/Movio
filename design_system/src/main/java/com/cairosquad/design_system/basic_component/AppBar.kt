@@ -45,12 +45,12 @@ fun AppBar(
         modifier = modifier
             .fillMaxWidth()
             .height(48.dp)
+            .padding(vertical = 4.dp, horizontal = 16.dp)
             .shadow(
                 elevation = 12.dp,
                 ambientColor = Color(0x0FFFFFFF),
                 spotColor = Color(0x0FFFFFFF)
             )
-            .padding(vertical = 4.dp, horizontal = 16.dp)
     ) {
         if (onBackButtonClicked != null) {
             Icon(

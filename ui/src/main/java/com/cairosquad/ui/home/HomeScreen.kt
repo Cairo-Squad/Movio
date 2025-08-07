@@ -28,9 +28,7 @@ fun HomeScreen(
         screenState = screenState,
         listener = viewModel,
     )
-
 }
-
 
 private fun effectHandler(
     effect: HomeEffect,

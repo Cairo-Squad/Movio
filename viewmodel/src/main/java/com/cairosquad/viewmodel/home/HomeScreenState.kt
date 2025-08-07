@@ -1,10 +1,8 @@
 package com.cairosquad.viewmodel.home
 
-import androidx.compose.ui.res.stringResource
 import androidx.paging.PagingData
 import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.exception.ErrorStatus
-import com.cairosquad.viewmodel.see_all.SeeAllScreenState
 import com.cairosquad.viewmodel.util.MediaContentType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -13,12 +11,13 @@ data class HomeScreenState(
 
     val popularMovies: List<MediaUiState> = emptyList(),
     val popularSeries: List<MediaUiState> = emptyList(),
+    val profileImage: String = "",
 
-    val categoriesMedia: Flow<PagingData<HomeScreenState.MediaUiState>> = flowOf(PagingData.empty()),
+    val categoriesMedia: Flow<PagingData<MediaUiState>> = flowOf(PagingData.empty()),
 
     val sections: Map<MediaContentType, SectionUiState> = mapOf(),
 
-    val screenStatus: ScreenStatus = ScreenStatus.LOADING,
+    val dataRequestStatus: DateRequestStatus = DateRequestStatus.LOADING,
     val errorStatus: ErrorStatus? = null,
 
     val selectedGenreIndex: Int = 0,
@@ -52,12 +51,12 @@ data class HomeScreenState(
         companion object {
             val defaultGenre = GenreUiState(
                 id = null,
-                name ="",
+                name = "ALL GENRE",
             )
         }
     }
 
-    enum class ScreenStatus {
+    enum class DateRequestStatus {
         LOADING,
         SUCCESS,
         FAILED

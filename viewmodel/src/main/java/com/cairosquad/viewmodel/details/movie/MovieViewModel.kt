@@ -1,6 +1,7 @@
 package com.cairosquad.viewmodel.details.movie
 
 import com.cairosquad.domain.exception.MovioException
+import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.domain.usecase.LoginUseCase
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.entity.Artist
@@ -21,6 +22,7 @@ import kotlinx.coroutines.delay
 class MovieViewModel @AssistedInject constructor(
     private val movieUseCase: ManageMoviesUseCase,
     private val loginUseCase: LoginUseCase,
+    private val accountUseCase: AccountUseCase,
     @Assisted private val movieId: Long = 0
 ) : BaseViewModel<MovieScreenState, MovieEffect>(MovieScreenState()),
     MovieInteractionListener {
@@ -32,6 +34,7 @@ class MovieViewModel @AssistedInject constructor(
 
     init {
         loadMovieData(movieId)
+        addMovieToHistory(movieId)
     }
 
     private fun loadMovieData(movieId: Long) {
@@ -39,6 +42,14 @@ class MovieViewModel @AssistedInject constructor(
         getActors(movieId)
         getReviews(movieId)
         getSimilarMovies(movieId)
+    }
+
+    private fun addMovieToHistory(movieId: Long) {
+        tryToCall(
+            block = { accountUseCase.addMovieToHistory(movieId) },
+            onSuccess = {},
+            onError = {}
+        )
     }
 
     private fun getBasicDetails(movieId: Long) {
@@ -179,10 +190,24 @@ class MovieViewModel @AssistedInject constructor(
                 if (!authed) {
                     updateState { it.copy(isNoAccountBottomSheetOpen = true) }
                 } else {
-                    updateState { it.copy(isAddToListBottomSheetOpen = true) }
+                    loadMovieLists()
                 }
             },
             onError = {}
+        )
+    }
+
+    private fun loadMovieLists() {
+        tryToCall(
+            block = { accountUseCase.getMoviesLists(1) },
+            onSuccess = { mediaLists ->
+                val uiLists = mediaLists.map { list -> list.toUiState() }
+                updateState {
+                    it.copy(isAddToListBottomSheetOpen = true, moviesLists = uiLists)
+                }
+            },
+            onError = {},
+            dispatcher = Dispatchers.Main
         )
     }
 

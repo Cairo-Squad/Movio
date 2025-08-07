@@ -23,7 +23,6 @@ import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfMoviesOfArt
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfNowPlayingMovies
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfPersonalizedMovies
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfPopularMovies
-import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSearchedMovies
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSimilarMovies
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfSuggestedMovies
 import com.cairosquad.repository.utils.sharedDto.local.getCacheCodeOfTopRatedMovies
@@ -134,10 +133,11 @@ class MovieRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getMoviesByQuery(query: String, page: Int): List<Movie> {
-        return getMovies(
-            remoteFetcher = { moviesRemoteDataSource.getMoviesByQuery(query, page) },
-            cacheCode = getCacheCodeOfSearchedMovies(query, page)
-        )
+        return tryToCall {
+            val genres = moviesRemoteDataSource.getMoviesGenres().map { it.toEntity() }
+            moviesRemoteDataSource.getMoviesByQuery(query, page)
+                .map { it.toEntity(genres) }
+        }
     }
 
     override suspend fun getMoviesOfArtist(artistId: Long): List<Movie> {
@@ -217,6 +217,6 @@ class MovieRepositoryImpl @Inject constructor(
     }
 
     private companion object {
-        private const val CACHE_EXPIRATION_MILLIS = 3_600_000
+        private const val CACHE_EXPIRATION_MILLIS = 86_400_000
     }
 }

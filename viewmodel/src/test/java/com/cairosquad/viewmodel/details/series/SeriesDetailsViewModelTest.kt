@@ -3,6 +3,7 @@ package com.cairosquad.viewmodel.details.series
 import app.cash.turbine.test
 import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.exception.NetworkException
+import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.domain.usecase.LoginUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Series
@@ -37,6 +38,7 @@ class SeriesDetailsViewModelTest {
 	private val seriesId = 123L
 	private val manageSeriesUseCase: ManageSeriesUseCase = mockk(relaxed = true)
 	private val loginUseCase: LoginUseCase = mockk(relaxed = true)
+	private val accountUseCase: AccountUseCase = mockk(relaxed = true)
 
 	private lateinit var viewModel: SeriesDetailsViewModel
 
@@ -47,7 +49,7 @@ class SeriesDetailsViewModelTest {
 		mockkStatic(Dispatchers::class)
 		every { Dispatchers.IO } returns testDispatcher
 
-		viewModel = SeriesDetailsViewModel(manageSeriesUseCase, loginUseCase, seriesId)
+		viewModel = SeriesDetailsViewModel(manageSeriesUseCase, loginUseCase, accountUseCase, seriesId)
 	}
 
 	@After

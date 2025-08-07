@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
@@ -54,6 +55,9 @@ fun SearchResultContent(
     }
 
     val selectedTabIndex = state.selectedTabIndex
+    val density = LocalDensity.current
+    val scrollThresholdPx = with(density) { 275.dp.toPx() }
+    val progress = (scrollState.value / scrollThresholdPx).coerceIn(0f, 1f)
 
     Column(
         modifier = modifier
@@ -87,7 +91,7 @@ fun SearchResultContent(
             ),
             selectedTabIndex = selectedTabIndex,
             onTabSelected = { listener.onTabSelected(it) },
-            scrollState = scrollState,
+            scrollProgress = progress,
             tabColorWithScroll = Theme.color.brand.onPrimaryContainer,
             tabColorWithNoScroll = Theme.color.brand.onPrimaryContainer,
             indicatorColorWithNoScroll = Theme.color.gradiant.horizontalCategoriesGradient,

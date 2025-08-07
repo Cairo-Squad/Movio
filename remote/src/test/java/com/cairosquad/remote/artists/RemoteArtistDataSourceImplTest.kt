@@ -2,6 +2,7 @@ package com.cairosquad.remote.artists
 
 import com.cairosquad.repository.artists.data_source.remote.dto.ArtistRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.CreditResponse
+import com.cairosquad.repository.utils.sharedDto.remote.ResultResponse
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -32,6 +33,26 @@ class RemoteArtistDataSourceImplTest {
 
         // Then
         assertThat(result).isEqualTo(expectedArtist)
+    }
+
+    @Test
+    fun `getArtistByQuery SHOULD return list of artist`() = runTest {
+        val expectedArtist = listOf(ArtistRemoteDto(id = 123, name = "Cillian Murphy"))
+        coEvery { apiService.getArtistsByQuery("Cillian", 1) } returns ResultResponse<ArtistRemoteDto>(results = expectedArtist)
+
+         val result = dataSource.getArtistsByQuery("Cillian", 1)
+
+        assertThat(result).isEqualTo(expectedArtist)
+    }
+
+    @Test
+    fun `getArtistByQuery SHOULD return empty list if id is null`() = runTest {
+        val expectedArtist = listOf(ArtistRemoteDto(id = null, name = "Cillian Murphy"))
+        coEvery { apiService.getArtistsByQuery("Cillian", 1) } returns ResultResponse<ArtistRemoteDto>(results = expectedArtist)
+
+        val result = dataSource.getArtistsByQuery("Cillian", 1)
+
+        assertThat(result).isEqualTo(emptyList<ArtistRemoteDto>())
     }
 
     @Test

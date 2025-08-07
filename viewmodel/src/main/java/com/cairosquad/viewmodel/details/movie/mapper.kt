@@ -1,6 +1,7 @@
 package com.cairosquad.viewmodel.details.movie
 
 import com.cairosquad.entity.Artist
+import com.cairosquad.entity.MediaList
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Review
 import com.cairosquad.viewmodel.util.TimeUtil
@@ -31,4 +32,9 @@ fun Review.toReviewUiState() = MovieScreenState.ReviewUiState(
     rating = rating.roundToFirstDecimalPlace(),
     date = TimeUtil.convertLongToNamedDate(date),
     description = description
+)
+
+fun MediaList.toUiState() = MovieScreenState.MoviesList(
+    id = id,
+    name = name
 )
