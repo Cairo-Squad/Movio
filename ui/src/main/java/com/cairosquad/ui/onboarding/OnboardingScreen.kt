@@ -61,7 +61,9 @@ private fun OnboardingContent(
     ) {
         Spacer(modifier = Modifier.weight(0.71f))
         Image(
-            painter = painterResource(R.drawable.im_onboarding),
+            painter = if (Theme.isDark) painterResource(R.drawable.im_onboarding) else painterResource(
+                R.drawable.im_onboarding_light
+            ),
             contentDescription = null,
             contentScale = ContentScale.FillHeight,
             modifier = Modifier
