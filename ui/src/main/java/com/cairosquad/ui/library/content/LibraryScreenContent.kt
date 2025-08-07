@@ -146,6 +146,7 @@ private fun ListsSection(
                     } else {
                         items(screenState.movieLists) {
                             ListContainer(
+                                modifier = Modifier.width(158.dp),
                                 listName = it.name,
                                 numberOfItems = it.mediaCount,
                                 onListClicked = { listener.onListClicked(it.id) }
@@ -153,6 +154,7 @@ private fun ListsSection(
                         }
                         items(screenState.seriesLists) {
                             ListContainer(
+                                modifier = Modifier.width(158.dp),
                                 listName = it.name,
                                 numberOfItems = it.mediaCount,
                                 onListClicked = { listener.onListClicked(it.id) }

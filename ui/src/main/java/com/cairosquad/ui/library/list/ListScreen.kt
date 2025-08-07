@@ -21,10 +21,10 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.basic_component.AppBar
-import com.cairosquad.design_system.basic_component.SwipeToDeleteContainer
 import com.cairosquad.design_system.modifier.dropShadow
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
+import com.cairosquad.ui.movio_component.SwipeToDeleteContainer
 import com.cairosquad.ui.movio_component.TrendingMovieCard
 
 @Composable
@@ -64,25 +64,24 @@ private fun ListScreenContent() {
                     }
                 )
         )
+        AppBar(
+            modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars),
+            title = "Watch Later",
+            onBackButtonClicked = { },
+            onShareButtonClicked = null,
+            onFavoriteButtonClicked = null
+        )
         LazyColumn(
+            modifier = Modifier.padding(top = 48.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(vertical = 16.dp)
         ) {
-            stickyHeader {
-                AppBar(
-                    modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars),
-                    title = "Watch Later",
-                    onBackButtonClicked = { },
-                    onShareButtonClicked = null,
-                    onFavoriteButtonClicked = null
-                )
-            }
             items(
                 10,
                 key = { it -> it }
             ) {
                 SwipeToDeleteContainer(
-                    onRemove = {},
+                    onDelete = {},
                 ) {
                     TrendingMovieCard(
                         modifier = Modifier
@@ -99,7 +98,7 @@ private fun ListScreenContent() {
                 key = { it -> it }
             ) {
                 SwipeToDeleteContainer(
-                    onRemove = {},
+                    onDelete = {},
                 ) {
                     TrendingMovieCard(
                         modifier = Modifier

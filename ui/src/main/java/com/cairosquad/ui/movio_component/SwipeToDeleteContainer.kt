@@ -63,7 +63,7 @@ fun SwipeToDeleteContainer(
                     (-swipeOffset.value).coerceAtLeast(0f).toDp()
                 }) // animate width
                 .fillMaxHeight()
-                .padding(vertical = 8.dp, horizontal = 16.dp),
+                .padding(horizontal = 16.dp),
             contentAlignment = Alignment.Center
         ) {
             DeleteComponent(
@@ -89,14 +89,14 @@ fun SwipeToDeleteContainer(
                     },
                     onDragStopped = {
                         val shouldDelete = if (!isRtl) {
-                            swipeOffset.value < -cardWidth.floatValue * 0.2f
+                            swipeOffset.value < -cardWidth.floatValue * 0.075f
                         } else {
-                            swipeOffset.value > cardWidth.floatValue * 0.2f
+                            swipeOffset.value > cardWidth.floatValue * 0.075f
                         }
 
                         coroutineScope.launch {
                             if (shouldDelete) {
-                                swipeOffset.animateTo(if (!isRtl) -maxSwipeDistance else maxSwipeDistance)
+                                swipeOffset.animateTo(if (!isRtl) -maxSwipeDistance else -maxSwipeDistance)
                                 onDelete()
                             } else {
                                 swipeOffset.animateTo(0f)
