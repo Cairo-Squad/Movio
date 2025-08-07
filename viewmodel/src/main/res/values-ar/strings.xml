@@ -12,5 +12,7 @@
     <string name="sorting_type_all">الكل</string>
     <string name="popularity">الأشهر</string>
     <string name="latest">الاحدث</string>
+    <string name="dark_mode">Dark</string>
+    <string name="light_mode">Light</string>
 
 </resources>

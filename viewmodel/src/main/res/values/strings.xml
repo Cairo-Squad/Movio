@@ -12,4 +12,6 @@
     <string name="sorting_type_all">All</string>
     <string name="popularity">Popularity</string>
     <string name="latest">Latest</string>
+    <string name="dark_mode">Dark</string>
+    <string name="light_mode">Light</string>
 </resources>
