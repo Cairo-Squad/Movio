@@ -65,4 +65,8 @@
     <string name="log_in_to_unlock_your_personal_library">Log in to unlock your personal library</string>
     <string name="access_your_watch_history_favorites_and_watchlist_all_in_one_place">Access your watch history, favorites, and watchlist  all in one place.</string>
     <string name="history">History</string>
+    <string name="open_with_space_end">"Open "</string>
+    <string name="movio">Movio</string>
+    <string name="and_let_the_noise_fade_away">and let the noise fade away.</string>
+    <string name="swipe_pick_dive_in_and_be_the_star_of_the_scene">Swipe, pick, dive in… and be the star of the scene.</string>
 </resources>
