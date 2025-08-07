@@ -30,6 +30,7 @@ class ThemeDataStoreSourceImpl @Inject constructor(
 
     override fun getTheme(): Flow<String> {
         return dataStore.data.map { preferences ->
+            // Always default to dark theme
             preferences[THEME_KEY] ?: "dark"
         }
     }
