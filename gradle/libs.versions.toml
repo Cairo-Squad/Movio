@@ -47,6 +47,8 @@ firebaseCrashlytics = "20.0.0"
 ksp = "2.2.0-2.0.2"
 composeBom = "2024.09.00"
 paging_version = "3.3.6"
+datastorePreferences = "1.1.7"
+datastoreCore = "1.1.7"
 
 [libraries]
 # android foundation
@@ -135,6 +137,8 @@ androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
+androidx-datastore-core = { group = "androidx.datastore", name = "datastore-core", version.ref = "datastoreCore" }
 
 
 [plugins]

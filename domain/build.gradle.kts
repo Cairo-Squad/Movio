@@ -27,4 +27,5 @@ dependencies {
     // Dagger
     implementation(libs.dagger)
     kapt(libs.dagger.compiler)
+    implementation(libs.kotlinx.coroutines.core)
 }

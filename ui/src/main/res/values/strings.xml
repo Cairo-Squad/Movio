@@ -58,11 +58,26 @@
     <string name="add_your_overall_rating_for_this">Add your overall rating for this %1$s</string>
     <string name="share_via">Share via</string>
     <string name="season">Season %1$d</string>
+    <string name="log_in_to_unlock_your_personal_library">Log in to unlock your personal library</string>
+    <string name="access_your_ratings_and_have_the_ability_to_change_the_theme_and_language">Access your ratings and have the ability to change the theme and language.</string>
+    <string name="my_ratings">My Ratings</string>
+    <string name="theme">Theme</string>
+    <string name="language">Language</string>
     <string name="favorite">Favorite</string>
     <string name="this_list_has_empty">This list has empty</string>
     <string name="library">Library</string>
     <string name="watchlist">Watchlist</string>
-    <string name="log_in_to_unlock_your_personal_library">Log in to unlock your personal library</string>
     <string name="access_your_watch_history_favorites_and_watchlist_all_in_one_place">Access your watch history, favorites, and watchlist  all in one place.</string>
     <string name="history">History</string>
+    <string name="choose_theme">Choose Theme</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="app_version">App Version</string>
+    <string name="movio_logo">Movio Logo</string>
+    <string name="confirm_logout">Confirm Logout</string>
+    <string name="you_ll_lose_access_to_your_library_favorites_and_history_until_you_sign_back_in">You’ll lose access to your library, favorites, and history until you sign back in.</string>
+    <string name="logout">Logout</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="light_mode">Light Mode</string>
+    <string name="confirm">Confirm</string>
+    <string name="success_check_mark">success check mark</string>
 </resources>
