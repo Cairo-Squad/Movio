@@ -46,34 +46,34 @@ fun LibraryScreenContent(
     listener: LibraryInteractionListener
 ) {
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .background(Theme.color.surfaces.surface)
-    ) {
-        stickyHeader {
-            AppBar(
-                modifier = Modifier.background(Theme.color.surfaces.surface),
-                title = stringResource(com.cairosquad.ui.R.string.library)
-            )
-        }
-        when (screenState.screenStatus) {
-            LibraryScreenState.SectionStatus.LOADING -> {}
-            LibraryScreenState.SectionStatus.SUCCESS -> {
-                if (screenState.isUserAuthed) {
-                    item { ListsSection(listener, screenState) }
-                    item { FavoriteSection(screenState, listener) }
-                    item { HistorySection(screenState, listener) }
+    Column {
+        AppBar(
+            modifier = Modifier.background(Theme.color.surfaces.surface),
+            title = stringResource(com.cairosquad.ui.R.string.library)
+        )
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(WindowInsets.statusBars)
+                .background(Theme.color.surfaces.surface)
+        ) {
+            when (screenState.screenStatus) {
+                LibraryScreenState.SectionStatus.LOADING -> {}
+                LibraryScreenState.SectionStatus.SUCCESS -> {
+                    if (screenState.isUserAuthed) {
+                        item { ListsSection(listener, screenState) }
+                        item { FavoriteSection(screenState, listener) }
+                        item { HistorySection(screenState, listener) }
+                    }
                 }
-            }
 
-            LibraryScreenState.SectionStatus.ERROR -> {
-                item {
-                    LibraryFailContent(
-                        screenState.errorStatus,
-                        listener = listener
-                    )
+                LibraryScreenState.SectionStatus.ERROR -> {
+                    item {
+                        LibraryFailContent(
+                            screenState.errorStatus,
+                            listener = listener
+                        )
+                    }
                 }
             }
         }

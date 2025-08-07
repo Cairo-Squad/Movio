@@ -122,7 +122,7 @@ private fun ViewAllListsContent(
         Column {
             AppBar(
                 modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars),
-                title = "Watch Later",
+                title = stringResource(com.cairosquad.ui.R.string.watchlist),
                 onBackButtonClicked = listener::onNavigateBack,
                 onShareButtonClicked = null,
                 onFavoriteButtonClicked = null
@@ -135,13 +135,10 @@ private fun ViewAllListsContent(
                 ViewAllListsScreenState.SectionStatus.SUCCESS -> {
                     if (moviesLists.itemCount != 0 || seriesLists.itemCount != 0){
                         LazyVerticalGrid(
-                            modifier = Modifier
-                                .windowInsetsPadding(WindowInsets.statusBars)
-                                .padding(top = 12.dp),
                             columns = GridCells.Adaptive(minSize = 158.dp),
                             verticalArrangement = Arrangement.spacedBy(12.dp),
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
-                            contentPadding = PaddingValues(16.dp)
+                            contentPadding = PaddingValues(horizontal =  16.dp, vertical = 12.dp)
                         ) {
                             items(
                                 moviesLists.itemCount
