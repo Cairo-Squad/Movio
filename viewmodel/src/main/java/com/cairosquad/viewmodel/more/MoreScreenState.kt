@@ -1,5 +1,7 @@
 package com.cairosquad.viewmodel.more
 
+import androidx.annotation.StringRes
+import com.cairosquad.viewmodel.R
 
 data class MoreScreenState(
     val isThemeBottomSheetOpen : Boolean = false,
@@ -12,19 +14,10 @@ data class MoreScreenState(
     val appVersion : String = "",
     val isLogoutButtonVisible : Boolean = false
 ){
-    enum class Theme {
-        DARK,LIGHT;
-        companion object{
-            //create function to convert theme to string
-            fun Theme.toThemeString(): String {
-                return when (this) {
-                    DARK -> "Dark"
-                    LIGHT -> "Light"
-                }
-            }
-        }
+    enum class Theme(@StringRes val stringResId: Int) {
+        DARK(R.string.dark_mode),
+        LIGHT(R.string.light_mode);
     }
 
     data class Language(val code: String, val name: String)
-
 }
