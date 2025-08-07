@@ -105,4 +105,8 @@ class AccountRepositoryImpl @Inject constructor(
         }
         return Pair(emptyList(), emptyList())
     }
+
+    override fun removeAccountDetails() {
+        accountLocalDataSource.removeAccount()
+    }
 }
