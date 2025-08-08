@@ -18,7 +18,7 @@
     <string name="series_favorite_remove_fail">Item could not be deleted.</string>
     <string name="movie_favorite_success">Item has been added.</string>
     <string name="movie_favorite_fail">Item could not be added.</string>
-    <string name="movie_favorite_remove_success">Item has been deleted.</string>
+    <string name="movie_favorite_remove_success">remove from favourites successfully.</string>
     <string name="movie_favorite_remove_fail">Item could not be deleted.</string>
     <string name="added_to_list">Added to list</string>
     <string name="movie_already_in_list">Movie already in list</string>

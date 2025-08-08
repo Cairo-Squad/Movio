@@ -190,7 +190,7 @@ class MovieViewModel @AssistedInject constructor(
                 if (!authed) {
                     updateState { it.copy(isNoAccountBottomSheetOpen = true) }
                 } else {
-                    if (screenState.value.isFavorite) {
+                    if(screenState.value.isFavorite) {
                         removeFromFavorite(movieId)
                     } else {
                         addToFavorite(movieId)
