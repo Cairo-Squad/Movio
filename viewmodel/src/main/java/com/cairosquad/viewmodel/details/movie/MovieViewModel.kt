@@ -3,6 +3,7 @@ package com.cairosquad.viewmodel.details.movie
 import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.AccountUseCase
+import com.cairosquad.domain.usecase.GetRatedItemsUseCase
 import com.cairosquad.domain.usecase.LoginUseCase
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.entity.Artist
@@ -26,6 +27,7 @@ class MovieViewModel @AssistedInject constructor(
     private val movieUseCase: ManageMoviesUseCase,
     private val loginUseCase: LoginUseCase,
     private val accountUseCase: AccountUseCase,
+    private val getRatedItemsUseCase: GetRatedItemsUseCase,
     @Assisted private val movieId: Long = 0
 ) : BaseViewModel<MovieScreenState, MovieEffect>(MovieScreenState()),
     MovieInteractionListener {
@@ -46,6 +48,21 @@ class MovieViewModel @AssistedInject constructor(
         getReviews(movieId)
         getSimilarMovies(movieId)
         getMovieInFavorite(movieId)
+        getMovieIsRated()
+    }
+
+    private fun getMovieIsRated() {
+        tryToCall(
+            block = {
+                    if (loginUseCase.isUserLoggedIn())
+                        getRatedItemsUseCase.execute(1).first.any { it.id == movieId }
+                    else false
+                },
+            onSuccess = { isRated ->
+                updateState { it.copy(isRated = isRated) }
+            },
+            onError = {  }
+        )
     }
 
     private fun addMovieToHistory(movieId: Long) {
