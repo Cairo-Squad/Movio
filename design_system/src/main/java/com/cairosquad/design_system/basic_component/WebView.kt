@@ -7,30 +7,22 @@ import android.net.Uri
 import android.util.Log
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.viewinterop.AndroidView
-import com.cairosquad.design_system.R
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun WebView(
-    webPageUrl: String,
-    modifier: Modifier = Modifier,
-    onBackPressed: (() -> Unit)? = null,
-    onBlockedNavigation: (() -> Unit)? = null
-
+    webPageUrl: String, modifier: Modifier = Modifier, onBackPressed: (() -> Unit)? = null
 ) {
     var webView by remember { mutableStateOf<WebView?>(null) }
-    var snackBarMessage by remember { mutableStateOf<String?>(null) }
 
     BackHandler(enabled = true) {
         if (webView?.canGoBack() == true) {
@@ -46,15 +38,15 @@ fun WebView(
                 settings.javaScriptEnabled = true
                 settings.domStorageEnabled = true
                 webViewClient = object : WebViewClient() {
-                    override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                        val uri = Uri.parse(url)
-                        val isTmdbDomain = uri.host == "www.themoviedb.org"
-                        val allowedPaths = listOf("signup", "reset-password")
-                        val isAllowed = isTmdbDomain && (uri.path in allowedPaths)
+                    override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+                        val uri = request.url
+                        val isTmdbDomain = uri.host?.contains("themoviedb.org") == true
 
-                        if (!isAllowed) {
-                            Log.d("WebView", "Navigation blocked: $url")
+                        return if (isTmdbDomain) {
+                            false
+                        } else {
                             onBlockedNavigation?.invoke()
+                            true
                         }
 
                         return !isAllowed // true = block, false = allow
