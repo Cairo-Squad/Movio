@@ -48,6 +48,7 @@ import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.viewmodel.library.view_all_favorite.ViewAllFavoriteEffect
 import com.cairosquad.viewmodel.library.view_all_favorite.ViewAllFavoriteScreenState
 import com.cairosquad.viewmodel.library.view_all_favorite.ViewAllFavoriteViewModel
+import java.util.Locale
 
 @Composable
 fun ViewAllFavorite(
@@ -103,7 +104,7 @@ fun ViewAllFavorite(
                             .padding(horizontal = 8.dp, vertical = 4.dp)
                     ) {
                         Text(
-                            text = "Undo",
+                            text = stringResource(R.string.undo),
                             style = Theme.textStyle.label.smallRegular14,
                             color = Theme.color.brand.primary
                         )
@@ -177,7 +178,7 @@ fun ViewAllFavoriteContent(
                             imgUrl = movie.posterPath,
                             movieTitle = movie.title,
                             movieCategory = movie.trailerPath,
-                            rating = movie.rating.toString()
+                            rating = String.format(Locale.getDefault(), "%.1f", movie.rating)
                         )
                     }
                 }
@@ -195,7 +196,7 @@ fun ViewAllFavoriteContent(
                             imgUrl = series.posterPath,
                             movieTitle = series.title,
                             movieCategory = series.trailerPath,
-                            rating = series.rating.toString()
+                            rating = String.format(Locale.getDefault(), "%.1f", series.rating)
                         )
                     }
                 }

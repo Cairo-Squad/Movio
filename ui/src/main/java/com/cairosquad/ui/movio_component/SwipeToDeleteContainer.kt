@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -58,12 +57,17 @@ fun SwipeToDeleteContainer(
     ) {
         Box(
             modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .width(with(LocalDensity.current) {
-                    (-swipeOffset.value).coerceAtLeast(0f).toDp()
-                }) // animate width
-                .fillMaxHeight()
-                .padding(horizontal = 16.dp),
+                .align( Alignment.CenterEnd)
+                .width(
+                    with(LocalDensity.current) {
+                        if (!isRtl) {
+                            (-swipeOffset.value).coerceAtLeast(0f).toDp()
+                        } else {
+                            swipeOffset.value.coerceAtLeast(0f).toDp()
+                        }
+                    }
+                )
+                .fillMaxHeight(),
             contentAlignment = Alignment.Center
         ) {
             DeleteComponent(
@@ -75,14 +79,17 @@ fun SwipeToDeleteContainer(
 
         Box(
             modifier = Modifier
-                .offset { IntOffset(swipeOffset.value.roundToInt(), 0) }
+                .offset { IntOffset(if(!isRtl)swipeOffset.value.roundToInt() else -swipeOffset.value.roundToInt(), 0) }
                 .draggable(
                     orientation = Orientation.Horizontal,
                     state = rememberDraggableState { delta ->
-                        val newOffset = (swipeOffset.value + delta).coerceIn(
-                            if (!isRtl) -maxSwipeDistance else 0f,
-                            if (!isRtl) 0f else -maxSwipeDistance
-                        )
+                        val (min, max) = if (!isRtl) {
+                            -maxSwipeDistance to 0f
+                        } else {
+                            0f to maxSwipeDistance
+                        }
+
+                        val newOffset = (swipeOffset.value + delta).coerceIn(min, max)
                         coroutineScope.launch {
                             swipeOffset.snapTo(newOffset)
                         }
@@ -96,7 +103,7 @@ fun SwipeToDeleteContainer(
 
                         coroutineScope.launch {
                             if (shouldDelete) {
-                                swipeOffset.animateTo(if (!isRtl) -maxSwipeDistance else -maxSwipeDistance)
+                                swipeOffset.animateTo(if (!isRtl) -maxSwipeDistance else maxSwipeDistance)
                                 onDelete()
                             } else {
                                 swipeOffset.animateTo(0f)
@@ -110,7 +117,6 @@ fun SwipeToDeleteContainer(
         }
     }
 }
-
 
 @Composable
 private fun DeleteComponent(modifier: Modifier = Modifier) {
