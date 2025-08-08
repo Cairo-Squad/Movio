@@ -86,6 +86,10 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 
+    // Data Store
+    implementation(libs.bundles.datastore.preferences)
+
+
     implementation(project(":repository"))
     testImplementation(kotlin("test"))
 }

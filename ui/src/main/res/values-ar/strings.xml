@@ -82,4 +82,8 @@
     <string name="success_check_mark">علامة نجاح</string>
     <string name="no_ratings_yet">لا توجد تقييمات حتى الآن!</string>
     <string name="no_ratings_found_description">لم تقم بتقييم أي شيء حتى الآن. ابدأ بالاستكشاف وشارك آراءك!</string>
+    <string name="open_with_space_end">افتح</string>
+    <string name="movio">موفيو</string>
+    <string name="and_let_the_noise_fade_away">ودع صخب الحياة يتلاشى.</string>
+    <string name="swipe_pick_dive_in_and_be_the_star_of_the_scene">اسحب, اختر، غُص.. وكن نجم المشهد.</string>
 </resources>

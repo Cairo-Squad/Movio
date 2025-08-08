@@ -653,7 +653,11 @@ class SearchViewModelTest {
         val artist = Artist(
             id = 1,
             name = "Artist",
-            photoPath = "/img.jpg"
+            photoPath = "/img.jpg",
+            country = "",
+            birthDate = 0L,
+            biography = "",
+            department = ""
         )
     }
 }

@@ -20,7 +20,11 @@ class SeriesDetailsUiStateMapperTest {
         val artist = Artist(
             id = 1L,
             name = "John Doe",
-            photoPath = "/photo.jpg"
+            photoPath = "/photo.jpg",
+            country = "",
+            birthDate = 0L,
+            biography = "",
+            department = ""
         )
 
         val uiState = artist.toUiState()

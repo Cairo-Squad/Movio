@@ -22,8 +22,7 @@ android {
     }
 
     val properties = Properties()
-    properties.load(rootProject.file("secret.properties").inputStream())
-    properties.getProperty("API_KEY")
+    properties.load(rootProject.file("local.properties").inputStream())
 
     buildTypes {
         release {

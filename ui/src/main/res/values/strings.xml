@@ -82,4 +82,8 @@
     <string name="success_check_mark">success check mark</string>
     <string name="no_ratings_yet">No Ratings Yet!</string>
     <string name="no_ratings_found_description">You haven’t rated anything yet. Start exploring and share your thoughts!</string>
+    <string name="open_with_space_end">Open</string>
+    <string name="movio">Movio</string>
+    <string name="and_let_the_noise_fade_away">and let the noise fade away.</string>
+    <string name="swipe_pick_dive_in_and_be_the_star_of_the_scene">Swipe, pick, dive in… and be the star of the scene.</string>
 </resources>

@@ -29,7 +29,7 @@ import com.cairosquad.ui.library.list.ListScreen
 import com.cairosquad.ui.library.view_all.ViewAllFavorite
 import com.cairosquad.ui.library.view_all.ViewAllHistory
 import com.cairosquad.ui.library.view_all.ViewAllLists
-import com.cairosquad.ui.rated.MyRatingsScreen
+import com.cairosquad.ui.onboarding.OnboardingScreen
 import com.cairosquad.ui.search.ForYouScreen
 import com.cairosquad.ui.see_all_screen.SeeAllScreen
 import com.cairosquad.ui.splash.SplashScreen
@@ -58,9 +58,27 @@ fun AppNavigation(
                 SplashScreen(
                     onNavigateNext = {
                         coroutineScope.launch {
+                            val secondRoute = if (authGate.isUserLoggedIn()) AppRoute else LoginRoute
+                            val firstRoute = if (authGate.isOnboardingStateComplete()) secondRoute else OnboardingRoute
+                            navController.navigate(firstRoute) {
+                                popUpTo(SplashRoute) {
+                                    inclusive = true
+                                }
+
+                                launchSingleTop = true
+                            }
+                        }
+                    }
+                )
+            }
+
+            composable<OnboardingRoute> {
+                OnboardingScreen(
+                    navigateToAuthOrHome = {
+                        coroutineScope.launch {
                             val route = if (authGate.isUserLoggedIn()) AppRoute else LoginRoute
                             navController.navigate(route) {
-                                popUpTo(SplashRoute) {
+                                popUpTo(OnboardingRoute) {
                                     inclusive = true
                                 }
 
@@ -164,10 +182,6 @@ fun AppNavigation(
                     listId = backStackEntry.toRoute<ListRoute>().listId
                 )
             }
-            composable<MyRatingsRoute> { backStackEntry ->
-                MyRatingsScreen()
-            }
-
         }
     }
 }
