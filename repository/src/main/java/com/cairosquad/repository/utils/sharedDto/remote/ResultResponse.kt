@@ -22,3 +22,10 @@ data class GenreResponse(
     @SerialName("genres")
     val genres: List<GenreDto?>? = null,
 )
+
+@Serializable
+data class StatusResponse(
+    @SerialName("status_code") val statusCode: Int,
+    @SerialName("status_message") val statusMessage: String
+)
+
