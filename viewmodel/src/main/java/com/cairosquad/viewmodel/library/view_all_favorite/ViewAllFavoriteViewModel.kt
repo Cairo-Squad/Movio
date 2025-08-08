@@ -120,6 +120,12 @@ class ViewAllFavoriteViewModel @Inject constructor(
                         snackMessageId = R.string.movie_favorite_remove_fail
                     )
                 }
+            },
+            onEnd = {
+                delay(2000)
+                updateState {
+                    it.copy(showSnackBar = false)
+                }
             }
         )
     }
@@ -152,6 +158,12 @@ class ViewAllFavoriteViewModel @Inject constructor(
                         isProcessSuccess = false,
                         snackMessageId = R.string.series_favorite_remove_fail
                     )
+                }
+            },
+            onEnd = {
+                delay(2000)
+                updateState {
+                    it.copy(showSnackBar = false)
                 }
             }
         )
@@ -199,7 +211,7 @@ class ViewAllFavoriteViewModel @Inject constructor(
                         updateState {
                             it.copy(
                                 deletedItems = it.deletedItems.dropLast(1),
-                                deletedMoviesIds = it.deletedMoviesIds.dropLast(1),
+                                deletedSeriesIds = it.deletedSeriesIds.dropLast(1),
                                 showSnackBar = false
                             )
                         }
