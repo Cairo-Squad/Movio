@@ -1,6 +1,5 @@
 package com.cairosquad.repository.account
 
-import android.util.Log
 import com.cairosquad.domain.repository.AccountRepository
 import com.cairosquad.entity.Account
 import com.cairosquad.entity.MediaList
@@ -65,9 +64,7 @@ class AccountRepositoryImpl @Inject constructor(
         page: Int
     ): List<Movie> {
         accountLocalDataSource.getAccount().also {  accountId ->
-            val asd =  accountRemoteDataSource.getMoviesOfList(listId, page).map { it.toEntity() }
-            Log.d("REmote lists", "getMoviesOfList: Repository $asd")
-            return asd
+            return  accountRemoteDataSource.getMoviesOfList(listId, page).map { it.toEntity() }
         }
     }
 
@@ -145,5 +142,9 @@ class AccountRepositoryImpl @Inject constructor(
 
     override suspend fun createList(listName: String) {
         accountRemoteDataSource.createList(listName)
+    }
+
+    override suspend fun removeMovieFromList(listId: Long, movieId: Long) {
+        accountRemoteDataSource.removeMovieFromList(listId, movieId)
     }
 }

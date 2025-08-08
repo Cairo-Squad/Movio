@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBars
@@ -40,6 +41,7 @@ import com.cairosquad.design_system.basic_component.Text
 import com.cairosquad.design_system.modifier.dropShadow
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.R
+import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.ui.movio_component.SwipeToDeleteContainer
 import com.cairosquad.ui.movio_component.TrendingMovieCard
 import com.cairosquad.ui.navigation.LocalNavController
@@ -158,48 +160,60 @@ fun ViewAllFavoriteContent(
                 onShareButtonClicked = null,
                 onFavoriteButtonClicked = null
             )
-            LazyColumn(
-                modifier = Modifier.padding(top = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(vertical = 16.dp, horizontal = 16.dp)
-            ) {
+            if (uiState.movies.isNotEmpty() || uiState.series.isNotEmpty()) {
+                LazyColumn(
+                    modifier = Modifier.padding(top = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(vertical = 16.dp, horizontal = 16.dp)
+                ) {
 
-                items(
-                    uiState.movies,
-                    key = { "${it.id} + movie" }
-                ) { movie ->
-                    SwipeToDeleteContainer(
-                        modifier = Modifier.animateItem(tween(200)),
-                        onDelete = { listener.onMovieDelete(movie.id) },
-                    ) {
-                        TrendingMovieCard(
-                            modifier = Modifier
-                                .clickable(onClick = { listener.onMovieClicked(movie.id) }),
-                            imgUrl = movie.posterPath,
-                            movieTitle = movie.title,
-                            movieCategory = movie.trailerPath,
-                            rating = String.format(Locale.getDefault(), "%.1f", movie.rating)
-                        )
+                    items(
+                        uiState.movies,
+                        key = { "${it.id} + movie" }
+                    ) { movie ->
+                        SwipeToDeleteContainer(
+                            modifier = Modifier.animateItem(tween(200)),
+                            onDelete = { listener.onMovieDelete(movie.id) },
+                        ) {
+                            TrendingMovieCard(
+                                modifier = Modifier
+                                    .clickable(onClick = { listener.onMovieClicked(movie.id) }),
+                                imgUrl = movie.posterPath,
+                                movieTitle = movie.title,
+                                movieCategory = movie.trailerPath,
+                                rating = String.format(Locale.getDefault(), "%.1f", movie.rating)
+                            )
+                        }
+                    }
+                    items(
+                        uiState.series,
+                        key = { "${it.id} + series" }
+                    ) { series ->
+                        SwipeToDeleteContainer(
+                            modifier = Modifier.animateItem(tween(200)),
+                            onDelete = { listener.onSeriesDelete(series.id) },
+                        ) {
+                            TrendingMovieCard(
+                                modifier = Modifier
+                                    .clickable(onClick = { listener.onSeriesDelete(series.id) }),
+                                imgUrl = series.posterPath,
+                                movieTitle = series.title,
+                                movieCategory = series.trailerPath,
+                                rating = String.format(Locale.getDefault(), "%.1f", series.rating)
+                            )
+                        }
                     }
                 }
-                items(
-                    uiState.series,
-                    key = { "${it.id} + series" }
-                ) { series ->
-                    SwipeToDeleteContainer(
-                        modifier = Modifier.animateItem(tween(200)),
-                        onDelete = { listener.onSeriesDelete(series.id) },
-                    ) {
-                        TrendingMovieCard(
-                            modifier = Modifier
-                                .clickable(onClick = { listener.onSeriesDelete(series.id) }),
-                            imgUrl = series.posterPath,
-                            movieTitle = series.title,
-                            movieCategory = series.trailerPath,
-                            rating = String.format(Locale.getDefault(), "%.1f", series.rating)
-                        )
-                    }
-                }
+
+            }
+            else {
+                Spacer(Modifier.weight(1f))
+                StateMessage(
+                    imageDrawable = com.cairosquad.design_system.R.drawable.watch_later_empty,
+                    title = stringResource(com.cairosquad.design_system.R.string.favorites_list_empty),
+                    description = stringResource(com.cairosquad.design_system.R.string.favorite_list_empty_description)
+                )
+                Spacer(Modifier.weight(1f))
             }
         }
     }

@@ -6,6 +6,7 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.AccountUseCase
+import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
@@ -47,12 +48,12 @@ class ListContentViewModel @AssistedInject constructor(
                 accountUseCase.getMoviesOfList(listId, 1)
             },
             onSuccess = { movies ->
-                val filteredMovies = movies.filter {
-                    movie -> movie.id !in screenState.value.deletedMoviesIds
+                val filteredMovies = movies.filter { movie ->
+                    movie.id !in screenState.value.deletedMoviesIds
                 }
                 updateState {
                     it.copy(
-                        movies = filteredMovies.map { it.toUiState() } ,
+                        movies = filteredMovies.map { it.toUiState() },
                         screenStatus = ListContentScreenState.SectionStatus.SUCCESS
                     )
                 }
@@ -70,10 +71,12 @@ class ListContentViewModel @AssistedInject constructor(
                 accountUseCase.getSeriesOfList(listId, 1)
             },
             onSuccess = { seriesList ->
-                updateState { it.copy(
-                    series = seriesList.map { it.toUiState() },
-                    screenStatus = ListContentScreenState.SectionStatus.SUCCESS
-                ) }
+                updateState {
+                    it.copy(
+                        series = seriesList.map { it.toUiState() },
+                        screenStatus = ListContentScreenState.SectionStatus.SUCCESS
+                    )
+                }
             },
             onError = {
                 updateScreenStatus(ListContentScreenState.SectionStatus.ERROR)
@@ -96,10 +99,40 @@ class ListContentViewModel @AssistedInject constructor(
 
     override fun onMovieDelete(movieId: Long) {
         tryToCall(
-            onStart = { updateState { it.copy(deletedMoviesIds = it.deletedMoviesIds + movieId) } },
-            block = {},
-            onSuccess = {},
-            onError = {}
+            onStart = {
+                updateState { state ->
+                    state.copy(
+                        movies = state.movies.filter { it.id != movieId },
+                        deletedMoviesIds = state.deletedMoviesIds + movieId,
+                        deletedItems = state.deletedItems + "${movieId}, movie"
+                    )
+                }
+            },
+            block = {
+                accountUseCase.removeMovieFromList(listId, movieId)
+            },
+            onSuccess = {
+                updateState {
+                    it.copy(
+                        showSnackBar = true,
+                        snackMessageId = R.string.movie_list_remove_success
+                    )
+                }
+            },
+            onError = {
+                updateState {
+                    it.copy(
+                        showSnackBar = true,
+                        snackMessageId = R.string.movie_list_remove_fail
+                    )
+                }
+            },
+            onEnd = {
+                delay(2000)
+                updateState {
+                    it.copy(showSnackBar = false)
+                }
+            }
         )
     }
 
@@ -119,6 +152,51 @@ class ListContentViewModel @AssistedInject constructor(
             delay(500L)
             updateState { it.copy(isRefreshing = true) }
         }
+    }
+
+    override fun onUndoClicked() {
+        tryToCall(
+            block = {
+                val item = screenState.value.deletedItems.last().split(", ")
+                when (item[1]) {
+                    "movie" -> {
+                        accountUseCase.addMovieToList(listId, item[0].toLong())
+                    }
+
+                    "series" -> {
+                    }
+                }
+            },
+            onSuccess = {
+                val item = screenState.value.deletedItems.last().split(", ")
+                when (item[1]) {
+                    "movie" -> {
+                        updateState {
+                            it.copy(
+                                deletedItems = it.deletedItems.dropLast(1),
+                                deletedMoviesIds = it.deletedMoviesIds.dropLast(1),
+                                showSnackBar = false
+                            )
+                        }
+                        getListDetails()
+                    }
+                }
+            },
+            onError = {
+                updateState {
+                    it.copy(
+                        showSnackBar = true,
+                        snackMessageId = R.string.favorite_restore_fail
+                    )
+                }
+            },
+            onEnd = {
+                delay(2000)
+                updateState {
+                    it.copy(showSnackBar = false)
+                }
+            }
+        )
     }
 
     fun updateScreenStatus(status: ListContentScreenState.SectionStatus) {

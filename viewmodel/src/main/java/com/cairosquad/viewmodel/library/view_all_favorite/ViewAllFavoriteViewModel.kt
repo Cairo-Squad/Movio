@@ -227,6 +227,12 @@ class ViewAllFavoriteViewModel @Inject constructor(
                         snackMessageId = R.string.favorite_restore_fail
                     )
                 }
+            },
+            onEnd = {
+                delay(2000)
+                updateState {
+                    it.copy(showSnackBar = false)
+                }
             }
         )
     }

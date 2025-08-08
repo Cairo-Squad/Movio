@@ -78,4 +78,8 @@ class AccountUseCase @Inject constructor(
     suspend fun createList(listName: String) {
         accountRepository.createList(listName)
     }
+
+    suspend fun removeMovieFromList(listId: Long, movieId: Long) {
+        accountRepository.removeMovieFromList(listId, movieId)
+    }
 }
