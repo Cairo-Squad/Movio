@@ -22,6 +22,6 @@
     <string name="series_favorite_remove_fail">تعذّر حذف العنصر.</string>
     <string name="movie_favorite_success">تمت إضافة العنصر.</string>
     <string name="movie_favorite_fail">تعذّر إضافة العنصر.</string>
-    <string name="movie_favorite_remove_success">تم حذف العنصر.</string>
+    <string name="movie_favorite_remove_success">تم ازالة من المفضل بنجاح.</string>
     <string name="movie_favorite_remove_fail">تعذّر حذف العنصر.</string>
 </resources>
