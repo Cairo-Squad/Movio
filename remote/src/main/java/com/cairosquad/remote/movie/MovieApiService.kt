@@ -8,7 +8,9 @@ import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.VideoResponse
 import com.cairosquad.repository.utils.sharedDto.remote.GenreResponse
 import com.cairosquad.repository.utils.sharedDto.remote.ResultResponse
+import com.cairosquad.repository.utils.sharedDto.remote.StatusResponse
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -122,4 +124,11 @@ interface MovieApiService {
 
     @GET("movie/now_playing")
     suspend fun getSuggestedMovies(): ResultResponse<MovieRemoteDto>
+
+    @POST("movie/{movie_id}/rating")
+    suspend fun addMovieRating(
+        @Path("movie_id") movieId: Long,
+        @Query("value") rating: Float
+    ): StatusResponse
+
 }

@@ -1,5 +1,6 @@
 package com.cairosquad.domain.repository
 
+import com.cairosquad.domain.model.RatingResult
 import com.cairosquad.domain.model.SortType
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
@@ -39,4 +40,6 @@ interface MoviesRepository {
     suspend fun getMoviesOfArtist(artistId: Long): List<Movie>
 
     suspend fun getMoviesGenres(): List<Genre>
+
+    suspend fun addMovieRating(movieId: Long, rating: Float): RatingResult
 }

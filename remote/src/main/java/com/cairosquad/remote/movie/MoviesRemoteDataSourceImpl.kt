@@ -6,6 +6,7 @@ import com.cairosquad.repository.movie.data_source.remote.dto.GenreDto
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieDetailsRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
+import com.cairosquad.repository.utils.sharedDto.remote.StatusResponse
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -133,5 +134,9 @@ class MoviesRemoteDataSourceImpl @Inject constructor(
     override suspend fun getSuggestedMovies(): List<MovieRemoteDto> {
         return safeCallApi { apiService.getSuggestedMovies() }
             .results?.filterNotNull()?.filter { it.id != null } ?: emptyList()
+    }
+
+    override suspend fun addMovieRating(movieId: Long, rating: Float): StatusResponse {
+        return safeCallApi { apiService.addMovieRating(movieId, rating) }
     }
 }

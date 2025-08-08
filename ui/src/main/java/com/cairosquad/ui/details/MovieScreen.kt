@@ -426,7 +426,8 @@ fun MovieContent(
                                     runtimeMinutes = uiState.movie.runtimeMinutes,
                                     onRateClicked = interactionListener::onRateItClick,
                                     onPlayTrailerClicked = interactionListener::onPlayClick,
-                                    onAddToListClicked = interactionListener::onAddToListClick
+                                    onAddToListClicked = interactionListener::onAddToListClick,
+                                    isRated = uiState.isRated
                                 )
                             }
 

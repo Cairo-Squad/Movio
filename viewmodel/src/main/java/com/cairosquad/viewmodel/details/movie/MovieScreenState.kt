@@ -20,7 +20,7 @@ data class MovieScreenState(
     val isRateBottomSheetOpen: Boolean = false,
     val isAddToListBottomSheetOpen: Boolean = false,
     val showCreateListBottomSheet: Boolean = false,
-
+    val isRated : Boolean = false,
     val rate: Int = 0,
     val listName: String = "",
     val moviesLists: List<MoviesList> = emptyList(),

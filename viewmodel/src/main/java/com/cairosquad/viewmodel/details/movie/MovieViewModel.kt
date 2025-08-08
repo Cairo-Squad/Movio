@@ -151,7 +151,6 @@ class MovieViewModel @AssistedInject constructor(
             )
         }
     }
-
     private fun getSimilarMovies(movieId: Long) {
         tryToCall(
             onStart = {
@@ -165,7 +164,6 @@ class MovieViewModel @AssistedInject constructor(
             dispatcher = Dispatchers.IO
         )
     }
-
     private fun setSimilarMovies(movies: List<Movie>) {
         updateState {
             it.copy(
@@ -472,7 +470,33 @@ class MovieViewModel @AssistedInject constructor(
     }
 
     override fun onSubmitRateClicked(rate: Int) {
-        updateState { it.copy(isRateBottomSheetOpen = false) }
+        tryToCall(
+            onStart = {
+                updateState { it.copy(isRateBottomSheetOpen = false) }
+            },
+            block = { movieUseCase.addMovieRating(movieId, rate.toFloat()) },
+            onSuccess = { status ->
+                    updateState {
+                        it.copy(
+                            showSnackBar = true,
+                            snackMessage = status.statusMessage,
+                            isProcessSuccess = true,
+                            isRated = true
+                        )
+                    }
+                    delay(2000)
+                    updateState {
+                        it.copy(
+                            showSnackBar = false,
+                            snackMessage = status.statusMessage,
+                            isProcessSuccess = true,
+                            isRated = true
+                        )
+                    }
+            },
+            onError = {},
+            dispatcher = Dispatchers.IO
+        )
     }
 
     override fun onNavigateToLogin() {
