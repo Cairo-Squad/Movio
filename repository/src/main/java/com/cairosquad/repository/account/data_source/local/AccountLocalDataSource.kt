@@ -9,5 +9,6 @@ interface AccountLocalDataSource {
     suspend fun getAccount(): List<AccountLocalDto>
 
     suspend fun getAccountId(): Long?
-    fun removeAccount()
+
+    suspend fun removeAccount()
 }

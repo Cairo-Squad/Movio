@@ -20,7 +20,7 @@ class AccountLocalDataSourceImpl @Inject constructor(
         return accountCacheDao.getAccount().getOrNull(0)?.accountId
     }
 
-    override fun removeAccount() {
+    override suspend fun removeAccount() {
         accountCacheDao.deleteAccount()
     }
 }
