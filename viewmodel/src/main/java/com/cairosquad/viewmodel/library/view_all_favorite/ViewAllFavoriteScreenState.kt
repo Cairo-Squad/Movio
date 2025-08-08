@@ -15,6 +15,7 @@ data class ViewAllFavoriteScreenState(
     val showSnackBar: Boolean = false,
     val isProcessSuccess: Boolean = false,
     val snackMessageId: Int = 0,
+    val deletedItems: List<String> = emptyList()
 ) {
 
     data class SeriesUiState(

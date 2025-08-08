@@ -190,8 +190,8 @@ class MovieViewModel @AssistedInject constructor(
                 if (!authed) {
                     updateState { it.copy(isNoAccountBottomSheetOpen = true) }
                 } else {
-                    if(screenState.value.isFavorite) {
-
+                    if (screenState.value.isFavorite) {
+                        removeFromFavorite(movieId)
                     } else {
                         addToFavorite(movieId)
                     }
@@ -201,16 +201,16 @@ class MovieViewModel @AssistedInject constructor(
         )
     }
 
-    private fun removeFromFavorite(seriesId: Long) {
+    private fun removeFromFavorite(movieId: Long) {
         tryToCall(
-            block = { accountUseCase.removeMovieFromFavorite(seriesId) },
+            block = { accountUseCase.removeMovieFromFavorite(movieId) },
             onSuccess = {
                 viewModelScope.launch {
                     updateState {
                         it.copy(
                             showSnackBar = true, isProcessSuccess = true,
                             snackMessageId = R.string.movie_favorite_remove_success,
-                            isFavorite = true
+                            isFavorite = false
                         )
                     }
                     delay(2000)

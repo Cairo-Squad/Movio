@@ -24,4 +24,5 @@
     <string name="movie_already_in_list">Movie already in list</string>
     <string name="error_adding_movie_to_list">Error adding movie to list</string>
     <string name="copied_to_clip_board_successfully">Copied To clip board successfully</string>
+    <string name="favorite_restore_fail">Item could not be restore.</string>
 </resources>

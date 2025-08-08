@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -71,7 +72,7 @@ fun ViewAllFavorite(
             }
         }
     }
-    Box{
+    Box {
         ViewAllFavoriteContent(
             uiState = uiState,
             listener = viewModel,
@@ -96,7 +97,8 @@ fun ViewAllFavorite(
                 message = stringResource(uiState.snackMessageId),
                 action = {
                     Box(
-                        modifier = Modifier.clip(CircleShape)
+                        modifier = Modifier
+                            .clip(CircleShape)
                             .clickable(onClick = viewModel::onUndoClicked)
                             .padding(horizontal = 8.dp, vertical = 4.dp)
                     ) {
@@ -160,43 +162,41 @@ fun ViewAllFavoriteContent(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 contentPadding = PaddingValues(vertical = 16.dp, horizontal = 16.dp)
             ) {
-                items(
-                    uiState.movies.size,
-                    key = { "${uiState.movies[it]?.id} + movie" }
-                ) { index ->
-                    uiState.movies[index]?.let { movie ->
-                        SwipeToDeleteContainer(
-                            onDelete = { listener.onMovieDelete(movie.id) },
-                        ) {
-                            TrendingMovieCard(
-                                modifier = Modifier
-                                    .clickable(onClick = { listener.onMovieClicked(movie.id) }),
-                                imgUrl = movie.posterPath,
-                                movieTitle = movie.title,
-                                movieCategory = movie.trailerPath,
-                                rating = movie.rating.toString()
-                            )
-                        }
 
+                items(
+                    uiState.movies,
+                    key = { "${it.id} + movie" }
+                ) { movie ->
+                    SwipeToDeleteContainer(
+                        modifier = Modifier.animateItem(tween(200)),
+                        onDelete = { listener.onMovieDelete(movie.id) },
+                    ) {
+                        TrendingMovieCard(
+                            modifier = Modifier
+                                .clickable(onClick = { listener.onMovieClicked(movie.id) }),
+                            imgUrl = movie.posterPath,
+                            movieTitle = movie.title,
+                            movieCategory = movie.trailerPath,
+                            rating = movie.rating.toString()
+                        )
                     }
                 }
                 items(
-                    uiState.series.size,
-                    key = { "${uiState.series[it]?.id} + series" }
-                ) { index ->
-                    uiState.series[index]?.let { series ->
-                        SwipeToDeleteContainer(
-                            onDelete = { listener.onSeriesDelete(series.id) },
-                        ) {
-                            TrendingMovieCard(
-                                modifier = Modifier
-                                    .clickable(onClick = { listener.onSeriesDelete(series.id) }),
-                                imgUrl = series.posterPath,
-                                movieTitle = series.title,
-                                movieCategory = series.trailerPath,
-                                rating = series.rating.toString()
-                            )
-                        }
+                    uiState.series,
+                    key = { "${it.id} + series" }
+                ) { series ->
+                    SwipeToDeleteContainer(
+                        modifier = Modifier.animateItem(tween(200)),
+                        onDelete = { listener.onSeriesDelete(series.id) },
+                    ) {
+                        TrendingMovieCard(
+                            modifier = Modifier
+                                .clickable(onClick = { listener.onSeriesDelete(series.id) }),
+                            imgUrl = series.posterPath,
+                            movieTitle = series.title,
+                            movieCategory = series.trailerPath,
+                            rating = series.rating.toString()
+                        )
                     }
                 }
             }
