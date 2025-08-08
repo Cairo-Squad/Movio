@@ -1,5 +1,6 @@
 package com.cairosquad.domain.repository
 
+import com.cairosquad.domain.model.RatingResult
 import com.cairosquad.domain.model.SortType
 import com.cairosquad.entity.Episode
 import com.cairosquad.entity.Genre
@@ -41,4 +42,7 @@ interface SeriesRepository {
     suspend fun getAllSeries(page: Int, genreId: Long?, sortType: SortType?): List<Series>
 
     suspend fun getSeriesByQuery(query: String, page: Int): List<Series>
+
+    suspend fun addSeriesRating(seriesId: Long, rating: Float): RatingResult
+
 }

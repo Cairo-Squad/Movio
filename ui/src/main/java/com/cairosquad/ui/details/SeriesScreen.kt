@@ -480,7 +480,8 @@ private fun SeriesScreenContent(
                                     seasonsCount = uiState.series.seasonsCount,
                                     onRateClicked = listener::onRateClicked,
                                     onPlayTrailerClicked = listener::onPlayTrailerClicked,
-                                    onAddToListClicked = listener::onAddToListClicked
+                                    onAddToListClicked = listener::onAddToListClicked,
+                                    isRated = uiState.isRated
                                 )
                             }
 

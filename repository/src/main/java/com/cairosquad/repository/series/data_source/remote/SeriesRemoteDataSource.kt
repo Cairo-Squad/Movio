@@ -6,6 +6,7 @@ import com.cairosquad.repository.series.data_source.remote.dto.EpisodeRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeasonRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesDetailsRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
+import com.cairosquad.repository.utils.sharedDto.remote.StatusResponse
 
 interface SeriesRemoteDataSource {
 
@@ -44,4 +45,6 @@ interface SeriesRemoteDataSource {
     suspend fun getAllSeries(page: Int, genreId: Long?, sortBy: String?): List<SeriesRemoteDto>
 
     suspend fun getSeriesByQuery(query: String, page: Int): List<SeriesRemoteDto>
+
+    suspend fun addSeriesRating(seriesId: Long, rating: Float): StatusResponse
 }
