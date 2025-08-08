@@ -1,6 +1,8 @@
 package com.cairosquad.viewmodel.home
 
 import androidx.paging.PagingData
+import com.cairosquad.entity.Movie
+import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.util.MediaContentType
@@ -8,6 +10,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 data class HomeScreenState(
+    val movieSections: MovieSectionsState = MovieSectionsState(),
+    val seriesSections: SeriesSectionsState = SeriesSectionsState(),
 
     val popularMovies: List<MediaUiState> = emptyList(),
     val popularSeries: List<MediaUiState> = emptyList(),
@@ -17,7 +21,7 @@ data class HomeScreenState(
 
     val sections: Map<MediaContentType, SectionUiState> = mapOf(),
 
-    val dataRequestStatus: DateRequestStatus = DateRequestStatus.LOADING,
+    val dataRequestStatus: DataRequestStatus = DataRequestStatus.LOADING,
     val errorStatus: ErrorStatus? = null,
 
     val selectedGenreIndex: Int = 0,
@@ -56,7 +60,7 @@ data class HomeScreenState(
         }
     }
 
-    enum class DateRequestStatus {
+    enum class DataRequestStatus {
         LOADING,
         SUCCESS,
         FAILED
@@ -74,5 +78,18 @@ data class HomeScreenState(
         LATEST(R.string.latest)
     }
 
+    data class MovieSectionsState(
+        val topRating: List<Movie> = emptyList(),
+        val nowPlaying: List<Movie> = emptyList(),
+        val upComing: List<Movie> = emptyList(),
+        val moreRecommended: List<Movie> = emptyList(),
+    )
+
+    data class SeriesSectionsState(
+        val topRating: List<Series> = emptyList(),
+        val airingToday: List<Series> = emptyList(),
+        val onTv: List<Series> = emptyList(),
+        val moreRecommended: List<Series> = emptyList(),
+    )
 
 }
