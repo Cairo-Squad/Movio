@@ -33,9 +33,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.Icon
@@ -56,22 +58,34 @@ fun SwitchToStartButton(
         val initialWidth = 64.dp
         val scope = rememberCoroutineScope()
         val density = LocalDensity.current
+        val layoutDirection = LocalLayoutDirection.current
+        val isRtl = layoutDirection == LayoutDirection.Rtl
 
         val initialOffsetPx = with(density) { initialWidth.toPx() }
         val maxOffsetPx = with(density) { (totalWidth - initialWidth).toPx() }
 
-        val dragOffset = remember { mutableFloatStateOf(initialOffsetPx) }
+        val startOffsetPx = if (isRtl) maxOffsetPx + initialOffsetPx else initialOffsetPx
+        val endOffsetPx = if (isRtl) initialOffsetPx else maxOffsetPx + initialOffsetPx
+
+        val dragOffset = remember { mutableFloatStateOf(startOffsetPx) }
         val isSwipeComplete = remember { mutableStateOf(false) }
         val finalWidth = remember { mutableFloatStateOf(0f) }
 
         val actualWidth = if (isSwipeComplete.value)
-            initialOffsetPx + finalWidth.floatValue
+            if (isRtl) maxOffsetPx + initialOffsetPx else initialOffsetPx + finalWidth.floatValue
         else
-            dragOffset.floatValue
+            if (isRtl)
+                maxOffsetPx + initialOffsetPx - (dragOffset.floatValue - initialOffsetPx)
+            else
+                dragOffset.floatValue
 
         val animatedWidth = animateFloatAsState(actualWidth, label = "")
 
-        val progress = ((actualWidth - initialOffsetPx) / maxOffsetPx).coerceIn(0f, 1f)
+        val progress = if (isRtl) {
+            ((startOffsetPx - dragOffset.floatValue) / maxOffsetPx).coerceIn(0f, 1f)
+        } else {
+            ((actualWidth - initialOffsetPx) / maxOffsetPx).coerceIn(0f, 1f)
+        }
 
         val purple = Theme.color.brand.primary
         val dark = Theme.color.surfaces.surfaceContainer
@@ -86,15 +100,20 @@ fun SwitchToStartButton(
                     if (!isSwipeComplete.value) Modifier.pointerInput(Unit) {
                         detectHorizontalDragGestures(
                             onHorizontalDrag = { _, delta ->
-                                dragOffset.floatValue = (dragOffset.floatValue + delta)
-                                    .coerceIn(initialOffsetPx, initialOffsetPx + maxOffsetPx)
+                                val adjustedDelta = if (isRtl) -delta else delta
+                                dragOffset.floatValue = (dragOffset.floatValue + adjustedDelta)
+                                    .coerceIn(
+                                        if (isRtl) initialOffsetPx else initialOffsetPx,
+                                        if (isRtl) startOffsetPx else endOffsetPx
+                                    )
                             },
                             onDragEnd = {
-                                val currentProgress =
-                                    ((dragOffset.floatValue - initialOffsetPx) / maxOffsetPx).coerceIn(
-                                        0f,
-                                        1f
-                                    )
+                                val currentProgress = if (isRtl) {
+                                    ((startOffsetPx - dragOffset.floatValue) / maxOffsetPx).coerceIn(0f, 1f)
+                                } else {
+                                    ((dragOffset.floatValue - initialOffsetPx) / maxOffsetPx).coerceIn(0f, 1f)
+                                }
+
                                 if (currentProgress > 0.95f) {
                                     finalWidth.floatValue = maxOffsetPx
                                     isSwipeComplete.value = true
@@ -103,7 +122,7 @@ fun SwitchToStartButton(
                                     scope.launch {
                                         animate(
                                             initialValue = dragOffset.floatValue,
-                                            targetValue = initialOffsetPx,
+                                            targetValue = startOffsetPx,
                                             animationSpec = tween(300)
                                         ) { value, _ ->
                                             dragOffset.floatValue = value
@@ -137,14 +156,20 @@ fun SwitchToStartButton(
                     style = Theme.textStyle.title.mediumMedium16,
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .padding(start = shiftAmount.value)
+                        .padding(
+                            start = if (isRtl) 0.dp else shiftAmount.value,
+                            end = if (isRtl) shiftAmount.value else 0.dp
+                        )
                 )
             }
 
             Row(
                 modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .padding(end = 24.dp),
+                    .align(if (isRtl) Alignment.CenterStart else Alignment.CenterEnd)
+                    .padding(
+                        start = if (isRtl) 24.dp else 0.dp,
+                        end = if (isRtl) 0.dp else 24.dp
+                    ),
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -165,7 +190,7 @@ fun SwitchToStartButton(
                 modifier = Modifier
                     .fillMaxHeight()
                     .width(afterSwipeColorWidth)
-                    .align(Alignment.CenterStart)
+                    .align(if (isRtl) Alignment.CenterEnd else Alignment.CenterStart)
                     .clip(RoundedCornerShape(50))
                     .background(purple)
             ) {
