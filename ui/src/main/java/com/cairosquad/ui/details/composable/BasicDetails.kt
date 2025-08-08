@@ -28,6 +28,7 @@ fun BasicDetails(
     onRateClicked: () -> Unit,
     onPlayTrailerClicked: () -> Unit,
     onAddToListClicked: () -> Unit,
+    isRated : Boolean
 ) {
     Column(
         modifier = Modifier
@@ -82,7 +83,8 @@ fun BasicDetails(
         ActionBar(
             onRateClicked = onRateClicked,
             onPlayClicked = onPlayTrailerClicked,
-            onAddToListClicked = onAddToListClicked
+            onAddToListClicked = onAddToListClicked,
+            isRated = isRated
         )
     }
 }

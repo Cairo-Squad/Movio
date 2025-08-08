@@ -51,6 +51,7 @@ abstract class BaseViewModel<T, E>(
         return viewModelScope.launch(dispatcher) {
             onStart()
             runCatching { block() }
+
                 .onSuccess({ onSuccess(it) })
                 .onFailure({ onError(it) })
             onEnd()
