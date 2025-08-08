@@ -33,7 +33,7 @@ class HomeViewModel @Inject constructor(
         loadHomeScreenData()
     }
 
-    private fun loadHomeScreenData() {
+    fun loadHomeScreenData() {
         fetchPopularMovies(null)
         fetchAllMovieSectionsOrdered()
         getAccountDetails()

@@ -90,7 +90,7 @@ class HomeViewModelTest {
                 genre2.toHomeGenreUiState()
             )
         )
-        assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DateRequestStatus.SUCCESS)
+        assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DataRequestStatus.SUCCESS)
     }
 
     @Test
@@ -115,7 +115,7 @@ class HomeViewModelTest {
                 genre2.toHomeGenreUiState()
             )
         )
-        assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DateRequestStatus.SUCCESS)
+        assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DataRequestStatus.SUCCESS)
     }
 
     @Test
@@ -132,7 +132,7 @@ class HomeViewModelTest {
 
         assertThat(viewModel.screenState.value.popularMovies).isEqualTo(listOf(movie1.toHomeMediaUiState()))
         assertThat(viewModel.screenState.value.popularSeries).isEqualTo(listOf(series1.toHomeMediaUiState()))
-        assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DateRequestStatus.SUCCESS)
+        assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DataRequestStatus.SUCCESS)
         assertThat(viewModel.screenState.value.isRefreshing).isFalse()
     }
 
@@ -153,7 +153,7 @@ class HomeViewModelTest {
             viewModel.loadHomeScreenData()
             advanceUntilIdle()
 
-            assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DateRequestStatus.FAILED)
+            assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DataRequestStatus.FAILED)
             assertThat(viewModel.screenState.value.errorStatus).isEqualTo(ErrorStatus.NO_INTERNET)
             assertThat(viewModel.screenState.value.isRefreshing).isFalse()
         }
@@ -169,7 +169,7 @@ class HomeViewModelTest {
         viewModel.loadHomeScreenData()
         advanceUntilIdle()
 
-        assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DateRequestStatus.FAILED)
+        assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DataRequestStatus.FAILED)
         assertThat(viewModel.screenState.value.errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
         assertThat(viewModel.screenState.value.isRefreshing).isFalse()
     }
@@ -185,7 +185,7 @@ class HomeViewModelTest {
         viewModel.loadHomeScreenData()
         advanceUntilIdle()
 
-        assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DateRequestStatus.FAILED)
+        assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DataRequestStatus.FAILED)
         assertThat(viewModel.screenState.value.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
         assertThat(viewModel.screenState.value.isRefreshing).isFalse()
     }
@@ -363,27 +363,12 @@ class HomeViewModelTest {
         assertThat(viewModel.screenState.value.selectedSortingType).isEqualTo(HomeScreenState.SortingType.LATEST)
     }
 
-    @Test
-    fun `should not fetch data when onSectionVisible section exists`() = runTest {
-        coEvery { manageMoviesUseCase.getTopRatingMovies(1, null) } returns listOf(movie1)
-        coEvery { manageSeriesUseCase.getTopRatingSeries(1, null) } returns listOf(series1)
-        viewModel.onSectionVisible(MediaContentType.TOP_RATING)
-        advanceUntilIdle()
-
-        viewModel.onSectionVisible(MediaContentType.TOP_RATING)
-        advanceUntilIdle()
-
-        assertThat(viewModel.screenState.value.sections[MediaContentType.TOP_RATING]?.movies).isEqualTo(
-            listOf(movie1.toHomeMediaUiState())
-        )
-    }
 
     @Test
     fun `should fetch top rating data when onSectionVisible top rating`() = runTest {
         coEvery { manageMoviesUseCase.getTopRatingMovies(1, null) } returns listOf(movie1)
         coEvery { manageSeriesUseCase.getTopRatingSeries(1, null) } returns listOf(series1)
 
-        viewModel.onSectionVisible(MediaContentType.TOP_RATING)
         advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.sections).isEqualTo(
@@ -401,7 +386,6 @@ class HomeViewModelTest {
     fun `should fetch now playing data when onSectionVisible now playing`() = runTest {
         coEvery { manageMoviesUseCase.getNowPlayingMovies(1, null) } returns listOf(movie1)
 
-        viewModel.onSectionVisible(MediaContentType.NOW_PLAYING)
         advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.sections).isEqualTo(
@@ -420,7 +404,6 @@ class HomeViewModelTest {
         coEvery { manageMoviesUseCase.getUpcomingMovies(1, null) } returns listOf(movie1)
         coEvery { manageSeriesUseCase.getFreeToWatchSeries(1, null) } returns listOf(series1)
 
-        viewModel.onSectionVisible(MediaContentType.UPCOMING)
         advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.sections).isEqualTo(
@@ -439,7 +422,6 @@ class HomeViewModelTest {
         coEvery { manageMoviesUseCase.getMoreRecommendedMovies(1, null) } returns listOf(movie1)
         coEvery { manageSeriesUseCase.getMoreRecommendedSeries(1, null) } returns listOf(series1)
 
-        viewModel.onSectionVisible(MediaContentType.MORE_RECOMMENDED)
         advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.sections).isEqualTo(
@@ -457,7 +439,6 @@ class HomeViewModelTest {
     fun `should fetch free to watch data when onSectionVisible free to watch`() = runTest {
         coEvery { manageMoviesUseCase.getFreeToWatchMovies(1, null) } returns listOf(movie1)
 
-        viewModel.onSectionVisible(MediaContentType.FREE_TO_WATCH)
         advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.sections).isEqualTo(
@@ -474,8 +455,6 @@ class HomeViewModelTest {
     @Test
     fun `should fetch airing today data when onSectionVisible airing today`() = runTest {
         coEvery { manageSeriesUseCase.getAiringTodaySeries(1, null) } returns listOf(series1)
-
-        viewModel.onSectionVisible(MediaContentType.AIRING_TODAY)
         advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.sections).isEqualTo(
@@ -493,7 +472,6 @@ class HomeViewModelTest {
     fun `should fetch on tv data when onSectionVisible on tv`() = runTest {
         coEvery { manageSeriesUseCase.getOnTvSeries(1, null) } returns listOf(series1)
 
-        viewModel.onSectionVisible(MediaContentType.ON_TV)
         advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.sections).isEqualTo(
@@ -511,10 +489,9 @@ class HomeViewModelTest {
     fun `should set error status when onSectionVisible fails with exception`() = runTest {
         coEvery { manageMoviesUseCase.getTopRatingMovies(1, null) } throws IOException()
 
-        viewModel.onSectionVisible(MediaContentType.TOP_RATING)
         advanceUntilIdle()
 
-        assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DateRequestStatus.FAILED)
+        assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DataRequestStatus.FAILED)
         assertThat(viewModel.screenState.value.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
     }
 
@@ -527,8 +504,6 @@ class HomeViewModelTest {
         coEvery { manageSeriesUseCase.getSeriesGenres() } returns listOf(genre2)
         coEvery { manageMoviesUseCase.getTopRatingMovies(1, null) } returns listOf(movie1)
         coEvery { manageSeriesUseCase.getTopRatingSeries(1, null) } returns listOf(series1)
-        viewModel.onSectionVisible(MediaContentType.TOP_RATING)
-        advanceUntilIdle()
 
         viewModel.onRefresh()
         advanceUntilIdle()
@@ -552,7 +527,7 @@ class HomeViewModelTest {
                 )
             ).entries.sortedBy { it.key.ordinal }.associate { it.key to it.value }
         )
-        assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DateRequestStatus.SUCCESS)
+        assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DataRequestStatus.SUCCESS)
         assertThat(viewModel.screenState.value.isRefreshing).isFalse()
     }
 
