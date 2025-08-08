@@ -5,6 +5,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.cairosquad.domain.exception.MovioException
+import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
@@ -19,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ViewAllListsViewModel @Inject constructor(
-    private val viewAllListsPager: ViewAllListsPager,
+    private val accountUseCase: AccountUseCase
 ) : BaseViewModel<ViewAllListsScreenState, ViewAllListsEffect>(ViewAllListsScreenState()),
     ViewAllListsInteractionListener {
 
@@ -35,15 +36,11 @@ class ViewAllListsViewModel @Inject constructor(
     private fun getMoviesLists() {
         tryToCall(
             block = {
-                cacheMappedPagingData(
-                    scope = viewModelScope,
-                    fetch = { viewAllListsPager.movies() },
-                    map = { it.toUiState() }
-                )
+                accountUseCase.getMoviesLists(1)
             },
             onSuccess = { movieLists ->
                 updateState {
-                    it.copy(movieLists = movieLists)
+                    it.copy(movieLists = movieLists.map { it.toUiState() })
                 }
                 updateScreenStatus(ViewAllListsScreenState.SectionStatus.SUCCESS)
             },
@@ -57,15 +54,11 @@ class ViewAllListsViewModel @Inject constructor(
     private fun getSeriesLists() {
         tryToCall(
             block = {
-                cacheMappedPagingData(
-                    scope = viewModelScope,
-                    fetch = { viewAllListsPager.series() },
-                    map = { it.toUiState() }
-                )
+                accountUseCase.getSeriesLists(1)
             },
             onSuccess = { seriesLists ->
                 updateState {
-                    it.copy(seriesLists = seriesLists)
+                    it.copy(seriesLists = seriesLists.map { it.toUiState() })
                 }
                 updateScreenStatus(ViewAllListsScreenState.SectionStatus.SUCCESS)
             },

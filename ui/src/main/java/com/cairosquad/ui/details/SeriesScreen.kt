@@ -267,11 +267,11 @@ fun SeriesScreen(
                 .padding(16.dp),
             visible = uiState.showSnackBar,
             enter = slideInVertically(
-                initialOffsetY = { fullHeight -> fullHeight },
+                initialOffsetY = { fullHeight -> 2 * fullHeight },
                 animationSpec = tween(durationMillis = 600)
             ),
             exit = slideOutVertically(
-                targetOffsetY = { fullHeight -> fullHeight },
+                targetOffsetY = { fullHeight -> 2 * fullHeight },
                 animationSpec = tween(durationMillis = 600)
             )
         ) {

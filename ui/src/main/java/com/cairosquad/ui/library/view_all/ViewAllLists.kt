@@ -30,8 +30,6 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.basic_component.Icon
@@ -42,7 +40,6 @@ import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.ui.navigation.ListRoute
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.utils.ObserveAsEffect
-import com.cairosquad.viewmodel.library.LibraryScreenState
 import com.cairosquad.viewmodel.library.view_all_lists.ViewAllListsEffect
 import com.cairosquad.viewmodel.library.view_all_lists.ViewAllListsScreenState
 import com.cairosquad.viewmodel.library.view_all_lists.ViewAllListsViewModel
@@ -52,8 +49,6 @@ fun ViewAllLists(
     viewModel: ViewAllListsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.screenState.collectAsStateWithLifecycle()
-    val moviesLists = uiState.movieLists.collectAsLazyPagingItems()
-    val seriesLists = uiState.seriesLists.collectAsLazyPagingItems()
 
     val navController = LocalNavController.current
 
@@ -75,8 +70,6 @@ fun ViewAllLists(
 
     ViewAllListsContent(
         screenState = uiState,
-        moviesLists = moviesLists,
-        seriesLists = seriesLists,
         listener = viewModel
     )
 }
@@ -84,13 +77,14 @@ fun ViewAllLists(
 @Composable
 private fun ViewAllListsContent(
     screenState: ViewAllListsScreenState,
-    moviesLists: LazyPagingItems<LibraryScreenState.ListsUiState>,
-    seriesLists: LazyPagingItems<LibraryScreenState.ListsUiState>,
     listener: ViewAllListsViewModel,
     modifier: Modifier = Modifier
 ) {
+    val moviesLists = screenState.movieLists
+    val seriesLists = screenState.seriesLists
+
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Theme.color.surfaces.surface)
     ) {
@@ -133,7 +127,7 @@ private fun ViewAllListsContent(
                 }
 
                 ViewAllListsScreenState.SectionStatus.SUCCESS -> {
-                    if (moviesLists.itemCount != 0 || seriesLists.itemCount != 0){
+                    if (moviesLists.isNotEmpty() || seriesLists.isNotEmpty()){
                         LazyVerticalGrid(
                             columns = GridCells.Adaptive(minSize = 158.dp),
                             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -141,7 +135,7 @@ private fun ViewAllListsContent(
                             contentPadding = PaddingValues(horizontal =  16.dp, vertical = 12.dp)
                         ) {
                             items(
-                                moviesLists.itemCount
+                                moviesLists.size
                             ) { index ->
                                 moviesLists[index]?.let { movieList ->
                                     ListContainer(
@@ -157,7 +151,7 @@ private fun ViewAllListsContent(
                                 }
                             }
                             items(
-                                seriesLists.itemCount
+                                seriesLists.size
                             ) { index ->
                                 seriesLists[index]?.let { seriesList ->
 

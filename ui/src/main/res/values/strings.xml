@@ -59,7 +59,7 @@
     <string name="share_via">Share via</string>
     <string name="season">Season %1$d</string>
     <string name="favorite">Favorite</string>
-    <string name="this_list_has_empty">This list has empty</string>
+    <string name="this_list_has_empty">This list is empty</string>
     <string name="library">Library</string>
     <string name="watchlist">Watchlist</string>
     <string name="log_in_to_unlock_your_personal_library">Log in to unlock your personal library</string>
