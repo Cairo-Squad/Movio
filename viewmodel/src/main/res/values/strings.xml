@@ -25,4 +25,6 @@
     <string name="error_adding_movie_to_list">Error adding movie to list</string>
     <string name="copied_to_clip_board_successfully">Copied To clip board successfully</string>
     <string name="favorite_restore_fail">Item could not be restore.</string>
+    <string name="list_created_successfully">List created successfully.</string>
+    <string name="error_creating_list">Error creating list.</string>
 </resources>

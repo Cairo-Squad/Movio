@@ -1,6 +1,10 @@
 package com.cairosquad.ui.library.view_all
 
 import android.os.Build
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,14 +37,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.basic_component.Icon
+import com.cairosquad.design_system.basic_component.SnackBar
 import com.cairosquad.design_system.modifier.dropShadow
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.library.component.ListContainer
 import com.cairosquad.ui.movio_component.StateMessage
+import com.cairosquad.ui.movio_component.bottom_sheet.CreateListBottomSheet
 import com.cairosquad.ui.navigation.ListRoute
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.viewmodel.library.view_all_lists.ViewAllListsEffect
+import com.cairosquad.viewmodel.library.view_all_lists.ViewAllListsInteractionListener
 import com.cairosquad.viewmodel.library.view_all_lists.ViewAllListsScreenState
 import com.cairosquad.viewmodel.library.view_all_lists.ViewAllListsViewModel
 
@@ -77,7 +84,7 @@ fun ViewAllLists(
 @Composable
 private fun ViewAllListsContent(
     screenState: ViewAllListsScreenState,
-    listener: ViewAllListsViewModel,
+    listener: ViewAllListsInteractionListener,
     modifier: Modifier = Modifier
 ) {
     val moviesLists = screenState.movieLists
@@ -192,7 +199,9 @@ private fun ViewAllListsContent(
                         .size(60.dp)
                         .clip(CircleShape)
                         .background(Theme.color.brand.primary)
-                        .clickable(onClick = {}),
+                        .clickable(onClick = {
+                            listener.onAddListClicked()
+                        }),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -205,6 +214,37 @@ private fun ViewAllListsContent(
             }
 
             ViewAllListsScreenState.SectionStatus.ERROR -> {}
+        }
+
+        CreateListBottomSheet(
+            isVisible = screenState.showCreateListBottomSheet,
+            onDismiss = listener::onDismissCreateListBottomSheet,
+            value = screenState.listName,
+            onValueChange = listener::onListValueChange,
+            onSubmit = { listener.onSubmitCreateListClicked() },
+            isMovie = true
+        )
+
+        AnimatedVisibility(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .windowInsetsPadding(WindowInsets.navigationBars)
+                .padding(16.dp),
+            visible = screenState.showSnackBar,
+            enter = slideInVertically(
+                initialOffsetY = { fullHeight -> 2 * fullHeight },
+                animationSpec = tween(durationMillis = 600)
+            ),
+            exit = slideOutVertically(
+                targetOffsetY = { fullHeight -> 2 * fullHeight },
+                animationSpec = tween(durationMillis = 600)
+            )
+        ) {
+            SnackBar(
+                imageVector = ImageVector.vectorResource(if (screenState.isProcessSuccess) R.drawable.archive_tick else R.drawable.danger),
+                message = stringResource(screenState.snackMessageId),
+                action = {}
+            )
         }
     }
 }

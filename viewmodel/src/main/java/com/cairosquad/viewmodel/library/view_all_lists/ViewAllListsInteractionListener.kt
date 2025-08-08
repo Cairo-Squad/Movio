@@ -7,4 +7,9 @@ interface ViewAllListsInteractionListener {
     fun onMovieListClicked(listId: Long, listName: String)
     fun onCreateNewListClicked()
     fun onRefresh()
+
+    fun onAddListClicked()
+    fun onDismissCreateListBottomSheet()
+    fun onListValueChange(listName: String)
+    fun onSubmitCreateListClicked()
 }

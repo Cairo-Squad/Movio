@@ -6,6 +6,7 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.AccountUseCase
+import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
@@ -94,6 +95,57 @@ class ViewAllListsViewModel @Inject constructor(
         }
     }
 
+    override fun onAddListClicked() {
+        updateState { it.copy(
+            showCreateListBottomSheet = true,
+            listName = ""
+        ) }
+    }
+
+    override fun onDismissCreateListBottomSheet() {
+        updateState { it.copy(showCreateListBottomSheet = false) }
+    }
+
+    override fun onListValueChange(listName: String) {
+        updateState { it.copy(listName = listName) }
+    }
+
+    override fun onSubmitCreateListClicked() {
+        tryToCall(
+            block = {
+                accountUseCase.createList(screenState.value.listName)
+                Pair(accountUseCase.getMoviesLists(1), accountUseCase.getSeriesLists(1))
+            },
+            onSuccess = { (moviesLists, seriesLists) ->
+                updateState {
+                    it.copy(
+                        showCreateListBottomSheet = false,
+                        listName = "",
+                        movieLists = moviesLists.map { list -> list.toUiState() },
+                        seriesLists = seriesLists.map { list -> list.toUiState() },
+                        showSnackBar = true,
+                        isProcessSuccess = true,
+                        snackMessageId = R.string.list_created_successfully
+                    )
+                }
+                delay(2000L)
+                updateState { it.copy(showSnackBar = false) }
+            },
+            onError = {
+                updateState {
+                    it.copy(
+                        showCreateListBottomSheet = false,
+                        listName = "",
+                        showSnackBar = true,
+                        isProcessSuccess = false,
+                        snackMessageId = R.string.error_creating_list
+                    )
+                }
+                delay(2000L)
+                updateState { it.copy(showSnackBar = false) }
+            }
+        )
+    }
 
     fun updateScreenStatus(status: ViewAllListsScreenState.SectionStatus) {
         updateState { it.copy(screenStatus = status) }

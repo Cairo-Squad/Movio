@@ -16,7 +16,7 @@
     <string name="movie_already_in_list">سبق وان اضيف الفلم لهذه القائمة</string>
     <string name="error_adding_movie_to_list">حدث خطأ اثناء اضافة الفلم للقاشمة</string>
     <string name="copied_to_clip_board_successfully">تم النسخ بنجاح</string>
-     <string name="series_favorite_success">تمت إضافة العنصر.</string>
+    <string name="series_favorite_success">تمت إضافة العنصر.</string>
     <string name="series_favorite_fail">تعذّر إضافة العنصر.</string>
     <string name="series_favorite_remove_success">تم حذف العنصر.</string>
     <string name="series_favorite_remove_fail">تعذّر حذف العنصر.</string>
@@ -25,4 +25,6 @@
     <string name="movie_favorite_remove_success">تم ازالة من المفضل بنجاح.</string>
     <string name="movie_favorite_remove_fail">تعذّر حذف العنصر.</string>
     <string name="favorite_restore_fail">تعذر إعادة العنصر.</string>
+    <string name="list_created_successfully">تم انشاء القائمة بنجاح.</string>
+    <string name="error_creating_list">حدث خطأ اثناء انشاء القائمة</string>
 </resources>
