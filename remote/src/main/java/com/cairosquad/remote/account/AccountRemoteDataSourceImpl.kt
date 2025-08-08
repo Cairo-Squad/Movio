@@ -1,6 +1,5 @@
 package com.cairosquad.remote.account
 
-import android.util.Log
 import com.cairosquad.remote.utils.retrofit.safeCallApi
 import com.cairosquad.repository.account.data_source.remote.AccountRemoteDataSource
 import com.cairosquad.repository.account.data_source.remote.dto.AddToListRequest
@@ -190,7 +189,6 @@ class AccountRemoteDataSourceImpl @Inject constructor(
     }
 
     override suspend fun createList(listName: String) {
-        Log.d("asdasd", "createList: $listName")
         safeCallApi {
             apiService.createList(
                 CreateListRequest(
@@ -199,6 +197,12 @@ class AccountRemoteDataSourceImpl @Inject constructor(
                     description = " "
                 )
             )
+        }
+    }
+
+    override suspend fun removeMovieFromList(listId: Long, movieId: Long) {
+        safeCallApi {
+            apiService.removeMovieFromList(listId, AddToListRequest(movieId))
         }
     }
 

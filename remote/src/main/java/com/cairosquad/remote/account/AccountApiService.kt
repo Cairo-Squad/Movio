@@ -116,4 +116,12 @@ interface AccountApiService {
 		@Body
 		body: CreateListRequest
 	)
+
+	@POST("list/{list_id}/remove_item")
+	suspend fun removeMovieFromList(
+		@Path("list_id")
+		listId: Long,
+		@Body
+		body: AddToListRequest
+	): AddToListResponse
 }

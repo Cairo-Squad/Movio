@@ -42,5 +42,7 @@ interface AccountRepository {
 
     suspend fun createList(listName: String)
 
+    suspend fun removeMovieFromList(listId: Long, movieId: Long)
+
     suspend fun removeAccountDetails()
 }
