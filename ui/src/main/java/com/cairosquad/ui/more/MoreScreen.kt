@@ -107,19 +107,31 @@ fun MoreScreenContent(state: MoreScreenState, listener: MoreScreenInteractionLis
                     .padding(top = 104.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                SafeImageViewer(
-                    nudeThreshold = 0.0,
-                    nonNudeThreshold = 0.0,
-                    model = state.userProfileImage
-                        ?.takeIf { it.isNotBlank() }
-                        ?.let { BuildConfig.IMAGE_BASE_URL + it }.toString(),                    placeholder = painterResource(com.cairosquad.ui.R.drawable.user_profile),
-                    contentDescription = stringResource(com.cairosquad.ui.R.string.profile_image),
-                    modifier = Modifier
-                        .padding(bottom = 8.dp)
-                        .clip(RoundedCornerShape(100))
-                        .size(100.dp)
+                if (state.userProfileImage != null) {
+                    SafeImageViewer(
+                        nudeThreshold = 0.0,
+                        nonNudeThreshold = 0.0,
+                        model = state.userProfileImage
+                            ?.takeIf { it.isNotBlank() }
+                            ?.let { BuildConfig.IMAGE_BASE_URL + it }.toString(),
+                        placeholder = painterResource(com.cairosquad.ui.R.drawable.user_profile),
+                        contentDescription = stringResource(com.cairosquad.ui.R.string.profile_image),
+                        modifier = Modifier
+                            .padding(bottom = 8.dp)
+                            .clip(RoundedCornerShape(100))
+                            .size(100.dp)
 
-                )
+                    )
+                } else {
+                    Image(
+                        painter = painterResource(com.cairosquad.ui.R.drawable.user_profile),
+                        contentDescription = stringResource(com.cairosquad.ui.R.string.profile_image),
+                        modifier = Modifier
+                            .padding(bottom = 8.dp)
+                            .clip(RoundedCornerShape(100))
+                            .size(100.dp)
+                    )
+                }
                 Text(
                     text = state.userName,
                     style = Theme.textStyle.title.mediumMedium14,
