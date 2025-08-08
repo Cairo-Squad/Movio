@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -39,6 +38,7 @@ fun ListContainer(
 ) {
 	Column(
 		modifier = modifier
+			.fillMaxWidth()
 			.clip(RoundedCornerShape(8.dp))
 			.clickable(onClick = onListClicked),
 		verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -46,7 +46,7 @@ fun ListContainer(
 		Box(
 			modifier = Modifier
 				.clip(RoundedCornerShape(8.dp))
-				.width(158.dp)
+				.fillMaxWidth()
 				.height(128.dp)
 		) {
 			Image(

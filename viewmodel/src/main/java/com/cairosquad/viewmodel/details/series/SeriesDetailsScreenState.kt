@@ -16,14 +16,17 @@ data class SeriesDetailsScreenState(
     val showAddToListBottomSheet: Boolean = false,
     val showLoginBottomSheet: Boolean = false,
     val showCreateListBottomSheet: Boolean = false,
-
+    val isRated : Boolean = false,
     val rating: Int = 0,
     val newListName: String = "",
     val seriesLists: List<SeriesList> = emptyList(),
 
     val showSnackBar: Boolean = false,
     val snackMessage: String = "",
+    val snackMessageId: Int = 0,
     val isProcessSuccess: Boolean = false,
+
+    val isFavorite: Boolean = false,
 
     val series: SeriesUiState = SeriesUiState(),
     val cast: List<ArtistUiState> = emptyList(),

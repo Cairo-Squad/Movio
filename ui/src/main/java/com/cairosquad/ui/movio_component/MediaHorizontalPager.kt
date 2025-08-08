@@ -248,6 +248,7 @@ private fun MediaHorizontalPagerCard(
 	Box(
 		modifier
 			.clip(RoundedCornerShape(8.dp))
+			.alpha(lerp(0.50f, 1f, isCurrentPageFloat))
 	) {
 		SafeImageViewer(
 			modifier = Modifier.fillMaxSize(),
@@ -326,7 +327,7 @@ private fun MediaHorizontalPagerCard(
 			modifier = Modifier
 				.fillMaxSize()
 				.clickable(onClick = onClick)
-				.background(Color.Black.copy(alpha = lerp(0.80f, 0f, isCurrentPageFloat)))
+				.background(Color.Black.copy(alpha = lerp(0.30f, 0f, isCurrentPageFloat)))
 		)
 	}
 }

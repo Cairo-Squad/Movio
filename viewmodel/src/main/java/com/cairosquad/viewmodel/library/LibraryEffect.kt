@@ -4,7 +4,7 @@ sealed class LibraryEffect {
 
     data class NavigateToMovieDetails(val movieId: Long) : LibraryEffect()
     data class NavigateToSeriesDetails(val seriesId: Long) : LibraryEffect()
-    data class NavigateToListDetails(val listId: Long) : LibraryEffect()
+    data class NavigateToListDetails(val listId: Long, val listName: String) : LibraryEffect()
 
     data object NavigateToFavorites : LibraryEffect()
     data object NavigateToHistory : LibraryEffect()

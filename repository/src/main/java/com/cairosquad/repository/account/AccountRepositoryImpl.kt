@@ -59,6 +59,24 @@ class AccountRepositoryImpl @Inject constructor(
         return emptyList()
     }
 
+    override suspend fun getMoviesOfList(
+        listId: Long,
+        page: Int
+    ): List<Movie> {
+        accountLocalDataSource.getAccount().also {  accountId ->
+            return  accountRemoteDataSource.getMoviesOfList(listId, page).map { it.toEntity() }
+        }
+    }
+
+    override suspend fun getSeriesOfList(
+        listId: Long,
+        page: Int
+    ): List<Series> {
+        accountLocalDataSource.getAccount().also {  accountId ->
+            return accountRemoteDataSource.getSeriesOfList(listId, page).map { it.toEntity() }
+        }
+    }
+
     override suspend fun addMovieToFavorite(movieId: Long) {
         accountLocalDataSource.getAccountId()?.also { accountId ->
             accountRemoteDataSource.addMovieToFavorite(accountId, movieId)
@@ -68,6 +86,18 @@ class AccountRepositoryImpl @Inject constructor(
     override suspend fun addSeriesToFavorite(seriesId: Long) {
         accountLocalDataSource.getAccountId()?.also { accountId ->
             accountRemoteDataSource.addSeriesToFavorite(accountId, seriesId)
+        }
+    }
+
+    override suspend fun removeMovieFromFavorite(movieId: Long) {
+        accountLocalDataSource.getAccountId()?.also { accountId ->
+            accountRemoteDataSource.removeMovieFromFavorite(accountId, movieId)
+        }
+    }
+
+    override suspend fun removeSeriesFromFavorite(seriesId: Long) {
+        accountLocalDataSource.getAccountId()?.also { accountId ->
+            accountRemoteDataSource.removeSeriesFromFavorite(accountId, seriesId)
         }
     }
 
@@ -104,5 +134,21 @@ class AccountRepositoryImpl @Inject constructor(
             )
         }
         return Pair(emptyList(), emptyList())
+    }
+
+    override suspend fun addMovieToList(listId: Long, movieId: Long) {
+        accountRemoteDataSource.addMovieToList(listId, movieId)
+    }
+
+    override suspend fun createList(listName: String) {
+        accountRemoteDataSource.createList(listName)
+    }
+
+    override suspend fun removeMovieFromList(listId: Long, movieId: Long) {
+        accountRemoteDataSource.removeMovieFromList(listId, movieId)
+    }
+
+    override suspend fun removeAccountDetails() {
+        accountLocalDataSource.removeAccount()
     }
 }

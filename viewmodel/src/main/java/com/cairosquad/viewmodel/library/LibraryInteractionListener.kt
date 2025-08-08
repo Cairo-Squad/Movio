@@ -8,7 +8,7 @@ interface LibraryInteractionListener {
     fun onLoginClicked()
     fun onRefresh()
 
-    fun onListClicked(listId: Long)
+    fun onListClicked(listId: Long, listName: String)
     fun onMovieClicked(movieId: Long)
     fun onSeriesClicked(seriesId: Long)
 

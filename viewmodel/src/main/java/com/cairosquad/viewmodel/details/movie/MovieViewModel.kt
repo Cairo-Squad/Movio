@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.details.movie
 
+import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.domain.usecase.LoginUseCase
@@ -7,6 +8,7 @@ import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Review
+import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.movie.MovieScreenState.ScreenStatus
 import com.cairosquad.viewmodel.exception.ErrorStatus
@@ -17,6 +19,7 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = MovieViewModel.Factory::class)
 class MovieViewModel @AssistedInject constructor(
@@ -42,6 +45,7 @@ class MovieViewModel @AssistedInject constructor(
         getActors(movieId)
         getReviews(movieId)
         getSimilarMovies(movieId)
+        getMovieInFavorite(movieId)
     }
 
     private fun addMovieToHistory(movieId: Long) {
@@ -51,6 +55,33 @@ class MovieViewModel @AssistedInject constructor(
             onError = {}
         )
     }
+
+    private fun getMovieInFavorite(movieId: Long) {
+        checkUserLoggedIn {
+            loadFavoriteMovies(movieId)
+        }
+    }
+
+    private fun checkUserLoggedIn(onLoggedIn: () -> Unit) {
+        tryToCall(
+            block = loginUseCase::isUserLoggedIn,
+            onSuccess = { isLoggedIn ->
+                if (isLoggedIn) onLoggedIn()
+            },
+            onError = {}
+        )
+    }
+
+    private fun loadFavoriteMovies(movieId: Long) {
+        tryToCall(
+            block = { accountUseCase.getFavoriteMovies(1) },
+            onSuccess = { series ->
+                updateState { it.copy(isFavorite = series.any { it.id == movieId }) }
+            },
+            onError = {}
+        )
+    }
+
 
     private fun getBasicDetails(movieId: Long) {
         tryToCall(
@@ -120,7 +151,6 @@ class MovieViewModel @AssistedInject constructor(
             )
         }
     }
-
     private fun getSimilarMovies(movieId: Long) {
         tryToCall(
             onStart = {
@@ -134,7 +164,6 @@ class MovieViewModel @AssistedInject constructor(
             dispatcher = Dispatchers.IO
         )
     }
-
     private fun setSimilarMovies(movies: List<Movie>) {
         updateState {
             it.copy(
@@ -159,9 +188,78 @@ class MovieViewModel @AssistedInject constructor(
                 if (!authed) {
                     updateState { it.copy(isNoAccountBottomSheetOpen = true) }
                 } else {
+                    if(screenState.value.isFavorite) {
+                        removeFromFavorite(movieId)
+                    } else {
+                        addToFavorite(movieId)
+                    }
                 }
             },
             onError = {}
+        )
+    }
+
+    private fun removeFromFavorite(movieId: Long) {
+        tryToCall(
+            block = { accountUseCase.removeMovieFromFavorite(movieId) },
+            onSuccess = {
+                viewModelScope.launch {
+                    updateState {
+                        it.copy(
+                            showSnackBar = true, isProcessSuccess = true,
+                            snackMessageId = R.string.movie_favorite_remove_success,
+                            isFavorite = false
+                        )
+                    }
+                    delay(2000)
+                    updateState { it.copy(showSnackBar = false) }
+                }
+            },
+            onError = {
+                viewModelScope.launch {
+                    updateState {
+                        it.copy(
+                            showSnackBar = true,
+                            isProcessSuccess = false,
+                            snackMessageId = R.string.movie_favorite_remove_fail,
+                        )
+                    }
+                    delay(2000)
+                    updateState { it.copy(showSnackBar = false) }
+                }
+            }
+        )
+    }
+
+    private fun addToFavorite(movieId: Long) {
+        tryToCall(
+            block = { accountUseCase.addMovieToFavorite(movieId) },
+            onSuccess = {
+                viewModelScope.launch {
+                    updateState {
+                        it.copy(
+                            showSnackBar = true, isProcessSuccess = true,
+                            snackMessageId = R.string.movie_favorite_success,
+                            isFavorite = true
+                        )
+                    }
+                    delay(2000)
+                    updateState { it.copy(showSnackBar = false) }
+                }
+            },
+            onError = {
+                viewModelScope.launch {
+                    updateState {
+                        it.copy(
+                            showSnackBar = true,
+                            isProcessSuccess = false,
+                            snackMessageId = R.string.movie_favorite_fail
+                        )
+                    }
+                    delay(2000)
+                    updateState { it.copy(showSnackBar = false) }
+                }
+            }
         )
     }
 
@@ -220,6 +318,84 @@ class MovieViewModel @AssistedInject constructor(
         }
     }
 
+    override fun onClickList(id: Long) {
+        tryToCall(
+            block = {
+                val movies = accountUseCase.getMoviesOfList(id, 1)
+                if (screenState.value.movie.id in movies.map { it.id }) {
+                    false
+                } else {
+                    accountUseCase.addMovieToList(id, screenState.value.movie.id)
+                    true
+                }
+            },
+            onSuccess = { isAdded ->
+                updateState {
+                    it.copy(
+                        isAddToListBottomSheetOpen = false,
+                        isProcessSuccess = isAdded,
+                        showSnackBar = true,
+                        snackMessageId =
+                            if (isAdded) R.string.added_to_list
+                            else R.string.movie_already_in_list
+                    )
+                }
+                delay(2000L)
+                updateState {
+                    it.copy(
+                        showSnackBar = false,
+                        isProcessSuccess = isAdded
+                    )
+                }
+            },
+            onError = {
+                updateState {
+                    it.copy(
+                        isAddToListBottomSheetOpen = false,
+                        isProcessSuccess = false,
+                        showSnackBar = true,
+                        snackMessageId = R.string.error_adding_movie_to_list
+                    )
+                }
+                delay(2000L)
+                updateState {
+                    it.copy(
+                        showSnackBar = false,
+                        isProcessSuccess = false
+                    )
+                }
+            }
+        )
+    }
+
+    override fun onSubmitCreateListClicked() {
+        tryToCall(
+            block = {
+                accountUseCase.createList(screenState.value.listName)
+                accountUseCase.getMoviesLists(1)
+            },
+            onSuccess = { moviesLists ->
+                updateState {
+                    it.copy(
+                        showCreateListBottomSheet = false,
+                        isAddToListBottomSheetOpen = true,
+                        listName = "",
+                        moviesLists = moviesLists.map { list -> list.toUiState() }
+                    )
+                }
+            },
+            onError = {
+                updateState {
+                    it.copy(
+                        showCreateListBottomSheet = false,
+                        isAddToListBottomSheetOpen = true,
+                        listName = "",
+                    )
+                }
+            }
+        )
+    }
+
     override fun onDismissCreateListBottomSheet() {
         updateState { it.copy(showCreateListBottomSheet = false) }
     }
@@ -256,7 +432,7 @@ class MovieViewModel @AssistedInject constructor(
                 updateState {
                     it.copy(
                         showSnackBar = true,
-                        snackMessage = message,
+                        snackMessageId = R.string.copied_to_clip_board_successfully,
                         isProcessSuccess = isSuccessful
                     )
                 }
@@ -266,7 +442,6 @@ class MovieViewModel @AssistedInject constructor(
                 updateState {
                     it.copy(
                         showSnackBar = false,
-                        snackMessage = message
                     )
                 }
             },
@@ -295,7 +470,33 @@ class MovieViewModel @AssistedInject constructor(
     }
 
     override fun onSubmitRateClicked(rate: Int) {
-        updateState { it.copy(isRateBottomSheetOpen = false) }
+        tryToCall(
+            onStart = {
+                updateState { it.copy(isRateBottomSheetOpen = false) }
+            },
+            block = { movieUseCase.addMovieRating(movieId, rate.toFloat()) },
+            onSuccess = { status ->
+                    updateState {
+                        it.copy(
+                            showSnackBar = true,
+                            snackMessageId = R.string.rated_successfully,
+                            isProcessSuccess = true,
+                            isRated = true
+                        )
+                    }
+                    delay(2000)
+                    updateState {
+                        it.copy(
+                            showSnackBar = false,
+                            snackMessageId = R.string.rated_successfully,
+                            isProcessSuccess = true,
+                            isRated = true
+                        )
+                    }
+            },
+            onError = {},
+            dispatcher = Dispatchers.IO
+        )
     }
 
     override fun onNavigateToLogin() {

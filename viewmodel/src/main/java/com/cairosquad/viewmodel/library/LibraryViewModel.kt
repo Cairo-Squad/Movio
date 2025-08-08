@@ -77,8 +77,8 @@ class LibraryViewModel @Inject constructor(
         loadScreenState()
     }
 
-    override fun onListClicked(listId: Long) {
-        sendEffect(LibraryEffect.NavigateToListDetails(listId))
+    override fun onListClicked(listId: Long, listName: String) {
+        sendEffect(LibraryEffect.NavigateToListDetails(listId, listName))
     }
 
     override fun onMovieClicked(movieId: Long) {

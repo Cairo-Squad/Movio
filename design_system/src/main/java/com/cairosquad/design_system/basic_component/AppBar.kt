@@ -39,6 +39,7 @@ fun AppBar(
     onBackButtonClicked: (() -> Unit)? = null,
     onShareButtonClicked: (() -> Unit)? = null,
     onFavoriteButtonClicked: (() -> Unit)? = null,
+    isFavorite: Boolean = false,
 ) {
     val layoutDirection = LocalLayoutDirection.current
     Box(
@@ -118,9 +119,11 @@ fun AppBar(
                         .clickable(onClick = onFavoriteButtonClicked)
                         .size(40.dp)
                         .padding(8.dp),
-                    painter = painterResource(R.drawable.heart_icon_round),
+                    painter = if (!isFavorite) painterResource(R.drawable.heart_icon_round) else painterResource(
+                        R.drawable.heart_icon_round_fill
+                    ),
                     contentDescription = stringResource(R.string.favorite_icon),
-                    tint = Theme.color.surfaces.onSurface,
+                    tint = if (!isFavorite) Theme.color.surfaces.onSurface else Theme.color.system.onErrorContainer,
                 )
             }
         }
@@ -164,7 +167,8 @@ private fun MovioAppBarPreview() {
                 title = "Title",
                 onBackButtonClicked = {},
                 onShareButtonClicked = {},
-                onFavoriteButtonClicked = {}
+                onFavoriteButtonClicked = {},
+                isFavorite = true
             )
         }
     }

@@ -4,6 +4,7 @@ import com.cairosquad.repository.movie.data_source.remote.dto.GenreDto
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieDetailsRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.movie.data_source.remote.dto.ReviewRemoteDto
+import com.cairosquad.repository.utils.sharedDto.remote.StatusResponse
 
 
 interface MoviesRemoteDataSource {
@@ -42,4 +43,7 @@ interface MoviesRemoteDataSource {
     suspend fun getPersonalizedMovies(page: Int): List<MovieRemoteDto>
 
     suspend fun getSuggestedMovies(): List<MovieRemoteDto>
+
+    suspend fun addMovieRating(movieId: Long, rating: Float): StatusResponse
+
 }
