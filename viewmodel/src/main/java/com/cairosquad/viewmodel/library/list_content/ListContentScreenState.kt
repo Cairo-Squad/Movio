@@ -12,6 +12,9 @@ data class ListContentScreenState(
     val deletedMoviesIds: List<Long> = emptyList(),
     val series: List<SeriesUiState> = emptyList(),
     val deletedSeriesIds: List<Long> = emptyList(),
+    val showSnackBar: Boolean = false,
+    val snackMessageId: Int = 0,
+    val deletedItems: List<String> = emptyList()
 ) {
 
     data class SeriesUiState(

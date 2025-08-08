@@ -13,4 +13,6 @@ interface ListContentInteractionListener {
     fun onSeriesDelete(seriesId: Long)
 
     fun onRefresh()
+
+    fun onUndoClicked()
 }

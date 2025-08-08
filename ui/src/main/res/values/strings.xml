@@ -74,4 +74,5 @@
     <string name="nothing_here_yet">🎬 Nothing here yet!</string>
     <string name="add_movies_and_tv_shows_to_build_your_personal_watchlist_the_perfect_binge_starts_here">Add movies and TV shows to build your personal watchlist. The perfect binge starts here!</string>
     <string name="view_all">View all</string>
+    <string name="undo">Undo</string>
 </resources>
