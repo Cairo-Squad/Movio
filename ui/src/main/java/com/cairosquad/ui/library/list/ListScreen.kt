@@ -25,8 +25,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.basic_component.RefreshBox
@@ -85,8 +83,8 @@ private fun ListScreenContent(
     listName: String,
     listener: ListContentInteractionListener
 ) {
-    val movies = uiState.movies.collectAsLazyPagingItems()
-    val series = uiState.series.collectAsLazyPagingItems()
+    val movies = uiState.movies
+    val series = uiState.series
 
     RefreshBox(
         modifier = Modifier.fillMaxSize(),
@@ -139,7 +137,7 @@ private fun ListScreenContent(
                     }
 
                     ListContentScreenState.SectionStatus.SUCCESS -> {
-                        if (movies.itemCount != 0 || series.itemCount != 0) {
+                        if (movies.size != 0 || series.size != 0) {
                             ListContent(
                                 modifier = Modifier.padding(top = 12.dp),
                                 movies = movies,
@@ -168,8 +166,8 @@ private fun ListScreenContent(
 
 @Composable
 private fun ListContent(
-    movies: LazyPagingItems<ListContentScreenState.MovieUiState>,
-    series: LazyPagingItems<ListContentScreenState.SeriesUiState>,
+    movies: List<ListContentScreenState.MovieUiState>,
+    series: List<ListContentScreenState.SeriesUiState>,
     listener: ListContentInteractionListener,
     modifier: Modifier = Modifier
 ) {
@@ -178,7 +176,7 @@ private fun ListContent(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(vertical = 16.dp)
     ) {
-        items(movies.itemCount, key = { it -> "${movies[it]?.id} + ${movies[it]?.title}" }
+        items(movies.size, key = { it -> "${movies[it]?.id} + ${movies[it]?.title}" }
         ) { index ->
             movies[index]?.let { movie ->
 
@@ -197,7 +195,7 @@ private fun ListContent(
             }
         }
         items(
-            series.itemCount,
+            series.size,
             key = { it -> "${series[it]?.id} + ${series[it]?.title}" }) { index ->
             series[index]?.let { series ->
                 SwipeToDeleteContainer(

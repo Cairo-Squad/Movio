@@ -3,7 +3,6 @@ package com.cairosquad.viewmodel.library.list_content
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import androidx.paging.filter
 import androidx.paging.map
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.AccountUseCase
@@ -39,26 +38,24 @@ class ListContentViewModel @AssistedInject constructor(
 
     private fun getListDetails() {
         loadMoviesOfList(listId)
-        loadSeriesOfList(listId)
+//        loadSeriesOfList(listId)
     }
 
     private fun loadMoviesOfList(listId: Long) {
         tryToCall(
             block = {
-                cacheMappedPagingData(
-                    scope = viewModelScope,
-                    fetch = { listContentPager.movies(listId) },
-                    map = { it.toUiState() }
-                )
+                accountUseCase.getMoviesOfList(listId, 1)
             },
             onSuccess = { movies ->
-                val filteredMovies = screenState.value.movies.map { pagingData ->
-                    pagingData.filter { movie -> movie.id !in screenState.value.deletedMoviesIds }
+                val filteredMovies = movies.filter {
+                    movie -> movie.id !in screenState.value.deletedMoviesIds
                 }
                 updateState {
-                    it.copy(movies = filteredMovies)
+                    it.copy(
+                        movies = filteredMovies.map { it.toUiState() } ,
+                        screenStatus = ListContentScreenState.SectionStatus.SUCCESS
+                    )
                 }
-                updateScreenStatus(ListContentScreenState.SectionStatus.SUCCESS)
             },
             onError = {
                 updateScreenStatus(ListContentScreenState.SectionStatus.ERROR)
@@ -70,15 +67,13 @@ class ListContentViewModel @AssistedInject constructor(
     private fun loadSeriesOfList(listId: Long) {
         tryToCall(
             block = {
-                cacheMappedPagingData(
-                    scope = viewModelScope,
-                    fetch = { listContentPager.series(listId) },
-                    map = { it.toUiState() }
-                )
+                accountUseCase.getSeriesOfList(listId, 1)
             },
-            onSuccess = { series ->
-                updateState { it.copy(series = series) }
-                updateScreenStatus(ListContentScreenState.SectionStatus.SUCCESS)
+            onSuccess = { seriesList ->
+                updateState { it.copy(
+                    series = seriesList.map { it.toUiState() },
+                    screenStatus = ListContentScreenState.SectionStatus.SUCCESS
+                ) }
             },
             onError = {
                 updateScreenStatus(ListContentScreenState.SectionStatus.ERROR)

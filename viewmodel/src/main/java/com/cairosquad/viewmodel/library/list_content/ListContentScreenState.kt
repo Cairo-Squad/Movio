@@ -1,9 +1,6 @@
 package com.cairosquad.viewmodel.library.list_content
 
-import androidx.paging.PagingData
 import com.cairosquad.viewmodel.exception.ErrorStatus
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 
 data class ListContentScreenState(
     val screenStatus: SectionStatus = SectionStatus.LOADING,
@@ -11,9 +8,9 @@ data class ListContentScreenState(
 
     val isRefreshing: Boolean = false,
 
-    val movies: Flow<PagingData<MovieUiState>> = flowOf(PagingData.empty()),
+    val movies: List<MovieUiState> = emptyList(),
     val deletedMoviesIds: List<Long> = emptyList(),
-    val series: Flow<PagingData<SeriesUiState>> = flowOf(PagingData.empty()),
+    val series: List<SeriesUiState> = emptyList(),
     val deletedSeriesIds: List<Long> = emptyList(),
 ) {
 

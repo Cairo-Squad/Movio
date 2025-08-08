@@ -1,15 +1,12 @@
 package com.cairosquad.viewmodel.library.view_all_lists
 
-import androidx.paging.PagingData
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.library.LibraryScreenState.ListsUiState
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 
 data class ViewAllListsScreenState(
     val screenStatus: SectionStatus = SectionStatus.LOADING,
-    val movieLists: Flow<PagingData<ListsUiState>> = flowOf(PagingData.empty()),
-    val seriesLists: Flow<PagingData<ListsUiState>> = flowOf(PagingData.empty()),
+    val movieLists: List<ListsUiState> = emptyList(),
+    val seriesLists: List<ListsUiState> = emptyList(),
 
     val isCreateListBottomSheetVisible: Boolean = false,
 
