@@ -479,7 +479,7 @@ class MovieViewModel @AssistedInject constructor(
                     updateState {
                         it.copy(
                             showSnackBar = true,
-                            snackMessage = status.statusMessage,
+                            snackMessageId = R.string.rated_successfully,
                             isProcessSuccess = true,
                             isRated = true
                         )
@@ -488,7 +488,7 @@ class MovieViewModel @AssistedInject constructor(
                     updateState {
                         it.copy(
                             showSnackBar = false,
-                            snackMessage = status.statusMessage,
+                            snackMessageId = R.string.rated_successfully,
                             isProcessSuccess = true,
                             isRated = true
                         )

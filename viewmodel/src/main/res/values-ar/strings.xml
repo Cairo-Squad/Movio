@@ -13,6 +13,7 @@
     <string name="popularity">الأشهر</string>
     <string name="latest">الاحدث</string>
     <string name="added_to_list">تمت الاضافة للقائمة</string>
+    <string name="rated_successfully">تم التقييم بنجاح</string>">
     <string name="movie_already_in_list">سبق وان اضيف الفلم لهذه القائمة</string>
     <string name="error_adding_movie_to_list">حدث خطأ اثناء اضافة الفلم للقاشمة</string>
     <string name="copied_to_clip_board_successfully">تم النسخ بنجاح</string>
