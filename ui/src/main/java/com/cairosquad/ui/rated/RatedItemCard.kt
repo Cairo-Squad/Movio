@@ -1,7 +1,15 @@
 package com.cairosquad.ui.rated
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -9,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.basic_component.Icon
@@ -17,7 +24,6 @@ import com.cairosquad.design_system.basic_component.Text
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import com.cairosquad.ui.BuildConfig
-import com.cairosquad.ui.R
 import com.cairosquad.viewmodel.rated.RatedItemUiState
 import java.text.DecimalFormat
 
@@ -31,7 +37,12 @@ fun RatedItemCard(
     val formattedRating = DecimalFormat("#.#").format(item.rating)
 
     Row(
-        modifier = modifier.fillMaxWidth().height(100.dp)
+        modifier = modifier
+            .fillMaxWidth()
+            .height(100.dp)
+            .clickable {
+                onItemClick(item.id, item.isMovie)
+            }
     ) {
         SafeImageViewer(
             model = BuildConfig.IMAGE_BASE_URL + (item.posterPath ?: ""),
@@ -61,9 +72,7 @@ fun RatedItemCard(
             //create a row with stars representing the rating
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.clickable {
-                    onItemClick(item.id, item.isMovie)
-                }
+                modifier = Modifier
             ) {
                 repeat(5) { index ->
                     val starIcon =
