@@ -15,20 +15,26 @@ import com.cairosquad.local.cache.series.SeasonEpisodeCacheDao
 import com.cairosquad.local.cache.series.SeasonEpisodeLocalDataSourceImpl
 import com.cairosquad.local.cache.series.SeriesCacheDao
 import com.cairosquad.local.cache.series.SeriesLocalDataSourceImpl
+import com.cairosquad.local.language.LanguageDataStoreSourceImpl
 import com.cairosquad.local.login.LocalAuthenticationDataSourceImpl
 import com.cairosquad.local.login.dao.LoginDao
 import com.cairosquad.local.onboarding.OnboardingDataSourceImpl
 import com.cairosquad.local.search.recent.LocalRecentSearchDataSourceImpl
 import com.cairosquad.local.search.recent.dao.LocalRecentSearchDao
+import com.cairosquad.local.theme.ThemeDataStoreSourceImpl
 import com.cairosquad.local.utils.MovioDataBase
+import com.cairosquad.local.version.VersionDataSourceImpl
 import com.cairosquad.repository.account.data_source.local.AccountLocalDataSource
 import com.cairosquad.repository.artists.data_source.local.ArtistsLocalDataSource
+import com.cairosquad.repository.language.LanguageDataSource
 import com.cairosquad.repository.login.data_source.local.LocalAuthenticationDataSource
 import com.cairosquad.repository.movie.data_source.local.MoviesLocalDataSource
 import com.cairosquad.repository.onboarding.data_source.local.OnboardingDataSource
 import com.cairosquad.repository.search.data_source.local.LocalRecentSearchDataSource
 import com.cairosquad.repository.series.data_source.local.SeasonEpisodeLocalDataSource
 import com.cairosquad.repository.series.data_source.local.SeriesLocalDataSource
+import com.cairosquad.repository.theme.ThemeDataSource
+import com.cairosquad.repository.version.VersionDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -152,4 +158,23 @@ object LocalDataSourceModule {
     fun provideAccountLocalDataSource(
         accountCacheDao: AccountCacheDao
     ): AccountLocalDataSource = AccountLocalDataSourceImpl(accountCacheDao)
+
+
+    @Singleton
+    @Provides
+    fun provideThemeDataSource(@ApplicationContext context: Context): ThemeDataSource {
+        return ThemeDataStoreSourceImpl(context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideLanguageDataSource(@ApplicationContext context: Context): LanguageDataSource {
+        return LanguageDataStoreSourceImpl(context)
+    }
+    @Provides
+    @Singleton
+    fun provideVersionDataSource(@ApplicationContext context: Context): VersionDataSource {
+        return VersionDataSourceImpl(context)
+    }
+
 }

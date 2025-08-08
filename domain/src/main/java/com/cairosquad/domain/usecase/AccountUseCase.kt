@@ -15,6 +15,10 @@ class AccountUseCase @Inject constructor(
         return accountRepository.getAccountDetails()
     }
 
+    suspend fun removeAccountDetails() {
+        accountRepository.removeAccountDetails()
+    }
+
     suspend fun getSeriesLists(page: Int): List<MediaList> {
         return accountRepository.getSeriesLists(page)
     }

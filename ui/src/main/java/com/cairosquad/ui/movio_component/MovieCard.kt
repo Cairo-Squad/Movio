@@ -27,13 +27,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.Icon
 import com.cairosquad.design_system.basic_component.Text
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import com.cairosquad.ui.BuildConfig
+import com.cairosquad.ui.R
 import java.util.Locale
 
 /**
@@ -65,7 +65,7 @@ fun MovieCard(
             if (imgUrl?.isNotEmpty() == true) {
                 SafeImageViewer(
                     model = BuildConfig.IMAGE_BASE_URL + imgUrl,
-                    contentDescription = stringResource(R.string.movie_poster),
+                    contentDescription = stringResource(com.cairosquad.design_system.R.string.movie_poster),
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(RoundedCornerShape(8.dp)),
@@ -86,8 +86,8 @@ fun MovieCard(
                 ) {
                     Icon(
                         modifier = Modifier.size(24.dp),
-                        imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
-                        contentDescription = stringResource(R.string.default_image_icon),
+                        imageVector = ImageVector.vectorResource(id = com.cairosquad.design_system.R.drawable.image_icon),
+                        contentDescription = stringResource(com.cairosquad.design_system.R.string.default_image_icon),
                         tint = Color(0xFFEFF1F5)
                     )
                 }
@@ -114,7 +114,7 @@ fun MovieCard(
                 Icon(
                     modifier = Modifier
                         .padding(end = 4.dp),
-                    imageVector = ImageVector.vectorResource(id = R.drawable.star),
+                    imageVector = ImageVector.vectorResource(id = com.cairosquad.design_system.R.drawable.review_star),
                     contentDescription = stringResource(R.string.rating_star),
                     tint = Color.Unspecified,
                 )

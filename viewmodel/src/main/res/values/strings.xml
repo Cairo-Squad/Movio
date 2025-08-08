@@ -27,4 +27,6 @@
     <string name="favorite_restore_fail">Item could not be restore.</string>
     <string name="list_created_successfully">List created successfully.</string>
     <string name="error_creating_list">Error creating list.</string>
+    <string name="dark_mode">Dark</string>
+    <string name="light_mode">Light</string>
 </resources>

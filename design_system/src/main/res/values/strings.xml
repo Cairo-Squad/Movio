@@ -79,4 +79,6 @@
     <string name="error_parsing_data">Something went wrong while processing data</string>
     <string name="categories">Categories</string>
     <string name="try_again">Try Again</string>
- </resources>
+    <string name="logo">logo</string>
+    <string name="choose_language">Choose Language</string>
+</resources>

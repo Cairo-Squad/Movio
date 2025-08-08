@@ -27,4 +27,7 @@
     <string name="favorite_restore_fail">تعذر إعادة العنصر.</string>
     <string name="list_created_successfully">تم انشاء القائمة بنجاح.</string>
     <string name="error_creating_list">حدث خطأ اثناء انشاء القائمة</string>
+    <string name="dark_mode">Dark</string>
+    <string name="light_mode">Light</string>
+
 </resources>

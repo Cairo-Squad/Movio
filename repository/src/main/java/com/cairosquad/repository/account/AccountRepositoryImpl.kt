@@ -146,4 +146,8 @@ class AccountRepositoryImpl @Inject constructor(
     override suspend fun createList(listName: String) {
         accountRemoteDataSource.createList(listName)
     }
+
+    override suspend fun removeAccountDetails() {
+        accountLocalDataSource.removeAccount()
+    }
 }

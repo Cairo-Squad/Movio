@@ -99,3 +99,6 @@ data class ListRoute(
     val listId: Long,
     val listName: String
 )
+
+@Serializable
+data object MyRatingsRoute

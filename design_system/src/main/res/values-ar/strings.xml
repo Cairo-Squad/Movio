@@ -79,5 +79,7 @@
     <string name="error_parsing_data">حدث خطأ أثناء معالجة البيانات</string>
     <string name="categories">الأصناف</string>
     <string name="try_again">حاول مجددا</string>
+    <string name="logo">شعار</string>
+    <string name="choose_language">اختر اللغة</string>
 
 </resources>
