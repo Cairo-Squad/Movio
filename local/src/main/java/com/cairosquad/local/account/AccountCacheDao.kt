@@ -14,4 +14,7 @@ interface AccountCacheDao {
 
     @Query("SELECT * FROM AccountLocalDto")
     suspend fun getAccount(): List<AccountLocalDto>
+
+    @Query("DELETE FROM AccountLocalDto")
+    suspend fun deleteAccount()
 }

@@ -42,6 +42,7 @@ android {
     room {
         schemaDirectory("schemas")
     }
+
 }
 
 dependencies {

@@ -30,6 +30,7 @@ import com.cairosquad.ui.library.view_all.ViewAllFavorite
 import com.cairosquad.ui.library.view_all.ViewAllHistory
 import com.cairosquad.ui.library.view_all.ViewAllLists
 import com.cairosquad.ui.onboarding.OnboardingScreen
+import com.cairosquad.ui.rated.MyRatingsScreen
 import com.cairosquad.ui.search.ForYouScreen
 import com.cairosquad.ui.see_all_screen.SeeAllScreen
 import com.cairosquad.ui.splash.SplashScreen
@@ -182,6 +183,9 @@ fun AppNavigation(
                     listId = backStackEntry.toRoute<ListRoute>().listId,
                     listName = backStackEntry.toRoute<ListRoute>().listName
                 )
+            }
+            composable<MyRatingsRoute> {
+                MyRatingsScreen()
             }
         }
     }

@@ -147,4 +147,8 @@ class AccountRepositoryImpl @Inject constructor(
     override suspend fun removeMovieFromList(listId: Long, movieId: Long) {
         accountRemoteDataSource.removeMovieFromList(listId, movieId)
     }
+
+    override suspend fun removeAccountDetails() {
+        accountLocalDataSource.removeAccount()
+    }
 }
