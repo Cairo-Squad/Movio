@@ -216,20 +216,6 @@ data class MediaHorizontalPagerItem(
 				isMovie = media.isMovie
 			)
 		}
-
-		fun fromHomeSectionUiState(
-			sectionUiState: HomeScreenState.SectionUiState?
-		): List<MediaHorizontalPagerItem> {
-			val mergedList = mutableListOf<MediaHorizontalPagerItem>()
-			val moviesIterator = sectionUiState?.movies?.iterator() ?: return emptyList()
-			val seriesIterator = sectionUiState.series.iterator()
-
-			while (moviesIterator.hasNext() || seriesIterator.hasNext()) {
-				if (moviesIterator.hasNext()) mergedList.add(fromHomeMediaUiState(moviesIterator.next()))
-				if (seriesIterator.hasNext()) mergedList.add(fromHomeMediaUiState(seriesIterator.next()))
-			}
-			return mergedList
-		}
 	}
 }
 

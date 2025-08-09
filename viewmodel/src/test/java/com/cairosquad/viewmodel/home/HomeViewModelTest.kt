@@ -1,6 +1,8 @@
 package com.cairosquad.viewmodel.home
 
 import app.cash.turbine.test
+import com.cairosquad.domain.exception.InternetConnectionException
+import com.cairosquad.domain.exception.NetworkException
 import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
@@ -8,6 +10,7 @@ import com.cairosquad.entity.Account
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
+import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.util.MediaContentType
 import com.cairosquad.viewmodel.util.MediaType
 import com.google.common.truth.Truth.assertThat
@@ -47,10 +50,19 @@ class HomeViewModelTest {
         accountUseCase = mockk(relaxed = true)
         unifiedMediaPager = mockk(relaxed = true)
         viewModel = HomeViewModel(
-            manageMoviesUseCase,
-            manageSeriesUseCase,
-            accountUseCase,
-            unifiedMediaPager
+            manageMoviesUseCase = manageMoviesUseCase,
+            manageSeriesUseCase = manageSeriesUseCase,
+            accountUseCase = accountUseCase,
+            unifiedMediaPager = unifiedMediaPager
+        )
+    }
+
+    private fun createViewModel(): HomeViewModel {
+        return HomeViewModel(
+            manageMoviesUseCase = manageMoviesUseCase,
+            manageSeriesUseCase = manageSeriesUseCase,
+            accountUseCase = accountUseCase,
+            unifiedMediaPager = unifiedMediaPager
         )
     }
 
@@ -59,154 +71,64 @@ class HomeViewModelTest {
         Dispatchers.resetMain()
     }
 
-//    @Test
-//    fun `should initialize data when viewmodel created`() = runTest {
-//        coEvery { accountUseCase.getAccountDetails() } returns account
-//        coEvery { manageMoviesUseCase.getPopularMovies(1, null) } returns listOf(movie1)
-//        coEvery { manageSeriesUseCase.getPopularSeries(1, null) } returns listOf(series1)
-//        coEvery { manageMoviesUseCase.getMoviesGenres() } returns listOf(genre1)
-//        coEvery { manageSeriesUseCase.getSeriesGenres() } returns listOf(genre2)
-//        coEvery { unifiedMediaPager.getCombinedMedia(null) } returns flowOf()
-//
-//        viewModel = HomeViewModel(
-//            manageMoviesUseCase,
-//            manageSeriesUseCase,
-//            accountUseCase,
-//            unifiedMediaPager
-//        )
-//        advanceUntilIdle()
-//
-//        assertThat(viewModel.screenState.value.profileImage).isEqualTo("/avatar.jpg")
-//        assertThat(viewModel.screenState.value.popularMovies).isEqualTo(listOf(movie1.toHomeMediaUiState()))
-//        assertThat(viewModel.screenState.value.popularSeries).isEqualTo(listOf(series1.toHomeMediaUiState()))
-//        assertThat(viewModel.screenState.value.genres).isEqualTo(
-//            listOf(
-//                HomeScreenState.GenreUiState.defaultGenre,
-//                genre1.toHomeGenreUiState(),
-//                genre2.toHomeGenreUiState()
-//            )
-//        )
-//        assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DataRequestStatus.SUCCESS)
-//    }
+    @Test
+    fun `should initialize data when viewmodel created`() = runTest {
+        coEvery { accountUseCase.getAccountDetails() } returns account
+        coEvery { manageMoviesUseCase.getPopularMovies(1, null) } returns listOf(movie1)
+        coEvery { unifiedMediaPager.getCombinedMedia(null) } returns flowOf()
 
-//    @Test
-//    fun `should load all data when loadHomeScreenData called`() = runTest {
-//        coEvery { accountUseCase.getAccountDetails() } returns account
-//        coEvery { manageMoviesUseCase.getPopularMovies(1, null) } returns listOf(movie1)
-//        coEvery { manageSeriesUseCase.getPopularSeries(1, null) } returns listOf(series1)
-//        coEvery { manageMoviesUseCase.getMoviesGenres() } returns listOf(genre1)
-//        coEvery { manageSeriesUseCase.getSeriesGenres() } returns listOf(genre2)
-//        coEvery { unifiedMediaPager.getCombinedMedia(null) } returns flowOf()
-//
-//        viewModel.loadHomeScreenData()
-//        advanceUntilIdle()
-//
-//        assertThat(viewModel.screenState.value.profileImage).isEqualTo("/avatar.jpg")
-//        assertThat(viewModel.screenState.value.popularMovies).isEqualTo(listOf(movie1.toHomeMediaUiState()))
-//        assertThat(viewModel.screenState.value.popularSeries).isEqualTo(listOf(series1.toHomeMediaUiState()))
-//        assertThat(viewModel.screenState.value.genres).isEqualTo(
-//            listOf(
-//                HomeScreenState.GenreUiState.defaultGenre,
-//                genre1.toHomeGenreUiState(),
-//                genre2.toHomeGenreUiState()
-//            )
-//        )
-//        assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DataRequestStatus.SUCCESS)
-//    }
-//
-//    @Test
-//    fun `should update popular media when loadHomeScreenData succeeds`() = runTest {
-//        coEvery { accountUseCase.getAccountDetails() } returns account
-//        coEvery { manageMoviesUseCase.getPopularMovies(1, null) } returns listOf(movie1)
-//        coEvery { manageSeriesUseCase.getPopularSeries(1, null) } returns listOf(series1)
-//        coEvery { manageMoviesUseCase.getMoviesGenres() } returns listOf(genre1)
-//        coEvery { manageSeriesUseCase.getSeriesGenres() } returns listOf(genre2)
-//        coEvery { unifiedMediaPager.getCombinedMedia(null) } returns flowOf()
-//
-//        viewModel.loadHomeScreenData()
-//        advanceUntilIdle()
-//
-//        assertThat(viewModel.screenState.value.popularMovies).isEqualTo(listOf(movie1.toHomeMediaUiState()))
-//        assertThat(viewModel.screenState.value.popularSeries).isEqualTo(listOf(series1.toHomeMediaUiState()))
-//        assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DataRequestStatus.SUCCESS)
-//        assertThat(viewModel.screenState.value.isRefreshing).isFalse()
-//    }
-//
-//    @Test
-//    fun `should set error status when loadHomeScreenData fails with InternetConnectionException`() =
-//        runTest {
-//            coEvery { accountUseCase.getAccountDetails() } returns account
-//            coEvery {
-//                manageMoviesUseCase.getPopularMovies(
-//                    1,
-//                    null
-//                )
-//            } throws InternetConnectionException()
-//            coEvery { manageMoviesUseCase.getMoviesGenres() } returns listOf(genre1)
-//            coEvery { manageSeriesUseCase.getSeriesGenres() } returns listOf(genre2)
-//            coEvery { unifiedMediaPager.getCombinedMedia(null) } returns flowOf()
-//
-//            viewModel.loadHomeScreenData()
-//            advanceUntilIdle()
-//
-//            assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DataRequestStatus.FAILED)
-//            assertThat(viewModel.screenState.value.errorStatus).isEqualTo(ErrorStatus.NO_INTERNET)
-//            assertThat(viewModel.screenState.value.isRefreshing).isFalse()
-//        }
-//
-//    @Test
-//    fun `should set error status when loadHomeScreenData fails with NetworkException`() = runTest {
-//        coEvery { accountUseCase.getAccountDetails() } returns account
-//        coEvery { manageMoviesUseCase.getPopularMovies(1, null) } throws NetworkException()
-//        coEvery { manageMoviesUseCase.getMoviesGenres() } returns listOf(genre1)
-//        coEvery { manageSeriesUseCase.getSeriesGenres() } returns listOf(genre2)
-//        coEvery { unifiedMediaPager.getCombinedMedia(null) } returns flowOf()
-//
-//        viewModel.loadHomeScreenData()
-//        advanceUntilIdle()
-//
-//        assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DataRequestStatus.FAILED)
-//        assertThat(viewModel.screenState.value.errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
-//        assertThat(viewModel.screenState.value.isRefreshing).isFalse()
-//    }
-//
-//    @Test
-//    fun `should set error status when loadHomeScreenData fails with generic exception`() = runTest {
-//        coEvery { accountUseCase.getAccountDetails() } returns account
-//        coEvery { manageMoviesUseCase.getPopularMovies(1, null) } throws IOException()
-//        coEvery { manageMoviesUseCase.getMoviesGenres() } returns listOf(genre1)
-//        coEvery { manageSeriesUseCase.getSeriesGenres() } returns listOf(genre2)
-//        coEvery { unifiedMediaPager.getCombinedMedia(null) } returns flowOf()
-//
-//        viewModel.loadHomeScreenData()
-//        advanceUntilIdle()
-//
-//        assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DataRequestStatus.FAILED)
-//        assertThat(viewModel.screenState.value.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
-//        assertThat(viewModel.screenState.value.isRefreshing).isFalse()
-//    }
-//
-//    @Test
-//    fun `should load genres when loadHomeScreenData succeeds`() = runTest {
-//        coEvery { accountUseCase.getAccountDetails() } returns account
-//        coEvery { manageMoviesUseCase.getPopularMovies(1, null) } returns listOf(movie1)
-//        coEvery { manageSeriesUseCase.getPopularSeries(1, null) } returns listOf(series1)
-//        coEvery { manageMoviesUseCase.getMoviesGenres() } returns listOf(genre1)
-//        coEvery { manageSeriesUseCase.getSeriesGenres() } returns listOf(genre2)
-//        coEvery { unifiedMediaPager.getCombinedMedia(null) } returns flowOf()
-//
-//        viewModel.loadHomeScreenData()
-//        advanceUntilIdle()
-//
-//        assertThat(viewModel.screenState.value.genres).isEqualTo(
-//            listOf(
-//                HomeScreenState.GenreUiState.defaultGenre,
-//                genre1.toHomeGenreUiState(),
-//                genre2.toHomeGenreUiState()
-//            )
-//        )
-//    }
+        viewModel = createViewModel()
+        advanceUntilIdle()
 
+        assertThat(viewModel.screenState.value.profileImage).isEqualTo("/avatar.jpg")
+        assertThat(viewModel.screenState.value.popularMovies).isEqualTo(listOf(movie1.toHomeMediaUiState()))
+        assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DataRequestStatus.SUCCESS)
+    }
+
+    @Test
+    fun `should set error status when loadHomeScreenData fails with InternetConnectionException`() =
+        runTest {
+            coEvery {
+                manageMoviesUseCase.getPopularMovies(
+                    1,
+                    null
+                )
+            } throws InternetConnectionException()
+            coEvery { manageMoviesUseCase.getTopRatingMovies(1) } throws InternetConnectionException()
+
+            viewModel.loadHomeScreenData()
+            advanceUntilIdle()
+
+            assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DataRequestStatus.FAILED)
+            assertThat(viewModel.screenState.value.errorStatus).isEqualTo(ErrorStatus.NO_INTERNET)
+            assertThat(viewModel.screenState.value.isRefreshing).isFalse()
+        }
+
+    @Test
+    fun `should set error status when loadHomeScreenData fails with NetworkException`() = runTest {
+        coEvery { manageMoviesUseCase.getPopularMovies(1, null) } throws NetworkException()
+        coEvery { manageMoviesUseCase.getTopRatingMovies(1) } throws NetworkException()
+
+        viewModel.loadHomeScreenData()
+        advanceUntilIdle()
+
+        assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DataRequestStatus.FAILED)
+        assertThat(viewModel.screenState.value.errorStatus).isEqualTo(ErrorStatus.NETWORK_ERROR)
+        assertThat(viewModel.screenState.value.isRefreshing).isFalse()
+    }
+
+    @Test
+    fun `should set error status when loadHomeScreenData fails with generic exception`() = runTest {
+        coEvery { manageMoviesUseCase.getPopularMovies(1, null) } throws IOException()
+        coEvery { manageMoviesUseCase.getTopRatingMovies(1) } throws IOException()
+
+        viewModel.loadHomeScreenData()
+        advanceUntilIdle()
+
+        assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DataRequestStatus.FAILED)
+        assertThat(viewModel.screenState.value.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
+        assertThat(viewModel.screenState.value.isRefreshing).isFalse()
+    }
 
     @Test
     fun `should update profile image when loadHomeScreenData succeeds`() = runTest {
@@ -270,19 +192,19 @@ class HomeViewModelTest {
         }
     }
 
-//    @Test
-//    fun `should update genre and fetch media when onGenreSelected called`() = runTest {
-//        coEvery { manageMoviesUseCase.getMoviesGenres() } returns listOf(genre1)
-//        coEvery { manageSeriesUseCase.getSeriesGenres() } returns emptyList()
-//        coEvery { unifiedMediaPager.getCombinedMedia(genre1.id) } returns flowOf()
-//        viewModel.loadHomeScreenData()
-//        advanceUntilIdle()
-//
-//        viewModel.onGenreSelected(1)
-//        advanceUntilIdle()
-//
-//        assertThat(viewModel.screenState.value.selectedGenreIndex).isEqualTo(1)
-//    }
+    @Test
+    fun `should update genre and fetch media when onGenreSelected called`() = runTest {
+        coEvery { manageMoviesUseCase.getMoviesGenres() } returns listOf(genre1)
+        coEvery { manageSeriesUseCase.getSeriesGenres() } returns emptyList()
+        coEvery { unifiedMediaPager.getCombinedMedia(genre1.id) } returns flowOf()
+        viewModel.onClickTab(HomeScreenState.Tab.CATEGORIES.ordinal)
+        advanceUntilIdle()
+
+        viewModel.onGenreSelected(1)
+        advanceUntilIdle()
+
+        assertThat(viewModel.screenState.value.selectedGenreIndex).isEqualTo(1)
+    }
 
     @Test
     fun `should update tab and fetch media when onClickTab categories`() = runTest {
@@ -303,6 +225,14 @@ class HomeViewModelTest {
     }
 
     @Test
+    fun `should update tab when onClickTab series`() = runTest {
+        viewModel.onClickTab(HomeScreenState.Tab.TV_SHOWS.ordinal)
+        advanceUntilIdle()
+
+        assertThat(viewModel.screenState.value.selectedTab).isEqualTo(HomeScreenState.Tab.TV_SHOWS)
+    }
+
+    @Test
     fun `should not update state when onSortingSelected same filter`() = runTest {
         viewModel.onSortingSelected(HomeScreenState.SortingType.ALL)
         advanceUntilIdle()
@@ -314,218 +244,112 @@ class HomeViewModelTest {
         assertThat(viewModel.screenState.value).isEqualTo(initialState)
     }
 
-//    @Test
-//    fun `should sort media by all when onSortingSelected all`() = runTest {
-//        coEvery { manageMoviesUseCase.getMoviesGenres() } returns listOf(genre1)
-//        coEvery { manageSeriesUseCase.getSeriesGenres() } returns emptyList()
-//        coEvery { unifiedMediaPager.getCombinedMedia(genre1.id, null) } returns flowOf()
-//        viewModel.loadHomeScreenData()
-//        viewModel.onGenreSelected(1)
-//        advanceUntilIdle()
-//
-//        viewModel.onSortingSelected(HomeScreenState.SortingType.ALL)
-//        advanceUntilIdle()
-//
-//        assertThat(viewModel.screenState.value.selectedSortingType).isEqualTo(HomeScreenState.SortingType.ALL)
-//    }
-//
-//    @Test
-//    fun `should sort media by popularity when onSortingSelected popularity`() = runTest {
-//        coEvery { manageMoviesUseCase.getMoviesGenres() } returns listOf(genre1)
-//        coEvery { manageSeriesUseCase.getSeriesGenres() } returns emptyList()
-//        coEvery { unifiedMediaPager.getCombinedMedia(genre1.id, SortType.POPULAR) } returns flowOf()
-//        viewModel.loadHomeScreenData()
-//        viewModel.onGenreSelected(1)
-//        advanceUntilIdle()
-//
-//        viewModel.onSortingSelected(HomeScreenState.SortingType.POPULARITY)
-//        advanceUntilIdle()
-//
-//        assertThat(viewModel.screenState.value.selectedSortingType).isEqualTo(HomeScreenState.SortingType.POPULARITY)
-//    }
-//
-//    @Test
-//    fun `should sort media by latest when onSortingSelected latest`() = runTest {
-//        coEvery { manageMoviesUseCase.getMoviesGenres() } returns listOf(genre1)
-//        coEvery { manageSeriesUseCase.getSeriesGenres() } returns emptyList()
-//        coEvery { unifiedMediaPager.getCombinedMedia(genre1.id, SortType.LATEST) } returns flowOf()
-//        viewModel.loadHomeScreenData()
-//        viewModel.onGenreSelected(1)
-//        advanceUntilIdle()
-//
-//        viewModel.onSortingSelected(HomeScreenState.SortingType.LATEST)
-//        advanceUntilIdle()
-//
-//        assertThat(viewModel.screenState.value.selectedSortingType).isEqualTo(HomeScreenState.SortingType.LATEST)
-//    }
-//
-//
-//    @Test
-//    fun `should fetch top rating data when onSectionVisible top rating`() = runTest {
-//        coEvery { manageMoviesUseCase.getTopRatingMovies(1, null) } returns listOf(movie1)
-//        coEvery { manageSeriesUseCase.getTopRatingSeries(1, null) } returns listOf(series1)
-//
-//        advanceUntilIdle()
-//
-//        assertThat(viewModel.screenState.value.sections).isEqualTo(
-//            mapOf(
-//                MediaContentType.TOP_RATING to HomeScreenState.SectionUiState(
-//                    movies = listOf(movie1.toHomeMediaUiState()),
-//                    series = listOf(series1.toHomeMediaUiState()),
-//                    isLoading = false
-//                )
-//            ).entries.sortedBy { it.key.ordinal }.associate { it.key to it.value }
-//        )
-//    }
-//
-//    @Test
-//    fun `should fetch now playing data when onSectionVisible now playing`() = runTest {
-//        coEvery { manageMoviesUseCase.getNowPlayingMovies(1, null) } returns listOf(movie1)
-//
-//        advanceUntilIdle()
-//
-//        assertThat(viewModel.screenState.value.sections).isEqualTo(
-//            mapOf(
-//                MediaContentType.NOW_PLAYING to HomeScreenState.SectionUiState(
-//                    movies = listOf(movie1.toHomeMediaUiState()),
-//                    series = emptyList(),
-//                    isLoading = false
-//                )
-//            ).entries.sortedBy { it.key.ordinal }.associate { it.key to it.value }
-//        )
-//    }
-//
-//    @Test
-//    fun `should fetch upcoming data when onSectionVisible upcoming`() = runTest {
-//        coEvery { manageMoviesUseCase.getUpcomingMovies(1, null) } returns listOf(movie1)
-//        coEvery { manageSeriesUseCase.getFreeToWatchSeries(1, null) } returns listOf(series1)
-//
-//        advanceUntilIdle()
-//
-//        assertThat(viewModel.screenState.value.sections).isEqualTo(
-//            mapOf(
-//                MediaContentType.UPCOMING to HomeScreenState.SectionUiState(
-//                    movies = listOf(movie1.toHomeMediaUiState()),
-//                    series = listOf(series1.toHomeMediaUiState()),
-//                    isLoading = false
-//                )
-//            ).entries.sortedBy { it.key.ordinal }.associate { it.key to it.value }
-//        )
-//    }
-//
-//    @Test
-//    fun `should fetch more recommended data when onSectionVisible more recommended`() = runTest {
-//        coEvery { manageMoviesUseCase.getMoreRecommendedMovies(1, null) } returns listOf(movie1)
-//        coEvery { manageSeriesUseCase.getMoreRecommendedSeries(1, null) } returns listOf(series1)
-//
-//        advanceUntilIdle()
-//
-//        assertThat(viewModel.screenState.value.sections).isEqualTo(
-//            mapOf(
-//                MediaContentType.MORE_RECOMMENDED to HomeScreenState.SectionUiState(
-//                    movies = listOf(movie1.toHomeMediaUiState()),
-//                    series = listOf(series1.toHomeMediaUiState()),
-//                    isLoading = false
-//                )
-//            ).entries.sortedBy { it.key.ordinal }.associate { it.key to it.value }
-//        )
-//    }
-//
-//    @Test
-//    fun `should fetch free to watch data when onSectionVisible free to watch`() = runTest {
-//        coEvery { manageMoviesUseCase.getFreeToWatchMovies(1, null) } returns listOf(movie1)
-//
-//        advanceUntilIdle()
-//
-//        assertThat(viewModel.screenState.value.sections).isEqualTo(
-//            mapOf(
-//                MediaContentType.FREE_TO_WATCH to HomeScreenState.SectionUiState(
-//                    movies = listOf(movie1.toHomeMediaUiState()),
-//                    series = emptyList(),
-//                    isLoading = false
-//                )
-//            ).entries.sortedBy { it.key.ordinal }.associate { it.key to it.value }
-//        )
-//    }
-//
-//    @Test
-//    fun `should fetch airing today data when onSectionVisible airing today`() = runTest {
-//        coEvery { manageSeriesUseCase.getAiringTodaySeries(1, null) } returns listOf(series1)
-//        advanceUntilIdle()
-//
-//        assertThat(viewModel.screenState.value.sections).isEqualTo(
-//            mapOf(
-//                MediaContentType.AIRING_TODAY to HomeScreenState.SectionUiState(
-//                    movies = emptyList(),
-//                    series = listOf(series1.toHomeMediaUiState()),
-//                    isLoading = false
-//                )
-//            ).entries.sortedBy { it.key.ordinal }.associate { it.key to it.value }
-//        )
-//    }
+    @Test
+    fun `should sort media by all when onSortingSelected all`() = runTest {
+        coEvery { manageMoviesUseCase.getMoviesGenres() } returns listOf(genre1)
+        coEvery { manageSeriesUseCase.getSeriesGenres() } returns emptyList()
+        coEvery { unifiedMediaPager.getCombinedMedia(genre1.id, null) } returns flowOf()
 
-//    @Test
-//    fun `should fetch on tv data when onSectionVisible on tv`() = runTest {
-//        coEvery { manageSeriesUseCase.getOnTvSeries(1, null) } returns listOf(series1)
-//
-//        advanceUntilIdle()
-//
-//        assertThat(viewModel.screenState.value.sections).isEqualTo(
-//            mapOf(
-//                MediaContentType.ON_TV to HomeScreenState.SectionUiState(
-//                    movies = emptyList(),
-//                    series = listOf(series1.toHomeMediaUiState()),
-//                    isLoading = false
-//                )
-//            ).entries.sortedBy { it.key.ordinal }.associate { it.key to it.value }
-//        )
-//    }
+        viewModel.onClickTab(HomeScreenState.Tab.CATEGORIES.ordinal)
+        viewModel.onGenreSelected(1)
+        viewModel.onSortingSelected(HomeScreenState.SortingType.ALL)
+        advanceUntilIdle()
 
-//    @Test
-//    fun `should set error status when onSectionVisible fails with exception`() = runTest {
-//        coEvery { manageMoviesUseCase.getTopRatingMovies(1, null) } throws IOException()
-//
-//        advanceUntilIdle()
-//
-//        assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DataRequestStatus.FAILED)
-//        assertThat(viewModel.screenState.value.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
-//    }
-//
-//    @Test
-//    fun `should reload all data when onRefresh called`() = runTest {
-//        coEvery { accountUseCase.getAccountDetails() } returns account
-//        coEvery { manageMoviesUseCase.getPopularMovies(1, null) } returns listOf(movie1)
-//        coEvery { manageSeriesUseCase.getPopularSeries(1, null) } returns listOf(series1)
-//        coEvery { manageMoviesUseCase.getMoviesGenres() } returns listOf(genre1)
-//        coEvery { manageSeriesUseCase.getSeriesGenres() } returns listOf(genre2)
-//        coEvery { manageMoviesUseCase.getTopRatingMovies(1, null) } returns listOf(movie1)
-//        coEvery { manageSeriesUseCase.getTopRatingSeries(1, null) } returns listOf(series1)
-//
-//        viewModel.onRefresh()
-//        advanceUntilIdle()
-//
-//        assertThat(viewModel.screenState.value.profileImage).isEqualTo("/avatar.jpg")
-//        assertThat(viewModel.screenState.value.popularMovies).isEqualTo(listOf(movie1.toHomeMediaUiState()))
-//        assertThat(viewModel.screenState.value.popularSeries).isEqualTo(listOf(series1.toHomeMediaUiState()))
-//        assertThat(viewModel.screenState.value.genres).isEqualTo(
-//            listOf(
-//                HomeScreenState.GenreUiState.defaultGenre,
-//                genre1.toHomeGenreUiState(),
-//                genre2.toHomeGenreUiState()
-//            )
-//        )
-//        assertThat(viewModel.screenState.value.sections).isEqualTo(
-//            mapOf(
-//                MediaContentType.TOP_RATING to HomeScreenState.SectionUiState(
-//                    movies = listOf(movie1.toHomeMediaUiState()),
-//                    series = listOf(series1.toHomeMediaUiState()),
-//                    isLoading = false
-//                )
-//            ).entries.sortedBy { it.key.ordinal }.associate { it.key to it.value }
-//        )
-//        assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DataRequestStatus.SUCCESS)
-//        assertThat(viewModel.screenState.value.isRefreshing).isFalse()
-//    }
+        assertThat(viewModel.screenState.value.selectedSortingType).isEqualTo(HomeScreenState.SortingType.ALL)
+    }
+
+    @Test
+    fun `should sort media by all when onSortingSelected popularity`() = runTest {
+        coEvery { manageMoviesUseCase.getMoviesGenres() } returns listOf(genre1)
+        coEvery { manageSeriesUseCase.getSeriesGenres() } returns emptyList()
+        coEvery { unifiedMediaPager.getCombinedMedia(genre1.id, null) } returns flowOf()
+
+        viewModel.onClickTab(HomeScreenState.Tab.CATEGORIES.ordinal)
+        viewModel.onGenreSelected(1)
+        viewModel.onSortingSelected(HomeScreenState.SortingType.POPULARITY)
+        advanceUntilIdle()
+
+        assertThat(viewModel.screenState.value.selectedSortingType).isEqualTo(HomeScreenState.SortingType.POPULARITY)
+    }
+
+    @Test
+    fun `should sort media by all when onSortingSelected latest`() = runTest {
+        coEvery { manageMoviesUseCase.getMoviesGenres() } returns listOf(genre1)
+        coEvery { manageSeriesUseCase.getSeriesGenres() } returns emptyList()
+        coEvery { unifiedMediaPager.getCombinedMedia(genre1.id, null) } returns flowOf()
+
+        viewModel.onClickTab(2)
+        viewModel.onGenreSelected(1)
+        viewModel.onSortingSelected(HomeScreenState.SortingType.LATEST)
+        advanceUntilIdle()
+
+        assertThat(viewModel.screenState.value.selectedSortingType).isEqualTo(HomeScreenState.SortingType.LATEST)
+    }
+
+    @Test
+    fun `should reload all data when onRefresh called in Movies Tab`() = runTest {
+        coEvery { manageMoviesUseCase.getPopularMovies(1, null) } returns listOf(movie1)
+        coEvery { manageMoviesUseCase.getTopRatingMovies(1) } returns listOf(movie1)
+        coEvery { manageMoviesUseCase.getNowPlayingMovies(1) } returns listOf(movie1)
+        coEvery { manageMoviesUseCase.getUpcomingMovies(1) } returns listOf(movie1)
+        coEvery { manageMoviesUseCase.getMoreRecommendedMovies(1) } returns listOf(movie1)
+
+        viewModel.onClickTab(HomeScreenState.Tab.MOVIES.ordinal)
+        viewModel.onRefresh()
+        advanceUntilIdle()
+
+        assertThat(viewModel.screenState.value.popularMovies).isEqualTo(listOf(movie1.toHomeMediaUiState()))
+        assertThat(viewModel.screenState.value.movieSections.topRating).isEqualTo(listOf(movie1.toHomeMediaUiState()))
+        assertThat(viewModel.screenState.value.movieSections.nowPlaying).isEqualTo(listOf(movie1.toHomeMediaUiState()))
+        assertThat(viewModel.screenState.value.movieSections.upComing).isEqualTo(listOf(movie1.toHomeMediaUiState()))
+        assertThat(viewModel.screenState.value.movieSections.moreRecommended).isEqualTo(
+            listOf(
+                movie1.toHomeMediaUiState()
+            )
+        )
+    }
+
+    @Test
+    fun `should reload all data when onRefresh called in Series Tab`() = runTest {
+        coEvery { manageSeriesUseCase.getPopularSeries(1, null) } returns listOf(series1)
+        coEvery { manageSeriesUseCase.getTopRatingSeries(1) } returns listOf(series1)
+        coEvery { manageSeriesUseCase.getAiringTodaySeries(1) } returns listOf(series1)
+        coEvery { manageSeriesUseCase.getOnTvSeries(1) } returns listOf(series1)
+        coEvery { manageSeriesUseCase.getMoreRecommendedSeries(1) } returns listOf(series1)
+
+        viewModel.onClickTab(HomeScreenState.Tab.TV_SHOWS.ordinal)
+        viewModel.onRefresh()
+        advanceUntilIdle()
+
+        assertThat(viewModel.screenState.value.popularSeries).isEqualTo(listOf(series1.toHomeMediaUiState()))
+        assertThat(viewModel.screenState.value.seriesSections.topRating).isEqualTo(listOf(series1.toHomeMediaUiState()))
+        assertThat(viewModel.screenState.value.seriesSections.onTv).isEqualTo(listOf(series1.toHomeMediaUiState()))
+        assertThat(viewModel.screenState.value.seriesSections.airingToday).isEqualTo(listOf(series1.toHomeMediaUiState()))
+        assertThat(viewModel.screenState.value.seriesSections.moreRecommended).isEqualTo(
+            listOf(
+                series1.toHomeMediaUiState()
+            )
+        )
+    }
+
+    @Test
+    fun `should reload all data when onRefresh called in Categories Tab`() = runTest {
+        coEvery { manageMoviesUseCase.getMoviesGenres() } returns listOf(genre1)
+        coEvery { manageSeriesUseCase.getSeriesGenres() } returns listOf(genre2)
+        coEvery { unifiedMediaPager.getCombinedMedia(null) } returns flowOf()
+
+        viewModel.onClickTab(HomeScreenState.Tab.CATEGORIES.ordinal)
+        viewModel.onRefresh()
+        advanceUntilIdle()
+
+        assertThat(viewModel.screenState.value.genres).isEqualTo(
+            listOf(
+                HomeScreenState.GenreUiState.defaultGenre,
+                genre1.toHomeGenreUiState(),
+                genre2.toHomeGenreUiState()
+            )
+        )
+    }
 
     private companion object {
         val account = Account(
