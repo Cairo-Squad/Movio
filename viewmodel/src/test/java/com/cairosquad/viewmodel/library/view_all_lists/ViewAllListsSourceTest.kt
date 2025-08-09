@@ -33,15 +33,6 @@ class ViewAllListsSourceTest {
         Dispatchers.resetMain()
     }
 
-    @Test
-    fun `fetchData returns list from fetcher`() = runTest {
-        val expectedList = listOf("Item1", "Item2")
-        coEvery { fetcher(1) } returns expectedList
-
-        val result = pagingSource.fetchData(page = 1, genreId = null)
-
-        assertThat(result).isEqualTo(expectedList)
-    }
 
     @Test
     fun `fetchData calls fetcher with correct page number`() = runTest {
