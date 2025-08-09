@@ -50,8 +50,7 @@ class ViewAllListsViewModelTest {
         advanceUntilIdle()
 
         viewModel.screenState.test {
-            val state = awaitItem()
-            assertThat(state.isRefreshing).isTrue()
+            assertThat(viewModel.screenState.value.isRefreshing).isTrue()
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -94,8 +93,7 @@ class ViewAllListsViewModelTest {
     fun `onCreateNewListClicked SHOULD show create list bottom sheet`() = runTest {
         viewModel.onCreateNewListClicked()
         viewModel.screenState.test {
-            val state = awaitItem()
-            assertThat(state.isCreateListBottomSheetVisible).isTrue()
+            assertThat(viewModel.screenState.value.isCreateListBottomSheetVisible).isTrue()
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -104,8 +102,7 @@ class ViewAllListsViewModelTest {
     fun `onAddListClicked SHOULD show create list bottom sheet`() = runTest {
         viewModel.onAddListClicked()
         viewModel.screenState.test {
-            val state = awaitItem()
-            assertThat(state.showCreateListBottomSheet).isTrue()
+            assertThat(viewModel.screenState.value.showCreateListBottomSheet).isTrue()
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -114,8 +111,7 @@ class ViewAllListsViewModelTest {
     fun `onAddListClicked SHOULD set listName to empty`() = runTest {
         viewModel.onAddListClicked()
         viewModel.screenState.test {
-            val state = awaitItem()
-            assertThat(state.listName).isEmpty()
+            assertThat(viewModel.screenState.value.listName).isEmpty()
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -125,8 +121,7 @@ class ViewAllListsViewModelTest {
         viewModel.onDismissCreateListBottomSheet()
 
         viewModel.screenState.test {
-            val state = awaitItem()
-            assertThat(state.showCreateListBottomSheet).isFalse()
+            assertThat(viewModel.screenState.value.showCreateListBottomSheet).isFalse()
             cancelAndIgnoreRemainingEvents()
         }
     }
