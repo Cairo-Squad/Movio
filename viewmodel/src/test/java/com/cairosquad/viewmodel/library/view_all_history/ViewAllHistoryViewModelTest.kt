@@ -8,6 +8,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -18,14 +19,13 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class ViewAllHistoryViewModelTest {
 
-    private val accountUseCase: AccountUseCase = mockk()
+    private val accountUseCase: AccountUseCase = mockk(relaxed = true)
     private lateinit var viewModel: ViewAllHistoryViewModel
 
     private val testDispatcher = StandardTestDispatcher()
 
     @Before
     fun setUp() {
-        viewModel = ViewAllHistoryViewModel(accountUseCase)
         Dispatchers.setMain(testDispatcher)
     }
 
@@ -39,10 +39,14 @@ class ViewAllHistoryViewModelTest {
         coEvery { accountUseCase.getHistoryMovies(1) } throws RuntimeException("Network error")
         coEvery { accountUseCase.getHistorySeries(1) } returns emptyList()
 
+        viewModel = ViewAllHistoryViewModel(accountUseCase)
+        advanceUntilIdle()
 
         viewModel.screenState.test {
             val state = awaitItem()
-            assertThat(state.screenStatus).isEqualTo(ViewAllHistoryScreenState.SectionStatus.ERROR)
+            assertThat(state.screenStatus)
+                .isEqualTo(ViewAllHistoryScreenState.SectionStatus.ERROR)
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
@@ -51,35 +55,47 @@ class ViewAllHistoryViewModelTest {
         coEvery { accountUseCase.getHistoryMovies(1) } throws RuntimeException("Network error")
         coEvery { accountUseCase.getHistorySeries(1) } throws RuntimeException("Network error")
 
+        viewModel = ViewAllHistoryViewModel(accountUseCase)
+        advanceUntilIdle()
 
         viewModel.screenState.test {
             val state = awaitItem()
-            assertThat(state.screenStatus).isEqualTo(ViewAllHistoryScreenState.SectionStatus.ERROR)
+            assertThat(state.screenStatus)
+                .isEqualTo(ViewAllHistoryScreenState.SectionStatus.ERROR)
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
     fun `onBackClicked SHOULD send OnNavigateBack effect`() = runTest {
+        viewModel = ViewAllHistoryViewModel(accountUseCase)
+        viewModel.onBackClicked()
 
         viewModel.effect.test {
-            viewModel.onBackClicked()
             assertThat(awaitItem()).isEqualTo(ViewAllHistoryEffect.OnNavigateBack)
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
     fun `onMovieClicked SHOULD send OnMovieClicked effect`() = runTest {
+        viewModel = ViewAllHistoryViewModel(accountUseCase)
+        viewModel.onMovieClicked(123L)
+
         viewModel.effect.test {
-            viewModel.onMovieClicked(123L)
             assertThat(awaitItem()).isEqualTo(ViewAllHistoryEffect.OnMovieClicked(123L))
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
     fun `onSeriesClicked SHOULD send OnSeriesClicked effect`() = runTest {
+        viewModel = ViewAllHistoryViewModel(accountUseCase)
+        viewModel.onSeriesClicked(456L)
+
         viewModel.effect.test {
-            viewModel.onSeriesClicked(456L)
             assertThat(awaitItem()).isEqualTo(ViewAllHistoryEffect.OnSeriesClicked(456L))
+            cancelAndIgnoreRemainingEvents()
         }
     }
 }

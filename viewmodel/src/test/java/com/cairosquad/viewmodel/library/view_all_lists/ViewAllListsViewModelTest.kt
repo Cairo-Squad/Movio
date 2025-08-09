@@ -20,17 +20,15 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class ViewAllListsViewModelTest {
 
-    private val accountUseCase: AccountUseCase = mockk()
+    private val accountUseCase: AccountUseCase = mockk(relaxed = true)
     private lateinit var viewModel: ViewAllListsViewModel
     private val testDispatcher = StandardTestDispatcher()
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-
         coEvery { accountUseCase.getMoviesLists(any()) } returns emptyList()
         coEvery { accountUseCase.getSeriesLists(any()) } returns emptyList()
-
         viewModel = ViewAllListsViewModel(accountUseCase)
     }
 
@@ -43,7 +41,6 @@ class ViewAllListsViewModelTest {
     fun `onRefresh SHOULD reload lists`() = runTest {
         coEvery { accountUseCase.getMoviesLists(1) } returns emptyList()
         coEvery { accountUseCase.getSeriesLists(1) } returns emptyList()
-
 
         viewModel.onRefresh()
         advanceTimeBy(500)
