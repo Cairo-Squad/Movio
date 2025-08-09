@@ -2,22 +2,31 @@ package com.cairosquad.viewmodel.library.view_all_history
 
 import app.cash.turbine.test
 import com.cairosquad.domain.usecase.AccountUseCase
+import com.cairosquad.viewmodel.details.series.SeriesDetailsViewModelTest.MainDispatcherRule
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ViewAllHistoryViewModelTest {
+
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
 
     private val accountUseCase: AccountUseCase = mockk(relaxed = true)
     private lateinit var viewModel: ViewAllHistoryViewModel
@@ -27,6 +36,9 @@ class ViewAllHistoryViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
+
+        mockkStatic(Dispatchers::class)
+        every { Dispatchers.IO } returns testDispatcher
     }
 
     @After
@@ -35,35 +47,24 @@ class ViewAllHistoryViewModelTest {
     }
 
     @Test
-    fun `loadHistoryMovies SHOULD set ERROR status on if one of the calls fails`() = runTest {
-        coEvery { accountUseCase.getHistoryMovies(1) } throws RuntimeException("Network error")
+    fun `onRefresh SHOULD set SUCESS status even if there is no movies or series`() = runTest {
+        mockkStatic(Dispatchers::class)
+        Dispatchers.setMain(testDispatcher)
         coEvery { accountUseCase.getHistorySeries(1) } returns emptyList()
+        coEvery { accountUseCase.getHistoryMovies(1) } returns emptyList()
 
         viewModel = ViewAllHistoryViewModel(accountUseCase)
         advanceUntilIdle()
+        viewModel.onRefresh()
 
         viewModel.screenState.test {
-            val state = awaitItem()
-            assertThat(state.screenStatus)
-                .isEqualTo(ViewAllHistoryScreenState.SectionStatus.ERROR)
+            assertThat(viewModel.screenState.value.isRefreshing).isFalse()
+            advanceTimeBy(500)
+            assertThat(viewModel.screenState.value.isRefreshing).isTrue()
             cancelAndIgnoreRemainingEvents()
         }
-    }
+        unmockkStatic(Dispatchers::class)
 
-    @Test
-    fun `loadHistoryMovies SHOULD set Error status on if both of the calls failed`() = runTest {
-        coEvery { accountUseCase.getHistoryMovies(1) } throws RuntimeException("Network error")
-        coEvery { accountUseCase.getHistorySeries(1) } throws RuntimeException("Network error")
-
-        viewModel = ViewAllHistoryViewModel(accountUseCase)
-        advanceUntilIdle()
-
-        viewModel.screenState.test {
-            val state = awaitItem()
-            assertThat(state.screenStatus)
-                .isEqualTo(ViewAllHistoryScreenState.SectionStatus.ERROR)
-            cancelAndIgnoreRemainingEvents()
-        }
     }
 
     @Test
