@@ -165,6 +165,7 @@ class MovieViewModelTest {
         advanceUntilIdle()
         coVerify { getRatedItemsUseCase.execute(1) }
         assertThat(locViewModel.screenState.value.isRated).isTrue()
+        unmockkStatic(Dispatchers::class)
     }
 
     @Test
@@ -183,7 +184,59 @@ class MovieViewModelTest {
             )
             advanceUntilIdle()
             assertThat(locViewModel.screenState.value.isRated).isFalse()
+            unmockkStatic(Dispatchers::class)
         }
+
+    @Test
+    fun `WHEN start WHEN add movie to history fails SHOULD do nothing`() = runTest {
+        mockkStatic(Dispatchers::class)
+        every { Dispatchers.IO } returns testDispatcher
+        coEvery { accountUseCase.addMovieToHistory(any()) } throws RuntimeException()
+        val locViewModel = MovieViewModel(
+            manageMoviesUseCase,
+            loginUseCase,
+            accountUseCase,
+            getRatedItemsUseCase,
+            movieId
+        )
+        advanceUntilIdle()
+        assertThat(locViewModel.screenState.value.isRated).isFalse()
+        unmockkStatic(Dispatchers::class)
+    }
+
+    @Test
+    fun `WHEN check user login fails SHOULD do nothing`() = runTest {
+        mockkStatic(Dispatchers::class)
+        every { Dispatchers.IO } returns testDispatcher
+        coEvery { loginUseCase.isUserLoggedIn() } throws RuntimeException()
+        val locViewModel = MovieViewModel(
+            manageMoviesUseCase,
+            loginUseCase,
+            accountUseCase,
+            getRatedItemsUseCase,
+            movieId
+        )
+        advanceUntilIdle()
+        assertThat(locViewModel.screenState.value.isFavorite).isFalse()
+    }
+
+    @Test
+    fun `WHEN load favorite movie fails SHOULD do nothing`() = runTest {
+        mockkStatic(Dispatchers::class)
+        every { Dispatchers.IO } returns testDispatcher
+        coEvery { accountUseCase.getFavoriteMovies(any()) } throws RuntimeException()
+        coEvery { loginUseCase.isUserLoggedIn() } returns true
+        val locViewModel = MovieViewModel(
+            manageMoviesUseCase,
+            loginUseCase,
+            accountUseCase,
+            getRatedItemsUseCase,
+            movieId
+        )
+        advanceUntilIdle()
+        assertThat(locViewModel.screenState.value.isFavorite).isFalse()
+        unmockkStatic(Dispatchers::class)
+    }
 
     @Test
     fun `WHEN onBackClicked SHOULD emit NavigateBack effect`() = runTest {
@@ -497,6 +550,17 @@ class MovieViewModelTest {
         assertThat(status).isEqualTo(ErrorStatus.NO_INTERNET)
     }
 
+    @Test
+    fun `WHEN onFavoriteClick WHEN error SHOULD do nothing`() = runTest {
+        mockkStatic(Dispatchers::class)
+        every { Dispatchers.IO } returns testDispatcher
+        coEvery { loginUseCase.isUserLoggedIn() } returns true
+        coEvery { accountUseCase.addMovieToFavorite(movieId) } throws RuntimeException()
+        viewModel.onFavoriteClick()
+        advanceUntilIdle()
+        assertThat(viewModel.screenState.value.isNoAccountBottomSheetOpen).isFalse()
+        unmockkStatic(Dispatchers::class)
+    }
 
     companion object {
         private val mockMovie = Movie(

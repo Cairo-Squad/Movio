@@ -6,12 +6,16 @@ import com.cairosquad.viewmodel.details.movie.MovieViewModelTest.MainDispatcherR
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import io.mockk.runs
+import io.mockk.unmockkStatic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -43,19 +47,24 @@ class OnboardingViewModelTest {
     @Test
     fun `onCompleteOnboarding SHOULD call OnboardingUseCase setOnboardingStateAsCompleted WHEN called`() =
         runTest {
-            Dispatchers.setMain(testDispatcher)
+            mockkStatic(Dispatchers::class)
+            every { Dispatchers.IO } returns testDispatcher
             coEvery { onboardingUseCase.setOnboardingStateAsCompleted() } just runs
             onboardingViewModel.onCompleteOnboarding()
+            advanceUntilIdle()
             coVerify { onboardingUseCase.setOnboardingStateAsCompleted() }
-            Dispatchers.resetMain()
+            unmockkStatic(Dispatchers::class)
         }
 
     @Test
     fun `onCompleteOnboarding SHOULD navigate to AuthOrHome WHEN success`() = runTest {
         Dispatchers.setMain(testDispatcher)
+        advanceUntilIdle()
         onboardingViewModel.effect.test {
             onboardingViewModel.onCompleteOnboarding()
+            advanceUntilIdle()
             assertThat(awaitItem()).isEqualTo(OnboardingEffect.NavigateToAuthOrHome)
+            advanceUntilIdle()
             cancelAndIgnoreRemainingEvents()
         }
         Dispatchers.resetMain()
