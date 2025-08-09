@@ -34,7 +34,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun loadHomeScreenData() {
-        fetchPopularMovies(null)
+        fetchPopularMovies()
         fetchAllMovieSectionsOrdered()
         getAccountDetails()
     }
@@ -43,12 +43,12 @@ class HomeViewModel @Inject constructor(
         updateState { it.copy(isRefreshing = true, dataRequestStatus = DataRequestStatus.LOADING) }
         when (screenState.value.selectedTab) {
             HomeScreenState.Tab.MOVIES -> {
-                fetchPopularMovies(null)
+                fetchPopularMovies()
                 fetchAllMovieSectionsOrdered()
             }
 
             HomeScreenState.Tab.TV_SHOWS -> {
-                fetchPopularSeries(null)
+                fetchPopularSeries()
                 fetchAllSeriesSectionsOrdered()
             }
 
@@ -66,11 +66,11 @@ class HomeViewModel @Inject constructor(
     override fun onClickTab(tabIndex: Int) {
         when (tabIndex) {
             0 -> {
-                fetchPopularMovies(null)
+                fetchPopularMovies()
                 fetchAllMovieSectionsOrdered()
             }
             1 -> {
-                fetchPopularSeries(null)
+                fetchPopularSeries()
                 fetchAllSeriesSectionsOrdered()
             }
             2 -> {
@@ -100,9 +100,9 @@ class HomeViewModel @Inject constructor(
         sortCategoriesMedia()
     }
 
-    private fun fetchPopularMovies(genreId: Long? = null) {
+    private fun fetchPopularMovies() {
         fetchPopularMedia(
-            genreId = genreId,
+            genreId = null,
             fetchBlock = { id -> manageMoviesUseCase.getPopularMovies(page = 1, genreId = id) },
             mapper = Movie::toHomeMediaUiState,
             onSuccess = { mappedList ->
@@ -116,9 +116,9 @@ class HomeViewModel @Inject constructor(
             })
     }
 
-    private fun fetchPopularSeries(genreId: Long? = null) {
+    private fun fetchPopularSeries() {
         fetchPopularMedia(
-            genreId = genreId,
+            genreId = null,
             fetchBlock = { id -> manageSeriesUseCase.getPopularSeries(page = 1, genreId = id) },
             mapper = Series::toHomeMediaUiState,
             onSuccess = { mappedList ->
@@ -142,12 +142,12 @@ class HomeViewModel @Inject constructor(
                 updateState {
                     it.copy(
                         movieSections = it.movieSections.copy(
-                            topRating = topRating,
-                            nowPlaying = nowPlaying,
-                            upComing = upComing,
-                            moreRecommended = moreRecommended
+                            topRating = topRating.map(Movie::toHomeMediaUiState),
+                            nowPlaying = nowPlaying.map(Movie::toHomeMediaUiState),
+                            upComing = upComing.map(Movie::toHomeMediaUiState),
+                            moreRecommended = moreRecommended.map(Movie::toHomeMediaUiState)
                         ),
-                        dataRequestStatus = HomeScreenState.DataRequestStatus.SUCCESS
+                        dataRequestStatus = DataRequestStatus.SUCCESS
                     )
                 }
             } catch (e: Exception) {
@@ -167,12 +167,12 @@ class HomeViewModel @Inject constructor(
                 updateState {
                     it.copy(
                         seriesSections = it.seriesSections.copy(
-                            topRating = topRating,
-                            airingToday = airingToday,
-                            onTv = onTv,
-                            moreRecommended = moreRecommended
+                            topRating = topRating.map(Series::toHomeMediaUiState),
+                            airingToday = airingToday.map(Series::toHomeMediaUiState),
+                            onTv = onTv.map(Series::toHomeMediaUiState),
+                            moreRecommended = moreRecommended.map(Series::toHomeMediaUiState)
                         ),
-                        dataRequestStatus = HomeScreenState.DataRequestStatus.SUCCESS
+                        dataRequestStatus = DataRequestStatus.SUCCESS
                     )
                 }
             } catch (e: Exception) {

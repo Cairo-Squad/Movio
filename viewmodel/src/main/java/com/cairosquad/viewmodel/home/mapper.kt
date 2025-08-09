@@ -38,15 +38,15 @@ fun MovieSectionsState.getSectionUiStateByContentType(type: MediaContentType): L
         MediaContentType.MORE_RECOMMENDED -> moreRecommended
         else -> emptyList()
     }
-    return movies.map { it.toHomeMediaUiState() }
+    return movies
 }
 fun HomeScreenState.SeriesSectionsState.getSectionUiStateByContentType(type: MediaContentType): List<HomeScreenState.MediaUiState> {
-    val movies = when (type) {
+    val series = when (type) {
         MediaContentType.TOP_RATING -> topRating
         MediaContentType.AIRING_TODAY -> airingToday
         MediaContentType.ON_TV -> onTv
         MediaContentType.MORE_RECOMMENDED -> moreRecommended
         else -> emptyList()
     }
-    return movies.map { it.toHomeMediaUiState() }
+    return series
 }
