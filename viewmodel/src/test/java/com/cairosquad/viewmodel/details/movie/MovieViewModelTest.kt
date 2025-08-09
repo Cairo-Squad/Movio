@@ -554,7 +554,7 @@ class MovieViewModelTest {
     fun `WHEN onFavoriteClick WHEN error SHOULD do nothing`() = runTest {
         mockkStatic(Dispatchers::class)
         every { Dispatchers.IO } returns testDispatcher
-        coEvery { loginUseCase.isUserLoggedIn() } returns true
+        coEvery { loginUseCase.isUserLoggedIn() } throws RuntimeException()
         coEvery { accountUseCase.addMovieToFavorite(movieId) } throws RuntimeException()
         viewModel.onFavoriteClick()
         advanceUntilIdle()

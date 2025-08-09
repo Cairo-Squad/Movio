@@ -69,5 +69,6 @@ class OnboardingViewModelTest {
             cancelAndIgnoreRemainingEvents()
         }
         Dispatchers.resetMain()
+        unmockkStatic(Dispatchers::class)
     }
 }
