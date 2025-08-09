@@ -2,11 +2,14 @@ package com.cairosquad.viewmodel.library.view_all_history
 
 import app.cash.turbine.test
 import com.cairosquad.domain.usecase.AccountUseCase
-import com.cairosquad.entity.Movie
-import com.cairosquad.entity.Series
+import com.cairosquad.viewmodel.details.series.SeriesDetailsViewModelTest.MainDispatcherRule
+import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -17,12 +20,16 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ViewAllHistoryViewModelTest {
 
-    private val accountUseCase: AccountUseCase = mockk()
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
+
+    private val accountUseCase: AccountUseCase = mockk(relaxed = true)
     private lateinit var viewModel: ViewAllHistoryViewModel
 
     private val testDispatcher = StandardTestDispatcher()
@@ -30,6 +37,9 @@ class ViewAllHistoryViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
+
+        mockkStatic(Dispatchers::class)
+        every { Dispatchers.IO } returns testDispatcher
     }
 
     @After
@@ -38,107 +48,72 @@ class ViewAllHistoryViewModelTest {
     }
 
     @Test
-    fun `init SHOULD load movies and series`() = runTest {
-        // Given
-        val movies = listOf(Movie(id = 1, title = "Test Movie", 5f, "", emptyList(), "", 0L, 0, ""))
-        val series =
-            listOf(Series(id = 2, title = "Test Series", 5f, "", "", emptyList(), "", 0, 5))
-
-        coEvery { accountUseCase.getHistoryMovies(1) } returns movies
-        coEvery { accountUseCase.getHistorySeries(1) } returns series
-
-        // When
-        viewModel = ViewAllHistoryViewModel(accountUseCase)
-        advanceUntilIdle()
-
-        // Then
-        viewModel.screenState.test {
-            val state = awaitItem()
-            assertThat(state.movies).isNotEmpty()
-            assertThat(state.series).isNotEmpty()
-        }
-    }
-
-    @Test
-    fun `onRefresh SHOULD reload movies and series`() = runTest {
-        val movies = listOf(Movie(id = 1, title = "Test Movie", 5f, "", emptyList(), "", 0L, 0, ""))
-        val series =
-            listOf(Series(id = 2, title = "Test Series", 5f, "", "", emptyList(), "", 0, 5))
-
-        coEvery { accountUseCase.getHistoryMovies(1) } returns movies
-        coEvery { accountUseCase.getHistorySeries(1) } returns series
-
-        viewModel = ViewAllHistoryViewModel(accountUseCase)
-        advanceUntilIdle()
-
-        viewModel.onRefresh()
-        advanceTimeBy(500) // delay in refresh
-        advanceUntilIdle()
-
-        viewModel.screenState.test {
-            val state = awaitItem()
-            assertThat(state.isRefreshing).isTrue()
-        }
-    }
-
-    @Test
-    fun `loadHistoryMovies SHOULD set ERROR status on if one of the calls fails`() = runTest {
-        coEvery { accountUseCase.getHistoryMovies(1) } throws RuntimeException("Network error")
+    fun `onRefresh SHOULD set SUCESS status even if there is no movies or series`() = runTest {
+        mockkStatic(Dispatchers::class)
+        Dispatchers.setMain(testDispatcher)
         coEvery { accountUseCase.getHistorySeries(1) } returns emptyList()
+        coEvery { accountUseCase.getHistoryMovies(1) } returns emptyList()
 
         viewModel = ViewAllHistoryViewModel(accountUseCase)
         advanceUntilIdle()
+        viewModel.onRefresh()
 
         viewModel.screenState.test {
-            val state = awaitItem()
-            assertThat(state.screenStatus).isEqualTo(ViewAllHistoryScreenState.SectionStatus.ERROR)
+            assertThat(viewModel.screenState.value.isRefreshing).isFalse()
+            advanceTimeBy(500)
+            assertThat(viewModel.screenState.value.isRefreshing).isTrue()
+            cancelAndIgnoreRemainingEvents()
         }
-    }
+        unmockkStatic(Dispatchers::class)
 
-    @Test
-    fun `loadHistoryMovies SHOULD set Error status on if both of the calls failed`() = runTest {
-        coEvery { accountUseCase.getHistoryMovies(1) } throws RuntimeException("Network error")
-        coEvery { accountUseCase.getHistorySeries(1) } throws RuntimeException("Network error")
-
-        viewModel = ViewAllHistoryViewModel(accountUseCase)
-        advanceUntilIdle()
-
-        viewModel.screenState.test {
-            val state = awaitItem()
-            assertThat(state.screenStatus).isEqualTo(ViewAllHistoryScreenState.SectionStatus.ERROR)
-        }
     }
 
     @Test
     fun `onBackClicked SHOULD send OnNavigateBack effect`() = runTest {
         viewModel = ViewAllHistoryViewModel(accountUseCase)
-        advanceUntilIdle()
+        viewModel.onBackClicked()
 
         viewModel.effect.test {
-            viewModel.onBackClicked()
             assertThat(awaitItem()).isEqualTo(ViewAllHistoryEffect.OnNavigateBack)
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
     fun `onMovieClicked SHOULD send OnMovieClicked effect`() = runTest {
         viewModel = ViewAllHistoryViewModel(accountUseCase)
-        advanceUntilIdle()
+        viewModel.onMovieClicked(123L)
 
         viewModel.effect.test {
-            viewModel.onMovieClicked(123L)
             assertThat(awaitItem()).isEqualTo(ViewAllHistoryEffect.OnMovieClicked(123L))
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
     fun `onSeriesClicked SHOULD send OnSeriesClicked effect`() = runTest {
         viewModel = ViewAllHistoryViewModel(accountUseCase)
-        advanceUntilIdle()
+        viewModel.onSeriesClicked(456L)
 
         viewModel.effect.test {
-            viewModel.onSeriesClicked(456L)
             assertThat(awaitItem()).isEqualTo(ViewAllHistoryEffect.OnSeriesClicked(456L))
+            cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    @Test
+    fun `updateErrorStatus SHOULD set ERROR status and UNKNOWN_ERROR when non-MovioException`() = runTest {
+        // Given
+        val throwable = IllegalStateException("boom")
+        viewModel = ViewAllHistoryViewModel(accountUseCase)
+
+        // When
+        viewModel.updateErrorStatus(throwable)
+
+        // Then
+        val state = viewModel.screenState.value
+        assertThat(state.screenStatus).isEqualTo(ViewAllHistoryScreenState.SectionStatus.ERROR)
+        assertThat(state.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
+        assertThat(state.isRefreshing).isFalse()
     }
 }

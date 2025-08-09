@@ -92,8 +92,8 @@ class MovieViewModel @AssistedInject constructor(
     private fun loadFavoriteMovies(movieId: Long) {
         tryToCall(
             block = { accountUseCase.getFavoriteMovies(1) },
-            onSuccess = { series ->
-                updateState { it.copy(isFavorite = series.any { it.id == movieId }) }
+            onSuccess = { movies ->
+                updateState { it.copy(isFavorite = movies.any { it.id == movieId }) }
             },
             onError = {}
         )
