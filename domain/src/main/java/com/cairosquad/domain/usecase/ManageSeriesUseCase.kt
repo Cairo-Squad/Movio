@@ -1,5 +1,6 @@
 package com.cairosquad.domain.usecase
 
+import com.cairosquad.domain.model.RatingResult
 import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.repository.ArtistsRepository
 import com.cairosquad.domain.repository.SearchRepository
@@ -92,5 +93,9 @@ class ManageSeriesUseCase @Inject constructor(
 
     suspend fun getTrendingSeries(page: Int, genreId: Long? = null): List<Series> {
         return seriesRepository.getTrendingSeries(page, genreId)
+    }
+
+    suspend fun addSeriesRating(seriesId: Long, rating: Float): RatingResult {
+        return seriesRepository.addSeriesRating(seriesId, rating)
     }
 }

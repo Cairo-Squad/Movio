@@ -1,5 +1,6 @@
 package com.cairosquad.domain.usecase
 
+import com.cairosquad.domain.model.RatingResult
 import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.repository.ArtistsRepository
 import com.cairosquad.domain.repository.MoviesRepository
@@ -87,6 +88,9 @@ class ManageMoviesUseCase @Inject constructor(
 
     suspend fun getUpcomingMovies(page: Int, genreId: Long? = null): List<Movie> {
         return moviesRepository.getUpcomingMovies(page, genreId)
+    }
+    suspend fun addMovieRating(movieId: Long, rating: Float): RatingResult {
+        return moviesRepository.addMovieRating(movieId, rating)
     }
 
 }

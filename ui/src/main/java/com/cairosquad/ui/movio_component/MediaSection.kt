@@ -156,20 +156,6 @@ data class MediaSectionItem(
                 genres = media.genres.map { it.name }
             )
         }
-
-        fun fromHomeSectionUiState(
-            sectionUiState: HomeScreenState.SectionUiState?
-        ): List<MediaSectionItem> {
-            val mergedList = mutableListOf<MediaSectionItem>()
-            val moviesIterator = sectionUiState?.movies?.iterator() ?: return emptyList()
-            val seriesIterator = sectionUiState.series.iterator()
-
-            while (moviesIterator.hasNext() || seriesIterator.hasNext()) {
-                if (moviesIterator.hasNext()) mergedList.add(fromHomeMediaUiState(moviesIterator.next()))
-                if (seriesIterator.hasNext()) mergedList.add(fromHomeMediaUiState(seriesIterator.next()))
-            }
-            return mergedList
-        }
     }
 }
 

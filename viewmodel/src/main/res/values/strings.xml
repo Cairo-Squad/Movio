@@ -12,4 +12,24 @@
     <string name="sorting_type_all">All</string>
     <string name="popularity">Popularity</string>
     <string name="latest">Latest</string>
+    <string name="series_favorite_success">Item has been added.</string>
+    <string name="series_favorite_fail">Item could not be added.</string>
+    <string name="series_favorite_remove_success">Item has been deleted.</string>
+    <string name="series_favorite_remove_fail">Item could not be deleted.</string>
+    <string name="movie_favorite_success">Item has been added.</string>
+    <string name="movie_favorite_fail">Item could not be added.</string>
+    <string name="movie_favorite_remove_success">remove from favourites successfully.</string>
+    <string name="movie_favorite_remove_fail">Item could not be deleted.</string>
+    <string name="added_to_list">Added to list</string>
+    <string name="rated_successfully">Rated successfully</string>">
+    <string name="movie_already_in_list">Movie already in list</string>
+    <string name="error_adding_movie_to_list">Error adding movie to list</string>
+    <string name="copied_to_clip_board_successfully">Copied To clip board successfully</string>
+    <string name="favorite_restore_fail">Item could not be restore.</string>
+    <string name="list_created_successfully">List created successfully.</string>
+    <string name="error_creating_list">Error creating list.</string>
+    <string name="dark_mode">Dark</string>
+    <string name="light_mode">Light</string>
+    <string name="movie_list_remove_success">remove from list successfully.</string>
+    <string name="movie_list_remove_fail">remove from list failed.</string>
 </resources>

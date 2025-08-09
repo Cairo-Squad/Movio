@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.details.series
 
+import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.domain.usecase.LoginUseCase
@@ -8,6 +9,7 @@ import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Review
 import com.cairosquad.entity.Season
 import com.cairosquad.entity.Series
+import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState.SectionStatus
 import com.cairosquad.viewmodel.exception.ErrorStatus
@@ -18,6 +20,7 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = SeriesDetailsViewModel.Factory::class)
 class SeriesDetailsViewModel @AssistedInject constructor(
@@ -44,6 +47,33 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         getSeasons(seriesId)
         getReviews(seriesId)
         getSimilarSeries(seriesId)
+        getSeriesInFavorite(seriesId)
+    }
+
+    private fun getSeriesInFavorite(seriesId: Long) {
+        checkUserLoggedIn {
+            loadFavoriteSeries(seriesId)
+        }
+    }
+
+    private fun checkUserLoggedIn(onLoggedIn: () -> Unit) {
+        tryToCall(
+            block = loginUseCase::isUserLoggedIn,
+            onSuccess = { isLoggedIn ->
+                if (isLoggedIn) onLoggedIn()
+            },
+            onError = {}
+        )
+    }
+
+    private fun loadFavoriteSeries(seriesId: Long) {
+        tryToCall(
+            block = { accountUseCase.getFavoriteSeries(1) },
+            onSuccess = { series ->
+                updateState { it.copy(isFavorite = series.any { it.id == seriesId }) }
+            },
+            onError = {}
+        )
     }
 
     private fun addSeriesToHistory(seriesId: Long) {
@@ -69,10 +99,78 @@ class SeriesDetailsViewModel @AssistedInject constructor(
                 if (!authed) {
                     updateState { it.copy(showLoginBottomSheet = true) }
                 } else {
-
+                    if(screenState.value.isFavorite) {
+                        removeFromFavorite(seriesId)
+                    } else {
+                        addToFavorite(seriesId)
+                    }
                 }
             },
             onError = {}
+        )
+    }
+
+    private fun removeFromFavorite(seriesId: Long) {
+        tryToCall(
+            block = { accountUseCase.removeSeriesFromFavorite(seriesId) },
+            onSuccess = {
+                viewModelScope.launch {
+                    updateState {
+                        it.copy(
+                            showSnackBar = true, isProcessSuccess = true,
+                            snackMessageId = R.string.series_favorite_remove_success,
+                            isFavorite = true
+                        )
+                    }
+                    delay(2000)
+                    updateState { it.copy(showSnackBar = false) }
+                }
+            },
+            onError = {
+                viewModelScope.launch {
+                    updateState {
+                        it.copy(
+                            showSnackBar = true,
+                            isProcessSuccess = false,
+                            snackMessageId = R.string.series_favorite_remove_fail,
+                        )
+                    }
+                    delay(2000)
+                    updateState { it.copy(showSnackBar = false) }
+                }
+            }
+        )
+    }
+
+    private fun addToFavorite(seriesId: Long) {
+        tryToCall(
+            block = { accountUseCase.addSeriesToFavorite(seriesId) },
+            onSuccess = {
+                viewModelScope.launch {
+                    updateState {
+                        it.copy(
+                            showSnackBar = true, isProcessSuccess = true,
+                            snackMessageId = R.string.series_favorite_success,
+                            isFavorite = true
+                        )
+                    }
+                    delay(2000)
+                    updateState { it.copy(showSnackBar = false) }
+                }
+            },
+            onError = {
+                viewModelScope.launch {
+                    updateState {
+                        it.copy(
+                            showSnackBar = true,
+                            isProcessSuccess = false,
+                            snackMessageId = R.string.series_favorite_fail,
+                        )
+                    }
+                    delay(2000)
+                    updateState { it.copy(showSnackBar = false) }
+                }
+            }
         )
     }
 
@@ -156,7 +254,33 @@ class SeriesDetailsViewModel @AssistedInject constructor(
     }
 
     override fun onSubmitRateClicked(rate: Int) {
-        updateState { it.copy(showRateBottomSheet = false) }
+        tryToCall(
+            onStart = {
+                updateState { it.copy(showRateBottomSheet = false) }
+            },
+            block = { manageSeriesUseCase.addSeriesRating(seriesId, rate.toFloat()) },
+            onSuccess = { status ->
+                updateState {
+                    it.copy(
+                        showSnackBar = true,
+                        snackMessage = status.statusMessage,
+                        isProcessSuccess = true,
+                        isRated = true
+                    )
+                }
+                delay(2000)
+                updateState {
+                    it.copy(
+                        showSnackBar = false,
+                        snackMessage = status.statusMessage,
+                        isProcessSuccess = true,
+                        isRated = true
+                    )
+                }
+            },
+            onError = {},
+            dispatcher = Dispatchers.IO
+        )
     }
 
     override fun onCopy(message: String, isSuccessful: Boolean) {

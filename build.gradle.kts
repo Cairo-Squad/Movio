@@ -40,6 +40,7 @@ kover {
                     "dagger.hilt.internal.aggregatedroot.codegen.*",
                     "hilt_aggregated_deps.*",
                     "*_HiltModules*",
+                    "**HiltModules**",
                     "*Hilt_*",
                     "*_Factory*",
                     "*BuildConfig*",

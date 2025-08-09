@@ -1,5 +1,6 @@
 package com.cairosquad.repository.series
 
+import com.cairosquad.domain.model.RatingResult
 import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.repository.SeriesRepository
 import com.cairosquad.entity.Episode
@@ -249,6 +250,16 @@ class SeriesRepositoryImpl @Inject constructor(
                         seriesLocalDataSource.insertSeriesGenres(it.toCacheDtoList())
                     }
             }
+    }
+
+    override suspend fun addSeriesRating(seriesId: Long, rating: Float): RatingResult {
+        return tryToCall {
+            val response = seriesRemoteDataSource.addSeriesRating(seriesId, rating)
+            RatingResult(
+                statusCode = response.statusCode,
+                statusMessage = response.statusMessage
+            )
+        }
     }
 
     private companion object {

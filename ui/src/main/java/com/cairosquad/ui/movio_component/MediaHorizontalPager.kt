@@ -216,20 +216,6 @@ data class MediaHorizontalPagerItem(
 				isMovie = media.isMovie
 			)
 		}
-
-		fun fromHomeSectionUiState(
-			sectionUiState: HomeScreenState.SectionUiState?
-		): List<MediaHorizontalPagerItem> {
-			val mergedList = mutableListOf<MediaHorizontalPagerItem>()
-			val moviesIterator = sectionUiState?.movies?.iterator() ?: return emptyList()
-			val seriesIterator = sectionUiState.series.iterator()
-
-			while (moviesIterator.hasNext() || seriesIterator.hasNext()) {
-				if (moviesIterator.hasNext()) mergedList.add(fromHomeMediaUiState(moviesIterator.next()))
-				if (seriesIterator.hasNext()) mergedList.add(fromHomeMediaUiState(seriesIterator.next()))
-			}
-			return mergedList
-		}
 	}
 }
 
@@ -248,6 +234,7 @@ private fun MediaHorizontalPagerCard(
 	Box(
 		modifier
 			.clip(RoundedCornerShape(8.dp))
+			.alpha(lerp(0.50f, 1f, isCurrentPageFloat))
 	) {
 		SafeImageViewer(
 			modifier = Modifier.fillMaxSize(),
@@ -326,7 +313,7 @@ private fun MediaHorizontalPagerCard(
 			modifier = Modifier
 				.fillMaxSize()
 				.clickable(onClick = onClick)
-				.background(Color.Black.copy(alpha = lerp(0.80f, 0f, isCurrentPageFloat)))
+				.background(Color.Black.copy(alpha = lerp(0.30f, 0f, isCurrentPageFloat)))
 		)
 	}
 }

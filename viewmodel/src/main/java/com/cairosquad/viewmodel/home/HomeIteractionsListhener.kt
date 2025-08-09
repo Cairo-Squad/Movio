@@ -10,6 +10,5 @@ interface HomeInteractionsListener {
     fun onClickTab(tabIndex: Int)
     fun onGenreSelected(genreIndex: Int)
     fun onSortingSelected(filter: HomeScreenState.SortingType)
-    fun onSectionVisible(sectionType: MediaContentType)
     fun onRefresh()
 }

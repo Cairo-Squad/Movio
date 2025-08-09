@@ -1,9 +1,13 @@
 package com.cairosquad.remote.account
 
+import com.cairosquad.repository.account.data_source.remote.dto.AddToListRequest
+import com.cairosquad.repository.account.data_source.remote.dto.AddToListResponse
+import com.cairosquad.repository.account.data_source.remote.dto.CreateListRequest
 import com.cairosquad.repository.account.data_source.remote.dto.FavoriteRequest
 import com.cairosquad.repository.account.data_source.remote.dto.HistoryRequest
 import com.cairosquad.repository.account.data_source.remote.dto.MediaListResponse
 import com.cairosquad.repository.account.data_source.remote.dto.acount.AccountDto
+import com.cairosquad.repository.account.data_source.remote.dto.list_details.ListDetailsResponse
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 import com.cairosquad.repository.utils.sharedDto.remote.ResultResponse
@@ -90,4 +94,34 @@ interface AccountApiService {
 		@Query("page")
 		page: Int
 	): ResultResponse<SeriesRemoteDto>
+
+	@GET("list/{listId}")
+	suspend fun getListDetails(
+		@Path("listId")
+		listId: Long,
+		@Query("page")
+		page: Int
+	): ListDetailsResponse
+
+	@POST("list/{list_id}/add_item")
+	suspend fun addMovieToList(
+		@Path("list_id")
+		listId: Long,
+		@Body
+		body: AddToListRequest
+	): AddToListResponse
+
+	@POST("list")
+	suspend fun createList(
+		@Body
+		body: CreateListRequest
+	)
+
+	@POST("list/{list_id}/remove_item")
+	suspend fun removeMovieFromList(
+		@Path("list_id")
+		listId: Long,
+		@Body
+		body: AddToListRequest
+	): AddToListResponse
 }

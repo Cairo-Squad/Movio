@@ -32,9 +32,9 @@ import com.cairosquad.ui.movio_component.MediaSectionLayoutType
 import com.cairosquad.ui.utils.LoadingMoviesGrid
 import com.cairosquad.viewmodel.home.HomeInteractionsListener
 import com.cairosquad.viewmodel.home.HomeScreenState
-import com.cairosquad.viewmodel.home.HomeScreenState.DateRequestStatus.FAILED
-import com.cairosquad.viewmodel.home.HomeScreenState.DateRequestStatus.LOADING
-import com.cairosquad.viewmodel.home.HomeScreenState.DateRequestStatus.SUCCESS
+import com.cairosquad.viewmodel.home.HomeScreenState.DataRequestStatus.FAILED
+import com.cairosquad.viewmodel.home.HomeScreenState.DataRequestStatus.LOADING
+import com.cairosquad.viewmodel.home.HomeScreenState.DataRequestStatus.SUCCESS
 import com.cairosquad.viewmodel.home.HomeScreenState.Tab.CATEGORIES
 import com.cairosquad.viewmodel.home.HomeScreenState.Tab.MOVIES
 import com.cairosquad.viewmodel.home.HomeScreenState.Tab.TV_SHOWS

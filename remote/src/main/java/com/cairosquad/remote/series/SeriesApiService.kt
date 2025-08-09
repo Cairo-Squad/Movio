@@ -9,7 +9,9 @@ import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesResponse
 import com.cairosquad.repository.utils.sharedDto.remote.GenreResponse
 import com.cairosquad.repository.utils.sharedDto.remote.ResultResponse
+import com.cairosquad.repository.utils.sharedDto.remote.StatusResponse
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -124,4 +126,10 @@ interface SeriesApiService {
         @Query("query") query: String,
         @Query("page") page: Int
     ): ResultResponse<SeriesRemoteDto>
+
+    @POST("tv/{series_id}/rating")
+    suspend fun addSeriesRating(
+        @Path("series_id") seriesId: Long,
+        @Query("value") rating: Float
+    ): StatusResponse
 }

@@ -1,9 +1,7 @@
 package com.cairosquad.ui
 
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -14,10 +12,10 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.BottomNavItem
 import com.cairosquad.design_system.basic_component.NavigationBar
 import com.cairosquad.design_system.basic_component.Scaffold
-import com.cairosquad.ui.details.EpisodesScreen
 import com.cairosquad.ui.home.HomeScreen
 import com.cairosquad.ui.library.LibraryScreen
 import com.cairosquad.ui.more.MoreScreen
+import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.search.SearchScreen
 
 @Composable
@@ -48,18 +46,11 @@ fun AppScreen() {
     }
     var selectedScreenIndex by rememberSaveable { mutableIntStateOf(0) }
 
-    val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
-    DisposableEffect(backPressedDispatcher) {
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (selectedScreenIndex > 0) selectedScreenIndex--
-                else this.remove()
-            }
-        }
-        backPressedDispatcher?.addCallback(callback)
-        onDispose {
-            callback.remove()
-        }
+    val navController = LocalNavController.current
+
+    BackHandler {
+        if (selectedScreenIndex > 0) selectedScreenIndex--
+        else navController.popBackStack()
     }
 
     Scaffold(
