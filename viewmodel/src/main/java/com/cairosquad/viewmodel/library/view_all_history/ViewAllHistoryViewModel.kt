@@ -86,7 +86,6 @@ class ViewAllHistoryViewModel @Inject constructor(
             loadHistory()
             delay(500L)
             updateState { it.copy(isRefreshing = true) }
-
         }
     }
 
