@@ -33,6 +33,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
+import org.mockito.ArgumentMatchers.any
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MovieViewModelTest {
@@ -146,6 +147,43 @@ class MovieViewModelTest {
             .isEqualTo(ErrorStatus.UNKNOWN_ERROR)
         unmockkStatic(Dispatchers::class)
     }
+
+    @Test
+    fun `WHEN start WHEN uesr is logged in SHOULD get rated items`() = runTest {
+        mockkStatic(Dispatchers::class)
+        every { Dispatchers.IO } returns testDispatcher
+        val movieList = listOf(mockMovie)
+        coEvery { loginUseCase.isUserLoggedIn() } returns true
+        coEvery { getRatedItemsUseCase.execute(1) } returns Pair(movieList, any())
+        val locViewModel = MovieViewModel(
+            manageMoviesUseCase,
+            loginUseCase,
+            accountUseCase,
+            getRatedItemsUseCase,
+            movieId
+        )
+        advanceUntilIdle()
+        coVerify { getRatedItemsUseCase.execute(1) }
+        assertThat(locViewModel.screenState.value.isRated).isTrue()
+    }
+
+    @Test
+    fun `WHEN start WHEN uesr is logged in WHEN get rated items fails SHOULD do nothing`() =
+        runTest {
+            mockkStatic(Dispatchers::class)
+            every { Dispatchers.IO } returns testDispatcher
+            coEvery { loginUseCase.isUserLoggedIn() } returns true
+            coEvery { getRatedItemsUseCase.execute(1) } throws RuntimeException()
+            val locViewModel = MovieViewModel(
+                manageMoviesUseCase,
+                loginUseCase,
+                accountUseCase,
+                getRatedItemsUseCase,
+                movieId
+            )
+            advanceUntilIdle()
+            assertThat(locViewModel.screenState.value.isRated).isFalse()
+        }
 
     @Test
     fun `WHEN onBackClicked SHOULD emit NavigateBack effect`() = runTest {
