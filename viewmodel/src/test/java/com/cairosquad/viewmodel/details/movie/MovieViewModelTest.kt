@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.exception.NetworkException
 import com.cairosquad.domain.usecase.AccountUseCase
+import com.cairosquad.domain.usecase.GetRatedItemsUseCase
 import com.cairosquad.domain.usecase.LoginUseCase
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.entity.Movie
@@ -39,6 +40,7 @@ class MovieViewModelTest {
 	private val manageMoviesUseCase: ManageMoviesUseCase = mockk(relaxed = true)
 	private val loginUseCase: LoginUseCase = mockk(relaxed = true)
 	private val accountUseCase: AccountUseCase = mockk(relaxed = true)
+	private val getRatedItemsUseCase: GetRatedItemsUseCase = mockk(relaxed = true)
 	private lateinit var viewModel: MovieViewModel
 
 	@Before
@@ -48,7 +50,13 @@ class MovieViewModelTest {
 		mockkStatic(Dispatchers::class)
 		every { Dispatchers.IO } returns testDispatcher
 
-		viewModel = MovieViewModel(manageMoviesUseCase, loginUseCase, accountUseCase, movieId)
+		viewModel = MovieViewModel(
+			manageMoviesUseCase,
+			loginUseCase,
+			accountUseCase,
+			getRatedItemsUseCase,
+			movieId
+		)
 	}
 
 	@After

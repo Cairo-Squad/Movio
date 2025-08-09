@@ -6,8 +6,10 @@ import com.cairosquad.entity.MediaList
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import com.google.common.truth.Truth.assertThat
+import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.just
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -135,11 +137,11 @@ class AccountUseCaseTest {
     @Test
     fun `addMovieToFavorite calls repository with correct id`() = runTest {
         val movieId = 10L
-        coEvery { accountRepository.addSeriesToFavorite(movieId) } answers { Unit }
+        coEvery { accountRepository.addMovieToFavorite(movieId) } just Runs
 
         useCase.addMovieToFavorite(movieId)
 
-        coVerify { accountRepository.addSeriesToFavorite(movieId) }
+        coVerify { accountRepository.addMovieToFavorite(movieId) }
     }
 
     @Test
