@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.library.view_all_favorite
 
+import app.cash.turbine.test
 import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
@@ -13,8 +14,11 @@ import io.mockk.mockkStatic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
@@ -27,15 +31,20 @@ class ViewAllFavoriteViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
+        mockkStatic(Dispatchers::class)
+        every { Dispatchers.IO } returns testDispatcher
 
         accountUseCase = mockk(relaxed = true)
         viewModel = ViewAllFavoriteViewModel(accountUseCase)
     }
 
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
+
     @Test
     fun `should fetch data in the init function`() = runTest {
-        mockkStatic(Dispatchers::class)
-        every { Dispatchers.IO } returns testDispatcher
         coEvery { accountUseCase.getFavoriteMovies(page) } returns listOf(movie)
         coEvery { accountUseCase.getFavoriteSeries(page) } returns listOf(series)
 
@@ -47,8 +56,6 @@ class ViewAllFavoriteViewModelTest {
 
     @Test
     fun `should handle error when fetching movies`() = runTest {
-        mockkStatic(Dispatchers::class)
-        every { Dispatchers.IO } returns testDispatcher
         coEvery { accountUseCase.getFavoriteMovies(page) } throws Exception()
         coEvery { accountUseCase.getFavoriteSeries(page) } returns listOf(series)
 
@@ -57,13 +64,161 @@ class ViewAllFavoriteViewModelTest {
         assertThat(viewModel.screenState.value.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
     }
 
-//    @Test
-//    fun `should send effect OnNavigateBack when onBackClicked is called`() = runTest {
-//        viewModel.onBackClicked()
-//        viewModel.effect.test {
-//            assertThat(awaitItem()).isEqualTo(ViewAllFavoriteEffect.OnNavigateBack)
-//        }
-//    }
+    @Test
+    fun `should send effect OnNavigateBack when onBackClicked is called`() = runTest {
+        viewModel.effect.test {
+            viewModel.onBackClicked()
+            assertThat(awaitItem()).isEqualTo(ViewAllFavoriteEffect.OnNavigateBack)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `should send effect OnMovieClicked when onMovieClicked is called`() = runTest {
+        viewModel.effect.test {
+            viewModel.onMovieClicked(movie.id)
+            assertThat(awaitItem()).isEqualTo(ViewAllFavoriteEffect.OnMovieClicked(movie.id))
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `should send effect OnSeriesClicked when onSeriesClicked is called`() = runTest {
+        viewModel.effect.test {
+            viewModel.onSeriesClicked(series.id)
+            assertThat(awaitItem()).isEqualTo(ViewAllFavoriteEffect.OnSeriesClicked(series.id))
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `should remove movie on success when onMovieDelete is called`() = runTest {
+        coEvery { accountUseCase.getFavoriteMovies(page) } returns listOf(movie)
+        coEvery { accountUseCase.getFavoriteSeries(page) } returns emptyList()
+        coEvery { accountUseCase.removeMovieFromFavorite(movie.id) } returns Unit
+
+
+        viewModel.onMovieDelete(movie.id)
+
+        assertThat(viewModel.screenState.value.movies).isEmpty()
+        assertThat(viewModel.screenState.value.deletedMoviesIds).contains(movie.id)
+        assertThat(viewModel.screenState.value.deletedItems).contains("${movie.id}, movie")
+        assertThat(viewModel.screenState.value.isProcessSuccess).isTrue()
+
+    }
+
+    @Test
+    fun `should handle error when removing movie fails`() = runTest {
+        coEvery { accountUseCase.getFavoriteMovies(page) } returns listOf(movie)
+        coEvery { accountUseCase.getFavoriteSeries(page) } returns emptyList()
+        coEvery { accountUseCase.removeMovieFromFavorite(movie.id) } throws Exception()
+
+
+        viewModel.onMovieDelete(movie.id)
+
+        assertThat(viewModel.screenState.value.movies).isEmpty()
+        assertThat(viewModel.screenState.value.deletedMoviesIds).contains(movie.id)
+        assertThat(viewModel.screenState.value.deletedItems).contains("${movie.id}, movie")
+        assertThat(viewModel.screenState.value.isProcessSuccess).isFalse()
+
+    }
+
+    @Test
+    fun `should remove series on success when onSeriesDelete is called`() = runTest {
+        coEvery { accountUseCase.getFavoriteMovies(page) } returns emptyList()
+        coEvery { accountUseCase.getFavoriteSeries(page) } returns listOf(series)
+        coEvery { accountUseCase.removeSeriesFromFavorite(series.id) } returns Unit
+
+        viewModel.onSeriesDelete(series.id)
+        advanceUntilIdle()
+
+        assertThat(viewModel.screenState.value.series).isEmpty()
+        assertThat(viewModel.screenState.value.deletedSeriesIds).contains(series.id)
+        assertThat(viewModel.screenState.value.deletedItems).contains("${series.id}, series")
+        assertThat(viewModel.screenState.value.isProcessSuccess).isTrue()
+    }
+
+    @Test
+    fun `should handle error when removing series fails`() = runTest {
+        coEvery { accountUseCase.getFavoriteMovies(page) } returns emptyList()
+        coEvery { accountUseCase.getFavoriteSeries(page) } returns listOf(series)
+        coEvery { accountUseCase.removeSeriesFromFavorite(series.id) } throws Exception()
+
+
+        viewModel.onSeriesDelete(series.id)
+        advanceUntilIdle()
+
+        assertThat(viewModel.screenState.value.series).isEmpty()
+        assertThat(viewModel.screenState.value.deletedSeriesIds).contains(series.id)
+        assertThat(viewModel.screenState.value.deletedItems).contains("${series.id}, series")
+        assertThat(viewModel.screenState.value.isProcessSuccess).isFalse()
+    }
+
+    @Test
+    fun `should refresh favorites when onRefresh is called`() = runTest {
+        val newMovie = movie.copy(id = 2, title = "Inception")
+        val newSeries = series.copy(id = 2, title = "Stranger Things")
+        coEvery { accountUseCase.getFavoriteMovies(page) } returns listOf(newMovie)
+        coEvery { accountUseCase.getFavoriteSeries(page) } returns listOf(newSeries)
+
+        viewModel.onRefresh()
+        advanceUntilIdle()
+
+        assertThat(viewModel.screenState.value.movies).isEqualTo(listOf(newMovie.toUiState()))
+        assertThat(viewModel.screenState.value.series).isEqualTo(listOf(newSeries.toUiState()))
+        assertThat(viewModel.screenState.value.screenStatus).isEqualTo(ViewAllFavoriteScreenState.SectionStatus.SUCCESS)
+
+    }
+
+    @Test
+    fun `should restore deleted movie when onUndoClicked is called`() = runTest {
+        coEvery { accountUseCase.getFavoriteMovies(page) } returns listOf(movie)
+        coEvery { accountUseCase.getFavoriteSeries(page) } returns emptyList()
+        coEvery { accountUseCase.removeMovieFromFavorite(movie.id) } returns Unit
+        coEvery { accountUseCase.addMovieToFavorite(movie.id) } returns Unit
+
+        viewModel.onMovieDelete(movie.id)
+
+        viewModel.onUndoClicked()
+        advanceUntilIdle()
+
+        assertThat(viewModel.screenState.value.movies).isEqualTo(listOf(movie.toUiState()))
+        assertThat(viewModel.screenState.value.deletedMoviesIds).isEmpty()
+        assertThat(viewModel.screenState.value.deletedItems).isEmpty()
+    }
+
+    @Test
+    fun `should restore deleted series when onUndoClicked is called`() = runTest {
+        coEvery { accountUseCase.getFavoriteMovies(page) } returns emptyList()
+        coEvery { accountUseCase.getFavoriteSeries(page) } returns listOf(series)
+        coEvery { accountUseCase.removeSeriesFromFavorite(series.id) } returns Unit
+        coEvery { accountUseCase.addSeriesToFavorite(series.id) } returns Unit
+
+        viewModel.onSeriesDelete(series.id)
+
+        viewModel.onUndoClicked()
+        advanceUntilIdle()
+
+        assertThat(viewModel.screenState.value.series).isEqualTo(listOf(series.toUiState()))
+        assertThat(viewModel.screenState.value.deletedSeriesIds).isEmpty()
+        assertThat(viewModel.screenState.value.deletedItems).isEmpty()
+    }
+
+    @Test
+    fun `should handle error when restoring item fails`() = runTest {
+        coEvery { accountUseCase.getFavoriteMovies(page) } returns listOf(movie)
+        coEvery { accountUseCase.getFavoriteSeries(page) } returns emptyList()
+        coEvery { accountUseCase.removeMovieFromFavorite(movie.id) } returns Unit
+        coEvery { accountUseCase.addMovieToFavorite(movie.id) } throws Exception()
+
+        viewModel.onMovieDelete(movie.id)
+
+        viewModel.onUndoClicked()
+        advanceUntilIdle()
+
+        assertThat(viewModel.screenState.value.isProcessSuccess).isFalse()
+
+    }
 
     private companion object {
         val page = 1
