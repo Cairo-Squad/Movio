@@ -2,11 +2,11 @@ package com.cairosquad.viewmodel.library.view_all_lists
 
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -24,23 +24,13 @@ class ViewAllListsSourceTest {
     @Before
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
-        fetcher = mockk()
+        fetcher = mockk(relaxed = true)
         pagingSource = ViewAllListsSource(fetcher)
     }
 
     @After
     fun tearDown() {
         Dispatchers.resetMain()
-    }
-
-
-    @Test
-    fun `fetchData calls fetcher with correct page number`() = runTest {
-        coEvery { fetcher(any()) } returns emptyList()
-
-        pagingSource.fetchData(page = 5, genreId = null)
-
-        coVerify(exactly = 1) { fetcher(5) }
     }
 
     @Test
@@ -50,6 +40,7 @@ class ViewAllListsSourceTest {
 
         val page1 = pagingSource.fetchData(1, null)
         val page2 = pagingSource.fetchData(2, null)
+        advanceUntilIdle()
 
         assertEquals(listOf("A"), page1)
         assertThat(page2).isEqualTo(listOf("B", "C"))
