@@ -28,11 +28,9 @@ class ViewAllListsViewModelTest {
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
 
-        // Default safe stubs for init() calls
         coEvery { accountUseCase.getMoviesLists(any()) } returns emptyList()
         coEvery { accountUseCase.getSeriesLists(any()) } returns emptyList()
 
-        // Now create the ViewModel after mocks are ready
         viewModel = ViewAllListsViewModel(accountUseCase)
     }
 
@@ -60,12 +58,11 @@ class ViewAllListsViewModelTest {
 
     @Test
     fun `onNavigateBack SHOULD send effect for navigating back`() = runTest {
+        viewModel.onNavigateBack()
 
         viewModel.effect.test {
-            viewModel.onNavigateBack()
             assertThat(awaitItem()).isEqualTo(ViewAllListsEffect.OnNavigateBack)
             cancelAndIgnoreRemainingEvents()
-
         }
     }
 
@@ -73,11 +70,11 @@ class ViewAllListsViewModelTest {
     fun `onSeriesListClicked SHOULD send effect for navigate to seriesList`() = runTest {
         val listId = 123L
         val listName = "Pixelise"
+        viewModel.onSeriesListClicked(listId, listName)
+
         viewModel.effect.test {
-            viewModel.onSeriesListClicked(listId, listName)
             assertThat(awaitItem()).isEqualTo(ViewAllListsEffect.OnSeriesListClicked(listId, listName))
             cancelAndIgnoreRemainingEvents()
-
         }
     }
 
@@ -85,11 +82,11 @@ class ViewAllListsViewModelTest {
     fun `onMovieListClicked SHOULD send effect for navigate to moviesList`() = runTest {
         val listId = 123L
         val listName = "Pixelise"
+        viewModel.onMovieListClicked(listId, listName)
+
         viewModel.effect.test {
-            viewModel.onMovieListClicked(listId, listName)
             assertThat(awaitItem()).isEqualTo(ViewAllListsEffect.OnMovieListClicked(listId, listName))
             cancelAndIgnoreRemainingEvents()
-
         }
     }
 
@@ -100,7 +97,6 @@ class ViewAllListsViewModelTest {
             val state = awaitItem()
             assertThat(state.isCreateListBottomSheetVisible).isTrue()
             cancelAndIgnoreRemainingEvents()
-
         }
     }
 
@@ -111,7 +107,6 @@ class ViewAllListsViewModelTest {
             val state = awaitItem()
             assertThat(state.showCreateListBottomSheet).isTrue()
             cancelAndIgnoreRemainingEvents()
-
         }
     }
 
@@ -122,7 +117,6 @@ class ViewAllListsViewModelTest {
             val state = awaitItem()
             assertThat(state.listName).isEmpty()
             cancelAndIgnoreRemainingEvents()
-
         }
     }
 
@@ -134,7 +128,6 @@ class ViewAllListsViewModelTest {
             val state = awaitItem()
             assertThat(state.showCreateListBottomSheet).isFalse()
             cancelAndIgnoreRemainingEvents()
-
         }
     }
 }
