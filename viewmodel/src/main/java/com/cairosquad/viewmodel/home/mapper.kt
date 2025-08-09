@@ -31,22 +31,20 @@ fun Genre.toHomeGenreUiState() = HomeScreenState.GenreUiState(
     name = name,
 )
 fun MovieSectionsState.getSectionUiStateByContentType(type: MediaContentType): List<HomeScreenState.MediaUiState> {
-    val movies = when (type) {
+    return when (type) {
         MediaContentType.TOP_RATING -> topRating
         MediaContentType.NOW_PLAYING -> nowPlaying
         MediaContentType.UPCOMING -> upComing
         MediaContentType.MORE_RECOMMENDED -> moreRecommended
         else -> emptyList()
     }
-    return movies
 }
 fun HomeScreenState.SeriesSectionsState.getSectionUiStateByContentType(type: MediaContentType): List<HomeScreenState.MediaUiState> {
-    val series = when (type) {
+    return when (type) {
         MediaContentType.TOP_RATING -> topRating
         MediaContentType.AIRING_TODAY -> airingToday
         MediaContentType.ON_TV -> onTv
         MediaContentType.MORE_RECOMMENDED -> moreRecommended
         else -> emptyList()
     }
-    return series
 }

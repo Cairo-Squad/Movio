@@ -237,11 +237,11 @@ class ViewAllFavoriteViewModel @Inject constructor(
         )
     }
 
-    fun updateScreenStatus(status: ViewAllFavoriteScreenState.SectionStatus) {
+    private fun updateScreenStatus(status: ViewAllFavoriteScreenState.SectionStatus) {
         updateState { it.copy(screenStatus = status) }
     }
 
-    fun updateErrorStatus(throwable: Throwable) {
+    private fun updateErrorStatus(throwable: Throwable) {
         handleError(throwable) { copy(screenStatus = ViewAllFavoriteScreenState.SectionStatus.ERROR) }
     }
 
