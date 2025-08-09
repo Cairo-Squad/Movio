@@ -58,6 +58,7 @@ class OnboardingViewModelTest {
 
     @Test
     fun `onCompleteOnboarding SHOULD navigate to AuthOrHome WHEN success`() = runTest {
+        mockkStatic(Dispatchers::class)
         Dispatchers.setMain(testDispatcher)
         advanceUntilIdle()
         onboardingViewModel.effect.test {
