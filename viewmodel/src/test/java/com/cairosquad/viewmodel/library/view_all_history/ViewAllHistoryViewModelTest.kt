@@ -3,6 +3,7 @@ package com.cairosquad.viewmodel.library.view_all_history
 import app.cash.turbine.test
 import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.viewmodel.details.series.SeriesDetailsViewModelTest.MainDispatcherRule
+import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.every
@@ -98,5 +99,21 @@ class ViewAllHistoryViewModelTest {
             assertThat(awaitItem()).isEqualTo(ViewAllHistoryEffect.OnSeriesClicked(456L))
             cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    @Test
+    fun `updateErrorStatus SHOULD set ERROR status and UNKNOWN_ERROR when non-MovioException`() = runTest {
+        // Given
+        val throwable = IllegalStateException("boom")
+        viewModel = ViewAllHistoryViewModel(accountUseCase)
+
+        // When
+        viewModel.updateErrorStatus(throwable)
+
+        // Then
+        val state = viewModel.screenState.value
+        assertThat(state.screenStatus).isEqualTo(ViewAllHistoryScreenState.SectionStatus.ERROR)
+        assertThat(state.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
+        assertThat(state.isRefreshing).isFalse()
     }
 }
