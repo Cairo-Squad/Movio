@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.details.series
 
+import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.domain.usecase.LoginUseCase
@@ -98,7 +99,7 @@ class SeriesDetailsViewModel @AssistedInject constructor(
                 if (!authed) {
                     updateState { it.copy(showLoginBottomSheet = true) }
                 } else {
-                    if(screenState.value.isFavorite) {
+                    if (screenState.value.isFavorite) {
                         removeFromFavorite(seriesId)
                     } else {
                         addToFavorite(seriesId)
