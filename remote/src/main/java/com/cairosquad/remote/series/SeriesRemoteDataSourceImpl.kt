@@ -8,6 +8,7 @@ import com.cairosquad.repository.series.data_source.remote.dto.EpisodeRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeasonRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesDetailsRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
+import com.cairosquad.repository.utils.sharedDto.remote.StatusResponse
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -146,4 +147,9 @@ class SeriesRemoteDataSourceImpl @Inject constructor(
         return safeCallApi { apiService.getSeriesByQuery(query, page) }
             .results?.filterNotNull()?.filter { it.id != null } ?: emptyList()
     }
+
+    override suspend fun addSeriesRating(seriesId: Long, rating: Float): StatusResponse {
+        return safeCallApi { apiService.addSeriesRating(seriesId, rating) }
+    }
+
 }

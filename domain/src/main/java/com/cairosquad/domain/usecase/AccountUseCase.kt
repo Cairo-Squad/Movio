@@ -15,6 +15,10 @@ class AccountUseCase @Inject constructor(
         return accountRepository.getAccountDetails()
     }
 
+    suspend fun removeAccountDetails() {
+        accountRepository.removeAccountDetails()
+    }
+
     suspend fun getSeriesLists(page: Int): List<MediaList> {
         return accountRepository.getSeriesLists(page)
     }
@@ -32,11 +36,19 @@ class AccountUseCase @Inject constructor(
     }
 
     suspend fun addMovieToFavorite(movieId: Long) {
-        accountRepository.addSeriesToFavorite(movieId)
+        accountRepository.addMovieToFavorite(movieId)
     }
 
     suspend fun addSeriesToFavorite(seriesId: Long) {
         accountRepository.addSeriesToFavorite(seriesId)
+    }
+
+    suspend fun removeMovieFromFavorite(movieId: Long) {
+        accountRepository.removeMovieFromFavorite(movieId)
+    }
+
+    suspend fun removeSeriesFromFavorite(seriesId: Long) {
+        accountRepository.removeSeriesFromFavorite(seriesId)
     }
 
     suspend fun addMovieToHistory(movieId: Long) {
@@ -53,5 +65,25 @@ class AccountUseCase @Inject constructor(
 
     suspend fun getHistorySeries(page: Int): List<Series> {
         return accountRepository.getHistorySeries(page)
+    }
+
+    suspend fun getMoviesOfList(listId: Long, page: Int): List<Movie> {
+        return accountRepository.getMoviesOfList(listId, page)
+    }
+
+    suspend fun getSeriesOfList(listId: Long, page: Int): List<Series> {
+        return accountRepository.getSeriesOfList(listId, page)
+    }
+
+    suspend fun addMovieToList(listId: Long, movieId: Long) {
+        accountRepository.addMovieToList(listId, movieId)
+    }
+
+    suspend fun createList(listName: String) {
+        accountRepository.createList(listName)
+    }
+
+    suspend fun removeMovieFromList(listId: Long, movieId: Long) {
+        accountRepository.removeMovieFromList(listId, movieId)
     }
 }

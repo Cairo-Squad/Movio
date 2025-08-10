@@ -16,10 +16,17 @@ interface AccountRepository {
 
     suspend fun getFavoriteSeries(page: Int): List<Series>
 
+    suspend fun getMoviesOfList(listId: Long, page: Int): List<Movie>
+
+    suspend fun getSeriesOfList(listId: Long, page: Int): List<Series>
+
     suspend fun addMovieToFavorite(movieId: Long)
 
     suspend fun addSeriesToFavorite(seriesId: Long)
 
+    suspend fun removeMovieFromFavorite(movieId: Long)
+
+    suspend fun removeSeriesFromFavorite(seriesId: Long)
 
     suspend fun addMovieToHistory(movieId: Long)
 
@@ -30,4 +37,12 @@ interface AccountRepository {
     suspend fun getHistorySeries(page: Int): List<Series>
 
     suspend fun getRatedItems(page: Int): Pair<List<Movie>, List<Series>>
+
+    suspend fun addMovieToList(listId: Long, movieId: Long)
+
+    suspend fun createList(listName: String)
+
+    suspend fun removeMovieFromList(listId: Long, movieId: Long)
+
+    suspend fun removeAccountDetails()
 }

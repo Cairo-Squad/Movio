@@ -264,17 +264,19 @@ fun SeriesScreen(
                 .padding(16.dp),
             visible = uiState.showSnackBar,
             enter = slideInVertically(
-                initialOffsetY = { fullHeight -> fullHeight },
+                initialOffsetY = { fullHeight -> 2 * fullHeight },
                 animationSpec = tween(durationMillis = 600)
             ),
             exit = slideOutVertically(
-                targetOffsetY = { fullHeight -> fullHeight },
+                targetOffsetY = { fullHeight -> 2 * fullHeight },
                 animationSpec = tween(durationMillis = 600)
             )
         ) {
             SnackBar(
                 imageVector = ImageVector.vectorResource(if (uiState.isProcessSuccess) R.drawable.archive_tick else R.drawable.danger),
-                message = uiState.snackMessage,
+                message = uiState.snackMessage.ifEmpty {
+                    stringResource(uiState.snackMessageId)
+                },
                 action = {}
             )
         }
@@ -475,7 +477,8 @@ private fun SeriesScreenContent(
                                     seasonsCount = uiState.series.seasonsCount,
                                     onRateClicked = listener::onRateClicked,
                                     onPlayTrailerClicked = listener::onPlayTrailerClicked,
-                                    onAddToListClicked = listener::onAddToListClicked
+                                    onAddToListClicked = listener::onAddToListClicked,
+                                    isRated = uiState.isRated
                                 )
                             }
 
@@ -647,6 +650,7 @@ private fun SeriesScreenContent(
             .fillMaxWidth(),
         onBackButtonClicked = listener::onBackClicked,
         onShareButtonClicked = listener::onShareClicked,
-        onFavoriteButtonClicked = listener::onFavoriteClicked
+        onFavoriteButtonClicked = listener::onFavoriteClicked,
+        isFavorite = uiState.isFavorite
     )
 }

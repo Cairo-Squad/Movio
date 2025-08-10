@@ -77,8 +77,8 @@ class LibraryViewModelTest {
     @Test
     fun `WHEN onListClicked SHOULD emit NavigateToListDetails effect`() = runTest {
         viewModel.effect.test {
-            viewModel.onListClicked(1)
-            assertThat(awaitItem()).isEqualTo(LibraryEffect.NavigateToListDetails(1))
+            viewModel.onListClicked(1, "name")
+            assertThat(awaitItem()).isEqualTo(LibraryEffect.NavigateToListDetails(1, "name"))
             cancelAndIgnoreRemainingEvents()
         }
     }

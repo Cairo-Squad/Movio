@@ -13,9 +13,17 @@ interface AccountRemoteDataSource {
 
     suspend fun getSeriesLists(accountId: Long, page: Int): List<MediaListDto>
 
+    suspend fun getMoviesOfList(listId: Long, page: Int): List<MovieRemoteDto>
+
+    suspend fun getSeriesOfList(listId: Long, page: Int): List<SeriesRemoteDto>
+
     suspend fun addMovieToFavorite(accountId: Long, movieId: Long)
 
     suspend fun addSeriesToFavorite(accountId: Long, seriesId: Long)
+
+    suspend fun removeMovieFromFavorite(accountId: Long, movieId: Long)
+
+    suspend fun removeSeriesFromFavorite(accountId: Long, seriesId: Long)
 
     suspend fun getFavoriteMovies(accountId: Long, page: Int): List<MovieRemoteDto>
 
@@ -32,4 +40,10 @@ interface AccountRemoteDataSource {
     suspend fun getRatedMovies(accountId: Long, page: Int): List<MovieRemoteDto>
 
     suspend fun getRatedSeries(accountId: Long, page: Int): List<SeriesRemoteDto>
+
+    suspend fun addMovieToList(listId: Long, movieId: Long)
+
+    suspend fun createList(listName: String)
+
+    suspend fun removeMovieFromList(listId: Long, movieId: Long)
 }

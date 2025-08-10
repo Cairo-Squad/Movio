@@ -14,9 +14,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.Icon
@@ -32,10 +36,11 @@ fun SectionHeader(
     modifier: Modifier = Modifier,
     sectionDescription: String? = null
 ) {
+    val layoutDirection = LocalLayoutDirection.current
     Row(
         modifier = modifier
-			.fillMaxWidth()
-			.padding(horizontal = 16.dp),
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -66,20 +71,25 @@ fun SectionHeader(
         }
         Row(
             modifier = Modifier
-				.clip(CircleShape)
-				.clickable(onClick = onSectionClick)
-				.padding(horizontal = 8.dp, vertical = 4.dp),
+                .clip(CircleShape)
+                .clickable(onClick = onSectionClick)
+                .padding(horizontal = 8.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
-                text = "View all",
+                text = stringResource(com.cairosquad.ui.R.string.view_all),
                 style = Theme.textStyle.label.smallRegular14,
                 color = Theme.color.surfaces.onSurfaceVariant
             )
 
             Icon(
-                modifier = Modifier.size(18.dp),
+                modifier = Modifier
+                    .size(18.dp)
+                    .scale(
+                        scaleX = if (layoutDirection == LayoutDirection.Rtl) -1f else 1f,
+                        scaleY = 1f
+                    ),
                 imageVector = ImageVector.vectorResource(R.drawable.arrow),
                 contentDescription = "List Icon",
                 tint = Theme.color.surfaces.onSurfaceVariant

@@ -4,8 +4,6 @@ import android.net.Uri
 import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
@@ -159,109 +157,81 @@ fun MovieScreen(
             uiState = state,
             interactionListener = viewModel
         )
-        AnimatedVisibility(
-            visible = state.isShareBottomSheetOpen,
-            enter = fadeIn(),
-            exit = fadeOut()
-        ) {
-            ShareBottomSheet(
-                isVisible = state.isShareBottomSheetOpen,
-                onDismiss = viewModel::onDismissShareBottomSheet,
-                onCopyLinkClick = {
-                    ShareUtil.copyLink(
-                        seriesUrl = movieUrl,
-                        context = context,
-                        onDismiss = viewModel::onCopy
-                    )
-                },
-                onShareFacebookClick = {
-                    ShareUtil.shareOnFacebook(
-                        encodedMessageAndUrl = encodedMessageAndUrl,
-                        context = context,
-                        onDismiss = viewModel::onDismissShareBottomSheet
-                    )
-                },
-                onShareXClick = {
-                    ShareUtil.shareOnX(
-                        encodedMessageAndUrl = encodedMessageAndUrl,
-                        context = context,
-                        onDismiss = viewModel::onDismissShareBottomSheet
-                    )
-                }
-            )
-        }
-        AnimatedVisibility(
-            visible = state.isNoAccountBottomSheetOpen,
-            enter = fadeIn(),
-            exit = fadeOut()
-        ) {
-            LoginBottomSheet(
-                isVisible = state.isNoAccountBottomSheetOpen,
-                onDismiss = viewModel::onDismissLoginBottomSheet,
-                onLoginClick = viewModel::onNavigateToLogin
-            )
-        }
-        AnimatedVisibility(
-            visible = state.isAddToListBottomSheetOpen,
-            enter = fadeIn(),
-            exit = fadeOut()
-        ) {
-            ListBottomSheet(
-                isVisible = state.isAddToListBottomSheetOpen,
-                onDismiss = viewModel::onDismissAddToListBottomSheet,
-                lists = state.moviesLists.map { it.name },
-                onListClicked = {},
-                onCreateNewList = viewModel::onCreateListClicked
-            )
-        }
-        AnimatedVisibility(
-            visible = state.showCreateListBottomSheet,
-            enter = fadeIn(),
-            exit = fadeOut()
-        ) {
-            CreateListBottomSheet(
-                isVisible = state.showCreateListBottomSheet,
-                onDismiss = viewModel::onDismissCreateListBottomSheet,
-                value = state.listName,
-                onValueChange = viewModel::onListValueChange,
-                onSubmit = { viewModel::onDismissCreateListBottomSheet },
-                isMovie = true
-            )
-        }
-        AnimatedVisibility(
-            visible = state.isRateBottomSheetOpen,
-            enter = fadeIn(),
-            exit = fadeOut()
-        ) {
-            RateBottomSheet(
-                isVisible = state.isRateBottomSheetOpen,
-                onDismiss = viewModel::onDismissRateBottomSheet,
-                rating = state.rate,
-                imageUrl = BuildConfig.IMAGE_BASE_URL + state.movie.posterPath,
-                name = state.movie.title,
-                isMovie = true,
-                onRatingChange = viewModel::onRateChange,
-                onSubmitClicked = viewModel::onSubmitRateClicked,
-            )
-        }
+        ShareBottomSheet(
+            isVisible = state.isShareBottomSheetOpen,
+            onDismiss = viewModel::onDismissShareBottomSheet,
+            onCopyLinkClick = {
+                ShareUtil.copyLink(
+                    seriesUrl = movieUrl,
+                    context = context,
+                    onDismiss = viewModel::onCopy
+                )
+            },
+            onShareFacebookClick = {
+                ShareUtil.shareOnFacebook(
+                    encodedMessageAndUrl = encodedMessageAndUrl,
+                    context = context,
+                    onDismiss = viewModel::onDismissShareBottomSheet
+                )
+            },
+            onShareXClick = {
+                ShareUtil.shareOnX(
+                    encodedMessageAndUrl = encodedMessageAndUrl,
+                    context = context,
+                    onDismiss = viewModel::onDismissShareBottomSheet
+                )
+            }
+        )
+        LoginBottomSheet(
+            isVisible = state.isNoAccountBottomSheetOpen,
+            onDismiss = viewModel::onDismissLoginBottomSheet,
+            onLoginClick = viewModel::onNavigateToLogin
+        )
+        ListBottomSheet(
+            isVisible = state.isAddToListBottomSheetOpen,
+            onDismiss = viewModel::onDismissAddToListBottomSheet,
+            lists = state.moviesLists.map { it.name },
+            onListClicked = { index ->
+                viewModel.onClickList(state.moviesLists[index].id)
+            },
+            onCreateNewList = viewModel::onCreateListClicked
+        )
+        CreateListBottomSheet(
+            isVisible = state.showCreateListBottomSheet,
+            onDismiss = viewModel::onDismissCreateListBottomSheet,
+            value = state.listName,
+            onValueChange = viewModel::onListValueChange,
+            onSubmit = { viewModel.onSubmitCreateListClicked() },
+            isMovie = true
+        )
+        RateBottomSheet(
+            isVisible = state.isRateBottomSheetOpen,
+            onDismiss = viewModel::onDismissRateBottomSheet,
+            rating = state.rate,
+            imageUrl = BuildConfig.IMAGE_BASE_URL + state.movie.posterPath,
+            name = state.movie.title,
+            isMovie = true,
+            onRatingChange = viewModel::onRateChange,
+            onSubmitClicked = viewModel::onSubmitRateClicked,
+        )
         AnimatedVisibility(
             modifier = Modifier
-				.align(Alignment.BottomCenter)
-				.windowInsetsPadding(WindowInsets.navigationBars)
-				.padding(16.dp),
+                .align(Alignment.BottomCenter)
+                .windowInsetsPadding(WindowInsets.navigationBars)
+                .padding(16.dp),
             visible = state.showSnackBar,
             enter = slideInVertically(
-                initialOffsetY = { fullHeight -> fullHeight },
+                initialOffsetY = { fullHeight -> 2 * fullHeight },
                 animationSpec = tween(durationMillis = 600)
             ),
             exit = slideOutVertically(
-                targetOffsetY = { fullHeight -> fullHeight },
+                targetOffsetY = { fullHeight -> 2 * fullHeight },
                 animationSpec = tween(durationMillis = 600)
             )
         ) {
             SnackBar(
                 imageVector = ImageVector.vectorResource(if (state.isProcessSuccess) R.drawable.archive_tick else R.drawable.danger),
-                message = state.snackMessage,
+                message = stringResource(state.snackMessageId),
                 action = {}
             )
         }
@@ -301,10 +271,10 @@ fun MovieContent(
         else -> {
             Box(
                 modifier = Modifier
-					.fillMaxSize()
-					.background(Theme.color.surfaces.surface)
-					.windowInsetsPadding(WindowInsets.navigationBars)
-					.verticalScroll(listState)
+                    .fillMaxSize()
+                    .background(Theme.color.surfaces.surface)
+                    .windowInsetsPadding(WindowInsets.navigationBars)
+                    .verticalScroll(listState)
             ) {
                 when (uiState.basicDetailsSectionState) {
                     MovieScreenState.ScreenStatus.LOADING -> {}
@@ -313,19 +283,19 @@ fun MovieContent(
                             Box {
                                 SafeImageViewer(
                                     modifier = Modifier
-										.fillMaxWidth()
-										.height(400.dp)
-										.then(
-											if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-												Modifier.blur(
-													16.dp,
-													edgeTreatment = BlurredEdgeTreatment.Unbounded
-												)
-											} else {
-												Modifier
-											}
-										)
-										.offset(y = (-28).dp),
+                                        .fillMaxWidth()
+                                        .height(400.dp)
+                                        .then(
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                                Modifier.blur(
+                                                    16.dp,
+                                                    edgeTreatment = BlurredEdgeTreatment.Unbounded
+                                                )
+                                            } else {
+                                                Modifier
+                                            }
+                                        )
+                                        .offset(y = (-28).dp),
                                     model = BuildConfig.IMAGE_BASE_URL + uiState.movie.posterPath,
                                     contentDescription = "",
                                     blur = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) 16 else 0,
@@ -334,29 +304,29 @@ fun MovieContent(
                                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
                                     Box(
                                         modifier = Modifier
-											.fillMaxWidth()
-											.height(50.dp)
-											.align(Alignment.BottomCenter)
-											.background(
-												brush = verticalGradient(
-													colors = listOf(
-														Theme.color.surfaces.surface.copy(alpha = 0.35f),
-														Theme.color.surfaces.surface.copy(alpha = 0.50f),
-														Theme.color.surfaces.surface.copy(alpha = 0.90f),
-														Theme.color.surfaces.surface,
-													)
-												)
-											)
+                                            .fillMaxWidth()
+                                            .height(50.dp)
+                                            .align(Alignment.BottomCenter)
+                                            .background(
+                                                brush = verticalGradient(
+                                                    colors = listOf(
+                                                        Theme.color.surfaces.surface.copy(alpha = 0.35f),
+                                                        Theme.color.surfaces.surface.copy(alpha = 0.50f),
+                                                        Theme.color.surfaces.surface.copy(alpha = 0.90f),
+                                                        Theme.color.surfaces.surface,
+                                                    )
+                                                )
+                                            )
                                     )
                                 }
                             }
                         } else {
                             Box(
                                 modifier = Modifier
-									.blur(16.dp)
-									.fillMaxWidth()
-									.height(400.dp)
-									.offset(y = (-28).dp),
+                                    .blur(16.dp)
+                                    .fillMaxWidth()
+                                    .height(400.dp)
+                                    .offset(y = (-28).dp),
                             )
                         }
                     }
@@ -365,22 +335,22 @@ fun MovieContent(
                 }
                 LazyColumn(
                     modifier = Modifier
-						.fillMaxWidth()
-						.windowInsetsPadding(WindowInsets.statusBars)
-						.then(
-							if (
-								uiState.showCreateListBottomSheet
-								|| uiState.isAddToListBottomSheetOpen
-								|| uiState.isRateBottomSheetOpen
-								|| uiState.isShareBottomSheetOpen
-								|| uiState.isNoAccountBottomSheetOpen
-							) {
-								Modifier.blur(4.dp)
-							} else {
-								Modifier
-							}
-						)
-						.heightIn(max = 10000.dp),
+                        .fillMaxWidth()
+                        .windowInsetsPadding(WindowInsets.statusBars)
+                        .then(
+                            if (
+                                uiState.showCreateListBottomSheet
+                                || uiState.isAddToListBottomSheetOpen
+                                || uiState.isRateBottomSheetOpen
+                                || uiState.isShareBottomSheetOpen
+                                || uiState.isNoAccountBottomSheetOpen
+                            ) {
+                                Modifier.blur(4.dp)
+                            } else {
+                                Modifier
+                            }
+                        )
+                        .heightIn(max = 10000.dp),
                     horizontalAlignment = Alignment.Start,
                     userScrollEnabled = false
                 ) {
@@ -389,8 +359,8 @@ fun MovieContent(
                             MovieScreenState.ScreenStatus.LOADING -> {
                                 Column(
                                     modifier = Modifier
-										.fillMaxWidth()
-										.padding(top = 56.dp, bottom = 24.dp),
+                                        .fillMaxWidth()
+                                        .padding(top = 56.dp, bottom = 24.dp),
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
                                     LoadingMovieImage(
@@ -402,15 +372,15 @@ fun MovieContent(
                             MovieScreenState.ScreenStatus.SUCCESS -> {
                                 Column(
                                     modifier = Modifier
-										.fillMaxWidth()
-										.padding(top = 56.dp, bottom = 24.dp),
+                                        .fillMaxWidth()
+                                        .padding(top = 56.dp, bottom = 24.dp),
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
                                     if (uiState.movie.posterPath.isNotEmpty()) {
                                         SafeImageViewer(
                                             modifier = Modifier
-												.size(height = 260.dp, width = 200.dp)
-												.clip(RoundedCornerShape(8.dp)),
+                                                .size(height = 260.dp, width = 200.dp)
+                                                .clip(RoundedCornerShape(8.dp)),
                                             model = BuildConfig.IMAGE_BASE_URL + uiState.movie.posterPath,
                                             contentDescription = "",
                                             loadingPlaceholder = {
@@ -425,9 +395,9 @@ fun MovieContent(
                                     } else {
                                         Box(
                                             modifier = Modifier
-												.size(height = 260.dp, width = 200.dp)
-												.clip(RoundedCornerShape(8.dp))
-												.background(Theme.color.system.defaultImageBackground),
+                                                .size(height = 260.dp, width = 200.dp)
+                                                .clip(RoundedCornerShape(8.dp))
+                                                .background(Theme.color.system.defaultImageBackground),
                                             contentAlignment = Alignment.Center
                                         ) {
                                             Icon(
@@ -459,7 +429,8 @@ fun MovieContent(
                                     runtimeMinutes = uiState.movie.runtimeMinutes,
                                     onRateClicked = interactionListener::onRateItClick,
                                     onPlayTrailerClicked = interactionListener::onPlayClick,
-                                    onAddToListClicked = interactionListener::onAddToListClick
+                                    onAddToListClicked = interactionListener::onAddToListClick,
+                                    isRated = uiState.isRated
                                 )
                             }
 
@@ -471,18 +442,18 @@ fun MovieContent(
                             MovieScreenState.ScreenStatus.LOADING -> {
                                 LoadingMovieImage(
                                     modifier = Modifier
-										.padding(horizontal = 16.dp)
-										.fillMaxWidth()
-										.height(height = 200.dp)
-										.padding(bottom = 32.dp)
+                                        .padding(horizontal = 16.dp)
+                                        .fillMaxWidth()
+                                        .height(height = 200.dp)
+                                        .padding(bottom = 32.dp)
                                 )
                             }
 
                             MovieScreenState.ScreenStatus.SUCCESS -> {
                                 ExpandableText(
                                     modifier = Modifier
-										.padding(horizontal = 16.dp)
-										.padding(top = 16.dp),
+                                        .padding(horizontal = 16.dp)
+                                        .padding(top = 16.dp),
                                     text = uiState.movie.overview,
                                     showMoreText = stringResource(R.string.read_more_with_dots_behind),
                                     showLessText = stringResource(R.string.read_less_with_dots_behind),
@@ -593,11 +564,12 @@ fun MovieContent(
     }
     AppBar(
         modifier = Modifier
-			.background(animatedBrush)
-			.windowInsetsPadding(WindowInsets.statusBars)
-			.fillMaxWidth(),
+            .background(animatedBrush)
+            .windowInsetsPadding(WindowInsets.statusBars)
+            .fillMaxWidth(),
         onBackButtonClicked = interactionListener::onBackClick,
         onShareButtonClicked = interactionListener::onShareClick,
-        onFavoriteButtonClicked = interactionListener::onFavoriteClick
+        onFavoriteButtonClicked = interactionListener::onFavoriteClick,
+        isFavorite = uiState.isFavorite
     )
 }

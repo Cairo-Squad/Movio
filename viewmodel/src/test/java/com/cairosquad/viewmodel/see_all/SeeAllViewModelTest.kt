@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.see_all
 
+import androidx.paging.PagingData
 import app.cash.turbine.test
 import com.cairosquad.domain.exception.DUnauthorizedException
 import com.cairosquad.domain.exception.DomainEmptyResponseException
@@ -16,14 +17,20 @@ import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.util.MediaContentType
 import com.cairosquad.viewmodel.util.MediaType
+import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkStatic
+import io.mockk.spyk
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -76,20 +83,6 @@ class SeeAllViewModelTest {
         assertNotNull(seriesFetcher)
     }
 
-//    @Test
-//    fun `combineTwoList merges lists alternately`() {
-//        val movies = listOf("A", "B")
-//        val series = listOf("1", "2", "3")
-//        val result = viewModel.run {
-//            val m = this::class.java.getDeclaredMethod(
-//                "combineTwoList", List::class.java, List::class.java
-//            )
-//            m.isAccessible = true
-//            m.invoke(this, movies, series) as List<*>
-//        }
-//        assertEquals(listOf("A", "1", "B", "2", "3"), result)
-//    }
-
     @Test
     fun `handleError maps exceptions to ErrorStatus correctly`() = runTest {
         val exceptionMapping = mapOf<MovioException, ErrorStatus>(
@@ -129,7 +122,7 @@ class SeeAllViewModelTest {
         assertEquals(SeeAllScreenState.ScreenStatus.LOADING, initialState.screenStatus)
         assertEquals(1, initialState.genres.size) // Default "All" genre
         assertEquals(0, initialState.selectedGenreIndex)
-       // assertTrue(initialState.mediaList.())
+        // assertTrue(initialState.mediaList.())
         assertNull(initialState.errorStatus)
     }
 
@@ -490,4 +483,47 @@ class SeeAllViewModelTest {
             assertEquals(testSeries, seriesFetcher(testPage, null))
         }
     }
+    @Test
+    fun `onRefresh updates isRefreshing state`() = runTest {
+        val spyViewModel = spyk(viewModel)
+        coEvery { spyViewModel.loadData(any(), any(), any()) } just Runs
+        val dummyGenreUiState = SeeAllScreenState.GenreUiState(id = 1, name = "Action")
+        viewModel.updateState { it.copy(genres = listOf(dummyGenreUiState)) }
+
+        spyViewModel.onRefresh(0)
+
+        advanceTimeBy(100)
+        assertTrue(spyViewModel.screenState.value.isRefreshing)
+
+        advanceTimeBy(500)
+        assertEquals(spyViewModel.screenState.value.isRefreshing,false)
+    }
+    @Test
+    fun `updateScreenStatus updates the screen status`() {
+        viewModel.updateScreenStatus(SeeAllScreenState.ScreenStatus.SUCCESS)
+        assertEquals(SeeAllScreenState.ScreenStatus.SUCCESS, viewModel.screenState.value.screenStatus)
+    }
+
+    @Test
+    fun `updateErrorStatus updates the error status`() {
+        viewModel.updateErrorStatus(ErrorStatus.NO_INTERNET)
+        assertEquals(ErrorStatus.NO_INTERNET, viewModel.screenState.value.errorStatus)
+    }
+
+    @Test
+    fun `getDataPagerFetcher2 for TOP_RATING returns correct flows`() = runTest {
+        val movie = mockk<Movie>()
+        val series = mockk<Series>()
+        coEvery { seeAllMoviesPager.getTopRatingMovies(any()) } returns flowOf(PagingData.from(listOf(movie)))
+        coEvery { seeAllSeriesPager.getTopRatingSeries(any()) } returns flowOf(PagingData.from(listOf(series)))
+
+        val (movieFlow, seriesFlow) = viewModel.getDataPagerFetcher2(MediaContentType.TOP_RATING, 1L)
+        val movieResult = movieFlow().first()
+        val seriesResult = seriesFlow().first()
+
+        assertNotNull(movieResult)
+        assertNotNull(seriesResult)
+    }
+
+
 }

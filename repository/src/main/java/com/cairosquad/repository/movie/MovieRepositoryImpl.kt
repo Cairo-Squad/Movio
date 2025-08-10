@@ -1,5 +1,6 @@
 package com.cairosquad.repository.movie
 
+import com.cairosquad.domain.model.RatingResult
 import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.repository.MoviesRepository
 import com.cairosquad.entity.Genre
@@ -214,6 +215,16 @@ class MovieRepositoryImpl @Inject constructor(
                         moviesLocalDataSource.insertMovieGenres(it.toCacheDtoList())
                     }
             }
+    }
+
+    override suspend fun addMovieRating(movieId: Long, rating: Float): RatingResult {
+        return tryToCall {
+            val response = moviesRemoteDataSource.addMovieRating(movieId, rating)
+            RatingResult(
+                statusCode = response.statusCode,
+                statusMessage = response.statusMessage
+            )
+        }
     }
 
     private companion object {

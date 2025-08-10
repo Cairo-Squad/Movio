@@ -43,10 +43,11 @@ fun ListBottomSheet(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
-                .padding(bottom = 16.dp)
+                .padding(bottom = 32.dp)
         ) {
             Row(
                 modifier = Modifier
+                    .padding(bottom = 8.dp)
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp))
                     .clickable(onClick = onCreateNewList),
@@ -100,7 +101,6 @@ private fun ListItem(
     ) {
         Text(
             modifier = Modifier
-                .padding(horizontal = 12.dp)
                 .weight(1f)
                 .fillMaxWidth(),
             text = listName,

@@ -17,6 +17,7 @@ import com.cairosquad.ui.movio_component.MediaSectionItem
 import com.cairosquad.viewmodel.home.HomeInteractionsListener
 import com.cairosquad.viewmodel.home.HomeScreenState
 import com.cairosquad.viewmodel.home.HomeViewModel
+import com.cairosquad.viewmodel.home.getSectionUiStateByContentType
 import com.cairosquad.viewmodel.util.MediaType.SERIES
 
 @Composable
@@ -42,28 +43,20 @@ fun HomeScreenContentSeriesTab(
         }
 
         itemsIndexed(HomeViewModel.homePageSeriesSections) { sectionIndex, mediaContentType ->
-            val mediaList = remember(screenState) { screenState
-                .sections[mediaContentType]
-                ?.series
-                ?.map(MediaSectionItem::fromHomeMediaUiState)
-                ?: emptyList()
+            val mediaList = remember(screenState.seriesSections) {
+                screenState
+                    .seriesSections
+                    .getSectionUiStateByContentType(mediaContentType)
+                    .map(MediaSectionItem::fromHomeMediaUiState)
             }
-
-            SectionContainer(
-                listState = lazyListState,
-                index = sectionIndex,
-                baseIndex = 1,
-                onVisible = { listener.onSectionVisible(mediaContentType) }
-            ) {
-                MediaSection(
-                    modifier = Modifier.padding(bottom = 32.dp),
-                    mediaList = mediaList,
-                    sectionTitle = stringResource(mediaContentType.titleId),
-                    mediaSectionLayoutType = getMediaSectionLayout(mediaContentType),
-                    onClickMedia = listener::onClickMedia,
-                    seeAllAction = { listener.onClickSeeAll(mediaContentType, SERIES) }
-                )
-            }
+            MediaSection(
+                modifier = Modifier.padding(bottom = 32.dp),
+                mediaList = mediaList,
+                sectionTitle = stringResource(mediaContentType.titleId),
+                mediaSectionLayoutType = getMediaSectionLayout(mediaContentType),
+                onClickMedia = listener::onClickMedia,
+                seeAllAction = { listener.onClickSeeAll(mediaContentType, SERIES) }
+            )
         }
     }
 }

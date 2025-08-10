@@ -3,11 +3,12 @@ package com.cairosquad.viewmodel.home
 import androidx.paging.PagingData
 import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.exception.ErrorStatus
-import com.cairosquad.viewmodel.util.MediaContentType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 data class HomeScreenState(
+    val movieSections: MovieSectionsState = MovieSectionsState(),
+    val seriesSections: SeriesSectionsState = SeriesSectionsState(),
 
     val popularMovies: List<MediaUiState> = emptyList(),
     val popularSeries: List<MediaUiState> = emptyList(),
@@ -15,9 +16,7 @@ data class HomeScreenState(
 
     val categoriesMedia: Flow<PagingData<MediaUiState>> = flowOf(PagingData.empty()),
 
-    val sections: Map<MediaContentType, SectionUiState> = mapOf(),
-
-    val dataRequestStatus: DateRequestStatus = DateRequestStatus.LOADING,
+    val dataRequestStatus: DataRequestStatus = DataRequestStatus.LOADING,
     val errorStatus: ErrorStatus? = null,
 
     val selectedGenreIndex: Int = 0,
@@ -27,12 +26,6 @@ data class HomeScreenState(
     val selectedTab: Tab = Tab.MOVIES,
     val isRefreshing: Boolean = false
 ) {
-
-    data class SectionUiState(
-        val movies: List<MediaUiState> = emptyList(),
-        val series: List<MediaUiState> = emptyList(),
-        val isLoading: Boolean = false
-    )
 
     data class MediaUiState(
         val id: Long,
@@ -56,7 +49,7 @@ data class HomeScreenState(
         }
     }
 
-    enum class DateRequestStatus {
+    enum class DataRequestStatus {
         LOADING,
         SUCCESS,
         FAILED
@@ -74,5 +67,18 @@ data class HomeScreenState(
         LATEST(R.string.latest)
     }
 
+    data class MovieSectionsState(
+        val topRating: List<MediaUiState> = emptyList(),
+        val nowPlaying: List<MediaUiState> = emptyList(),
+        val upComing: List<MediaUiState> = emptyList(),
+        val moreRecommended: List<MediaUiState> = emptyList(),
+    )
+
+    data class SeriesSectionsState(
+        val topRating: List<MediaUiState> = emptyList(),
+        val airingToday: List<MediaUiState> = emptyList(),
+        val onTv: List<MediaUiState> = emptyList(),
+        val moreRecommended: List<MediaUiState> = emptyList(),
+    )
 
 }

@@ -2,10 +2,14 @@ package com.cairosquad.remote.account
 
 import com.cairosquad.remote.utils.retrofit.safeCallApi
 import com.cairosquad.repository.account.data_source.remote.AccountRemoteDataSource
+import com.cairosquad.repository.account.data_source.remote.dto.AddToListRequest
+import com.cairosquad.repository.account.data_source.remote.dto.CreateListRequest
 import com.cairosquad.repository.account.data_source.remote.dto.FavoriteRequest
 import com.cairosquad.repository.account.data_source.remote.dto.HistoryRequest
 import com.cairosquad.repository.account.data_source.remote.dto.MediaListDto
 import com.cairosquad.repository.account.data_source.remote.dto.acount.AccountDto
+import com.cairosquad.repository.account.data_source.remote.dto.list_details.toRemoteMovieDto
+import com.cairosquad.repository.account.data_source.remote.dto.list_details.toRemoteSeriesDto
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 import javax.inject.Inject
@@ -25,6 +29,32 @@ class AccountRemoteDataSourceImpl @Inject constructor(
         return safeCallApi { getListsByType(accountId, page, "tv") }
     }
 
+    override suspend fun getMoviesOfList(
+        listId: Long,
+        page: Int
+    ): List<MovieRemoteDto> {
+        return safeCallApi {
+            apiService.getListDetails(listId, page)
+                .items
+                ?.filter { it.mediaType == "movie" }
+                ?.map { it.toRemoteMovieDto() }
+                ?: emptyList()
+        }
+    }
+
+    override suspend fun getSeriesOfList(
+        listId: Long,
+        page: Int
+    ): List<SeriesRemoteDto> {
+        return safeCallApi {
+            apiService.getListDetails(listId, page)
+                .items
+                ?.filter { it.mediaType == "tv" }
+                ?.map { it.toRemoteSeriesDto() }
+                ?: emptyList()
+        }
+    }
+
     override suspend fun addMovieToFavorite(accountId: Long, movieId: Long) {
         safeCallApi {
             apiService.addItemToFavorite(
@@ -39,6 +69,24 @@ class AccountRemoteDataSourceImpl @Inject constructor(
             apiService.addItemToFavorite(
                 accountId,
                 FavoriteRequest("tv", seriesId, true)
+            )
+        }
+    }
+
+    override suspend fun removeMovieFromFavorite(accountId: Long, movieId: Long) {
+        safeCallApi {
+            apiService.addItemToFavorite(
+                accountId,
+                FavoriteRequest("movie", movieId, false)
+            )
+        }
+    }
+
+    override suspend fun removeSeriesFromFavorite(accountId: Long, seriesId: Long) {
+        safeCallApi {
+            apiService.addItemToFavorite(
+                accountId,
+                FavoriteRequest("tv", seriesId, false)
             )
         }
     }
@@ -131,6 +179,30 @@ class AccountRemoteDataSourceImpl @Inject constructor(
                 .results
                 ?.filterNotNull()
                 ?: emptyList()
+        }
+    }
+
+    override suspend fun addMovieToList(listId: Long, movieId: Long) {
+        safeCallApi {
+            apiService.addMovieToList(listId, AddToListRequest(movieId))
+        }
+    }
+
+    override suspend fun createList(listName: String) {
+        safeCallApi {
+            apiService.createList(
+                CreateListRequest(
+                    name = listName,
+                    language = "en",
+                    description = " "
+                )
+            )
+        }
+    }
+
+    override suspend fun removeMovieFromList(listId: Long, movieId: Long) {
+        safeCallApi {
+            apiService.removeMovieFromList(listId, AddToListRequest(movieId))
         }
     }
 

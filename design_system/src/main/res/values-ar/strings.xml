@@ -7,7 +7,7 @@
     <string name="internet_is_not_available_description">يرجى التأكد من أنك متصل بالإنترنت وحاول مرة أخرى.</string>
     <string name="log_in_to_unlock_your_personal_library">سجّل الدخول لفتح مكتبتك الشخصية</string>
     <string name="access_your_watch_history_favorites_and_watchlist_all_in_one_place">يمكنك الوصول إلى سجل المشاهدة، المفضلة، وقائمة المشاهدة لاحقًا في مكان واحد.</string>
-    <string name="watch_later_empty">قائمة المشاهدة لاحقًا فارغة</string>
+    <string name="watch_later_empty">قائمة %1$s فارغة</string>
     <string name="watch_later_empty_description">احفظ الأفلام والعروض التي تريد مشاهدتها، وستظهر هنا عندما تكون مستعدًا.</string>
     <string name="favorites_list_empty">قائمة المفضلة فارغة!</string>
     <string name="favorite_list_empty_description">ابدأ بإضافة الأفلام والعروض التي تحبها — واحتفظ بها جميعًا في مكان واحد للوصول السريع.</string>
@@ -57,6 +57,7 @@
     <string name="rating_star">نجمة التقييم</string>
     <string name="reviewer_image">صورة المراج</string>
     <string name="Rate_it">قّيم</string>
+    <string name="Rated">تم تقييمه</string>
     <string name="add_to_list">أضف إلى القائمة</string>
     <string name="play">تشغيل</string>
     <string name="current_season">الاجزاء الحاليه</string>
@@ -79,5 +80,7 @@
     <string name="error_parsing_data">حدث خطأ أثناء معالجة البيانات</string>
     <string name="categories">الأصناف</string>
     <string name="try_again">حاول مجددا</string>
+    <string name="logo">شعار</string>
+    <string name="choose_language">اختر اللغة</string>
 
 </resources>

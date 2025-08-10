@@ -55,7 +55,7 @@ fun RatingBar(
                             Modifier
                         }
                     ),
-                imageVector = ImageVector.vectorResource(R.drawable.star),
+                imageVector = ImageVector.vectorResource(R.drawable.review_star),
                 contentDescription = "",
                 tint = iconColor
             )

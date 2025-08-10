@@ -1,7 +1,5 @@
 package com.cairosquad.viewmodel.details.series
 
-import android.R.id.message
-import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.domain.usecase.LoginUseCase
@@ -10,6 +8,7 @@ import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Review
 import com.cairosquad.entity.Season
 import com.cairosquad.entity.Series
+import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState.SectionStatus
 import com.cairosquad.viewmodel.exception.ErrorStatus
@@ -47,6 +46,33 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         getSeasons(seriesId)
         getReviews(seriesId)
         getSimilarSeries(seriesId)
+        getSeriesInFavorite(seriesId)
+    }
+
+    private fun getSeriesInFavorite(seriesId: Long) {
+        checkUserLoggedIn {
+            loadFavoriteSeries(seriesId)
+        }
+    }
+
+    private fun checkUserLoggedIn(onLoggedIn: () -> Unit) {
+        tryToCall(
+            block = loginUseCase::isUserLoggedIn,
+            onSuccess = { isLoggedIn ->
+                if (isLoggedIn) onLoggedIn()
+            },
+            onError = {}
+        )
+    }
+
+    private fun loadFavoriteSeries(seriesId: Long) {
+        tryToCall(
+            block = { accountUseCase.getFavoriteSeries(1) },
+            onSuccess = { series ->
+                updateState { it.copy(isFavorite = series.any { it.id == seriesId }) }
+            },
+            onError = {}
+        )
     }
 
     private fun addSeriesToHistory(seriesId: Long) {
@@ -72,10 +98,78 @@ class SeriesDetailsViewModel @AssistedInject constructor(
                 if (!authed) {
                     updateState { it.copy(showLoginBottomSheet = true) }
                 } else {
-
+                    if(screenState.value.isFavorite) {
+                        removeFromFavorite(seriesId)
+                    } else {
+                        addToFavorite(seriesId)
+                    }
                 }
             },
             onError = {}
+        )
+    }
+
+    private fun removeFromFavorite(seriesId: Long) {
+        tryToCall(
+            block = { accountUseCase.removeSeriesFromFavorite(seriesId) },
+            onSuccess = {
+                viewModelScope.launch {
+                    updateState {
+                        it.copy(
+                            showSnackBar = true, isProcessSuccess = true,
+                            snackMessageId = R.string.series_favorite_remove_success,
+                            isFavorite = true
+                        )
+                    }
+                    delay(2000)
+                    updateState { it.copy(showSnackBar = false) }
+                }
+            },
+            onError = {
+                viewModelScope.launch {
+                    updateState {
+                        it.copy(
+                            showSnackBar = true,
+                            isProcessSuccess = false,
+                            snackMessageId = R.string.series_favorite_remove_fail,
+                        )
+                    }
+                    delay(2000)
+                    updateState { it.copy(showSnackBar = false) }
+                }
+            }
+        )
+    }
+
+    private fun addToFavorite(seriesId: Long) {
+        tryToCall(
+            block = { accountUseCase.addSeriesToFavorite(seriesId) },
+            onSuccess = {
+                viewModelScope.launch {
+                    updateState {
+                        it.copy(
+                            showSnackBar = true, isProcessSuccess = true,
+                            snackMessageId = R.string.series_favorite_success,
+                            isFavorite = true
+                        )
+                    }
+                    delay(2000)
+                    updateState { it.copy(showSnackBar = false) }
+                }
+            },
+            onError = {
+                viewModelScope.launch {
+                    updateState {
+                        it.copy(
+                            showSnackBar = true,
+                            isProcessSuccess = false,
+                            snackMessageId = R.string.series_favorite_fail,
+                        )
+                    }
+                    delay(2000)
+                    updateState { it.copy(showSnackBar = false) }
+                }
+            }
         )
     }
 
@@ -163,16 +257,10 @@ class SeriesDetailsViewModel @AssistedInject constructor(
     }
 
     override fun onCopy(message: String, isSuccessful: Boolean) {
-        onDismissShareBottomSheet()
-        viewModelScope.launch {
-            delay(500)
-            showSnackBar(message, isSuccessful)
-        }
-    }
-
-    fun showSnackBar(message: String, isSuccessful: Boolean, durationMillis: Long = 2000) {
         tryToCall(
             onStart = {
+                onDismissShareBottomSheet()
+                delay(500)
                 updateState {
                     it.copy(
                         showSnackBar = true,

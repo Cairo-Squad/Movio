@@ -16,8 +16,6 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.cairosquad.design_system.preview.MultiThemePreviews
-import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 
 @Composable
@@ -50,18 +48,11 @@ fun SnackBar(
             contentDescription = "Snack Bar Icon",
         )
         Text(
+            modifier = Modifier.weight(1f),
             text = message,
             color = Theme.color.surfaces.onSurface,
             style = Theme.textStyle.label.smallRegular14
         )
         action()
-    }
-}
-
-@MultiThemePreviews
-@Composable
-private fun SnackBarPreview() {
-    MovioTheme {
-
     }
 }
