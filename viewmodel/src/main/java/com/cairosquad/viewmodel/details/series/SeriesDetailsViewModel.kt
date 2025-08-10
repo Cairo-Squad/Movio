@@ -258,10 +258,16 @@ class SeriesDetailsViewModel @AssistedInject constructor(
     }
 
     override fun onCopy(message: String, isSuccessful: Boolean) {
+        onDismissShareBottomSheet()
+        viewModelScope.launch {
+            delay(500)
+            showSnackBar(message, isSuccessful)
+        }
+    }
+
+    fun showSnackBar(message: String, isSuccessful: Boolean, durationMillis: Long = 2000) {
         tryToCall(
             onStart = {
-                onDismissShareBottomSheet()
-                delay(500)
                 updateState {
                     it.copy(
                         showSnackBar = true,
@@ -275,8 +281,7 @@ class SeriesDetailsViewModel @AssistedInject constructor(
                 updateState {
                     it.copy(showSnackBar = false)
                 }
-            },
-            onError = {}
+            }, onError = {}
         )
     }
 
