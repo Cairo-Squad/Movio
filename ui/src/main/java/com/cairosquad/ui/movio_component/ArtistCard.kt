@@ -77,7 +77,7 @@ fun ArtistCard(
                 .fillMaxWidth()
                 .padding(top = 8.dp),
             text = name,
-            textAlign = TextAlign.Start,
+            textAlign = TextAlign.Center,
             style = Theme.textStyle.title.mediumMedium14,
             color = Theme.color.surfaces.onSurface,
             overflow = TextOverflow.Ellipsis,
