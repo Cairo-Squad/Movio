@@ -71,8 +71,15 @@ class MainActivity : ComponentActivity() {
             configuration.setLayoutDirection(Locale("en"))
             window.decorView.layoutDirection = View.LAYOUT_DIRECTION_LTR
         }
+        configuration.setLayoutDirection(locale)
 
         @Suppress("DEPRECATION")
         resources.updateConfiguration(configuration, resources.displayMetrics)
+
+        @Suppress("DEPRECATION")
+        applicationContext.resources.updateConfiguration(
+            configuration,
+            applicationContext.resources.displayMetrics
+        )
     }
 }
