@@ -54,7 +54,7 @@ fun SearchContent(
             onValueChange = listener::onQueryTextChanged,
             placeholder = stringResource(R.string.search_with_dotes_ahead),
             leadingIcon = R.drawable.search_bottom_nav,
-            trailingIcon = R.drawable.ic_close,
+            trailingIcon =   if(state.query.isNotEmpty()) R.drawable.ic_close else null,
             onTrailingIconClick = { listener.onCancelSearch() },
             keyboardActions = KeyboardActions(
                 onDone = { listener.onSearch() }
