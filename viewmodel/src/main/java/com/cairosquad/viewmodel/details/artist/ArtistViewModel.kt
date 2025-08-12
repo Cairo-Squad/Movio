@@ -44,7 +44,10 @@ class ArtistViewModel @AssistedInject constructor(
                 updateState {
                     it.copy(
                         screenStatus = ArtistScreenState.ScreenStatus.FAILED,
-                        errorStatus = handleArtistException(e)
+                        errorStatus = handleArtistException(e),
+                        showSnackBar = true,
+                        snackMessage = "Failed to load artist",
+                        isProcessSuccess = false
                     )
                 }
             }

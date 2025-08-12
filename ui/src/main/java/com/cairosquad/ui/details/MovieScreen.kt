@@ -2,7 +2,6 @@ package com.cairosquad.ui.details
 
 import android.net.Uri
 import android.os.Build
-import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
@@ -109,11 +108,13 @@ fun MovieScreen(
             }
 
             is MovieEffect.ErrorHappened -> {
-                Toast.makeText(
-                    context,
-                    context.getString(errorStatusToMessageResource(effect.message)),
-                    Toast.LENGTH_LONG
-                ).show() // TODO: Change to snack bar
+                viewModel.updateState {
+                    it.copy(
+                        showSnackBar = true,
+                        snackMessage = context.getString(errorStatusToMessageResource(effect.message)),
+                        isProcessSuccess = false
+                    )
+                }
             }
 
             MovieEffect.NavigateBack -> {
@@ -134,11 +135,13 @@ fun MovieScreen(
 
             MovieEffect.PlayTrailer -> {
                 if (state.movie.trailerPath.isBlank()) {
-                    Toast.makeText(
-                        context,
-                        context.getString(com.cairosquad.ui.R.string.no_trailer_found_for_this_movie),
-                        Toast.LENGTH_LONG
-                    ).show() // TODO: Change to snack bar
+                    viewModel.updateState {
+                        it.copy(
+                            showSnackBar = true,
+                            snackMessage = context.getString(com.cairosquad.ui.R.string.no_trailer_found_for_this_movie),
+                            isProcessSuccess = false
+                        )
+                    }
                 } else {
                     ShareUtil.playOnYoutube(videoId = state.movie.trailerPath, context = context)
                 }

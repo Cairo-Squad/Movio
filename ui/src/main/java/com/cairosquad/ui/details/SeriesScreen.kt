@@ -113,23 +113,20 @@ fun SeriesScreen(
 
             SeriesDetailEffect.PlayTrailer -> {
                 if (uiState.series.trailerPath.isBlank()) {
-                    Toast.makeText(
-                        context,
-                        context.getString(com.cairosquad.ui.R.string.no_trailer_found_for_this_series),
-                        Toast.LENGTH_LONG
-                    ).show() // TODO: Change to snack bar
+                    viewModel.showSnackBar(
+                        message = context.getString(com.cairosquad.ui.R.string.no_trailer_found_for_this_series),
+                        isSuccessful = false
+                    )
                 } else {
                     ShareUtil.playOnYoutube(videoId = uiState.series.trailerPath, context = context)
                 }
             }
 
             is SeriesDetailEffect.ErrorHappened -> {
-                Toast.makeText(
-                    context,
-                    context.getString(errorStatusToMessageResource(effect.message)),
-                    Toast.LENGTH_LONG
-                ).show()
-                // TODO("Replace it with SnackBar")
+                viewModel.showSnackBar(
+                    message = context.getString(errorStatusToMessageResource(effect.message)),
+                    isSuccessful = false
+                )
             }
 
             is SeriesDetailEffect.NavigateToAllArtists -> {

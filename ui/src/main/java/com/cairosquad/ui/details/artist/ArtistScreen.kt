@@ -1,7 +1,9 @@
 package com.cairosquad.ui.details.artist
 
 import android.os.Build
-import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -49,6 +51,7 @@ import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.basic_component.ExpandableText
 import com.cairosquad.design_system.basic_component.Icon
 import com.cairosquad.design_system.basic_component.InfoChip
+import com.cairosquad.design_system.basic_component.SnackBar
 import com.cairosquad.design_system.modifier.CustomBrush
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
@@ -86,11 +89,13 @@ fun ArtistScreen(
     ObserveAsEffect(artistViewModel.effect) { effect ->
         when (effect) {
             is ArtistEffect.ErrorHappened -> {
-                Toast.makeText(
-                    context,
-                    context.getString(errorStatusToMessageResource(effect.message)),
-                    Toast.LENGTH_LONG
-                ).show()
+                artistViewModel.updateState {
+                    it.copy(
+                        showSnackBar = true,
+                        snackMessage = context.getString(errorStatusToMessageResource(effect.message)),
+                        isProcessSuccess = false
+                    )
+                }
             }
 
             is ArtistEffect.NavigateToMovieDetails -> {
@@ -432,6 +437,23 @@ private fun ArtistScreenContent(
                 .background(animatedBrush)
                 .windowInsetsPadding(WindowInsets.statusBars)
         )
+
+        AnimatedVisibility(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(16.dp),
+            visible = state.showSnackBar,
+            enter = slideInVertically { it },
+            exit = slideOutVertically { it }
+        ) {
+            SnackBar(
+                imageVector = ImageVector.vectorResource(
+                    if (state.isProcessSuccess) R.drawable.archive_tick else R.drawable.danger
+                ),
+                message = state.snackMessage,
+                action = {}
+            )
+        }
     }
 }
 
