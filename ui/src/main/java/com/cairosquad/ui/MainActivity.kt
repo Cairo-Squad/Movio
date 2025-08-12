@@ -30,10 +30,8 @@ class MainActivity : ComponentActivity() {
             mainViewModel.currentLanguage
                 .collect { newLanguage ->
                     val currentLocale = resources.configuration.locales[0]
-
                     if (currentLocale.language != newLanguage.code) {
                         setAppLocale(newLanguage.code)
-                        recreate()
                     }
                 }
         }
@@ -63,7 +61,6 @@ class MainActivity : ComponentActivity() {
         Locale.setDefault(locale)
         val configuration = Configuration(resources.configuration)
         configuration.setLocale(locale)
-
         if (languageCode == "ar") {
             configuration.setLayoutDirection(Locale("ar"))
             window.decorView.layoutDirection = View.LAYOUT_DIRECTION_RTL
@@ -71,11 +68,8 @@ class MainActivity : ComponentActivity() {
             configuration.setLayoutDirection(Locale("en"))
             window.decorView.layoutDirection = View.LAYOUT_DIRECTION_LTR
         }
-        configuration.setLayoutDirection(locale)
-
         @Suppress("DEPRECATION")
         resources.updateConfiguration(configuration, resources.displayMetrics)
-
         @Suppress("DEPRECATION")
         applicationContext.resources.updateConfiguration(
             configuration,
