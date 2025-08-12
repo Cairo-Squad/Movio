@@ -1,4 +1,4 @@
-package com.cairosquad.ui.details.reviews.content
+package com.cairosquad.ui.details.composable
 
 import android.os.Build
 import androidx.compose.foundation.background
