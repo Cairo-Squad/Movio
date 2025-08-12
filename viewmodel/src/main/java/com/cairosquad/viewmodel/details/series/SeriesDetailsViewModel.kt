@@ -254,8 +254,23 @@ class SeriesDetailsViewModel @AssistedInject constructor(
     }
 
     override fun onSubmitRateClicked(rate: Int) {
-        updateState { it.copy(showRateBottomSheet = false) }
+        tryToCall(
+            onStart = {
+                updateState { it.copy(showRateBottomSheet = false) }
+            },
+            block = {
+                manageSeriesUseCase.addSeriesRating(seriesId, rate.toFloat())
+            },
+            onSuccess = {
+                updateState { it.copy(isRated = true, showSnackBar = false) }
+            },
+            onError = {
+                updateState { it.copy(isRated = false) }
+            },
+            dispatcher = Dispatchers.IO
+        )
     }
+
 
     override fun onCopy(message: String, isSuccessful: Boolean) {
         onDismissShareBottomSheet()
