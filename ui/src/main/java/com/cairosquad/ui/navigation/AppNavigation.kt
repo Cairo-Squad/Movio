@@ -17,12 +17,12 @@ import com.cairosquad.ui.auth.ForgetPasswordWebViewScreen
 import com.cairosquad.ui.auth.LoginScreen
 import com.cairosquad.ui.auth.SignUpWebViewScreen
 import com.cairosquad.ui.details.MovieScreen
-import com.cairosquad.ui.details.ReviewsScreen
 import com.cairosquad.ui.details.SeasonsScreen
 import com.cairosquad.ui.details.SeriesScreen
 import com.cairosquad.ui.details.TopCastScreen
 import com.cairosquad.ui.details.artist.ArtistScreen
 import com.cairosquad.ui.details.episodes.EpisodesScreen
+import com.cairosquad.ui.details.reviews.ReviewsScreen
 import com.cairosquad.ui.details.similar_movies.SimilarMoviesScreen
 import com.cairosquad.ui.details.similar_series.SimilarSeriesScreen
 import com.cairosquad.ui.library.list.ListScreen
