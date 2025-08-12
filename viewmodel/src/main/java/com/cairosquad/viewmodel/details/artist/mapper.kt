@@ -3,6 +3,7 @@ package com.cairosquad.viewmodel.details.artist
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
+import com.cairosquad.viewmodel.util.TimeUtil
 import com.cairosquad.viewmodel.util.roundToFirstDecimalPlace
 
 fun Artist.toArtistUiState() = ArtistScreenState.ArtistUiState(
@@ -10,7 +11,7 @@ fun Artist.toArtistUiState() = ArtistScreenState.ArtistUiState(
     name = name,
     photoPath = photoPath,
     country = country,
-    birthDate = birthDate,
+    birthDate = TimeUtil.convertLongToNamedDate(birthDate),
     biography = biography,
     department = department
 )
