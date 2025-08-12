@@ -1,4 +1,4 @@
-package com.cairosquad.ui.details.movie.content
+package com.cairosquad.ui.details.series.content
 
 import android.os.Build
 import androidx.compose.foundation.background
@@ -16,14 +16,15 @@ import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import com.cairosquad.ui.BuildConfig
-import com.cairosquad.viewmodel.details.movie.MovieScreenState
+import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState
+
 
 @Composable
-fun MovieBackgroundSection(uiState: MovieScreenState) {
+fun SeriesBackgroundImage(uiState: SeriesDetailsScreenState) {
     when (uiState.basicDetailsSectionState) {
-        MovieScreenState.ScreenStatus.LOADING -> {}
-        MovieScreenState.ScreenStatus.SUCCESS -> {
-            if (uiState.movie.posterPath.isNotEmpty()) {
+        SeriesDetailsScreenState.SectionStatus.LOADING -> {}
+        SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
+            if (uiState.series.posterPath.isNotEmpty()) {
                 Box {
                     SafeImageViewer(
                         modifier = Modifier
@@ -40,7 +41,7 @@ fun MovieBackgroundSection(uiState: MovieScreenState) {
                                 }
                             )
                             .offset(y = (-28).dp),
-                        model = BuildConfig.IMAGE_BASE_URL + uiState.movie.posterPath,
+                        model = BuildConfig.IMAGE_BASE_URL + uiState.series.posterPath,
                         contentDescription = "",
                         blur = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) 16 else 0,
                         isBlurForced = true
@@ -49,7 +50,7 @@ fun MovieBackgroundSection(uiState: MovieScreenState) {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(50.dp)
+                                .height(60.dp)
                                 .align(Alignment.BottomCenter)
                                 .background(
                                     brush = verticalGradient(
@@ -64,15 +65,9 @@ fun MovieBackgroundSection(uiState: MovieScreenState) {
                         )
                     }
                 }
-            } else {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(400.dp)
-                )
             }
         }
 
-        MovieScreenState.ScreenStatus.ERROR -> {}
+        SeriesDetailsScreenState.SectionStatus.ERROR -> {}
     }
 }
