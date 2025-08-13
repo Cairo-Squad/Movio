@@ -166,7 +166,9 @@ private fun ViewAllHistoryContent(
                     else {
                         Spacer(Modifier.weight(1f))
                         StateMessage(
-                            imageDrawable = com.cairosquad.design_system.R.drawable.favorite_list_empty,
+                            imageDrawable =
+                                if (Theme.isDark) com.cairosquad.design_system.R.drawable.favorite_list_empty_dark
+                                else com.cairosquad.design_system.R.drawable.favorite_list_empty,
                             title = stringResource(R.string.no_watch_history_yet),
                             description = stringResource(R.string.start_watching_movies_and_shows_and_we_ll_keep_track_of_your_viewing_history_here)
                         )

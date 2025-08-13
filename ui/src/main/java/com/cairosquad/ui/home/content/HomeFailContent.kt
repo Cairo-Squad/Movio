@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.Button
+import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.home.HomeInteractionsListener
@@ -38,13 +39,12 @@ fun HomeFailContent(
         Spacer(Modifier.weight(1f))
         StateMessage(
             imageDrawable = when (errorStatus) {
-                ErrorStatus.NO_INTERNET -> R.drawable.no_internet
-                ErrorStatus.NETWORK_ERROR -> R.drawable.no_result
-                ErrorStatus.UNKNOWN_ERROR -> R.drawable.no_result
-                null -> R.drawable.no_result
-                ErrorStatus.UNAUTHORIZED -> R.drawable.no_result
-                ErrorStatus.EMPTY -> R.drawable.no_result
-                ErrorStatus.PARSING_ERROR -> R.drawable.no_result
+                ErrorStatus.NO_INTERNET ->
+                    if (Theme.isDark) R.drawable.no_internet_dark
+                    else R.drawable.no_internet
+                else ->
+                    if (Theme.isDark) R.drawable.no_result_dark
+                    else R.drawable.no_result
             },
             titleId = when (errorStatus) {
                 ErrorStatus.NO_INTERNET -> R.string.no_internet_connection

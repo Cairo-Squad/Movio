@@ -13,21 +13,17 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.cairosquad.design_system.basic_component.Text
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.R
 import com.cairosquad.ui.movio_component.LoadingMovieCard
-import com.cairosquad.ui.movio_component.LoadingReviewCard
 import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.MovieRoute
@@ -105,7 +101,6 @@ fun RatedItemsList(
     Box(
         modifier = modifier.fillMaxSize()
     ) {
-        // Show loading state
         if (ratedItems.loadState.refresh is LoadState.Loading) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
@@ -121,22 +116,12 @@ fun RatedItemsList(
                 }
             }
         }
-        // Show error state
-//        else if (ratedItems.loadState.refresh is LoadState.Error) {
-//            Text(
-//                text = "Error loading ratings",
-//                color = Theme.color.system.error,
-//                textAlign = TextAlign.Center,
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(16.dp)
-//                    .align(Alignment.Center)
-//            )
-//        }
-        // Show empty state
+
         else if (ratedItems.itemCount == 0 && ratedItems.loadState.refresh !is LoadState.Loading) {
             StateMessage(
-                imageDrawable = com.cairosquad.design_system.R.drawable.favorite_list_empty,
+                imageDrawable =
+                    if (Theme.isDark) com.cairosquad.design_system.R.drawable.favorite_list_empty_dark
+                    else com.cairosquad.design_system.R.drawable.favorite_list_empty,
                 titleId = R.string.no_ratings_yet,
                 descriptionId = R.string.no_ratings_found_description,
                 modifier = Modifier
@@ -146,7 +131,7 @@ fun RatedItemsList(
                 height = 150.dp,
             )
         }
-        // Show items
+
         else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),

@@ -181,7 +181,9 @@ private fun ViewAllListsContent(
                             contentAlignment = Alignment.Center
                         ) {
                             StateMessage(
-                                imageDrawable = R.drawable.favorite_list_empty,
+                                imageDrawable =
+                                    if (Theme.isDark) R.drawable.favorite_list_empty_dark
+                                    else R.drawable.favorite_list_empty,
                                 title = stringResource(com.cairosquad.ui.R.string.nothing_here_yet),
                                 description = stringResource(com.cairosquad.ui.R.string.add_movies_and_tv_shows_to_build_your_personal_watchlist_the_perfect_binge_starts_here)
                             )
