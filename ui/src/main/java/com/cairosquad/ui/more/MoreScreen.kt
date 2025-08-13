@@ -1,5 +1,6 @@
 package com.cairosquad.ui.more
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -91,6 +93,15 @@ fun MoreScreen(
 
 @Composable
 fun MoreScreenContent(state: MoreScreenState, listener: MoreScreenInteractionListener) {
+
+    val animatedBlur by animateDpAsState(
+        if (
+            state.isThemeBottomSheetOpen
+            || state.isLanguageBottomSheetOpen
+            || state.isLogoutButtonVisible
+        ) 4.dp else 0.dp
+    )
+
     if (!state.isUserLoggedIn) {
         ShowLoggedOutState(
             onClick = { listener.onLoginClick() }
@@ -106,9 +117,11 @@ fun MoreScreenContent(state: MoreScreenState, listener: MoreScreenInteractionLis
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.TopCenter)
+                    .blur(animatedBlur)
             )
             Column(
                 modifier = Modifier
+                    .blur(animatedBlur)
                     .statusBarsPadding()
                     .verticalScroll(rememberScrollState())
                     .fillMaxWidth()
@@ -188,7 +201,6 @@ fun MoreScreenContent(state: MoreScreenState, listener: MoreScreenInteractionLis
                     modifier = Modifier.padding(bottom = 12.dp),
                     onClick = listener::onLogoutClick
                 )
-
             }
         }
         ThemeSelectionBottomSheet(
@@ -289,10 +301,12 @@ private fun LanguageSelectionBottomSheet(
                 )
 
                 val languages = listOf(
-                    MoreScreenState.Language("en",
+                    MoreScreenState.Language(
+                        "en",
                         stringResource(com.cairosquad.ui.R.string.english)
                     ),
-                    MoreScreenState.Language("ar",
+                    MoreScreenState.Language(
+                        "ar",
                         stringResource(com.cairosquad.ui.R.string.arabic)
                     )
                 )
