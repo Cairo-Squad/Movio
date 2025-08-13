@@ -86,4 +86,5 @@ fun SearchScreenContent(
             }
         }
     }
+
 }
