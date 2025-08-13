@@ -127,7 +127,7 @@ fun SeeAllScreen(
                     modifier = Modifier.padding(top = 16.dp),
                     categories =state.genres.map { genre ->
                         if (genre.id == null) {
-                            stringResource(com.cairosquad.ui.R.string.all)
+                            stringResource(com.cairosquad.ui.R.string.all_with_space_around)
                         } else {
                             genre.name
                         }

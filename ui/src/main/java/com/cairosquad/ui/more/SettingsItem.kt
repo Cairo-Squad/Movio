@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -36,15 +35,14 @@ fun SettingsItem(
     Row(
         modifier
             .fillMaxWidth()
-            .height(48.dp)
-            .clickable(onClick = onClick),
+            .clickable(onClick = onClick)
+            .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             painter = icon,
             contentDescription = icon.toString(),
             modifier = Modifier
-                .padding(vertical = 12.dp)
                 .padding(start = 16.dp, end = 8.dp)
                 .size(24.dp),
             tint = Theme.color.surfaces.onSurface
@@ -60,9 +58,7 @@ fun SettingsItem(
                 text = trailingText,
                 style = Theme.textStyle.label.smallRegular14,
                 color = Theme.color.surfaces.onSurfaceVariant,
-                modifier = Modifier
-                    .padding(vertical = 15.5.dp)
-                    .padding(end = 4.dp)
+                modifier = Modifier.padding(end = if (trailingIcon == null) 16.dp else 4.dp)
             )
         }
         if (trailingIcon != null) {
@@ -70,7 +66,6 @@ fun SettingsItem(
                 painter = trailingIcon,
                 contentDescription = trailingIcon.toString(),
                 modifier = Modifier
-                    .padding(vertical = 12.dp)
                     .padding(end = 16.dp)
                     .size(16.dp)
                     .graphicsLayer {
@@ -81,7 +76,6 @@ fun SettingsItem(
                 tint = Theme.color.surfaces.onSurfaceVariant
             )
         }
-
     }
 }
 

@@ -66,11 +66,11 @@ fun AppScreen() {
         },
         content = {
             when (selectedScreenIndex) {
-                0 -> HomeScreen()
+                0 -> HomeScreen(navigateToProfile = { selectedScreenIndex = 3 })
                 1 -> SearchScreen()
                 2 -> LibraryScreen()
                 3 -> MoreScreen()
-                else -> HomeScreen()
+                else -> HomeScreen(navigateToProfile = { selectedScreenIndex = 3 })
             }
         })
 }

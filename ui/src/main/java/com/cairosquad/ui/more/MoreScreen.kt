@@ -1,6 +1,8 @@
 package com.cairosquad.ui.more
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,10 +13,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -62,7 +70,6 @@ fun MoreScreen(
     ObserveAsEffect(viewModel.effect) {
         when (it) {
             MoreScreenEffect.NavigateToLogin -> {
-                //todo: navigate to login and remove the backstack
                 navController.navigate(LoginRoute) {
                     popUpTo(navController.graph.findStartDestination().id) {
                         inclusive = true
@@ -86,6 +93,15 @@ fun MoreScreen(
 
 @Composable
 fun MoreScreenContent(state: MoreScreenState, listener: MoreScreenInteractionListener) {
+
+    val animatedBlur by animateDpAsState(
+        if (
+            state.isThemeBottomSheetOpen
+            || state.isLanguageBottomSheetOpen
+            || state.isLogoutButtonVisible
+        ) 4.dp else 0.dp
+    )
+
     if (!state.isUserLoggedIn) {
         ShowLoggedOutState(
             onClick = { listener.onLoginClick() }
@@ -93,52 +109,60 @@ fun MoreScreenContent(state: MoreScreenState, listener: MoreScreenInteractionLis
     } else {
         Box {
             Image(
-                painter = painterResource(com.cairosquad.ui.R.drawable.more_background),
+                painter = painterResource(
+                    if (Theme.isDark) com.cairosquad.ui.R.drawable.more_background_dark
+                    else com.cairosquad.ui.R.drawable.more_background_light
+                ),
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(188.dp)
                     .align(Alignment.TopCenter)
+                    .blur(animatedBlur)
             )
             Column(
                 modifier = Modifier
-                    .align(alignment = Alignment.Center)
+                    .blur(animatedBlur)
+                    .statusBarsPadding()
+                    .verticalScroll(rememberScrollState())
                     .fillMaxWidth()
                     .padding(top = 104.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 if (state.userProfileImage != null) {
                     SafeImageViewer(
+                        modifier = Modifier
+                            .padding(bottom = 8.dp)
+                            .clip(CircleShape)
+                            .size(100.dp),
                         nudeThreshold = 0.0,
                         nonNudeThreshold = 0.0,
                         model = state.userProfileImage
                             ?.takeIf { it.isNotBlank() }
                             ?.let { BuildConfig.IMAGE_BASE_URL + it }.toString(),
-                        placeholder = painterResource(com.cairosquad.ui.R.drawable.user_profile),
+                        placeholder = painterResource(
+                            if (Theme.isDark) com.cairosquad.ui.R.drawable.more_background_dark
+                            else com.cairosquad.ui.R.drawable.more_background_light
+                        ),
                         contentDescription = stringResource(com.cairosquad.ui.R.string.profile_image),
-                        modifier = Modifier
-                            .padding(bottom = 8.dp)
-                            .clip(RoundedCornerShape(100))
-                            .size(100.dp)
-
                     )
                 } else {
                     Image(
-                        painter = painterResource(com.cairosquad.ui.R.drawable.user_profile),
+                        painter = painterResource(
+                            if (Theme.isDark) com.cairosquad.ui.R.drawable.profile_place_holder_dark
+                            else com.cairosquad.ui.R.drawable.profile_place_holder_light
+                        ),
                         contentDescription = stringResource(com.cairosquad.ui.R.string.profile_image),
                         modifier = Modifier
                             .padding(bottom = 8.dp)
-                            .clip(RoundedCornerShape(100))
                             .size(100.dp)
+                            .clip(CircleShape)
                     )
                 }
                 Text(
-                    text = state.userName,
+                    text = state.name.takeIf { it.isNotBlank() } ?: state.username,
                     style = Theme.textStyle.title.mediumMedium14,
                     color = Theme.color.surfaces.onSurface,
-                    modifier = Modifier.padding(
-                        bottom = 24.dp
-                    )
+                    modifier = Modifier.padding(bottom = 24.dp)
                 )
                 SettingsItem(
                     icon = painterResource(id = com.cairosquad.ui.R.drawable.star),
@@ -166,8 +190,7 @@ fun MoreScreenContent(state: MoreScreenState, listener: MoreScreenInteractionLis
                 SettingsItem(
                     icon = painterResource(id = com.cairosquad.ui.R.drawable.phone),
                     title = stringResource(com.cairosquad.ui.R.string.app_version),
-                    trailingText = state.appVersion,
-                    trailingIcon = painterResource(id = R.drawable.arrow),
+                    trailingText = "v" + state.appVersion,
                     modifier = Modifier.padding(bottom = 12.dp),
                     onClick = {}
                 )
@@ -178,7 +201,6 @@ fun MoreScreenContent(state: MoreScreenState, listener: MoreScreenInteractionLis
                     modifier = Modifier.padding(bottom = 12.dp),
                     onClick = listener::onLogoutClick
                 )
-
             }
         }
         ThemeSelectionBottomSheet(
@@ -217,8 +239,6 @@ private fun LogoutBottomSheet(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
-
                 Image(
                     painter = painterResource(id = R.drawable.logo),
                     contentDescription = stringResource(com.cairosquad.ui.R.string.movio_logo),
@@ -228,19 +248,22 @@ private fun LogoutBottomSheet(
                         .padding(bottom = 16.dp)
                 )
                 Text(
+                    modifier = Modifier.padding(bottom = 8.dp),
                     text = stringResource(com.cairosquad.ui.R.string.confirm_logout),
                     style = Theme.textStyle.title.mediumMedium16,
                     color = Theme.color.surfaces.onSurface,
-                    modifier = Modifier.padding(bottom = 8.dp)
                 )
                 Text(
                     text = stringResource(com.cairosquad.ui.R.string.you_ll_lose_access_to_your_library_favorites_and_history_until_you_sign_back_in),
+                    modifier = Modifier.padding(bottom = 40.dp),
                     style = Theme.textStyle.label.smallRegular12,
                     color = Theme.color.surfaces.onSurfaceContainer,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(bottom = 40.dp)
                 )
                 Button(
+                    modifier = Modifier
+                        .padding(bottom = 32.dp)
+                        .navigationBarsPadding(),
                     text = stringResource(com.cairosquad.ui.R.string.logout),
                     onClick = { onConfirmClicked() },
                 )
@@ -278,8 +301,14 @@ private fun LanguageSelectionBottomSheet(
                 )
 
                 val languages = listOf(
-                    MoreScreenState.Language("en", "English"),
-                    MoreScreenState.Language("ar", "العربية")
+                    MoreScreenState.Language(
+                        "en",
+                        stringResource(com.cairosquad.ui.R.string.english)
+                    ),
+                    MoreScreenState.Language(
+                        "ar",
+                        stringResource(com.cairosquad.ui.R.string.arabic)
+                    )
                 )
 
                 languages.forEach { language ->
@@ -296,7 +325,9 @@ private fun LanguageSelectionBottomSheet(
                 Button(
                     text = stringResource(com.cairosquad.ui.R.string.confirm),
                     onClick = { onConfirmClicked(selectedLanguage) },
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier
+                        .padding(bottom = 32.dp)
+                        .navigationBarsPadding()
                 )
             }
         }
@@ -346,9 +377,11 @@ fun ThemeSelectionBottomSheet(
                     modifier = Modifier.padding(bottom = 40.dp)
                 )
                 Button(
+                    modifier = Modifier
+                        .padding(bottom = 32.dp)
+                        .navigationBarsPadding(),
                     text = stringResource(com.cairosquad.ui.R.string.confirm),
                     onClick = { onConfirmClicked(selectedTheme) },
-                    modifier = Modifier.padding(bottom = 16.dp)
                 )
             }
         }
@@ -382,22 +415,23 @@ fun BottomSheetItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(48.dp)
+            .clip(RoundedCornerShape(8.dp))
             .border(
                 width = 1.dp,
                 brush = borderColor,
                 shape = RoundedCornerShape(8.dp)
             )
-            .clickable { onClick() },
+            .background(Theme.color.surfaces.surfaceContainer)
+            .clickable { onClick() }
+            .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
-
     ) {
         icon?.let {
             Icon(
                 painter = icon,
                 contentDescription = null,
                 modifier = Modifier
-                    .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                    .padding(start = 16.dp)
                     .size(24.dp), tint = Theme.color.surfaces.onSurface
             )
         }
@@ -407,7 +441,6 @@ fun BottomSheetItem(
             style = Theme.textStyle.title.mediumMedium14,
             color = Theme.color.surfaces.onSurface,
             modifier = Modifier
-                .padding(vertical = 15.5.dp)
                 .padding(start = 8.dp)
         )
         Spacer(Modifier.weight(1f))
@@ -417,7 +450,6 @@ fun BottomSheetItem(
                 contentDescription = stringResource(com.cairosquad.ui.R.string.success_check_mark),
                 modifier = Modifier
                     .padding(end = 12.dp)
-                    .padding(vertical = 14.dp)
                     .size(20.dp)
             )
         }

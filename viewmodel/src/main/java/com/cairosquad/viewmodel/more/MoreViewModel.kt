@@ -47,23 +47,22 @@ class MoreViewModel @Inject constructor(
             val isUserLoggedIn = loginUseCase.isUserLoggedIn()
             updateState { it.copy(isUserLoggedIn = isUserLoggedIn) }
 
-            // Only fetch account details if the user is logged in
             if (isUserLoggedIn) {
                 try {
                     val accountDetails = account.getAccountDetails()
                     updateState {
                         it.copy(
-                            userProfileImage = accountDetails.avatarPath,
-                            userName = accountDetails.name
+                            userProfileImage = accountDetails.avatarPath.takeIf { it.isNotBlank() },
+                            name = accountDetails.name,
+                            username = accountDetails.username,
                         )
                     }
-                } catch (e: Exception) {
-                    // Handle potential errors when fetching account details
-                    // This prevents crashes when there are API issues
+                } catch (_: Exception) {
                     updateState {
                         it.copy(
                             userProfileImage = null,
-                            userName = ""
+                            username = "",
+                            name = "",
                         )
                     }
                 }

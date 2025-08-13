@@ -19,16 +19,20 @@ class AccountRepositoryImpl @Inject constructor(
     private val accountLocalDataSource: AccountLocalDataSource
 ) : AccountRepository {
     override suspend fun getAccountDetails(): Account {
-        return accountLocalDataSource
-            .getAccount()
-            .getOrNull(0)
-            ?.toEntity()
-            ?: accountRemoteDataSource
+        return try {
+            accountRemoteDataSource
                 .getAccountDetails()
                 .toEntity()
                 .also { account ->
                     accountLocalDataSource.setAccount(account.toCacheDto())
                 }
+        } catch (e: Exception) {
+            accountLocalDataSource
+                .getAccount()
+                .getOrNull(0)
+                ?.toEntity()
+                ?: throw e
+        }
     }
 
     override suspend fun getMovieLists(page: Int): List<MediaList> {
