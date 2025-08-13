@@ -81,7 +81,7 @@ fun SmallArtistCard(
 		Text(
 			modifier = Modifier
 				.fillMaxWidth()
-				.padding(top = 8.dp, start = 4.dp, end = 4.dp), // padding يمنع الحروف من الالتصاق
+				.padding(top = 8.dp, start = 4.dp, end = 4.dp),
 			text = name,
 			textAlign = TextAlign.Center,
 			style = Theme.textStyle.title.mediumMedium14,
