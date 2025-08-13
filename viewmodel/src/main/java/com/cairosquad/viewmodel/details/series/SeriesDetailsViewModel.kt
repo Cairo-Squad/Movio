@@ -99,7 +99,7 @@ class SeriesDetailsViewModel @AssistedInject constructor(
                 if (!authed) {
                     updateState { it.copy(showLoginBottomSheet = true) }
                 } else {
-                    if(screenState.value.isFavorite) {
+                    if (screenState.value.isFavorite) {
                         removeFromFavorite(seriesId)
                     } else {
                         addToFavorite(seriesId)
@@ -258,36 +258,31 @@ class SeriesDetailsViewModel @AssistedInject constructor(
             onStart = {
                 updateState { it.copy(showRateBottomSheet = false) }
             },
-            block = { manageSeriesUseCase.addSeriesRating(seriesId, rate.toFloat()) },
-            onSuccess = { status ->
-                updateState {
-                    it.copy(
-                        showSnackBar = true,
-                        snackMessage = status.statusMessage,
-                        isProcessSuccess = true,
-                        isRated = true
-                    )
-                }
-                delay(2000)
-                updateState {
-                    it.copy(
-                        showSnackBar = false,
-                        snackMessage = status.statusMessage,
-                        isProcessSuccess = true,
-                        isRated = true
-                    )
-                }
+            block = {
+                manageSeriesUseCase.addSeriesRating(seriesId, rate.toFloat())
             },
-            onError = {},
+            onSuccess = {
+                updateState { it.copy(isRated = true, showSnackBar = false) }
+            },
+            onError = {
+                updateState { it.copy(isRated = false) }
+            },
             dispatcher = Dispatchers.IO
         )
     }
 
+
     override fun onCopy(message: String, isSuccessful: Boolean) {
+        onDismissShareBottomSheet()
+        viewModelScope.launch {
+            delay(500)
+            showSnackBar(message, isSuccessful)
+        }
+    }
+
+    fun showSnackBar(message: String, isSuccessful: Boolean, durationMillis: Long = 2000) {
         tryToCall(
             onStart = {
-                onDismissShareBottomSheet()
-                delay(500)
                 updateState {
                     it.copy(
                         showSnackBar = true,
@@ -299,13 +294,9 @@ class SeriesDetailsViewModel @AssistedInject constructor(
             block = { delay(2000) },
             onSuccess = {
                 updateState {
-                    it.copy(
-                        showSnackBar = false,
-                        snackMessage = message
-                    )
+                    it.copy(showSnackBar = false)
                 }
-            },
-            onError = {},
+            }, onError = {}
         )
     }
 

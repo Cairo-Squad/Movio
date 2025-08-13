@@ -8,6 +8,9 @@ data class ArtistScreenState (
     val knownForSeries :List<SeriesUiState> =emptyList(),
     val screenStatus: ScreenStatus= ScreenStatus.LOADING,
     val errorStatus: ErrorStatus? = null,
+    val showSnackBar: Boolean = false,
+    val snackMessage: String = "",
+    val isProcessSuccess: Boolean = false
 
     ) {
     data class ArtistUiState(

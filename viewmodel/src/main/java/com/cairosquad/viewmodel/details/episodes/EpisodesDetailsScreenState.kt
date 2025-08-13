@@ -12,8 +12,11 @@ data class EpisodesDetailsScreenState(
     val selectedSeasonNumber: Int = 1,
     val isSeasonDropdownExpanded: Boolean = false,
     val isRefreshing: Boolean = false,
-    val currentSeasonNumber: Int = 1
-    ) {
+    val currentSeasonNumber: Int = 1,
+    val showSnackBar: Boolean = false,
+    val snackMessage: String = "",
+    val isProcessSuccess: Boolean = false
+) {
     data class EpisodeUiState(
         val id: Long = 0L,
         val name: String = "",

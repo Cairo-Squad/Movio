@@ -5,5 +5,5 @@ import com.cairosquad.viewmodel.exception.ErrorStatus
 sealed class EpisodesDetailEffect {
     data object NavigateBack : EpisodesDetailEffect()
     data object PlayEpisode : EpisodesDetailEffect()
-    data class ShowToast(val message: ErrorStatus) : EpisodesDetailEffect()
+    data class ShowSnackBar(val message: ErrorStatus) : EpisodesDetailEffect()
 }
