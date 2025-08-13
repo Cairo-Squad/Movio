@@ -12,7 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.modifier.CustomBrush
 import com.cairosquad.design_system.theme.Theme
@@ -55,17 +54,7 @@ fun ArtistBackgroundImage(state: ArtistScreenState) {
                         .fillMaxWidth()
                         .height(40.dp)
                         .align(Alignment.BottomCenter)
-                        .background(
-                            brush = verticalGradient(
-                                colors = listOf(
-                                    Theme.color.surfaces.surface.copy(alpha = 0.00f),
-                                    Theme.color.surfaces.surface.copy(alpha = 0.10f),
-                                    Theme.color.surfaces.surface.copy(alpha = 0.50f),
-                                    Theme.color.surfaces.surface.copy(alpha = 0.90f),
-                                    Theme.color.surfaces.surface,
-                                )
-                            )
-                        )
+                        .background(brush = Theme.color.gradiant.fadingGradient)
                 )
             }
         }
