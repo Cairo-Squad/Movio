@@ -209,7 +209,7 @@ fun ViewAllFavoriteContent(
             else {
                 Spacer(Modifier.weight(1f))
                 StateMessage(
-                    imageDrawable = com.cairosquad.design_system.R.drawable.watch_later_empty,
+                    imageDrawable = com.cairosquad.design_system.R.drawable.favorite_list_empty,
                     title = stringResource(com.cairosquad.design_system.R.string.favorites_list_empty),
                     description = stringResource(com.cairosquad.design_system.R.string.favorite_list_empty_description)
                 )
