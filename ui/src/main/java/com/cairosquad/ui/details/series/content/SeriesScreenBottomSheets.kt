@@ -11,6 +11,7 @@ import com.cairosquad.design_system.R
 import com.cairosquad.ui.BuildConfig
 import com.cairosquad.ui.details.Constants.SERIES_URL
 import com.cairosquad.ui.movio_component.bottom_sheet.CreateListBottomSheet
+import com.cairosquad.ui.movio_component.bottom_sheet.FinishRatingBottomSheet
 import com.cairosquad.ui.movio_component.bottom_sheet.ListBottomSheet
 import com.cairosquad.ui.movio_component.bottom_sheet.LoginBottomSheet
 import com.cairosquad.ui.movio_component.bottom_sheet.RateBottomSheet
@@ -82,6 +83,17 @@ fun SeriesScreenBottomSheets(
             lists = emptyList(),
             onListClicked = {},
             onCreateNewList = viewModel::onCreateListClicked
+        )
+    }
+    AnimatedVisibility(
+        visible = state.showSuccessRatedBottomSheet,
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
+        FinishRatingBottomSheet(
+            isVisible = state.showSuccessRatedBottomSheet,
+            onDismiss = viewModel::onDismissSuccessRatedBottomSheet,
+            rating = state.userRating
         )
     }
     AnimatedVisibility(

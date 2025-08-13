@@ -23,7 +23,7 @@ interface MovieInteractionListener {
     fun onSeeAllSimilarMoviesClick(movieId: Long)
     fun onMovieClick(movieId: Long)
 
-    fun onCopy(message: String, isSuccessful: Boolean)
+    fun onCopy(messageId: Int, isSuccessful: Boolean)
 
     fun onDismissShareBottomSheet()
     fun onDismissLoginBottomSheet()

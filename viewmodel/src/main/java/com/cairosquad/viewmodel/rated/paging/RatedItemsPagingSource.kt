@@ -21,10 +21,10 @@ class RatedItemsPagingSource(
         val page = params.key ?: 1
 
         return try {
-            val (movies, series) = getRatedItemsUseCase.execute(page)
-
-            val movieItems = movies.map { it.toRatedItemUiState() }
-            val seriesItems = series.map { it.toRatedItemUiState() }
+            val movies = getRatedItemsUseCase.getRatedMovies(page)
+            val series = getRatedItemsUseCase.getRatedSeries(page)
+            val movieItems = movies.map { (movie, _) -> movie.toRatedItemUiState() }
+            val seriesItems = series.map { (series,_) -> series.toRatedItemUiState() }
 
             val combined = (movieItems + seriesItems).sortedByDescending { it.rating }
 

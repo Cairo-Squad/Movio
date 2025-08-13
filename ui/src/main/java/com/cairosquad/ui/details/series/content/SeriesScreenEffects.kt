@@ -37,7 +37,7 @@ fun SeriesScreenEffects(
             SeriesDetailEffect.PlayTrailer -> {
                 if (state.series.trailerPath.isBlank()) {
                     viewModel.showSnackBar(
-                        message = context.getString(com.cairosquad.ui.R.string.no_trailer_found_for_this_series),
+                        messageId = com.cairosquad.ui.R.string.no_trailer_found_for_this_series,
                         isSuccessful = false
                     )
                 } else {
@@ -47,7 +47,7 @@ fun SeriesScreenEffects(
 
             is SeriesDetailEffect.ErrorHappened -> {
                 viewModel.showSnackBar(
-                    message = context.getString(errorStatusToMessageResource(effect.message)),
+                    messageId = errorStatusToMessageResource(effect.message),
                     isSuccessful = false
                 )
             }

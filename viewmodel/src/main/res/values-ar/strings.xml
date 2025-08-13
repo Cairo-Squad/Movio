@@ -32,4 +32,5 @@
     <string name="light_mode">Light</string>
     <string name="movie_list_remove_success">تم إزالة من القائمة.</string>
     <string name="movie_list_remove_fail">فشل الإزالة من القائمة.</string>
+    <string name="rated_failed">فشلت عمليه التقييم.</string>
 </resources>

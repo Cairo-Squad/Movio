@@ -19,4 +19,6 @@ data class SeriesRemoteDto(
     val overview: String? = null,
     @SerialName("first_air_date")
     val releaseDate: String? = null,
+    @SerialName("rating")
+    val userRating: Double? = null
 )

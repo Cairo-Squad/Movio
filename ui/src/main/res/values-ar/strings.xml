@@ -92,4 +92,6 @@
     <string name="add_movies_and_tv_shows_to_build_your_personal_watchlist_the_perfect_binge_starts_here">أضف الأفلام والمسلسلات لبناء قائمة مشاهدتك الشخصية. البداية المثالية لماراثون المشاهدة تبدأ من هنا!</string>
     <string name="view_all">عرض الكل</string>
     <string name="undo">إعادة</string>
+    <string name="copied_to_clipboard_successfully">تم النسخ الى الذاكرة.</string>
+    <string name="done">تم</string>
 </resources>
