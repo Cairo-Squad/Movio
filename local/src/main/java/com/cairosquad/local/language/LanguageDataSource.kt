@@ -32,7 +32,11 @@ class LanguageDataStoreSourceImpl @Inject constructor(
 
     override fun getLanguage(): Flow<String> {
         return dataStore.data.map { preferences ->
-            preferences[LANGUAGE_KEY] ?: getDefaultLanguageBasedOnDevice()
+            preferences[LANGUAGE_KEY]
+                ?: (
+                        getDefaultLanguageBasedOnDevice()
+                            .also { saveLanguage(it) }
+                        )
         }
     }
 
