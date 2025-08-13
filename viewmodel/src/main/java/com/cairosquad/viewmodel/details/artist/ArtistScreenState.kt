@@ -18,7 +18,7 @@ data class ArtistScreenState (
         val name: String = "",
         val photoPath: String = "",
         val country: String = "",
-        val birthDate: Long? = null,
+        val birthDate: String = "",
         val biography: String = "",
         val department: String = ""
     )

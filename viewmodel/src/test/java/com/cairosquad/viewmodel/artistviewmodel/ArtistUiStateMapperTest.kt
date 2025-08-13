@@ -7,6 +7,7 @@ import com.cairosquad.viewmodel.details.artist.ArtistScreenState
 import com.cairosquad.viewmodel.details.artist.toArtistMovieUiState
 import com.cairosquad.viewmodel.details.artist.toArtistSeriesUiState
 import com.cairosquad.viewmodel.details.artist.toArtistUiState
+import com.cairosquad.viewmodel.util.TimeUtil
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
@@ -24,7 +25,7 @@ class ArtistUiStateMapperTest {
                 name = artist.name,
                 photoPath = artist.photoPath,
                 country = artist.country,
-                birthDate = artist.birthDate,
+                birthDate = TimeUtil.convertLongToNamedDate(artist.birthDate),
                 biography = artist.biography,
                 department = artist.department
             )

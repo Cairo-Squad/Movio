@@ -69,6 +69,15 @@ val lightThemeColors = MovioColors(
                 Color(0xFFE6DFFF),
                 Color(0xFF7C5DF6)
             )
+        ),
+        fadingGradient = Brush.verticalGradient(
+            colors = listOf(
+                Color(0x00FFFFFF),
+                Color(0x1AFFFFFF),
+                Color(0x80FFFFFF),
+                Color(0xE6FFFFFF),
+                Color(0xFFFFFFFF),
+            )
         )
     ),
 )

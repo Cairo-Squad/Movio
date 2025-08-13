@@ -36,7 +36,8 @@ internal object TimeUtil {
      * @param time time in milliseconds
      * @return named date as a string, e.g., `June 14, 2025`
      */
-    internal fun convertLongToNamedDate(time: Long): String {
+    internal fun convertLongToNamedDate(time: Long?): String {
+        if (time == null) return ""
         val date = Date(time)
         val formatter = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
         return formatter.format(date)

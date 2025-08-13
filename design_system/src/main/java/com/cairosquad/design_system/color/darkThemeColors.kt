@@ -67,6 +67,15 @@ val darkThemeColors = MovioColors(
                 Color(0xFFEBE6FE),
                 Color(0xFF7C5DF6)
             )
+        ),
+        fadingGradient = Brush.verticalGradient(
+            colors = listOf(
+                Color(0x00080D24),
+                Color(0x1A080D24),
+                Color(0x80080D24),
+                Color(0xE6080D24),
+                Color(0xFF080D24)
+            )
         )
     )
 )

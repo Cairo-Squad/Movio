@@ -1,0 +1,34 @@
+package com.cairosquad.ui.details.top_cast.content
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.cairosquad.design_system.R
+import com.cairosquad.design_system.basic_component.AppBar
+import com.cairosquad.ui.details.composable.BlurredCircle
+import com.cairosquad.viewmodel.details.top_cast.TopCastScreenState
+
+@Composable
+fun TopCastScreenContent(
+    onBackClick: () -> Unit,
+    onClick: (Long) -> Unit,
+    state: TopCastScreenState
+) {
+    Box {
+        BlurredCircle()
+        Column {
+            AppBar(
+                modifier = Modifier
+                    .windowInsetsPadding(WindowInsets.statusBars),
+                title = stringResource(R.string.top_cast),
+                onBackButtonClicked = onBackClick,
+            )
+            TopCastSection(state, onClick)
+        }
+    }
+}
