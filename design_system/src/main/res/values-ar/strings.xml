@@ -62,6 +62,8 @@
     <string name="play">تشغيل</string>
     <string name="current_season">الاجزاء الحاليه</string>
     <string name="copy_link">نسخ الرابط</string>
+    <string name="facebook">فيسبوك</string>
+    <string name="X">اكس</string>
     <string name="you_don_t_have_an_account">ليس لديك حساب</string>
     <string name="you_don_t_have_an_account_description">يرجى تسجيل الدخول أو إنشاء حساب لحفظ العناصر في المفضلة والوصول إليها لاحقًا.</string>
     <string name="login">تسجيل الدخول</string>
