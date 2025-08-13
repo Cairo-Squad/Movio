@@ -28,12 +28,6 @@ class LocaleViewModel @Inject constructor(
                 _currentTheme.value = it.toUi()
             }
         }
-
-//        viewModelScope.launch {
-//            .collectLatest {
-//                _currentLanguage.value = it.toUi()
-//            }
-//        }
     }
 
     fun getLanguageCode() = languageManagerUseCase.getLanguage().map { it.code }
