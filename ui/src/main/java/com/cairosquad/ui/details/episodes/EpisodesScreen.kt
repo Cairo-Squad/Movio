@@ -19,8 +19,8 @@ fun EpisodesScreen(
             factory.create(seriesId, seasonNumber)
         }
     val navController = LocalNavController.current
-    val uiState by viewModel.screenState.collectAsStateWithLifecycle()
+    val state by viewModel.screenState.collectAsStateWithLifecycle()
 
     EpisodesScreenEffects(viewModel, navController)
-    EpisodesScreenContent(uiState = uiState, listener = viewModel, seriesId)
+    EpisodesScreenContent(state = state, listener = viewModel, seriesId)
 }

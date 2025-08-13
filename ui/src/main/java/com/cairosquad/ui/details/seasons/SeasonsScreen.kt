@@ -21,13 +21,13 @@ fun SeasonsScreen(
                 dispatcher = Dispatchers.IO
             )
         }
-    val uiState by viewModel.screenState.collectAsStateWithLifecycle()
+    val state by viewModel.screenState.collectAsStateWithLifecycle()
     val navController = LocalNavController.current
 
     SeasonScreenEffects(viewModel, navController)
 
     SeasonsScreenContent(
-        uiState = uiState,
+        state = state,
         listener = viewModel,
     )
 }

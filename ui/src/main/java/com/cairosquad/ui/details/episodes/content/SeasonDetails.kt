@@ -21,13 +21,13 @@ import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsInteractionListe
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState
 
 fun LazyListScope.SeasonDetails(
-    uiState: EpisodesDetailsScreenState,
+    state: EpisodesDetailsScreenState,
     seasonOptions: List<String>,
     listener: EpisodesDetailsInteractionListener,
     seriesId: Long
 ) {
     item {
-        when (uiState.basicDetailsSectionState) {
+        when (state.basicDetailsSectionState) {
             EpisodesDetailsScreenState.ScreenStatus.LOADING -> {
                 Row(
                     modifier = Modifier
@@ -60,7 +60,7 @@ fun LazyListScope.SeasonDetails(
                         modifier = Modifier.padding(bottom = 8.dp),
                         text = stringResource(
                             com.cairosquad.ui.R.string.episodes,
-                            uiState.season.episodesCount
+                            state.season.episodesCount
                         ),
                         style = Theme.textStyle.headline.mediumMedium18.copy(
                             color = Theme.color.surfaces.onSurface
@@ -70,7 +70,7 @@ fun LazyListScope.SeasonDetails(
                     AppDropDownMenu(
                         selectedText = stringResource(
                             R.string.season,
-                            uiState.selectedSeasonNumber
+                            state.selectedSeasonNumber
                         ),
                         options = seasonOptions,
                         imgRes = R.drawable.drop_down_arrow,

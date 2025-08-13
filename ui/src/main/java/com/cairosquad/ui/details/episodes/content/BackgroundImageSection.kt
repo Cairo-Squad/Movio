@@ -5,12 +5,12 @@ import androidx.compose.runtime.Composable
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState
 
 @Composable
-fun BackgroundImageSection(uiState: EpisodesDetailsScreenState) {
+fun BackgroundImageSection(state: EpisodesDetailsScreenState) {
     Box {
-        when (uiState.basicDetailsSectionState) {
+        when (state.basicDetailsSectionState) {
             EpisodesDetailsScreenState.ScreenStatus.LOADING -> {}
             EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
-                SeasonBackgroundImage(uiState)
+                SeasonBackgroundImage(state)
             }
 
             EpisodesDetailsScreenState.ScreenStatus.ERROR -> {}

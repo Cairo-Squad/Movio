@@ -22,9 +22,9 @@ import com.cairosquad.ui.BuildConfig
 import com.cairosquad.ui.movio_component.LoadingMovieImage
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState
 
-fun LazyListScope.SeasonImage(uiState: EpisodesDetailsScreenState) {
+fun LazyListScope.SeasonImage(state: EpisodesDetailsScreenState) {
     item {
-        when (uiState.basicDetailsSectionState) {
+        when (state.basicDetailsSectionState) {
             EpisodesDetailsScreenState.ScreenStatus.LOADING -> {
                 LoadingMovieImage(
                     Modifier
@@ -34,13 +34,13 @@ fun LazyListScope.SeasonImage(uiState: EpisodesDetailsScreenState) {
             }
 
             EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
-                if (uiState.season.posterUrl.isNotEmpty()) {
+                if (state.season.posterUrl.isNotEmpty()) {
                     SafeImageViewer(
                         modifier = Modifier
                             .padding(top = 56.dp, bottom = 24.dp)
                             .size(height = 260.dp, width = 200.dp)
                             .clip(RoundedCornerShape(8.dp)),
-                        model = BuildConfig.IMAGE_BASE_URL + uiState.season.posterUrl,
+                        model = BuildConfig.IMAGE_BASE_URL + state.season.posterUrl,
                         contentDescription = "",
                         loadingPlaceholder = {
                             LoadingMovieImage(Modifier.size(height = 260.dp, width = 200.dp))

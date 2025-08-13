@@ -14,9 +14,9 @@ import com.cairosquad.ui.movio_component.LoadingMovieImage
 import com.cairosquad.viewmodel.details.movie.MovieScreenState
 
 
-fun LazyListScope.MovieDescriptionSection(uiState: MovieScreenState) {
+fun LazyListScope.MovieDescriptionSection(state: MovieScreenState) {
     item {
-        when (uiState.basicDetailsSectionState) {
+        when (state.basicDetailsSectionState) {
             MovieScreenState.ScreenStatus.LOADING -> {
                 LoadingMovieImage(
                     modifier = Modifier
@@ -32,7 +32,7 @@ fun LazyListScope.MovieDescriptionSection(uiState: MovieScreenState) {
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                         .padding(top = 16.dp),
-                    text = uiState.movie.overview,
+                    text = state.movie.overview,
                     showMoreText = stringResource(R.string.read_more_with_dots_behind),
                     showLessText = stringResource(R.string.read_less_with_dots_behind),
                     color = Theme.color.surfaces.onSurface,

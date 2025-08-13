@@ -20,10 +20,9 @@ import com.cairosquad.viewmodel.details.movie.MovieViewModel
 fun MovieScreenBottomSheets(
     state: MovieScreenState,
     viewModel: MovieViewModel,
-    movieId: Long,
 ) {
     val context = LocalContext.current
-    val movieUrl = "$MOVIE_URL${movieId}"
+    val movieUrl = "$MOVIE_URL${state.movie.id}"
     val message = stringResource(R.string.check_out_this_amazing_movie)
     val encodedMessageAndUrl = Uri.encode("$message $movieUrl")
 

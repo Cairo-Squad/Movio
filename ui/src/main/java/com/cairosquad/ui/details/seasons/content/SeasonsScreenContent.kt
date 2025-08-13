@@ -17,7 +17,7 @@ import com.cairosquad.viewmodel.details.series.season.SeasonDetailsScreenState
 
 @Composable
 fun SeasonsScreenContent(
-    uiState: SeasonDetailsScreenState,
+    state: SeasonDetailsScreenState,
     listener: SeasonDetailsInteractionListener,
 ) {
     Box {
@@ -31,7 +31,7 @@ fun SeasonsScreenContent(
                 title = stringResource(R.string.current_season),
                 onBackButtonClicked = listener::onBackClicked,
             )
-            Seasons(uiState, listener)
+            Seasons(state, listener)
         }
     }
 }

@@ -20,11 +20,11 @@ import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState
 
 
 @Composable
-fun SeriesBackgroundImage(uiState: SeriesDetailsScreenState) {
-    when (uiState.basicDetailsSectionState) {
+fun SeriesBackgroundImage(state: SeriesDetailsScreenState) {
+    when (state.basicDetailsSectionState) {
         SeriesDetailsScreenState.SectionStatus.LOADING -> {}
         SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
-            if (uiState.series.posterPath.isNotEmpty()) {
+            if (state.series.posterPath.isNotEmpty()) {
                 Box {
                     SafeImageViewer(
                         modifier = Modifier
@@ -41,7 +41,7 @@ fun SeriesBackgroundImage(uiState: SeriesDetailsScreenState) {
                                 }
                             )
                             .offset(y = (-28).dp),
-                        model = BuildConfig.IMAGE_BASE_URL + uiState.series.posterPath,
+                        model = BuildConfig.IMAGE_BASE_URL + state.series.posterPath,
                         contentDescription = "",
                         blur = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) 16 else 0,
                         isBlurForced = true

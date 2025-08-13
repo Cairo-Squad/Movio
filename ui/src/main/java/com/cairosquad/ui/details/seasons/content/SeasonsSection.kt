@@ -18,7 +18,7 @@ import com.cairosquad.viewmodel.details.series.season.SeasonDetailsScreenState
 
 @Composable
 fun Seasons(
-    uiState: SeasonDetailsScreenState,
+    state: SeasonDetailsScreenState,
     listener: SeasonDetailsInteractionListener
 ) {
     LazyColumn(
@@ -27,7 +27,7 @@ fun Seasons(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp)
     ) {
-        when (uiState.seasonSectionState) {
+        when (state.seasonSectionState) {
             SeasonDetailsScreenState.ScreenStatus.LOADING -> {
                 items(10) {
                     LoadingMovieImage(Modifier
@@ -37,9 +37,9 @@ fun Seasons(
             }
 
             SeasonDetailsScreenState.ScreenStatus.SUCCESS -> {
-                items(uiState.season) { season ->
+                items(state.season) { season ->
                     SeasonCard(
-                        seriesName = uiState.seriesTitle,
+                        seriesName = state.seriesTitle,
                         seasonTitle = season.name,
                         seasonRate = season.rating,
                         totalNumberOfEpisodes = season.episodesCount.toString(),

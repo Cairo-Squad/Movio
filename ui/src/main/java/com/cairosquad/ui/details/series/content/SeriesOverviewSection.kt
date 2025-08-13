@@ -16,11 +16,11 @@ import com.cairosquad.viewmodel.details.series.SeriesDetailsInteractionListener
 import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState
 
 fun LazyListScope.SeriesOverviewSection(
-    uiState: SeriesDetailsScreenState,
+    state: SeriesDetailsScreenState,
     listener: SeriesDetailsInteractionListener
 ) {
     item {
-        when (uiState.basicDetailsSectionState) {
+        when (state.basicDetailsSectionState) {
             SeriesDetailsScreenState.SectionStatus.LOADING -> {
                 LoadingMovieImage(
                     modifier = Modifier
@@ -32,12 +32,12 @@ fun LazyListScope.SeriesOverviewSection(
             }
 
             SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
-                if (uiState.series.overview.isNotEmpty()) {
+                if (state.series.overview.isNotEmpty()) {
                     ExpandableText(
                         modifier = Modifier
                             .padding(horizontal = 16.dp)
                             .padding(top = 16.dp),
-                        text = uiState.series.overview,
+                        text = state.series.overview,
                         showMoreText = stringResource(R.string.read_more_with_dots_behind),
                         showLessText = stringResource(R.string.read_less_with_dots_behind),
                         color = Theme.color.surfaces.onSurface,

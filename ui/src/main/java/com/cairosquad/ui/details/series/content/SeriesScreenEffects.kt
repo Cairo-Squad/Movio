@@ -1,10 +1,10 @@
 package com.cairosquad.ui.details.series.content
 
-import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
+import androidx.compose.ui.platform.LocalContext
 import com.cairosquad.ui.navigation.ArtistRoute
 import com.cairosquad.ui.navigation.EpisodesRoute
+import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.LoginRoute
 import com.cairosquad.ui.navigation.ReviewsRoute
 import com.cairosquad.ui.navigation.SeasonsRoute
@@ -21,11 +21,12 @@ import com.cairosquad.viewmodel.details.series.SeriesDetailsViewModel
 @Composable
 fun SeriesScreenEffects(
     viewModel: SeriesDetailsViewModel,
-    navController: NavHostController,
-    uiState: SeriesDetailsScreenState,
-    context: Context,
-    seriesId: Long
+    state: SeriesDetailsScreenState,
 ) {
+    val context = LocalContext.current
+
+    val navController = LocalNavController.current
+
     ObserveAsEffect(viewModel.effect) { effect ->
         when (effect) {
 
@@ -34,13 +35,13 @@ fun SeriesScreenEffects(
             }
 
             SeriesDetailEffect.PlayTrailer -> {
-                if (uiState.series.trailerPath.isBlank()) {
+                if (state.series.trailerPath.isBlank()) {
                     viewModel.showSnackBar(
                         message = context.getString(com.cairosquad.ui.R.string.no_trailer_found_for_this_series),
                         isSuccessful = false
                     )
                 } else {
-                    ShareUtil.playOnYoutube(videoId = uiState.series.trailerPath, context = context)
+                    ShareUtil.playOnYoutube(videoId = state.series.trailerPath, context = context)
                 }
             }
 
@@ -52,19 +53,19 @@ fun SeriesScreenEffects(
             }
 
             is SeriesDetailEffect.NavigateToAllArtists -> {
-                navController.navigate(TopCastRoute(seriesId, isMovie = false))
+                navController.navigate(TopCastRoute(effect.seriesId, isMovie = false))
             }
 
             is SeriesDetailEffect.NavigateToAllReviews -> {
-                navController.navigate(ReviewsRoute(seriesId, isMovie = false))
+                navController.navigate(ReviewsRoute(effect.seriesId, isMovie = false))
             }
 
             is SeriesDetailEffect.NavigateToAllSeasons -> {
-                navController.navigate(SeasonsRoute(seriesId))
+                navController.navigate(SeasonsRoute(effect.seriesId))
             }
 
             is SeriesDetailEffect.NavigateToAllSimilar -> {
-                navController.navigate(SimilarSeriesRoute(seriesId))
+                navController.navigate(SimilarSeriesRoute(effect.seriesId))
             }
 
             is SeriesDetailEffect.NavigateToArtistDetails -> {

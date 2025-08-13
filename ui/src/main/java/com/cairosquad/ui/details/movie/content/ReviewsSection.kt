@@ -13,11 +13,11 @@ import com.cairosquad.viewmodel.details.movie.MovieInteractionListener
 import com.cairosquad.viewmodel.details.movie.MovieScreenState
 
 fun LazyListScope.ReviewsSection(
-    uiState: MovieScreenState,
-    interactionListener: MovieInteractionListener
+    state: MovieScreenState,
+    listener: MovieInteractionListener
 ) {
     item {
-        when (uiState.reviewsSectionState) {
+        when (state.reviewsSectionState) {
             MovieScreenState.ScreenStatus.LOADING -> {
                 SectionLoading(
                     headerName = stringResource(R.string.reviews),
@@ -33,12 +33,12 @@ fun LazyListScope.ReviewsSection(
             }
 
             MovieScreenState.ScreenStatus.SUCCESS -> {
-                if (uiState.reviews.isNotEmpty()) {
+                if (state.reviews.isNotEmpty()) {
                     MovieReviewSection(
-                        reviews = uiState.reviews,
+                        reviews = state.reviews,
                         onActionClicked = {
-                            interactionListener.onSeeAllReviewsClick(
-                                uiState.movie.id
+                            listener.onSeeAllReviewsClick(
+                                state.movie.id
                             )
                         }
                     )

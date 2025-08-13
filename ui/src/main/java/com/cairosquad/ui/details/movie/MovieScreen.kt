@@ -21,11 +21,11 @@ fun MovieScreen(
         }
     val state by viewModel.screenState.collectAsState()
 
-    MovieScreenEffects(viewModel, movieId, state)
+    MovieScreenEffects(viewModel, state)
 
     Box {
-        MovieContent(uiState = state, interactionListener = viewModel)
-        MovieScreenBottomSheets(state, viewModel, movieId)
+        MovieContent(state = state, listener = viewModel)
+        MovieScreenBottomSheets(state, viewModel)
         MovieScreenSnackBar(state)
     }
 }

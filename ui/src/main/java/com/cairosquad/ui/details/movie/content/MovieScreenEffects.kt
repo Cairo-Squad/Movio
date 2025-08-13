@@ -19,7 +19,6 @@ import com.cairosquad.viewmodel.details.movie.MovieViewModel
 @Composable
 fun MovieScreenEffects(
     viewModel: MovieViewModel,
-    movieId: Long,
     state: MovieScreenState
 ) {
     val context = LocalContext.current
@@ -51,15 +50,15 @@ fun MovieScreenEffects(
             }
 
             is MovieEffect.NavigateToAllActors -> {
-                navController.navigate(TopCastRoute(movieId, isMovie = true))
+                navController.navigate(TopCastRoute(effect.movieId, isMovie = true))
             }
 
             is MovieEffect.NavigateToAllReviews -> {
-                navController.navigate(ReviewsRoute(movieId, isMovie = true))
+                navController.navigate(ReviewsRoute(effect.movieId, isMovie = true))
             }
 
             is MovieEffect.NavigateToSimilarMovies -> {
-                navController.navigate(SimilarMovieRoute(movieId))
+                navController.navigate(SimilarMovieRoute(effect.movieId))
             }
 
             MovieEffect.PlayTrailer -> {

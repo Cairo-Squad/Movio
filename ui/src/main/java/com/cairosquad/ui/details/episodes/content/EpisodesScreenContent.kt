@@ -30,13 +30,13 @@ import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState
 
 @Composable
 fun EpisodesScreenContent(
-    uiState: EpisodesDetailsScreenState,
+    state: EpisodesDetailsScreenState,
     listener: EpisodesDetailsInteractionListener,
     seriesId: Long,
     modifier: Modifier = Modifier,
 
     ) {
-    val seasonOptions = uiState.seasons.map {
+    val seasonOptions = state.seasons.map {
         stringResource(
             com.cairosquad.ui.R.string.season,
             it.seasonNumber
@@ -61,7 +61,7 @@ fun EpisodesScreenContent(
     val animatedBrush = verticalGradient(
         colors = listOf(animatedStartColor, animatedEndColor)
     )
-    when (uiState.episodesSectionState) {
+    when (state.episodesSectionState) {
         EpisodesDetailsScreenState.ScreenStatus.ERROR -> {
             DetailsFailContent(onTryAgainClick = listener::onRefresh)
 
@@ -74,7 +74,7 @@ fun EpisodesScreenContent(
                     .windowInsetsPadding(WindowInsets.navigationBars)
                     .verticalScroll(listState)
             ) {
-                BackgroundImageSection(uiState)
+                BackgroundImageSection(state)
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -83,9 +83,9 @@ fun EpisodesScreenContent(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     userScrollEnabled = false,
                 ) {
-                    SeasonImage(uiState)
-                    SeasonDetails(uiState, seasonOptions, listener, seriesId)
-                    EpisodesSection(uiState)
+                    SeasonImage(state)
+                    SeasonDetails(state, seasonOptions, listener, seriesId)
+                    EpisodesSection(state)
                 }
             }}
     }

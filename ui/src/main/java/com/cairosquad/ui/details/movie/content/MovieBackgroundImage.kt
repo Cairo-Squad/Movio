@@ -19,11 +19,11 @@ import com.cairosquad.ui.BuildConfig
 import com.cairosquad.viewmodel.details.movie.MovieScreenState
 
 @Composable
-fun MovieBackgroundSection(uiState: MovieScreenState) {
-    when (uiState.basicDetailsSectionState) {
+fun MovieBackgroundSection(state: MovieScreenState) {
+    when (state.basicDetailsSectionState) {
         MovieScreenState.ScreenStatus.LOADING -> {}
         MovieScreenState.ScreenStatus.SUCCESS -> {
-            if (uiState.movie.posterPath.isNotEmpty()) {
+            if (state.movie.posterPath.isNotEmpty()) {
                 Box {
                     SafeImageViewer(
                         modifier = Modifier
@@ -40,7 +40,7 @@ fun MovieBackgroundSection(uiState: MovieScreenState) {
                                 }
                             )
                             .offset(y = (-28).dp),
-                        model = BuildConfig.IMAGE_BASE_URL + uiState.movie.posterPath,
+                        model = BuildConfig.IMAGE_BASE_URL + state.movie.posterPath,
                         contentDescription = "",
                         blur = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) 16 else 0,
                         isBlurForced = true

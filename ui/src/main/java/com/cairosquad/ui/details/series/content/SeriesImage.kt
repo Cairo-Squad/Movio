@@ -28,11 +28,11 @@ import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState
 
 
 fun LazyListScope.SeriesImage(
-    uiState: SeriesDetailsScreenState,
+    state: SeriesDetailsScreenState,
     listener: SeriesDetailsInteractionListener
 ) {
     item {
-        when (uiState.basicDetailsSectionState) {
+        when (state.basicDetailsSectionState) {
             SeriesDetailsScreenState.SectionStatus.LOADING -> {
                 Column(
                     modifier = Modifier
@@ -53,12 +53,12 @@ fun LazyListScope.SeriesImage(
                         .padding(top = 56.dp, bottom = 24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    if (uiState.series.posterPath.isNotEmpty())
+                    if (state.series.posterPath.isNotEmpty())
                         SafeImageViewer(
                             modifier = Modifier
                                 .size(height = 260.dp, width = 200.dp)
                                 .clip(RoundedCornerShape(8.dp)),
-                            model = BuildConfig.IMAGE_BASE_URL + uiState.series.posterPath,
+                            model = BuildConfig.IMAGE_BASE_URL + state.series.posterPath,
                             contentDescription = "",
                             loadingPlaceholder = {
                                 LoadingMovieImage(

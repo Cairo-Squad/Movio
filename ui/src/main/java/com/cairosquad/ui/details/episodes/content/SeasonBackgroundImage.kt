@@ -15,8 +15,8 @@ import com.cairosquad.ui.BuildConfig
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState
 
 @Composable
-fun SeasonBackgroundImage(uiState: EpisodesDetailsScreenState) {
-    if (uiState.season.posterUrl.isNotEmpty()) {
+fun SeasonBackgroundImage(state: EpisodesDetailsScreenState) {
+    if (state.season.posterUrl.isNotEmpty()) {
         Box {
             SafeImageViewer(
                 modifier = Modifier
@@ -33,7 +33,7 @@ fun SeasonBackgroundImage(uiState: EpisodesDetailsScreenState) {
                         }
                     )
                     .offset(y = (-28).dp),
-                model = BuildConfig.IMAGE_BASE_URL + uiState.season.posterUrl,
+                model = BuildConfig.IMAGE_BASE_URL + state.season.posterUrl,
                 contentDescription = "",
                 blur = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) 16 else 0,
                 isBlurForced = true

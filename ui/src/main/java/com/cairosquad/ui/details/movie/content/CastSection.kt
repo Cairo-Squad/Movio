@@ -10,11 +10,11 @@ import com.cairosquad.viewmodel.details.movie.MovieInteractionListener
 import com.cairosquad.viewmodel.details.movie.MovieScreenState
 
 fun LazyListScope.CastSection(
-    uiState: MovieScreenState,
-    interactionListener: MovieInteractionListener
+    state: MovieScreenState,
+    listener: MovieInteractionListener
 ) {
     item {
-        when (uiState.castSectionState) {
+        when (state.castSectionState) {
             MovieScreenState.ScreenStatus.LOADING -> {
                 SectionLoading(
                     headerName = stringResource(R.string.top_cast),
@@ -25,15 +25,15 @@ fun LazyListScope.CastSection(
             }
 
             MovieScreenState.ScreenStatus.SUCCESS -> {
-                if (uiState.topCast.isNotEmpty()) {
+                if (state.topCast.isNotEmpty()) {
                     MovieTopCastSection(
                         onActionClicked = {
-                            interactionListener.onSeeAllCastClick(
-                                uiState.movie.id
+                            listener.onSeeAllCastClick(
+                                state.movie.id
                             )
                         },
-                        onArtistClicked = interactionListener::onActorClick,
-                        cast = uiState.topCast,
+                        onArtistClicked = listener::onActorClick,
+                        cast = state.topCast,
                     )
                 }
             }

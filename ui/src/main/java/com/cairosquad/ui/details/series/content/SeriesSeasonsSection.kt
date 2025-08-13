@@ -14,11 +14,11 @@ import com.cairosquad.viewmodel.details.series.SeriesDetailsInteractionListener
 import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState
 
 fun LazyListScope.SeriesSeasonsSection(
-    uiState: SeriesDetailsScreenState,
+    state: SeriesDetailsScreenState,
     listener: SeriesDetailsInteractionListener
 ) {
     item {
-        when (uiState.seasonsSectionState) {
+        when (state.seasonsSectionState) {
             SeriesDetailsScreenState.SectionStatus.LOADING -> {
                 SectionLoading(
                     headerName = stringResource(R.string.current_seasons),
@@ -34,12 +34,12 @@ fun LazyListScope.SeriesSeasonsSection(
             }
 
             SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
-                if (uiState.seasons.isNotEmpty()) {
+                if (state.seasons.isNotEmpty()) {
                     SeasonSection(
-                        seriesName = uiState.series.title,
-                        seriesId = uiState.series.id,
-                        seasons = uiState.seasons,
-                        onActionClicked = { listener.onSeeAllSeasonsClicked(seriesId = uiState.series.id) },
+                        seriesName = state.series.title,
+                        seriesId = state.series.id,
+                        seasons = state.seasons,
+                        onActionClicked = { listener.onSeeAllSeasonsClicked(seriesId = state.series.id) },
                         onSeasonClicked = listener::onSeasonClicked
                     )
                 }

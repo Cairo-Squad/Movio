@@ -12,8 +12,8 @@ import com.cairosquad.ui.details.episodes.composable.EpisodeCard
 import com.cairosquad.ui.movio_component.LoadingMovieImage
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState
 
-fun LazyListScope.EpisodesSection(uiState: EpisodesDetailsScreenState) {
-    when (uiState.episodesSectionState) {
+fun LazyListScope.EpisodesSection(state: EpisodesDetailsScreenState) {
+    when (state.episodesSectionState) {
         EpisodesDetailsScreenState.ScreenStatus.LOADING -> {
             items(10) {
                 LoadingMovieImage(
@@ -26,7 +26,7 @@ fun LazyListScope.EpisodesSection(uiState: EpisodesDetailsScreenState) {
         }
 
         EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
-            items(uiState.episodes) { episode ->
+            items(state.episodes) { episode ->
                 EpisodeCard(
                     episodeNumber = episode.number.toString().padStart(2, '0'),
                     episodeImageUrl = BuildConfig.IMAGE_BASE_URL + episode.imageUrl,

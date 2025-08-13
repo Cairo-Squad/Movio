@@ -12,11 +12,11 @@ import com.cairosquad.viewmodel.details.series.SeriesDetailsInteractionListener
 import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState
 
 fun LazyListScope.SimilarSeriesSection(
-    uiState: SeriesDetailsScreenState,
+    state: SeriesDetailsScreenState,
     listener: SeriesDetailsInteractionListener
 ) {
     item {
-        when (uiState.similarSeriesSectionState) {
+        when (state.similarSeriesSectionState) {
             SeriesDetailsScreenState.SectionStatus.LOADING -> {
                 SectionLoading(
                     headerName = stringResource(R.string.similar_series),
@@ -29,11 +29,11 @@ fun LazyListScope.SimilarSeriesSection(
             }
 
             SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
-                if (uiState.similarSeries.isNotEmpty()) {
+                if (state.similarSeries.isNotEmpty()) {
                     SimilarSeriesSection(
-                        similarSeries = uiState.similarSeries,
+                        similarSeries = state.similarSeries,
                         onSeriesClicked = listener::onSeriesClicked,
-                        onActionClicked = { listener.onSeeAllSimilarClicked(seriesId = uiState.series.id) },
+                        onActionClicked = { listener.onSeeAllSimilarClicked(seriesId = state.series.id) },
                     )
                 }
             }

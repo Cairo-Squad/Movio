@@ -14,11 +14,11 @@ import com.cairosquad.viewmodel.details.series.SeriesDetailsInteractionListener
 import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState
 
 fun LazyListScope.SeriesReviewsSection(
-    uiState: SeriesDetailsScreenState,
+    state: SeriesDetailsScreenState,
     listener: SeriesDetailsInteractionListener
 ) {
     item {
-        when (uiState.reviewsSectionState) {
+        when (state.reviewsSectionState) {
             SeriesDetailsScreenState.SectionStatus.LOADING -> {
                 SectionLoading(
                     headerName = stringResource(R.string.reviews),
@@ -34,10 +34,10 @@ fun LazyListScope.SeriesReviewsSection(
             }
 
             SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
-                if (uiState.reviews.isNotEmpty()) {
+                if (state.reviews.isNotEmpty()) {
                     SeriesReviewSection(
-                        reviews = uiState.reviews,
-                        onActionClicked = { listener.onSeeAllReviewsClicked(seriesId = uiState.series.id) }
+                        reviews = state.reviews,
+                        onActionClicked = { listener.onSeeAllReviewsClicked(seriesId = state.series.id) }
                     )
                 }
             }

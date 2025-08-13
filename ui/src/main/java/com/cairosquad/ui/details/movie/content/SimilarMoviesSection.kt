@@ -11,11 +11,11 @@ import com.cairosquad.viewmodel.details.movie.MovieInteractionListener
 import com.cairosquad.viewmodel.details.movie.MovieScreenState
 
 fun LazyListScope.SimilarMoviesSection(
-    uiState: MovieScreenState,
-    interactionListener: MovieInteractionListener
+    state: MovieScreenState,
+    listener: MovieInteractionListener
 ) {
     item {
-        when (uiState.similarMoviesSectionState) {
+        when (state.similarMoviesSectionState) {
             MovieScreenState.ScreenStatus.LOADING -> {
                 SectionLoading(
                     headerName = stringResource(R.string.similar_movies),
@@ -28,13 +28,13 @@ fun LazyListScope.SimilarMoviesSection(
             }
 
             MovieScreenState.ScreenStatus.SUCCESS -> {
-                if (uiState.similarMovies.isNotEmpty()) {
+                if (state.similarMovies.isNotEmpty()) {
                     SimilarMoviesSection(
-                        similarMovies = uiState.similarMovies,
-                        onMovieClicked = interactionListener::onMovieClick,
+                        similarMovies = state.similarMovies,
+                        onMovieClicked = listener::onMovieClick,
                         onActionClicked = {
-                            interactionListener.onSeeAllSimilarMoviesClick(
-                                uiState.movie.id
+                            listener.onSeeAllSimilarMoviesClick(
+                                state.movie.id
                             )
                         }
                     )

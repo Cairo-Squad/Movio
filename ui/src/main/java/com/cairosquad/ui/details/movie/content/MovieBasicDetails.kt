@@ -7,26 +7,26 @@ import com.cairosquad.viewmodel.details.movie.MovieInteractionListener
 import com.cairosquad.viewmodel.details.movie.MovieScreenState
 
 fun LazyListScope.MovieBasicDetails(
-    uiState: MovieScreenState,
-    interactionListener: MovieInteractionListener
+    state: MovieScreenState,
+    listener: MovieInteractionListener
 ) {
     item {
-        when (uiState.basicDetailsSectionState) {
+        when (state.basicDetailsSectionState) {
             MovieScreenState.ScreenStatus.LOADING -> {
                 BasicDetailsLoading()
             }
 
             MovieScreenState.ScreenStatus.SUCCESS -> {
                 BasicDetails(
-                    title = uiState.movie.title,
-                    genres = uiState.movie.genres,
-                    rating = uiState.movie.rating,
-                    releaseDate = uiState.movie.releaseDate,
-                    runtimeMinutes = uiState.movie.runtimeMinutes,
-                    onRateClicked = interactionListener::onRateItClick,
-                    onPlayTrailerClicked = interactionListener::onPlayClick,
-                    onAddToListClicked = interactionListener::onAddToListClick,
-                    isRated = uiState.isRated
+                    title = state.movie.title,
+                    genres = state.movie.genres,
+                    rating = state.movie.rating,
+                    releaseDate = state.movie.releaseDate,
+                    runtimeMinutes = state.movie.runtimeMinutes,
+                    onRateClicked = listener::onRateItClick,
+                    onPlayTrailerClicked = listener::onPlayClick,
+                    onAddToListClicked = listener::onAddToListClick,
+                    isRated = state.isRated
                 )
             }
 

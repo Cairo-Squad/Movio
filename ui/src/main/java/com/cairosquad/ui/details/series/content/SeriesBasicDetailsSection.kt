@@ -8,26 +8,26 @@ import com.cairosquad.viewmodel.details.series.SeriesDetailsInteractionListener
 import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState
 
 fun LazyListScope.SeriesBasicDetailsSection(
-    uiState: SeriesDetailsScreenState,
+    state: SeriesDetailsScreenState,
     listener: SeriesDetailsInteractionListener
 ) {
     item {
-        when (uiState.basicDetailsSectionState) {
+        when (state.basicDetailsSectionState) {
             SeriesDetailsScreenState.SectionStatus.LOADING -> {
                 BasicDetailsLoading()
             }
 
             SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
                 BasicDetails(
-                    title = uiState.series.title,
-                    genres = uiState.series.genres,
-                    rating = uiState.series.rating,
-                    releaseDate = uiState.series.releaseDate,
-                    seasonsCount = uiState.series.seasonsCount,
+                    title = state.series.title,
+                    genres = state.series.genres,
+                    rating = state.series.rating,
+                    releaseDate = state.series.releaseDate,
+                    seasonsCount = state.series.seasonsCount,
                     onRateClicked = listener::onRateClicked,
                     onPlayTrailerClicked = listener::onPlayTrailerClicked,
                     onAddToListClicked = listener::onAddToListClicked,
-                    isRated = uiState.isRated
+                    isRated = state.isRated
                 )
             }
 

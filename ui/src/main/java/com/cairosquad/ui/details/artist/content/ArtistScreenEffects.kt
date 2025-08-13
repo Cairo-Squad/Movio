@@ -12,14 +12,14 @@ import com.cairosquad.viewmodel.details.artist.ArtistViewModel
 
 @Composable
 fun ArtistScreenEffects(
-    artistViewModel: ArtistViewModel,
+    viewModel: ArtistViewModel,
     navController: NavController
 ) {
     val context = LocalContext.current
-    ObserveAsEffect(artistViewModel.effect) { effect ->
+    ObserveAsEffect(viewModel.effect) { effect ->
         when (effect) {
             is ArtistEffect.ErrorHappened -> {
-                artistViewModel.updateState {
+                viewModel.updateState {
                     it.copy(
                         showSnackBar = true,
                         snackMessage = context.getString(errorStatusToMessageResource(effect.message)),

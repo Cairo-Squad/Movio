@@ -21,22 +21,21 @@ import com.cairosquad.viewmodel.details.series.SeriesDetailsViewModel
 
 @Composable
 fun SeriesScreenBottomSheets(
-    uiState: SeriesDetailsScreenState,
+    state: SeriesDetailsScreenState,
     viewModel: SeriesDetailsViewModel,
-    seriesId: Long,
 ) {
     val context = LocalContext.current
 
-    val seriesUrl = "$SERIES_URL${seriesId}"
+    val seriesUrl = "$SERIES_URL${state.series.id}"
     val message = stringResource(R.string.check_out_this_amazing_series)
     val encodedMessageAndUrl = Uri.encode("$message $seriesUrl")
     AnimatedVisibility(
-        visible = uiState.showShareBottomSheet,
+        visible = state.showShareBottomSheet,
         enter = fadeIn(),
         exit = fadeOut()
     ) {
         ShareBottomSheet(
-            isVisible = uiState.showShareBottomSheet,
+            isVisible = state.showShareBottomSheet,
             onDismiss = viewModel::onDismissShareBottomSheet,
             onCopyLinkClick = {
                 ShareUtil.copyLink(
@@ -62,23 +61,23 @@ fun SeriesScreenBottomSheets(
         )
     }
     AnimatedVisibility(
-        visible = uiState.showLoginBottomSheet,
+        visible = state.showLoginBottomSheet,
         enter = fadeIn(),
         exit = fadeOut()
     ) {
         LoginBottomSheet(
-            isVisible = uiState.showLoginBottomSheet,
+            isVisible = state.showLoginBottomSheet,
             onDismiss = viewModel::onDismissLoginBottomSheet,
             onLoginClick = viewModel::onNavigateToLogin
         )
     }
     AnimatedVisibility(
-        visible = uiState.showAddToListBottomSheet,
+        visible = state.showAddToListBottomSheet,
         enter = fadeIn(),
         exit = fadeOut()
     ) {
         ListBottomSheet(
-            isVisible = uiState.showAddToListBottomSheet,
+            isVisible = state.showAddToListBottomSheet,
             onDismiss = viewModel::onDismissAddToListBottomSheet,
             lists = emptyList(),
             onListClicked = {},
@@ -86,30 +85,30 @@ fun SeriesScreenBottomSheets(
         )
     }
     AnimatedVisibility(
-        visible = uiState.showCreateListBottomSheet,
+        visible = state.showCreateListBottomSheet,
         enter = fadeIn(),
         exit = fadeOut()
     ) {
         CreateListBottomSheet(
-            isVisible = uiState.showCreateListBottomSheet,
+            isVisible = state.showCreateListBottomSheet,
             onDismiss = viewModel::onDismissCreateListBottomSheet,
             isMovie = false,
-            value = uiState.newListName,
+            value = state.newListName,
             onValueChange = viewModel::onValueChange,
             onSubmit = { viewModel.onDismissCreateListBottomSheet() }
         )
     }
     AnimatedVisibility(
-        visible = uiState.showRateBottomSheet,
+        visible = state.showRateBottomSheet,
         enter = fadeIn(),
         exit = fadeOut()
     ) {
         RateBottomSheet(
-            isVisible = uiState.showRateBottomSheet,
+            isVisible = state.showRateBottomSheet,
             onDismiss = viewModel::onDismissRateBottomSheet,
-            rating = uiState.rating,
-            imageUrl = BuildConfig.IMAGE_BASE_URL + uiState.series.posterPath,
-            name = uiState.series.title,
+            rating = state.rating,
+            imageUrl = BuildConfig.IMAGE_BASE_URL + state.series.posterPath,
+            name = state.series.title,
             isMovie = false,
             onRatingChange = viewModel::onRateChange,
             onSubmitClicked = viewModel::onSubmitRateClicked,

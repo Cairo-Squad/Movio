@@ -29,8 +29,8 @@ import com.cairosquad.viewmodel.details.movie.MovieScreenState
 
 @Composable
 fun MovieContent(
-    uiState: MovieScreenState,
-    interactionListener: MovieInteractionListener,
+    state: MovieScreenState,
+    listener: MovieInteractionListener,
 ) {
     val listState = rememberScrollState()
     val density = LocalDensity.current
@@ -52,9 +52,9 @@ fun MovieContent(
     val animatedBrush = verticalGradient(
         colors = listOf(animatedStartColor, animatedEndColor)
     )
-    when (uiState.basicDetailsSectionState) {
+    when (state.basicDetailsSectionState) {
         MovieScreenState.ScreenStatus.ERROR -> {
-            DetailsFailContent(onTryAgainClick = { interactionListener.onRefresh() })
+            DetailsFailContent(onTryAgainClick = { listener.onRefresh() })
         }
 
         else -> {
@@ -65,18 +65,18 @@ fun MovieContent(
                     .windowInsetsPadding(WindowInsets.navigationBars)
                     .verticalScroll(listState)
             ) {
-                MovieBackgroundSection(uiState)
+                MovieBackgroundSection(state)
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
                         .windowInsetsPadding(WindowInsets.statusBars)
                         .then(
                             if (
-                                uiState.showCreateListBottomSheet
-                                || uiState.isAddToListBottomSheetOpen
-                                || uiState.isRateBottomSheetOpen
-                                || uiState.isShareBottomSheetOpen
-                                || uiState.isNoAccountBottomSheetOpen
+                                state.showCreateListBottomSheet
+                                || state.isAddToListBottomSheetOpen
+                                || state.isRateBottomSheetOpen
+                                || state.isShareBottomSheetOpen
+                                || state.isNoAccountBottomSheetOpen
                             ) {
                                 Modifier.blur(4.dp)
                             } else {
@@ -87,12 +87,12 @@ fun MovieContent(
                     horizontalAlignment = Alignment.Start,
                     userScrollEnabled = false
                 ) {
-                    MovieImageSection(uiState)
-                    MovieBasicDetails(uiState, interactionListener)
-                    MovieDescriptionSection(uiState)
-                    CastSection(uiState, interactionListener)
-                    ReviewsSection(uiState, interactionListener)
-                    SimilarMoviesSection(uiState, interactionListener)
+                    MovieImageSection(state)
+                    MovieBasicDetails(state, listener)
+                    MovieDescriptionSection(state)
+                    CastSection(state, listener)
+                    ReviewsSection(state, listener)
+                    SimilarMoviesSection(state, listener)
                 }
             }
         }
@@ -102,9 +102,9 @@ fun MovieContent(
             .background(animatedBrush)
             .windowInsetsPadding(WindowInsets.statusBars)
             .fillMaxWidth(),
-        onBackButtonClicked = interactionListener::onBackClick,
-        onShareButtonClicked = interactionListener::onShareClick,
-        onFavoriteButtonClicked = interactionListener::onFavoriteClick,
-        isFavorite = uiState.isFavorite
+        onBackButtonClicked = listener::onBackClick,
+        onShareButtonClicked = listener::onShareClick,
+        onFavoriteButtonClicked = listener::onFavoriteClick,
+        isFavorite = state.isFavorite
     )
 }

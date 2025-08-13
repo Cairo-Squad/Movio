@@ -31,7 +31,7 @@ import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState
 
 @Composable
 fun SeriesScreenContent(
-    uiState: SeriesDetailsScreenState,
+    state: SeriesDetailsScreenState,
     listener: SeriesDetailsInteractionListener
 ) {
     val listState = rememberScrollState()
@@ -53,7 +53,7 @@ fun SeriesScreenContent(
         colors = listOf(animatedStartColor, animatedEndColor)
     )
 
-    when (uiState.basicDetailsSectionState) {
+    when (state.basicDetailsSectionState) {
         SeriesDetailsScreenState.SectionStatus.ERROR -> {
             Box(
                 modifier = Modifier
@@ -77,18 +77,18 @@ fun SeriesScreenContent(
                     .windowInsetsPadding(WindowInsets.navigationBars)
                     .verticalScroll(listState)
             ) {
-                SeriesBackgroundImage(uiState)
+                SeriesBackgroundImage(state)
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
                         .windowInsetsPadding(WindowInsets.statusBars)
                         .then(
                             if (
-                                uiState.showCreateListBottomSheet
-                                || uiState.showRateBottomSheet
-                                || uiState.showLoginBottomSheet
-                                || uiState.showShareBottomSheet
-                                || uiState.showAddToListBottomSheet
+                                state.showCreateListBottomSheet
+                                || state.showRateBottomSheet
+                                || state.showLoginBottomSheet
+                                || state.showShareBottomSheet
+                                || state.showAddToListBottomSheet
                             ) {
                                 Modifier.blur(4.dp)
                             } else {
@@ -99,13 +99,13 @@ fun SeriesScreenContent(
                     horizontalAlignment = Alignment.Start,
                     userScrollEnabled = false
                 ) {
-                    SeriesImage(uiState, listener)
-                    SeriesBasicDetailsSection(uiState, listener)
-                    SeriesOverviewSection(uiState, listener)
-                    SeriesTopCastSection(uiState, listener)
-                    SeriesSeasonsSection(uiState, listener)
-                    SeriesReviewsSection(uiState, listener)
-                    SimilarSeriesSection(uiState, listener)
+                    SeriesImage(state, listener)
+                    SeriesBasicDetailsSection(state, listener)
+                    SeriesOverviewSection(state, listener)
+                    SeriesTopCastSection(state, listener)
+                    SeriesSeasonsSection(state, listener)
+                    SeriesReviewsSection(state, listener)
+                    SimilarSeriesSection(state, listener)
                 }
             }
         }
@@ -118,6 +118,6 @@ fun SeriesScreenContent(
         onBackButtonClicked = listener::onBackClicked,
         onShareButtonClicked = listener::onShareClicked,
         onFavoriteButtonClicked = listener::onFavoriteClicked,
-        isFavorite = uiState.isFavorite
+        isFavorite = state.isFavorite
     )
 }

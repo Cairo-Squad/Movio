@@ -24,9 +24,9 @@ import com.cairosquad.ui.BuildConfig
 import com.cairosquad.ui.movio_component.LoadingMovieImage
 import com.cairosquad.viewmodel.details.movie.MovieScreenState
 
-fun LazyListScope.MovieImageSection(uiState: MovieScreenState) {
+fun LazyListScope.MovieImageSection(state: MovieScreenState) {
     item {
-        when (uiState.basicDetailsSectionState) {
+        when (state.basicDetailsSectionState) {
             MovieScreenState.ScreenStatus.LOADING -> {
                 Column(
                     modifier = Modifier
@@ -47,12 +47,12 @@ fun LazyListScope.MovieImageSection(uiState: MovieScreenState) {
                         .padding(top = 56.dp, bottom = 24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    if (uiState.movie.posterPath.isNotEmpty()) {
+                    if (state.movie.posterPath.isNotEmpty()) {
                         SafeImageViewer(
                             modifier = Modifier
                                 .size(height = 260.dp, width = 200.dp)
                                 .clip(RoundedCornerShape(8.dp)),
-                            model = BuildConfig.IMAGE_BASE_URL + uiState.movie.posterPath,
+                            model = BuildConfig.IMAGE_BASE_URL + state.movie.posterPath,
                             contentDescription = "",
                             loadingPlaceholder = {
                                 LoadingMovieImage(

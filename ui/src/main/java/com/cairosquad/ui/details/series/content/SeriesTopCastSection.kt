@@ -11,11 +11,11 @@ import com.cairosquad.viewmodel.details.series.SeriesDetailsInteractionListener
 import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState
 
 fun LazyListScope.SeriesTopCastSection(
-    uiState: SeriesDetailsScreenState,
+    state: SeriesDetailsScreenState,
     listener: SeriesDetailsInteractionListener
 ) {
     item {
-        when (uiState.castSectionState) {
+        when (state.castSectionState) {
             SeriesDetailsScreenState.SectionStatus.LOADING -> {
                 SectionLoading(
                     headerName = stringResource(R.string.top_cast),
@@ -26,11 +26,11 @@ fun LazyListScope.SeriesTopCastSection(
             }
 
             SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
-                if (uiState.cast.isNotEmpty()) {
+                if (state.cast.isNotEmpty()) {
                     SeriesTopCastSection(
-                        onActionClicked = { listener.onSeeAllArtistsClicked(uiState.series.id) },
+                        onActionClicked = { listener.onSeeAllArtistsClicked(state.series.id) },
                         onArtistClicked = listener::onArtistClicked,
-                        cast = uiState.cast
+                        cast = state.cast
                     )
                 }
             }

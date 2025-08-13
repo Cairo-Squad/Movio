@@ -20,7 +20,7 @@ fun ReviewsScreen(
     mediaId: Long,
     isMovie: Boolean,
 ) {
-	val viewModel: ReviewsViewModel =
+    val viewModel: ReviewsViewModel =
         hiltViewModel<ReviewsViewModel, ReviewsViewModel.Factory> { factory ->
             factory.create(
                 mediaId = mediaId,
@@ -31,22 +31,22 @@ fun ReviewsScreen(
     val navController = LocalNavController.current
     val state = viewModel.screenState.collectAsState()
 
-	LaunchedEffect(Unit) {
-		viewModel.getReviews()
-	}
+    LaunchedEffect(Unit) {
+        viewModel.getReviews()
+    }
 
-	ReviewsScreenEffects(viewModel, navController)
+    ReviewsScreenEffects(viewModel, navController)
 
-	ReviewsContent(
-		listener = viewModel,
-		state = state.value,
-	)
+    ReviewsContent(
+        listener = viewModel,
+        state = state.value,
+    )
 
-	if (state.value.error != null) {
-		SnackBar(
-			imageVector = ImageVector.vectorResource(com.cairosquad.design_system.R.drawable.danger),
-			message = state.value.error ?: stringResource(R.string.something_went_wrong),
-			action = {}
-		)
-	}
+    if (state.value.error != null) {
+        SnackBar(
+            imageVector = ImageVector.vectorResource(com.cairosquad.design_system.R.drawable.danger),
+            message = state.value.error ?: stringResource(R.string.something_went_wrong),
+            action = {}
+        )
+    }
 }

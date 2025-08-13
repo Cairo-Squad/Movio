@@ -21,13 +21,13 @@ import com.cairosquad.design_system.basic_component.SnackBar
 import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState
 
 @Composable
-fun BoxScope.SeriesScreenSnackBar(uiState: SeriesDetailsScreenState) {
+fun BoxScope.SeriesScreenSnackBar(state: SeriesDetailsScreenState) {
     AnimatedVisibility(
         modifier = Modifier
             .align(Alignment.BottomCenter)
             .windowInsetsPadding(WindowInsets.navigationBars)
             .padding(16.dp),
-        visible = uiState.showSnackBar,
+        visible = state.showSnackBar,
         enter = slideInVertically(
             initialOffsetY = { fullHeight -> 2 * fullHeight },
             animationSpec = tween(durationMillis = 600)
@@ -38,9 +38,9 @@ fun BoxScope.SeriesScreenSnackBar(uiState: SeriesDetailsScreenState) {
         )
     ) {
         SnackBar(
-            imageVector = ImageVector.vectorResource(if (uiState.isProcessSuccess) R.drawable.archive_tick else R.drawable.danger),
-            message = uiState.snackMessage.ifEmpty {
-                stringResource(uiState.snackMessageId)
+            imageVector = ImageVector.vectorResource(if (state.isProcessSuccess) R.drawable.archive_tick else R.drawable.danger),
+            message = state.snackMessage.ifEmpty {
+                stringResource(state.snackMessageId)
             },
             action = {}
         )
