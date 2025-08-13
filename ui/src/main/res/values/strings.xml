@@ -38,7 +38,8 @@
     <string name="free_to_watch">Free To Watch</string>
     <string name="up_coming">Upcoming</string>
     <string name="more_recommended">More Recommended</string>
-    <string name="all">"     All     "</string>
+    <string name="all_with_space_around">     All     </string>
+    <string name="all">All</string>
     <string name="movies">Movies</string>
     <string name="tv_shows">TV Shows</string>
     <string name="categories">Categories</string>
@@ -76,8 +77,8 @@
     <string name="confirm_logout">Confirm Logout</string>
     <string name="you_ll_lose_access_to_your_library_favorites_and_history_until_you_sign_back_in">You’ll lose access to your library, favorites, and history until you sign back in.</string>
     <string name="logout">Logout</string>
-    <string name="dark_mode">Dark Mode</string>
-    <string name="light_mode">Light Mode</string>
+    <string name="dark_mode">Dark</string>
+    <string name="light_mode">Light</string>
     <string name="confirm">Confirm</string>
     <string name="success_check_mark">success check mark</string>
     <string name="no_ratings_yet">No Ratings Yet!</string>
@@ -92,4 +93,6 @@
     <string name="add_movies_and_tv_shows_to_build_your_personal_watchlist_the_perfect_binge_starts_here">Add movies and TV shows to build your personal watchlist. The perfect binge starts here!</string>
     <string name="view_all">View all</string>
     <string name="undo">Undo</string>
+    <string name="english">English</string>
+    <string name="arabic">Arabic</string>
 </resources>

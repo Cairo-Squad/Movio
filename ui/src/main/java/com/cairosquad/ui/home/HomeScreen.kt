@@ -16,11 +16,18 @@ import com.cairosquad.viewmodel.home.HomeViewModel
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
+    navigateToProfile: () -> Unit = {},
 ) {
 
     val navController = LocalNavController.current
-    ObserveAsEffect(viewModel.effect) { effect -> effectHandler(effect, navController) }
+    ObserveAsEffect(viewModel.effect) { effect ->
+        effectHandler(
+            effect = effect,
+            navController = navController,
+            navigateToProfile = navigateToProfile
+        )
+    }
 
     val screenState by viewModel.screenState.collectAsState()
 
@@ -32,7 +39,8 @@ fun HomeScreen(
 
 private fun effectHandler(
     effect: HomeEffect,
-    navController: NavController
+    navController: NavController,
+    navigateToProfile: () -> Unit = {}
 ) {
     when (effect) {
         is HomeEffect.NavigateMediaDetails -> {
@@ -44,7 +52,7 @@ private fun effectHandler(
         }
 
         HomeEffect.NavigateToProfile -> {
-            // TODO
+            navigateToProfile()
         }
 
         is HomeEffect.NavigateToSeeAllScreen -> {
