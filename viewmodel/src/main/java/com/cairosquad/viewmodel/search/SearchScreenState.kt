@@ -18,9 +18,6 @@ data class SearchScreenState(
     val series: Flow<PagingData<SeriesUiState>> = flowOf(PagingData.empty()),
     val artists: Flow<PagingData<ArtistUiState>> = flowOf(PagingData.empty()),
     val isRefreshing: Boolean = false,
-    val showSnackBar: Boolean = false,
-    val snackMessage: String = "",
-    val isProcessSuccess: Boolean = false,
     ) {
     data class ArtistUiState(
         val id: Long,
