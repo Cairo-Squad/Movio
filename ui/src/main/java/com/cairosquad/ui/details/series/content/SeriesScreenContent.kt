@@ -62,7 +62,9 @@ fun SeriesScreenContent(
                 contentAlignment = Alignment.Center
             ) {
                 StateMessage(
-                    imageDrawable = R.drawable.no_internet,
+                    imageDrawable =
+                        if (Theme.isDark) R.drawable.no_internet_dark
+                        else R.drawable.no_internet,
                     titleId = R.string.no_internet_connection,
                     descriptionId = R.string.internet_is_not_available_description
                 )

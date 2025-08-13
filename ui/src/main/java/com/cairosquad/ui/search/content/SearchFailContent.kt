@@ -59,13 +59,12 @@ fun SearchFailContent(
             Spacer(Modifier.weight(1f))
             StateMessage(
                 imageDrawable = when (state.errorStatus) {
-                    ErrorStatus.NO_INTERNET -> R.drawable.no_internet
-                    ErrorStatus.NETWORK_ERROR -> R.drawable.no_result
-                    ErrorStatus.UNKNOWN_ERROR -> R.drawable.no_result
-                    null -> R.drawable.no_result
-                    ErrorStatus.UNAUTHORIZED -> R.drawable.no_result //TODO()
-                    ErrorStatus.EMPTY -> R.drawable.no_result
-                    ErrorStatus.PARSING_ERROR -> R.drawable.no_result //TODO()
+                    ErrorStatus.NO_INTERNET ->
+                        if (Theme.isDark) R.drawable.no_internet_dark
+                        else R.drawable.no_internet
+                    else ->
+                        if (Theme.isDark) R.drawable.no_result_dark
+                        else R.drawable.no_result
                 },
                 titleId = when (state.errorStatus) {
                     ErrorStatus.NO_INTERNET -> R.string.no_internet_connection
