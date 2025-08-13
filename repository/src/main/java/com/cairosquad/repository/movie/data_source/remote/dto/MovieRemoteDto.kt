@@ -19,4 +19,6 @@ data class MovieRemoteDto(
     val releaseDate: String? = null,
     @SerialName("genre_ids")
     val genreIds: List<Long>? = null,
+    @SerialName("rating")
+    val userRating: Double? = null
 )

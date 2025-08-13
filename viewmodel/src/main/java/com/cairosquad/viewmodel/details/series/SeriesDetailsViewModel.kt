@@ -94,7 +94,10 @@ class SeriesDetailsViewModel @AssistedInject constructor(
     private fun checkUserLoggedIn(onLoggedIn: () -> Unit) {
         tryToCall(
             block = loginUseCase::isUserLoggedIn,
-            onSuccess = { if (it) onLoggedIn() },
+            onSuccess = {
+                if (it) onLoggedIn()
+                else updateState { it.copy(showLoginBottomSheet = true) }
+            },
             onError = {}
         )
     }
