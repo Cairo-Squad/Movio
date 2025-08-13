@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
@@ -32,18 +33,21 @@ fun SmallArtistCard(
 	imgUrl: String?,
 	modifier: Modifier = Modifier
 ) {
+	val imageSize = 88.dp
+	val horizontalPadding = 6.67.dp
+
 	Column(
 		modifier = modifier
-			.widthIn(max = 102.dp)
-			.fillMaxWidth(),
+			.width(imageSize + (horizontalPadding * 2))
+			.padding(horizontal = 4.dp),
 		horizontalAlignment = Alignment.CenterHorizontally
 	) {
 		if (imgUrl?.isNotEmpty() == true) {
 			SafeImageViewer(
 				model = BuildConfig.IMAGE_BASE_URL + imgUrl,
 				modifier = Modifier
-					.padding(horizontal = 6.67.dp)
-					.size(88.dp)
+					.padding(horizontal = horizontalPadding)
+					.size(imageSize)
 					.clip(CircleShape),
 				contentDescription = stringResource(R.string.artist_image),
 				nudeThreshold = 0.0,
@@ -51,7 +55,7 @@ fun SmallArtistCard(
 				loadingPlaceholder = {
 					LoadingMovieImage(
 						modifier = Modifier
-							.size(88.dp)
+							.size(imageSize)
 							.clip(CircleShape)
 					)
 				}
@@ -59,8 +63,8 @@ fun SmallArtistCard(
 		} else {
 			Box(
 				modifier = Modifier
-					.padding(horizontal = 6.67.dp)
-					.size(88.dp)
+					.padding(horizontal = horizontalPadding)
+					.size(imageSize)
 					.clip(CircleShape)
 					.background(Theme.color.system.defaultImageBackground),
 				contentAlignment = Alignment.Center
@@ -73,10 +77,11 @@ fun SmallArtistCard(
 				)
 			}
 		}
+
 		Text(
 			modifier = Modifier
 				.fillMaxWidth()
-				.padding(top = 8.dp),
+				.padding(top = 8.dp, start = 4.dp, end = 4.dp), // padding يمنع الحروف من الالتصاق
 			text = name,
 			textAlign = TextAlign.Center,
 			style = Theme.textStyle.title.mediumMedium14,
@@ -86,3 +91,5 @@ fun SmallArtistCard(
 		)
 	}
 }
+
+
