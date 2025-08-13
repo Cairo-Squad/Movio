@@ -93,7 +93,7 @@ fun TrendingMovieCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = ImageVector.vectorResource(com.cairosquad.design_system.R.drawable.star),
+                        imageVector = ImageVector.vectorResource(id = com.cairosquad.design_system.R.drawable.review_star),
                         contentDescription = stringResource(R.string.rating_star),
                         tint = Color.Unspecified
                     )
