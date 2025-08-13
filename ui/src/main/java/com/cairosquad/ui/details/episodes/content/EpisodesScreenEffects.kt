@@ -1,6 +1,5 @@
 package com.cairosquad.ui.details.episodes.content
 
-import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
@@ -22,12 +21,14 @@ fun EpisodesScreenEffects(
                 navController.popBackStack()
             }
 
-            is EpisodesDetailEffect.ShowToast -> {
-                Toast.makeText(
-                    context,
-                    context.getString(errorStatusToMessageResource(effect.message)),
-                    Toast.LENGTH_LONG
-                ).show()
+            is EpisodesDetailEffect.ShowSnackBar -> {
+                viewModel.updateState {
+                    it.copy(
+                        showSnackBar = true,
+                        snackMessage = context.getString(errorStatusToMessageResource(effect.message)),
+                        isProcessSuccess = false
+                    )
+                }
             }
 
             EpisodesDetailEffect.PlayEpisode -> {}
