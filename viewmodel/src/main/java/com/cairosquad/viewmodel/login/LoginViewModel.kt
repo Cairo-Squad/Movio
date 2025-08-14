@@ -12,6 +12,9 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase
 ) : BaseViewModel<LoginScreenState, LoginEffect>(LoginScreenState()), LoginInteractionListener {
+    private var lastTriedUsername: String? = null
+    private var lastTriedPassword: String? = null
+
     override fun onUsernameChange(username: String) {
         updateState {
             it.copy(
@@ -45,12 +48,26 @@ class LoginViewModel @Inject constructor(
     }
 
     override fun onLoginClick() {
+        val currentUsername = screenState.value.username
+        val currentPassword = screenState.value.password
+
+        if (currentUsername.isBlank() && currentPassword.isBlank()) {
+            return
+        }
+
+        if (currentUsername == lastTriedUsername && currentPassword == lastTriedPassword) {
+            return
+        }
+
+        lastTriedUsername = currentUsername
+        lastTriedPassword = currentPassword
+
         validateFields()
         tryToCall(
             block = {
                 loginUseCase.login(
-                    username = screenState.value.username,
-                    password = screenState.value.password
+                    username = currentUsername,
+                    password = currentPassword
                 )
             },
             onSuccess = ::onLoginSuccess,
