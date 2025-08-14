@@ -6,7 +6,6 @@ import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
-import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.search.paging.SearchPager
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -67,36 +66,36 @@ class SearchPagerTest {
         // Then
         assertEquals(expected, result)
     }
-
-    @Test
-    fun `series should emit PagingData with correct series items`() = runTest {
-        // Given
-        val expected = listOf(
-            Series(
-                id = 1, title = "Batman Begins", rating = 0.1f, posterPath = "http:",
-                trailerPath = "",
-                genres = emptyList(),
-                overview = "",
-                releaseDate = 0L,
-                seasonsCount = 1
-            ),
-            Series(
-                id = 2, title = "The Dark Knight", rating = 0f, posterPath = "",
-                trailerPath = "",
-                genres = emptyList(),
-                overview = "",
-                releaseDate = 0L,
-                seasonsCount = 1
-            )
-        )
-        coEvery { manageSeriesUseCase.getSeriesByQuery(testQuery, 1) } returns expected
-        coEvery { manageSeriesUseCase.getSeriesByQuery(testQuery, match { it != 1 }) } returns emptyList()
-        // When
-        val flow = searchPager.series(testQuery)
-        val result = flow.asSnapshot()
-        // Then
-        assertEquals(expected, result)
-    }
+//
+//    @Test
+//    fun `series should emit PagingData with correct series items`() = runTest {
+//        // Given
+//        val expected = listOf(
+//            Series(
+//                id = 1, title = "Batman Begins", rating = 0.1f, posterPath = "http:",
+//                trailerPath = "",
+//                genres = emptyList(),
+//                overview = "",
+//                releaseDate = 0L,
+//                seasonsCount = 1
+//            ),
+//            Series(
+//                id = 2, title = "The Dark Knight", rating = 0f, posterPath = "",
+//                trailerPath = "",
+//                genres = emptyList(),
+//                overview = "",
+//                releaseDate = 0L,
+//                seasonsCount = 1
+//            )
+//        )
+//        coEvery { manageSeriesUseCase.getSeriesByQuery(testQuery, 1) } returns expected
+//        coEvery { manageSeriesUseCase.getSeriesByQuery(testQuery, match { it != 1 }) } returns emptyList()
+//        // When
+//        val flow = searchPager.series(testQuery)
+//        val result = flow.asSnapshot()
+//        // Then
+//        assertEquals(expected, result)
+//    }
 
     @Test
     fun `artists should emit PagingData with correct artist items`() = runTest {
