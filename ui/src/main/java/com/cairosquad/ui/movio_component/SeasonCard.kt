@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.Icon
@@ -44,6 +45,7 @@ fun SeasonCard(
     currentSeason: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    bottomPadding:Dp=25.dp,
 ) {
     Row(
         modifier = modifier
@@ -87,9 +89,9 @@ fun SeasonCard(
                 .padding(vertical = 4.dp)
                 .padding(start = 8.dp)
                 .weight(1f),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             BasicText(
+                modifier = Modifier.padding(bottom = 8.dp),
                 text = seasonTitle,
                 style = Theme.textStyle.title.mediumMedium14.copy(
                     color = Theme.color.surfaces.onSurface,
@@ -98,7 +100,7 @@ fun SeasonCard(
                 overflow = TextOverflow.Ellipsis
             )
             BasicText(
-                modifier = Modifier.padding(bottom = 2.dp),
+                modifier = Modifier.padding(bottom = bottomPadding),
                 text = stringResource(
                     R.string.year_episodes,
                     yearOfPublish,
