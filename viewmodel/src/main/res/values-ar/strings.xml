@@ -30,7 +30,7 @@
     <string name="error_creating_list">حدث خطأ اثناء انشاء القائمة</string>
     <string name="dark_mode">Dark</string>
     <string name="light_mode">Light</string>
-    <string name="movie_list_remove_success">تم إزالة من القائمة.</string>
+    <string name="movie_list_remove_success">تمت إزالة العنصر من القائمة.</string>
     <string name="movie_list_remove_fail">فشل الإزالة من القائمة.</string>
     <string name="rated_failed">فشلت عمليه التقييم.</string>
     <string name="series_rate_remove_success">تم ازاله التقييم من المسلسل بنجاح.</string>

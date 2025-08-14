@@ -31,7 +31,7 @@
     <string name="error_creating_list">Error creating list.</string>
     <string name="dark_mode">Dark</string>
     <string name="light_mode">Light</string>
-    <string name="movie_list_remove_success">remove from list successfully.</string>
+    <string name="movie_list_remove_success">Item has been deleted</string>
     <string name="movie_list_remove_fail">remove from list failed.</string>
     <string name="series_rate_remove_success">Removed series rate successfully.</string>
     <string name="series_rate_remove_fail">Removed series rate failed.</string>
