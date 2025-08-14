@@ -165,7 +165,7 @@ fun MoreScreenContent(state: MoreScreenState, listener: MoreScreenInteractionLis
                     modifier = Modifier.padding(bottom = 24.dp)
                 )
                 SettingsItem(
-                    icon = painterResource(id = com.cairosquad.ui.R.drawable.star),
+                    icon = painterResource(id = com.cairosquad.ui.R.drawable.star_unfilled),
                     title = stringResource(com.cairosquad.ui.R.string.my_ratings),
                     trailingIcon = painterResource(id = R.drawable.arrow),
                     modifier = Modifier.padding(bottom = 12.dp),
