@@ -74,6 +74,8 @@ fun SearchResultContent(
             onValueChange = { },
             placeholder = stringResource(R.string.search_with_dotes_ahead),
             leadingIcon = R.drawable.search_bottom_nav,
+            trailingIcon =   if(state.query.isNotEmpty()) R.drawable.ic_close else null,
+            onTrailingIconClick = { listener.onCancelSearch() },
             onFocusChanged = {
                 if (it) {
                     listener.onClickSearchTextField()
