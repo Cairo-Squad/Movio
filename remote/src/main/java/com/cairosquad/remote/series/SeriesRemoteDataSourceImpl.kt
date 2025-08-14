@@ -152,4 +152,7 @@ class SeriesRemoteDataSourceImpl @Inject constructor(
         return safeCallApi { apiService.addSeriesRating(seriesId, rating) }
     }
 
+    override suspend fun deleteSeriesRating(seriesId: Long) {
+        return safeCallApi { apiService.deleteSeriesRating(seriesId) }
+    }
 }

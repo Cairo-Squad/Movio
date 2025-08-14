@@ -262,6 +262,12 @@ class SeriesRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun deleteSeriesRating(seriesId: Long) {
+        tryToCall {
+            seriesRemoteDataSource.deleteSeriesRating(seriesId)
+        }
+    }
+
     private companion object {
         private const val CACHE_EXPIRATION_MILLIS = 86_400_000
     }

@@ -24,71 +24,82 @@ import com.cairosquad.design_system.basic_component.Text
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import com.cairosquad.ui.BuildConfig
-import com.cairosquad.viewmodel.rated.RatedItemUiState
+import com.cairosquad.ui.movio_component.SwipeToDeleteContainer
+import com.cairosquad.viewmodel.rated.MyRatingsScreenState
 import java.text.DecimalFormat
 
 @Composable
 fun RatedItemCard(
-    item: RatedItemUiState,
+    item: MyRatingsScreenState.RatedItemUiState,
     onItemClick: (Long, Boolean) -> Unit,
+    onMovieDelete: (Long, Int) -> Unit,
+    onSeriesDelete: (Long, Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Format rating to show only one decimal place
     val formattedRating = DecimalFormat("#.#").format(item.rating)
-
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(100.dp)
-            .clickable {
-                onItemClick(item.id, item.isMovie)
+    SwipeToDeleteContainer(
+        onDelete = {
+            if (item.isMovie) {
+                onMovieDelete(item.id, item.userRating)
+            } else {
+                onSeriesDelete(item.id, item.userRating)
             }
+        }
     ) {
-        SafeImageViewer(
-            model = BuildConfig.IMAGE_BASE_URL + (item.posterPath ?: ""),
-            contentDescription = item.title,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(76.dp)
-                .clip(RoundedCornerShape(8.dp))
-        )
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .padding(start = 8.dp, end = 16.dp)
-                .weight(1f),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.Start
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .height(100.dp)
+                .clickable {
+                    onItemClick(item.id, item.isMovie)
+                }
         ) {
-            Text(
-                text = item.title,
-                style = Theme.textStyle.title.mediumMedium14,
-                color = Theme.color.surfaces.onSurface,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-            //create a row with stars representing the rating
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
+            SafeImageViewer(
+                model = BuildConfig.IMAGE_BASE_URL + (item.posterPath ?: ""),
+                contentDescription = item.title,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
+                    .fillMaxHeight()
+                    .width(76.dp)
+                    .clip(RoundedCornerShape(8.dp))
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(start = 8.dp, end = 16.dp)
+                    .weight(1f),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.Start
             ) {
-                repeat(5) { index ->
-                    val starIcon =
-                        if (index < item.rating.toInt()) com.cairosquad.design_system.R.drawable.review_star else com.cairosquad.design_system.R.drawable.star
-                    Icon(
-                        painter = painterResource(id = starIcon),
-                        contentDescription = null,
-                        modifier = Modifier.size(16.dp)
+                Text(
+                    text = item.title,
+                    style = Theme.textStyle.title.mediumMedium14,
+                    color = Theme.color.surfaces.onSurface,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+                //create a row with stars representing the rating
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                ) {
+                    repeat(5) { index ->
+                        val starIcon =
+                            if (index < item.userRating) com.cairosquad.design_system.R.drawable.review_star else com.cairosquad.design_system.R.drawable.star
+                        Icon(
+                            painter = painterResource(id = starIcon),
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+                    Text(
+                        text = formattedRating,
+                        style = Theme.textStyle.label.smallRegular12,
+                        color = Theme.color.surfaces.onSurface,
+                        modifier = Modifier.padding(start = 8.dp)
                     )
                 }
-                Text(
-                    text = formattedRating,
-                    style = Theme.textStyle.label.smallRegular12,
-                    color = Theme.color.surfaces.onSurface,
-                    modifier = Modifier.padding(start = 8.dp)
-                )
             }
         }
     }

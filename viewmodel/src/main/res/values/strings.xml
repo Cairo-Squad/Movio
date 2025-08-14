@@ -33,4 +33,16 @@
     <string name="light_mode">Light</string>
     <string name="movie_list_remove_success">remove from list successfully.</string>
     <string name="movie_list_remove_fail">remove from list failed.</string>
+    <string name="series_rate_remove_success">Removed series rate successfully.</string>
+    <string name="series_rate_remove_fail">Removed series rate failed.</string>
+
+    <string name="movie_rate_remove_success">Removed movie rate successfully.</string>
+    <string name="movie_rate_remove_fail">Removed movie rate failed.</string>
+
+    <string name="series_rate_restore_success">Restore series rate successfully.</string>
+    <string name="series_rate_restore_fail">Restore series rate failed.</string>
+
+    <string name="movie_rate_restore_success">Restore movie rate successfully.</string>
+    <string name="movie_rate_restore_fail">Restore movie rate failed.</string>
+
 </resources>

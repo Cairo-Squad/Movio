@@ -33,4 +33,14 @@
     <string name="movie_list_remove_success">تم إزالة من القائمة.</string>
     <string name="movie_list_remove_fail">فشل الإزالة من القائمة.</string>
     <string name="rated_failed">فشلت عمليه التقييم.</string>
+    <string name="series_rate_remove_success">تم ازاله التقييم من المسلسل بنجاح.</string>
+    <string name="series_rate_remove_fail">فشلت ازالة التقييم من المسلسل.</string>
+    <string name="movie_rate_remove_success">تم إزالة التقييم من الفيلم بنجاح.</string>
+    <string name="movie_rate_remove_fail">فشلت إزالة التقييم من الفيلم.</string>
+
+    <string name="series_rate_restore_success">تم إعادة تقييم المسلسل بنجاح.</string>
+    <string name="series_rate_restore_fail">فشلت إعادة تقييم المسلسل.</string>
+
+    <string name="movie_rate_restore_success">تم إعادة تقييم الفيلم بنجاح.</string>
+    <string name="movie_rate_restore_fail">فشلت إعادة تقييم الفيلم.</string>
 </resources>

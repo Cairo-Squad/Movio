@@ -98,4 +98,9 @@ class ManageSeriesUseCase @Inject constructor(
     suspend fun addSeriesRating(seriesId: Long, rating: Float): RatingResult {
         return seriesRepository.addSeriesRating(seriesId, rating)
     }
+
+    suspend fun deleteSeriesRating(seriesId: Long) {
+        seriesRepository.deleteSeriesRating(seriesId)
+    }
+
 }

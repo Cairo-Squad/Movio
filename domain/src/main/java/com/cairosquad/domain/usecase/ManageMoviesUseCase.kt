@@ -93,4 +93,7 @@ class ManageMoviesUseCase @Inject constructor(
         return moviesRepository.addMovieRating(movieId, rating)
     }
 
+    suspend fun deleteMovieRating(seriesId: Long) {
+        moviesRepository.deleteMovieRating(seriesId)
+    }
 }

@@ -42,4 +42,6 @@ interface MoviesRepository {
     suspend fun getMoviesGenres(): List<Genre>
 
     suspend fun addMovieRating(movieId: Long, rating: Float): RatingResult
+
+    suspend fun deleteMovieRating(movieId: Long)
 }

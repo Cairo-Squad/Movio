@@ -1,33 +1,47 @@
 package com.cairosquad.ui.rated
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.cairosquad.design_system.basic_component.AppBar
+import com.cairosquad.design_system.basic_component.SnackBar
 import com.cairosquad.design_system.basic_component.Text
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.R
 import com.cairosquad.ui.movio_component.LoadingMovieCard
-import com.cairosquad.ui.movio_component.LoadingReviewCard
 import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.MovieRoute
@@ -37,7 +51,6 @@ import com.cairosquad.viewmodel.rated.MyRatingsEffect
 import com.cairosquad.viewmodel.rated.MyRatingsInteractionListener
 import com.cairosquad.viewmodel.rated.MyRatingsScreenState
 import com.cairosquad.viewmodel.rated.MyRatingsViewModel
-import com.cairosquad.viewmodel.rated.RatedItemUiState
 
 @Composable
 fun MyRatingsScreen(
@@ -55,23 +68,75 @@ fun MyRatingsScreen(
             is MyRatingsEffect.NavigateToMovieDetails -> {
                 navController.navigate(MovieRoute(it.movieId))
             }
+
             is MyRatingsEffect.NavigateToSeriesDetails -> {
                 navController.navigate(SeriesRoute(it.seriesId))
             }
         }
     }
-    MyRatingsScreenContent(
-        modifier = modifier,
-        state = state,
-        interactionListener = viewModel
-    )
+    Box {
+        MyRatingsScreenContent(
+            modifier = modifier,
+            state = state,
+            listener = viewModel
+        )
+
+        UndoRatingSnackBar(state, viewModel)
+    }
 }
+
+@Composable
+private fun BoxScope.UndoRatingSnackBar(
+    state: MyRatingsScreenState,
+    viewModel: MyRatingsViewModel
+) {
+    AnimatedVisibility(
+        modifier = Modifier
+            .align(Alignment.BottomCenter)
+            .windowInsetsPadding(WindowInsets.navigationBars)
+            .padding(16.dp),
+        visible = state.showSnackBar,
+        enter = slideInVertically(
+            initialOffsetY = { fullHeight -> 2 * fullHeight },
+            animationSpec = tween(durationMillis = 600)
+        ),
+        exit = slideOutVertically(
+            targetOffsetY = { fullHeight -> 2 * fullHeight },
+            animationSpec = tween(durationMillis = 600)
+        )
+    ) {
+        SnackBar(
+            imageVector = ImageVector.vectorResource(
+                if (state.isProcessSuccess)
+                    com.cairosquad.design_system.R.drawable.archive_tick
+                else
+                    com.cairosquad.design_system.R.drawable.danger
+            ),
+            message = stringResource(state.snackMessageId),
+            action = {
+                Box(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .clickable(onClick = viewModel::onUndoClicked)
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.undo),
+                        style = Theme.textStyle.label.smallRegular14,
+                        color = Theme.color.brand.primary
+                    )
+                }
+            }
+        )
+    }
+}
+
 
 @Composable
 fun MyRatingsScreenContent(
     modifier: Modifier,
     state: MyRatingsScreenState,
-    interactionListener: MyRatingsInteractionListener
+    listener: MyRatingsInteractionListener
 ) {
     val ratedItems = state.ratedItems.collectAsLazyPagingItems()
 
@@ -80,9 +145,9 @@ fun MyRatingsScreenContent(
             .fillMaxSize()
             .background(Theme.color.surfaces.surface)
     ) {
-        com.cairosquad.design_system.basic_component.AppBar(
+        AppBar(
             onBackButtonClicked = {
-                interactionListener.onBackPressed()
+                listener.onBackPressed()
             },
             title = stringResource(R.string.my_ratings),
             modifier = Modifier.statusBarsPadding()
@@ -90,20 +155,29 @@ fun MyRatingsScreenContent(
         RatedItemsList(
             ratedItems = ratedItems,
             onItemClick = { itemId, isMovie ->
-                interactionListener.onItemClicked(itemId, isMovie)
-            }
+                if (isMovie) {
+                    listener.onMovieClicked(itemId)
+                } else {
+                    listener.onSeriesClicked(itemId)
+                }
+            },
+            onMovieDelete = listener::onMovieDelete,
+            onSeriesDelete = listener::onSeriesDelete
         )
     }
 }
 
 @Composable
 fun RatedItemsList(
-    ratedItems: LazyPagingItems<RatedItemUiState>,
+    ratedItems: LazyPagingItems<MyRatingsScreenState.RatedItemUiState>,
     onItemClick: (Long, Boolean) -> Unit,
+    onMovieDelete: (Long, Int) -> Unit,
+    onSeriesDelete: (Long, Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier.fillMaxSize()
+            .navigationBarsPadding()
     ) {
         // Show loading state
         if (ratedItems.loadState.refresh is LoadState.Loading) {
@@ -120,21 +194,7 @@ fun RatedItemsList(
                     )
                 }
             }
-        }
-        // Show error state
-//        else if (ratedItems.loadState.refresh is LoadState.Error) {
-//            Text(
-//                text = "Error loading ratings",
-//                color = Theme.color.system.error,
-//                textAlign = TextAlign.Center,
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(16.dp)
-//                    .align(Alignment.Center)
-//            )
-//        }
-        // Show empty state
-        else if (ratedItems.itemCount == 0 && ratedItems.loadState.refresh !is LoadState.Loading) {
+        } else if (ratedItems.itemCount == 0 && ratedItems.loadState.refresh !is LoadState.Loading) {
             StateMessage(
                 imageDrawable = com.cairosquad.design_system.R.drawable.favorite_list_empty,
                 titleId = R.string.no_ratings_yet,
@@ -145,9 +205,7 @@ fun RatedItemsList(
                 width = 180.dp,
                 height = 150.dp,
             )
-        }
-        // Show items
-        else {
+        } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(16.dp),
@@ -159,13 +217,16 @@ fun RatedItemsList(
                 ) { index ->
                     ratedItems[index]?.let { item ->
                         RatedItemCard(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .animateItem(),
                             item = item,
                             onItemClick = onItemClick,
-                            modifier = Modifier.fillMaxWidth().animateItem()
+                            onMovieDelete = onMovieDelete,
+                            onSeriesDelete = onSeriesDelete
                         )
                     }
                 }
-
             }
         }
     }

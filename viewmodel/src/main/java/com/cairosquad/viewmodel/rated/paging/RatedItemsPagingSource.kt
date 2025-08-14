@@ -3,28 +3,28 @@ package com.cairosquad.viewmodel.rated.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.cairosquad.domain.usecase.GetRatedItemsUseCase
-import com.cairosquad.viewmodel.rated.RatedItemUiState
+import com.cairosquad.viewmodel.rated.MyRatingsScreenState
 import com.cairosquad.viewmodel.rated.mappers.toRatedItemUiState
 
 class RatedItemsPagingSource(
     private val getRatedItemsUseCase: GetRatedItemsUseCase
-) : PagingSource<Int, RatedItemUiState>() {
+) : PagingSource<Int, MyRatingsScreenState.RatedItemUiState>() {
 
-    override fun getRefreshKey(state: PagingState<Int, RatedItemUiState>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, MyRatingsScreenState.RatedItemUiState>): Int? {
         return state.anchorPosition?.let { anchor ->
             state.closestPageToPosition(anchor)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(anchor)?.nextKey?.minus(1)
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, RatedItemUiState> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MyRatingsScreenState.RatedItemUiState> {
         val page = params.key ?: 1
 
         return try {
             val movies = getRatedItemsUseCase.getRatedMovies(page)
             val series = getRatedItemsUseCase.getRatedSeries(page)
-            val movieItems = movies.map { (movie, _) -> movie.toRatedItemUiState() }
-            val seriesItems = series.map { (series,_) -> series.toRatedItemUiState() }
+            val movieItems = movies.map { (movie, rating) -> movie.toRatedItemUiState(rating) }
+            val seriesItems = series.map { (series,rating) -> series.toRatedItemUiState(rating) }
 
             val combined = (movieItems + seriesItems).sortedByDescending { it.rating }
 

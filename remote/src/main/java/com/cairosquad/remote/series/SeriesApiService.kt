@@ -10,6 +10,8 @@ import com.cairosquad.repository.series.data_source.remote.dto.SeriesResponse
 import com.cairosquad.repository.utils.sharedDto.remote.GenreResponse
 import com.cairosquad.repository.utils.sharedDto.remote.ResultResponse
 import com.cairosquad.repository.utils.sharedDto.remote.StatusResponse
+import okhttp3.ResponseBody
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -132,4 +134,9 @@ interface SeriesApiService {
         @Path("series_id") seriesId: Long,
         @Query("value") rating: Float
     ): StatusResponse
+
+    @DELETE("tv/{series_id}/rating")
+    suspend fun deleteSeriesRating(
+        @Path("series_id") seriesId: Long,
+    ): ResponseBody
 }
