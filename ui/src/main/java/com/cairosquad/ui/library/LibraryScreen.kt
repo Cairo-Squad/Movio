@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.ui.library.content.LibraryScreenContent
+import com.cairosquad.ui.navigation.AppRoute
 import com.cairosquad.ui.navigation.ListRoute
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.LoginRoute
@@ -43,7 +44,11 @@ fun LibraryScreen() {
             }
 
             LibraryEffect.NavigateToLogin -> {
-                navController.navigate(LoginRoute)
+                navController.navigate(LoginRoute) {
+                    popUpTo(AppRoute) {
+                        inclusive = true
+                    }
+                }
             }
 
             is LibraryEffect.NavigateToListDetails -> {
