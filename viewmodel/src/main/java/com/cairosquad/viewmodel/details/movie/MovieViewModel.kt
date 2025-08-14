@@ -232,7 +232,11 @@ class MovieViewModel @AssistedInject constructor(
     }
 
     private fun onRemoveFromFavoriteSuccess() {
-        showSnackBar(messageId = R.string.movie_favorite_remove_success, isSuccessful = true)
+        updateState { it.copy(isFavorite = false) }
+        showSnackBar(
+            messageId = R.string.movie_favorite_remove_success,
+            isSuccessful = true,
+        )
     }
 
     private fun onRemoveFromFavoriteError(throwable: Throwable) {

@@ -12,8 +12,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
+
 @HiltViewModel
 class MoreViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
@@ -118,14 +118,12 @@ class MoreViewModel @Inject constructor(
     }
 
     override fun onLogoutConfirm() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             loginUseCase.logout()
-            withContext(Dispatchers.IO){
-                account.removeAccountDetails()
-            }
-            checkUserLoggedInStatus()
-            updateState { it.copy( isLogoutButtonVisible = false) }
+            account.removeAccountDetails()
         }
+        updateState { it.copy( isLogoutButtonVisible = false) }
+        sendEffect(MoreScreenEffect.NavigateToLogin)
     }
 
     override fun onLogoutDismiss() {

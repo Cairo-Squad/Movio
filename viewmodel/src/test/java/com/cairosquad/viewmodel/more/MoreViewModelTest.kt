@@ -127,8 +127,10 @@ class MoreViewModelTest {
         viewModel.onLogoutConfirm()
         advanceUntilIdle()
 
-        coVerify { loginUseCase.logout() }
-        coVerify { accountUseCase.removeAccountDetails() }
+        coVerify {
+            loginUseCase.logout()
+            accountUseCase.removeAccountDetails()
+        }
         assertThat(viewModel.screenState.value.isLogoutButtonVisible).isFalse()
     }
 

@@ -392,7 +392,7 @@ class SeriesDetailsViewModelTest {
             coEvery { accountUseCase.removeSeriesFromFavorite(seriesId) } returns Unit
             viewModel.onFavoriteClicked()
             advanceUntilIdle()
-            assertThat(viewModel.screenState.value.isFavorite).isTrue()
+            assertThat(viewModel.screenState.value.isFavorite).isFalse()
             assertThat(viewModel.screenState.value.showSnackBar).isFalse()
         }
 
