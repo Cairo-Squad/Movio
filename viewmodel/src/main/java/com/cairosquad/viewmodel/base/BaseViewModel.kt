@@ -30,9 +30,10 @@ abstract class BaseViewModel<T, E>(
     protected fun sendEffect(
         event: E,
         onStart: suspend () -> Unit = {},
-        onEnd: suspend () -> Unit = {}
+        onEnd: suspend () -> Unit = {},
+        dispatcher: CoroutineDispatcher = Dispatchers.Main
     ) {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             onStart()
             _effect.emit(event)
             onEnd()
