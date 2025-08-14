@@ -123,8 +123,8 @@ class MoreViewModel @Inject constructor(
             withContext(Dispatchers.IO){
                 account.removeAccountDetails()
             }
-            checkUserLoggedInStatus()
             updateState { it.copy( isLogoutButtonVisible = false) }
+            sendEffect(MoreScreenEffect.NavigateToLogin)
         }
     }
 
