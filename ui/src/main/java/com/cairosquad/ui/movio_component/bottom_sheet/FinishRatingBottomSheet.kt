@@ -53,7 +53,7 @@ fun FinishRatingBottomSheet(
                 isRateLarge = true
             )
             Button(
-                text = stringResource(R.string.submit),
+                text = stringResource(R.string.done),
                 onClick = onDismiss
             )
         }

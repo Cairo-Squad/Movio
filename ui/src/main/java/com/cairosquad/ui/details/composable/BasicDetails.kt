@@ -84,7 +84,6 @@ fun BasicDetails(
             onRateClicked = onRateClicked,
             onPlayClicked = onPlayTrailerClicked,
             onAddToListClicked = onAddToListClicked,
-            isRated = isRated
         )
     }
 }

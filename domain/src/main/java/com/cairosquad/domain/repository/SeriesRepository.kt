@@ -45,4 +45,5 @@ interface SeriesRepository {
 
     suspend fun addSeriesRating(seriesId: Long, rating: Float): RatingResult
 
+    suspend fun deleteSeriesRating(seriesId: Long)
 }

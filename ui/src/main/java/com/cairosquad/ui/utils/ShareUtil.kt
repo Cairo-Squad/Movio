@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.core.net.toUri
+import com.cairosquad.ui.R
 
 object ShareUtil {
 
@@ -35,15 +36,15 @@ object ShareUtil {
         onDismiss()
     }
 
-    fun copyLink(seriesUrl: String, context: Context, onDismiss: (String, Boolean) -> Unit) {
+    fun copyLink(seriesUrl: String, context: Context, onDismiss: (Int, Boolean) -> Unit) {
         try {
             val clipboard =
                 context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
             val clip = ClipData.newPlainText("Series link", seriesUrl)
             clipboard?.setPrimaryClip(clip)
-            onDismiss("Copied to clipboard successfully.", true)
+            onDismiss(R.string.copied_to_clipboard_successfully, true)
         } catch (_: Exception) {
-            onDismiss("Failed to copy, please try again later.", false)
+            onDismiss(R.string.copied_to_clipboard_successfully, false)
         }
     }
 

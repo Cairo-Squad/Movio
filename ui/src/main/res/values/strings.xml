@@ -95,4 +95,6 @@
     <string name="undo">Undo</string>
     <string name="english">English</string>
     <string name="arabic">Arabic</string>
+    <string name="copied_to_clipboard_successfully">Copied to clipboard successfully.</string>
+    <string name="done">Done</string>
 </resources>

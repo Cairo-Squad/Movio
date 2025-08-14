@@ -46,4 +46,5 @@ interface MoviesRemoteDataSource {
 
     suspend fun addMovieRating(movieId: Long, rating: Float): StatusResponse
 
+    suspend fun deleteMovieRating(movieId: Long)
 }

@@ -9,6 +9,8 @@ import com.cairosquad.repository.movie.data_source.remote.dto.VideoResponse
 import com.cairosquad.repository.utils.sharedDto.remote.GenreResponse
 import com.cairosquad.repository.utils.sharedDto.remote.ResultResponse
 import com.cairosquad.repository.utils.sharedDto.remote.StatusResponse
+import okhttp3.ResponseBody
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -131,4 +133,8 @@ interface MovieApiService {
         @Query("value") rating: Float
     ): StatusResponse
 
+    @DELETE("movie/{movie_id}/rating")
+    suspend fun deleteMovieRating(
+        @Path("movie_id") movieId: Long
+    ): ResponseBody
 }

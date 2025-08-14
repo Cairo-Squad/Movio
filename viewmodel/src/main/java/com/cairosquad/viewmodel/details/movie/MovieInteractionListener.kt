@@ -23,12 +23,13 @@ interface MovieInteractionListener {
     fun onSeeAllSimilarMoviesClick(movieId: Long)
     fun onMovieClick(movieId: Long)
 
-    fun onCopy(message: String, isSuccessful: Boolean)
+    fun onCopy(messageId: Int, isSuccessful: Boolean)
 
     fun onDismissShareBottomSheet()
     fun onDismissLoginBottomSheet()
     fun onDismissRateBottomSheet()
     fun onDismissAddToListBottomSheet()
+    fun onDismissRateSuccessBottomSheet()
 
     fun onRateChange(rate: Int)
     fun onSubmitRateClicked(rate: Int)

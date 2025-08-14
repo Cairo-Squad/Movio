@@ -36,7 +36,9 @@ interface AccountRepository {
 
     suspend fun getHistorySeries(page: Int): List<Series>
 
-    suspend fun getRatedItems(page: Int): Pair<List<Movie>, List<Series>>
+    suspend fun getRatedSeries(page: Int): List<Pair<Series, Double>>
+
+    suspend fun getRatedMovies(page: Int): List<Pair<Movie, Double>>
 
     suspend fun addMovieToList(listId: Long, movieId: Long)
 

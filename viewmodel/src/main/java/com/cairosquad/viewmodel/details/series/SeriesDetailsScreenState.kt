@@ -13,11 +13,13 @@ data class SeriesDetailsScreenState(
 
     val showShareBottomSheet: Boolean = false,
     val showRateBottomSheet: Boolean = false,
+    val showSuccessRatedBottomSheet: Boolean = false,
     val showAddToListBottomSheet: Boolean = false,
     val showLoginBottomSheet: Boolean = false,
     val showCreateListBottomSheet: Boolean = false,
     val isRated : Boolean = false,
     val rating: Int = 0,
+    val userRating: Int = 0,
     val newListName: String = "",
     val seriesLists: List<SeriesList> = emptyList(),
 

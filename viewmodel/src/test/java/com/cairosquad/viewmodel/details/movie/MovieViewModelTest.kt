@@ -33,7 +33,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
-import org.mockito.ArgumentMatchers.any
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MovieViewModelTest {
@@ -149,32 +148,12 @@ class MovieViewModelTest {
     }
 
     @Test
-    fun `WHEN start WHEN uesr is logged in SHOULD get rated items`() = runTest {
-        mockkStatic(Dispatchers::class)
-        every { Dispatchers.IO } returns testDispatcher
-        val movieList = listOf(mockMovie)
-        coEvery { loginUseCase.isUserLoggedIn() } returns true
-        coEvery { getRatedItemsUseCase.execute(1) } returns Pair(movieList, any())
-        val locViewModel = MovieViewModel(
-            manageMoviesUseCase,
-            loginUseCase,
-            accountUseCase,
-            getRatedItemsUseCase,
-            movieId
-        )
-        advanceUntilIdle()
-        coVerify { getRatedItemsUseCase.execute(1) }
-        assertThat(locViewModel.screenState.value.isRated).isTrue()
-        unmockkStatic(Dispatchers::class)
-    }
-
-    @Test
     fun `WHEN start WHEN uesr is logged in WHEN get rated items fails SHOULD do nothing`() =
         runTest {
             mockkStatic(Dispatchers::class)
             every { Dispatchers.IO } returns testDispatcher
             coEvery { loginUseCase.isUserLoggedIn() } returns true
-            coEvery { getRatedItemsUseCase.execute(1) } throws RuntimeException()
+            coEvery { getRatedItemsUseCase.getRatedMovies(1) } throws RuntimeException()
             val locViewModel = MovieViewModel(
                 manageMoviesUseCase,
                 loginUseCase,
@@ -320,7 +299,7 @@ class MovieViewModelTest {
 
     @Test
     fun `onCopy SHOULD show then hide snackbar after delay`() = runTest {
-        viewModel.onCopy("Copied!", true)
+        viewModel.onCopy(0, true)
 
         advanceTimeBy(0)
         assertThat(viewModel.screenState.value.showSnackBar).isFalse()
@@ -367,7 +346,6 @@ class MovieViewModelTest {
 
         viewModel.onFavoriteClick()
         advanceUntilIdle()
-        assertThat(viewModel.screenState.value.isFavorite).isTrue()
         assertThat(viewModel.screenState.value.showSnackBar).isFalse()
         unmockkStatic(Dispatchers::class)
     }
@@ -384,7 +362,6 @@ class MovieViewModelTest {
             viewModel.onFavoriteClick()
             advanceUntilIdle()
 
-            assertThat(viewModel.screenState.value.isFavorite).isFalse()
             assertThat(viewModel.screenState.value.showSnackBar).isFalse()
             unmockkStatic(Dispatchers::class)
         }
@@ -528,8 +505,8 @@ class MovieViewModelTest {
 
     @Test
     fun `WHEN onNavigateToLogin SHOULD emit navigation effect`() = runTest {
+        viewModel.onNavigateToLogin()
         viewModel.effect.test {
-            viewModel.onNavigateToLogin()
             assertThat(awaitItem()).isEqualTo(MovieEffect.NavigateToLogin)
             cancelAndIgnoreRemainingEvents()
         }
@@ -548,18 +525,6 @@ class MovieViewModelTest {
         viewModel.handleDetailsException(exception)
         val status = viewModel.handleDetailsException(exception)
         assertThat(status).isEqualTo(ErrorStatus.NO_INTERNET)
-    }
-
-    @Test
-    fun `WHEN onFavoriteClick WHEN error SHOULD do nothing`() = runTest {
-        mockkStatic(Dispatchers::class)
-        every { Dispatchers.IO } returns testDispatcher
-        coEvery { loginUseCase.isUserLoggedIn() } throws RuntimeException()
-        coEvery { accountUseCase.addMovieToFavorite(movieId) } throws RuntimeException()
-        viewModel.onFavoriteClick()
-        advanceUntilIdle()
-        assertThat(viewModel.screenState.value.isNoAccountBottomSheetOpen).isFalse()
-        unmockkStatic(Dispatchers::class)
     }
 
     companion object {

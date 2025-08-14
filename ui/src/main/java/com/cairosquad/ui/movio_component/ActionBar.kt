@@ -15,7 +15,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
@@ -34,7 +33,6 @@ fun ActionBar(
     onPlayClicked: () -> Unit,
     onRateClicked: () -> Unit,
     onAddToListClicked: () -> Unit,
-    isRated : Boolean
 ) {
     Row(
         modifier = Modifier
@@ -50,35 +48,20 @@ fun ActionBar(
             modifier = Modifier
                 .weight(1f)
                 .clip(RoundedCornerShape(8.dp))
-                .clickable(onClick = {
-                    if (!isRated) onRateClicked()}),
+                .clickable(onClick = onRateClicked),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            if (isRated) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(id = R.drawable.review_star),
-                    contentDescription = stringResource(R.string.Rate_it),
-                    tint = Color.Unspecified,
-                    modifier = Modifier.size(28.dp)
-                )
-                Text(
-                    text = stringResource(R.string.Rated) ,
-                    color = Theme.color.surfaces.onSurface,
-                    style = Theme.textStyle.label.smallRegular12
-                )
-            } else {
-                Icon(
-                    imageVector = ImageVector.vectorResource(id = R.drawable.outline_star),
-                    contentDescription = stringResource(R.string.Rate_it),
-                    tint = Theme.color.surfaces.onSurfaceContainer,
-                )
-                Text(
-                    text = stringResource(R.string.Rate_it),
-                    color = Theme.color.surfaces.onSurfaceContainer,
-                    style = Theme.textStyle.label.smallRegular12,
-                )
-            }
+            Icon(
+                imageVector = ImageVector.vectorResource(id = R.drawable.outline_star),
+                contentDescription = stringResource(R.string.Rate_it),
+                tint = Theme.color.surfaces.onSurfaceContainer,
+            )
+            Text(
+                text = stringResource(R.string.Rate_it),
+                color = Theme.color.surfaces.onSurfaceContainer,
+                style = Theme.textStyle.label.smallRegular12,
+            )
         }
 
         Icon(
@@ -129,7 +112,7 @@ private fun ActionBarPreview() {
             onPlayClicked = {},
             onRateClicked = {},
             onAddToListClicked = {},
-            isRated = false)
+        )
     }
 }
 
@@ -141,7 +124,6 @@ private fun ActionBarRtlPreview() {
             onPlayClicked = {},
             onRateClicked = {},
             onAddToListClicked = {},
-            isRated = true
         )
     }
 }

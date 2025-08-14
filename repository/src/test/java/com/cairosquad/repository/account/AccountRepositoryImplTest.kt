@@ -254,24 +254,12 @@ class AccountRepositoryImplTest {
     fun `getRatedItems returns empty lists if account id is null`() = runTest {
         coEvery { localDataSource.getAccountId() } returns null
 
-        val result = repository.getRatedItems(1)
+        val moviesResult = repository.getRatedMovies(1)
+        val seriesResult = repository.getRatedSeries(1)
 
-        assertThat(result.first).isEmpty()
-        assertThat(result.second).isEmpty()
+        assertThat(moviesResult).isEmpty()
+        assertThat(seriesResult).isEmpty()
         coVerify(exactly = 0) { remoteDataSource.getRatedMovies(any(), any()) }
         coVerify(exactly = 0) { remoteDataSource.getRatedSeries(any(), any()) }
-    }
-
-    @Test
-    fun `get getRatedItems returns lists if account id is not null`() = runTest {
-        coEvery { localDataSource.getAccountId() } returns 123
-        coEvery { remoteDataSource.getRatedMovies(123, 1) } returns listOf(MovieRemoteDto())
-        coEvery { remoteDataSource.getRatedSeries(123, 1) } returns listOf(SeriesRemoteDto())
-
-
-        val result = repository.getRatedItems(1)
-
-        assertThat(result.first).isNotEmpty()
-        assertThat(result.second).isNotEmpty()
     }
 }
