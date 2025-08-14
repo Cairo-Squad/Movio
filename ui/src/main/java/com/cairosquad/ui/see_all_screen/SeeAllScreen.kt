@@ -127,7 +127,7 @@ fun SeeAllScreen(
                     modifier = Modifier.padding(top = 16.dp),
                     categories =state.genres.map { genre ->
                         if (genre.id == null) {
-                            stringResource(com.cairosquad.ui.R.string.all)
+                            stringResource(com.cairosquad.ui.R.string.all_with_space_around)
                         } else {
                             genre.name
                         }
@@ -174,7 +174,9 @@ private fun SeeAllMediaItems(
         state.screenStatus == SeeAllScreenState.ScreenStatus.FAILED -> {
             Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 StateMessage(
-                    imageDrawable = R.drawable.no_internet,
+                    imageDrawable =
+                        if (Theme.isDark) R.drawable.no_internet_dark
+                        else R.drawable.no_internet,
                     titleId = R.string.no_internet_connection,
                     descriptionId = R.string.internet_is_not_available_description
                 )
@@ -188,7 +190,9 @@ private fun SeeAllMediaItems(
         state.screenStatus == SeeAllScreenState.ScreenStatus.Empty ->{
             Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 StateMessage(
-                    imageDrawable = R.drawable.no_result,
+                    imageDrawable =
+                        if (Theme.isDark) R.drawable.no_result_dark
+                        else R.drawable.no_result,
                     titleId = R.string.no_results_found,
                     descriptionId = R.string.no_results_for_category
                 )
@@ -213,7 +217,9 @@ private fun TrendingContentList(
         state.screenStatus == SeeAllScreenState.ScreenStatus.FAILED -> {
             Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 StateMessage(
-                    imageDrawable = R.drawable.no_internet,
+                    imageDrawable =
+                        if (Theme.isDark) R.drawable.no_internet_dark
+                        else R.drawable.no_internet,
                     titleId = R.string.no_internet_connection,
                     descriptionId = R.string.internet_is_not_available_description
                 )
@@ -227,7 +233,9 @@ private fun TrendingContentList(
         state.screenStatus == SeeAllScreenState.ScreenStatus.Empty -> {
             Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 StateMessage(
-                    imageDrawable = R.drawable.no_result,
+                    imageDrawable =
+                        if (Theme.isDark) R.drawable.no_result_dark
+                        else R.drawable.no_result,
                     titleId = R.string.no_results_found,
                     descriptionId = R.string.no_results_for_category
                 )

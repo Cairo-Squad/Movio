@@ -38,7 +38,8 @@
     <string name="free_to_watch">مجاني للمشاهدة</string>
     <string name="up_coming">قادم</string>
     <string name="more_recommended">المزيد من الاقتراحات</string>
-    <string name="all">"     الكل     "</string>
+    <string name="all_with_space_around">"     الكل     "</string>
+    <string name="all">الكل</string>
     <string name="movies">الافلام</string>
     <string name="tv_shows">العروض التلفزيونية</string>
     <string name="categories">الاصناف</string>
@@ -77,8 +78,8 @@
     <string name="movio_logo">شعار موفيو</string>
     <string name="confirm_logout">تأكيد تسجيل الخروج</string>
     <string name="you_ll_lose_access_to_your_library_favorites_and_history_until_you_sign_back_in">ستفقد الوصول إلى مكتبتك ومفضلاتك وسجلك حتى تسجل الدخول مرة أخرى.</string>
-    <string name="dark_mode">الوضع الداكن</string>
-    <string name="light_mode">الوضع الفاتح</string>
+    <string name="dark_mode">الداكن</string>
+    <string name="light_mode">الفاتح</string>
     <string name="success_check_mark">علامة نجاح</string>
     <string name="no_ratings_yet">لا توجد تقييمات حتى الآن!</string>
     <string name="no_ratings_found_description">لم تقم بتقييم أي شيء حتى الآن. ابدأ بالاستكشاف وشارك آراءك!</string>
@@ -92,6 +93,8 @@
     <string name="add_movies_and_tv_shows_to_build_your_personal_watchlist_the_perfect_binge_starts_here">أضف الأفلام والمسلسلات لبناء قائمة مشاهدتك الشخصية. البداية المثالية لماراثون المشاهدة تبدأ من هنا!</string>
     <string name="view_all">عرض الكل</string>
     <string name="undo">إعادة</string>
+    <string name="english">الإنجليزية</string>
+    <string name="arabic">العربية</string>
     <string name="copied_to_clipboard_successfully">تم النسخ الى الذاكرة.</string>
     <string name="done">تم</string>
 </resources>

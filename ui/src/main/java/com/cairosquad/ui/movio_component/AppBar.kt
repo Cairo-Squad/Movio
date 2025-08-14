@@ -1,7 +1,6 @@
 package com.cairosquad.ui.movio_component
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,8 +27,9 @@ import com.cairosquad.ui.BuildConfig
 
 @Composable
 fun AppBar(
-    userImage: String,
-    modifier: Modifier = Modifier
+    profileImage: String,
+    modifier: Modifier = Modifier,
+    onClickProfileImage: () -> Unit = {}
 ) {
     Row(
         modifier = modifier
@@ -55,14 +55,15 @@ fun AppBar(
                 brush = Theme.color.gradiant.logo
             )
         )
-        if (userImage.isNotBlank()) {
+        if (profileImage.isNotBlank()) {
             SafeImageViewer(
                 modifier = Modifier
-                    .clip(CircleShape)
                     .size(40.dp)
-                    .background(brush = Theme.color.gradiant.logo),
-                model = BuildConfig.IMAGE_BASE_URL + userImage,
-                contentDescription = "User Profile",
+                    .padding(8.dp)
+                    .clip(CircleShape)
+                    .clickable(onClick = onClickProfileImage),
+                model = BuildConfig.IMAGE_BASE_URL + profileImage,
+                contentDescription = stringResource(com.cairosquad.ui.R.string.user_profile_image),
                 nudeThreshold = 0.0,
                 nonNudeThreshold = 0.0,
                 loadingPlaceholder = {
@@ -80,10 +81,11 @@ fun AppBar(
                     .size(40.dp)
                     .padding(8.dp)
                     .clip(CircleShape)
-                    .background(
-                        brush = Theme.color.gradiant.logo
-                    ),
-                painter = painterResource(com.cairosquad.ui.R.drawable.user_profile),
+                    .clickable(onClick = onClickProfileImage),
+                painter = painterResource(
+                    if (Theme.isDark) com.cairosquad.ui.R.drawable.profile_place_holder_dark
+                    else com.cairosquad.ui.R.drawable.profile_place_holder_light
+                ),
                 contentDescription = stringResource(com.cairosquad.ui.R.string.user_profile_image)
             )
         }
@@ -94,6 +96,6 @@ fun AppBar(
 @Composable
 private fun AppBarPrev() {
     MovioTheme(isDarkTheme = true) {
-        AppBar(userImage = "")
+        AppBar(profileImage = "")
     }
 }

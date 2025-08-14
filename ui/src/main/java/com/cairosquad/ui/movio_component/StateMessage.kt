@@ -109,7 +109,9 @@ private fun NoResultPreview() {
             Modifier.background(Theme.color.surfaces.surface)
         ) {
             StateMessage(
-                imageDrawable = R.drawable.no_result,
+                imageDrawable =
+                    if (Theme.isDark) R.drawable.no_result_dark
+                    else R.drawable.no_result,
                 titleId = R.string.no_results_found,
                 descriptionId = R.string.no_search_results_found_description
             )
@@ -125,7 +127,9 @@ private fun NoInternetPreview() {
             Modifier.background(Theme.color.surfaces.surface)
         ) {
             StateMessage(
-                imageDrawable = R.drawable.no_internet,
+                imageDrawable =
+                    if (Theme.isDark) R.drawable.no_internet_dark
+                    else R.drawable.no_internet,
                 titleId = R.string.internet_is_not_available,
                 descriptionId = R.string.internet_is_not_available_description
             )
@@ -141,7 +145,9 @@ private fun EmptyWatchLaterPreview() {
             Modifier.background(Theme.color.surfaces.surface)
         ) {
             StateMessage(
-                imageDrawable = R.drawable.watch_later_empty,
+                imageDrawable =
+                    if (Theme.isDark) R.drawable.watch_later_empty_dark
+                    else R.drawable.watch_later_empty,
                 titleId = R.string.watch_later_empty,
                 descriptionId = R.string.watch_later_empty_description
             )
@@ -173,7 +179,9 @@ private fun FavouriteListEmptyPreview() {
             Modifier.background(Theme.color.surfaces.surface)
         ) {
             StateMessage(
-                imageDrawable = R.drawable.favorite_list_empty,
+                imageDrawable =
+                    if (Theme.isDark) R.drawable.favorite_list_empty_dark
+                    else R.drawable.favorite_list_empty,
                 titleId = R.string.favorites_list_empty,
                 descriptionId = R.string.favorite_list_empty_description
             )

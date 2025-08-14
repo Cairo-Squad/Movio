@@ -74,6 +74,8 @@ fun SearchResultContent(
             onValueChange = { },
             placeholder = stringResource(R.string.search_with_dotes_ahead),
             leadingIcon = R.drawable.search_bottom_nav,
+            trailingIcon =   if(state.query.isNotEmpty()) R.drawable.ic_close else null,
+            onTrailingIconClick = { listener.onCancelSearch() },
             onFocusChanged = {
                 if (it) {
                     listener.onClickSearchTextField()
@@ -161,7 +163,9 @@ private fun AllResultsTabContent(
                 contentAlignment = Alignment.Center
             ) {
                 StateMessage(
-                    imageDrawable = R.drawable.no_result,
+                    imageDrawable =
+                        if (Theme.isDark) R.drawable.no_result_dark
+                        else R.drawable.no_result,
                     titleId = R.string.no_results_found,
                     descriptionId = R.string.no_search_results_found_description
                 )
@@ -230,7 +234,9 @@ private fun MoviesTabContent(
                 contentAlignment = Alignment.Center
             ) {
                 StateMessage(
-                    imageDrawable = R.drawable.no_result,
+                    imageDrawable =
+                        if (Theme.isDark) R.drawable.no_result_dark
+                        else R.drawable.no_result,
                     titleId = R.string.no_results_found,
                     descriptionId = R.string.no_search_results_found_description
                 )
@@ -307,7 +313,9 @@ private fun SeriesTabContent(
                 contentAlignment = Alignment.Center
             ) {
                 StateMessage(
-                    imageDrawable = R.drawable.no_result,
+                    imageDrawable =
+                        if (Theme.isDark) R.drawable.no_result_dark
+                        else R.drawable.no_result,
                     titleId = R.string.no_results_found,
                     descriptionId = R.string.no_search_results_found_description
                 )
@@ -382,7 +390,9 @@ private fun ArtistsTabContent(
                 contentAlignment = Alignment.Center
             ) {
                 StateMessage(
-                    imageDrawable = R.drawable.no_result,
+                    imageDrawable =
+                        if (Theme.isDark) R.drawable.no_result_dark
+                        else R.drawable.no_result,
                     titleId = R.string.no_results_found,
                     descriptionId = R.string.no_search_results_found_description
                 )
@@ -432,13 +442,12 @@ private fun SearchResultFail(
         Spacer(Modifier.weight(1f))
         StateMessage(
             imageDrawable = when (errorStatus) {
-                ErrorStatus.NO_INTERNET -> R.drawable.no_internet
-                ErrorStatus.NETWORK_ERROR -> R.drawable.no_result
-                ErrorStatus.UNKNOWN_ERROR -> R.drawable.no_result
-                null -> R.drawable.no_result
-                ErrorStatus.UNAUTHORIZED -> R.drawable.no_result
-                ErrorStatus.EMPTY -> R.drawable.no_result
-                ErrorStatus.PARSING_ERROR -> R.drawable.no_result
+                ErrorStatus.NO_INTERNET ->
+                    if (Theme.isDark) R.drawable.no_internet_dark
+                    else R.drawable.no_internet
+                else ->
+                    if (Theme.isDark) R.drawable.no_result_dark
+                    else R.drawable.no_result
             },
             titleId = when (errorStatus) {
                 ErrorStatus.NO_INTERNET -> R.string.no_internet_connection
@@ -447,7 +456,7 @@ private fun SearchResultFail(
                 null -> R.string.an_unexpected_error_occurred
                 ErrorStatus.EMPTY -> R.string.no_results_found
                 ErrorStatus.PARSING_ERROR -> R.string.error_parsing_data
-                ErrorStatus.UNAUTHORIZED -> R.drawable.no_result
+                ErrorStatus.UNAUTHORIZED -> R.string.unauthorized_access
             },
             descriptionId = when (errorStatus) {
                 ErrorStatus.NO_INTERNET -> R.string.internet_is_not_available_description

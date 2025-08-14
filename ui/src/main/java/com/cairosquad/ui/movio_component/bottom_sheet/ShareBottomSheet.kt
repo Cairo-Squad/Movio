@@ -69,12 +69,12 @@ fun ShareBottomSheet(
                 )
                 ShareItem(
                     shareIcon = painterResource(R.drawable.facebook),
-                    shareTitle = "Facebook",
+                    shareTitle = stringResource(R.string.facebook),
                     onShareClick = onShareFacebookClick
                 )
                 ShareItem(
                     shareIcon = painterResource(R.drawable.x),
-                    shareTitle = "X",
+                    shareTitle = stringResource(R.string.X),
                     onShareClick = onShareXClick
                 )
             }

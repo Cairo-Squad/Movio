@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.Button
+import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.foryou.ForYouInteractionListener
@@ -30,7 +31,9 @@ fun ForYouFailedContent(
         Spacer(Modifier.weight(1f))
         when (errorStatus) {
             ErrorStatus.NO_INTERNET -> StateMessage(
-                imageDrawable = R.drawable.no_internet,
+                imageDrawable =
+                    if (Theme.isDark) R.drawable.no_internet_dark
+                    else R.drawable.no_internet,
                 titleId = R.string.no_internet_connection,
                 descriptionId = R.string.no_internet_connection
             )
@@ -46,7 +49,6 @@ fun ForYouFailedContent(
                     .padding(horizontal = 16.dp),
                 text = stringResource(R.string.try_again),
                 onClick = listener::onRefresh
-
             )
         }
     }

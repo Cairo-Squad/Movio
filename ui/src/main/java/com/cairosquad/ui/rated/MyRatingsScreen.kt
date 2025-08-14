@@ -179,7 +179,6 @@ fun RatedItemsList(
         modifier = modifier.fillMaxSize()
             .navigationBarsPadding()
     ) {
-        // Show loading state
         if (ratedItems.loadState.refresh is LoadState.Loading) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
@@ -194,9 +193,12 @@ fun RatedItemsList(
                     )
                 }
             }
-        } else if (ratedItems.itemCount == 0 && ratedItems.loadState.refresh !is LoadState.Loading) {
+        }
+        else if (ratedItems.itemCount == 0 && ratedItems.loadState.refresh !is LoadState.Loading) {
             StateMessage(
-                imageDrawable = com.cairosquad.design_system.R.drawable.favorite_list_empty,
+                imageDrawable =
+                    if (Theme.isDark) com.cairosquad.design_system.R.drawable.favorite_list_empty_dark
+                    else com.cairosquad.design_system.R.drawable.favorite_list_empty,
                 titleId = R.string.no_ratings_yet,
                 descriptionId = R.string.no_ratings_found_description,
                 modifier = Modifier

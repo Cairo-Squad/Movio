@@ -67,6 +67,8 @@
     <string name="read_more_with_dots_behind"> ... Read More</string>
     <string name="current_season">Current Seasons</string>
     <string name="copy_link">Copy link</string>
+    <string name="facebook">Facebook</string>
+    <string name="X">X</string>
     <string name="you_don_t_have_an_account">You don\'t have an account</string>
     <string name="you_don_t_have_an_account_description">Please log in or create an account to save items to your favorites and access them later.</string>
     <string name="login">Login</string>

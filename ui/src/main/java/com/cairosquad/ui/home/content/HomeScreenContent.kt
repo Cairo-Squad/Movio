@@ -167,7 +167,8 @@ private fun TobContent(
     ) {
         AppBar(
             modifier = Modifier.statusBarsPadding(),
-            userImage = screenState.profileImage
+            profileImage = screenState.profileImage,
+            onClickProfileImage = listener::onClickProfile
         )
 
         TabRow(

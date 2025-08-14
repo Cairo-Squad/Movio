@@ -195,7 +195,9 @@ private fun ListScreenContent(
                         } else {
                             Spacer(Modifier.weight(1f))
                             StateMessage(
-                                imageDrawable = R.drawable.watch_later_empty,
+                                imageDrawable =
+                                    if (Theme.isDark) R.drawable.watch_later_empty_dark
+                                    else R.drawable.watch_later_empty,
                                 title = stringResource(R.string.watch_later_empty, listName),
                                 description = stringResource(R.string.watch_later_empty_description)
                             )

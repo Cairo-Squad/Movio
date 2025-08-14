@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
+import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.ArtistCard
 import com.cairosquad.ui.movio_component.LoadingArtistCard
 import com.cairosquad.ui.movio_component.StateMessage
@@ -63,7 +64,9 @@ fun TopCastSection(
                         contentAlignment = Alignment.Center
                     ) {
                         StateMessage(
-                            imageDrawable = R.drawable.no_internet,
+                            imageDrawable =
+                                if (Theme.isDark) R.drawable.no_internet_dark
+                                else R.drawable.no_internet,
                             titleId = R.string.no_internet_connection,
                             descriptionId = R.string.internet_is_not_available_description
                         )
