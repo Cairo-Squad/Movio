@@ -43,4 +43,5 @@
 
     <string name="movie_rate_restore_success">تم إعادة تقييم الفيلم بنجاح.</string>
     <string name="movie_rate_restore_fail">فشلت إعادة تقييم الفيلم.</string>
+    <string name="lists_is_not_supported_for_series">القوائم غير مدعومة للمسلسلات</string>
 </resources>

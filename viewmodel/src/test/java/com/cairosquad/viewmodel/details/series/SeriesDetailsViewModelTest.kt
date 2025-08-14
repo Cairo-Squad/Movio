@@ -418,30 +418,13 @@ class SeriesDetailsViewModelTest {
         assertThat(viewModel.screenState.value.isProcessSuccess).isFalse()
     }
 
-    @Test
-    fun `should show login bottom sheet when add to list clicked and not logged in`() = runTest {
-        coEvery { loginUseCase.isUserLoggedIn() } returns false
-        viewModel.onAddToListClicked()
-        advanceUntilIdle()
-        assertThat(viewModel.screenState.value.showLoginBottomSheet).isTrue()
-    }
-
-    @Test
-    fun `should load series lists when add to list clicked and logged in`() = runTest {
-        coEvery { loginUseCase.isUserLoggedIn() } returns true
-        coEvery { accountUseCase.getSeriesLists(1) } returns emptyList()
-        viewModel.onAddToListClicked()
-        advanceUntilIdle()
-        assertThat(viewModel.screenState.value.showAddToListBottomSheet).isTrue()
-    }
-
-    @Test
-    fun `should show login bottom sheet when rate clicked and not logged in`() = runTest {
-        coEvery { loginUseCase.isUserLoggedIn() } returns false
-        viewModel.onRateClicked()
-        advanceUntilIdle()
-        assertThat(viewModel.screenState.value.showLoginBottomSheet).isTrue()
-    }
+	@Test
+	fun `should show login bottom sheet when rate clicked and not logged in`() = runTest {
+		coEvery { loginUseCase.isUserLoggedIn() } returns false
+		viewModel.onRateClicked()
+		advanceUntilIdle()
+		assertThat(viewModel.screenState.value.showLoginBottomSheet).isTrue()
+	}
 
     @Test
     fun `should open rate bottom sheet when rate clicked and logged in`() = runTest {

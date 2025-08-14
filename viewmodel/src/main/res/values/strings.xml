@@ -45,4 +45,5 @@
     <string name="movie_rate_restore_success">Restore movie rate successfully.</string>
     <string name="movie_rate_restore_fail">Restore movie rate failed.</string>
 
+    <string name="lists_is_not_supported_for_series">Lists is not supported for series</string>
 </resources>
