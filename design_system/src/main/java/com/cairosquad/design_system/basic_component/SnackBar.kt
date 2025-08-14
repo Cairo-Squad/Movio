@@ -6,16 +6,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.graphics.BlendMode
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.cairosquad.design_system.R
+import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 
 @Composable
@@ -35,15 +37,7 @@ fun SnackBar(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            modifier = Modifier
-                .graphicsLayer(alpha = 1f)
-                .drawWithContent {
-                    drawContent()
-                    drawRect(
-                        brush = gradientBrush,
-                        blendMode = BlendMode.Multiply
-                    )
-                },
+            modifier = Modifier.size(24.dp),
             imageVector = imageVector,
             contentDescription = "Snack Bar Icon",
         )
@@ -54,5 +48,24 @@ fun SnackBar(
             style = Theme.textStyle.label.smallRegular14
         )
         action()
+    }
+}
+
+
+@Preview
+@Composable
+private fun SnackBarPreview() {
+    MovioTheme {
+        SnackBar(
+            imageVector = ImageVector.vectorResource(id = R.drawable.snack_bar_icon_save_success_light),
+            message = "This is a snack bar message.",
+            action = {
+                Text(
+                    text = "Action",
+                    color = Theme.color.surfaces.onSurface,
+                    style = Theme.textStyle.label.smallRegular14
+                )
+            }
+        )
     }
 }

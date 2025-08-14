@@ -446,7 +446,10 @@ fun BottomSheetItem(
         Spacer(Modifier.weight(1f))
         if (isSelected) {
             Image(
-                painter = painterResource(R.drawable.add_success),
+                painter = painterResource(
+                    if (Theme.isDark) R.drawable.snack_bar_icon_success_tick_dark
+                    else R.drawable.snack_bar_icon_success_tick_light
+                ),
                 contentDescription = stringResource(com.cairosquad.ui.R.string.success_check_mark),
                 modifier = Modifier
                     .padding(end = 12.dp)

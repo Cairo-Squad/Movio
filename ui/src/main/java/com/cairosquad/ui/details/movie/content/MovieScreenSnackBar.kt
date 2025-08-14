@@ -12,12 +12,10 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.SnackBar
+import com.cairosquad.ui.utils.getSnackBarIcon
 import com.cairosquad.viewmodel.details.movie.MovieScreenState
 
 @Composable
@@ -38,7 +36,7 @@ fun BoxScope.MovieScreenSnackBar(state: MovieScreenState) {
         )
     ) {
         SnackBar(
-            imageVector = ImageVector.vectorResource(if (state.isProcessSuccess) R.drawable.archive_tick else R.drawable.danger),
+            imageVector = getSnackBarIcon(state.isProcessSuccess),
             message = stringResource(state.snackMessageId),
             action = {}
         )
