@@ -46,6 +46,7 @@ import com.cairosquad.ui.movio_component.bottom_sheet.CreateListBottomSheet
 import com.cairosquad.ui.navigation.ListRoute
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.utils.ObserveAsEffect
+import com.cairosquad.ui.utils.getSnackBarIcon
 import com.cairosquad.viewmodel.library.view_all_lists.ViewAllListsEffect
 import com.cairosquad.viewmodel.library.view_all_lists.ViewAllListsInteractionListener
 import com.cairosquad.viewmodel.library.view_all_lists.ViewAllListsScreenState
@@ -248,7 +249,7 @@ private fun ViewAllListsContent(
             )
         ) {
             SnackBar(
-                imageVector = ImageVector.vectorResource(if (screenState.isProcessSuccess) R.drawable.archive_tick else R.drawable.danger),
+                imageVector = getSnackBarIcon(screenState.isProcessSuccess),
                 message = stringResource(screenState.snackMessageId),
                 action = {}
             )

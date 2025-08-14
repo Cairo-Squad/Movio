@@ -29,9 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -47,6 +45,7 @@ import com.cairosquad.ui.movio_component.TrendingMovieCard
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.MovieRoute
 import com.cairosquad.ui.utils.ObserveAsEffect
+import com.cairosquad.ui.utils.getSnackBarIcon
 import com.cairosquad.viewmodel.library.view_all_favorite.ViewAllFavoriteEffect
 import com.cairosquad.viewmodel.library.view_all_favorite.ViewAllFavoriteScreenState
 import com.cairosquad.viewmodel.library.view_all_favorite.ViewAllFavoriteViewModel
@@ -96,7 +95,7 @@ fun ViewAllFavorite(
             )
         ) {
             SnackBar(
-                imageVector = ImageVector.vectorResource(com.cairosquad.design_system.R.drawable.danger),
+                imageVector = getSnackBarIcon(false),
                 message = stringResource(uiState.snackMessageId),
                 action = {
                     Box(

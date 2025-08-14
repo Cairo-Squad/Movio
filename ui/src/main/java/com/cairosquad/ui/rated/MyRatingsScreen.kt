@@ -27,9 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -47,6 +45,7 @@ import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.MovieRoute
 import com.cairosquad.ui.navigation.SeriesRoute
 import com.cairosquad.ui.utils.ObserveAsEffect
+import com.cairosquad.ui.utils.getSnackBarIcon
 import com.cairosquad.viewmodel.rated.MyRatingsEffect
 import com.cairosquad.viewmodel.rated.MyRatingsInteractionListener
 import com.cairosquad.viewmodel.rated.MyRatingsScreenState
@@ -106,12 +105,7 @@ private fun BoxScope.UndoRatingSnackBar(
         )
     ) {
         SnackBar(
-            imageVector = ImageVector.vectorResource(
-                if (state.isProcessSuccess)
-                    com.cairosquad.design_system.R.drawable.archive_tick
-                else
-                    com.cairosquad.design_system.R.drawable.danger
-            ),
+            imageVector = getSnackBarIcon(state.isProcessSuccess),
             message = stringResource(state.snackMessageId),
             action = {
                 Box(

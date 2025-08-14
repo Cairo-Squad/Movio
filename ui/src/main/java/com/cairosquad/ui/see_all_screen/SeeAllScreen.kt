@@ -140,7 +140,7 @@ fun SeeAllScreen(
                 if (contentType != MediaContentType.TRENDING) {
                     SeeAllMediaItems(
                         modifier = Modifier
-                            .padding(top = 24.dp, bottom = 16.dp)
+                            .padding(top = 16.dp)
                             .padding(horizontal = 16.dp),
                         state = state,
                         listener = viewModel,
@@ -149,7 +149,7 @@ fun SeeAllScreen(
                 } else {
                     TrendingContentList(
                         modifier = Modifier
-                            .padding(top = 24.dp, bottom = 16.dp)
+                            .padding(top = 16.dp)
                             .padding(horizontal = 16.dp),
                         listener = viewModel,
                         state = state,
@@ -259,7 +259,7 @@ fun MediaGridContent(
         columns = GridCells.Adaptive(minSize = 101.33.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
-        contentPadding = PaddingValues(bottom = 16.dp)
+        contentPadding = PaddingValues(bottom = 16.dp, top = 8.dp)
     ) {
         items(media.itemCount) { index ->
             media[index]?.let { item ->

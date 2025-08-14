@@ -3,15 +3,14 @@ package com.cairosquad.ui.details.reviews
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.cairosquad.design_system.basic_component.SnackBar
 import com.cairosquad.ui.R
 import com.cairosquad.ui.details.reviews.content.ReviewsContent
 import com.cairosquad.ui.details.reviews.content.ReviewsScreenEffects
 import com.cairosquad.ui.navigation.LocalNavController
+import com.cairosquad.ui.utils.getSnackBarIcon
 import com.cairosquad.viewmodel.details.reviews.ReviewsViewModel
 import kotlinx.coroutines.Dispatchers
 
@@ -44,7 +43,7 @@ fun ReviewsScreen(
 
     if (state.value.error != null) {
         SnackBar(
-            imageVector = ImageVector.vectorResource(com.cairosquad.design_system.R.drawable.danger),
+            imageVector = getSnackBarIcon(false),
             message = state.value.error ?: stringResource(R.string.something_went_wrong),
             action = {}
         )
