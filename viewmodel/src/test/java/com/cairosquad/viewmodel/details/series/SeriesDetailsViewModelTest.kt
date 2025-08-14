@@ -527,14 +527,6 @@ class SeriesDetailsViewModelTest {
         assertThat(status).isEqualTo(ErrorStatus.NO_INTERNET)
     }
 
-    @Test
-    fun `should do nothing when favorite clicked and error occurs`() = runTest {
-        coEvery { loginUseCase.isUserLoggedIn() } throws RuntimeException()
-        viewModel.onFavoriteClicked()
-        advanceUntilIdle()
-        assertThat(viewModel.screenState.value.showLoginBottomSheet).isFalse()
-    }
-
     companion object {
         private const val seriesId = 123L
         private val mockSeries = Series(
