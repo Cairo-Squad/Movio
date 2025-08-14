@@ -164,7 +164,7 @@ class SeriesDetailsViewModel @AssistedInject constructor(
                 it.copy(
                     showSnackBar = true, isProcessSuccess = true,
                     snackMessageId = R.string.series_favorite_remove_success,
-                    isFavorite = true
+                    isFavorite = false
                 )
             }
             delay(2000)
