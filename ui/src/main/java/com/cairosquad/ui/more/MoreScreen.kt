@@ -41,7 +41,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.BottomSheet
 import com.cairosquad.design_system.basic_component.Button
@@ -51,6 +50,7 @@ import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import com.cairosquad.ui.BuildConfig
+import com.cairosquad.ui.navigation.AppRoute
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.LoginRoute
 import com.cairosquad.ui.navigation.MyRatingsRoute
@@ -71,10 +71,9 @@ fun MoreScreen(
         when (it) {
             MoreScreenEffect.NavigateToLogin -> {
                 navController.navigate(LoginRoute) {
-                    popUpTo(navController.graph.findStartDestination().id) {
+                    popUpTo(AppRoute) {
                         inclusive = true
                     }
-                    launchSingleTop = true
                 }
             }
 
