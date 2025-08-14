@@ -82,15 +82,11 @@ class MovieViewModel @AssistedInject constructor(
     }
 
     private fun getMovieInFavorite() {
-        checkUserLoggedIn {
-            loadFavoriteMovies()
-        }
-    }
-
-
-    private fun loadFavoriteMovies() {
         tryToCall(
-            block = { accountUseCase.getFavoriteMovies(1) },
+            block = {
+                if (loginUseCase.isUserLoggedIn()) accountUseCase.getFavoriteMovies(1)
+                else emptyList()
+            },
             onSuccess = ::onLoadFavoriteMoviesSuccess,
             onError = {}
         )
