@@ -193,17 +193,17 @@ class SeriesDetailsViewModel @AssistedInject constructor(
     }
 
     override fun onAddToListClicked() {
-        tryToCall(
-            block = loginUseCase::isUserLoggedIn,
-            onSuccess = { authed ->
-                if (!authed) {
-                    updateState { it.copy(showLoginBottomSheet = true) }
-                } else {
-                    loadSeriesLists()
-                }
-            },
-            onError = {}
-        )
+        updateState {
+            it.copy(
+                showSnackBar = true,
+                isProcessSuccess = false,
+                snackMessageId = R.string.lists_is_not_supported_for_series
+            )
+        }
+        viewModelScope.launch {
+            delay(2000)
+            updateState { it.copy(showSnackBar = false) }
+        }
     }
 
     private fun loadSeriesLists() {

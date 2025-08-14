@@ -32,4 +32,5 @@
     <string name="light_mode">Light</string>
     <string name="movie_list_remove_success">تم إزالة من القائمة.</string>
     <string name="movie_list_remove_fail">فشل الإزالة من القائمة.</string>
+    <string name="lists_is_not_supported_for_series">القوائم غير مدعومة للمسلسلات</string>
 </resources>

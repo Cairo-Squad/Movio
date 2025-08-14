@@ -32,4 +32,5 @@
     <string name="light_mode">Light</string>
     <string name="movie_list_remove_success">remove from list successfully.</string>
     <string name="movie_list_remove_fail">remove from list failed.</string>
+    <string name="lists_is_not_supported_for_series">Lists is not supported for series</string>
 </resources>
