@@ -185,8 +185,8 @@ class SeriesDetailsViewModel @AssistedInject constructor(
     }
 
     private fun onAddToFavoriteSuccess() {
-        showSnackBar(messageId = R.string.series_favorite_success, isSuccessful = true)
         updateState { it.copy(isFavorite = true) }
+        showSnackBar(messageId = R.string.series_favorite_success, isSuccessful = true)
     }
 
     private fun onAddToFavoriteError() {

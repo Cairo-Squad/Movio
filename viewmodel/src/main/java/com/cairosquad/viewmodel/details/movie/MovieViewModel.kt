@@ -266,6 +266,7 @@ class MovieViewModel @AssistedInject constructor(
     }
 
     private fun onAddToFavoriteSuccess() {
+        updateState { it.copy(isFavorite = true) }
         showSnackBar(R.string.movie_favorite_success, true)
     }
 
