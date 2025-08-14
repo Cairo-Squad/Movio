@@ -67,8 +67,8 @@ class AccountRepositoryImpl @Inject constructor(
         listId: Long,
         page: Int
     ): List<Movie> {
-        accountLocalDataSource.getAccount().also {  accountId ->
-            return  accountRemoteDataSource.getMoviesOfList(listId, page).map { it.toEntity() }
+        accountLocalDataSource.getAccount().also { accountId ->
+            return accountRemoteDataSource.getMoviesOfList(listId, page).map { it.toEntity() }
         }
     }
 
@@ -76,7 +76,7 @@ class AccountRepositoryImpl @Inject constructor(
         listId: Long,
         page: Int
     ): List<Series> {
-        accountLocalDataSource.getAccount().also {  accountId ->
+        accountLocalDataSource.getAccount().also { accountId ->
             return accountRemoteDataSource.getSeriesOfList(listId, page).map { it.toEntity() }
         }
     }
@@ -114,7 +114,8 @@ class AccountRepositoryImpl @Inject constructor(
     override suspend fun addSeriesToHistory(seriesId: Long) {
         accountLocalDataSource.getAccountId()?.also { accountId ->
             accountRemoteDataSource.addSeriesToHistory(accountId, seriesId)
-        }    }
+        }
+    }
 
     override suspend fun getHistoryMovies(page: Int): List<Movie> {
         accountLocalDataSource.getAccountId()?.also { accountId ->
@@ -130,14 +131,26 @@ class AccountRepositoryImpl @Inject constructor(
         return emptyList()
     }
 
-    override suspend fun getRatedItems(page: Int): Pair<List<Movie>, List<Series>> {
+    override suspend fun getRatedSeries(page: Int): List<Pair<Series, Double>> {
         accountLocalDataSource.getAccountId()?.also { accountId ->
-            return Pair(
-                accountRemoteDataSource.getRatedMovies(accountId, page).map { it.toEntity() },
-                accountRemoteDataSource.getRatedSeries(accountId, page).map { it.toEntity() }
-            )
+            return accountRemoteDataSource.getRatedSeries(accountId, page).mapNotNull { series ->
+                series.userRating?.let { userRating ->
+                    series.toEntity() to userRating
+                }
+            }
         }
-        return Pair(emptyList(), emptyList())
+        return emptyList()
+    }
+
+    override suspend fun getRatedMovies(page: Int): List<Pair<Movie, Double>> {
+        accountLocalDataSource.getAccountId()?.also { accountId ->
+            return accountRemoteDataSource.getRatedMovies(accountId, page).mapNotNull { movies ->
+                movies.userRating?.let { userRating ->
+                    movies.toEntity() to userRating
+                }
+            }
+        }
+        return emptyList()
     }
 
     override suspend fun addMovieToList(listId: Long, movieId: Long) {

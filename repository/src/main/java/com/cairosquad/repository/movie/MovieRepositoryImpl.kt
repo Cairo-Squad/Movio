@@ -227,6 +227,12 @@ class MovieRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun deleteMovieRating(movieId: Long,){
+        return tryToCall {
+            moviesRemoteDataSource.deleteMovieRating(movieId)
+        }
+    }
+
     private companion object {
         private const val CACHE_EXPIRATION_MILLIS = 86_400_000
     }

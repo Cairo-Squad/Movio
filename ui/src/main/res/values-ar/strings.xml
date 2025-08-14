@@ -95,4 +95,6 @@
     <string name="undo">إعادة</string>
     <string name="english">الإنجليزية</string>
     <string name="arabic">العربية</string>
+    <string name="copied_to_clipboard_successfully">تم النسخ الى الذاكرة.</string>
+    <string name="done">تم</string>
 </resources>

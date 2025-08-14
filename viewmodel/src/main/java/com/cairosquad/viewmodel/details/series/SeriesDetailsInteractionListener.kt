@@ -15,12 +15,13 @@ interface SeriesDetailsInteractionListener {
     fun onDismissRateBottomSheet()
     fun onDismissAddToListBottomSheet()
     fun onDismissCreateListBottomSheet()
+    fun onDismissSuccessRatedBottomSheet()
 
     fun onValueChange(listName: String)
 
     fun onRateChange(rate: Int)
     fun onSubmitRateClicked(rate: Int)
-    fun onCopy(message: String, isSuccessful: Boolean)
+    fun onCopy(messageId: Int, isSuccessful: Boolean)
 
     fun onArtistClicked(artistId: Long)
     fun onSeeAllArtistsClicked(seriesId: Long)

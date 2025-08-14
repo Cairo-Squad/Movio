@@ -47,4 +47,6 @@ interface SeriesRemoteDataSource {
     suspend fun getSeriesByQuery(query: String, page: Int): List<SeriesRemoteDto>
 
     suspend fun addSeriesRating(seriesId: Long, rating: Float): StatusResponse
+
+    suspend fun deleteSeriesRating(seriesId: Long)
 }

@@ -8,6 +8,7 @@ import com.cairosquad.design_system.R
 import com.cairosquad.ui.BuildConfig
 import com.cairosquad.ui.details.Constants.MOVIE_URL
 import com.cairosquad.ui.movio_component.bottom_sheet.CreateListBottomSheet
+import com.cairosquad.ui.movio_component.bottom_sheet.FinishRatingBottomSheet
 import com.cairosquad.ui.movio_component.bottom_sheet.ListBottomSheet
 import com.cairosquad.ui.movio_component.bottom_sheet.LoginBottomSheet
 import com.cairosquad.ui.movio_component.bottom_sheet.RateBottomSheet
@@ -82,5 +83,10 @@ fun MovieScreenBottomSheets(
         isMovie = true,
         onRatingChange = viewModel::onRateChange,
         onSubmitClicked = viewModel::onSubmitRateClicked,
+    )
+    FinishRatingBottomSheet(
+        isVisible = state.isRatedSuccessBottomSheetOpen,
+        onDismiss = viewModel::onDismissRateSuccessBottomSheet,
+        rating = state.userRating
     )
 }

@@ -21,7 +21,8 @@
     <string name="movie_favorite_remove_success">remove from favourites successfully.</string>
     <string name="movie_favorite_remove_fail">Item could not be deleted.</string>
     <string name="added_to_list">Added to list</string>
-    <string name="rated_successfully">Rated successfully</string>">
+    <string name="rated_successfully">Rated successfully</string>
+    <string name="rated_failed">Failed To rate.</string>
     <string name="movie_already_in_list">Movie already in list</string>
     <string name="error_adding_movie_to_list">Error adding movie to list</string>
     <string name="copied_to_clip_board_successfully">Copied To clip board successfully</string>
@@ -32,4 +33,16 @@
     <string name="light_mode">Light</string>
     <string name="movie_list_remove_success">remove from list successfully.</string>
     <string name="movie_list_remove_fail">remove from list failed.</string>
+    <string name="series_rate_remove_success">Removed series rate successfully.</string>
+    <string name="series_rate_remove_fail">Removed series rate failed.</string>
+
+    <string name="movie_rate_remove_success">Removed movie rate successfully.</string>
+    <string name="movie_rate_remove_fail">Removed movie rate failed.</string>
+
+    <string name="series_rate_restore_success">Restore series rate successfully.</string>
+    <string name="series_rate_restore_fail">Restore series rate failed.</string>
+
+    <string name="movie_rate_restore_success">Restore movie rate successfully.</string>
+    <string name="movie_rate_restore_fail">Restore movie rate failed.</string>
+
 </resources>

@@ -139,4 +139,8 @@ class MoviesRemoteDataSourceImpl @Inject constructor(
     override suspend fun addMovieRating(movieId: Long, rating: Float): StatusResponse {
         return safeCallApi { apiService.addMovieRating(movieId, rating) }
     }
+
+    override suspend fun deleteMovieRating(movieId: Long) {
+        safeCallApi { apiService.deleteMovieRating(movieId) }
+    }
 }
