@@ -6,10 +6,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,20 +32,16 @@ fun SmallArtistCard(
 	imgUrl: String?,
 	modifier: Modifier = Modifier
 ) {
-	val imageSize = 88.dp
-	val horizontalPadding = 6.67.dp
+	val imageSize = remember { 68.dp }
 
 	Column(
-		modifier = modifier
-			.width(imageSize + (horizontalPadding * 2))
-			.padding(horizontal = 4.dp),
+		modifier = modifier,
 		horizontalAlignment = Alignment.CenterHorizontally
 	) {
 		if (imgUrl?.isNotEmpty() == true) {
 			SafeImageViewer(
 				model = BuildConfig.IMAGE_BASE_URL + imgUrl,
 				modifier = Modifier
-					.padding(horizontal = horizontalPadding)
 					.size(imageSize)
 					.clip(CircleShape),
 				contentDescription = stringResource(R.string.artist_image),
@@ -63,7 +58,6 @@ fun SmallArtistCard(
 		} else {
 			Box(
 				modifier = Modifier
-					.padding(horizontal = horizontalPadding)
 					.size(imageSize)
 					.clip(CircleShape)
 					.background(Theme.color.system.defaultImageBackground),
@@ -81,7 +75,7 @@ fun SmallArtistCard(
 		Text(
 			modifier = Modifier
 				.fillMaxWidth()
-				.padding(top = 8.dp, start = 4.dp, end = 4.dp),
+				.padding(top = 8.dp),
 			text = name,
 			textAlign = TextAlign.Center,
 			style = Theme.textStyle.title.mediumMedium14,
