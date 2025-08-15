@@ -194,7 +194,7 @@ fun ViewAllFavoriteContent(
                         ) {
                             TrendingMovieCard(
                                 modifier = Modifier
-                                    .clickable(onClick = { listener.onSeriesDelete(series.id) }),
+                                    .clickable(onClick = { listener.onSeriesClicked(series.id) }),
                                 imgUrl = series.posterPath,
                                 movieTitle = series.title,
                                 movieCategory = series.trailerPath,
