@@ -46,5 +46,9 @@ interface AccountRepository {
 
     suspend fun removeMovieFromList(listId: Long, movieId: Long)
 
+    suspend fun removeMovieFromHistory(movieId: Long)
+
+    suspend fun removeSeriesFromHistory(seriesId: Long)
+
     suspend fun removeAccountDetails()
 }

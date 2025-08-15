@@ -7,5 +7,11 @@ interface ViewAllHistoryInteractionListener {
 
     fun onSeriesClicked(seriesId: Long)
 
+    fun onMovieDelete(movieId: Long)
+
+    fun onSeriesDelete(seriesId: Long)
+
     fun onRefresh()
+
+    fun onUndoClicked()
 }

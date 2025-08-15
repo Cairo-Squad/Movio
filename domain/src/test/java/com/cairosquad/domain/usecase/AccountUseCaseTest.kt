@@ -221,4 +221,137 @@ class AccountUseCaseTest {
         assertThat(result).isEqualTo(expectedSeries)
         coVerify { accountRepository.getHistorySeries(1) }
     }
+
+    @Test
+    fun `removeAccountDetails calls repository`() = runTest {
+        coEvery { accountRepository.removeAccountDetails() } just Runs
+
+        useCase.removeAccountDetails()
+
+        coVerify { accountRepository.removeAccountDetails() }
+    }
+
+    @Test
+    fun `removeMovieFromFavorite calls repository with correct id`() = runTest {
+        val movieId = 10L
+        coEvery { accountRepository.removeMovieFromFavorite(movieId) } just Runs
+
+        useCase.removeMovieFromFavorite(movieId)
+
+        coVerify { accountRepository.removeMovieFromFavorite(movieId) }
+    }
+
+    @Test
+    fun `removeSeriesFromFavorite calls repository with correct id`() = runTest {
+        val seriesId = 20L
+        coEvery { accountRepository.removeSeriesFromFavorite(seriesId) } just Runs
+
+        useCase.removeSeriesFromFavorite(seriesId)
+
+        coVerify { accountRepository.removeSeriesFromFavorite(seriesId) }
+    }
+
+    @Test
+    fun `removeMovieFromHistory calls repository with correct id`() = runTest {
+        val movieId = 100L
+        coEvery { accountRepository.removeMovieFromHistory(movieId) } just Runs
+
+        useCase.removeMovieFromHistory(movieId)
+
+        coVerify { accountRepository.removeMovieFromHistory(movieId) }
+    }
+
+    @Test
+    fun `removeSeriesFromHistory calls repository with correct id`() = runTest {
+        val seriesId = 200L
+        coEvery { accountRepository.removeSeriesFromHistory(seriesId) } just Runs
+
+        useCase.removeSeriesFromHistory(seriesId)
+
+        coVerify { accountRepository.removeSeriesFromHistory(seriesId) }
+    }
+
+    @Test
+    fun `getMoviesOfList returns movies from repository`() = runTest {
+        val listId = 1L
+        val page = 1
+        val expectedMovies = listOf(
+            Movie(
+                1,
+                "Inception",
+                8.5f,
+                "/poster.jpg",
+                emptyList(),
+                "A mind-bending thriller",
+                1620000000,
+                148,
+                "/trailer.mp4"
+            )
+        )
+
+        coEvery { accountRepository.getMoviesOfList(listId, page) } returns expectedMovies
+
+        val result = useCase.getMoviesOfList(listId, page)
+
+        assertThat(result).isEqualTo(expectedMovies)
+        coVerify { accountRepository.getMoviesOfList(listId, page) }
+    }
+
+    @Test
+    fun `getSeriesOfList returns series from repository`() = runTest {
+        val listId = 2L
+        val page = 1
+        val expectedSeries = listOf(
+            Series(
+                2,
+                "Dark",
+                9.0f,
+                "/poster.jpg",
+                "/trailer.mp4",
+                emptyList(),
+                "Time travel mystery",
+                1620000000,
+                3
+            )
+        )
+
+        coEvery { accountRepository.getSeriesOfList(listId, page) } returns expectedSeries
+
+        val result = useCase.getSeriesOfList(listId, page)
+
+        assertThat(result).isEqualTo(expectedSeries)
+        coVerify { accountRepository.getSeriesOfList(listId, page) }
+    }
+
+    @Test
+    fun `addMovieToList calls repository with correct ids`() = runTest {
+        val listId = 1L
+        val movieId = 50L
+        coEvery { accountRepository.addMovieToList(listId, movieId) } just Runs
+
+        useCase.addMovieToList(listId, movieId)
+
+        coVerify { accountRepository.addMovieToList(listId, movieId) }
+    }
+
+    @Test
+    fun `createList calls repository with correct name`() = runTest {
+        val listName = "My Watchlist"
+        coEvery { accountRepository.createList(listName) } just Runs
+
+        useCase.createList(listName)
+
+        coVerify { accountRepository.createList(listName) }
+    }
+
+    @Test
+    fun `removeMovieFromList calls repository with correct ids`() = runTest {
+        val listId = 1L
+        val movieId = 99L
+        coEvery { accountRepository.removeMovieFromList(listId, movieId) } just Runs
+
+        useCase.removeMovieFromList(listId, movieId)
+
+        coVerify { accountRepository.removeMovieFromList(listId, movieId) }
+    }
 }
