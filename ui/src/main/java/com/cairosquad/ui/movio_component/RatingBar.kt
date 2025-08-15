@@ -43,8 +43,7 @@ fun RatingBar(
             )
             Icon(
                 modifier = Modifier
-                    .scale(if (isRateLarge && rate == rating) 2f else 1f)
-                    .size(24.dp)
+                    .size(if (isRateLarge && rate == rating) 48.dp else 28.dp)
                     .clip(RoundedCornerShape(8.dp))
                     .then(
                         if (isClickable) {
