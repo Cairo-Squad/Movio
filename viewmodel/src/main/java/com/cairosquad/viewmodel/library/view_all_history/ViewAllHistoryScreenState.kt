@@ -7,12 +7,16 @@ data class ViewAllHistoryScreenState (
     val errorStatus: ErrorStatus? = null,
 
     val isRefreshing: Boolean = false,
+    val showSnackBar: Boolean = false,
+    val isProcessSuccess: Boolean = false,
+    val snackBarMessageId: Int = 0,
 
     val movies: List<MovieUiState> = emptyList(),
     val deletedMoviesIds: List<Long> = emptyList(),
     val series: List<SeriesUiState> = emptyList(),
     val deletedSeriesIds: List<Long> = emptyList(),
-    ) {
+    val deletedItems: List<String> = emptyList()
+) {
 
     data class SeriesUiState(
         val id: Long = 0L,
