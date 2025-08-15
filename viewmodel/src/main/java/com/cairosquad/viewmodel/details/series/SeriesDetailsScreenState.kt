@@ -29,7 +29,6 @@ data class SeriesDetailsScreenState(
     val isProcessSuccess: Boolean = false,
 
     val isFavorite: Boolean = false,
-
     val series: SeriesUiState = SeriesUiState(),
     val cast: List<ArtistUiState> = emptyList(),
     val seasons: List<SeasonUiState> = emptyList(),

@@ -50,8 +50,6 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         getSeasons()
         getReviews()
         getSimilarSeries()
-        getSeriesInFavorite()
-        getSeriesInRated()
     }
 
     private fun getSeriesInFavorite() {
@@ -218,18 +216,29 @@ class SeriesDetailsViewModel @AssistedInject constructor(
     }
 
     override fun onAddToListClicked() {
-        updateState {
-            it.copy(
-                showSnackBar = true,
-                isProcessSuccess = false,
-                snackMessageId = R.string.lists_is_not_supported_for_series
-            )
-        }
-        viewModelScope.launch {
-            delay(2000)
-            updateState { it.copy(showSnackBar = false) }
-        }
+        tryToCall(
+            block = loginUseCase::isUserLoggedIn,
+            onSuccess = { authed ->
+                if (!authed) {
+                    updateState { it.copy( showLoginBottomSheet = true) }
+                } else {
+                    updateState {
+                        it.copy(
+                            showSnackBar = true,
+                            isProcessSuccess = false,
+                            snackMessageId = R.string.lists_is_not_supported_for_series
+                        )
+                    }
+                    viewModelScope.launch {
+                        delay(2000)
+                        updateState { it.copy(showSnackBar = false) }
+                    }
+                }
+            },
+            onError = {}
+        )
     }
+
 
     private fun loadSeriesLists() {
         tryToCall(
