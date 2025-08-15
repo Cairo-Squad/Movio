@@ -32,11 +32,10 @@ import java.text.DecimalFormat
 fun RatedItemCard(
     item: MyRatingsScreenState.RatedItemUiState,
     onItemClick: (Long, Boolean) -> Unit,
-    onMovieDelete: (Long, Int) -> Unit,
-    onSeriesDelete: (Long, Int) -> Unit,
+    onMovieDelete: (Long, Double) -> Unit,
+    onSeriesDelete: (Long, Double) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val formattedRating = DecimalFormat("#.#").format(item.userRating)
     SwipeToDeleteContainer(
         onDelete = {
             if (item.isMovie) {
@@ -93,7 +92,7 @@ fun RatedItemCard(
                         )
                     }
                     Text(
-                        text = formattedRating,
+                        text = item.userRating.toString(),
                         style = Theme.textStyle.label.smallRegular12,
                         color = Theme.color.surfaces.onSurface,
                         modifier = Modifier.padding(start = 8.dp)
