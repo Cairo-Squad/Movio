@@ -10,13 +10,17 @@ import com.cairosquad.repository.account.data_source.local.toCacheDto
 import com.cairosquad.repository.account.data_source.local.toEntity
 import com.cairosquad.repository.account.data_source.remote.AccountRemoteDataSource
 import com.cairosquad.repository.account.data_source.remote.toEntity
+import com.cairosquad.repository.movie.data_source.remote.MoviesRemoteDataSource
 import com.cairosquad.repository.movie.data_source.remote.toEntity
+import com.cairosquad.repository.series.data_source.remote.SeriesRemoteDataSource
 import com.cairosquad.repository.series.data_source.remote.toEntity
 import javax.inject.Inject
 
 class AccountRepositoryImpl @Inject constructor(
     private val accountRemoteDataSource: AccountRemoteDataSource,
-    private val accountLocalDataSource: AccountLocalDataSource
+    private val accountLocalDataSource: AccountLocalDataSource,
+    private val movieRemoteDataSource: MoviesRemoteDataSource,
+    private val seriesRemoteDataSource: SeriesRemoteDataSource
 ) : AccountRepository {
     override suspend fun getAccountDetails(): Account {
         return try {
@@ -51,14 +55,16 @@ class AccountRepositoryImpl @Inject constructor(
 
     override suspend fun getFavoriteMovies(page: Int): List<Movie> {
         accountLocalDataSource.getAccountId()?.also { accountId ->
-            return accountRemoteDataSource.getFavoriteMovies(accountId, page).map { it.toEntity() }
+            val genres = movieRemoteDataSource.getMoviesGenres().map { it.toEntity() }
+            return accountRemoteDataSource.getFavoriteMovies(accountId, page).map { it.toEntity(genres) }
         }
         return emptyList()
     }
 
     override suspend fun getFavoriteSeries(page: Int): List<Series> {
         accountLocalDataSource.getAccountId()?.also { accountId ->
-            return accountRemoteDataSource.getFavoriteSeries(accountId, page).map { it.toEntity() }
+            val genres = seriesRemoteDataSource.getSeriesGenres().map { it.toEntity() }
+            return accountRemoteDataSource.getFavoriteSeries(accountId, page).map { it.toEntity(genres) }
         }
         return emptyList()
     }
@@ -68,7 +74,8 @@ class AccountRepositoryImpl @Inject constructor(
         page: Int
     ): List<Movie> {
         accountLocalDataSource.getAccount().also { accountId ->
-            return accountRemoteDataSource.getMoviesOfList(listId, page).map { it.toEntity() }
+            val genres = movieRemoteDataSource.getMoviesGenres().map { it.toEntity() }
+            return accountRemoteDataSource.getMoviesOfList(listId, page).map { it.toEntity(genres) }
         }
     }
 
@@ -77,7 +84,8 @@ class AccountRepositoryImpl @Inject constructor(
         page: Int
     ): List<Series> {
         accountLocalDataSource.getAccount().also { accountId ->
-            return accountRemoteDataSource.getSeriesOfList(listId, page).map { it.toEntity() }
+            val genres = seriesRemoteDataSource.getSeriesGenres().map { it.toEntity() }
+            return accountRemoteDataSource.getSeriesOfList(listId, page).map { it.toEntity(genres) }
         }
     }
 
@@ -119,14 +127,16 @@ class AccountRepositoryImpl @Inject constructor(
 
     override suspend fun getHistoryMovies(page: Int): List<Movie> {
         accountLocalDataSource.getAccountId()?.also { accountId ->
-            return accountRemoteDataSource.getHistoryMovies(accountId, page).map { it.toEntity() }
+            val genres = movieRemoteDataSource.getMoviesGenres().map { it.toEntity() }
+            return accountRemoteDataSource.getHistoryMovies(accountId, page).map { it.toEntity(genres) }
         }
         return emptyList()
     }
 
     override suspend fun getHistorySeries(page: Int): List<Series> {
         accountLocalDataSource.getAccountId()?.also { accountId ->
-            return accountRemoteDataSource.getHistorySeries(accountId, page).map { it.toEntity() }
+            val genres = seriesRemoteDataSource.getSeriesGenres().map { it.toEntity() }
+            return accountRemoteDataSource.getHistorySeries(accountId, page).map { it.toEntity(genres) }
         }
         return emptyList()
     }
@@ -163,6 +173,18 @@ class AccountRepositoryImpl @Inject constructor(
 
     override suspend fun removeMovieFromList(listId: Long, movieId: Long) {
         accountRemoteDataSource.removeMovieFromList(listId, movieId)
+    }
+
+    override suspend fun removeMovieFromHistory(movieId: Long) {
+        accountLocalDataSource.getAccountId()?.also { accountId ->
+            accountRemoteDataSource.removeMovieFromHistory(accountId, movieId)
+        }
+    }
+
+    override suspend fun removeSeriesFromHistory(seriesId: Long) {
+        accountLocalDataSource.getAccountId()?.also { accountId ->
+            accountRemoteDataSource.removeMovieFromHistory(accountId, seriesId)
+        }
     }
 
     override suspend fun removeAccountDetails() {

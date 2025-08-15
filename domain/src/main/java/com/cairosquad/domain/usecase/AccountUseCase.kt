@@ -55,12 +55,20 @@ class AccountUseCase @Inject constructor(
         accountRepository.addMovieToHistory(movieId)
     }
 
-    suspend fun addSeriesToHistory(seriesId: Long) {
-        accountRepository.addSeriesToHistory(seriesId)
+    suspend fun removeMovieFromHistory(movieId: Long) {
+        accountRepository.removeMovieFromHistory(movieId)
     }
 
     suspend fun getHistoryMovies(page: Int): List<Movie> {
         return accountRepository.getHistoryMovies(page)
+    }
+
+    suspend fun addSeriesToHistory(seriesId: Long) {
+        accountRepository.addSeriesToHistory(seriesId)
+    }
+
+    suspend fun removeSeriesFromHistory(seriesId: Long) {
+        accountRepository.removeSeriesFromHistory(seriesId)
     }
 
     suspend fun getHistorySeries(page: Int): List<Series> {
