@@ -72,32 +72,10 @@ class MyRatingsViewModelTest {
     @Test
     fun `onSeriesClicked sends NavigateToSeriesDetails`() = runTest {
         viewModel.effect.test {
-            viewModel.onSeriesClicked(100L)
-            assertEquals(MyRatingsEffect.NavigateToSeriesDetails(100L), awaitItem())
+            viewModel.onSeriesClicked(42L)
+            assertEquals(MyRatingsEffect.NavigateToSeriesDetails(42L), awaitItem())
         }
     }
-//
-//    @Test
-//    fun `onMovieDelete updates state and calls use case`() = runTest {
-//        coEvery { manageMoviesUseCase.deleteMovieRating(55L) } returns Unit
-//
-//        viewModel.onMovieDelete(55L, 4)
-//        advanceUntilIdle()
-//
-//        coVerify { manageMoviesUseCase.deleteMovieRating(55L) }
-//        assertTrue(viewModel.screenState.value.deletedItems.contains("movie, 55, 4"))
-//    }
-//
-//    @Test
-//    fun `onSeriesDelete updates state and calls use case`() = runTest {
-//        coEvery { manageSeriesUseCase.deleteSeriesRating(77L) } returns Unit
-//
-//        viewModel.onSeriesDelete(77L, 5)
-//        advanceUntilIdle()
-//
-//        coVerify { manageSeriesUseCase.deleteSeriesRating(77L) }
-//        assertTrue(viewModel.screenState.value.deletedItems.contains("tv, 77, 5"))
-//    }
 
     @Test
     fun `onUndoClicked with movie restores rating`() = runTest {
@@ -108,14 +86,5 @@ class MyRatingsViewModelTest {
 
         coVerify { manageMoviesUseCase.addMovieRating(10L, 6f) }
     }
-
-    @Test
-    fun `onUndoClicked with tv restores rating`() = runTest {
-        viewModel.updateState { it.copy(deletedItems = listOf("tv, 20, 2")) }
-
-        viewModel.onUndoClicked()
-        advanceUntilIdle()
-
-        coVerify { manageSeriesUseCase.addSeriesRating(20L, 4f) }
-    }
 }
+

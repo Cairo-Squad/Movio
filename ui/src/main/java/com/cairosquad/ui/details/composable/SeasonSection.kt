@@ -51,7 +51,8 @@ fun SeasonSection(
                 currentSeason = season.number.toString(),
                 onClick = {
                     onSeasonClicked(seriesId, season.number)
-                }
+                },
+                bottomPadding = 10.dp,
             )
         }
     }
