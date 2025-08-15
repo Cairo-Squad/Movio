@@ -36,7 +36,7 @@ fun RatedItemCard(
     onSeriesDelete: (Long, Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val formattedRating = DecimalFormat("#.#").format(item.rating)
+    val formattedRating = DecimalFormat("#.#").format(item.userRating)
     SwipeToDeleteContainer(
         onDelete = {
             if (item.isMovie) {
@@ -79,14 +79,13 @@ fun RatedItemCard(
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-                //create a row with stars representing the rating
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                 ) {
                     repeat(5) { index ->
                         val starIcon =
-                            if (index < item.userRating) com.cairosquad.design_system.R.drawable.review_star else com.cairosquad.design_system.R.drawable.star
+                            if (index < item.userRating) com.cairosquad.design_system.R.drawable.review_star else com.cairosquad.design_system.R.drawable.star_gray
                         Icon(
                             painter = painterResource(id = starIcon),
                             contentDescription = null,
