@@ -132,7 +132,7 @@ private fun DeleteComponent(modifier: Modifier = Modifier) {
             modifier = Modifier.size(20.dp),
             imageVector = ImageVector.vectorResource(com.cairosquad.ui.R.drawable.trash),
             contentDescription = "Trash Icon",
-            tint = Theme.color.surfaces.onSurface
+            tint = Theme.color.brand.onPrimary
         )
     }
 }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
@@ -47,12 +48,10 @@ fun LoginBottomSheet(
 					.padding(horizontal = 16.dp)
 					.padding(bottom = 32.dp),
 			horizontalAlignment = Alignment.CenterHorizontally,
-			verticalArrangement = Arrangement.spacedBy(16.dp)
 		) {
 			Image(
-				modifier = Modifier
-						.size(width = 60.dp, height = 66.dp)
-						.padding(16.dp),
+				modifier = Modifier.width(60.dp)
+						.padding(bottom=16.dp),
 				imageVector = ImageVector.vectorResource(R.drawable.logo),
 				contentDescription = "Application Logo"
 			)
