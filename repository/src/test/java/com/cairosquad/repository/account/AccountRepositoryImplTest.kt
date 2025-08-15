@@ -3,7 +3,10 @@ package com.cairosquad.repository.account
 import com.cairosquad.repository.account.data_source.local.AccountLocalDataSource
 import com.cairosquad.repository.account.data_source.remote.AccountRemoteDataSource
 import com.cairosquad.repository.account.data_source.remote.dto.MediaListDto
+import com.cairosquad.repository.movie.data_source.remote.MoviesRemoteDataSource
+import com.cairosquad.repository.movie.data_source.remote.dto.GenreDto
 import com.cairosquad.repository.movie.data_source.remote.dto.MovieRemoteDto
+import com.cairosquad.repository.series.data_source.remote.SeriesRemoteDataSource
 import com.cairosquad.repository.series.data_source.remote.dto.SeriesRemoteDto
 import com.google.common.truth.Truth.assertThat
 import io.mockk.Runs
@@ -26,6 +29,8 @@ class AccountRepositoryImplTest {
 
     private val remoteDataSource: AccountRemoteDataSource = mockk()
     private val localDataSource: AccountLocalDataSource = mockk()
+    private val remoteMovieDataSource: MoviesRemoteDataSource = mockk()
+    private val remoteSeriesDataSource: SeriesRemoteDataSource = mockk()
     private lateinit var repository: AccountRepositoryImpl
 
     private val testDispatcher = StandardTestDispatcher()
@@ -33,7 +38,12 @@ class AccountRepositoryImplTest {
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        repository = AccountRepositoryImpl(remoteDataSource, localDataSource)
+        repository = AccountRepositoryImpl(
+            accountRemoteDataSource = remoteDataSource,
+            accountLocalDataSource = localDataSource,
+            movieRemoteDataSource = remoteMovieDataSource,
+            seriesRemoteDataSource = remoteSeriesDataSource
+        )
     }
 
     @AfterTest
@@ -64,7 +74,14 @@ class AccountRepositoryImplTest {
     @Test
     fun `getMoviesLists returns list if account id is not null`() = runTest {
         coEvery { localDataSource.getAccountId() } returns 123
-        coEvery { remoteDataSource.getMovieLists(123, 1) } returns listOf(MediaListDto(id = 123, "", 1, ""))
+        coEvery { remoteDataSource.getMovieLists(123, 1) } returns listOf(
+            MediaListDto(
+                id = 123,
+                "",
+                1,
+                ""
+            )
+        )
 
         val result = repository.getMovieLists(1)
 
@@ -74,7 +91,14 @@ class AccountRepositoryImplTest {
     @Test
     fun `getSeriesLists returns list if account id is not null`() = runTest {
         coEvery { localDataSource.getAccountId() } returns 123
-        coEvery { remoteDataSource.getSeriesLists(123, 1) } returns listOf(MediaListDto(id = 123, "", 1, ""))
+        coEvery { remoteDataSource.getSeriesLists(123, 1) } returns listOf(
+            MediaListDto(
+                id = 123,
+                "",
+                1,
+                ""
+            )
+        )
 
         val result = repository.getSeriesLists(1)
 
@@ -104,6 +128,7 @@ class AccountRepositoryImplTest {
     @Test
     fun `getFavoriteMovies returns list of Movies if account id is not null`() = runTest {
         coEvery { localDataSource.getAccountId() } returns 123
+        coEvery { remoteMovieDataSource.getMoviesGenres()} returns listOf(GenreDto(id = 123, "asd"))
         coEvery { remoteDataSource.getFavoriteMovies(123, 1) } returns listOf(MovieRemoteDto())
 
         val result = repository.getFavoriteMovies(1)
@@ -114,6 +139,7 @@ class AccountRepositoryImplTest {
     @Test
     fun `getFavoriteSeries returns list of Movies if account id is not null`() = runTest {
         coEvery { localDataSource.getAccountId() } returns 123
+        coEvery { remoteSeriesDataSource.getSeriesGenres()} returns listOf(GenreDto(id = 123, "asd"))
         coEvery { remoteDataSource.getFavoriteSeries(123, 1) } returns listOf(SeriesRemoteDto())
 
         val result = repository.getFavoriteSeries(1)
@@ -233,6 +259,7 @@ class AccountRepositoryImplTest {
     @Test
     fun `getHistoryMovies returns list if account id is not null`() = runTest {
         coEvery { localDataSource.getAccountId() } returns 123
+        coEvery { remoteMovieDataSource.getMoviesGenres()} returns listOf(GenreDto(id = 123, "asd"))
         coEvery { remoteDataSource.getHistoryMovies(123, 1) } returns listOf(MovieRemoteDto())
 
         val result = repository.getHistoryMovies(1)
@@ -243,6 +270,7 @@ class AccountRepositoryImplTest {
     @Test
     fun `getHistorySeries returns list if account id is not null`() = runTest {
         coEvery { localDataSource.getAccountId() } returns 123
+        coEvery { remoteSeriesDataSource.getSeriesGenres()} returns listOf(GenreDto(id = 123, "asd"))
         coEvery { remoteDataSource.getHistorySeries(123, 1) } returns listOf(SeriesRemoteDto())
 
         val result = repository.getHistorySeries(1)
