@@ -9,6 +9,7 @@ data class MovioColors(
     val surfaces: Surfaces,
     val system: System,
     val gradiant: Gradiant,
+    val warning: Warning
 )
 
 data class Surfaces(
@@ -58,6 +59,9 @@ data class Gradiant(
     val primaryGradient: Brush,
     val logo: Brush,
     val fadingGradient: Brush,
+)
+data class Warning(
+    val onWarning: Color
 )
 
 internal val LocalMovioColor = staticCompositionLocalOf { lightThemeColors }
