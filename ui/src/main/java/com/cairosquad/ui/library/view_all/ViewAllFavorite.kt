@@ -32,6 +32,7 @@ import com.cairosquad.ui.movio_component.SwipeToDeleteContainer
 import com.cairosquad.ui.movio_component.TrendingMovieCard
 import com.cairosquad.ui.navigation.LocalNavController
 import com.cairosquad.ui.navigation.MovieRoute
+import com.cairosquad.ui.navigation.SeriesRoute
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.viewmodel.library.view_all_favorite.ViewAllFavoriteEffect
 import com.cairosquad.viewmodel.library.view_all_favorite.ViewAllFavoriteScreenState
@@ -56,7 +57,7 @@ fun ViewAllFavorite(
             }
 
             is ViewAllFavoriteEffect.OnSeriesClicked -> {
-                navController.navigate(MovieRoute(effect.seriesId))
+                navController.navigate(SeriesRoute(effect.seriesId))
 
             }
         }
@@ -129,7 +130,7 @@ fun ViewAllFavoriteContent(
                         ) {
                             TrendingMovieCard(
                                 modifier = Modifier
-                                    .clickable(onClick = { listener.onSeriesDelete(series.id) }),
+                                    .clickable(onClick = { listener.onSeriesClicked(series.id) }),
                                 imgUrl = series.posterPath,
                                 movieTitle = series.title,
                                 movieCategory = series.genres[0],
