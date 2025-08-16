@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.viewinterop.AndroidView
 import com.cairosquad.design_system.R
@@ -74,7 +75,10 @@ fun WebView(
                     if (Theme.isDark) R.drawable.snack_bar_icon_fail_dark
                     else R.drawable.snack_bar_icon_fail_light
             ),
-            action = { snackBarMessage = null }
+            action = {
+                snackBarMessage =
+                    stringResource(com.cairosquad.design_system.R.string.error_parsing_data)
+            }
         )
     }
 }
