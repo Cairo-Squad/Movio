@@ -21,7 +21,7 @@ data class MyRatingsScreenState(
         val posterPath: String?,
         val releaseDate: String?,
         val rating: Double,
-        val userRating: Int = 0,
+        val userRating: Double = 0.0,
         val isMovie: Boolean
     )
 }

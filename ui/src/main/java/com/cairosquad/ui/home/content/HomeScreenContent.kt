@@ -1,6 +1,5 @@
 package com.cairosquad.ui.home.content
 
-import HomeScreenContentCategoriesTab
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

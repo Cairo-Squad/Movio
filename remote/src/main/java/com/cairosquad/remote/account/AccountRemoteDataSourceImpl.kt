@@ -206,6 +206,23 @@ class AccountRemoteDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun removeMovieFromHistory(accountId: Long, movieId: Long) {
+        apiService.addItemToHistory(
+            accountId, HistoryRequest(
+                mediaType = "movie", mediaId = movieId, false
+            )
+        )
+    }
+
+    override suspend fun removeSeriesFromHistory(accountId: Long, seriesId: Long) {
+        safeCallApi {
+            apiService.addItemToHistory(
+                accountId,
+                HistoryRequest("tv", seriesId, false)
+            )
+        }
+    }
+
     private suspend fun getListsByType(
         accountId: Long,
         page: Int,

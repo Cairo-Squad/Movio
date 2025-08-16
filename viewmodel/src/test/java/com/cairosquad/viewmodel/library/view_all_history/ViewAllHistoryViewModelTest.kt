@@ -5,8 +5,11 @@ import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.viewmodel.details.series.SeriesDetailsViewModelTest.MainDispatcherRule
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.google.common.truth.Truth.assertThat
+import io.mockk.Runs
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.unmockkStatic
@@ -115,5 +118,75 @@ class ViewAllHistoryViewModelTest {
         assertThat(state.screenStatus).isEqualTo(ViewAllHistoryScreenState.SectionStatus.ERROR)
         assertThat(state.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
         assertThat(state.isRefreshing).isFalse()
+    }
+
+    @Test
+    fun `onMovieDelete SHOULD remove movie from state and call removeMovieFromHistory`() = runTest {
+        val movieId = 1L
+        val movieUi = ViewAllHistoryScreenState.MovieUiState()
+        viewModel = ViewAllHistoryViewModel(accountUseCase)
+        viewModel.updateState { it.copy(movies = listOf(movieUi)) }
+
+        coEvery { accountUseCase.removeMovieFromHistory(movieId) } just Runs
+
+        viewModel.onMovieDelete(movieId)
+        advanceUntilIdle()
+
+        val state = viewModel.screenState.value
+        assertThat(state.movies).doesNotContain(movieUi)
+        assertThat(state.deletedMoviesIds).contains(movieId)
+        assertThat(state.deletedItems).contains("$movieId, movie")
+        coVerify { accountUseCase.removeMovieFromHistory(movieId) }
+    }
+
+    @Test
+    fun `onSeriesDelete SHOULD remove series from state and call removeSeriesFromHistory`() = runTest {
+        val seriesId = 2L
+        val seriesUi = ViewAllHistoryScreenState.SeriesUiState()
+        viewModel = ViewAllHistoryViewModel(accountUseCase)
+        viewModel.updateState { it.copy(series = listOf(seriesUi)) }
+
+        coEvery { accountUseCase.removeSeriesFromHistory(seriesId) } just Runs
+
+        viewModel.onSeriesDelete(seriesId)
+        advanceUntilIdle()
+
+        val state = viewModel.screenState.value
+        assertThat(state.series).doesNotContain(seriesUi)
+        assertThat(state.deletedSeriesIds).contains(seriesId)
+        assertThat(state.deletedItems).contains("$seriesId, tv")
+        coVerify { accountUseCase.removeSeriesFromHistory(seriesId) }
+    }
+
+    @Test
+    fun `onUndoClicked with movie SHOULD call addMovieToHistory`() = runTest {
+        val movieId = 3L
+        viewModel = ViewAllHistoryViewModel(accountUseCase)
+        viewModel.updateState {
+            it.copy(deletedItems = listOf("$movieId, movie"), deletedMoviesIds = listOf(movieId))
+        }
+        coEvery { accountUseCase.addMovieToHistory(movieId) } just Runs
+        coEvery { accountUseCase.getHistoryMovies(any()) } returns emptyList()
+
+        viewModel.onUndoClicked()
+        advanceUntilIdle()
+
+        coVerify { accountUseCase.addMovieToHistory(movieId) }
+    }
+
+    @Test
+    fun `onUndoClicked with tv SHOULD call addSeriesToHistory`() = runTest {
+        val seriesId = 4L
+        viewModel = ViewAllHistoryViewModel(accountUseCase)
+        viewModel.updateState {
+            it.copy(deletedItems = listOf("$seriesId, tv"), deletedSeriesIds = listOf(seriesId))
+        }
+        coEvery { accountUseCase.addSeriesToHistory(seriesId) } just Runs
+        coEvery { accountUseCase.getHistorySeries(any()) } returns emptyList()
+
+        viewModel.onUndoClicked()
+        advanceUntilIdle()
+
+        coVerify { accountUseCase.addSeriesToHistory(seriesId) }
     }
 }

@@ -46,4 +46,8 @@ interface AccountRemoteDataSource {
     suspend fun createList(listName: String)
 
     suspend fun removeMovieFromList(listId: Long, movieId: Long)
+
+    suspend fun removeMovieFromHistory(accountId: Long, movieId: Long)
+
+    suspend fun removeSeriesFromHistory(accountId: Long, seriesId: Long)
 }

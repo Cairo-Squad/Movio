@@ -143,7 +143,7 @@ fun SeasonCard(
                 BasicText(
                     text = String.format(Locale.getDefault(), "%.1f", seasonRate),
                     style = Theme.textStyle.label.smallRegular12.copy(
-                        color = Theme.color.system.onWarning,
+                        color = Theme.color.warning.onWarning,
                     )
                 )
             }
