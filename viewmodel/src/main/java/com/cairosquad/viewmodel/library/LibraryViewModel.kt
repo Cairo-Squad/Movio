@@ -1,5 +1,4 @@
 package com.cairosquad.viewmodel.library
-
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.domain.usecase.LoginUseCase
