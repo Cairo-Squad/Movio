@@ -1,3 +1,5 @@
+package com.cairosquad.ui.home.content
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.cairosquad.ui.R
 import com.cairosquad.ui.movio_component.CategoriesChips
@@ -30,6 +33,23 @@ fun HomeScreenContentCategoriesTab(
 ) {
     val media = screenState.categoriesMedia.collectAsLazyPagingItems()
     val genresNames = remember(screenState) { screenState.genres.drop(1).map { it.name } }
+
+    when (media.loadState.refresh) {
+        is LoadState.Loading -> {
+            return
+        }
+
+        is LoadState.Error -> {
+            HomeFailContent(
+                errorStatus = screenState.errorStatus,
+                listener = listener,
+                modifier = Modifier.fillMaxSize()
+            )
+            return
+        }
+
+        else -> { }
+    }
 
     LazyVerticalGrid(
         modifier = modifier
@@ -63,14 +83,14 @@ fun HomeScreenContentCategoriesTab(
         }
 
         items(media.itemCount) { index ->
-            media[index]?.let { media ->
+            media[index]?.let { mediaItem ->
                 MovieCard(
                     modifier = Modifier.clickable {
-                        listener.onClickMedia(media.id, media.isMovie)
+                        listener.onClickMedia(mediaItem.id, mediaItem.isMovie)
                     },
-                    title = media.title,
-                    vote = media.rating,
-                    imgUrl = media.posterPath,
+                    title = mediaItem.title,
+                    vote = mediaItem.rating,
+                    imgUrl = mediaItem.posterPath,
                     width = null,
                     aspectRatio = 0.743f
                 )
