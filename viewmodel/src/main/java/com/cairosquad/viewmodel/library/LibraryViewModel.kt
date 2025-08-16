@@ -1,6 +1,5 @@
 package com.cairosquad.viewmodel.library
 
-import android.util.Log
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.domain.usecase.LoginUseCase
@@ -94,7 +93,7 @@ class LibraryViewModel @Inject constructor(
         sendEffect(LibraryEffect.NavigateToSeriesDetails(seriesId))
     }
 
-    // ----------------- Lists Section -----------------
+
 
     private fun loadMoviesLists() {
         updateState {it.copy(listsSectionState = LibraryScreenState.SectionStatus.LOADING) }
@@ -136,7 +135,6 @@ class LibraryViewModel @Inject constructor(
         }
     }
 
-    // ----------------- Favorites Section -----------------
 
     private fun loadFavoriteMovies() {
         updateState {it.copy(favoritesSectionState = LibraryScreenState.SectionStatus.LOADING) }
@@ -178,7 +176,6 @@ class LibraryViewModel @Inject constructor(
         }
     }
 
-    // ----------------- History Section -----------------
 
     private fun loadHistoryMovies() {
         updateState { it.copy(historySectionState = LibraryScreenState.SectionStatus.LOADING) }
@@ -220,7 +217,6 @@ class LibraryViewModel @Inject constructor(
         }
     }
 
-    // ----------------- Helpers -----------------
 
     private fun LibraryScreenState.recalculateScreenStatus(): LibraryScreenState {
         val sectionStates = listOf(listsSectionState, favoritesSectionState, historySectionState)
@@ -237,7 +233,6 @@ class LibraryViewModel @Inject constructor(
         throwable: Throwable,
         updateSection: LibraryScreenState.() -> LibraryScreenState
     ) {
-        Log.e("LibraryViewModel", throwable.toString())
         updateState {
             val updatedState = it.updateSection()
             updatedState.copy(
@@ -253,11 +248,9 @@ class LibraryViewModel @Inject constructor(
         return when (e) {
 
             is MovioException ->{
-                Log.e("movio","movio exception")
                 exceptionToErrorStatus(e)
             }
             else -> {
-                Log.e("movio" ,"unknown exception")
                 ErrorStatus.UNKNOWN_ERROR
             }
         }
