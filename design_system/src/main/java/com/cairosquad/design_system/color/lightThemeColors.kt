@@ -80,4 +80,8 @@ val lightThemeColors = MovioColors(
             )
         )
     ),
+    warning = Warning(
+        onWarning = Color(0xFFCDBE87)
+
+    )
 )
