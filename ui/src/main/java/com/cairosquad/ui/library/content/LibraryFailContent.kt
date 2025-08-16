@@ -30,8 +30,8 @@ fun LibraryFailContent(
             .statusBarsPadding()
             .padding(top = 48.dp)
             .padding(top = 36.dp)
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
+            .padding(horizontal = 16.dp)
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

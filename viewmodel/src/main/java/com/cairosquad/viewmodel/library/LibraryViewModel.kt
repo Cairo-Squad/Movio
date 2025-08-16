@@ -1,5 +1,6 @@
 package com.cairosquad.viewmodel.library
 
+import android.util.Log
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.domain.usecase.LoginUseCase
@@ -41,9 +42,13 @@ class LibraryViewModel @Inject constructor(
     private fun loadScreenData() {
         tryToCall(
             block = ::loadScreenState,
-            onSuccess = { updateState { it.copy(screenStatus = LibraryScreenState.SectionStatus.SUCCESS) } },
+            onSuccess = {
+                updateState {
+                    it.copy(screenStatus = LibraryScreenState.SectionStatus.SUCCESS)
+                }
+            },
             onError = { throwable ->
-                handleError(throwable) { copy(screenStatus = LibraryScreenState.SectionStatus.SUCCESS) }
+                handleError(throwable) { copy(screenStatus = LibraryScreenState.SectionStatus.ERROR) }
             }
         )
     }
@@ -89,7 +94,10 @@ class LibraryViewModel @Inject constructor(
         sendEffect(LibraryEffect.NavigateToSeriesDetails(seriesId))
     }
 
+    // ----------------- Lists Section -----------------
+
     private fun loadMoviesLists() {
+        updateState {it.copy(listsSectionState = LibraryScreenState.SectionStatus.LOADING) }
         tryToCall(
             block = { accountUseCase.getMoviesLists(1) },
             onSuccess = ::onLoadingMoviesListsSuccess,
@@ -104,11 +112,12 @@ class LibraryViewModel @Inject constructor(
             it.copy(
                 movieLists = mediaLists.map { mediaList -> mediaList.toUiState() },
                 listsSectionState = LibraryScreenState.SectionStatus.SUCCESS
-            )
+            ).recalculateScreenStatus()
         }
     }
 
     private fun loadSeriesLists() {
+        updateState {it.copy(listsSectionState = LibraryScreenState.SectionStatus.LOADING) }
         tryToCall(
             block = { accountUseCase.getSeriesLists(1) },
             onSuccess = ::onLoadingSeriesListsSuccess,
@@ -123,11 +132,14 @@ class LibraryViewModel @Inject constructor(
             it.copy(
                 seriesLists = mediaLists.map { mediaList -> mediaList.toUiState() },
                 listsSectionState = LibraryScreenState.SectionStatus.SUCCESS
-            )
+            ).recalculateScreenStatus()
         }
     }
 
+    // ----------------- Favorites Section -----------------
+
     private fun loadFavoriteMovies() {
+        updateState {it.copy(favoritesSectionState = LibraryScreenState.SectionStatus.LOADING) }
         tryToCall(
             block = { accountUseCase.getFavoriteMovies(1) },
             onSuccess = ::onLoadingFavoriteMoviesSuccess,
@@ -142,11 +154,12 @@ class LibraryViewModel @Inject constructor(
             it.copy(
                 favoriteMovies = movies.map { it.toUiState() },
                 favoritesSectionState = LibraryScreenState.SectionStatus.SUCCESS
-            )
+            ).recalculateScreenStatus()
         }
     }
 
     private fun loadFavoriteSeries() {
+        updateState { it.copy(favoritesSectionState = LibraryScreenState.SectionStatus.LOADING) }
         tryToCall(
             block = { accountUseCase.getFavoriteSeries(1) },
             onSuccess = ::onLoadingFavoriteSeriesSuccess,
@@ -161,11 +174,14 @@ class LibraryViewModel @Inject constructor(
             it.copy(
                 favoriteSeries = series.map { it.toUiState() },
                 favoritesSectionState = LibraryScreenState.SectionStatus.SUCCESS
-            )
+            ).recalculateScreenStatus()
         }
     }
 
+    // ----------------- History Section -----------------
+
     private fun loadHistoryMovies() {
+        updateState { it.copy(historySectionState = LibraryScreenState.SectionStatus.LOADING) }
         tryToCall(
             block = { accountUseCase.getHistoryMovies(1) },
             onSuccess = ::onLoadingHistoryMoviesSuccess,
@@ -180,11 +196,12 @@ class LibraryViewModel @Inject constructor(
             it.copy(
                 historyMovies = movies.map { movie -> movie.toUiState() },
                 historySectionState = LibraryScreenState.SectionStatus.SUCCESS
-            )
+            ).recalculateScreenStatus()
         }
     }
 
     private fun loadHistorySeries() {
+        updateState {it.copy(historySectionState = LibraryScreenState.SectionStatus.LOADING) }
         tryToCall(
             block = { accountUseCase.getHistorySeries(1) },
             onSuccess = ::onLoadingHistorySeriesSuccess,
@@ -199,26 +216,50 @@ class LibraryViewModel @Inject constructor(
             it.copy(
                 historySeries = series.map { series -> series.toUiState() },
                 historySectionState = LibraryScreenState.SectionStatus.SUCCESS
-            )
+            ).recalculateScreenStatus()
         }
+    }
+
+    // ----------------- Helpers -----------------
+
+    private fun LibraryScreenState.recalculateScreenStatus(): LibraryScreenState {
+        val sectionStates = listOf(listsSectionState, favoritesSectionState, historySectionState)
+        val newStatus = when {
+            sectionStates.all { it == LibraryScreenState.SectionStatus.ERROR } -> LibraryScreenState.SectionStatus.ERROR
+            sectionStates.any { it == LibraryScreenState.SectionStatus.LOADING } -> LibraryScreenState.SectionStatus.LOADING
+            sectionStates.all { it == LibraryScreenState.SectionStatus.SUCCESS } -> LibraryScreenState.SectionStatus.SUCCESS
+            else -> LibraryScreenState.SectionStatus.ERROR
+        }
+        return copy(screenStatus = newStatus)
     }
 
     private fun handleError(
         throwable: Throwable,
         updateSection: LibraryScreenState.() -> LibraryScreenState
     ) {
+        Log.e("LibraryViewModel", throwable.toString())
         updateState {
-            it.updateSection().copy(
+            val updatedState = it.updateSection()
+            updatedState.copy(
                 errorStatus = handleLibraryException(throwable),
                 isRefreshing = false
-            )
+            ).recalculateScreenStatus()
+
         }
+
     }
 
     private fun handleLibraryException(e: Throwable): ErrorStatus {
         return when (e) {
-            is MovioException -> exceptionToErrorStatus(e)
-            else -> ErrorStatus.UNKNOWN_ERROR
+
+            is MovioException ->{
+                Log.e("movio","movio exception")
+                exceptionToErrorStatus(e)
+            }
+            else -> {
+                Log.e("movio" ,"unknown exception")
+                ErrorStatus.UNKNOWN_ERROR
+            }
         }
     }
 }
