@@ -165,8 +165,8 @@ fun MyRatingsScreenContent(
 fun RatedItemsList(
     ratedItems: LazyPagingItems<MyRatingsScreenState.RatedItemUiState>,
     onItemClick: (Long, Boolean) -> Unit,
-    onMovieDelete: (Long, Int) -> Unit,
-    onSeriesDelete: (Long, Int) -> Unit,
+    onMovieDelete: (Long, Double) -> Unit,
+    onSeriesDelete: (Long, Double) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(

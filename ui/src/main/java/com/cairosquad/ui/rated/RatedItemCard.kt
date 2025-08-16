@@ -32,11 +32,10 @@ import java.text.DecimalFormat
 fun RatedItemCard(
     item: MyRatingsScreenState.RatedItemUiState,
     onItemClick: (Long, Boolean) -> Unit,
-    onMovieDelete: (Long, Int) -> Unit,
-    onSeriesDelete: (Long, Int) -> Unit,
+    onMovieDelete: (Long, Double) -> Unit,
+    onSeriesDelete: (Long, Double) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val formattedRating = DecimalFormat("#.#").format(item.rating)
     SwipeToDeleteContainer(
         onDelete = {
             if (item.isMovie) {
@@ -85,7 +84,7 @@ fun RatedItemCard(
                 ) {
                     repeat(5) { index ->
                         val starIcon =
-                            if (index < item.userRating) com.cairosquad.design_system.R.drawable.review_star else com.cairosquad.design_system.R.drawable.star
+                            if (index < item.userRating) com.cairosquad.design_system.R.drawable.review_star else com.cairosquad.design_system.R.drawable.star_gray
                         Icon(
                             painter = painterResource(id = starIcon),
                             contentDescription = null,
@@ -93,7 +92,7 @@ fun RatedItemCard(
                         )
                     }
                     Text(
-                        text = formattedRating,
+                        text = item.userRating.toString(),
                         style = Theme.textStyle.label.smallRegular12,
                         color = Theme.color.warning.onWarning,
                         modifier = Modifier.padding(start = 8.dp)
