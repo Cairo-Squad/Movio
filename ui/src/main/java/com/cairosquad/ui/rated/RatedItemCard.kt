@@ -79,7 +79,6 @@ fun RatedItemCard(
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-                //create a row with stars representing the rating
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -96,7 +95,7 @@ fun RatedItemCard(
                     Text(
                         text = formattedRating,
                         style = Theme.textStyle.label.smallRegular12,
-                        color = Theme.color.surfaces.onSurface,
+                        color = Theme.color.warning.onWarning,
                         modifier = Modifier.padding(start = 8.dp)
                     )
                 }

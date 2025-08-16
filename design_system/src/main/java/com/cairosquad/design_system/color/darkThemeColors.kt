@@ -77,5 +77,9 @@ val darkThemeColors = MovioColors(
                 Color(0xFF080D24)
             )
         )
+    ),
+    warning = Warning(
+        onWarning = Color(0xFFFFFEF9)
+
     )
 )
