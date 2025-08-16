@@ -33,7 +33,7 @@ fun EpisodeRating(episodeName: String, episodeRating: String) {
         )
         BasicText(
             text = episodeRating,
-            style = Theme.textStyle.label.smallRegular12.copy(color = Theme.color.surfaces.onSurface)
+            style = Theme.textStyle.label.smallRegular12.copy(color = Theme.color.warning.onWarning)
         )
     }
 }

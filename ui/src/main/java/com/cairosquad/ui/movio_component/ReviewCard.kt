@@ -116,7 +116,7 @@ fun ReviewCard(
 				Text(
 					modifier = Modifier.padding(start = 4.dp),
 					text = rating,
-					color = color.system.onWarning,
+					color = color.warning.onWarning,
 					style = textStyle.label.smallRegular12
 				)
 			}

@@ -102,7 +102,7 @@ class MyRatingsViewModel @Inject constructor(
         sendEffect(MyRatingsEffect.NavigateToSeriesDetails(seriesId))
     }
 
-    override fun onMovieDelete(movieId: Long, rating: Int) {
+    override fun onMovieDelete(movieId: Long, rating:Double) {
         tryToCall(
             onStart = { onMovieDeleteStart(movieId, rating) },
             block = { manageMoviesUseCase.deleteMovieRating(movieId) },
@@ -111,7 +111,7 @@ class MyRatingsViewModel @Inject constructor(
         )
     }
 
-    private fun onMovieDeleteStart(movieId: Long, rating: Int) {
+    private fun onMovieDeleteStart(movieId: Long, rating: Double) {
         updateState { state ->
             state.copy(
                 ratedItems = state.ratedItems.removeItem(movieId, isMovie = true),
@@ -129,7 +129,7 @@ class MyRatingsViewModel @Inject constructor(
         showSnackBar(R.string.movie_rate_remove_fail, false)
     }
 
-    override fun onSeriesDelete(seriesId: Long, rating: Int) {
+    override fun onSeriesDelete(seriesId: Long, rating:Double) {
         tryToCall(
             onStart = { onSeriesDeleteStart(seriesId, rating) },
             block = { manageSeriesUseCase.deleteSeriesRating(seriesId = seriesId) },
@@ -139,7 +139,7 @@ class MyRatingsViewModel @Inject constructor(
         )
     }
 
-    private fun onSeriesDeleteStart(seriesId: Long, rating: Int) {
+    private fun onSeriesDeleteStart(seriesId: Long, rating: Double) {
         updateState { state ->
             state.copy(
                 ratedItems = state.ratedItems.removeItem(seriesId, isMovie = false),

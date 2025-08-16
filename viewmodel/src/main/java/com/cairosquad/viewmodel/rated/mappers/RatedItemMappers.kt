@@ -17,7 +17,7 @@ fun Movie.toRatedItemUiState(userRating: Double): MyRatingsScreenState.RatedItem
     posterPath = posterPath,
     releaseDate = releaseDate.toString(),
     rating = rating.toDouble(),
-    userRating = (userRating /2).toInt(),
+    userRating = (userRating /2),
     isMovie = true
 )
 
@@ -30,7 +30,7 @@ fun Series.toRatedItemUiState(userRating: Double): MyRatingsScreenState.RatedIte
     posterPath = posterPath,
     releaseDate = releaseDate.toString(),
     rating = rating.toDouble(),
-    userRating = (userRating /2).toInt(),
+    userRating = (userRating /2),
     isMovie = false
 )
 
