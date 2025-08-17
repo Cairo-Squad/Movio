@@ -121,7 +121,7 @@ fun MovieCard(
 
                 Text(
                     text = String.format(Locale.getDefault(), "%.1f", vote),
-                    color = Theme.color.system.onWarning,
+                    color = Theme.color.warning.onWarning,
                     style = Theme.textStyle.label.smallRegular12
                 )
             }
