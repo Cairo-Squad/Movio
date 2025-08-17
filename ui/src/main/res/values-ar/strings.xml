@@ -26,7 +26,7 @@
     <string name="movie">فيلم</string>
     <string name="series">مسلسل</string>
     <string name="create_list_description">قم بصناعة قائمة جديدة لكي تتابع %1$s التي تريد الوصول إليها بسهولة</string>
-    <string name="create_list_title">أضف عنوان للقائمة</string>
+    <string name="create_list_title">أضف قائمة جديدة</string>
     <string name="create_new_list">أضف قائمة جديدة</string>
     <string name="add_to_list_icon">أيكونه أضف إلى القائمة</string>
     <string name="submit">إرسال</string>
