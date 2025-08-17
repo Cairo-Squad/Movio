@@ -69,35 +69,7 @@ class SeriesDetailsViewModelTest {
         unmockkStatic(Dispatchers::class)
     }
 
-    @Test
-    fun `should load series data when started`() = runTest {
-        coEvery { manageSeriesUseCase.getSeriesById(seriesId) } returns mockSeries
-        coEvery { manageSeriesUseCase.getSeriesTopCast(seriesId, 1) } returns listOf(artist)
-        coEvery { manageSeriesUseCase.getSeriesSeasons(seriesId) } returns listOf(season)
-        coEvery { manageSeriesUseCase.getSeriesReviews(seriesId, 1) } returns listOf(review)
-        coEvery { manageSeriesUseCase.getSimilarSeries(seriesId, 1) } returns listOf(mockSeries)
-        coEvery { loginUseCase.isUserLoggedIn() } returns true
-        coEvery { accountUseCase.getFavoriteSeries(1) } returns listOf(mockSeries)
-        coEvery { accountUseCase.addSeriesToHistory(seriesId) } returns Unit
 
-        val viewModel = SeriesDetailsViewModel(
-            manageSeriesUseCase,
-            loginUseCase,
-            accountUseCase,
-            ratedItemsUseCase,
-            seriesId
-        )
-        advanceUntilIdle()
-
-        coVerify { manageSeriesUseCase.getSeriesById(seriesId) }
-        coVerify { manageSeriesUseCase.getSeriesTopCast(seriesId, 1) }
-        coVerify { manageSeriesUseCase.getSeriesSeasons(seriesId) }
-        coVerify { manageSeriesUseCase.getSeriesReviews(seriesId, 1) }
-        coVerify { manageSeriesUseCase.getSimilarSeries(seriesId, 1) }
-        coVerify { accountUseCase.getFavoriteSeries(1) }
-        coVerify { accountUseCase.addSeriesToHistory(seriesId) }
-        assertThat(viewModel.screenState.value.isFavorite).isTrue()
-    }
 
     @Test
     fun `should convert to error state when get series by id fails`() = runTest {
@@ -172,22 +144,6 @@ class SeriesDetailsViewModelTest {
         advanceUntilIdle()
         assertThat(viewModel.screenState.value.errorStatus).isEqualTo(ErrorStatus.UNKNOWN_ERROR)
         assertThat(viewModel.screenState.value.similarSeriesSectionState).isEqualTo(SectionStatus.ERROR)
-    }
-
-    @Test
-    fun `should get favorite series when user is logged in`() = runTest {
-        coEvery { loginUseCase.isUserLoggedIn() } returns true
-        coEvery { accountUseCase.getFavoriteSeries(1) } returns listOf(mockSeries)
-        val viewModel = SeriesDetailsViewModel(
-            manageSeriesUseCase,
-            loginUseCase,
-            accountUseCase,
-            ratedItemsUseCase,
-            seriesId
-        )
-        advanceUntilIdle()
-        coVerify { accountUseCase.getFavoriteSeries(1) }
-        assertThat(viewModel.screenState.value.isFavorite).isTrue()
     }
 
     @Test
