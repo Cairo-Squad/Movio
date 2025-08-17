@@ -222,7 +222,7 @@ class LibraryViewModel @Inject constructor(
         val newStatus = when {
             sectionStates.all { it == LibraryScreenState.SectionStatus.ERROR } -> LibraryScreenState.SectionStatus.ERROR
             sectionStates.any { it == LibraryScreenState.SectionStatus.LOADING } -> LibraryScreenState.SectionStatus.LOADING
-            sectionStates.all { it == LibraryScreenState.SectionStatus.SUCCESS } -> LibraryScreenState.SectionStatus.SUCCESS
+            sectionStates.any{ it == LibraryScreenState.SectionStatus.SUCCESS } -> LibraryScreenState.SectionStatus.SUCCESS
             else -> LibraryScreenState.SectionStatus.ERROR
         }
         return copy(screenStatus = newStatus)
