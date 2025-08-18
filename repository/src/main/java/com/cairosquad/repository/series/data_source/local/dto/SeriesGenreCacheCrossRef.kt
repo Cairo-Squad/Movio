@@ -5,12 +5,12 @@ import androidx.room.Entity
 
 @Entity(
     tableName = "SeriesGenreCacheCrossRef",
-    primaryKeys = ["series_id", "genre_id"]
+    primaryKeys = ["series_id_language", "genre_id_language"]
 )
 data class SeriesGenreCacheCrossRef(
-    @ColumnInfo(name = "series_id")
+    @ColumnInfo(name = "series_id_language")
     val seriesId: Long,
-    @ColumnInfo(name = "genre_id")
+    @ColumnInfo(name = "genre_id_language")
     val genreId: Long
 ) {
     companion object {

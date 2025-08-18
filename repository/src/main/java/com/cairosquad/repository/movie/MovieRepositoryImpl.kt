@@ -259,7 +259,8 @@ class MovieRepositoryImpl @Inject constructor(
                         getCacheCodeOfMovieReviews(
                             page, movieId,
                             language = languageRepository.getLanguage()
-                        )
+                        ),
+                        languageRepository.getLanguage()
                     )
                 )
             }
@@ -267,7 +268,7 @@ class MovieRepositoryImpl @Inject constructor(
 
     override suspend fun getMoviesGenres(): List<Genre> {
         return moviesLocalDataSource
-            .getMovieGenres()
+            .getMovieGenresByLanguage(language = languageRepository.getLanguage())
             .toEntityList()
             .takeIf { it.isNotEmpty() }
             ?: tryToCall {

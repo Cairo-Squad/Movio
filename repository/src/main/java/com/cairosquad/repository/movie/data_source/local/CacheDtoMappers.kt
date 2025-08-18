@@ -69,7 +69,8 @@ fun Genre.toCacheDto(language: String): GenreOfMovieCacheDto {
     return GenreOfMovieCacheDto(
         id = id,
         name = name,
-        genreIdWithLanguage = id.toString() + language
+        genreIdWithLanguage = id.toString() + language,
+        language = language
     )
 }
 

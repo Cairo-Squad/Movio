@@ -62,6 +62,10 @@ class MoviesLocalDataSourceImpl @Inject constructor(
         return genreDao.getMovieGenres()
     }
 
+    override suspend fun getMovieGenresByLanguage(language: String): List<GenreOfMovieCacheDto> {
+        return genreDao.getMovieGenresByLanguage(language = language)
+    }
+
     override suspend fun getMovieReviewsByCacheCode(cacheCode: String): List<ReviewCacheDto> {
         return reviewDao.getReviewsByCacheCode(cacheCode)?.reviews ?: emptyList()
     }
