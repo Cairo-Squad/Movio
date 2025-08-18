@@ -10,12 +10,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.AppScreen
 import com.cairosquad.ui.auth.ForgetPasswordWebViewScreen
 import com.cairosquad.ui.auth.LoginScreen
 import com.cairosquad.ui.auth.SignUpWebViewScreen
+import com.cairosquad.ui.details.Constants
 import com.cairosquad.ui.details.artist.ArtistScreen
 import com.cairosquad.ui.details.episodes.EpisodesScreen
 import com.cairosquad.ui.details.movie.MovieScreen
@@ -109,12 +111,20 @@ fun AppNavigation(
             composable<AppRoute> {
                 AppScreen()
             }
-            composable<MovieRoute> { backStackEntry ->
+            composable<MovieRoute>(
+                deepLinks = listOf(
+                    navDeepLink<MovieRoute>(basePath = Constants.MOVIE_DEEP_URL)
+                )
+            ) { backStackEntry ->
                 MovieScreen(
                     movieId = backStackEntry.toRoute<MovieRoute>().movieId
                 )
             }
-            composable<SeriesRoute> { backStackEntry ->
+            composable<SeriesRoute>(
+                deepLinks = listOf(
+                    navDeepLink<SeriesRoute>(basePath = Constants.SERIES_DEEP_URL)
+                )
+            ){ backStackEntry ->
                 SeriesScreen(
                     seriesId = backStackEntry.toRoute<SeriesRoute>().seriesId
                 )
