@@ -21,10 +21,15 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -35,6 +40,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.cairosquad.design_system.basic_component.Button
 import com.cairosquad.design_system.basic_component.Icon
 import com.cairosquad.design_system.basic_component.InputField
+import com.cairosquad.design_system.basic_component.SnackBar
 import com.cairosquad.design_system.basic_component.Text
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
@@ -63,6 +69,8 @@ fun LoginScreen(
     val uiState by viewModel.screenState.collectAsState()
     val resetPasswordUrl = "https://www.themoviedb.org/reset-password"
     val signUpUrl = "https://www.themoviedb.org/signup"
+    var snackBarMessage by remember { mutableStateOf<String?>(null) }
+
     ObserveAsEffect(viewModel.effect) { effect ->
         when (effect) {
             LoginEffect.NavigateToForgetPassword -> navController.navigate(
@@ -96,6 +104,21 @@ fun LoginScreen(
         interactionListener = viewModel,
         modifier = modifier
     )
+
+    AnimatedVisibility(visible = snackBarMessage != null) {
+        SnackBar(
+            message = snackBarMessage.orEmpty(),
+            imageVector = ImageVector.vectorResource(
+                id =
+                    if (Theme.isDark) com.cairosquad.design_system.R.drawable.snack_bar_icon_fail_dark
+                    else com.cairosquad.design_system.R.drawable.snack_bar_icon_fail_light
+            ),
+            action = {
+                snackBarMessage =
+                    stringResource(com.cairosquad.design_system.R.string.error_parsing_data)
+            }
+        )
+    }
 }
 
 @Composable
@@ -275,6 +298,7 @@ private fun LoginScreenContent(
 
     }
 }
+
 @Preview(device = "spec:width=411dp,height=891dp")
 @Preview(device = "spec:width=360dp,height=600dp,dpi=440")
 @Composable

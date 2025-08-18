@@ -1,11 +1,15 @@
 package com.cairosquad.viewmodel.login
 
+import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.LoginUseCase
+import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -93,22 +97,28 @@ class LoginViewModel @Inject constructor(
         sendEffect(LoginEffect.NavigateToSignUp)
     }
 
-
-    private fun handleError(
-        throwable: Throwable
-    ) {
-        if (throwable is MovioException) {
-            updateState {
-                it.copy(
-                    error = exceptionToErrorStatus(throwable)
-                )
-            }
+    private fun handleError(throwable: Throwable) {
+        val status = if (throwable is MovioException) {
+            exceptionToErrorStatus(throwable)
         } else {
+            ErrorStatus.UNKNOWN_ERROR
+        }
+
+        updateState { it.copy(error = status) }
+        showSnackBar(R.string.something_went_wrong, isSuccessful = false)
+    }
+
+    fun showSnackBar(messageId: Int, isSuccessful: Boolean, durationMillis: Long = 2000) {
+        viewModelScope.launch {
             updateState {
                 it.copy(
-                    error = ErrorStatus.UNKNOWN_ERROR
+                    showSnackBar = true,
+                    snackMessageId = messageId,
+                    isProcessSuccess = isSuccessful
                 )
             }
+            delay(durationMillis)
+            updateState { it.copy(showSnackBar = false) }
         }
     }
 

@@ -8,7 +8,10 @@ data class LoginScreenState(
     val isPasswordVisible: Boolean = false,
     val isLoading: Boolean = false,
     val errors: Map<FormField, ValidationError?> = emptyMap(),
-    val error: ErrorStatus? = null
+    val error: ErrorStatus? = null,
+    val showSnackBar: Boolean = false,
+    val snackMessageId: Int = 0,
+    val isProcessSuccess: Boolean = false,
 ) {
     enum class FormField {
         USERNAME,
