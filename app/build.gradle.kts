@@ -100,7 +100,7 @@ dependencies {
     implementation(libs.firebase.perf)
     implementation(libs.androidx.core.ktx)
     implementation(libs.firebase.analytics)
-    implementation(libs.androidx.foundation)
+    implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.firebase.crashlytics)
     implementation(platform(libs.firebase.bom))
