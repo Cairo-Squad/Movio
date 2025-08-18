@@ -53,25 +53,25 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
+    implementation(libs.core.ktx)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
-    androidTestImplementation(libs.androidx.junit)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    androidTestImplementation(libs.test.junit)
+    implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.lifecycle.viewmodel.ktx)
 
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.compose.ui.test.junit4)
 
     // Paging
-    api(libs.androidx.paging.runtime)
+    api(libs.paging.runtime)
     api(libs.paging.compose)
 
     // test
-    androidTestImplementation(libs.androidx.core.testing)
-    androidTestImplementation(libs.androidx.junit.ktx)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.androidx.paging.testing)
+    androidTestImplementation(libs.core.testing)
+    androidTestImplementation(libs.test.junit.ktx)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.paging.testing)
 
     // google truth
     testImplementation(libs.truth)
@@ -81,13 +81,13 @@ dependencies {
     testImplementation(libs.mockk)
     androidTestImplementation(libs.mockk)
 
-    testImplementation(libs.androidx.core.testing)
+    testImplementation(libs.core.testing)
     testImplementation(libs.turbine)
 
     // Dagger & Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
-    kapt(libs.androidx.hilt.compiler)
+    kapt(libs.hilt.androidx.compiler)
 
     implementation(project(":domain"))
     testImplementation(kotlin("test"))

@@ -66,21 +66,21 @@ android {
     }
 }
 dependencies {
-    implementation(platform(libs.androidx.compose.bom))
+    implementation(platform(libs.compose.bom))
 
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.androidx.compose.runtime)
+    implementation(libs.serialization.json)
+    implementation(libs.compose.runtime)
     implementation(libs.logging.interceptor)
 
     // --- Retrofit 3 ---
     implementation(libs.retrofit)
-    implementation(libs.converter.kotlinx.serialization)
+    implementation(libs.retrofit.converter.kotlinx.serialization)
     implementation (libs.okhttp)
     testImplementation(kotlin("test"))
     testImplementation(libs.mockwebserver)
 
 
-    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.coroutines.test)
 
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit)

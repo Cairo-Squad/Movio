@@ -19,7 +19,7 @@ dependencies {
     testImplementation(kotlin("test"))
     api(project(":entity"))
     testImplementation(libs.junit.jupiter)
-    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.coroutines.test)
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.truth)
@@ -27,5 +27,5 @@ dependencies {
     // Dagger
     implementation(libs.dagger)
     kapt(libs.dagger.compiler)
-    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.coroutines.core)
 }
