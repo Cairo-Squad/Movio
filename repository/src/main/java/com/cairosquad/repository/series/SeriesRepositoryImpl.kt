@@ -316,7 +316,7 @@ class SeriesRepositoryImpl @Inject constructor(
 
     override suspend fun getSeriesGenres(): List<Genre> {
         return seriesLocalDataSource
-            .getSeriesGenres()
+            .getSeriesGenresByLanguage(languageRepository.getLanguage())
             .toEntityList()
             .takeIf { it.isNotEmpty() }
             ?: tryToCall {
