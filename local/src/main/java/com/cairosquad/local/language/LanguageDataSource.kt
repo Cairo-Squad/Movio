@@ -9,6 +9,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.cairosquad.repository.language.LanguageDataSource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -30,7 +31,7 @@ class LanguageDataStoreSourceImpl @Inject constructor(
         }
     }
 
-    override fun getLanguage(): Flow<String> {
+    override fun getLanguageFlow(): Flow<String> {
         return dataStore.data.map { preferences ->
             preferences[LANGUAGE_KEY]
                 ?: (
@@ -38,6 +39,16 @@ class LanguageDataStoreSourceImpl @Inject constructor(
                             .also { saveLanguage(it) }
                         )
         }
+    }
+
+    override suspend fun getLanguage(): String {
+        return dataStore.data.map { preferences ->
+            preferences[LANGUAGE_KEY]
+                ?: (
+                        getDefaultLanguageBasedOnDevice()
+                            .also { saveLanguage(it) }
+                        )
+        }.first()
     }
 
     private fun getDefaultLanguageBasedOnDevice(): String {

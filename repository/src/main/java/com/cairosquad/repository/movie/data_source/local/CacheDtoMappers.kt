@@ -9,10 +9,10 @@ import com.cairosquad.repository.movie.data_source.local.dto.MovieWithoutGenreCa
 import com.cairosquad.repository.utils.sharedDto.local.CacheCodeDto
 
 
-fun List<Movie>.toCacheCodeWithMoviesCacheDto(request: String): CacheCodeWithMoviesCacheDto {
+fun List<Movie>.toCacheCodeWithMoviesCacheDto(request: String, language: String): CacheCodeWithMoviesCacheDto {
     return CacheCodeWithMoviesCacheDto(
         cacheCode = CacheCodeDto(cacheCode = request),
-        movies = this.map { it.toCacheDto() }
+        movies = this.map { it.toCacheDto(language = language) }
     )
 }
 
@@ -36,7 +36,7 @@ fun List<MovieCacheDto>.toEntityList(): List<Movie> {
     return map { it.toEntity() }
 }
 
-fun Movie.toCacheDto(): MovieCacheDto {
+fun Movie.toCacheDto(language: String): MovieCacheDto {
     return MovieCacheDto(
         movieWithoutGenre = MovieWithoutGenreCacheDto(
             id = id,
@@ -46,9 +46,10 @@ fun Movie.toCacheDto(): MovieCacheDto {
             overview = overview,
             releaseDate = releaseDate,
             runtime = runtimeMinutes,
-            trailerPath = trailerPath
+            trailerPath = trailerPath,
+            movieIdWithLanguage = id.toString() + language
         ),
-        genres = genres.toCacheDtoList()
+        genres = genres.toCacheDtoList(language = language)
     )
 }
 
@@ -64,14 +65,15 @@ fun List<GenreOfMovieCacheDto>.toEntityList(): List<Genre> {
     return map { it.toEntity() }
 }
 
-fun Genre.toCacheDto(): GenreOfMovieCacheDto {
+fun Genre.toCacheDto(language: String): GenreOfMovieCacheDto {
     return GenreOfMovieCacheDto(
         id = id,
-        name = name
+        name = name,
+        genreIdWithLanguage = id.toString() + language
     )
 }
 
 @JvmName("toCacheGenre")
-fun List<Genre>.toCacheDtoList(): List<GenreOfMovieCacheDto> {
-    return map { it.toCacheDto() }
+fun List<Genre>.toCacheDtoList(language: String): List<GenreOfMovieCacheDto> {
+    return map { it.toCacheDto(language = language) }
 }

@@ -10,7 +10,7 @@ class LanguageManagerUseCase @Inject constructor(
 ) {
 
     fun getLanguage(): Flow<Language> {
-        return repository.getLanguage()
+        return repository.getLanguageFlow()
     }
 
     suspend fun saveLanguage(language: Language) {

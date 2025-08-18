@@ -2,6 +2,7 @@ package com.cairosquad.repository.movie
 
 import com.cairosquad.domain.model.RatingResult
 import com.cairosquad.domain.model.SortType
+import com.cairosquad.domain.repository.LanguageRepository
 import com.cairosquad.domain.repository.MoviesRepository
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
@@ -36,83 +37,118 @@ import javax.inject.Inject
 
 class MovieRepositoryImpl @Inject constructor(
     private val moviesRemoteDataSource: MoviesRemoteDataSource,
-    private val moviesLocalDataSource: MoviesLocalDataSource
+    private val moviesLocalDataSource: MoviesLocalDataSource,
+    private val languageRepository: LanguageRepository
 ) : MoviesRepository {
+
 
     override suspend fun getSimilarMovies(movieId: Long, page: Int): List<Movie> {
         return getMovies(
             remoteFetcher = { moviesRemoteDataSource.getSimilarMovies(movieId, page) },
-            cacheCode = getCacheCodeOfSimilarMovies(movieId, page)
+            cacheCode = getCacheCodeOfSimilarMovies(
+                movieId,
+                page,
+                language = languageRepository.getLanguage()
+            )
         )
     }
 
     override suspend fun getPersonalizedMovies(page: Int): List<Movie> {
         return getMovies(
             remoteFetcher = { moviesRemoteDataSource.getPersonalizedMovies(page) },
-            cacheCode = getCacheCodeOfPersonalizedMovies(page)
+            cacheCode = getCacheCodeOfPersonalizedMovies(
+                page,
+                language = languageRepository.getLanguage()
+            )
         )
     }
 
     override suspend fun getSuggestedMovies(): List<Movie> {
         return getMovies(
             remoteFetcher = { moviesRemoteDataSource.getSuggestedMovies() },
-            cacheCode = getCacheCodeOfSuggestedMovies()
+            cacheCode = getCacheCodeOfSuggestedMovies(
+                language = languageRepository.getLanguage()
+            )
         )
     }
 
     override suspend fun getTopRatingMovies(page: Int, genreId: Long?): List<Movie> {
         return getMovies(
             remoteFetcher = { moviesRemoteDataSource.getTopRatingMovies(page, genreId) },
-            cacheCode = getCacheCodeOfTopRatedMovies(page, genreId)
+            cacheCode = getCacheCodeOfTopRatedMovies(
+                page, genreId,
+                language = languageRepository.getLanguage()
+            )
         )
     }
 
     override suspend fun getUpcomingMovies(page: Int, genreId: Long?): List<Movie> {
         return getMovies(
             remoteFetcher = { moviesRemoteDataSource.getUpcomingMovies(page, genreId) },
-            cacheCode = getCacheCodeOfUpcomingMovies(page, genreId)
+            cacheCode = getCacheCodeOfUpcomingMovies(
+                page, genreId,
+                language = languageRepository.getLanguage()
+            )
         )
     }
 
     override suspend fun getNowPlayingMovies(page: Int, genreId: Long?): List<Movie> {
         return getMovies(
             remoteFetcher = { moviesRemoteDataSource.getNowPlayingMovies(page, genreId) },
-            cacheCode = getCacheCodeOfNowPlayingMovies(page, genreId)
+            cacheCode = getCacheCodeOfNowPlayingMovies(
+                page, genreId,
+                language = languageRepository.getLanguage()
+            )
         )
     }
 
     override suspend fun getTrendingMovies(page: Int, genreId: Long?): List<Movie> {
         return getMovies(
             remoteFetcher = { moviesRemoteDataSource.getTrendingMovies(page, genreId) },
-            cacheCode = getCacheCodeOfTrendingMovies(page, genreId)
+            cacheCode = getCacheCodeOfTrendingMovies(
+                page, genreId,
+                language = languageRepository.getLanguage()
+            )
         )
     }
 
     override suspend fun getMoreRecommendedMovies(page: Int, genreId: Long?): List<Movie> {
         return getMovies(
             remoteFetcher = { moviesRemoteDataSource.getMoreRecommendedMovies(page, genreId) },
-            cacheCode = getCacheCodeOfMoreRecommendedMovies(page, genreId)
+            cacheCode = getCacheCodeOfMoreRecommendedMovies(
+                page, genreId,
+                language = languageRepository.getLanguage()
+            )
         )
     }
 
     override suspend fun getFreeToWatchMovies(page: Int, genreId: Long?): List<Movie> {
         return getMovies(
             remoteFetcher = { moviesRemoteDataSource.getFreeToWatchMovies(page, genreId) },
-            cacheCode = getCacheCodeOfFreeToWatchMovies(page, genreId)
+            cacheCode = getCacheCodeOfFreeToWatchMovies(
+                page, genreId,
+                language = languageRepository.getLanguage()
+            )
         )
     }
 
     override suspend fun getMoviesByCategory(page: Int, genreId: Long): List<Movie> {
         return getMovies(
             remoteFetcher = { moviesRemoteDataSource.getMoviesByCategory(genreId, page) },
-            cacheCode = getCacheCodeOfMoviesByCategory(page, genreId)
+            cacheCode = getCacheCodeOfMoviesByCategory(
+                page, genreId,
+                language = languageRepository.getLanguage()
+            )
         )
     }
 
     override suspend fun getPopularMovies(page: Int, genreId: Long?): List<Movie> {
         return getMovies(
             remoteFetcher = { moviesRemoteDataSource.getPopularMovies(page, genreId) },
-            cacheCode = getCacheCodeOfPopularMovies(page, genreId)
+            cacheCode = getCacheCodeOfPopularMovies(
+                page, genreId,
+                language = languageRepository.getLanguage()
+            )
         )
     }
 
@@ -129,7 +165,10 @@ class MovieRepositoryImpl @Inject constructor(
                     sortType?.sortBy
                 )
             },
-            cacheCode = getCacheCodeOfAllMovies(page, genreId, sortType)
+            cacheCode = getCacheCodeOfAllMovies(
+                page, genreId, sortType,
+                language = languageRepository.getLanguage()
+            )
         )
     }
 
@@ -144,7 +183,10 @@ class MovieRepositoryImpl @Inject constructor(
     override suspend fun getMoviesOfArtist(artistId: Long): List<Movie> {
         return getMovies(
             remoteFetcher = { moviesRemoteDataSource.getMoviesOfArtist(artistId) },
-            cacheCode = getCacheCodeOfMoviesOfArtist(artistId)
+            cacheCode = getCacheCodeOfMoviesOfArtist(
+                artistId,
+                language = languageRepository.getLanguage()
+            )
         )
     }
 
@@ -163,7 +205,8 @@ class MovieRepositoryImpl @Inject constructor(
                     .also { movies ->
                         moviesLocalDataSource.insertCacheCodeWithMovies(
                             movies.toCacheCodeWithMoviesCacheDto(
-                                request = cacheCode
+                                request = cacheCode,
+                                language = languageRepository.getLanguage()
                             )
                         )
                     }
@@ -173,7 +216,12 @@ class MovieRepositoryImpl @Inject constructor(
     override suspend fun getMovieById(id: Long): Movie {
         moviesLocalDataSource.deleteExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
         return moviesLocalDataSource
-            .getMoviesByCacheCode(cacheCode = getCacheCodeOfMovie(id))
+            .getMoviesByCacheCode(
+                cacheCode = getCacheCodeOfMovie(
+                    id,
+                    language = languageRepository.getLanguage()
+                )
+            )
             .toEntityList()
             .firstOrNull()
             ?: tryToCall {
@@ -182,14 +230,25 @@ class MovieRepositoryImpl @Inject constructor(
                 )
             }.also { movie ->
                 moviesLocalDataSource.insertCacheCodeWithMovies(
-                    listOf(movie).toCacheCodeWithMoviesCacheDto(request = getCacheCodeOfMovie(id))
+                    listOf(movie).toCacheCodeWithMoviesCacheDto(
+                        request = getCacheCodeOfMovie(
+                            id,
+                            language = languageRepository.getLanguage()
+                        ),
+                        language = languageRepository.getLanguage()
+                    )
                 )
             }
     }
 
     override suspend fun getMovieReviews(movieId: Long, page: Int): List<Review> {
         return moviesLocalDataSource
-            .getMovieReviewsByCacheCode(getCacheCodeOfMovieReviews(page, movieId))
+            .getMovieReviewsByCacheCode(
+                getCacheCodeOfMovieReviews(
+                    page, movieId,
+                    language = languageRepository.getLanguage()
+                )
+            )
             .toEntityList()
             .takeIf { it.isNotEmpty() }
             ?: tryToCall {
@@ -197,7 +256,10 @@ class MovieRepositoryImpl @Inject constructor(
             }.also {
                 moviesLocalDataSource.insertCacheCodeWithReviews(
                     it.toCacheCodeWithReviewsCacheDto(
-                        getCacheCodeOfMovieReviews(page, movieId)
+                        getCacheCodeOfMovieReviews(
+                            page, movieId,
+                            language = languageRepository.getLanguage()
+                        )
                     )
                 )
             }
@@ -212,7 +274,11 @@ class MovieRepositoryImpl @Inject constructor(
                 moviesRemoteDataSource.getMoviesGenres()
                     .map { it.toEntity() }
                     .also {
-                        moviesLocalDataSource.insertMovieGenres(it.toCacheDtoList())
+                        moviesLocalDataSource.insertMovieGenres(
+                            it.toCacheDtoList(
+                                language = languageRepository.getLanguage()
+                            )
+                        )
                     }
             }
     }
@@ -227,7 +293,7 @@ class MovieRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteMovieRating(movieId: Long,){
+    override suspend fun deleteMovieRating(movieId: Long) {
         return tryToCall {
             moviesRemoteDataSource.deleteMovieRating(movieId)
         }

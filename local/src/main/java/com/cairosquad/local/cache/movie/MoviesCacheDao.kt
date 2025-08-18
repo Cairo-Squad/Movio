@@ -27,16 +27,16 @@ interface MoviesCacheDao {
 
     @Query("Delete from CacheCodeMovieCrossRef " +
             "where " +
-                "Not movie_id in (Select movie_id from MovieWithoutGenreCacheDto) " +
+                "Not movie_id_language in (Select movie_id from MovieWithoutGenreCacheDto) " +
              "OR " +
                 "Not cacheCode in (Select cacheCode from CacheCodeDto)")
     suspend fun deleteCrossRefForNonExistingCacheCodeAndMovieCache()
 
     @Query("Delete from MovieGenreCacheCrossRef " +
             "where " +
-                "Not movie_id in (Select movie_id from MovieWithoutGenreCacheDto) " +
+                "Not movie_id_language in (Select movie_id from MovieWithoutGenreCacheDto) " +
              "OR " +
-                "Not genre_id in (Select genre_id from MovieGenreCacheCrossRef)")
+                "Not genre_id_language in (Select genre_id_language from MovieGenreCacheCrossRef)")
     suspend fun deleteCrossRefForNonExistingMovieAndGenreCache()
 
     @Transaction

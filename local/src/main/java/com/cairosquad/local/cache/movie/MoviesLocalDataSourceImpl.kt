@@ -31,7 +31,7 @@ class MoviesLocalDataSourceImpl @Inject constructor(
             genres = cacheCodeWithMovies.movies
                 .map { it.genres }
                 .flatten()
-                .distinctBy { it.id }
+                .distinctBy { it.genreIdWithLanguage }
         )
         moviesCacheDao.insertCrossRefForMovieAndGenreCache(
             cacheCodeWithMovies.movies

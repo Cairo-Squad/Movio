@@ -1,55 +1,70 @@
 package com.cairosquad.repository.utils.sharedDto.local
 
 import com.cairosquad.domain.model.SortType
+fun getCacheCodeOfMovie(movieId: Long, language: String): String {
+    return "movies/movieId=$movieId/language=$language"
+}
 
-fun getCacheCodeOfMovie(movieId: Long): String {
-    return "movies/movieId = $movieId"
+fun getCacheCodeOfTopRatedMovies(page: Int, genreId: Long?, language: String): String {
+    return "movies/topRated/page=$page/genreId=$genreId/language=$language"
 }
-fun getCacheCodeOfTopRatedMovies(page: Int, genreId: Long?): String {
-    return "movies/tobRated/page = $page/genreId = $genreId"
+
+fun getCacheCodeOfSimilarMovies(movieId: Long, page: Int, language: String): String {
+    return "movies/similar/movieId=$movieId/page=$page/language=$language"
 }
-fun getCacheCodeOfSimilarMovies(movieId: Long, page: Int): String {
-    return "movies/tobRated/movieId = $movieId/page = $page"
+
+fun getCacheCodeOfPersonalizedMovies(page: Int, language: String): String {
+    return "movies/personalized/page=$page/language=$language"
 }
-fun getCacheCodeOfPersonalizedMovies(page: Int): String {
-    return "movies/personalized/page = $page"
+
+fun getCacheCodeOfSuggestedMovies(language: String): String {
+    return "movies/suggested/language=$language"
 }
-fun getCacheCodeOfSuggestedMovies(): String {
-    return "movies/suggested"
+
+fun getCacheCodeOfUpcomingMovies(page: Int, genreId: Long?, language: String): String {
+    return "movies/upcoming/page=$page/genreId=$genreId/language=$language"
 }
-fun getCacheCodeOfUpcomingMovies(page: Int, genreId: Long?): String {
-    return "movies/upcoming/page=$page/genreId=$genreId"
+
+fun getCacheCodeOfNowPlayingMovies(page: Int, genreId: Long?, language: String): String {
+    return "movies/nowPlaying/page=$page/genreId=$genreId/language=$language"
 }
-fun getCacheCodeOfNowPlayingMovies(page: Int, genreId: Long?): String {
-    return "movies/nowPlaying/page=$page/genreId=$genreId"
+
+fun getCacheCodeOfTrendingMovies(page: Int, genreId: Long?, language: String): String {
+    return "movies/trending/page=$page/genreId=$genreId/language=$language"
 }
-fun getCacheCodeOfTrendingMovies(page: Int, genreId: Long?): String {
-    return "movies/trending/page=$page/genreId=$genreId"
+
+fun getCacheCodeOfMoreRecommendedMovies(page: Int, genreId: Long?, language: String): String {
+    return "movies/moreRecommended/page=$page/genreId=$genreId/language=$language"
 }
-fun getCacheCodeOfMoreRecommendedMovies(page: Int, genreId: Long?): String {
-    return "movies/moreRecommended/page=$page/genreId=$genreId"
+
+fun getCacheCodeOfFreeToWatchMovies(page: Int, genreId: Long?, language: String): String {
+    return "movies/freeToWatch/page=$page/genreId=$genreId/language=$language"
 }
-fun getCacheCodeOfFreeToWatchMovies(page: Int, genreId: Long?): String {
-    return "movies/freeToWatch/page=$page/genreId=$genreId"
+
+fun getCacheCodeOfMoviesByCategory(page: Int, genreId: Long, language: String): String {
+    return "movies/byCategory/page=$page/genreId=$genreId/language=$language"
 }
-fun getCacheCodeOfMoviesByCategory(page: Int, genreId: Long): String {
-    return "movies/byCategory/page=$page/genreId=$genreId"
+
+fun getCacheCodeOfPopularMovies(page: Int, genreId: Long?, language: String): String {
+    return "movies/popular/page=$page/genreId=$genreId/language=$language"
 }
-fun getCacheCodeOfPopularMovies(page: Int, genreId: Long?): String {
-    return "movies/popular/page=$page/genreId=$genreId"
+
+fun getCacheCodeOfAllMovies(page: Int, genreId: Long?, sortType: SortType?, language: String): String {
+    return "movies/all/page=$page/genreId=$genreId/sortType=${sortType?.sortBy}/language=$language"
 }
-fun getCacheCodeOfAllMovies(page: Int, genreId: Long?, sortType: SortType?): String {
-    return "movies/all/page=$page/genreId=$genreId/sortType=${sortType?.sortBy}"
+
+fun getCacheCodeOfSearchedMovies(query: String, page: Int, language: String): String {
+    return "search/movie/page=$page/query=$query/language=$language"
 }
-fun getCacheCodeOfSearchedMovies(query: String, page: Int): String {
-    return "search/movie/page=$page/query=$query"
+
+fun getCacheCodeOfMovieReviews(page: Int, movieId: Long, language: String): String {
+    return "movies/reviews/page=$page/movieId=$movieId/language=$language"
 }
-fun getCacheCodeOfMovieReviews(page: Int, movieId: Long): String {
-    return "movies/tobRated/page = $page/movieId = $movieId"
+
+fun getCacheCodeOfMoviesOfArtist(artistId: Long, language: String): String {
+    return "movies/artist/artistId=$artistId/language=$language"
 }
-fun getCacheCodeOfMoviesOfArtist(artistId: Long): String {
-    return "movies/artist/artistId = $artistId"
-}
+
 fun getCacheCodeOfSeries(seriesId: Long): String {
     return "series/seriesId = $seriesId"
 }
