@@ -10,7 +10,7 @@ data class CacheCodeWithArtistsCacheDto(
     val cacheCode: CacheCodeDto,
     @Relation(
         parentColumn = "cacheCode",
-        entityColumn = "artist_id",
+        entityColumn = "artist_id_language",
         associateBy = Junction(CacheCodeArtistCrossRef::class)
     )
     val artists: List<ArtistCacheDto>,

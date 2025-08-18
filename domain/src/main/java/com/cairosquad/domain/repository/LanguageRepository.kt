@@ -4,6 +4,7 @@ import com.cairosquad.entity.Language
 import kotlinx.coroutines.flow.Flow
 
 interface LanguageRepository {
-    fun getLanguage(): Flow<Language>
+    fun getLanguageFlow(): Flow<Language>
+    suspend fun getLanguage(): String
     suspend fun saveLanguage(language: Language)
 }

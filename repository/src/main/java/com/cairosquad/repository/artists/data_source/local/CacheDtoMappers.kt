@@ -6,7 +6,7 @@ import com.cairosquad.repository.artists.data_source.local.dto.CacheCodeWithArti
 import com.cairosquad.repository.utils.sharedDto.local.CacheCodeDto
 import java.util.Date
 
-fun Artist.toCacheDto(): ArtistCacheDto {
+fun Artist.toCacheDto(language: String): ArtistCacheDto {
     return ArtistCacheDto(
         id = id,
         name = name,
@@ -16,12 +16,13 @@ fun Artist.toCacheDto(): ArtistCacheDto {
         birthDate = birthDate,
         biography = biography,
         department = department,
+        artistIdWithLanguage = "$id$language"
     )
 }
 
 @JvmName("toCacheArtistDto")
-fun List<Artist>.toCacheDtoList(): List<ArtistCacheDto> {
-    return map { it.toCacheDto() }
+fun List<Artist>.toCacheDtoList(language: String): List<ArtistCacheDto> {
+    return map { it.toCacheDto(language = language) }
 }
 
 fun ArtistCacheDto.toEntity(): Artist {
@@ -41,9 +42,9 @@ fun List<ArtistCacheDto>.toEntityList(): List<Artist> {
     return map { it.toEntity() }
 }
 
-fun List<Artist>.toCacheCodeWithArtistsCacheDto(cacheCode: String): CacheCodeWithArtistsCacheDto {
+fun List<Artist>.toCacheCodeWithArtistsCacheDto(cacheCode: String, language: String): CacheCodeWithArtistsCacheDto {
     return CacheCodeWithArtistsCacheDto(
         cacheCode = CacheCodeDto(cacheCode = cacheCode),
-        artists = this.map { it.toCacheDto() }
+        artists = this.map { it.toCacheDto(language = language) }
     )
 }
