@@ -13,7 +13,7 @@ data class CacheCodeSeriesCacheCrossRef(
     @ColumnInfo(name = "cacheCode")
     val cacheCode: String,
     @ColumnInfo(name = "series_id_language")
-    val seriesIdWithLanguage: Long,
+    val seriesIdWithLanguage: String,
 ) {
     companion object{
         fun fromRequestAndSeriesList(
@@ -23,7 +23,7 @@ data class CacheCodeSeriesCacheCrossRef(
             return seriesList.map { series ->
                 CacheCodeSeriesCacheCrossRef(
                     cacheCode.cacheCode,
-                    series.seriesWithoutGenre.id
+                    series.seriesWithoutGenre.seriesIdWithLanguage
                 )
             }
         }

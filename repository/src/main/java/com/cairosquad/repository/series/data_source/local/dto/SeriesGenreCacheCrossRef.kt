@@ -9,9 +9,9 @@ import androidx.room.Entity
 )
 data class SeriesGenreCacheCrossRef(
     @ColumnInfo(name = "series_id_language")
-    val seriesId: Long,
+    val seriesIdWithLanguage: String,
     @ColumnInfo(name = "genre_id_language")
-    val genreId: Long
+    val genreIdWithLanguage: String
 ) {
     companion object {
         fun fromSeries(
@@ -19,8 +19,8 @@ data class SeriesGenreCacheCrossRef(
         ): List<SeriesGenreCacheCrossRef> {
             return series.genres.map { genre ->
                 SeriesGenreCacheCrossRef(
-                    series.seriesWithoutGenre.id,
-                    genre.id
+                    series.seriesWithoutGenre.seriesIdWithLanguage,
+                    genre.genreIdWithLanguage
                 )
             }
         }
