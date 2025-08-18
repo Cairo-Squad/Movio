@@ -14,8 +14,12 @@ class LanguageRepositoryImpl @Inject constructor(
         languageDataSource.saveLanguage(language.code)
     }
 
-    override fun getLanguage(): Flow<Language> {
-        return languageDataSource.getLanguage().map { languageCode ->
+    override suspend fun getLanguage(): String {
+        return languageDataSource.getLanguage()
+    }
+
+    override fun getLanguageFlow(): Flow<Language> {
+        return languageDataSource.getLanguageFlow().map { languageCode ->
             when (languageCode) {
                 "ar" -> Language("ar", "العربية")
                 else -> Language("en", "English")

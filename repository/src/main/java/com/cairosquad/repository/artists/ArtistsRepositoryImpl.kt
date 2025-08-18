@@ -1,6 +1,7 @@
 package com.cairosquad.repository.artists
 
 import com.cairosquad.domain.repository.ArtistsRepository
+import com.cairosquad.domain.repository.LanguageRepository
 import com.cairosquad.entity.Artist
 import com.cairosquad.repository.artists.data_source.local.ArtistsLocalDataSource
 import com.cairosquad.repository.artists.data_source.local.toCacheCodeWithArtistsCacheDto
@@ -17,7 +18,8 @@ import javax.inject.Inject
 
 class ArtistsRepositoryImpl @Inject constructor(
     private val artistsRemoteDataSource: ArtistsRemoteDataSource,
-    private val artistsLocalDataSource: ArtistsLocalDataSource
+    private val artistsLocalDataSource: ArtistsLocalDataSource,
+    private val languageRepository: LanguageRepository
 ) : ArtistsRepository {
 
     override suspend fun getArtistsByQuery(query: String, page: Int): List<Artist> {
@@ -29,7 +31,9 @@ class ArtistsRepositoryImpl @Inject constructor(
     override suspend fun getArtistById(id: Long): Artist {
         artistsLocalDataSource.deleteExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
         return artistsLocalDataSource
-            .getArtistsByCacheCode(cacheCode = getCacheCodeOfArtist(id))
+            .getArtistsByCacheCode(cacheCode = getCacheCodeOfArtist(id,
+                languageRepository.getLanguage()
+            ))
             .toEntityList()
             .firstOrNull()
             ?: tryToCall {
@@ -38,7 +42,10 @@ class ArtistsRepositoryImpl @Inject constructor(
                     .also { artist ->
                         artistsLocalDataSource.insertCacheCodeWithArtists(
                             listOf(artist).toCacheCodeWithArtistsCacheDto(
-                                cacheCode = getCacheCodeOfArtist(id)
+                                cacheCode = getCacheCodeOfArtist(id,
+                                    languageRepository.getLanguage()
+                                ),
+                                languageRepository.getLanguage()
                             )
                         )
                     }
@@ -50,7 +57,9 @@ class ArtistsRepositoryImpl @Inject constructor(
             remoteFetcher = {
                 artistsRemoteDataSource.getMovieTopCast(movieId, page).map { it.toEntity() }
             },
-            cacheCode = getCacheCodeOfMovieTopCast(movieId, page)
+            cacheCode = getCacheCodeOfMovieTopCast(movieId, page,
+                languageRepository.getLanguage()
+            )
         )
     }
 
@@ -59,7 +68,9 @@ class ArtistsRepositoryImpl @Inject constructor(
             remoteFetcher = {
                 artistsRemoteDataSource.getSeriesTopCast(seriesId, page).map { it.toEntity() }
             },
-            cacheCode = getCacheCodeOfSeriesTopCast(seriesId, page)
+            cacheCode = getCacheCodeOfSeriesTopCast(seriesId, page,
+                languageRepository.getLanguage()
+            )
         )
     }
 
@@ -77,7 +88,9 @@ class ArtistsRepositoryImpl @Inject constructor(
                     .also { artists ->
                         artistsLocalDataSource.insertCacheCodeWithArtists(
                             artists.toCacheCodeWithArtistsCacheDto(
-                                cacheCode = cacheCode
+                                cacheCode = cacheCode,
+                                languageRepository.getLanguage()
+
                             )
                         )
                     }

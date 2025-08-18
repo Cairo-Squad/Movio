@@ -8,6 +8,8 @@ import java.util.Date
 @Entity(tableName = "EpisodeCacheDto")
 data class EpisodeCacheDto(
     @PrimaryKey
+    @ColumnInfo(name = "episode_id_language")
+    val episodeIdWithLanguage: String,
     @ColumnInfo(name = "episode_id")
     val id: Long,
     @ColumnInfo(name = "episode_number")

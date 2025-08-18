@@ -27,16 +27,16 @@ interface SeriesCacheDao {
 
     @Query("Delete from CacheCodeSeriesCacheCrossRef " +
             "where " +
-                "Not series_id in (Select series_id from SeriesWithoutGenreCacheDto) " +
+                "Not series_id_language in (Select series_id_language from SeriesWithoutGenreCacheDto) " +
              "OR " +
                 "Not cacheCode in (Select cacheCode from CacheCodeDto)")
     suspend fun deleteCrossRefForNonExistingCacheCodeAndSeriesCache()
 
     @Query("Delete from SeriesGenreCacheCrossRef " +
             "where " +
-                "Not series_id in (Select series_id from SeriesWithoutGenreCacheDto) " +
+                "Not series_id_language in (Select series_id_language from SeriesWithoutGenreCacheDto) " +
              "OR " +
-                "Not genre_id in (Select genre_id from SeriesGenreCacheCrossRef)")
+                "Not genre_id_language in (Select genre_id_language from SeriesGenreCacheCrossRef)")
     suspend fun deleteCrossRefForNonExistingSeriesAndGenreCache()
 
     @Transaction

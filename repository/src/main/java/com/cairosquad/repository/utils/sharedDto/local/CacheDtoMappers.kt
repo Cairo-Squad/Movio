@@ -17,7 +17,7 @@ fun List<ReviewCacheDto>.toEntityList(): List<Review> {
     return map { it.toCacheDto() }
 }
 
-fun Review.toCacheDto(): ReviewCacheDto {
+fun Review.toCacheDto(language: String): ReviewCacheDto {
     return ReviewCacheDto(
         id = id,
         author = author,
@@ -25,12 +25,13 @@ fun Review.toCacheDto(): ReviewCacheDto {
         rating = rating,
         date = date,
         description = description,
+        reviewIdWithLanguage = "$id$language"
     )
 }
 
-fun List<Review>.toCacheCodeWithReviewsCacheDto(request: String): CacheCodeWithReviewsCacheDto {
+fun List<Review>.toCacheCodeWithReviewsCacheDto(request: String, language: String): CacheCodeWithReviewsCacheDto {
     return CacheCodeWithReviewsCacheDto(
         cacheCode = CacheCodeDto(cacheCode = request),
-        reviews = this.map { it.toCacheDto() }
+        reviews = this.map { it.toCacheDto(language = language) }
     )
 }

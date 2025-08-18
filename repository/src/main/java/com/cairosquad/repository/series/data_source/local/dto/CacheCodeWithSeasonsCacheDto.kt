@@ -10,7 +10,7 @@ data class CacheCodeWithSeasonsCacheDto(
     val cacheCode: CacheCodeDto,
     @Relation(
         parentColumn = "cacheCode",
-        entityColumn = "season_id",
+        entityColumn = "season_id_language",
         associateBy = Junction(CacheCodeSeasonCrossRef::class)
     )
     val seasons: List<SeasonCacheDto>
