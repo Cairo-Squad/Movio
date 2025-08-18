@@ -72,7 +72,7 @@ class LibraryViewModel @Inject constructor(
         sendEffect(LibraryEffect.NavigateToHistory)
     }
 
-    override fun onLoginClicked() {
+    override fun onLoginClick() {
         sendEffect(LibraryEffect.NavigateToLogin)
     }
 
@@ -80,15 +80,15 @@ class LibraryViewModel @Inject constructor(
         loadScreenState()
     }
 
-    override fun onListClicked(listId: Long, listName: String) {
+    override fun onListClick(listId: Long, listName: String) {
         sendEffect(LibraryEffect.NavigateToListDetails(listId, listName))
     }
 
-    override fun onMovieClicked(movieId: Long) {
+    override fun onMovieClick(movieId: Long) {
         sendEffect(LibraryEffect.NavigateToMovieDetails(movieId))
     }
 
-    override fun onSeriesClicked(seriesId: Long) {
+    override fun onSeriesClick(seriesId: Long) {
         sendEffect(LibraryEffect.NavigateToSeriesDetails(seriesId))
     }
 

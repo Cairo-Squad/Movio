@@ -98,7 +98,7 @@ class ListContentViewModelTest {
         // Simulate delete
         viewModel.onMovieDelete(movie1.id)
         // Simulate undo
-        viewModel.onUndoClicked()
+        viewModel.onUndoClick()
         advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.deletedMoviesIds).isEmpty()

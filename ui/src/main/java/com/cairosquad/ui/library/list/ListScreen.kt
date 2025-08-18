@@ -75,7 +75,7 @@ fun ListScreen(
         UndoSnackBar(
             messageId = uiState.snackMessageId,
             isVisible = uiState.showSnackBar,
-            onUndoClicked = viewModel::onUndoClicked
+            onUndoClicked = viewModel::onUndoClick
         )
     }
 }
@@ -105,7 +105,7 @@ private fun ListScreenContent(
                 AppBar(
                     modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars),
                     title = listName,
-                    onBackButtonClicked = listener::onBackClicked,
+                    onBackButtonClicked = listener::onBackClick,
                     onShareButtonClicked = null,
                     onFavoriteButtonClicked = null
                 )

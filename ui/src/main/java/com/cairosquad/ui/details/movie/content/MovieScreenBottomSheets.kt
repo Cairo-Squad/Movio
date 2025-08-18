@@ -64,14 +64,14 @@ fun MovieScreenBottomSheets(
         onListClicked = { index ->
             viewModel.onClickList(state.moviesLists[index].id)
         },
-        onCreateNewList = viewModel::onCreateListClicked
+        onCreateNewList = viewModel::onCreateListClick
     )
     CreateListBottomSheet(
         isVisible = state.showCreateListBottomSheet,
         onDismiss = viewModel::onDismissCreateListBottomSheet,
         value = state.listName,
         onValueChange = viewModel::onListValueChange,
-        onSubmit = { viewModel.onSubmitCreateListClicked() },
+        onSubmit = { viewModel.onSubmitCreateListClick() },
         isMovie = true
     )
     RateBottomSheet(
@@ -82,7 +82,7 @@ fun MovieScreenBottomSheets(
         name = state.movie.title,
         isMovie = true,
         onRatingChange = viewModel::onRateChange,
-        onSubmitClicked = viewModel::onSubmitRateClicked,
+        onSubmitClicked = viewModel::onSubmitRateClick,
     )
     FinishRatingBottomSheet(
         isVisible = state.isRatedSuccessBottomSheetOpen,

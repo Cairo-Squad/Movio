@@ -58,15 +58,15 @@ class ListContentViewModel @AssistedInject constructor(
         )
     }
 
-    override fun onBackClicked() {
+    override fun onBackClick() {
         sendEffect(ListContentEffect.OnNavigateBack)
     }
 
-    override fun onMovieClicked(movieId: Long) {
+    override fun onMovieClick(movieId: Long) {
         sendEffect(ListContentEffect.OnMovieClicked(movieId))
     }
 
-    override fun onSeriesClicked(seriesId: Long) {
+    override fun onSeriesClick(seriesId: Long) {
         sendEffect(ListContentEffect.OnSeriesClicked(seriesId))
     }
 
@@ -127,7 +127,7 @@ class ListContentViewModel @AssistedInject constructor(
         }
     }
 
-    override fun onUndoClicked() {
+    override fun onUndoClick() {
         tryToCall(
             block = {
                 val item = screenState.value.deletedItems.last().split(", ")

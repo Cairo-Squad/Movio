@@ -12,11 +12,11 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.cairosquad.ui.movio_component.MovieCard
 import com.cairosquad.viewmodel.foryou.ForYouInteractionListener
-import com.cairosquad.viewmodel.foryou.ForYouState
+import com.cairosquad.viewmodel.foryou.ForYouScreenState
 
 @Composable
 fun MoviesGridContent(
-    movies: LazyPagingItems<ForYouState.MovieUiState>,
+    movies: LazyPagingItems<ForYouScreenState.MovieUiState>,
     listener: ForYouInteractionListener,
     modifier: Modifier = Modifier
 ) {
@@ -31,7 +31,7 @@ fun MoviesGridContent(
             movies[index]?.let { movie ->
                 MovieCard(
                     modifier = Modifier.clickable {
-                        listener.onMovieClicked(movie.id)
+                        listener.onMovieClick(movie.id)
                     },
                     title = movie.title,
                     vote = movie.rating,

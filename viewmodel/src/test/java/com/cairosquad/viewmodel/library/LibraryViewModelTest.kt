@@ -68,7 +68,7 @@ class LibraryViewModelTest {
     @Test
     fun `WHEN onLoginClicked SHOULD emit NavigateToLogin effect`() = runTest {
         viewModel.effect.test {
-            viewModel.onLoginClicked()
+            viewModel.onLoginClick()
             assertThat(awaitItem()).isEqualTo(LibraryEffect.NavigateToLogin)
             cancelAndIgnoreRemainingEvents()
         }
@@ -77,7 +77,7 @@ class LibraryViewModelTest {
     @Test
     fun `WHEN onListClicked SHOULD emit NavigateToListDetails effect`() = runTest {
         viewModel.effect.test {
-            viewModel.onListClicked(1, "name")
+            viewModel.onListClick(1, "name")
             assertThat(awaitItem()).isEqualTo(LibraryEffect.NavigateToListDetails(1, "name"))
             cancelAndIgnoreRemainingEvents()
         }
@@ -86,7 +86,7 @@ class LibraryViewModelTest {
     @Test
     fun `WHEN onMovieClicked SHOULD emit NavigateToMovieDetails effect`() = runTest {
         viewModel.effect.test {
-            viewModel.onMovieClicked(1)
+            viewModel.onMovieClick(1)
             assertThat(awaitItem()).isEqualTo(LibraryEffect.NavigateToMovieDetails(1))
             cancelAndIgnoreRemainingEvents()
         }
@@ -95,7 +95,7 @@ class LibraryViewModelTest {
     @Test
     fun `WHEN onSeriesClicked SHOULD emit NavigateToSeriesDetails effect`() = runTest {
         viewModel.effect.test {
-            viewModel.onSeriesClicked(1)
+            viewModel.onSeriesClick(1)
             assertThat(awaitItem()).isEqualTo(LibraryEffect.NavigateToSeriesDetails(1))
             cancelAndIgnoreRemainingEvents()
         }

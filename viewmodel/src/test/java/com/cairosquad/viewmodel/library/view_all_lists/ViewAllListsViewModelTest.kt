@@ -94,7 +94,7 @@ class ViewAllListsViewModelTest {
         val listName = "Pixelise"
 
         viewModel.effect.test {
-            viewModel.onSeriesListClicked(listId, listName)
+            viewModel.onSeriesListClick(listId, listName)
             advanceUntilIdle()
             assertThat(awaitItem()).isEqualTo(
                 ViewAllListsEffect.OnSeriesListClicked(
@@ -118,7 +118,7 @@ class ViewAllListsViewModelTest {
         val listName = "Pixelise"
 
         viewModel.effect.test {
-            viewModel.onMovieListClicked(listId, listName)
+            viewModel.onMovieListClick(listId, listName)
             advanceUntilIdle()
             assertThat(awaitItem()).isEqualTo(
                 ViewAllListsEffect.OnMovieListClicked(
@@ -135,7 +135,7 @@ class ViewAllListsViewModelTest {
 
     @Test
     fun `onCreateNewListClicked SHOULD show create list bottom sheet`() = runTest {
-        viewModel.onCreateNewListClicked()
+        viewModel.onCreateNewListClick()
         viewModel.screenState.test {
             assertThat(viewModel.screenState.value.isCreateListBottomSheetVisible).isTrue()
             cancelAndIgnoreRemainingEvents()
@@ -144,7 +144,7 @@ class ViewAllListsViewModelTest {
 
     @Test
     fun `onAddListClicked SHOULD show create list bottom sheet`() = runTest {
-        viewModel.onAddListClicked()
+        viewModel.onAddListClick()
         viewModel.screenState.test {
             assertThat(viewModel.screenState.value.showCreateListBottomSheet).isTrue()
             cancelAndIgnoreRemainingEvents()
@@ -153,7 +153,7 @@ class ViewAllListsViewModelTest {
 
     @Test
     fun `onAddListClicked SHOULD set listName to empty`() = runTest {
-        viewModel.onAddListClicked()
+        viewModel.onAddListClick()
         viewModel.screenState.test {
             assertThat(viewModel.screenState.value.listName).isEmpty()
             cancelAndIgnoreRemainingEvents()
@@ -189,7 +189,7 @@ class ViewAllListsViewModelTest {
         coEvery { accountUseCase.getSeriesLists(1) } returns seriesLists
 
         viewModel.updateState { it.copy(listName = "My List") }
-        viewModel.onSubmitCreateListClicked()
+        viewModel.onSubmitCreateListClick()
         advanceUntilIdle()
 
         val state = viewModel.screenState.value
@@ -205,7 +205,7 @@ class ViewAllListsViewModelTest {
         coEvery { accountUseCase.createList(any()) } throws RuntimeException("Failed")
 
         viewModel.updateState { it.copy(listName = "My List") }
-        viewModel.onSubmitCreateListClicked()
+        viewModel.onSubmitCreateListClick()
         advanceUntilIdle()
 
         val state = viewModel.screenState.value
@@ -221,7 +221,7 @@ class ViewAllListsViewModelTest {
         coEvery { accountUseCase.getSeriesLists(1) } returns emptyList()
 
         viewModel.updateState { it.copy(listName = "My List") }
-        viewModel.onSubmitCreateListClicked()
+        viewModel.onSubmitCreateListClick()
         advanceUntilIdle()
         advanceTimeBy(2000L)
         advanceUntilIdle()

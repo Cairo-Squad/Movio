@@ -51,7 +51,7 @@ fun SearchResultContent(
     val artists = state.artists.collectAsLazyPagingItems()
     val series = state.series.collectAsLazyPagingItems()
     BackHandler(enabled = true) {
-        listener.onBackClicked()
+        listener.onBackClick()
     }
 
     val selectedTabIndex = state.selectedTabIndex
@@ -188,7 +188,7 @@ private fun AllResultsTabContent(
                     movies[index]?.let { result ->
                         MovieCard(
                             modifier = Modifier
-                                .clickable(onClick = { listener.onMovieClicked(result.id) }),
+                                .clickable(onClick = { listener.onMovieClick(result.id) }),
                             title = result.title,
                             vote = result.rating,
                             imgUrl = result.posterPath,
@@ -259,7 +259,7 @@ private fun MoviesTabContent(
                     movies[index]?.let { movie ->
                         MovieCard(
                             modifier = Modifier.clickable {
-                                listener.onMovieClicked(movie.id)
+                                listener.onMovieClick(movie.id)
                             },
                             title = movie.title,
                             vote = movie.rating,
@@ -338,7 +338,7 @@ private fun SeriesTabContent(
                     series[index]?.let { series ->
                         MovieCard(
                             modifier = Modifier
-                                .clickable(onClick = { listener.onSeriesClicked(series.id) }),
+                                .clickable(onClick = { listener.onSeriesClick(series.id) }),
                             title = series.title,
                             vote = series.rating,
                             imgUrl = series.posterPath,
@@ -415,7 +415,7 @@ private fun ArtistsTabContent(
                     artist[index]?.let { artist ->
                         ArtistCard(
                             modifier = Modifier
-                                .clickable(onClick = { listener.onArtistClicked(artist.id) }),
+                                .clickable(onClick = { listener.onArtistClick(artist.id) }),
                             name = artist.name,
                             imgUrl = artist.photoPath,
                         )

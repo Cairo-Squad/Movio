@@ -70,7 +70,7 @@ fun ViewAllFavorite(
         UndoSnackBar(
             messageId = uiState.snackMessageId,
             isVisible = uiState.showSnackBar,
-            onUndoClicked = viewModel::onUndoClicked
+            onUndoClicked = viewModel::onUndoClick
         )
     }
 }
@@ -91,7 +91,7 @@ fun ViewAllFavoriteContent(
             AppBar(
                 modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars),
                 title = stringResource(R.string.favorite),
-                onBackButtonClicked = listener::onBackClicked,
+                onBackButtonClicked = listener::onBackClick,
                 onShareButtonClicked = null,
                 onFavoriteButtonClicked = null
             )
@@ -112,7 +112,7 @@ fun ViewAllFavoriteContent(
                         ) {
                             TrendingMovieCard(
                                 modifier = Modifier
-                                    .clickable(onClick = { listener.onMovieClicked(movie.id) }),
+                                    .clickable(onClick = { listener.onMovieClick(movie.id) }),
                                 imgUrl = movie.posterPath,
                                 movieTitle = movie.title,
                                 movieCategory = movie.genres[0],
@@ -130,7 +130,7 @@ fun ViewAllFavoriteContent(
                         ) {
                             TrendingMovieCard(
                                 modifier = Modifier
-                                    .clickable(onClick = { listener.onSeriesClicked(series.id) }),
+                                    .clickable(onClick = { listener.onSeriesClick(series.id) }),
                                 imgUrl = series.posterPath,
                                 movieTitle = series.title,
                                 movieCategory = series.genres[0],

@@ -9,9 +9,7 @@ import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.details.artist.ArtistScreenState
 import com.cairosquad.viewmodel.details.artist.ArtistViewModel
-import com.cairosquad.viewmodel.details.artist.toArtistMovieUiState
-import com.cairosquad.viewmodel.details.artist.toArtistSeriesUiState
-import com.cairosquad.viewmodel.details.artist.toArtistUiState
+import com.cairosquad.viewmodel.details.artist.toUiState
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import com.google.common.truth.Truth.assertThat
@@ -64,11 +62,11 @@ class ArtistViewModelTest {
         val artistId = 1L
         coEvery { manageArtistUseCase.getArtistById(artistId) } returns artist
 
-        viewModel.loadArtistDetails(artistId)
+        viewModel.fetchArtistDetails(artistId)
 
         advanceUntilIdle()
 
-        assertThat(viewModel.screenState.value.artist).isEqualTo(artist.toArtistUiState())
+        assertThat(viewModel.screenState.value.artist).isEqualTo(artist.toUiState())
     }
 
     @Test
@@ -76,7 +74,7 @@ class ArtistViewModelTest {
         val artistId = 1L
         coEvery { manageArtistUseCase.getArtistById(artistId) } throws IOException()
 
-        viewModel.loadArtistDetails(artistId)
+        viewModel.fetchArtistDetails(artistId)
 
         advanceUntilIdle()
 
@@ -96,11 +94,11 @@ class ArtistViewModelTest {
         val movies = listOf(movie1, movie2)
         coEvery { manageArtistUseCase.getMoviesOfArtist(artistId) } returns movies
 
-        viewModel.loadArtistMovies(artistId)
+        viewModel.fetchArtistMovies(artistId)
 
         advanceUntilIdle()
 
-        assertThat(viewModel.screenState.value.knownForMovies).isEqualTo(movies.map { it.toArtistMovieUiState() })
+        assertThat(viewModel.screenState.value.knownForMovies).isEqualTo(movies.map { it.toUiState() })
     }
 
     @Test
@@ -108,7 +106,7 @@ class ArtistViewModelTest {
         val artistId = 1L
         coEvery { manageArtistUseCase.getMoviesOfArtist(artistId) } throws IOException()
 
-        viewModel.loadArtistMovies(artistId)
+        viewModel.fetchArtistMovies(artistId)
 
         advanceUntilIdle()
 
@@ -128,11 +126,11 @@ class ArtistViewModelTest {
         val series = listOf(series1)
         coEvery { manageArtistUseCase.getSeriesOfArtist(artistId) } returns series
 
-        viewModel.loadArtistSeries(artistId)
+        viewModel.fetchArtistSeries(artistId)
 
         advanceUntilIdle()
 
-        assertThat(viewModel.screenState.value.knownForSeries).isEqualTo(series.map { it.toArtistSeriesUiState() })
+        assertThat(viewModel.screenState.value.knownForSeries).isEqualTo(series.map { it.toUiState() })
     }
 
     @Test
@@ -140,7 +138,7 @@ class ArtistViewModelTest {
         val artistId = 1L
         coEvery { manageArtistUseCase.getSeriesOfArtist(artistId) } throws IOException()
 
-        viewModel.loadArtistSeries(artistId)
+        viewModel.fetchArtistSeries(artistId)
 
         advanceUntilIdle()
 
@@ -161,7 +159,7 @@ class ArtistViewModelTest {
             val artistId = 1L
             coEvery { manageArtistUseCase.getArtistById(artistId) } throws NetworkException()
 
-            viewModel.loadArtistDetails(artistId)
+            viewModel.fetchArtistDetails(artistId)
 
             advanceUntilIdle()
 
@@ -177,7 +175,7 @@ class ArtistViewModelTest {
             val artistId = 1L
             coEvery { manageArtistUseCase.getArtistById(artistId) } throws UnknownException()
 
-            viewModel.loadArtistDetails(artistId)
+            viewModel.fetchArtistDetails(artistId)
 
             advanceUntilIdle()
 
@@ -193,7 +191,7 @@ class ArtistViewModelTest {
             val artistId = 1L
             coEvery { manageArtistUseCase.getArtistById(artistId) } throws InternetConnectionException()
 
-            viewModel.loadArtistDetails(artistId)
+            viewModel.fetchArtistDetails(artistId)
 
             advanceUntilIdle()
 
@@ -247,7 +245,7 @@ class ArtistViewModelTest {
             val artistId = 1L
             coEvery { manageArtistUseCase.getMoviesOfArtist(artistId) } throws NetworkException()
 
-            viewModel.loadArtistMovies(artistId)
+            viewModel.fetchArtistMovies(artistId)
 
             advanceUntilIdle()
 
@@ -263,7 +261,7 @@ class ArtistViewModelTest {
             val artistId = 1L
             coEvery { manageArtistUseCase.getSeriesOfArtist(artistId) } throws NetworkException()
 
-            viewModel.loadArtistSeries(artistId)
+            viewModel.fetchArtistSeries(artistId)
 
             advanceUntilIdle()
 
