@@ -2,6 +2,7 @@ package com.cairosquad.repository.series
 
 import com.cairosquad.domain.model.RatingResult
 import com.cairosquad.domain.model.SortType
+import com.cairosquad.domain.repository.LanguageRepository
 import com.cairosquad.domain.repository.SeriesRepository
 import com.cairosquad.entity.Episode
 import com.cairosquad.entity.Genre
@@ -42,34 +43,48 @@ import javax.inject.Inject
 class SeriesRepositoryImpl @Inject constructor(
     private val seriesRemoteDataSource: SeriesRemoteDataSource,
     private val seriesLocalDataSource: SeriesLocalDataSource,
-    private val seasonEpisodeLocalDataSource: SeasonEpisodeLocalDataSource
+    private val seasonEpisodeLocalDataSource: SeasonEpisodeLocalDataSource,
+    private val languageRepository: LanguageRepository
 ) : SeriesRepository {
 
     override suspend fun getSimilarSeries(seriesId: Long, page: Int): List<Series> {
         return getSeries(
             remoteFetcher = { seriesRemoteDataSource.getSimilarSeries(seriesId, page) },
-            cacheCode = getCacheCodeOfSimilarSeries(seriesId, page)
+            cacheCode = getCacheCodeOfSimilarSeries(
+                seriesId,
+                page,
+                languageRepository.getLanguage()
+            )
         )
     }
 
     override suspend fun getTopRatingSeries(page: Int, genreId: Long?): List<Series> {
         return getSeries(
             remoteFetcher = { seriesRemoteDataSource.getTopRatingSeries(page, genreId) },
-            cacheCode = getCacheCodeOfTopRatedSeries(page, genreId)
+            cacheCode = getCacheCodeOfTopRatedSeries(
+                page, genreId,
+                languageRepository.getLanguage()
+            )
         )
     }
 
     override suspend fun getTrendingSeries(page: Int, genreId: Long?): List<Series> {
         return getSeries(
             remoteFetcher = { seriesRemoteDataSource.getTrendingSeries(page, genreId) },
-            cacheCode = getCacheCodeOfTrendingSeries(page, genreId)
+            cacheCode = getCacheCodeOfTrendingSeries(
+                page, genreId,
+                languageRepository.getLanguage()
+            )
         )
     }
 
     override suspend fun getMoreRecommendedSeries(page: Int, genreId: Long?): List<Series> {
         return getSeries(
             remoteFetcher = { seriesRemoteDataSource.getMoreRecommendedSeries(page, genreId) },
-            cacheCode = getCacheCodeOfMoreRecommendedSeries(page, genreId)
+            cacheCode = getCacheCodeOfMoreRecommendedSeries(
+                page, genreId,
+                languageRepository.getLanguage()
+            )
         )
     }
 
@@ -79,7 +94,10 @@ class SeriesRepositoryImpl @Inject constructor(
     ): List<Series> {
         return getSeries(
             remoteFetcher = { seriesRemoteDataSource.getOnTvSeries(page, genreId) },
-            cacheCode = getCacheCodeOfOnTvSeries(page, genreId)
+            cacheCode = getCacheCodeOfOnTvSeries(
+                page, genreId,
+                languageRepository.getLanguage()
+            )
         )
     }
 
@@ -89,28 +107,40 @@ class SeriesRepositoryImpl @Inject constructor(
     ): List<Series> {
         return getSeries(
             remoteFetcher = { seriesRemoteDataSource.getAiringTodaySeries(page, genreId) },
-            cacheCode = getCacheCodeOfAiringTodaySeries(page, genreId)
+            cacheCode = getCacheCodeOfAiringTodaySeries(
+                page, genreId,
+                languageRepository.getLanguage()
+            )
         )
     }
 
     override suspend fun getFreeToWatchSeries(page: Int, genreId: Long?): List<Series> {
         return getSeries(
             remoteFetcher = { seriesRemoteDataSource.getFreeToWatchSeries(page, genreId) },
-            cacheCode = getCacheCodeOfFreeToWatchSeries(page, genreId)
+            cacheCode = getCacheCodeOfFreeToWatchSeries(
+                page, genreId,
+                languageRepository.getLanguage()
+            )
         )
     }
 
     override suspend fun getSeriesByCategory(genreId: Long, page: Int): List<Series> {
         return getSeries(
             remoteFetcher = { seriesRemoteDataSource.getSeriesByCategory(genreId, page) },
-            cacheCode = getCacheCodeOfSeriesByCategory(page, genreId)
+            cacheCode = getCacheCodeOfSeriesByCategory(
+                page, genreId,
+                languageRepository.getLanguage()
+            )
         )
     }
 
     override suspend fun getPopularSeries(page: Int, genreId: Long?): List<Series> {
         return getSeries(
             remoteFetcher = { seriesRemoteDataSource.getPopularSeries(page, genreId) },
-            cacheCode = getCacheCodeOfPopularSeries(page, genreId)
+            cacheCode = getCacheCodeOfPopularSeries(
+                page, genreId,
+                languageRepository.getLanguage()
+            )
         )
     }
 
@@ -127,7 +157,10 @@ class SeriesRepositoryImpl @Inject constructor(
                     sortType?.sortBy
                 )
             },
-            cacheCode = getCacheCodeOfAllSeries(page, genreId, sortType)
+            cacheCode = getCacheCodeOfAllSeries(
+                page, genreId, sortType,
+                languageRepository.getLanguage()
+            )
         )
     }
 
@@ -142,7 +175,10 @@ class SeriesRepositoryImpl @Inject constructor(
     override suspend fun getSeriesOfArtist(artistId: Long): List<Series> {
         return getSeries(
             remoteFetcher = { seriesRemoteDataSource.getSeriesOfArtist(artistId) },
-            cacheCode = getCacheCodeOfSeriesOfArtist(artistId)
+            cacheCode = getCacheCodeOfSeriesOfArtist(
+                artistId,
+                languageRepository.getLanguage()
+            )
         )
     }
 
@@ -162,7 +198,9 @@ class SeriesRepositoryImpl @Inject constructor(
                     .also { series ->
                         seriesLocalDataSource.insertCacheCodeWithSeries(
                             series.toCacheCodeWithSeriesCacheDto(
-                                request = cacheCode
+                                request = cacheCode,
+                                languageRepository.getLanguage()
+
                             )
                         )
                     }
@@ -172,7 +210,12 @@ class SeriesRepositoryImpl @Inject constructor(
     override suspend fun getSeriesById(id: Long): Series {
         seriesLocalDataSource.deleteExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
         return seriesLocalDataSource
-            .getSeriesByCacheCode(cacheCode = getCacheCodeOfSeries(id))
+            .getSeriesByCacheCode(
+                cacheCode = getCacheCodeOfSeries(
+                    id,
+                    languageRepository.getLanguage()
+                )
+            )
             .toEntityList()
             .firstOrNull()
             ?: tryToCall {
@@ -181,14 +224,22 @@ class SeriesRepositoryImpl @Inject constructor(
                 )
             }.also { series ->
                 seriesLocalDataSource.insertCacheCodeWithSeries(
-                    listOf(series).toCacheCodeWithSeriesCacheDto(request = "series/${id}")
+                    listOf(series).toCacheCodeWithSeriesCacheDto(
+                        request = "series/${id}",
+                        languageRepository.getLanguage()
+                    )
                 )
             }
     }
 
     override suspend fun getSeriesReviews(seriesId: Long, page: Int): List<Review> {
         return seriesLocalDataSource
-            .getSeriesReviewsByCacheCode(getCacheCodeOfSeriesReviews(page, seriesId))
+            .getSeriesReviewsByCacheCode(
+                getCacheCodeOfSeriesReviews(
+                    page, seriesId,
+                    languageRepository.getLanguage()
+                )
+            )
             .toEntityList()
             .takeIf { it.isNotEmpty() }
             ?: tryToCall {
@@ -196,7 +247,12 @@ class SeriesRepositoryImpl @Inject constructor(
             }.also {
                 seriesLocalDataSource.insertCacheCodeWithReviews(
                     it.toCacheCodeWithReviewsCacheDto(
-                        getCacheCodeOfSeriesReviews(page, seriesId)
+                        getCacheCodeOfSeriesReviews(
+                            page, seriesId,
+                            languageRepository.getLanguage()
+                        ),
+                        languageRepository.getLanguage()
+
                     )
                 )
             }
@@ -205,7 +261,12 @@ class SeriesRepositoryImpl @Inject constructor(
     override suspend fun getSeriesSeasons(seriesId: Long): List<Season> {
         seasonEpisodeLocalDataSource.deleteExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
         return seasonEpisodeLocalDataSource
-            .getSeasonsByCacheCode(cacheCode = getCacheCodeOfSeriesSeasons(seriesId))
+            .getSeasonsByCacheCode(
+                cacheCode = getCacheCodeOfSeriesSeasons(
+                    seriesId,
+                    languageRepository.getLanguage()
+                )
+            )
             .toEntityList()
             .takeIf { it.isNotEmpty() }
             ?: tryToCall {
@@ -213,7 +274,12 @@ class SeriesRepositoryImpl @Inject constructor(
                     .also { seasons ->
                         seasonEpisodeLocalDataSource.insertCacheCodeWithSeasons(
                             seasons.toCacheCodeWithSeasonsCacheDto(
-                                request = getCacheCodeOfSeriesSeasons(seriesId)
+                                request = getCacheCodeOfSeriesSeasons(
+                                    seriesId,
+                                    languageRepository.getLanguage()
+                                ),
+                                languageRepository.getLanguage()
+
                             )
                         )
                     }
@@ -223,7 +289,12 @@ class SeriesRepositoryImpl @Inject constructor(
     override suspend fun getEpisodes(seriesId: Long, seasonNumber: Int): List<Episode> {
         seasonEpisodeLocalDataSource.deleteExpiredCache(Date().time - CACHE_EXPIRATION_MILLIS)
         return seasonEpisodeLocalDataSource
-            .getEpisodesByCacheCode(cacheCode = getCacheCodeOfEpisodes(seriesId, seasonNumber))
+            .getEpisodesByCacheCode(
+                cacheCode = getCacheCodeOfEpisodes(
+                    seriesId, seasonNumber,
+                    languageRepository.getLanguage()
+                )
+            )
             .toEntityList()
             .takeIf { it.isNotEmpty() }
             ?: tryToCall {
@@ -231,7 +302,12 @@ class SeriesRepositoryImpl @Inject constructor(
                     .also { episodes ->
                         seasonEpisodeLocalDataSource.insertCacheCodeWithEpisodes(
                             episodes.toCacheCodeWithEpisodesCacheDto(
-                                request = getCacheCodeOfEpisodes(seriesId, seasonNumber)
+                                request = getCacheCodeOfEpisodes(
+                                    seriesId, seasonNumber,
+                                    languageRepository.getLanguage()
+                                ),
+                                languageRepository.getLanguage()
+
                             )
                         )
                     }
@@ -240,14 +316,18 @@ class SeriesRepositoryImpl @Inject constructor(
 
     override suspend fun getSeriesGenres(): List<Genre> {
         return seriesLocalDataSource
-            .getSeriesGenres()
+            .getSeriesGenresByLanguage(languageRepository.getLanguage())
             .toEntityList()
             .takeIf { it.isNotEmpty() }
             ?: tryToCall {
                 seriesRemoteDataSource.getSeriesGenres()
                     .map { it.toEntity() }
                     .also {
-                        seriesLocalDataSource.insertSeriesGenres(it.toCacheDtoList())
+                        seriesLocalDataSource.insertSeriesGenres(
+                            it.toCacheDtoList(
+                                languageRepository.getLanguage()
+                            )
+                        )
                     }
             }
     }

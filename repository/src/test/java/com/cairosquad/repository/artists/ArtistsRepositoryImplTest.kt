@@ -2,6 +2,7 @@ package com.cairosquad.repository.artists
 
 import com.cairosquad.domain.exception.DomainEmptyResponseException
 import com.cairosquad.domain.exception.InternetConnectionException
+import com.cairosquad.domain.repository.LanguageRepository
 import com.cairosquad.entity.Artist
 import com.cairosquad.repository.artists.data_source.local.ArtistsLocalDataSource
 import com.cairosquad.repository.artists.data_source.local.dto.ArtistCacheDto
@@ -30,12 +31,20 @@ class ArtistsRepositoryImplTest {
     private lateinit var repository: ArtistsRepositoryImpl
     private lateinit var remoteDataSource: ArtistsRemoteDataSource
     private lateinit var localDataSource: ArtistsLocalDataSource
+    private lateinit var languageRepository: LanguageRepository
 
     @Before
     fun setUp() {
+        languageRepository = mockk(relaxed = true)
         remoteDataSource = mockk(relaxed = true)
         localDataSource = mockk(relaxed = true)
-        repository = ArtistsRepositoryImpl(remoteDataSource, localDataSource)
+        repository = ArtistsRepositoryImpl(
+            remoteDataSource,
+            localDataSource,
+            languageRepository
+        )
+
+        coEvery { languageRepository.getLanguage() } returns LANGUAGE
     }
 
     @Test
@@ -106,7 +115,7 @@ class ArtistsRepositoryImplTest {
     fun `should return cached artist when getArtistById is called and cache is available`() =
         runTest {
             val artistId = 1L
-            val cacheCode = getCacheCodeOfArtist(artistId)
+            val cacheCode = getCacheCodeOfArtist(artistId, LANGUAGE)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getArtistsByCacheCode(cacheCode) } returns listOf(
                 cachedArtistDto
@@ -157,7 +166,7 @@ class ArtistsRepositoryImplTest {
         runTest {
             val movieId = 100L
             val page = 1
-            val cacheCode = getCacheCodeOfMovieTopCast(movieId, page)
+            val cacheCode = getCacheCodeOfMovieTopCast(movieId, page, LANGUAGE)
             val cachedArtists = listOf(cachedArtistDto)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getArtistsByCacheCode(cacheCode) } returns cachedArtists
@@ -174,7 +183,7 @@ class ArtistsRepositoryImplTest {
         runTest {
             val movieId = 100L
             val page = 1
-            val cacheCode = getCacheCodeOfMovieTopCast(movieId, page)
+            val cacheCode = getCacheCodeOfMovieTopCast(movieId, page, LANGUAGE)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getArtistsByCacheCode(cacheCode) } returns emptyList()
             coEvery { remoteDataSource.getMovieTopCast(movieId, page) } returns listOf(
@@ -194,7 +203,7 @@ class ArtistsRepositoryImplTest {
         runTest {
             val seriesId = 200L
             val page = 1
-            val cacheCode = getCacheCodeOfSeriesTopCast(seriesId, page)
+            val cacheCode = getCacheCodeOfSeriesTopCast(seriesId, page, LANGUAGE)
             val cachedArtists = listOf(cachedArtistDto)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getArtistsByCacheCode(cacheCode) } returns cachedArtists
@@ -227,7 +236,9 @@ class ArtistsRepositoryImplTest {
         }
 
     private companion object {
-        private val artistRemoteDto = ArtistRemoteDto(
+        const val LANGUAGE = "en"
+
+        val artistRemoteDto = ArtistRemoteDto(
             id = 1,
             name = "John Doe",
             profilePath = "/path/to/photo.jpg",
@@ -237,7 +248,7 @@ class ArtistsRepositoryImplTest {
             department = "Acting"
         )
 
-        private val cachedArtistDto = ArtistCacheDto(
+        val cachedArtistDto = ArtistCacheDto(
             id = 1L,
             name = "John Doe",
             photoPath = "/path/to/photo.jpg",
@@ -245,10 +256,11 @@ class ArtistsRepositoryImplTest {
             birthDate = 946684800000L, // 2000-01-01
             biography = "Talented actor",
             department = "Acting",
-            cachingTimestamp = System.currentTimeMillis()
+            cachingTimestamp = System.currentTimeMillis(),
+            artistIdWithLanguage = "${1L}$LANGUAGE"
         )
 
-        private val expectedArtist = Artist(
+        val expectedArtist = Artist(
             id = 1L,
             name = "John Doe",
             photoPath = "/path/to/photo.jpg",

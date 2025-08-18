@@ -24,7 +24,7 @@ interface ArtistsCacheDao {
     @Query(
         "DELETE FROM CacheCodeArtistCrossRef " +
                 "WHERE " +
-                "NOT artist_id IN (SELECT artist_id FROM ArtistCacheDto) " +
+                "NOT artist_id_language IN (SELECT artist_id FROM ArtistCacheDto) " +
                 "OR NOT cacheCode IN (SELECT cacheCode FROM CacheCodeDto)"
     )
     suspend fun deleteCrossRefForNonExistingCacheCodeAndArtist()

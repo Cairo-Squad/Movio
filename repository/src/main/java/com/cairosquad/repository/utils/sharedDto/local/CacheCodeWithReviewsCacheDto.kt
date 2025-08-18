@@ -9,7 +9,7 @@ data class CacheCodeWithReviewsCacheDto(
     val cacheCode: CacheCodeDto,
     @Relation(
         parentColumn = "cacheCode",
-        entityColumn = "review_id",
+        entityColumn = "review_id_language",
         associateBy = Junction(CacheCodeReviewCacheCrossRef::class)
     )
     val reviews: List<ReviewCacheDto>,

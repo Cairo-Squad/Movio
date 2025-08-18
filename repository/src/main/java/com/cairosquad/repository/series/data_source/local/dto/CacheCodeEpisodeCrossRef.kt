@@ -6,11 +6,11 @@ import com.cairosquad.repository.utils.sharedDto.local.CacheCodeDto
 
 @Entity(
     tableName = "CacheCodeEpisodeCrossRef",
-    primaryKeys = ["cacheCode", "episode_id"]
+    primaryKeys = ["cacheCode", "episode_id_language"]
 )
 data class CacheCodeEpisodeCrossRef(
     @ColumnInfo(name = "cacheCode") val cacheCode: String,
-    @ColumnInfo(name = "episode_id") val episodeId: Long
+    @ColumnInfo(name = "episode_id_language") val episodeIdWithLanguage: String
 ) {
     companion object {
         fun fromCacheCodeAndEpisodeList(
@@ -20,7 +20,7 @@ data class CacheCodeEpisodeCrossRef(
             return episodes.map { episode ->
                 CacheCodeEpisodeCrossRef(
                     cacheCode = cacheCode.cacheCode,
-                    episodeId = episode.id
+                    episodeIdWithLanguage = episode.episodeIdWithLanguage
                 )
             }
         }

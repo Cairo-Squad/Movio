@@ -7,8 +7,10 @@ import java.util.Date
 
 @Entity(tableName = "SeriesWithoutGenreCacheDto")
 data class SeriesWithoutGenreCacheDto(
-    @ColumnInfo(name = "series_id")
     @PrimaryKey
+    @ColumnInfo(name = "series_id_language")
+    val seriesIdWithLanguage: String,
+    @ColumnInfo(name = "series_id")
     val id: Long,
     @ColumnInfo(name = "title")
     val title: String,

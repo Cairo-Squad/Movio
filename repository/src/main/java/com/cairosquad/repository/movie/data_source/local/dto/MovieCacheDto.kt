@@ -9,8 +9,8 @@ data class MovieCacheDto(
     @Embedded
     val movieWithoutGenre: MovieWithoutGenreCacheDto,
     @Relation(
-        parentColumn = "movie_id",
-        entityColumn = "genre_id",
+        parentColumn = "movie_id_language",
+        entityColumn = "genre_id_language",
         associateBy = Junction(MovieGenreCacheCrossRef::class)
     )
     val genres: List<GenreOfMovieCacheDto>
