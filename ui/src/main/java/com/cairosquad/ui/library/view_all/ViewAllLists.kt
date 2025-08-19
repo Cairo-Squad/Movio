@@ -230,7 +230,7 @@ private fun ViewAllListsContent(
             value = screenState.listName,
             onValueChange = listener::onListValueChange,
             onSubmit = { listener.onSubmitCreateListClick() },
-            isMovie = true
+            isMovie = true,
         )
 
         AnimatedVisibility(

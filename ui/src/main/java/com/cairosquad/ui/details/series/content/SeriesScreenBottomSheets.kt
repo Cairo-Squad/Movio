@@ -76,7 +76,7 @@ fun SeriesScreenBottomSheets(
         isMovie = false,
         value = state.newListName,
         onValueChange = viewModel::onValueChange,
-        onSubmit = { viewModel.onDismissCreateListBottomSheet() }
+        onSubmit = { viewModel.onDismissCreateListBottomSheet() },
     )
     RateBottomSheet(
         isVisible = state.showRateBottomSheet,

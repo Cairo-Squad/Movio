@@ -19,6 +19,7 @@ data class ViewAllListsScreenState(
 
     val errorStatus: ErrorStatus? = null,
     val isRefreshing: Boolean = false,
+    val isCreatingList: Boolean = false,
 ) {
     enum class SectionStatus {
         LOADING,
