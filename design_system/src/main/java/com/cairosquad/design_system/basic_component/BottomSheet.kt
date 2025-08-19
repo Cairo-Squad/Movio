@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -54,7 +55,15 @@ fun BottomSheet(
             modifier = modifier,
             sheetState = sheetState,
             containerColor = containerColor,
-            scrimColor = scrimColor
+            scrimColor = scrimColor,
+            dragHandle = {
+                Box(
+                    modifier = Modifier
+                        .padding(top = 12.dp, bottom = 16.dp)
+                        .size(36.dp, 4.dp)
+                        .background(Theme.color.surfaces.surfaceVariant, CircleShape)
+                )
+            }
         ) {
             content()
         }
@@ -63,13 +72,13 @@ fun BottomSheet(
 
 @Preview
 @Composable
-private fun BottomSheetLightPreview(){
+private fun BottomSheetLightPreview() {
     BottomSheetPreview(isDarkTheme = false)
 }
 
 @Preview
 @Composable
-private fun BottomSheetDarkPreview(){
+private fun BottomSheetDarkPreview() {
     BottomSheetPreview(isDarkTheme = true)
 }
 
