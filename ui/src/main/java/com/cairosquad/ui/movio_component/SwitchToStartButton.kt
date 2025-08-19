@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -42,6 +43,8 @@ import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.Icon
 import com.cairosquad.design_system.basic_component.Text
+import com.cairosquad.design_system.preview.MultiThemePreviews
+import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 import kotlinx.coroutines.launch
 
@@ -173,15 +176,7 @@ fun SwitchToStartButton(
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                repeat(3) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.arrow),
-                        contentDescription = null,
-                        tint = Theme.color.surfaces.onSurface.copy(
-                            alpha = (progress - 0.3f + it * 0.2f).coerceIn(0f, 1f)
-                        )
-                    )
-                }
+                Arrows(isRtl)
             }
 
             val afterSwipeColorWidth = with(density) { animatedWidth.value.toDp() }
@@ -223,8 +218,45 @@ fun SwitchToStartButton(
     }
 }
 
+@Composable
+private fun Arrows(isRtl: Boolean) {
+    val step = if (isRtl) 10.dp else (-10).dp
+    Box {
+        Icon(
+            painter = painterResource(id = R.drawable.arrow),
+            contentDescription = stringResource(R.string.icon),
+            tint = Theme.color.surfaces.onSurfaceAt3,
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .size(24.dp)
+                .offset(x = step * 2)
+        )
+        Icon(
+            painter = painterResource(id = R.drawable.arrow),
+            contentDescription = stringResource(R.string.icon),
+            tint = Theme.color.surfaces.onSurfaceAt2,
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .size(24.dp)
+                .offset(x = step)
+        )
+        Icon(
+            painter = painterResource(id = R.drawable.arrow),
+            contentDescription = stringResource(R.string.icon),
+            tint = Theme.color.surfaces.onSurfaceAt1,
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .size(24.dp)
+                .offset(x = 0.dp)
+        )
+    }
+}
+
 @Preview(device = "id:pixel_5")
+@MultiThemePreviews
 @Composable
 private fun Preview() {
-    SwitchToStartButton { }
+    MovioTheme {
+        SwitchToStartButton { }
+    }
 }
