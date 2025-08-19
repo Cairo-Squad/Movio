@@ -111,7 +111,7 @@ private fun BoxScope.UndoRatingSnackBar(
                 Box(
                     modifier = Modifier
                         .clip(CircleShape)
-                        .clickable(onClick = viewModel::onUndoClicked)
+                        .clickable(onClick = viewModel::onUndoClick)
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                 ) {
                     Text(
@@ -150,9 +150,9 @@ fun MyRatingsScreenContent(
             ratedItems = ratedItems,
             onItemClick = { itemId, isMovie ->
                 if (isMovie) {
-                    listener.onMovieClicked(itemId)
+                    listener.onMovieClick(itemId)
                 } else {
-                    listener.onSeriesClicked(itemId)
+                    listener.onSeriesClick(itemId)
                 }
             },
             onMovieDelete = listener::onMovieDelete,

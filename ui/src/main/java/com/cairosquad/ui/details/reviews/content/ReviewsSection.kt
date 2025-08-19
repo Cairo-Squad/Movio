@@ -33,7 +33,7 @@ fun Reviews(
     ) {
         AppBar(
             title = stringResource(R.string.reviews),
-            onBackButtonClicked = listener::onClickBack,
+            onBackButtonClicked = listener::onBackClick,
         )
         LazyColumn(
             modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp),

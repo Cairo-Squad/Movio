@@ -32,8 +32,8 @@ fun LazyListScope.SimilarSeriesSection(
                 if (state.similarSeries.isNotEmpty()) {
                     SimilarSeriesSection(
                         similarSeries = state.similarSeries,
-                        onSeriesClicked = listener::onSeriesClicked,
-                        onActionClicked = { listener.onSeeAllSimilarClicked(seriesId = state.series.id) },
+                        onSeriesClicked = listener::onSeriesClick,
+                        onActionClicked = { listener.onSeeAllSimilarClick(seriesId = state.series.id) },
                     )
                 }
             }

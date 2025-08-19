@@ -41,7 +41,7 @@ fun SimilarMoviesGrid(
                         vote = movie.rating,
                         imgUrl = movie.posterUrl,
                         modifier = Modifier.clickable {
-                            viewModel.onMovieClicked(movie.id)
+                            viewModel.onMovieClick(movie.id)
                         },
                         width = null,
                         aspectRatio = 0.745F,

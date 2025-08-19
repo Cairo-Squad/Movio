@@ -37,7 +37,7 @@ fun SearchContent(
     val focusRequester = remember { FocusRequester() }
 
     BackHandler(enabled = true) {
-        listener.onBackClicked()
+        listener.onBackClick()
     }
 
     Column(modifier = modifier.fillMaxSize()) {
@@ -81,7 +81,7 @@ fun SearchContent(
                         recentItem = it,
                         query = state.query,
                         onRemoveHistoryItem = listener::onRemoveHistoryItem,
-                        onRecentSearchItemClicked = listener::onRecentSearchItemClicked
+                        onRecentSearchItemClicked = listener::onRecentSearchItemClick
                     )
                 }
             } else {
@@ -91,7 +91,7 @@ fun SearchContent(
                         recommendationItem = item,
                         query = state.query,
                         isRecentSearch = isRecent,
-                        onSearchRecommendationItemClicked = listener::onRecentSearchItemClicked
+                        onSearchRecommendationItemClicked = listener::onRecentSearchItemClick
                     )
                 }
             }

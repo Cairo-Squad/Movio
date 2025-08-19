@@ -32,9 +32,9 @@ import com.cairosquad.ui.search.content.for_you.MoviesGridContent
 import com.cairosquad.ui.utils.ObserveAsEffect
 import com.cairosquad.viewmodel.foryou.ForYouEffect
 import com.cairosquad.viewmodel.foryou.ForYouInteractionListener
-import com.cairosquad.viewmodel.foryou.ForYouState
-import com.cairosquad.viewmodel.foryou.ForYouState.MovieUiState
-import com.cairosquad.viewmodel.foryou.ForYouState.ScreenStatus
+import com.cairosquad.viewmodel.foryou.ForYouScreenState
+import com.cairosquad.viewmodel.foryou.ForYouScreenState.MovieUiState
+import com.cairosquad.viewmodel.foryou.ForYouScreenState.ScreenStatus
 import com.cairosquad.viewmodel.foryou.ForYouViewModel
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -107,7 +107,7 @@ fun ForYouScreen(
 
 @Composable
 private fun MoviesList(
-    state: ForYouState,
+    state: ForYouScreenState,
     listener: ForYouInteractionListener,
     movies: LazyPagingItems<MovieUiState>,
     modifier: Modifier = Modifier

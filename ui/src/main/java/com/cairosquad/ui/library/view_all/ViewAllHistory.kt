@@ -73,7 +73,7 @@ fun ViewAllHistory(
         UndoSnackBar(
             messageId = uiState.snackBarMessageId,
             isVisible = uiState.showSnackBar,
-            onUndoClicked = viewModel::onUndoClicked,
+            onUndoClicked = viewModel::onUndoClick,
         )
     }
 }
@@ -97,7 +97,7 @@ private fun ViewAllHistoryContent(
             AppBar(
                 modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars),
                 title = stringResource(R.string.history),
-                onBackButtonClicked = listener::onBackClicked,
+                onBackButtonClicked = listener::onBackClick,
                 onShareButtonClicked = null,
                 onFavoriteButtonClicked = null
             )
@@ -153,7 +153,7 @@ private fun HistoryItemsContent(
             ) {
                 TrendingMovieCard(
                     modifier = Modifier.clickable {
-                        listener.onMovieClicked(movie.id)
+                        listener.onMovieClick(movie.id)
                     },
                     movieTitle = movie.title,
                     rating = String.format(
@@ -172,7 +172,7 @@ private fun HistoryItemsContent(
             ) {
                 TrendingMovieCard(
                     modifier = Modifier.clickable {
-                        listener.onSeriesClicked(series.id)
+                        listener.onSeriesClick(series.id)
                     },
                     movieTitle = series.title,
                     rating = String.format(

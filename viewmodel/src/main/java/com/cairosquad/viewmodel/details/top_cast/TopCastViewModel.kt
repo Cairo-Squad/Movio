@@ -10,8 +10,6 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import javax.inject.Inject
 
 @HiltViewModel(assistedFactory = TopCastViewModel.Factory::class)
 class TopCastViewModel @AssistedInject constructor(
@@ -68,7 +66,7 @@ class TopCastViewModel @AssistedInject constructor(
         updateState {
             it.copy(
                 screenStatus = ScreenStatus.SUCCESS,
-                cast = cast.map { it.toTopCastUiState() })
+                cast = cast.map { it.toUiState() })
         }
     }
 }

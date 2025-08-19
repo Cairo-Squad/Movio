@@ -58,11 +58,11 @@ class SimilarMoviesViewModel @Inject constructor(
     }
 
 
-    override fun onClickBack() {
+    override fun onBackClick() {
         sendEffect(SimilarMoviesEffect.NavigateBack)
     }
 
-    override fun onMovieClicked(movieId: Long) {
+    override fun onMovieClick(movieId: Long) {
         sendEffect(SimilarMoviesEffect.NavigateToMovieDetails(movieId))
     }
 

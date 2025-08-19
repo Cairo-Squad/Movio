@@ -150,7 +150,7 @@ private fun ViewAllListsContent(
                                         listName = movieList.name,
                                         numberOfItems = movieList.mediaCount,
                                         onListClicked = {
-                                            listener.onMovieListClicked(
+                                            listener.onMovieListClick(
                                                 movieList.id,
                                                 movieList.name
                                             )
@@ -167,7 +167,7 @@ private fun ViewAllListsContent(
                                         listName = seriesList.name,
                                         numberOfItems = seriesList.mediaCount,
                                         onListClicked = {
-                                            listener.onSeriesListClicked(
+                                            listener.onSeriesListClick(
                                                 seriesList.id,
                                                 seriesList.name
                                             )
@@ -208,7 +208,7 @@ private fun ViewAllListsContent(
                         .clip(CircleShape)
                         .background(Theme.color.brand.primary)
                         .clickable(onClick = {
-                            listener.onAddListClicked()
+                            listener.onAddListClick()
                         }),
                     contentAlignment = Alignment.Center
                 ) {
@@ -229,7 +229,7 @@ private fun ViewAllListsContent(
             onDismiss = listener::onDismissCreateListBottomSheet,
             value = screenState.listName,
             onValueChange = listener::onListValueChange,
-            onSubmit = { listener.onSubmitCreateListClicked() },
+            onSubmit = { listener.onSubmitCreateListClick() },
             isMovie = true
         )
 

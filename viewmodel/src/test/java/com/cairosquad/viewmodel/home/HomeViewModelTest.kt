@@ -81,7 +81,7 @@ class HomeViewModelTest {
         advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.profileImage).isEqualTo("/avatar.jpg")
-        assertThat(viewModel.screenState.value.popularMovies).isEqualTo(listOf(movie1.toHomeMediaUiState()))
+        assertThat(viewModel.screenState.value.popularMovies).isEqualTo(listOf(movie1.toUiState()))
         assertThat(viewModel.screenState.value.dataRequestStatus).isEqualTo(HomeScreenState.DataRequestStatus.SUCCESS)
     }
 
@@ -163,7 +163,7 @@ class HomeViewModelTest {
     @Test
     fun `should emit navigate to profile when onClickProfile called`() = runTest {
         viewModel.effect.test {
-            viewModel.onClickProfile()
+            viewModel.onProfileClick()
             assertThat(awaitItem()).isEqualTo(HomeEffect.NavigateToProfile)
             cancelAndIgnoreRemainingEvents()
         }
@@ -172,7 +172,7 @@ class HomeViewModelTest {
     @Test
     fun `should emit navigate to media details when onClickMedia called`() = runTest {
         viewModel.effect.test {
-            viewModel.onClickMedia(123L, true)
+            viewModel.onMediaClick(123L, true)
             assertThat(awaitItem()).isEqualTo(HomeEffect.NavigateMediaDetails(123L, true))
             cancelAndIgnoreRemainingEvents()
         }
@@ -181,7 +181,7 @@ class HomeViewModelTest {
     @Test
     fun `should emit navigate to see all screen when onClickSeeAll called`() = runTest {
         viewModel.effect.test {
-            viewModel.onClickSeeAll(MediaContentType.TOP_RATING, MediaType.MOVIES)
+            viewModel.onSeeAllClick(MediaContentType.TOP_RATING, MediaType.MOVIES)
             assertThat(awaitItem()).isEqualTo(
                 HomeEffect.NavigateToSeeAllScreen(
                     MediaContentType.TOP_RATING,
@@ -197,7 +197,7 @@ class HomeViewModelTest {
         coEvery { manageMoviesUseCase.getMoviesGenres() } returns listOf(genre1)
         coEvery { manageSeriesUseCase.getSeriesGenres() } returns emptyList()
         coEvery { unifiedMediaPager.getCombinedMedia(genre1.id) } returns flowOf()
-        viewModel.onClickTab(HomeScreenState.Tab.CATEGORIES.ordinal)
+        viewModel.onTabClick(HomeScreenState.Tab.CATEGORIES.ordinal)
         advanceUntilIdle()
 
         viewModel.onGenreSelected(1)
@@ -210,7 +210,7 @@ class HomeViewModelTest {
     fun `should update tab and fetch media when onClickTab categories`() = runTest {
         coEvery { unifiedMediaPager.getCombinedMedia(null) } returns flowOf()
 
-        viewModel.onClickTab(HomeScreenState.Tab.CATEGORIES.ordinal)
+        viewModel.onTabClick(HomeScreenState.Tab.CATEGORIES.ordinal)
         advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.selectedTab).isEqualTo(HomeScreenState.Tab.CATEGORIES)
@@ -218,7 +218,7 @@ class HomeViewModelTest {
 
     @Test
     fun `should update tab when onClickTab movies`() = runTest {
-        viewModel.onClickTab(HomeScreenState.Tab.MOVIES.ordinal)
+        viewModel.onTabClick(HomeScreenState.Tab.MOVIES.ordinal)
         advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.selectedTab).isEqualTo(HomeScreenState.Tab.MOVIES)
@@ -226,7 +226,7 @@ class HomeViewModelTest {
 
     @Test
     fun `should update tab when onClickTab series`() = runTest {
-        viewModel.onClickTab(HomeScreenState.Tab.TV_SHOWS.ordinal)
+        viewModel.onTabClick(HomeScreenState.Tab.TV_SHOWS.ordinal)
         advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.selectedTab).isEqualTo(HomeScreenState.Tab.TV_SHOWS)
@@ -250,7 +250,7 @@ class HomeViewModelTest {
         coEvery { manageSeriesUseCase.getSeriesGenres() } returns emptyList()
         coEvery { unifiedMediaPager.getCombinedMedia(genre1.id, null) } returns flowOf()
 
-        viewModel.onClickTab(HomeScreenState.Tab.CATEGORIES.ordinal)
+        viewModel.onTabClick(HomeScreenState.Tab.CATEGORIES.ordinal)
         viewModel.onGenreSelected(1)
         viewModel.onSortingSelected(HomeScreenState.SortingType.ALL)
         advanceUntilIdle()
@@ -264,7 +264,7 @@ class HomeViewModelTest {
         coEvery { manageSeriesUseCase.getSeriesGenres() } returns emptyList()
         coEvery { unifiedMediaPager.getCombinedMedia(genre1.id, null) } returns flowOf()
 
-        viewModel.onClickTab(HomeScreenState.Tab.CATEGORIES.ordinal)
+        viewModel.onTabClick(HomeScreenState.Tab.CATEGORIES.ordinal)
         viewModel.onGenreSelected(1)
         viewModel.onSortingSelected(HomeScreenState.SortingType.POPULARITY)
         advanceUntilIdle()
@@ -278,7 +278,7 @@ class HomeViewModelTest {
         coEvery { manageSeriesUseCase.getSeriesGenres() } returns emptyList()
         coEvery { unifiedMediaPager.getCombinedMedia(genre1.id, null) } returns flowOf()
 
-        viewModel.onClickTab(2)
+        viewModel.onTabClick(2)
         viewModel.onGenreSelected(1)
         viewModel.onSortingSelected(HomeScreenState.SortingType.LATEST)
         advanceUntilIdle()
@@ -294,17 +294,17 @@ class HomeViewModelTest {
         coEvery { manageMoviesUseCase.getUpcomingMovies(1) } returns listOf(movie1)
         coEvery { manageMoviesUseCase.getMoreRecommendedMovies(1) } returns listOf(movie1)
 
-        viewModel.onClickTab(HomeScreenState.Tab.MOVIES.ordinal)
+        viewModel.onTabClick(HomeScreenState.Tab.MOVIES.ordinal)
         viewModel.onRefresh()
         advanceUntilIdle()
 
-        assertThat(viewModel.screenState.value.popularMovies).isEqualTo(listOf(movie1.toHomeMediaUiState()))
-        assertThat(viewModel.screenState.value.movieSections.topRating).isEqualTo(listOf(movie1.toHomeMediaUiState()))
-        assertThat(viewModel.screenState.value.movieSections.nowPlaying).isEqualTo(listOf(movie1.toHomeMediaUiState()))
-        assertThat(viewModel.screenState.value.movieSections.upComing).isEqualTo(listOf(movie1.toHomeMediaUiState()))
+        assertThat(viewModel.screenState.value.popularMovies).isEqualTo(listOf(movie1.toUiState()))
+        assertThat(viewModel.screenState.value.movieSections.topRating).isEqualTo(listOf(movie1.toUiState()))
+        assertThat(viewModel.screenState.value.movieSections.nowPlaying).isEqualTo(listOf(movie1.toUiState()))
+        assertThat(viewModel.screenState.value.movieSections.upComing).isEqualTo(listOf(movie1.toUiState()))
         assertThat(viewModel.screenState.value.movieSections.moreRecommended).isEqualTo(
             listOf(
-                movie1.toHomeMediaUiState()
+                movie1.toUiState()
             )
         )
     }
@@ -317,17 +317,17 @@ class HomeViewModelTest {
         coEvery { manageSeriesUseCase.getOnTvSeries(1) } returns listOf(series1)
         coEvery { manageSeriesUseCase.getMoreRecommendedSeries(1) } returns listOf(series1)
 
-        viewModel.onClickTab(HomeScreenState.Tab.TV_SHOWS.ordinal)
+        viewModel.onTabClick(HomeScreenState.Tab.TV_SHOWS.ordinal)
         viewModel.onRefresh()
         advanceUntilIdle()
 
-        assertThat(viewModel.screenState.value.popularSeries).isEqualTo(listOf(series1.toHomeMediaUiState()))
-        assertThat(viewModel.screenState.value.seriesSections.topRating).isEqualTo(listOf(series1.toHomeMediaUiState()))
-        assertThat(viewModel.screenState.value.seriesSections.onTv).isEqualTo(listOf(series1.toHomeMediaUiState()))
-        assertThat(viewModel.screenState.value.seriesSections.airingToday).isEqualTo(listOf(series1.toHomeMediaUiState()))
+        assertThat(viewModel.screenState.value.popularSeries).isEqualTo(listOf(series1.toUiState()))
+        assertThat(viewModel.screenState.value.seriesSections.topRating).isEqualTo(listOf(series1.toUiState()))
+        assertThat(viewModel.screenState.value.seriesSections.onTv).isEqualTo(listOf(series1.toUiState()))
+        assertThat(viewModel.screenState.value.seriesSections.airingToday).isEqualTo(listOf(series1.toUiState()))
         assertThat(viewModel.screenState.value.seriesSections.moreRecommended).isEqualTo(
             listOf(
-                series1.toHomeMediaUiState()
+                series1.toUiState()
             )
         )
     }
@@ -338,15 +338,15 @@ class HomeViewModelTest {
         coEvery { manageSeriesUseCase.getSeriesGenres() } returns listOf(genre2)
         coEvery { unifiedMediaPager.getCombinedMedia(null) } returns flowOf()
 
-        viewModel.onClickTab(HomeScreenState.Tab.CATEGORIES.ordinal)
+        viewModel.onTabClick(HomeScreenState.Tab.CATEGORIES.ordinal)
         viewModel.onRefresh()
         advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.genres).isEqualTo(
             listOf(
                 HomeScreenState.GenreUiState.defaultGenre,
-                genre1.toHomeGenreUiState(),
-                genre2.toHomeGenreUiState()
+                genre1.toUiState(),
+                genre2.toUiState()
             )
         )
     }

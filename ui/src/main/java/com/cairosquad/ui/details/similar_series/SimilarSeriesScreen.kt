@@ -37,7 +37,7 @@ fun SimilarSeriesScreen(
     ) {
         AppBar(
             title = stringResource(R.string.similar_series),
-            onBackButtonClicked = { viewModel.onClickBack() },
+            onBackButtonClicked = { viewModel.onBackClick() },
         )
         SimilarSeriesGrid(state, viewModel, seriesId)
     }
