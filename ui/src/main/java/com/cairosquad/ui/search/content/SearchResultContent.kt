@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
@@ -99,22 +100,18 @@ fun SearchResultContent(
 
         when (selectedTabIndex) {
             0 -> {
-                SearchResultText(noOfResults = movies.itemCount)
                 AllResultsTabContent(movies = movies, listener = listener, state = state)
             }
 
             1 -> {
-                SearchResultText(noOfResults = movies.itemCount)
                 MoviesTabContent(movies = movies, listener = listener, state = state)
             }
 
             2 -> {
-                SearchResultText(noOfResults = series.itemCount)
                 SeriesTabContent(series = series, listener = listener, state = state)
             }
 
             3 -> {
-                SearchResultText(noOfResults = artists.itemCount)
                 ArtistsTabContent(artist = artists, listener = listener, state = state)
             }
         }
@@ -180,6 +177,9 @@ private fun AllResultsTabContent(
                     bottom = 16.dp
                 )
             ) {
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    SearchResultText(noOfResults = movies.itemCount)
+                }
                 items(movies.itemCount) { index ->
                     movies[index]?.let { result ->
                         MovieCard(
@@ -251,6 +251,9 @@ private fun MoviesTabContent(
                     bottom = 16.dp
                 )
             ) {
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    SearchResultText(noOfResults = movies.itemCount)
+                }
                 items(movies.itemCount) { index ->
                     movies[index]?.let { movie ->
                         MovieCard(
@@ -330,6 +333,9 @@ private fun SeriesTabContent(
                     bottom = 16.dp
                 )
             ) {
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    SearchResultText(noOfResults = series.itemCount)
+                }
                 items(series.itemCount) { index ->
                     series[index]?.let { series ->
                         MovieCard(
@@ -407,6 +413,9 @@ private fun ArtistsTabContent(
                     bottom = 16.dp
                 )
             ) {
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    SearchResultText(noOfResults = artist.itemCount)
+                }
                 items(artist.itemCount) { index ->
                     artist[index]?.let { artist ->
                         ArtistCard(
@@ -486,9 +495,6 @@ fun SearchResultText(
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier
-            .padding(bottom = 16.dp)
-            .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         BasicText(
