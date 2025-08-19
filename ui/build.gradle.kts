@@ -8,7 +8,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     id("org.jetbrains.kotlin.plugin.compose")
     id("dagger.hilt.android.plugin")
-    id("org.jetbrains.kotlin.kapt")
+    alias(libs.plugins.kotlin.kapt)
 }
 
 android {
@@ -54,31 +54,29 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    debugImplementation(libs.androidx.ui.tooling)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.foundation.layout.android)
-    implementation(libs.androidx.compose.foundation)
-    implementation(platform(libs.androidx.compose.bom))
+    implementation(platform(libs.compose.bom))
+    implementation(libs.bundles.compose)
+    implementation(libs.core.ktx)
+    implementation(libs.appcompat)
+    implementation(libs.activity.compose)
+    implementation(libs.compose.foundation.layout)
+    implementation(libs.compose.foundation)
+    implementation(platform(libs.compose.bom))
     testImplementation(libs.junit)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.lifecycle.viewmodel.compose)
 
     // navigation
     implementation(libs.navigation.compose)
 
     // serialization
-    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.serialization.json)
 
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
-    kapt(libs.androidx.hilt.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)
+    kapt(libs.hilt.androidx.compiler)
+    implementation(libs.hilt.navigation.compose)
 
     // Lottie
     implementation(libs.lottie.compose)

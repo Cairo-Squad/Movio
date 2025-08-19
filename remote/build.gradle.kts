@@ -4,11 +4,10 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kover)
     alias(libs.plugins.ksp)
-    id("org.jetbrains.kotlin.kapt")
+    alias(libs.plugins.kotlin.kapt)
 }
 android {
     namespace = "com.cairosquad.remote"
@@ -49,7 +48,6 @@ android {
         }
     }
     buildFeatures {
-        compose = true
         buildConfig = true
     }
     packaging {
@@ -66,21 +64,18 @@ android {
     }
 }
 dependencies {
-    implementation(platform(libs.androidx.compose.bom))
-
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.androidx.compose.runtime)
+    implementation(libs.serialization.json)
     implementation(libs.logging.interceptor)
 
     // --- Retrofit 3 ---
     implementation(libs.retrofit)
-    implementation(libs.converter.kotlinx.serialization)
+    implementation(libs.retrofit.converter.kotlinx.serialization)
     implementation (libs.okhttp)
     testImplementation(kotlin("test"))
     testImplementation(libs.mockwebserver)
 
 
-    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.coroutines.test)
 
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit)
