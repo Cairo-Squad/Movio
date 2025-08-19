@@ -54,9 +54,9 @@ android {
 
 dependencies {
 
-	implementation(libs.androidx.core.ktx)
+	implementation(libs.core.ktx)
 	implementation(libs.coil.compose)
-	implementation(libs.androidx.junit.ktx)
+	implementation(libs.test.junit.ktx)
 	testImplementation(kotlin("test"))
 	testImplementation(libs.junit.jupiter)
 	testImplementation(libs.mockk)
@@ -64,8 +64,8 @@ dependencies {
 	androidTestImplementation(libs.mockk)
 	androidTestImplementation(libs.truth)
 	testImplementation(libs.junit)
-	testImplementation(libs.kotlinx.coroutines.test)
-	implementation(libs.coil.network.okhttp)
+	testImplementation(libs.coroutines.test)
+	implementation(libs.coil.okhttp)
 	api("com.google.firebase:firebase-ml-vision:24.1.0") {
 		exclude( group="com.google.android.gms", module="play-services-vision-common")
 	}

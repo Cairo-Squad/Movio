@@ -7,7 +7,7 @@ plugins {
     id("androidx.room") version "2.7.1"
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kover)
-    id("org.jetbrains.kotlin.kapt")
+    alias(libs.plugins.kotlin.kapt)
 }
 
 android {
@@ -47,20 +47,20 @@ android {
 
 dependencies {
     implementation(project(":domain"))
-    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.serialization.json)
     testImplementation(kotlin("test"))
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
 
     testImplementation(libs.mockk)
-    testImplementation(libs.kotlinx.coroutines.test)
-    implementation(libs.kotlinx.coroutines.core)
+    testImplementation(libs.coroutines.test)
+    implementation(libs.coroutines.core)
     testImplementation(libs.truth)
 
     // Room
-    implementation(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.ktx)
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler)
+    implementation(libs.room.ktx)
 
     // Hilt
     implementation(libs.hilt.android)
