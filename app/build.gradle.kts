@@ -14,7 +14,7 @@ plugins {
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
-    id("dagger.hilt.android.plugin")
+    alias(libs.plugins.hilt.android)
 }
 
 android {
@@ -95,24 +95,12 @@ hilt {
 }
 
 dependencies {
-    testImplementation(libs.junit)
-    implementation(libs.compose.ui)
-    implementation(libs.firebase.perf)
-    implementation(libs.core.ktx)
-    implementation(libs.firebase.analytics)
-    implementation(libs.compose.foundation)
-    implementation(libs.compose.ui.graphics)
-    implementation(libs.firebase.crashlytics)
+    implementation(libs.bundles.android.core)
     implementation(platform(libs.firebase.bom))
-    debugImplementation(libs.compose.ui.tooling)
-    androidTestImplementation(libs.compose.ui.test.junit4)
-    implementation(libs.activity.compose)
-    androidTestImplementation(libs.test.junit)
-    implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.bundles.firebase)
     implementation(platform(libs.compose.bom))
-    implementation(libs.lifecycle.runtime.ktx)
-    debugImplementation(libs.compose.ui.test.manifest)
-    implementation(libs.compose.foundation.layout)
+    implementation(libs.bundles.compose)
+    implementation(libs.bundles.lifecycle)
 
     implementation(libs.logging.interceptor)
 

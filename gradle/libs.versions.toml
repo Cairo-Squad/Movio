@@ -33,7 +33,7 @@ paging = "3.3.6"
 daggerCompiler = "2.57"
 hiltCompiler = "2.57"
 hiltCompilerVersion = "1.2.0"
-hiltAndroid = "1.0"
+hiltAndroid = "2.57"
 
 # Firebase
 firebaseBom = "34.0.0"
@@ -199,20 +199,20 @@ kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kover = { id = "org.jetbrains.kotlinx.kover", version = "0.9.1" }
 
 #Hilt
-hilt-android = { id = "dagger.hilt.android.plugin", version.ref = "hiltAndroid" }
+hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
 
 # Room
 room = { id = "androidx.room", version.ref = "room" }
 
 [bundles]
 android-core = ["core-ktx", "appcompat", "runner"]
-compose = ["compose-bom", "compose-runtime", "compose-foundation", "compose-foundation-layout", "activity-compose", "compose-ui", "compose-ui-graphics", "compose-ui-tooling", "compose-ui-tooling-preview", "compose-ui-test-manifest", "compose-ui-test-junit4", "material3"]
+compose = ["compose-runtime", "compose-foundation", "compose-foundation-layout", "activity-compose", "compose-ui", "compose-ui-graphics", "compose-ui-tooling", "compose-ui-tooling-preview", "compose-ui-test-manifest", "compose-ui-test-junit4", "material3"]
 lifecycle = ["lifecycle-runtime-ktx", "lifecycle-viewmodel-ktx", "lifecycle-viewmodel-compose"]
 datastore = ["datastore-preferences", "datastore-core"]
 room = ["room-runtime", "room-ktx", "room-compiler", "room-testing"]
 paging = ["paging-runtime", "paging-testing", "paging-compose"]
 hilt = ["dagger", "dagger-compiler", "hilt-android", "hilt-android-gradle-plugin", "hilt-compiler", "hilt-androidx-compiler", "hilt-navigation-compose"]
-firebase = ["firebase-bom", "firebase-analytics", "firebase-crashlytics", "firebase-perf", "firebase-ml-model-interpreter", "firebase-ml-vision-automl"]
+firebase = ["firebase-analytics", "firebase-crashlytics", "firebase-perf"]
 networking = ["retrofit", "okhttp", "logging-interceptor", "mockwebserver"]
 coil = ["coil-okhttp", "coil-compose"]
 coroutines = ["coroutines-core", "coroutines-test"]

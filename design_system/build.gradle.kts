@@ -46,12 +46,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.test.junit)
     implementation(libs.material3)
-    implementation(libs.compose.foundation.layout)
     implementation(platform(libs.compose.bom))
-    implementation(libs.compose.ui)
-    implementation(libs.compose.ui.graphics)
-    implementation(libs.compose.ui.tooling.preview)
-    debugImplementation(libs.compose.ui.tooling)
+    implementation(libs.bundles.compose)
     implementation(libs.lottie.compose)
     implementation(libs.accompanist.webview)
 }

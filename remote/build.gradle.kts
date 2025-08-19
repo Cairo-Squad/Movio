@@ -66,10 +66,7 @@ android {
     }
 }
 dependencies {
-    implementation(platform(libs.compose.bom))
-
     implementation(libs.serialization.json)
-    implementation(libs.compose.runtime)
     implementation(libs.logging.interceptor)
 
     // --- Retrofit 3 ---
