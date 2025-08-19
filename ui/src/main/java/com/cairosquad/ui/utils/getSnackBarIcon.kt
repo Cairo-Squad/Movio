@@ -27,3 +27,25 @@ fun getSnackBarIcon(isProcessSuccess: Boolean): ImageVector {
         }
     }
 }
+
+@Composable
+fun getListIcon(isProcessSuccess: Boolean): ImageVector {
+    return when (isProcessSuccess) {
+        true -> {
+            ImageVector.vectorResource(
+                if (Theme.isDark)
+                    R.drawable.snack_bar_icon_success_tick_dark
+                else
+                    R.drawable.snack_bar_icon_success_tick_light
+            )
+        }
+        false -> {
+            ImageVector.vectorResource(
+                if (Theme.isDark)
+                    R.drawable.snack_bar_icon_fail_dark
+                else
+                    R.drawable.snack_bar_icon_fail_light
+            )
+        }
+    }
+}

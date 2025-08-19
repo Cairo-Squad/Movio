@@ -80,6 +80,9 @@ dependencies {
     kapt(libs.androidx.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
+    // Lottie
+    implementation(libs.lottie.compose)
+
     implementation(project(":design_system"))
     implementation(project(":viewmodel"))
     implementation(project(":safe_image_viewer"))
