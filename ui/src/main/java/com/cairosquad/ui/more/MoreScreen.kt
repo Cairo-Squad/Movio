@@ -23,6 +23,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,12 +60,13 @@ import com.cairosquad.viewmodel.more.MoreScreenEffect
 import com.cairosquad.viewmodel.more.MoreScreenInteractionListener
 import com.cairosquad.viewmodel.more.MoreScreenState
 import com.cairosquad.viewmodel.more.MoreViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun MoreScreen(
     viewModel: MoreViewModel = hiltViewModel(),
-
-    ) {
+    setNavBarVisibility: (Boolean) -> Unit
+) {
     val navController = LocalNavController.current
     val state by viewModel.screenState.collectAsStateWithLifecycle()
     ObserveAsEffect(viewModel.effect) {
@@ -82,8 +84,18 @@ fun MoreScreen(
             }
 
         }
-
     }
+
+    val isNavBarVisible =
+        !(state.isThemeBottomSheetOpen
+                || state.isLanguageBottomSheetOpen
+                || state.isLogoutButtonVisible)
+
+    LaunchedEffect(isNavBarVisible) {
+        if (isNavBarVisible) delay(600)
+        setNavBarVisibility(isNavBarVisible)
+    }
+
     MoreScreenContent(
         state = state,
         listener = viewModel
@@ -91,7 +103,10 @@ fun MoreScreen(
 }
 
 @Composable
-fun MoreScreenContent(state: MoreScreenState, listener: MoreScreenInteractionListener) {
+fun MoreScreenContent(
+    state: MoreScreenState,
+    listener: MoreScreenInteractionListener
+) {
 
     val animatedBlur by animateDpAsState(
         if (

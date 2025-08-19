@@ -1,5 +1,6 @@
 package com.cairosquad.design_system.basic_component
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -18,10 +19,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -66,10 +65,12 @@ fun BottomSheet(
         animationSpec = tween(500)
     )
 
+    BackHandler(onBack = onDismiss)
+
     LaunchedEffect(isVisible) {
         if (isVisible) {
             delay(50)
-            bottomSheetHeightDp = contentHeight + 40
+            bottomSheetHeightDp = minOf(contentHeight + 40, maxHeight)
         } else {
             delay(500)
             bottomSheetHeightDp = maxHeight
@@ -142,8 +143,7 @@ fun BottomSheet(
                         .wrapContentSize()
                         .onGloballyPositioned {
                             contentHeight = with(density) { it.size.height.toDp().value }
-                        }
-                        .verticalScroll(rememberScrollState()),
+                        },
                     content = content
                 )
             }
