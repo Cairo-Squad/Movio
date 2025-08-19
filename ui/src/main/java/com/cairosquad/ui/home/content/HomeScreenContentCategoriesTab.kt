@@ -86,7 +86,7 @@ fun HomeScreenContentCategoriesTab(
             media[index]?.let { mediaItem ->
                 MovieCard(
                     modifier = Modifier.clickable {
-                        listener.onClickMedia(mediaItem.id, mediaItem.isMovie)
+                        listener.onMediaClick(mediaItem.id, mediaItem.isMovie)
                     },
                     title = mediaItem.title,
                     vote = mediaItem.rating,

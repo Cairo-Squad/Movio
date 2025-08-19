@@ -51,7 +51,7 @@ fun SearchResultContent(
     val artists = state.artists.collectAsLazyPagingItems()
     val series = state.series.collectAsLazyPagingItems()
     BackHandler(enabled = true) {
-        listener.onBackClicked()
+        listener.onBackClick()
     }
 
     val selectedTabIndex = state.selectedTabIndex
@@ -64,23 +64,19 @@ fun SearchResultContent(
             .fillMaxSize()
             .padding(top = 16.dp)
     ) {
-
         InputField(
             modifier = Modifier
                 .background(Theme.color.surfaces.surface)
                 .padding(bottom = 12.dp)
                 .padding(horizontal = 16.dp),
+            isFocusEnabled = false,
+            onClick = listener::onClickSearchTextField,
             value = state.query,
             onValueChange = { },
             placeholder = stringResource(R.string.search_with_dotes_ahead),
             leadingIcon = R.drawable.search_bottom_nav,
-            trailingIcon =   if(state.query.isNotEmpty()) R.drawable.ic_close else null,
+            trailingIcon = if (state.query.isNotEmpty()) R.drawable.ic_close else null,
             onTrailingIconClick = { listener.onCancelSearch() },
-            onFocusChanged = {
-                if (it) {
-                    listener.onClickSearchTextField()
-                }
-            },
             readOnly = true
         )
         TabRow(
@@ -188,7 +184,7 @@ private fun AllResultsTabContent(
                     movies[index]?.let { result ->
                         MovieCard(
                             modifier = Modifier
-                                .clickable(onClick = { listener.onMovieClicked(result.id) }),
+                                .clickable(onClick = { listener.onMovieClick(result.id) }),
                             title = result.title,
                             vote = result.rating,
                             imgUrl = result.posterPath,
@@ -259,7 +255,7 @@ private fun MoviesTabContent(
                     movies[index]?.let { movie ->
                         MovieCard(
                             modifier = Modifier.clickable {
-                                listener.onMovieClicked(movie.id)
+                                listener.onMovieClick(movie.id)
                             },
                             title = movie.title,
                             vote = movie.rating,
@@ -338,7 +334,7 @@ private fun SeriesTabContent(
                     series[index]?.let { series ->
                         MovieCard(
                             modifier = Modifier
-                                .clickable(onClick = { listener.onSeriesClicked(series.id) }),
+                                .clickable(onClick = { listener.onSeriesClick(series.id) }),
                             title = series.title,
                             vote = series.rating,
                             imgUrl = series.posterPath,
@@ -415,7 +411,7 @@ private fun ArtistsTabContent(
                     artist[index]?.let { artist ->
                         ArtistCard(
                             modifier = Modifier
-                                .clickable(onClick = { listener.onArtistClicked(artist.id) }),
+                                .clickable(onClick = { listener.onArtistClick(artist.id) }),
                             name = artist.name,
                             imgUrl = artist.photoPath,
                         )
@@ -445,6 +441,7 @@ private fun SearchResultFail(
                 ErrorStatus.NO_INTERNET ->
                     if (Theme.isDark) R.drawable.no_internet_dark
                     else R.drawable.no_internet
+
                 else ->
                     if (Theme.isDark) R.drawable.no_result_dark
                     else R.drawable.no_result

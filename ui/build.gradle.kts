@@ -62,7 +62,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.foundation.layout.android)
-    implementation(libs.androidx.foundation)
+    implementation(libs.androidx.compose.foundation)
     implementation(platform(libs.androidx.compose.bom))
     testImplementation(libs.junit)
     implementation(libs.androidx.lifecycle.runtime.ktx)

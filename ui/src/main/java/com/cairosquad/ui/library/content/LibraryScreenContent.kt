@@ -106,7 +106,7 @@ fun LibraryScreenContent(
                             .fillMaxWidth()
                             .padding(bottom = 32.dp),
                         text = stringResource(com.cairosquad.ui.R.string.login),
-                        onClick = listener::onLoginClicked
+                        onClick = listener::onLoginClick
                     )
                 }
             }
@@ -150,7 +150,7 @@ private fun ListsSection(
                                 modifier = Modifier.width(158.dp),
                                 listName = it.name,
                                 numberOfItems = it.mediaCount,
-                                onListClicked = { listener.onListClicked(it.id, it.name) }
+                                onListClicked = { listener.onListClick(it.id, it.name) }
                             )
                         }
                         items(screenState.seriesLists) {
@@ -158,7 +158,7 @@ private fun ListsSection(
                                 modifier = Modifier.width(158.dp),
                                 listName = it.name,
                                 numberOfItems = it.mediaCount,
-                                onListClicked = { listener.onListClicked(it.id, it.name) }
+                                onListClicked = { listener.onListClick(it.id, it.name) }
                             )
                         }
                     }
@@ -222,7 +222,7 @@ private fun FavoriteSection(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(8.dp))
                                     .width(124.dp)
-                                    .clickable(onClick = { listener.onMovieClicked(it.id) }),
+                                    .clickable(onClick = { listener.onMovieClick(it.id) }),
                                 title = it.title,
                                 vote = it.rating,
                                 imgUrl = it.posterPath,
@@ -235,7 +235,7 @@ private fun FavoriteSection(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(8.dp))
                                     .width(124.dp)
-                                    .clickable(onClick = { listener.onSeriesClicked(it.id) }),
+                                    .clickable(onClick = { listener.onSeriesClick(it.id) }),
                                 title = it.title,
                                 vote = it.rating,
                                 imgUrl = it.posterPath,
@@ -306,7 +306,7 @@ private fun HistorySection(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(8.dp))
                                     .width(124.dp)
-                                    .clickable(onClick = { listener.onMovieClicked(it.id) }),
+                                    .clickable(onClick = { listener.onMovieClick(it.id) }),
                                 title = it.title,
                                 vote = it.rating,
                                 imgUrl = it.posterPath,
@@ -319,7 +319,7 @@ private fun HistorySection(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(8.dp))
                                     .width(124.dp)
-                                    .clickable(onClick = { listener.onSeriesClicked(it.id) }),
+                                    .clickable(onClick = { listener.onSeriesClick(it.id) }),
                                 title = it.title,
                                 vote = it.rating,
                                 imgUrl = it.posterPath,

@@ -5,7 +5,7 @@ import com.cairosquad.viewmodel.exception.ErrorStatus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-data class ForYouState(
+data class ForYouScreenState(
     val forYou: Flow<PagingData<MovieUiState>> = flowOf(PagingData.empty()),
     val screenStatus: ScreenStatus = ScreenStatus.LOADING,
     val errorStatus: ErrorStatus? = null,

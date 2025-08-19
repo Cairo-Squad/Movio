@@ -28,8 +28,8 @@ fun LazyListScope.SeriesTopCastSection(
             SeriesDetailsScreenState.SectionStatus.SUCCESS -> {
                 if (state.cast.isNotEmpty()) {
                     SeriesTopCastSection(
-                        onActionClicked = { listener.onSeeAllArtistsClicked(state.series.id) },
-                        onArtistClicked = listener::onArtistClicked,
+                        onActionClicked = { listener.onSeeAllArtistsClick(state.series.id) },
+                        onArtistClicked = listener::onArtistClick,
                         cast = state.cast
                     )
                 }

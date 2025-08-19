@@ -8,6 +8,8 @@ import java.util.Date
 @Entity(tableName = "SeasonCacheDto")
 data class SeasonCacheDto(
     @PrimaryKey
+    @ColumnInfo(name = "season_id_language")
+    val seasonIdWithLanguage: String,
     @ColumnInfo(name = "season_id")
     val id: Long,
     @ColumnInfo(name = "series_id")

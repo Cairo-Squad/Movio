@@ -39,11 +39,11 @@ class MovieViewModel @AssistedInject constructor(
     }
 
     init {
-        loadMovieData()
+        fetchMovieData()
         addMovieToHistory()
     }
 
-    private fun loadMovieData() {
+    private fun fetchMovieData() {
         getBasicDetails()
         getActors()
         getReviews()
@@ -115,7 +115,7 @@ class MovieViewModel @AssistedInject constructor(
         updateState {
             it.copy(
                 basicDetailsSectionState = ScreenStatus.SUCCESS,
-                movie = movie.toMovieUiState()
+                movie = movie.toUiState()
             )
         }
     }
@@ -146,7 +146,7 @@ class MovieViewModel @AssistedInject constructor(
         updateState {
             it.copy(
                 castSectionState = ScreenStatus.SUCCESS,
-                topCast = actors.map { it.toArtistUiState() }
+                topCast = actors.map { it.toUiState() }
             )
         }
     }
@@ -169,7 +169,7 @@ class MovieViewModel @AssistedInject constructor(
         updateState {
             it.copy(
                 reviewsSectionState = ScreenStatus.SUCCESS,
-                reviews = reviews.map { it.toReviewUiState() }
+                reviews = reviews.map { it.toUiState() }
             )
         }
     }
@@ -196,7 +196,7 @@ class MovieViewModel @AssistedInject constructor(
         updateState {
             it.copy(
                 similarMoviesSectionState = ScreenStatus.SUCCESS,
-                similarMovies = movies.map { it.toMovieUiState() }
+                similarMovies = movies.map { it.toUiState() }
             )
         }
     }
@@ -317,7 +317,7 @@ class MovieViewModel @AssistedInject constructor(
         }
     }
 
-    override fun onCreateListClicked() {
+    override fun onCreateListClick() {
         updateState {
             it.copy(
                 isAddToListBottomSheetOpen = false,
@@ -357,7 +357,7 @@ class MovieViewModel @AssistedInject constructor(
         )
     }
 
-    override fun onSubmitCreateListClicked() {
+    override fun onSubmitCreateListClick() {
         tryToCall(
             block = ::onSubmitCreateListClickedBlock,
             onSuccess = ::onSubmitCreateListClickedSuccess,
@@ -450,7 +450,7 @@ class MovieViewModel @AssistedInject constructor(
         updateState { it.copy(rate = rate) }
     }
 
-    override fun onSubmitRateClicked(rate: Int) {
+    override fun onSubmitRateClick(rate: Int) {
         tryToCall(
             onStart = ::onSubmitRateClickedStart,
             block = { movieUseCase.addMovieRating(movieId, rate * 2.toFloat()) },
@@ -479,7 +479,7 @@ class MovieViewModel @AssistedInject constructor(
     }
 
     override fun onRefresh() {
-        loadMovieData()
+        fetchMovieData()
     }
 
     private fun setError(

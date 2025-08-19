@@ -417,7 +417,7 @@ class MovieViewModelTest {
 
     @Test
     fun `WHEN onCreateListClicked SHOULD update state`() = runTest {
-        viewModel.onCreateListClicked()
+        viewModel.onCreateListClick()
 
         assertThat(viewModel.screenState.value.showCreateListBottomSheet).isTrue()
         assertThat(viewModel.screenState.value.isAddToListBottomSheetOpen).isFalse()
@@ -431,7 +431,7 @@ class MovieViewModelTest {
             coEvery { accountUseCase.createList(any()) } returns Unit
             coEvery { accountUseCase.getMoviesLists(1) } returns emptyList()
 
-            viewModel.onSubmitCreateListClicked()
+            viewModel.onSubmitCreateListClick()
             advanceUntilIdle()
             assertThat(viewModel.screenState.value.isAddToListBottomSheetOpen).isTrue()
             unmockkStatic(Dispatchers::class)
@@ -444,7 +444,7 @@ class MovieViewModelTest {
             every { Dispatchers.IO } returns testDispatcher
             coEvery { accountUseCase.createList(any()) } throws RuntimeException()
 
-            viewModel.onSubmitCreateListClicked()
+            viewModel.onSubmitCreateListClick()
             advanceUntilIdle()
             assertThat(viewModel.screenState.value.isAddToListBottomSheetOpen).isTrue()
             unmockkStatic(Dispatchers::class)
@@ -497,7 +497,7 @@ class MovieViewModelTest {
         every { Dispatchers.IO } returns testDispatcher
         coEvery { manageMoviesUseCase.addMovieRating(movieId, any()) } returns RatingResult(1, "")
 
-        viewModel.onSubmitRateClicked(5)
+        viewModel.onSubmitRateClick(5)
         advanceUntilIdle()
         assertThat(viewModel.screenState.value.isRated).isTrue()
         unmockkStatic(Dispatchers::class)

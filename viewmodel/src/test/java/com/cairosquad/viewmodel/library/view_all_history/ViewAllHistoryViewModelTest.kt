@@ -74,7 +74,7 @@ class ViewAllHistoryViewModelTest {
     @Test
     fun `onBackClicked SHOULD send OnNavigateBack effect`() = runTest {
         viewModel = ViewAllHistoryViewModel(accountUseCase)
-        viewModel.onBackClicked()
+        viewModel.onBackClick()
 
         viewModel.effect.test {
             assertThat(awaitItem()).isEqualTo(ViewAllHistoryEffect.OnNavigateBack)
@@ -85,7 +85,7 @@ class ViewAllHistoryViewModelTest {
     @Test
     fun `onMovieClicked SHOULD send OnMovieClicked effect`() = runTest {
         viewModel = ViewAllHistoryViewModel(accountUseCase)
-        viewModel.onMovieClicked(123L)
+        viewModel.onMovieClick(123L)
 
         viewModel.effect.test {
             assertThat(awaitItem()).isEqualTo(ViewAllHistoryEffect.OnMovieClicked(123L))
@@ -96,7 +96,7 @@ class ViewAllHistoryViewModelTest {
     @Test
     fun `onSeriesClicked SHOULD send OnSeriesClicked effect`() = runTest {
         viewModel = ViewAllHistoryViewModel(accountUseCase)
-        viewModel.onSeriesClicked(456L)
+        viewModel.onSeriesClick(456L)
 
         viewModel.effect.test {
             assertThat(awaitItem()).isEqualTo(ViewAllHistoryEffect.OnSeriesClicked(456L))
@@ -168,7 +168,7 @@ class ViewAllHistoryViewModelTest {
         coEvery { accountUseCase.addMovieToHistory(movieId) } just Runs
         coEvery { accountUseCase.getHistoryMovies(any()) } returns emptyList()
 
-        viewModel.onUndoClicked()
+        viewModel.onUndoClick()
         advanceUntilIdle()
 
         coVerify { accountUseCase.addMovieToHistory(movieId) }
@@ -184,7 +184,7 @@ class ViewAllHistoryViewModelTest {
         coEvery { accountUseCase.addSeriesToHistory(seriesId) } just Runs
         coEvery { accountUseCase.getHistorySeries(any()) } returns emptyList()
 
-        viewModel.onUndoClicked()
+        viewModel.onUndoClick()
         advanceUntilIdle()
 
         coVerify { accountUseCase.addSeriesToHistory(seriesId) }

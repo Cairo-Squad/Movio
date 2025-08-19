@@ -50,11 +50,11 @@ class SimilarSeriesViewModel @Inject constructor(
         )
     }
 
-    override fun onClickBack() {
+    override fun onBackClick() {
         sendEffect(SimilarSeriesEffect.NavigateBack)
     }
 
-    override fun onSeriesClicked(seriesId: Long) {
+    override fun onSeriesClick(seriesId: Long) {
         sendEffect(SimilarSeriesEffect.NavigateToSeriesDetails(seriesId))
     }
 

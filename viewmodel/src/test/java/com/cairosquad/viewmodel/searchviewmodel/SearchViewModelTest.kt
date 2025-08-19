@@ -272,7 +272,7 @@ class SearchViewModelTest {
 
         viewModel.onQueryTextChanged(query)
         advanceUntilIdle()
-        viewModel.onBackClicked()
+        viewModel.onBackClick()
         advanceUntilIdle()
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
     }
@@ -303,7 +303,7 @@ class SearchViewModelTest {
 
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.RESULT)
 
-        viewModel.onBackClicked()
+        viewModel.onBackClick()
 
         assertThat(viewModel.screenState.value.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.SEARCH)
     }
@@ -351,7 +351,7 @@ class SearchViewModelTest {
                 recentSearch = listOf("a", "b")
             )
         }
-        viewModel.onBackClicked()
+        viewModel.onBackClick()
         val state = viewModel.screenState.value
         assertThat(state.screenStatus).isEqualTo(SearchScreenState.ScreenStatus.EXPLORE)
         assertThat(state.query).isEqualTo("whatever")
@@ -471,7 +471,7 @@ class SearchViewModelTest {
     @Test
     fun `should navigate to movie details when movie is clicked`() = runTest {
         viewModel.effect.test {
-            viewModel.onMovieClicked(123)
+            viewModel.onMovieClick(123)
             assertThat(awaitItem()).isEqualTo(SearchEffect.NavigateToMovieDetails(123))
             cancelAndIgnoreRemainingEvents()
         }
@@ -480,7 +480,7 @@ class SearchViewModelTest {
     @Test
     fun `should navigate to series details when series is clicked`() = runTest {
         viewModel.effect.test {
-            viewModel.onSeriesClicked(123)
+            viewModel.onSeriesClick(123)
             assertThat(awaitItem()).isEqualTo(SearchEffect.NavigateToSeriesDetails(123))
             cancelAndIgnoreRemainingEvents()
         }
@@ -489,7 +489,7 @@ class SearchViewModelTest {
     @Test
     fun `should navigate to artist details when artist is clicked`() = runTest {
         viewModel.effect.test {
-            viewModel.onArtistClicked(123)
+            viewModel.onArtistClick(123)
             assertThat(awaitItem()).isEqualTo(SearchEffect.NavigateToArtistDetails(123))
             cancelAndIgnoreRemainingEvents()
         }
@@ -498,7 +498,7 @@ class SearchViewModelTest {
     @Test
     fun `should navigate to see all for you movies when see all is clicked`() = runTest {
         viewModel.effect.test {
-            viewModel.onSeeAllForYouClicked()
+            viewModel.onSeeAllForYouClick()
             assertThat(awaitItem()).isEqualTo(SearchEffect.NavigateToSeeAllForYouScreen)
             cancelAndIgnoreRemainingEvents()
         }
@@ -542,7 +542,7 @@ class SearchViewModelTest {
         every { searchPager.series(any()) } returns flowOf(PagingData.empty())
         every { searchPager.artists(any()) } returns flowOf(PagingData.empty())
 
-        viewModel.onRecentSearchItemClicked(testQuery)
+        viewModel.onRecentSearchItemClick(testQuery)
         advanceUntilIdle()
         waitUntil {
             viewModel.screenState.value.screenStatus == SearchScreenState.ScreenStatus.RESULT

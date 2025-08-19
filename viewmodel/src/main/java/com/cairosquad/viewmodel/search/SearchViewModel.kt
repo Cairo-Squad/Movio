@@ -185,7 +185,7 @@ class SearchViewModel @Inject constructor(
     }
 
 
-    override fun onRecentSearchItemClicked(query: String) {
+    override fun onRecentSearchItemClick(query: String) {
         updateState { it.copy(query = query) }
         onSearch()
     }
@@ -228,7 +228,7 @@ class SearchViewModel @Inject constructor(
         )
     }
 
-    override fun onBackClicked() {
+    override fun onBackClick() {
         updateState {
             when (it.screenStatus) {
                 SearchScreenState.ScreenStatus.SEARCH -> it.copy(
@@ -271,19 +271,19 @@ class SearchViewModel @Inject constructor(
         if (screenState.value.query.isBlank()) loadDiscoverMovies() else onSearch()
     }
 
-    override fun onMovieClicked(movieId: Long) {
+    override fun onMovieClick(movieId: Long) {
         sendEffect(SearchEffect.NavigateToMovieDetails(movieId))
     }
 
-    override fun onSeriesClicked(seriesId: Long) {
+    override fun onSeriesClick(seriesId: Long) {
         sendEffect(SearchEffect.NavigateToSeriesDetails(seriesId))
     }
 
-    override fun onArtistClicked(artistId: Long) {
+    override fun onArtistClick(artistId: Long) {
         sendEffect(SearchEffect.NavigateToArtistDetails(artistId))
     }
 
-    override fun onSeeAllForYouClicked() {
+    override fun onSeeAllForYouClick() {
         sendEffect(SearchEffect.NavigateToSeeAllForYouScreen)
     }
 

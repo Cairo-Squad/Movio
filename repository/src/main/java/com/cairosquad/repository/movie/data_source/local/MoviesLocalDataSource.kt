@@ -15,6 +15,8 @@ interface MoviesLocalDataSource {
 
     suspend fun getMovieGenres(): List<GenreOfMovieCacheDto>
 
+    suspend fun getMovieGenresByLanguage(language: String): List<GenreOfMovieCacheDto>
+
     suspend fun getMovieReviewsByCacheCode(cacheCode: String): List<ReviewCacheDto>
 
     suspend fun insertCacheCodeWithReviews(cacheCodeWithReviewsCacheDto: CacheCodeWithReviewsCacheDto)

@@ -6,13 +6,13 @@ import androidx.room.Entity
 
 @Entity(
     tableName = "MovieGenreCacheCrossRef",
-    primaryKeys = ["movie_id", "genre_id"]
+    primaryKeys = ["movie_id_language", "genre_id_language"]
 )
 data class MovieGenreCacheCrossRef(
-    @ColumnInfo(name = "movie_id")
-    val movieId: Long,
-    @ColumnInfo(name = "genre_id")
-    val genreId: Long
+    @ColumnInfo(name = "movie_id_language")
+    val movieIdWithLanguage: String,
+    @ColumnInfo(name = "genre_id_language")
+    val genreIdWithLanguage: String
 ){
     companion object{
         fun fromMovie(
@@ -20,8 +20,8 @@ data class MovieGenreCacheCrossRef(
         ): List<MovieGenreCacheCrossRef> {
             return movie.genres.map { genre ->
                 MovieGenreCacheCrossRef(
-                    movie.movieWithoutGenre.id,
-                    genre.id
+                    movie.movieWithoutGenre.movieIdWithLanguage,
+                    genre.genreIdWithLanguage
                 )
             }
         }

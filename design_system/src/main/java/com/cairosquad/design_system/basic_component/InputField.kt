@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -75,6 +74,8 @@ fun InputField(
     @DrawableRes trailingIcon: Int? = null,
     onTrailingIconClick: () -> Unit = {},
     onFocusChanged: (Boolean) -> Unit = {},
+    isFocusEnabled: Boolean = true,
+    onClick: (() -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {
@@ -85,7 +86,7 @@ fun InputField(
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
 
     val fontScale = LocalConfiguration.current.fontScale
-    val chipHeight = (48 - 28) * fontScale + 28
+    val inputFieldHeight = (48 - 28) * fontScale + 28
 
     val hasFocusGradientColors = listOf(
         Theme.color.brand.onPrimary,
@@ -149,12 +150,16 @@ fun InputField(
                 onValueChange(filteredValue.text.trimStart())
             },
             modifier = Modifier
+                .height(inputFieldHeight.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .background(Theme.color.surfaces.surfaceContainer)
-                .onFocusChanged { focusState ->
-                    onFocusChanged(focusState.isFocused)
-                    hasFocus = focusState.isFocused
-                }
+                .then(
+                    other = if (isFocusEnabled) Modifier.onFocusChanged { focusState ->
+                        onFocusChanged(focusState.isFocused)
+                        hasFocus = focusState.isFocused
+                    }
+                    else Modifier
+                )
                 .then(
                     if (hasFocus || error.isNotBlank()) {
                         Modifier.border(
@@ -166,8 +171,7 @@ fun InputField(
                         Modifier
                     }
                 )
-                .padding(horizontal = 12.dp)
-                .height(chipHeight.dp),
+                .padding(horizontal = 12.dp),
             singleLine = isSingleLine,
             maxLines = 1,
             keyboardOptions = keyboardOptions,
@@ -180,7 +184,12 @@ fun InputField(
             ),
             decorationBox = { innerTextField ->
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .then(
+                            if (onClick != null) Modifier.clickable(onClick = onClick)
+                            else Modifier
+                        ),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     TextFieldIcon(
@@ -198,7 +207,7 @@ fun InputField(
                             Text(
                                 text = placeholder,
                                 style = Theme.textStyle.label.smallRegular14.copy(
-                                    color =textColor,
+                                    color = textColor,
                                     lineHeight = 20.sp
                                 )
                             )

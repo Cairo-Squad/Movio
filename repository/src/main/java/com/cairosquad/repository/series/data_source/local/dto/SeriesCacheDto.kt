@@ -8,8 +8,8 @@ data class SeriesCacheDto(
     @Embedded
     val seriesWithoutGenre: SeriesWithoutGenreCacheDto,
     @Relation(
-        parentColumn = "series_id",
-        entityColumn = "genre_id",
+        parentColumn = "series_id_language",
+        entityColumn = "genre_id_language",
         associateBy = Junction(SeriesGenreCacheCrossRef::class)
     )
     val genres: List<GenreOfSeriesCacheDto>
