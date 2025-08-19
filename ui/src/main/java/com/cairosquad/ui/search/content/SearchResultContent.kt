@@ -64,23 +64,19 @@ fun SearchResultContent(
             .fillMaxSize()
             .padding(top = 16.dp)
     ) {
-
         InputField(
             modifier = Modifier
                 .background(Theme.color.surfaces.surface)
                 .padding(bottom = 12.dp)
                 .padding(horizontal = 16.dp),
+            isFocusEnabled = false,
+            onClick = listener::onClickSearchTextField,
             value = state.query,
             onValueChange = { },
             placeholder = stringResource(R.string.search_with_dotes_ahead),
             leadingIcon = R.drawable.search_bottom_nav,
-            trailingIcon =   if(state.query.isNotEmpty()) R.drawable.ic_close else null,
+            trailingIcon = if (state.query.isNotEmpty()) R.drawable.ic_close else null,
             onTrailingIconClick = { listener.onCancelSearch() },
-            onFocusChanged = {
-                if (it) {
-                    listener.onClickSearchTextField()
-                }
-            },
             readOnly = true
         )
         TabRow(
@@ -445,6 +441,7 @@ private fun SearchResultFail(
                 ErrorStatus.NO_INTERNET ->
                     if (Theme.isDark) R.drawable.no_internet_dark
                     else R.drawable.no_internet
+
                 else ->
                     if (Theme.isDark) R.drawable.no_result_dark
                     else R.drawable.no_result
