@@ -9,7 +9,6 @@ import com.cairosquad.ui.BuildConfig
 import com.cairosquad.ui.details.Constants.SERIES_URL
 import com.cairosquad.ui.movio_component.bottom_sheet.CreateListBottomSheet
 import com.cairosquad.ui.movio_component.bottom_sheet.FinishRatingBottomSheet
-import com.cairosquad.ui.movio_component.bottom_sheet.ListBottomSheet
 import com.cairosquad.ui.movio_component.bottom_sheet.LoginBottomSheet
 import com.cairosquad.ui.movio_component.bottom_sheet.RateBottomSheet
 import com.cairosquad.ui.movio_component.bottom_sheet.ShareBottomSheet
@@ -57,13 +56,6 @@ fun SeriesScreenBottomSheets(
         isVisible = state.showLoginBottomSheet,
         onDismiss = viewModel::onDismissLoginBottomSheet,
         onLoginClick = viewModel::onNavigateToLogin
-    )
-    ListBottomSheet(
-        isVisible = state.showAddToListBottomSheet,
-        onDismiss = viewModel::onDismissAddToListBottomSheet,
-        lists = emptyList(),
-        onListClicked = {},
-        onCreateNewList = viewModel::onCreateListClick
     )
     FinishRatingBottomSheet(
         isVisible = state.showSuccessRatedBottomSheet,
