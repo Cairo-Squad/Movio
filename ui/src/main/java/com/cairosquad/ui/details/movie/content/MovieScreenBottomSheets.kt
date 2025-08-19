@@ -73,7 +73,7 @@ fun MovieScreenBottomSheets(
         value = state.listName,
         onValueChange = viewModel::onListValueChange,
         onSubmit = { viewModel.onSubmitCreateListClick() },
-        isMovie = true
+        isMovie = true,
     )
     RateBottomSheet(
         isVisible = state.isRateBottomSheetOpen,

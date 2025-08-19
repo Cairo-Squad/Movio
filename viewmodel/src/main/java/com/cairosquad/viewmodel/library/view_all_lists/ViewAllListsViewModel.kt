@@ -105,6 +105,10 @@ class ViewAllListsViewModel @Inject constructor(
     }
 
     override fun onSubmitCreateListClick() {
+        if (screenState.value.isCreatingList) return
+
+        updateState { it.copy(isCreatingList = true) }
+
         tryToCall(
             block = {
                 accountUseCase.createList(screenState.value.listName)
@@ -113,6 +117,7 @@ class ViewAllListsViewModel @Inject constructor(
             onSuccess = { (moviesLists, seriesLists) ->
                 updateState {
                     it.copy(
+                        isCreatingList = false,
                         showCreateListBottomSheet = false,
                         listName = "",
                         movieLists = moviesLists.map { list -> list.toUiState() },
@@ -128,6 +133,7 @@ class ViewAllListsViewModel @Inject constructor(
             onError = {
                 updateState {
                     it.copy(
+                        isCreatingList = false,
                         showCreateListBottomSheet = false,
                         listName = "",
                         showSnackBar = true,
