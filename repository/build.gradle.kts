@@ -7,7 +7,7 @@ plugins {
     id("androidx.room") version "2.7.1"
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kover)
-    id("org.jetbrains.kotlin.kapt")
+    alias(libs.plugins.kotlin.kapt)
 }
 
 android {

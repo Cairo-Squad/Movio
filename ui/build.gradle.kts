@@ -8,7 +8,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     id("org.jetbrains.kotlin.plugin.compose")
     id("dagger.hilt.android.plugin")
-    id("org.jetbrains.kotlin.kapt")
+    alias(libs.plugins.kotlin.kapt)
 }
 
 android {

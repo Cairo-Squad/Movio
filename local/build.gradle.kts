@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
-    id("org.jetbrains.kotlin.kapt")
+    alias(libs.plugins.kotlin.kapt)
     id("androidx.room") version "2.7.1"
 }
 

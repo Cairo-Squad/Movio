@@ -6,14 +6,14 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.gms.google.services)
     alias(libs.plugins.google.firebase.crashlytics)
     alias(libs.plugins.google.firebase.perf)
     alias(libs.plugins.google.firebase.appdistribution)
+    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.ksp)
-    id("org.jetbrains.kotlin.kapt")
-    alias(libs.plugins.kotlin.serialization)
-    id("androidx.room") version "2.7.1"
+    alias(libs.plugins.room)
     id("dagger.hilt.android.plugin")
 }
 

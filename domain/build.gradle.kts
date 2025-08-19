@@ -4,7 +4,7 @@ plugins {
     id("java-library")
     alias(libs.plugins.jetbrains.kotlin.jvm)
     alias(libs.plugins.kover)
-    id("org.jetbrains.kotlin.kapt")
+    alias(libs.plugins.kotlin.kapt)
 }
 java {
     sourceCompatibility = JavaVersion.VERSION_11

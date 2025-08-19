@@ -8,7 +8,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kover)
     alias(libs.plugins.ksp)
-    id("org.jetbrains.kotlin.kapt")
+    alias(libs.plugins.kotlin.kapt)
 }
 android {
     namespace = "com.cairosquad.remote"

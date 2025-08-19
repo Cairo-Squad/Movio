@@ -23,16 +23,17 @@ datastoreCore = "1.1.7"
 datastorePreferencesCore = "1.1.7"
 
 # Room
-roomRuntime = "2.7.2"
+room = "2.7.2"
 roomTesting = "2.7.2"
 
 # Paging
-paging_version = "3.3.6"
+paging = "3.3.6"
 
 # Dagger & Hilt
 daggerCompiler = "2.57"
 hiltCompiler = "2.57"
 hiltCompilerVersion = "1.2.0"
+hiltAndroid = "1.0"
 
 # Firebase
 firebaseBom = "34.0.0"
@@ -113,15 +114,15 @@ datastore-preferences = { module = "androidx.datastore:datastore-preferences", v
 datastore-core = { module = "androidx.datastore:datastore-core", version.ref = "datastoreCore" }
 
 # Room
-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-testing = { module = "androidx.room:room-testing", version.ref = "roomTesting" }
 
 # Paging
-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging_version" }
-paging-testing = { module = "androidx.paging:paging-testing", version.ref = "paging_version" }
-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging_version" }
+paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
+paging-testing = { module = "androidx.paging:paging-testing", version.ref = "paging" }
+paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
 
 # Dagger & Hilt
 dagger = { module = "com.google.dagger:dagger", version.ref = "daggerCompiler" }
@@ -190,12 +191,18 @@ google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.
 google-firebase-appdistribution = { id = "com.google.firebase.appdistribution", version.ref = "googleFirebaseAppdistribution" }
 google-firebase-perf = { id = "com.google.firebase.firebase-perf", version.ref = "googleFirebasePerf" }
 
-# KSP
+# Annotation Processing
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 
 # Kover
 kover = { id = "org.jetbrains.kotlinx.kover", version = "0.9.1" }
 
+#Hilt
+hilt-android = { id = "dagger.hilt.android.plugin", version.ref = "hiltAndroid" }
+
+# Room
+room = { id = "androidx.room", version.ref = "room" }
 
 [bundles]
 android-core = ["core-ktx", "appcompat", "runner"]

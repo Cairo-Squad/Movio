@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.kover)
     id("dagger.hilt.android.plugin")
     alias(libs.plugins.ksp)
-    id("org.jetbrains.kotlin.kapt")
+    alias(libs.plugins.kotlin.kapt)
 }
 
 android {
