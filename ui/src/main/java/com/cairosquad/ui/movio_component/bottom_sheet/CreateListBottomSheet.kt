@@ -67,7 +67,7 @@ fun CreateListBottomSheet(
                 text = stringResource(com.cairosquad.ui.R.string.create),
                 onClick = {
                     onSubmit()
-                }
+                },
             )
         }
     }

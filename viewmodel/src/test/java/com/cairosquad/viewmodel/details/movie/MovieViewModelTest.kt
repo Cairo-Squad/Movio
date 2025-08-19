@@ -299,7 +299,7 @@ class MovieViewModelTest {
 
     @Test
     fun `onCopy SHOULD show then hide snackbar after delay`() = runTest {
-        viewModel.onCopy(0, true)
+        viewModel.onCopy()
 
         advanceTimeBy(0)
         assertThat(viewModel.screenState.value.showSnackBar).isFalse()

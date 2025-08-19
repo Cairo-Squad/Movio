@@ -443,11 +443,8 @@ class MovieViewModel @AssistedInject constructor(
         sendEffect(MovieEffect.NavigateToMovie(movieId))
     }
 
-    override fun onCopy(messageId: Int, isSuccessful: Boolean) {
-        viewModelScope.launch {
+    override fun onCopy() {
             onDismissShareBottomSheet()
-            showSnackBar(R.string.copied_to_clip_board_successfully, isSuccessful)
-        }
     }
 
     override fun onDismissShareBottomSheet() {
