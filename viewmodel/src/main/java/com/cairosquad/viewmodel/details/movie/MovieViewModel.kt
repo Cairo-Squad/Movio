@@ -326,12 +326,49 @@ class MovieViewModel @AssistedInject constructor(
         }
     }
 
-    override fun onClickList(id: Long) {
+    override fun onClickList(listId: Long) {
         tryToCall(
-            block = { onClickListBlock(id) },
-            onSuccess = ::onClickListSuccess,
-            onError = ::onClickListError
+            onStart = { onClickListStart(listId) },
+            block = { onClickListBlock(listId) },
+            onSuccess = {onClickListSuccess(it, listId)},
+            onError = { onClickListError(it, listId) },
+            onEnd = { onClickListEnd(listId) }
         )
+    }
+
+    private fun onClickListStart(listId: Long) {
+        updateListState(listId, MovieScreenState.ListState.LOADING)
+    }
+
+    private fun onClickListEnd(listId: Long) {
+        updateListState(listId, MovieScreenState.ListState.INITIAL)
+        updateState { it.copy(isAddToListBottomSheetOpen = false) }
+    }
+
+    private suspend fun onClickListError(throwable: Throwable, listId: Long) {
+        updateListState(listId, MovieScreenState.ListState.ERROR)
+        delay(750)
+        showSnackBar(R.string.error_adding_movie_to_list, false)
+    }
+
+    private suspend fun onClickListSuccess(isAdded: Boolean, listId: Long) {
+        updateListState(listId, MovieScreenState.ListState.SUCCESS)
+        delay(750)
+        showSnackBar(
+            messageId = if (isAdded) R.string.added_to_list
+            else R.string.movie_already_in_list, isSuccessful = isAdded
+        )
+    }
+
+    private fun updateListState(listId: Long, newState: MovieScreenState.ListState) {
+        updateState { state ->
+            state.copy(
+                moviesLists = state.moviesLists.map { list ->
+                    if (list.id == listId) list.copy(addToListState = newState)
+                    else list
+                }
+            )
+        }
     }
 
     private suspend fun onClickListBlock(listId: Long): Boolean {
@@ -342,19 +379,6 @@ class MovieViewModel @AssistedInject constructor(
             accountUseCase.addMovieToList(listId, screenState.value.movie.id)
             true
         }
-    }
-
-    private fun onClickListError(throwable: Throwable) {
-        updateState { it.copy(isAddToListBottomSheetOpen = false) }
-        showSnackBar(R.string.error_adding_movie_to_list, false)
-    }
-
-    private fun onClickListSuccess(isAdded: Boolean) {
-        updateState { it.copy(isAddToListBottomSheetOpen = false) }
-        showSnackBar(
-            messageId = if (isAdded) R.string.added_to_list
-            else R.string.movie_already_in_list, isSuccessful = isAdded
-        )
     }
 
     override fun onSubmitCreateListClick() {

@@ -10,7 +10,7 @@ interface MovieInteractionListener {
     fun onPlayClick()
     fun onAddToListClick()
     fun onCreateListClick()
-    fun onClickList(id: Long)
+    fun onClickList(listId: Long)
     fun onSubmitCreateListClick()
     fun onDismissCreateListBottomSheet()
     fun onListValueChange(listName: String)
