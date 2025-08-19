@@ -67,8 +67,16 @@ data class MovieScreenState(
         ERROR
     }
 
+    enum class ListState {
+        INITIAL,
+        LOADING,
+        SUCCESS,
+        ERROR
+    }
+
     data class MoviesList(
         val id: Long,
-        val name: String
+        val name: String,
+        val addToListState: ListState = ListState.INITIAL,
     )
 }
