@@ -34,6 +34,7 @@ fun MovieScreenBottomSheets(
             ShareUtil.copyLink(
                 seriesUrl = movieUrl,
                 context = context,
+                isSeries = false,
                 onDismiss = viewModel::onCopy
             )
         },

@@ -35,6 +35,7 @@ fun SeriesScreenBottomSheets(
             ShareUtil.copyLink(
                 seriesUrl = seriesUrl,
                 context = context,
+                isSeries = true,
                 onDismiss = viewModel::onCopy
             )
         },
