@@ -65,7 +65,7 @@ fun BottomSheet(
         animationSpec = tween(500)
     )
 
-    BackHandler(onBack = onDismiss)
+    BackHandler(enabled = isVisible, onBack = onDismiss)
 
     LaunchedEffect(isVisible) {
         if (isVisible) {
