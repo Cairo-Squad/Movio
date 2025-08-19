@@ -2,11 +2,11 @@ package com.cairosquad.viewmodel.library.list_content
 
 interface ListContentInteractionListener {
 
-    fun onBackClicked()
+    fun onBackClick()
 
-    fun onMovieClicked(movieId: Long)
+    fun onMovieClick(movieId: Long)
 
-    fun onSeriesClicked(seriesId: Long)
+    fun onSeriesClick(seriesId: Long)
 
     fun onMovieDelete(movieId: Long)
 
@@ -14,5 +14,5 @@ interface ListContentInteractionListener {
 
     fun onRefresh()
 
-    fun onUndoClicked()
+    fun onUndoClick()
 }

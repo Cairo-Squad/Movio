@@ -63,7 +63,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    override fun onClickTab(tabIndex: Int) {
+    override fun onTabClick(tabIndex: Int) {
         when (tabIndex) {
             0 -> {
                 fetchPopularMovies()
@@ -104,7 +104,7 @@ class HomeViewModel @Inject constructor(
         fetchPopularMedia(
             genreId = null,
             fetchBlock = { id -> manageMoviesUseCase.getPopularMovies(page = 1, genreId = id) },
-            mapper = Movie::toHomeMediaUiState,
+            mapper = Movie::toUiState,
             onSuccess = { mappedList ->
                 updateState {
                     it.copy(
@@ -120,7 +120,7 @@ class HomeViewModel @Inject constructor(
         fetchPopularMedia(
             genreId = null,
             fetchBlock = { id -> manageSeriesUseCase.getPopularSeries(page = 1, genreId = id) },
-            mapper = Series::toHomeMediaUiState,
+            mapper = Series::toUiState,
             onSuccess = { mappedList ->
                 updateState {
                     it.copy(
@@ -142,10 +142,10 @@ class HomeViewModel @Inject constructor(
                 updateState {
                     it.copy(
                         movieSections = it.movieSections.copy(
-                            topRating = topRating.map(Movie::toHomeMediaUiState),
-                            nowPlaying = nowPlaying.map(Movie::toHomeMediaUiState),
-                            upComing = upComing.map(Movie::toHomeMediaUiState),
-                            moreRecommended = moreRecommended.map(Movie::toHomeMediaUiState)
+                            topRating = topRating.map(Movie::toUiState),
+                            nowPlaying = nowPlaying.map(Movie::toUiState),
+                            upComing = upComing.map(Movie::toUiState),
+                            moreRecommended = moreRecommended.map(Movie::toUiState)
                         ),
                         dataRequestStatus = DataRequestStatus.SUCCESS
                     )
@@ -167,10 +167,10 @@ class HomeViewModel @Inject constructor(
                 updateState {
                     it.copy(
                         seriesSections = it.seriesSections.copy(
-                            topRating = topRating.map(Series::toHomeMediaUiState),
-                            airingToday = airingToday.map(Series::toHomeMediaUiState),
-                            onTv = onTv.map(Series::toHomeMediaUiState),
-                            moreRecommended = moreRecommended.map(Series::toHomeMediaUiState)
+                            topRating = topRating.map(Series::toUiState),
+                            airingToday = airingToday.map(Series::toUiState),
+                            onTv = onTv.map(Series::toUiState),
+                            moreRecommended = moreRecommended.map(Series::toUiState)
                         ),
                         dataRequestStatus = DataRequestStatus.SUCCESS
                     )
@@ -231,8 +231,8 @@ class HomeViewModel @Inject constructor(
 
         return buildSet {
             add(HomeScreenState.GenreUiState.defaultGenre)
-            movieGenres.mapTo(this) { it.toHomeGenreUiState() }
-            seriesGenres.mapTo(this) { it.toHomeGenreUiState() }
+            movieGenres.mapTo(this) { it.toUiState() }
+            seriesGenres.mapTo(this) { it.toUiState() }
         }.toList()
     }
 
@@ -255,11 +255,11 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    override fun onClickProfile() {
+    override fun onProfileClick() {
         sendEffect(HomeEffect.NavigateToProfile)
     }
 
-    override fun onClickMedia(mediaId: Long, isMovie: Boolean) {
+    override fun onMediaClick(mediaId: Long, isMovie: Boolean) {
         sendEffect(
             HomeEffect.NavigateMediaDetails(
                 mediaId = mediaId,
@@ -268,7 +268,7 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    override fun onClickSeeAll(
+    override fun onSeeAllClick(
         mediaContentType: MediaContentType,
         mediaType: MediaType
     ) {

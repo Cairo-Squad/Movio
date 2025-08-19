@@ -128,9 +128,9 @@ fun SeriesScreenContent(
             .background(brush = animatedBrush)
             .windowInsetsPadding(WindowInsets.statusBars)
             .fillMaxWidth(),
-        onBackButtonClicked = listener::onBackClicked,
-        onShareButtonClicked = listener::onShareClicked,
-        onFavoriteButtonClicked = listener::onFavoriteClicked,
+        onBackButtonClicked = listener::onBackClick,
+        onShareButtonClicked = listener::onShareClick,
+        onFavoriteButtonClicked = listener::onFavoriteClick,
         isFavorite = state.isFavorite
     )
 }

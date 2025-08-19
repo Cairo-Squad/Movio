@@ -265,7 +265,7 @@ fun MediaGridContent(
             media[index]?.let { item ->
                 MovieCard(
                     modifier = Modifier.clickable {
-                        listener.onClickMedia(item.id, item.isMovie)
+                        listener.onMediaClick(item.id, item.isMovie)
                     },
                     title = item.title,
                     vote = item.rating,
@@ -293,7 +293,7 @@ fun MediaListContent(
             media[index]?.let { mediaItem ->
                 TrendingMovieCard(
                     modifier = Modifier.clickable {
-                        listener.onClickMedia(mediaItem.id, mediaItem.isMovie)
+                        listener.onMediaClick(mediaItem.id, mediaItem.isMovie)
                     },
                     imgUrl = mediaItem.posterPath,
                     rating = String.format(

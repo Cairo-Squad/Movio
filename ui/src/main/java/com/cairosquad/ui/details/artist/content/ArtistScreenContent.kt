@@ -71,7 +71,7 @@ fun ArtistScreenContent(
             }
         }
         AppBar(
-            onBackButtonClicked = listener::onClickBack,
+            onBackButtonClicked = listener::onBackClick,
             modifier = Modifier
                 .background(animatedBrush)
                 .windowInsetsPadding(WindowInsets.statusBars)

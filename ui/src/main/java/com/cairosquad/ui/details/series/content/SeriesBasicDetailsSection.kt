@@ -24,9 +24,9 @@ fun LazyListScope.SeriesBasicDetailsSection(
                     rating = state.series.rating,
                     releaseDate = state.series.releaseDate,
                     seasonsCount = state.series.seasonsCount,
-                    onRateClicked = listener::onRateClicked,
-                    onPlayTrailerClicked = listener::onPlayTrailerClicked,
-                    onAddToListClicked = listener::onAddToListClicked,
+                    onRateClicked = listener::onRateClick,
+                    onPlayTrailerClicked = listener::onPlayTrailerClick,
+                    onAddToListClicked = listener::onAddToListClick,
                     isRated = state.isRated
                 )
             }

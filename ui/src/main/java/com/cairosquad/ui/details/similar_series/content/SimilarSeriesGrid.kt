@@ -43,7 +43,7 @@ fun SimilarSeriesGrid(
                         vote = series.rating,
                         imgUrl = series.posterUrl,
                         modifier = Modifier.clickable {
-                            viewModel.onSeriesClicked(series.id)
+                            viewModel.onSeriesClick(series.id)
                         },
                         width = null,
                         aspectRatio = 0.745F,

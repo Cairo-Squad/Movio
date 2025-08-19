@@ -37,7 +37,7 @@ fun LazyListScope.SeriesReviewsSection(
                 if (state.reviews.isNotEmpty()) {
                     SeriesReviewSection(
                         reviews = state.reviews,
-                        onActionClicked = { listener.onSeeAllReviewsClicked(seriesId = state.series.id) }
+                        onActionClicked = { listener.onSeeAllReviewsClick(seriesId = state.series.id) }
                     )
                 }
             }

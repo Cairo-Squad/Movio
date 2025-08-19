@@ -8,7 +8,7 @@ import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
-import com.cairosquad.viewmodel.foryou.ForYouState.ScreenStatus
+import com.cairosquad.viewmodel.foryou.ForYouScreenState.ScreenStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ForYouViewModel @Inject constructor(private val forYouPager: ForYouPager) :
-    BaseViewModel<ForYouState, ForYouEffect>(ForYouState()), ForYouInteractionListener {
+    BaseViewModel<ForYouScreenState, ForYouEffect>(ForYouScreenState()), ForYouInteractionListener {
 
     init {
         getForYouMovies()
@@ -86,7 +86,7 @@ class ForYouViewModel @Inject constructor(private val forYouPager: ForYouPager) 
         }
     }
 
-    override fun onMovieClicked(movieId: Long) {
+    override fun onMovieClick(movieId: Long) {
         sendEffect(ForYouEffect.NavigateToMovieDetails(movieId))
     }
 }

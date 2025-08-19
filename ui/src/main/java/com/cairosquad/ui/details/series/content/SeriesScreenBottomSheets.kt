@@ -63,7 +63,7 @@ fun SeriesScreenBottomSheets(
         onDismiss = viewModel::onDismissAddToListBottomSheet,
         lists = emptyList(),
         onListClicked = {},
-        onCreateNewList = viewModel::onCreateListClicked
+        onCreateNewList = viewModel::onCreateListClick
     )
     FinishRatingBottomSheet(
         isVisible = state.showSuccessRatedBottomSheet,
@@ -86,7 +86,7 @@ fun SeriesScreenBottomSheets(
         name = state.series.title,
         isMovie = false,
         onRatingChange = viewModel::onRateChange,
-        onSubmitClicked = viewModel::onSubmitRateClicked,
+        onSubmitClicked = viewModel::onSubmitRateClick,
     )
 
 }

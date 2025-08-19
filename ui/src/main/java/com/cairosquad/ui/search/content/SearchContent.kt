@@ -12,11 +12,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
@@ -37,7 +37,12 @@ fun SearchContent(
     val focusRequester = remember { FocusRequester() }
 
     BackHandler(enabled = true) {
-        listener.onBackClicked()
+        listener.onBackClick()
+    }
+
+    LaunchedEffect(state.screenStatus) {
+        if (state.screenStatus != SearchScreenState.ScreenStatus.SEARCH) return@LaunchedEffect
+        focusRequester.requestFocus()
     }
 
     Column(modifier = modifier.fillMaxSize()) {
@@ -46,19 +51,14 @@ fun SearchContent(
             modifier = Modifier
                 .background(Theme.color.surfaces.surface)
                 .padding(16.dp)
-                .focusRequester(focusRequester)
-                .onGloballyPositioned {
-                    focusRequester.requestFocus()
-                },
+                .focusRequester(focusRequester),
             value = state.query,
             onValueChange = listener::onQueryTextChanged,
             placeholder = stringResource(R.string.search_with_dotes_ahead),
             leadingIcon = R.drawable.search_bottom_nav,
             trailingIcon =   if(state.query.isNotEmpty()) R.drawable.ic_close else null,
             onTrailingIconClick = { listener.onCancelSearch() },
-            keyboardActions = KeyboardActions(
-                onDone = { listener.onSearch() }
-            )
+            keyboardActions = KeyboardActions(onDone = { listener.onSearch() })
         )
         if (state.recentSearch.isNotEmpty() && state.query.isBlank()) {
             SectionHeader(
@@ -81,7 +81,7 @@ fun SearchContent(
                         recentItem = it,
                         query = state.query,
                         onRemoveHistoryItem = listener::onRemoveHistoryItem,
-                        onRecentSearchItemClicked = listener::onRecentSearchItemClicked
+                        onRecentSearchItemClicked = listener::onRecentSearchItemClick
                     )
                 }
             } else {
@@ -91,7 +91,7 @@ fun SearchContent(
                         recommendationItem = item,
                         query = state.query,
                         isRecentSearch = isRecent,
-                        onSearchRecommendationItemClicked = listener::onRecentSearchItemClicked
+                        onSearchRecommendationItemClicked = listener::onRecentSearchItemClick
                     )
                 }
             }

@@ -9,7 +9,6 @@ import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.base.BaseViewModel
-import com.cairosquad.viewmodel.rated.mappers.removeItem
 import com.cairosquad.viewmodel.rated.paging.RatedItemsPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -25,10 +24,10 @@ class MyRatingsViewModel @Inject constructor(
     MyRatingsInteractionListener {
 
     init {
-        loadRatedItems()
+        fetchRatedItems()
     }
 
-    private fun loadRatedItems() {
+    private fun fetchRatedItems() {
         updateState {
             it.copy(
                 isLoading = true,
@@ -50,7 +49,7 @@ class MyRatingsViewModel @Inject constructor(
         sendEffect(MyRatingsEffect.NavigateBack)
     }
 
-    override fun onUndoClicked() {
+    override fun onUndoClick() {
         val item = screenState.value.deletedItems.last().split(", ")
         when (item[0]) {
             "movie" -> {
@@ -69,7 +68,7 @@ class MyRatingsViewModel @Inject constructor(
                 manageSeriesUseCase.addSeriesRating(item[1].toLong(), item[2].toFloat() * 2)
             },
             onSuccess = {
-                loadRatedItems()
+                fetchRatedItems()
                 showSnackBar(R.string.series_rate_restore_success, true)
             },
             onError = {
@@ -84,7 +83,7 @@ class MyRatingsViewModel @Inject constructor(
                 manageMoviesUseCase.addMovieRating(item[1].toLong(), item[2].toFloat() * 2)
             },
             onSuccess = {
-                loadRatedItems()
+                fetchRatedItems()
                 showSnackBar(R.string.movie_rate_restore_success, true)
             },
             onError = {
@@ -94,11 +93,11 @@ class MyRatingsViewModel @Inject constructor(
     }
 
 
-    override fun onMovieClicked(movieId: Long) {
+    override fun onMovieClick(movieId: Long) {
         sendEffect(MyRatingsEffect.NavigateToMovieDetails(movieId))
     }
 
-    override fun onSeriesClicked(seriesId: Long) {
+    override fun onSeriesClick(seriesId: Long) {
         sendEffect(MyRatingsEffect.NavigateToSeriesDetails(seriesId))
     }
 

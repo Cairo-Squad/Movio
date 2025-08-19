@@ -38,7 +38,7 @@ fun HomeScreenContentSeriesTab(
                     .map(MediaHorizontalPagerItem::fromHomeMediaUiState)
                     .take(HomeViewModel.HORIZONTAL_PAGER_COUNT),
                 initialPage = HomeViewModel.HORIZONTAL_PAGER_COUNT / 2,
-                onClickMedia = listener::onClickMedia
+                onClickMedia = listener::onMediaClick
             )
         }
 
@@ -54,8 +54,8 @@ fun HomeScreenContentSeriesTab(
                 mediaList = mediaList,
                 sectionTitle = stringResource(mediaContentType.titleId),
                 mediaSectionLayoutType = getMediaSectionLayout(mediaContentType),
-                onClickMedia = listener::onClickMedia,
-                seeAllAction = { listener.onClickSeeAll(mediaContentType, SERIES) }
+                onClickMedia = listener::onMediaClick,
+                seeAllAction = { listener.onSeeAllClick(mediaContentType, SERIES) }
             )
         }
     }

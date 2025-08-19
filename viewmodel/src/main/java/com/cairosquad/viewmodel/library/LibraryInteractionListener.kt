@@ -5,11 +5,10 @@ interface LibraryInteractionListener {
     fun onListsViewAllClick()
     fun onFavoritesViewAllClick()
     fun onHistoryViewAllClick()
-    fun onLoginClicked()
+    fun onLoginClick()
     fun onRefresh()
 
-    fun onListClicked(listId: Long, listName: String)
-    fun onMovieClicked(movieId: Long)
-    fun onSeriesClicked(seriesId: Long)
-
+    fun onListClick(listId: Long, listName: String)
+    fun onMovieClick(movieId: Long)
+    fun onSeriesClick(seriesId: Long)
 }

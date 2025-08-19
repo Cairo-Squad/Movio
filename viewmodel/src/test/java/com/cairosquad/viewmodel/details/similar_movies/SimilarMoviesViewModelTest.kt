@@ -106,7 +106,7 @@ class SimilarMoviesViewModelTest {
     @Test
     fun `should emit NavigateBack effect when onClickBack is called`() = runTest {
         viewModel.effect.test {
-            viewModel.onClickBack()
+            viewModel.onBackClick()
             assertThat(awaitItem()).isEqualTo(SimilarMoviesEffect.NavigateBack)
             cancelAndIgnoreRemainingEvents()
         }
@@ -116,7 +116,7 @@ class SimilarMoviesViewModelTest {
     fun `should emit NavigateToMovieDetails effect when onMovieClicked is called`() = runTest {
         val movieId = 123L
         viewModel.effect.test {
-            viewModel.onMovieClicked(movieId)
+            viewModel.onMovieClick(movieId)
             assertThat(awaitItem()).isEqualTo(SimilarMoviesEffect.NavigateToMovieDetails(movieId))
             cancelAndIgnoreRemainingEvents()
         }
