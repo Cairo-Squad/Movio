@@ -1,7 +1,6 @@
 package com.cairosquad.ui
 
 import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.activity.ComponentActivity
@@ -21,10 +20,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            window.setNavigationBarContrastEnforced(false)
-        }
 
         setContent {
             LocaleWrapper(::setAppDisplayLanguage) {
