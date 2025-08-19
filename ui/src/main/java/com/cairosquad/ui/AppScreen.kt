@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -53,6 +54,8 @@ fun AppScreen() {
         else navController.popBackStack()
     }
 
+    var isNavBarVisible by rememberSaveable { mutableStateOf(true) }
+
     Scaffold(
         topBar = {},
         navBar = {
@@ -64,12 +67,13 @@ fun AppScreen() {
                 selectedMenu = selectedScreenIndex
             )
         },
+        isNavBarVisible = isNavBarVisible,
         content = {
             when (selectedScreenIndex) {
                 0 -> HomeScreen(navigateToProfile = { selectedScreenIndex = 3 })
                 1 -> SearchScreen()
                 2 -> LibraryScreen()
-                3 -> MoreScreen()
+                3 -> MoreScreen(setNavBarVisibility = { isNavBarVisible = it })
                 else -> HomeScreen(navigateToProfile = { selectedScreenIndex = 3 })
             }
         })
