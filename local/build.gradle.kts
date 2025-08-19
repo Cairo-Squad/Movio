@@ -76,7 +76,6 @@ dependencies {
 
     androidTestImplementation(libs.androidx.room.testing)
     androidTestImplementation(libs.androidx.runner)
-    androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.core.testing)
     androidTestImplementation(libs.mockk)
@@ -87,7 +86,7 @@ dependencies {
     kapt(libs.hilt.compiler)
 
     // Data Store
-    implementation(libs.bundles.datastore.preferences)
+    implementation(libs.bundles.datastore)
 
 
     implementation(project(":repository"))
