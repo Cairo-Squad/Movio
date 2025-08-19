@@ -99,7 +99,7 @@ fun BottomSheet(
                 animationSpec = tween(
                     durationMillis = 500, delayMillis = 100
                 ), initialOffsetY = { it }),
-            exit = slideOutVertically(animationSpec = tween(500), targetOffsetY = { it }),
+            exit = slideOutVertically(animationSpec = tween(500), targetOffsetY = { 2 * it }),
         ) {
             Column(
                 modifier = modifier
