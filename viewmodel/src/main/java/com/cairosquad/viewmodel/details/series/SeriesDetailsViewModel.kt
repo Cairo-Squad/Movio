@@ -316,12 +316,8 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         showSnackBar(R.string.rated_failed, false)
     }
 
-    override fun onCopy(messageId: Int, isSuccessful: Boolean) {
+    override fun onCopy() {
         onDismissShareBottomSheet()
-        viewModelScope.launch {
-            delay(500)
-            showSnackBar(messageId, isSuccessful)
-        }
     }
 
     fun showSnackBar(messageId: Int, isSuccessful: Boolean, durationMillis: Long = 2000) {

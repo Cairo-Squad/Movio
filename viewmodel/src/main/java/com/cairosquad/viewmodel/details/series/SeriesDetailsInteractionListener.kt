@@ -21,7 +21,7 @@ interface SeriesDetailsInteractionListener {
 
     fun onRateChange(rate: Int)
     fun onSubmitRateClick(rate: Int)
-    fun onCopy(messageId: Int, isSuccessful: Boolean)
+    fun onCopy()
 
     fun onArtistClick(artistId: Long)
     fun onSeeAllArtistsClick(seriesId: Long)
