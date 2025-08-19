@@ -18,7 +18,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -152,7 +151,7 @@ private fun ListItem(
                             .padding(8.dp),
                         imageVector = getListIcon(true),
                         contentDescription = stringResource(com.cairosquad.ui.R.string.add_to_list_icon),
-                        tint = Color.Unspecified
+                        tint = Theme.color.brand.primary
                     )
                 }
                 MovieScreenState.ListState.ERROR -> {
@@ -162,7 +161,7 @@ private fun ListItem(
                             .padding(8.dp),
                         imageVector = getListIcon(false),
                         contentDescription = stringResource(com.cairosquad.ui.R.string.add_to_list_icon),
-                        tint = Color.Unspecified
+                        tint = Theme.color.brand.primary
                     )
                 }
             }
