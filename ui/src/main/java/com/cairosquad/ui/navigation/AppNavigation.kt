@@ -3,7 +3,12 @@ package com.cairosquad.ui.navigation
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -109,8 +114,15 @@ fun AppNavigation(
             }
 
             composable<AppRoute> {
-                AppScreen()
+                var isUserLoggedIn by remember { mutableStateOf(false) }
+
+                LaunchedEffect(Unit) {
+                    isUserLoggedIn = authGate.isUserLoggedIn()
+                }
+
+                AppScreen(isUserLoggedIn = isUserLoggedIn)
             }
+
             composable<MovieRoute>(
                 deepLinks = listOf(
                     navDeepLink<MovieRoute>(basePath = Constants.MOVIE_DEEP_URL)
