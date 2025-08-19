@@ -34,6 +34,7 @@ fun SeriesScreenBottomSheets(
             ShareUtil.copyLink(
                 seriesUrl = seriesUrl,
                 context = context,
+                isSeries = true,
                 onDismiss = viewModel::onCopy
             )
         },
@@ -68,7 +69,7 @@ fun SeriesScreenBottomSheets(
         isMovie = false,
         value = state.newListName,
         onValueChange = viewModel::onValueChange,
-        onSubmit = { viewModel.onDismissCreateListBottomSheet() }
+        onSubmit = { viewModel.onDismissCreateListBottomSheet() },
     )
     RateBottomSheet(
         isVisible = state.showRateBottomSheet,

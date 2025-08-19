@@ -96,5 +96,8 @@
     <string name="english">الإنجليزية</string>
     <string name="arabic">العربية</string>
     <string name="copied_to_clipboard_successfully">تم النسخ الى الذاكرة.</string>
+    <string name="copied_to_clipboard_unsuccessfully">فشلت عمليه النسخ الى الذاكرة.</string>
+    <string name="series_link">عنوان المسلسل: </string>
+    <string name="movie_link">عنوان الفيلم: </string>
     <string name="done">تم</string>
 </resources>
