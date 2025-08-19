@@ -64,7 +64,7 @@ class MyRatingsViewModelTest {
     @Test
     fun `onMovieClicked sends NavigateToMovieDetails`() = runTest {
         viewModel.effect.test {
-            viewModel.onMovieClicked(42L)
+            viewModel.onMovieClick(42L)
             assertEquals(MyRatingsEffect.NavigateToMovieDetails(42L), awaitItem())
         }
     }
@@ -72,7 +72,7 @@ class MyRatingsViewModelTest {
     @Test
     fun `onSeriesClicked sends NavigateToSeriesDetails`() = runTest {
         viewModel.effect.test {
-            viewModel.onSeriesClicked(42L)
+            viewModel.onSeriesClick(42L)
             assertEquals(MyRatingsEffect.NavigateToSeriesDetails(42L), awaitItem())
         }
     }
@@ -81,7 +81,7 @@ class MyRatingsViewModelTest {
     fun `onUndoClicked with movie restores rating`() = runTest {
         viewModel.updateState { it.copy(deletedItems = listOf("movie, 10, 3")) }
 
-        viewModel.onUndoClicked()
+        viewModel.onUndoClick()
         advanceUntilIdle()
 
         coVerify { manageMoviesUseCase.addMovieRating(10L, 6f) }

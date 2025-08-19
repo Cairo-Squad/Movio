@@ -25,7 +25,7 @@ interface ReviewDao {
     @Query(
         "Delete from CacheCodeReviewCacheCrossRef " +
         "where " +
-                "Not review_id in (Select review_id from ReviewCacheDto) " +
+                "Not review_id_language in (Select review_id_language from ReviewCacheDto) " +
             "OR " +
                 "Not cacheCode in (Select cacheCode from CacheCodeDto)"
     )

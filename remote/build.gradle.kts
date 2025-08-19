@@ -69,7 +69,7 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
 
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.androidx.runtime)
+    implementation(libs.androidx.compose.runtime)
     implementation(libs.logging.interceptor)
 
     // --- Retrofit 3 ---

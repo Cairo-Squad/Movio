@@ -11,7 +11,7 @@ data class CacheCodeWithSeriesCacheDto(
     @Relation(
         parentColumn = "cacheCode",
         entity = SeriesWithoutGenreCacheDto::class,
-        entityColumn = "series_id",
+        entityColumn = "series_id_language",
         associateBy = Junction(CacheCodeSeriesCacheCrossRef::class)
     )
     val series: List<SeriesCacheDto>,

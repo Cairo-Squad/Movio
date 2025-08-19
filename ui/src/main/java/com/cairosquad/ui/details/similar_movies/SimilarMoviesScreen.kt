@@ -37,7 +37,7 @@ fun SimilarMoviesScreen(
     ) {
         AppBar(
             title = stringResource(R.string.similar_movies),
-            onBackButtonClicked = { viewModel.onClickBack() },
+            onBackButtonClicked = { viewModel.onBackClick() },
         )
         SimilarMoviesGrid(state, viewModel, movieId)
     }

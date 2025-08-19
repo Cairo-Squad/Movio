@@ -21,9 +21,11 @@ import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
+import com.cairosquad.design_system.basic_component.Button
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.viewmodel.details.series.SeriesDetailsInteractionListener
@@ -62,11 +64,20 @@ fun SeriesScreenContent(
                 contentAlignment = Alignment.Center
             ) {
                 StateMessage(
+                    modifier = Modifier.align(Alignment.Center),
                     imageDrawable =
                         if (Theme.isDark) R.drawable.no_internet_dark
                         else R.drawable.no_internet,
                     titleId = R.string.no_internet_connection,
                     descriptionId = R.string.internet_is_not_available_description
+                )
+                Button(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 24.dp),
+                    text = stringResource(R.string.try_again),
+                    onClick = listener::onRefresh
                 )
             }
         }
@@ -117,9 +128,9 @@ fun SeriesScreenContent(
             .background(brush = animatedBrush)
             .windowInsetsPadding(WindowInsets.statusBars)
             .fillMaxWidth(),
-        onBackButtonClicked = listener::onBackClicked,
-        onShareButtonClicked = listener::onShareClicked,
-        onFavoriteButtonClicked = listener::onFavoriteClicked,
+        onBackButtonClicked = listener::onBackClick,
+        onShareButtonClicked = listener::onShareClick,
+        onFavoriteButtonClicked = listener::onFavoriteClick,
         isFavorite = state.isFavorite
     )
 }

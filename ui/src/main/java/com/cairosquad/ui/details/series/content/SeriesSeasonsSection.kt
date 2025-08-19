@@ -39,8 +39,8 @@ fun LazyListScope.SeriesSeasonsSection(
                         seriesName = state.series.title,
                         seriesId = state.series.id,
                         seasons = state.seasons,
-                        onActionClicked = { listener.onSeeAllSeasonsClicked(seriesId = state.series.id) },
-                        onSeasonClicked = listener::onSeasonClicked
+                        onActionClicked = { listener.onSeeAllSeasonsClick(seriesId = state.series.id) },
+                        onSeasonClicked = listener::onSeasonClick
                     )
                 }
             }

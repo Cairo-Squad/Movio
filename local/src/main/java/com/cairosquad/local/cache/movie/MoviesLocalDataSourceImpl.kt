@@ -31,7 +31,7 @@ class MoviesLocalDataSourceImpl @Inject constructor(
             genres = cacheCodeWithMovies.movies
                 .map { it.genres }
                 .flatten()
-                .distinctBy { it.id }
+                .distinctBy { it.genreIdWithLanguage }
         )
         moviesCacheDao.insertCrossRefForMovieAndGenreCache(
             cacheCodeWithMovies.movies
@@ -60,6 +60,10 @@ class MoviesLocalDataSourceImpl @Inject constructor(
 
     override suspend fun getMovieGenres(): List<GenreOfMovieCacheDto> {
         return genreDao.getMovieGenres()
+    }
+
+    override suspend fun getMovieGenresByLanguage(language: String): List<GenreOfMovieCacheDto> {
+        return genreDao.getMovieGenresByLanguage(language = language)
     }
 
     override suspend fun getMovieReviewsByCacheCode(cacheCode: String): List<ReviewCacheDto> {

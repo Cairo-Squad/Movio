@@ -7,13 +7,13 @@ import com.cairosquad.repository.utils.sharedDto.local.CacheCodeDto
 
 @Entity(
     tableName = "CacheCodeMovieCrossRef",
-    primaryKeys = ["cacheCode", "movie_id"]
+    primaryKeys = ["cacheCode", "movie_id_language"]
 )
 data class CacheCodeMovieCrossRef(
     @ColumnInfo(name = "cacheCode")
     val cacheCode: String,
-    @ColumnInfo(name = "movie_id")
-    val movieId: Long,
+    @ColumnInfo(name = "movie_id_language")
+    val movieIdWithLanguage: String,
 ) {
     companion object{
         fun fromCacheCodeAndMovieList(
@@ -23,7 +23,7 @@ data class CacheCodeMovieCrossRef(
             return movies.map { movie ->
                 CacheCodeMovieCrossRef(
                     cacheCode.cacheCode,
-                    movie.movieWithoutGenre.id
+                    movie.movieWithoutGenre.movieIdWithLanguage
                 )
             }
         }

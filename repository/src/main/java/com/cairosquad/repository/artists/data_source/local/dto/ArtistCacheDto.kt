@@ -6,8 +6,10 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "ArtistCacheDto")
 data class ArtistCacheDto(
-    @ColumnInfo(name = "artist_id")
     @PrimaryKey
+    @ColumnInfo(name = "artist_id_language")
+    val artistIdWithLanguage: String,
+    @ColumnInfo(name = "artist_id")
     val id: Long,
     @ColumnInfo(name = "name")
     val name: String,

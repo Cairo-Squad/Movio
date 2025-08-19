@@ -7,8 +7,10 @@ import java.util.Date
 
 @Entity(tableName = "MovieWithoutGenreCacheDto")
 data class MovieWithoutGenreCacheDto(
-    @ColumnInfo(name = "movie_id")
+    @ColumnInfo(name = "movie_id_language")
     @PrimaryKey
+    val movieIdWithLanguage: String,
+    @ColumnInfo(name = "movie_id")
     val id: Long,
     @ColumnInfo(name = "title")
     val title: String,

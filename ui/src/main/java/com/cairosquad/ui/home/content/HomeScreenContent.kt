@@ -167,14 +167,14 @@ private fun TobContent(
         AppBar(
             modifier = Modifier.statusBarsPadding(),
             profileImage = screenState.profileImage,
-            onClickProfileImage = listener::onClickProfile
+            onClickProfileImage = listener::onProfileClick
         )
 
         TabRow(
             modifier = Modifier,
             tabs = tabsNamesResId.map { stringResource(it) },
             selectedTabIndex = screenState.selectedTab.ordinal,
-            onTabSelected = listener::onClickTab,
+            onTabSelected = listener::onTabClick,
             scrollProgress = scrollProgress,
             tabColorWithScroll = Theme.color.brand.onPrimaryContainer,
             tabColorWithNoScroll = Theme.color.brand.onPrimary,

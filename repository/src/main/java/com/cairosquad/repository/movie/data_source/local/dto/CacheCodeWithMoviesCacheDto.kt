@@ -11,7 +11,7 @@ data class CacheCodeWithMoviesCacheDto(
     @Relation(
         parentColumn = "cacheCode",
         entity = MovieWithoutGenreCacheDto::class,
-        entityColumn = "movie_id",
+        entityColumn = "movie_id_language",
         associateBy = Junction(CacheCodeMovieCrossRef::class)
     )
     val movies: List<MovieCacheDto>,

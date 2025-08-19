@@ -145,7 +145,7 @@ class SeeAllViewModelTest {
     @Test
     fun `onClickBack sends NavigateBack effect`() = runTest(testDispatcher) {
         viewModel.effect.test {
-            viewModel.onClickBack()
+            viewModel.onBackClick()
 
             assertEquals(SeeAllEffect.NavigateBack, awaitItem())
             expectNoEvents()
@@ -157,7 +157,7 @@ class SeeAllViewModelTest {
         runTest(testDispatcher) {
 
             viewModel.effect.test {
-                viewModel.onClickMedia(123, true)
+                viewModel.onMediaClick(123, true)
 
                 val effect = awaitItem()
                 assertEquals(SeeAllEffect.NavigateMediaDetails(123, true), effect)
@@ -170,7 +170,7 @@ class SeeAllViewModelTest {
         runTest(testDispatcher) {
 
             viewModel.effect.test {
-                viewModel.onClickMedia(456, false)
+                viewModel.onMediaClick(456, false)
 
                 val effect = awaitItem()
                 assertEquals(SeeAllEffect.NavigateMediaDetails(456, false), effect)
@@ -182,9 +182,9 @@ class SeeAllViewModelTest {
     fun `multiple onClickMedia calls send multiple effects`() = runTest(testDispatcher) {
 
         viewModel.effect.test {
-            viewModel.onClickMedia(1, true)
-            viewModel.onClickMedia(2, false)
-            viewModel.onClickMedia(3, true)
+            viewModel.onMediaClick(1, true)
+            viewModel.onMediaClick(2, false)
+            viewModel.onMediaClick(3, true)
 
             assertEquals(SeeAllEffect.NavigateMediaDetails(1, true), awaitItem())
             assertEquals(SeeAllEffect.NavigateMediaDetails(2, false), awaitItem())
@@ -517,7 +517,7 @@ class SeeAllViewModelTest {
         coEvery { seeAllMoviesPager.getTopRatingMovies(any()) } returns flowOf(PagingData.from(listOf(movie)))
         coEvery { seeAllSeriesPager.getTopRatingSeries(any()) } returns flowOf(PagingData.from(listOf(series)))
 
-        val (movieFlow, seriesFlow) = viewModel.getDataPagerFetcher2(MediaContentType.TOP_RATING, 1L)
+        val (movieFlow, seriesFlow) = viewModel.getDataPagerFetcher(MediaContentType.TOP_RATING, 1L)
         val movieResult = movieFlow().first()
         val seriesResult = seriesFlow().first()
 

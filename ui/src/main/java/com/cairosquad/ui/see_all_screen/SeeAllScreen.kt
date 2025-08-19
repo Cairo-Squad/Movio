@@ -127,7 +127,7 @@ fun SeeAllScreen(
                     modifier = Modifier.padding(top = 16.dp),
                     categories =state.genres.map { genre ->
                         if (genre.id == null) {
-                            stringResource(com.cairosquad.ui.R.string.all_with_space_around)
+                            stringResource(com.cairosquad.ui.R.string.all)
                         } else {
                             genre.name
                         }
@@ -265,7 +265,7 @@ fun MediaGridContent(
             media[index]?.let { item ->
                 MovieCard(
                     modifier = Modifier.clickable {
-                        listener.onClickMedia(item.id, item.isMovie)
+                        listener.onMediaClick(item.id, item.isMovie)
                     },
                     title = item.title,
                     vote = item.rating,
@@ -293,7 +293,7 @@ fun MediaListContent(
             media[index]?.let { mediaItem ->
                 TrendingMovieCard(
                     modifier = Modifier.clickable {
-                        listener.onClickMedia(mediaItem.id, mediaItem.isMovie)
+                        listener.onMediaClick(mediaItem.id, mediaItem.isMovie)
                     },
                     imgUrl = mediaItem.posterPath,
                     rating = String.format(

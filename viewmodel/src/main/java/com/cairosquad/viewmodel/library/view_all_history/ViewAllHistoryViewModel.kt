@@ -77,15 +77,15 @@ class ViewAllHistoryViewModel @Inject constructor(
         updateErrorStatus(throwable)
     }
 
-    override fun onBackClicked() {
+    override fun onBackClick() {
         sendEffect(ViewAllHistoryEffect.OnNavigateBack)
     }
 
-    override fun onMovieClicked(movieId: Long) {
+    override fun onMovieClick(movieId: Long) {
         sendEffect(ViewAllHistoryEffect.OnMovieClicked(movieId))
     }
 
-    override fun onSeriesClicked(seriesId: Long) {
+    override fun onSeriesClick(seriesId: Long) {
         sendEffect(ViewAllHistoryEffect.OnSeriesClicked(seriesId))
     }
 
@@ -152,7 +152,7 @@ class ViewAllHistoryViewModel @Inject constructor(
         }
     }
 
-    override fun onUndoClicked() {
+    override fun onUndoClick() {
         tryToCall(
             block = ::onUndoClickedBlock,
             onSuccess = { onUndoClickedSuccess() },

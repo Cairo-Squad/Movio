@@ -2,11 +2,11 @@ package com.cairosquad.viewmodel.library.view_all_favorite
 
 interface ViewAllFavoriteInteractionListener {
 
-    fun onBackClicked()
+    fun onBackClick()
 
-    fun onMovieClicked(movieId: Long)
+    fun onMovieClick(movieId: Long)
 
-    fun onSeriesClicked(seriesId: Long)
+    fun onSeriesClick(seriesId: Long)
 
     fun onMovieDelete(movieId: Long)
 
@@ -14,5 +14,5 @@ interface ViewAllFavoriteInteractionListener {
 
     fun onRefresh()
 
-    fun onUndoClicked()
+    fun onUndoClick()
 }

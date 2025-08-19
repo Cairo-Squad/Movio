@@ -7,13 +7,13 @@ import com.cairosquad.entity.Review
 import com.cairosquad.viewmodel.util.TimeUtil
 import com.cairosquad.viewmodel.util.roundToFirstDecimalPlace
 
-fun Artist.toArtistUiState() = MovieScreenState.TopCastUiState(
+fun Artist.toUiState() = MovieScreenState.TopCastUiState(
     id = id,
     name = name,
     photoPath = photoPath,
 )
 
-fun Movie.toMovieUiState() = MovieScreenState.MovieDetailsUiState(
+fun Movie.toUiState() = MovieScreenState.MovieDetailsUiState(
     id = id,
     title = title,
     rating = rating.roundToFirstDecimalPlace(),
@@ -25,7 +25,7 @@ fun Movie.toMovieUiState() = MovieScreenState.MovieDetailsUiState(
     trailerPath = trailerPath
 )
 
-fun Review.toReviewUiState() = MovieScreenState.ReviewUiState(
+fun Review.toUiState() = MovieScreenState.ReviewUiState(
     id = id,
     author = author,
     authorPhotoPath = authorPhotoPath,
