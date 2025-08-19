@@ -79,15 +79,15 @@ class ViewAllFavoriteViewModel @Inject constructor(
         )
     }
 
-    override fun onBackClicked() {
+    override fun onBackClick() {
         sendEffect(ViewAllFavoriteEffect.OnNavigateBack)
     }
 
-    override fun onMovieClicked(movieId: Long) {
+    override fun onMovieClick(movieId: Long) {
         sendEffect(ViewAllFavoriteEffect.OnMovieClicked(movieId))
     }
 
-    override fun onSeriesClicked(seriesId: Long) {
+    override fun onSeriesClick(seriesId: Long) {
         sendEffect(ViewAllFavoriteEffect.OnSeriesClicked(seriesId))
     }
 
@@ -178,7 +178,7 @@ class ViewAllFavoriteViewModel @Inject constructor(
         }
     }
 
-    override fun onUndoClicked() {
+    override fun onUndoClick() {
         tryToCall(
             block = {
                 val item = screenState.value.deletedItems.last().split(", ")

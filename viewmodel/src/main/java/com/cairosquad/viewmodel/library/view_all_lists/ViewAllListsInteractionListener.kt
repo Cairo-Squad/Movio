@@ -3,13 +3,13 @@ package com.cairosquad.viewmodel.library.view_all_lists
 interface ViewAllListsInteractionListener {
 
     fun onNavigateBack()
-    fun onSeriesListClicked(listId: Long, listName: String)
-    fun onMovieListClicked(listId: Long, listName: String)
-    fun onCreateNewListClicked()
+    fun onSeriesListClick(listId: Long, listName: String)
+    fun onMovieListClick(listId: Long, listName: String)
+    fun onCreateNewListClick()
     fun onRefresh()
 
-    fun onAddListClicked()
+    fun onAddListClick()
     fun onDismissCreateListBottomSheet()
     fun onListValueChange(listName: String)
-    fun onSubmitCreateListClicked()
+    fun onSubmitCreateListClick()
 }

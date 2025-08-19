@@ -38,7 +38,7 @@ fun HomeScreenContentMoviesTab(
                     .map(MediaHorizontalPagerItem::fromHomeMediaUiState)
                     .take(HomeViewModel.HORIZONTAL_PAGER_COUNT),
                 initialPage = HomeViewModel.HORIZONTAL_PAGER_COUNT / 2,
-                onClickMedia = listener::onClickMedia
+                onClickMedia = listener::onMediaClick
             )
         }
 
@@ -54,8 +54,8 @@ fun HomeScreenContentMoviesTab(
                 mediaList = mediaList,
                 sectionTitle = stringResource(mediaContentType.titleId),
                 mediaSectionLayoutType = getMediaSectionLayout(mediaContentType),
-                onClickMedia = listener::onClickMedia,
-                seeAllAction = { listener.onClickSeeAll(mediaContentType, MOVIES) }
+                onClickMedia = listener::onMediaClick,
+                seeAllAction = { listener.onSeeAllClick(mediaContentType, MOVIES) }
             )
         }
     }

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
@@ -51,7 +52,7 @@ fun SearchResultContent(
     val artists = state.artists.collectAsLazyPagingItems()
     val series = state.series.collectAsLazyPagingItems()
     BackHandler(enabled = true) {
-        listener.onBackClicked()
+        listener.onBackClick()
     }
 
     val selectedTabIndex = state.selectedTabIndex
@@ -64,23 +65,19 @@ fun SearchResultContent(
             .fillMaxSize()
             .padding(top = 16.dp)
     ) {
-
         InputField(
             modifier = Modifier
                 .background(Theme.color.surfaces.surface)
                 .padding(bottom = 12.dp)
                 .padding(horizontal = 16.dp),
+            isFocusEnabled = false,
+            onClick = listener::onClickSearchTextField,
             value = state.query,
             onValueChange = { },
             placeholder = stringResource(R.string.search_with_dotes_ahead),
             leadingIcon = R.drawable.search_bottom_nav,
-            trailingIcon =   if(state.query.isNotEmpty()) R.drawable.ic_close else null,
+            trailingIcon = if (state.query.isNotEmpty()) R.drawable.ic_close else null,
             onTrailingIconClick = { listener.onCancelSearch() },
-            onFocusChanged = {
-                if (it) {
-                    listener.onClickSearchTextField()
-                }
-            },
             readOnly = true
         )
         TabRow(
@@ -103,22 +100,18 @@ fun SearchResultContent(
 
         when (selectedTabIndex) {
             0 -> {
-                SearchResultText(noOfResults = movies.itemCount)
                 AllResultsTabContent(movies = movies, listener = listener, state = state)
             }
 
             1 -> {
-                SearchResultText(noOfResults = movies.itemCount)
                 MoviesTabContent(movies = movies, listener = listener, state = state)
             }
 
             2 -> {
-                SearchResultText(noOfResults = series.itemCount)
                 SeriesTabContent(series = series, listener = listener, state = state)
             }
 
             3 -> {
-                SearchResultText(noOfResults = artists.itemCount)
                 ArtistsTabContent(artist = artists, listener = listener, state = state)
             }
         }
@@ -184,11 +177,14 @@ private fun AllResultsTabContent(
                     bottom = 16.dp
                 )
             ) {
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    SearchResultText(noOfResults = movies.itemCount)
+                }
                 items(movies.itemCount) { index ->
                     movies[index]?.let { result ->
                         MovieCard(
                             modifier = Modifier
-                                .clickable(onClick = { listener.onMovieClicked(result.id) }),
+                                .clickable(onClick = { listener.onMovieClick(result.id) }),
                             title = result.title,
                             vote = result.rating,
                             imgUrl = result.posterPath,
@@ -255,11 +251,14 @@ private fun MoviesTabContent(
                     bottom = 16.dp
                 )
             ) {
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    SearchResultText(noOfResults = movies.itemCount)
+                }
                 items(movies.itemCount) { index ->
                     movies[index]?.let { movie ->
                         MovieCard(
                             modifier = Modifier.clickable {
-                                listener.onMovieClicked(movie.id)
+                                listener.onMovieClick(movie.id)
                             },
                             title = movie.title,
                             vote = movie.rating,
@@ -334,11 +333,14 @@ private fun SeriesTabContent(
                     bottom = 16.dp
                 )
             ) {
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    SearchResultText(noOfResults = series.itemCount)
+                }
                 items(series.itemCount) { index ->
                     series[index]?.let { series ->
                         MovieCard(
                             modifier = Modifier
-                                .clickable(onClick = { listener.onSeriesClicked(series.id) }),
+                                .clickable(onClick = { listener.onSeriesClick(series.id) }),
                             title = series.title,
                             vote = series.rating,
                             imgUrl = series.posterPath,
@@ -411,11 +413,14 @@ private fun ArtistsTabContent(
                     bottom = 16.dp
                 )
             ) {
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    SearchResultText(noOfResults = artist.itemCount)
+                }
                 items(artist.itemCount) { index ->
                     artist[index]?.let { artist ->
                         ArtistCard(
                             modifier = Modifier
-                                .clickable(onClick = { listener.onArtistClicked(artist.id) }),
+                                .clickable(onClick = { listener.onArtistClick(artist.id) }),
                             name = artist.name,
                             imgUrl = artist.photoPath,
                         )
@@ -445,6 +450,7 @@ private fun SearchResultFail(
                 ErrorStatus.NO_INTERNET ->
                     if (Theme.isDark) R.drawable.no_internet_dark
                     else R.drawable.no_internet
+
                 else ->
                     if (Theme.isDark) R.drawable.no_result_dark
                     else R.drawable.no_result
@@ -489,9 +495,6 @@ fun SearchResultText(
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier
-            .padding(bottom = 16.dp)
-            .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         BasicText(

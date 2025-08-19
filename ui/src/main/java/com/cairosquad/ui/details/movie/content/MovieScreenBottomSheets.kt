@@ -34,6 +34,7 @@ fun MovieScreenBottomSheets(
             ShareUtil.copyLink(
                 seriesUrl = movieUrl,
                 context = context,
+                isSeries = false,
                 onDismiss = viewModel::onCopy
             )
         },
@@ -64,15 +65,15 @@ fun MovieScreenBottomSheets(
         onListClicked = { index ->
             viewModel.onClickList(state.moviesLists[index].id)
         },
-        onCreateNewList = viewModel::onCreateListClicked
+        onCreateNewList = viewModel::onCreateListClick
     )
     CreateListBottomSheet(
         isVisible = state.showCreateListBottomSheet,
         onDismiss = viewModel::onDismissCreateListBottomSheet,
         value = state.listName,
         onValueChange = viewModel::onListValueChange,
-        onSubmit = { viewModel.onSubmitCreateListClicked() },
-        isMovie = true
+        onSubmit = { viewModel.onSubmitCreateListClick() },
+        isMovie = true,
     )
     RateBottomSheet(
         isVisible = state.isRateBottomSheetOpen,
@@ -82,7 +83,7 @@ fun MovieScreenBottomSheets(
         name = state.movie.title,
         isMovie = true,
         onRatingChange = viewModel::onRateChange,
-        onSubmitClicked = viewModel::onSubmitRateClicked,
+        onSubmitClicked = viewModel::onSubmitRateClick,
     )
     FinishRatingBottomSheet(
         isVisible = state.isRatedSuccessBottomSheetOpen,

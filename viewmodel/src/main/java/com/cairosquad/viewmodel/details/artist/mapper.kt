@@ -6,7 +6,7 @@ import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.util.TimeUtil
 import com.cairosquad.viewmodel.util.roundToFirstDecimalPlace
 
-fun Artist.toArtistUiState() = ArtistScreenState.ArtistUiState(
+fun Artist.toUiState() = ArtistScreenState.ArtistUiState(
     id = id,
     name = name,
     photoPath = photoPath,
@@ -16,17 +16,16 @@ fun Artist.toArtistUiState() = ArtistScreenState.ArtistUiState(
     department = department
 )
 
-fun Movie.toArtistMovieUiState() = ArtistScreenState.MovieUiState(
+fun Movie.toUiState() = ArtistScreenState.MovieUiState(
     id = id,
     title = title,
     rating = rating.roundToFirstDecimalPlace(),
     posterPath = posterPath
 )
 
-fun Series.toArtistSeriesUiState() = ArtistScreenState.SeriesUiState(
+fun Series.toUiState() = ArtistScreenState.SeriesUiState(
     id = id,
     title = title,
     rating = rating.roundToFirstDecimalPlace(),
     posterPath = posterPath
 )
-

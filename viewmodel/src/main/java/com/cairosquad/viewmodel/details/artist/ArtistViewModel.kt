@@ -23,18 +23,18 @@ class ArtistViewModel @AssistedInject constructor(
     }
 
     init {
-        loadArtistDetails(artistId)
-        loadArtistMovies(artistId)
-        loadArtistSeries(artistId)
+        fetchArtistDetails(artistId)
+        fetchArtistMovies(artistId)
+        fetchArtistSeries(artistId)
     }
 
-    fun loadArtistDetails(artistId: Long) {
+    fun fetchArtistDetails(artistId: Long) {
         tryToCall(
             onStart = {
                 updateState { it.copy(screenStatus = ArtistScreenState.ScreenStatus.LOADING) }
             },
             block = {
-                manageArtistUseCase.getArtistById(artistId).toArtistUiState()
+                manageArtistUseCase.getArtistById(artistId).toUiState()
             },
             onSuccess = { artist ->
                 updateState {
@@ -54,7 +54,7 @@ class ArtistViewModel @AssistedInject constructor(
         )
     }
 
-    fun loadArtistMovies(artistId: Long) {
+    fun fetchArtistMovies(artistId: Long) {
         tryToCall(
             onStart = {
                 updateState { it.copy(screenStatus = ArtistScreenState.ScreenStatus.LOADING) }
@@ -64,7 +64,7 @@ class ArtistViewModel @AssistedInject constructor(
             },
             onSuccess = { movies ->
                 updateState {
-                    it.copy(knownForMovies = movies.map { it.toArtistMovieUiState() })
+                    it.copy(knownForMovies = movies.map { it.toUiState() })
                 }
             },
             onError = { e ->
@@ -78,7 +78,7 @@ class ArtistViewModel @AssistedInject constructor(
         )
     }
 
-    fun loadArtistSeries(artistId: Long) {
+    fun fetchArtistSeries(artistId: Long) {
         tryToCall(
             onStart = {
                 updateState { it.copy(screenStatus = ArtistScreenState.ScreenStatus.LOADING) }
@@ -86,7 +86,7 @@ class ArtistViewModel @AssistedInject constructor(
             block = {
                 val series = manageArtistUseCase
                     .getSeriesOfArtist(artistId)
-                    .map { it.toArtistSeriesUiState() }
+                    .map { it.toUiState() }
                 series
             },
             onSuccess = { series ->
@@ -105,7 +105,7 @@ class ArtistViewModel @AssistedInject constructor(
         )
     }
 
-    override fun onClickBack() {
+    override fun onBackClick() {
         sendEffect(ArtistEffect.NavigateBack)
     }
 
@@ -118,9 +118,9 @@ class ArtistViewModel @AssistedInject constructor(
     }
 
     override fun onRefresh() {
-            loadArtistDetails(artistId)
-            loadArtistMovies(artistId)
-            loadArtistSeries(artistId)
+            fetchArtistDetails(artistId)
+            fetchArtistMovies(artistId)
+            fetchArtistSeries(artistId)
     }
     private fun handleArtistException(e: Throwable): ErrorStatus {
         return when (e) {

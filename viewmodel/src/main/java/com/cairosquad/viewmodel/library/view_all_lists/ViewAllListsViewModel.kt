@@ -68,15 +68,15 @@ class ViewAllListsViewModel @Inject constructor(
         sendEffect(ViewAllListsEffect.OnNavigateBack)
     }
 
-    override fun onSeriesListClicked(listId: Long, listName: String) {
+    override fun onSeriesListClick(listId: Long, listName: String) {
         sendEffect(ViewAllListsEffect.OnSeriesListClicked(listId, listName))
     }
 
-    override fun onMovieListClicked(listId: Long, listName: String) {
+    override fun onMovieListClick(listId: Long, listName: String) {
         sendEffect(ViewAllListsEffect.OnMovieListClicked(listId, listName))
     }
 
-    override fun onCreateNewListClicked() {
+    override fun onCreateNewListClick() {
         updateState { it.copy(isCreateListBottomSheetVisible = true) }
     }
 
@@ -89,7 +89,7 @@ class ViewAllListsViewModel @Inject constructor(
         }
     }
 
-    override fun onAddListClicked() {
+    override fun onAddListClick() {
         updateState { it.copy(
             showCreateListBottomSheet = true,
             listName = ""
@@ -104,7 +104,11 @@ class ViewAllListsViewModel @Inject constructor(
         updateState { it.copy(listName = listName) }
     }
 
-    override fun onSubmitCreateListClicked() {
+    override fun onSubmitCreateListClick() {
+        if (screenState.value.isCreatingList) return
+
+        updateState { it.copy(isCreatingList = true) }
+
         tryToCall(
             block = {
                 accountUseCase.createList(screenState.value.listName)
@@ -113,6 +117,7 @@ class ViewAllListsViewModel @Inject constructor(
             onSuccess = { (moviesLists, seriesLists) ->
                 updateState {
                     it.copy(
+                        isCreatingList = false,
                         showCreateListBottomSheet = false,
                         listName = "",
                         movieLists = moviesLists.map { list -> list.toUiState() },
@@ -128,6 +133,7 @@ class ViewAllListsViewModel @Inject constructor(
             onError = {
                 updateState {
                     it.copy(
+                        isCreatingList = false,
                         showCreateListBottomSheet = false,
                         listName = "",
                         showSnackBar = true,

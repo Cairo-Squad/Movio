@@ -40,11 +40,11 @@ class SeriesDetailsViewModel @AssistedInject constructor(
     }
 
     init {
-        loadDetails()
+        fetchDetailsData()
         addSeriesToHistory()
     }
 
-    fun loadDetails() {
+    fun fetchDetailsData() {
         getSeriesDetails()
         getTopCast()
         getSeasons()
@@ -120,15 +120,15 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         )
     }
 
-    override fun onBackClicked() {
+    override fun onBackClick() {
         sendEffect(SeriesDetailEffect.NavigateBack)
     }
 
-    override fun onShareClicked() {
+    override fun onShareClick() {
         updateState { it.copy(showShareBottomSheet = true) }
     }
 
-    override fun onFavoriteClicked() {
+    override fun onFavoriteClick() {
         tryToCall(
             block = loginUseCase::isUserLoggedIn,
             onSuccess = ::onFavoriteClickedSuccess,
@@ -191,7 +191,7 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         showSnackBar(messageId = R.string.series_favorite_fail, isSuccessful = false)
     }
 
-    override fun onRateClicked() {
+    override fun onRateClick() {
         tryToCall(
             block = loginUseCase::isUserLoggedIn,
             onSuccess = ::onRateClickedSuccess,
@@ -211,11 +211,11 @@ class SeriesDetailsViewModel @AssistedInject constructor(
     }
 
 
-    override fun onPlayTrailerClicked() {
+    override fun onPlayTrailerClick() {
         sendEffect(SeriesDetailEffect.PlayTrailer)
     }
 
-    override fun onAddToListClicked() {
+    override fun onAddToListClick() {
         tryToCall(
             block = loginUseCase::isUserLoggedIn,
             onSuccess = { authed ->
@@ -256,7 +256,7 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         }
     }
 
-    override fun onCreateListClicked() {
+    override fun onCreateListClick() {
         updateState { it.copy(showAddToListBottomSheet = false, showCreateListBottomSheet = true) }
     }
 
@@ -292,7 +292,7 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         updateState { it.copy(rating = rate) }
     }
 
-    override fun onSubmitRateClicked(rate: Int) {
+    override fun onSubmitRateClick(rate: Int) {
         tryToCall(
             block = { manageSeriesUseCase.addSeriesRating(seriesId, rate.toFloat() * 2) },
             onSuccess = { onSubmitRateClickedSuccess(rate) },
@@ -316,12 +316,8 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         showSnackBar(R.string.rated_failed, false)
     }
 
-    override fun onCopy(messageId: Int, isSuccessful: Boolean) {
+    override fun onCopy() {
         onDismissShareBottomSheet()
-        viewModelScope.launch {
-            delay(500)
-            showSnackBar(messageId, isSuccessful)
-        }
     }
 
     fun showSnackBar(messageId: Int, isSuccessful: Boolean, durationMillis: Long = 2000) {
@@ -338,15 +334,15 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         }
     }
 
-    override fun onArtistClicked(artistId: Long) {
+    override fun onArtistClick(artistId: Long) {
         sendEffect(SeriesDetailEffect.NavigateToArtistDetails(artistId))
     }
 
-    override fun onSeeAllArtistsClicked(seriesId: Long) {
+    override fun onSeeAllArtistsClick(seriesId: Long) {
         sendEffect(SeriesDetailEffect.NavigateToAllArtists(seriesId))
     }
 
-    override fun onSeasonClicked(seriesId: Long, seasonNumber: Int) {
+    override fun onSeasonClick(seriesId: Long, seasonNumber: Int) {
         sendEffect(
             SeriesDetailEffect.NavigateToSeasonDetails(
                 seriesId = seriesId,
@@ -355,19 +351,19 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         )
     }
 
-    override fun onSeeAllSeasonsClicked(seriesId: Long) {
+    override fun onSeeAllSeasonsClick(seriesId: Long) {
         sendEffect(SeriesDetailEffect.NavigateToAllSeasons(seriesId))
     }
 
-    override fun onSeeAllReviewsClicked(seriesId: Long) {
+    override fun onSeeAllReviewsClick(seriesId: Long) {
         sendEffect(SeriesDetailEffect.NavigateToAllReviews(seriesId))
     }
 
-    override fun onSeriesClicked(seriesId: Long) {
+    override fun onSeriesClick(seriesId: Long) {
         sendEffect(SeriesDetailEffect.NavigateToSeriesDetails(seriesId))
     }
 
-    override fun onSeeAllSimilarClicked(seriesId: Long) {
+    override fun onSeeAllSimilarClick(seriesId: Long) {
         sendEffect(SeriesDetailEffect.NavigateToAllSimilar(seriesId))
     }
 
@@ -376,7 +372,7 @@ class SeriesDetailsViewModel @AssistedInject constructor(
     }
 
     override fun onRefresh() {
-        loadDetails()
+        fetchDetailsData()
     }
 
     private fun getSeriesDetails() {

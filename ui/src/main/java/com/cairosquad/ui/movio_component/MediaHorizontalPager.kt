@@ -294,9 +294,9 @@ private fun MediaHorizontalPagerCard(
 					text = title,
 					maxLines = 1,
 					overflow = TextOverflow.Ellipsis,
-					style = Theme.textStyle.label.mediumMedium12
-						.copy(Theme.color.surfaces.onSurface)
-				)
+                    style = Theme.textStyle.label.mediumMedium12
+                        .copy(color = Theme.color.brand.onPrimary)
+                )
 				FlowRow(
 					modifier = Modifier.padding(horizontal = 8.dp),
 					horizontalArrangement = Arrangement.spacedBy(4.dp),

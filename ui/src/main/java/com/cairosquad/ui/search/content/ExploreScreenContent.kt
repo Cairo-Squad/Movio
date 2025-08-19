@@ -79,11 +79,8 @@ fun ExploreScreenContent(
                 onValueChange = {  },
                 placeholder = stringResource(R.string.search_with_dotes_ahead),
                 leadingIcon = R.drawable.search_bottom_nav,
-                onFocusChanged = {
-                    if (it) {
-                        listener.onClickSearchTextField()
-                    }
-                },
+                isFocusEnabled = false,
+                onClick = listener::onClickSearchTextField,
                 readOnly = true
             )
         }
@@ -92,7 +89,7 @@ fun ExploreScreenContent(
                 title = stringResource(R.string.for_you),
                 actionText = stringResource(R.string.see_all),
                 actionIcon = ImageVector.vectorResource(R.drawable.arrow),
-                onActionClick = { listener.onSeeAllForYouClicked() }
+                onActionClick = { listener.onSeeAllForYouClick() }
             )
         }
         item {
@@ -104,7 +101,7 @@ fun ExploreScreenContent(
                     MovieCard(
                         modifier = Modifier
                             .width(124.dp)
-                            .clickable(onClick = { listener.onMovieClicked(movie.id) }),
+                            .clickable(onClick = { listener.onMovieClick(movie.id) }),
                         title = movie.title,
                         vote = movie.rating,
                         imgUrl = movie.posterPath,
@@ -136,7 +133,7 @@ fun ExploreScreenContent(
 
                     MovieCard(
                         modifier = Modifier
-                            .clickable(onClick = { listener.onMovieClicked(movie.id) }),
+                            .clickable(onClick = { listener.onMovieClick(movie.id) }),
                         title = movie.title,
                         vote = movie.rating,
                         imgUrl = movie.posterPath,

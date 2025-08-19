@@ -8,25 +8,25 @@ import com.cairosquad.viewmodel.util.MediaContentType
 import com.cairosquad.viewmodel.util.roundToFirstDecimalPlace
 
 
-fun Movie.toHomeMediaUiState() = HomeScreenState.MediaUiState(
+fun Movie.toUiState() = HomeScreenState.MediaUiState(
     id = id,
     title = title,
     rating = rating.roundToFirstDecimalPlace(),
     posterPath = posterPath,
-    genres = genres.map(Genre::toHomeGenreUiState),
+    genres = genres.map(Genre::toUiState),
     isMovie = true
 )
 
-fun Series.toHomeMediaUiState() = HomeScreenState.MediaUiState(
+fun Series.toUiState() = HomeScreenState.MediaUiState(
     id = id,
     title = title,
     rating = rating.roundToFirstDecimalPlace(),
     posterPath = posterPath,
-    genres = genres.map(Genre::toHomeGenreUiState),
+    genres = genres.map(Genre::toUiState),
     isMovie = false
 )
 
-fun Genre.toHomeGenreUiState() = HomeScreenState.GenreUiState(
+fun Genre.toUiState() = HomeScreenState.GenreUiState(
     id = id,
     name = name,
 )

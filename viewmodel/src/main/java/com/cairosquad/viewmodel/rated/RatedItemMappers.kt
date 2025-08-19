@@ -1,17 +1,16 @@
-package com.cairosquad.viewmodel.rated.mappers
+package com.cairosquad.viewmodel.rated
 
 import androidx.paging.PagingData
 import androidx.paging.filter
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
-import com.cairosquad.viewmodel.rated.MyRatingsScreenState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 /**
  * Maps a Movie entity to a RatedItemUiState
  */
-fun Movie.toRatedItemUiState(userRating: Double): MyRatingsScreenState.RatedItemUiState = MyRatingsScreenState.RatedItemUiState(
+fun Movie.toUiState(userRating: Double): MyRatingsScreenState.RatedItemUiState = MyRatingsScreenState.RatedItemUiState(
     id = id,
     title = title,
     posterPath = posterPath,
@@ -24,7 +23,7 @@ fun Movie.toRatedItemUiState(userRating: Double): MyRatingsScreenState.RatedItem
 /**
  * Maps a Series entity to a RatedItemUiState
  */
-fun Series.toRatedItemUiState(userRating: Double): MyRatingsScreenState.RatedItemUiState = MyRatingsScreenState.RatedItemUiState(
+fun Series.toUiState(userRating: Double): MyRatingsScreenState.RatedItemUiState = MyRatingsScreenState.RatedItemUiState(
     id = id,
     title = title,
     posterPath = posterPath,
