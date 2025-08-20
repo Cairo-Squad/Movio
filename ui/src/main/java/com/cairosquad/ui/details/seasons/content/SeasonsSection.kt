@@ -47,7 +47,7 @@ fun Seasons(
                         movieImage = season.posterPath,
                         yearOfPublish = season.airDate,
                         timeOfPublish = season.timeOfPublish,
-                        currentSeason = "${season.number}",
+                        currentSeason = season.number.toLocalString(),
                         onClick = {
                             listener.onSeasonClicked(
                                 season.seriesId,
