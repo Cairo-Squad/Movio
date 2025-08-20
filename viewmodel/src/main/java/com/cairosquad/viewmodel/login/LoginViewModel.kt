@@ -63,7 +63,7 @@ class LoginViewModel @Inject constructor(
 
     private fun onLoginSuccess(response: Unit) {
         updateState { it.copy(error = null) }
-        sendEffect(LoginEffect.NavigateToHome)
+        sendEffect(LoginEffect.NavigateAfterLoginSuccessfully)
     }
 
     override fun onContinueAsAGuestClick() {

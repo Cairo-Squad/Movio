@@ -87,6 +87,13 @@ fun SeriesScreenEffects(
 
             SeriesDetailEffect.NavigateToLogin -> {
                 navController.navigate(LoginRoute)
+                fun onLoginSuccess() {
+                    navController.popBackStack()
+                    viewModel.updateStateAfterLoggingIn()
+                }
+                navController
+                    .getBackStackEntry(LoginRoute)
+                    .savedStateHandle["onLoginSuccess"] = ::onLoginSuccess
             }
         }
     }
