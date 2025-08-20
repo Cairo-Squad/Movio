@@ -39,6 +39,10 @@ class MovieViewModel @AssistedInject constructor(
     }
 
     init {
+        initScreen()
+    }
+
+    private fun initScreen() {
         fetchMovieData()
         addMovieToHistory()
     }
@@ -81,7 +85,7 @@ class MovieViewModel @AssistedInject constructor(
 
     private fun getMovieIsRated() {
         tryToCall(
-            block = { getRatedItemsUseCase.getRatedMovies(1) },
+            block = { getRatedItemsUseCase.getRatedMovies(FIRST_PAGE) },
             onSuccess = ::onGetMovieIsRatedSuccess,
             onError = { }
         )
@@ -111,7 +115,7 @@ class MovieViewModel @AssistedInject constructor(
     private fun getMovieInFavorite() {
         tryToCall(
             block = {
-                if (loginUseCase.isUserLoggedIn()) accountUseCase.getFavoriteMovies(1)
+                if (loginUseCase.isUserLoggedIn()) accountUseCase.getFavoriteMovies(FIRST_PAGE)
                 else emptyList()
             },
             onSuccess = ::onLoadFavoriteMoviesSuccess,
@@ -119,9 +123,7 @@ class MovieViewModel @AssistedInject constructor(
         )
     }
 
-    private fun onLoadFavoriteMoviesSuccess(movies: List<Movie>) {
-        updateState { it.copy(isFavorite = movies.any { it.id == movieId }) }
-    }
+    private fun onLoadFavoriteMoviesSuccess(movies: List<Movie>) { updateState { it.copy(isFavorite = movies.any { it.id == movieId }) } }
 
 
     private fun getBasicDetails() {
@@ -134,9 +136,7 @@ class MovieViewModel @AssistedInject constructor(
         )
     }
 
-    private fun onGetBasicDetailsStart() {
-        updateState { it.copy(basicDetailsSectionState = ScreenStatus.LOADING) }
-    }
+    private fun onGetBasicDetailsStart() { updateState { it.copy(basicDetailsSectionState = ScreenStatus.LOADING) } }
 
     private fun onGetBasicDetailsSuccess(movie: Movie) {
         updateState {
@@ -147,9 +147,7 @@ class MovieViewModel @AssistedInject constructor(
         }
     }
 
-    private fun onGetBasicDetailsError(throwable: Throwable) {
-        setError(throwable) { copy(basicDetailsSectionState = ScreenStatus.ERROR) }
-    }
+    private fun onGetBasicDetailsError(throwable: Throwable) { setError(throwable) { copy(basicDetailsSectionState = ScreenStatus.ERROR) } }
 
     private fun getActors() {
         tryToCall(
@@ -161,13 +159,9 @@ class MovieViewModel @AssistedInject constructor(
         )
     }
 
-    private fun onGetActorsStart() {
-        updateState { it.copy(castSectionState = ScreenStatus.LOADING) }
-    }
+    private fun onGetActorsStart() { updateState { it.copy(castSectionState = ScreenStatus.LOADING) } }
 
-    private fun onGetActorsError(throwable: Throwable) {
-        setError(throwable) { copy(castSectionState = ScreenStatus.ERROR) }
-    }
+    private fun onGetActorsError(throwable: Throwable) {setError(throwable) { copy(castSectionState = ScreenStatus.ERROR) } }
 
     private fun setActors(actors: List<Artist>) {
         updateState {
@@ -188,9 +182,7 @@ class MovieViewModel @AssistedInject constructor(
         )
     }
 
-    private fun onGetReviewsStart() {
-        updateState { it.copy(reviewsSectionState = ScreenStatus.LOADING) }
-    }
+    private fun onGetReviewsStart() { updateState { it.copy(reviewsSectionState = ScreenStatus.LOADING) } }
 
     private fun setReviews(reviews: List<Review>) {
         updateState {
@@ -201,9 +193,7 @@ class MovieViewModel @AssistedInject constructor(
         }
     }
 
-    private fun onGetReviewsError(throwable: Throwable) {
-        setError(throwable) { copy(reviewsSectionState = ScreenStatus.ERROR) }
-    }
+    private fun onGetReviewsError(throwable: Throwable) { setError(throwable) { copy(reviewsSectionState = ScreenStatus.ERROR) } }
 
     private fun getSimilarMovies() {
         tryToCall(
@@ -215,9 +205,7 @@ class MovieViewModel @AssistedInject constructor(
         )
     }
 
-    private fun onGetSimilarMoviesStart() {
-        updateState { it.copy(similarMoviesSectionState = ScreenStatus.LOADING) }
-    }
+    private fun onGetSimilarMoviesStart() { updateState { it.copy(similarMoviesSectionState = ScreenStatus.LOADING) } }
 
     private fun setSimilarMovies(movies: List<Movie>) {
         updateState {
@@ -228,17 +216,11 @@ class MovieViewModel @AssistedInject constructor(
         }
     }
 
-    private fun onGetSimilarMoviesError(throwable: Throwable) {
-        setError(throwable) { copy(similarMoviesSectionState = ScreenStatus.ERROR) }
-    }
+    private fun onGetSimilarMoviesError(throwable: Throwable) { setError(throwable) { copy(similarMoviesSectionState = ScreenStatus.ERROR) } }
 
-    override fun onBackClick() {
-        sendEffect(MovieEffect.NavigateBack)
-    }
+    override fun onBackClick() { sendEffect(MovieEffect.NavigateBack) }
 
-    override fun onShareClick() {
-        updateState { it.copy(isShareBottomSheetOpen = true) }
-    }
+    override fun onShareClick() { updateState { it.copy(isShareBottomSheetOpen = true) } }
 
     override fun onFavoriteClick() {
         checkUserLoggedIn {
@@ -279,7 +261,7 @@ class MovieViewModel @AssistedInject constructor(
                     showSnackBar = true
                 )
             }
-            delay(2000)
+            delay(SNACKBAR_DELAY)
             updateState { it.copy(showSnackBar = false) }
         }
     }
@@ -297,9 +279,7 @@ class MovieViewModel @AssistedInject constructor(
         showSnackBar(R.string.movie_favorite_success, true)
     }
 
-    private fun onAddToFavoriteError(throwable: Throwable) {
-        showSnackBar(R.string.movie_favorite_fail, false)
-    }
+    private fun onAddToFavoriteError(throwable: Throwable) {showSnackBar(R.string.movie_favorite_fail, false) }
 
     override fun onRateItClick() {
         tryToCall(
@@ -320,17 +300,13 @@ class MovieViewModel @AssistedInject constructor(
     }
 
 
-    override fun onPlayClick() {
-        sendEffect(MovieEffect.PlayTrailer)
-    }
+    override fun onPlayClick() { sendEffect(MovieEffect.PlayTrailer) }
 
-    override fun onAddToListClick() {
-        checkUserLoggedIn { loadMovieLists() }
-    }
+    override fun onAddToListClick() {checkUserLoggedIn { loadMovieLists() } }
 
     private fun loadMovieLists() {
         tryToCall(
-            block = { accountUseCase.getMoviesLists(1) },
+            block = { accountUseCase.getMoviesLists(FIRST_PAGE) },
             onSuccess = ::onLoadMovieListsSuccess,
             onError = {},
             dispatcher = Dispatchers.Main
@@ -374,13 +350,13 @@ class MovieViewModel @AssistedInject constructor(
 
     private suspend fun onClickListError(throwable: Throwable, listId: Long) {
         updateListState(listId, MovieScreenState.ListState.ERROR)
-        delay(750)
+        delay(LIST_OPERATION_DELAY)
         showSnackBar(R.string.error_adding_movie_to_list, false)
     }
 
     private suspend fun onClickListSuccess(isAdded: Boolean, listId: Long) {
         updateListState(listId, MovieScreenState.ListState.SUCCESS)
-        delay(750)
+        delay(LIST_OPERATION_DELAY)
         showSnackBar(
             messageId = if (isAdded) R.string.added_to_list
             else R.string.movie_already_in_list, isSuccessful = isAdded
@@ -399,7 +375,7 @@ class MovieViewModel @AssistedInject constructor(
     }
 
     private suspend fun onClickListBlock(listId: Long): Boolean {
-        val movies = accountUseCase.getMoviesOfList(listId, 1)
+        val movies = accountUseCase.getMoviesOfList(listId,FIRST_PAGE)
         return if (screenState.value.movie.id in movies.map { it.id }) {
             false
         } else {
@@ -418,7 +394,7 @@ class MovieViewModel @AssistedInject constructor(
 
     private suspend fun onSubmitCreateListClickedBlock(): List<MediaList> {
         accountUseCase.createList(screenState.value.listName)
-        return accountUseCase.getMoviesLists(1)
+        return accountUseCase.getMoviesLists(FIRST_PAGE)
     }
 
     private fun onSubmitCreateListClickedSuccess(moviesLists: List<MediaList>) {
@@ -442,61 +418,33 @@ class MovieViewModel @AssistedInject constructor(
         }
     }
 
-    override fun onDismissCreateListBottomSheet() {
-        updateState { it.copy(showCreateListBottomSheet = false) }
-    }
+    override fun onDismissCreateListBottomSheet() {updateState { it.copy(showCreateListBottomSheet = false) } }
 
-    override fun onListValueChange(listName: String) {
-        updateState { it.copy(listName = listName) }
-    }
+    override fun onListValueChange(listName: String) {updateState { it.copy(listName = listName) } }
 
-    override fun onSeeAllCastClick(movieId: Long) {
-        sendEffect(MovieEffect.NavigateToAllActors(movieId))
-    }
+    override fun onSeeAllCastClick(movieId: Long) {sendEffect(MovieEffect.NavigateToAllActors(movieId)) }
 
-    override fun onActorClick(actorId: Long) {
-        sendEffect(MovieEffect.NavigateToActor(actorId))
-    }
+    override fun onActorClick(actorId: Long) {sendEffect(MovieEffect.NavigateToActor(actorId)) }
 
-    override fun onSeeAllReviewsClick(movieId: Long) {
-        sendEffect(MovieEffect.NavigateToAllReviews(movieId))
-    }
+    override fun onSeeAllReviewsClick(movieId: Long) {sendEffect(MovieEffect.NavigateToAllReviews(movieId)) }
 
-    override fun onSeeAllSimilarMoviesClick(movieId: Long) {
-        sendEffect(MovieEffect.NavigateToSimilarMovies(movieId))
-    }
+    override fun onSeeAllSimilarMoviesClick(movieId: Long) {sendEffect(MovieEffect.NavigateToSimilarMovies(movieId)) }
 
-    override fun onMovieClick(movieId: Long) {
-        sendEffect(MovieEffect.NavigateToMovie(movieId))
-    }
+    override fun onMovieClick(movieId: Long) { sendEffect(MovieEffect.NavigateToMovie(movieId)) }
 
-    override fun onCopy() {
-            onDismissShareBottomSheet()
-    }
+    override fun onCopy() {onDismissShareBottomSheet()}
 
-    override fun onDismissShareBottomSheet() {
-        updateState { it.copy(isShareBottomSheetOpen = false) }
-    }
+    override fun onDismissShareBottomSheet() { updateState { it.copy(isShareBottomSheetOpen = false) } }
 
-    override fun onDismissLoginBottomSheet() {
-        updateState { it.copy(isNoAccountBottomSheetOpen = false) }
-    }
+    override fun onDismissLoginBottomSheet() { updateState { it.copy(isNoAccountBottomSheetOpen = false) } }
 
-    override fun onDismissRateBottomSheet() {
-        updateState { it.copy(isRateBottomSheetOpen = false) }
-    }
+    override fun onDismissRateBottomSheet() { updateState { it.copy(isRateBottomSheetOpen = false) } }
 
-    override fun onDismissAddToListBottomSheet() {
-        updateState { it.copy(isAddToListBottomSheetOpen = false) }
-    }
+    override fun onDismissAddToListBottomSheet() { updateState { it.copy(isAddToListBottomSheetOpen = false) }}
 
-    override fun onDismissRateSuccessBottomSheet() {
-        updateState { it.copy(isRatedSuccessBottomSheetOpen = false) }
-    }
+    override fun onDismissRateSuccessBottomSheet() { updateState { it.copy(isRatedSuccessBottomSheetOpen = false) } }
 
-    override fun onRateChange(rate: Int) {
-        updateState { it.copy(rate = rate) }
-    }
+    override fun onRateChange(rate: Int) { updateState { it.copy(rate = rate) } }
 
     override fun onSubmitRateClick(rate: Int) {
         tryToCall(
@@ -508,9 +456,7 @@ class MovieViewModel @AssistedInject constructor(
         )
     }
 
-    private fun onSubmitRateClickedStart() {
-        updateState { it.copy(isRateBottomSheetOpen = false) }
-    }
+    private fun onSubmitRateClickedStart() { updateState { it.copy(isRateBottomSheetOpen = false) } }
 
     private fun onSubmitRateClickedSuccess(rate: Int) {
         updateState {
@@ -522,23 +468,15 @@ class MovieViewModel @AssistedInject constructor(
         }
     }
 
-    override fun onNavigateToLogin() {
-        sendEffect(MovieEffect.NavigateToLogin)
-    }
+    override fun onNavigateToLogin() { sendEffect(MovieEffect.NavigateToLogin) }
 
-    override fun onRefresh() {
-        fetchMovieData()
-    }
+    override fun onRefresh() { fetchMovieData() }
 
     private fun setError(
         throwable: Throwable,
         updateSection: MovieScreenState.() -> MovieScreenState
     ) {
-        updateState {
-            it.updateSection().copy(
-                errorStatus = handleDetailsException(throwable)
-            )
-        }
+        updateState { it.updateSection().copy(errorStatus = handleDetailsException(throwable)) }
     }
 
     private fun checkUserLoggedIn(onLoggedIn: () -> Unit) {
@@ -560,5 +498,10 @@ class MovieViewModel @AssistedInject constructor(
 
             else -> ErrorStatus.UNKNOWN_ERROR
         }
+    }
+    companion object {
+        private const val FIRST_PAGE = 1
+        private const val SNACKBAR_DELAY = 2000L
+        private const val LIST_OPERATION_DELAY = 750L
     }
 }

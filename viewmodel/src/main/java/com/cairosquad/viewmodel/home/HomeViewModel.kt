@@ -2,6 +2,7 @@ package com.cairosquad.viewmodel.home
 
 
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.usecase.AccountUseCase
@@ -17,6 +18,7 @@ import com.cairosquad.viewmodel.util.MediaContentType
 import com.cairosquad.viewmodel.util.MediaType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -46,12 +48,10 @@ class HomeViewModel @Inject constructor(
                 fetchPopularMovies()
                 fetchAllMovieSectionsOrdered()
             }
-
             HomeScreenState.Tab.TV_SHOWS -> {
                 fetchPopularSeries()
                 fetchAllSeriesSectionsOrdered()
             }
-
             HomeScreenState.Tab.CATEGORIES -> {
                 loadGenres()
                 fetchMediaByCategory()
@@ -65,71 +65,67 @@ class HomeViewModel @Inject constructor(
 
     override fun onTabClick(tabIndex: Int) {
         when (tabIndex) {
-            0 -> {
+            TAB_MOVIES -> {
                 fetchPopularMovies()
                 fetchAllMovieSectionsOrdered()
             }
-            1 -> {
+            TAB_SERIES -> {
                 fetchPopularSeries()
                 fetchAllSeriesSectionsOrdered()
             }
-            2 -> {
+            TAB_CATEGORIES -> {
                 loadGenres()
                 fetchMediaByCategory()
             }
         }
-        updateState {
-            it.copy(selectedTab = HomeScreenState.Tab.entries[tabIndex])
-        }
+        updateState { it.copy(selectedTab = HomeScreenState.Tab.entries[tabIndex]) }
     }
 
     override fun onGenreSelected(genreIndex: Int) {
         fetchMediaByCategory(screenState.value.genres[genreIndex].id)
-        updateState {
-            it.copy(
-                selectedGenreIndex = genreIndex
-            )
-        }
+        updateState { it.copy(selectedGenreIndex = genreIndex) }
     }
 
     override fun onSortingSelected(filter: HomeScreenState.SortingType) {
         if (filter == screenState.value.selectedSortingType) return
-        updateState {
-            it.copy(selectedSortingType = filter)
-        }
+        updateState { it.copy(selectedSortingType = filter) }
         sortCategoriesMedia()
     }
 
     private fun fetchPopularMovies() {
         fetchPopularMedia(
-            genreId = null,
-            fetchBlock = { id -> manageMoviesUseCase.getPopularMovies(page = 1, genreId = id) },
+            fetchBlock = { id -> manageMoviesUseCase.getPopularMovies(1, id) },
             mapper = Movie::toUiState,
-            onSuccess = { mappedList ->
-                updateState {
-                    it.copy(
-                        popularMovies = mappedList,
-                        isRefreshing = false,
-                        dataRequestStatus = DataRequestStatus.SUCCESS
-                    )
-                }
-            })
+            onSuccess = ::onPopularMoviesSuccess
+        )
     }
 
     private fun fetchPopularSeries() {
         fetchPopularMedia(
-            genreId = null,
-            fetchBlock = { id -> manageSeriesUseCase.getPopularSeries(page = 1, genreId = id) },
+            fetchBlock = { id -> manageSeriesUseCase.getPopularSeries(1, id) },
             mapper = Series::toUiState,
-            onSuccess = { mappedList ->
-                updateState {
-                    it.copy(
-                        popularSeries = mappedList,
-                        isRefreshing = false,
-                        dataRequestStatus = DataRequestStatus.SUCCESS
-                    )
-                }
-            })
+            onSuccess = ::onPopularSeriesSuccess
+        )
+    }
+
+    private fun onPopularMoviesSuccess(movies: List<HomeScreenState.MediaUiState>) {
+        updateState {
+            it.copy(
+                popularMovies = movies,
+                isRefreshing = false,
+                dataRequestStatus = DataRequestStatus.SUCCESS
+            )
+        }
+    }
+
+    private fun onPopularSeriesSuccess(series: List<HomeScreenState.MediaUiState>) {
+        updateState {
+            it.copy(
+                popularSeries = series,
+                isRefreshing = false,
+                dataRequestStatus = DataRequestStatus.SUCCESS
+            )
+        }
     }
 
     private fun fetchAllMovieSectionsOrdered() {
@@ -183,18 +179,14 @@ class HomeViewModel @Inject constructor(
 
     private fun fetchMediaByCategory(genreId: Long? = null) {
         tryToCall(
-            block = {
-                unifiedMediaPager.getCombinedMedia(genreId)
-            },
-            onSuccess = { media ->
-                updateState {
-                    it.copy(
-                        categoriesMedia = media
-                    )
-                }
-            },
+            block = { unifiedMediaPager.getCombinedMedia(genreId) },
+            onSuccess = ::onCategoryMediaSuccess,
             onError = ::handleError
         )
+    }
+
+    private fun onCategoryMediaSuccess(media: Flow<PagingData<HomeScreenState.MediaUiState>>) {
+        updateState { it.copy(categoriesMedia = media) }
     }
 
     private fun sortCategoriesMedia() {
@@ -202,27 +194,17 @@ class HomeViewModel @Inject constructor(
         tryToCall(
             block = {
                 when (screenState.value.selectedSortingType) {
-                    HomeScreenState.SortingType.ALL -> {
-                        unifiedMediaPager.getCombinedMedia(genreId = genre.id)
-                    }
-
-                    HomeScreenState.SortingType.POPULARITY -> {
-                        unifiedMediaPager.getCombinedMedia(genreId = genre.id, SortType.POPULAR)
-                    }
-
-                    HomeScreenState.SortingType.LATEST -> {
-                        unifiedMediaPager.getCombinedMedia(genreId = genre.id, SortType.LATEST)
-                    }
+                    HomeScreenState.SortingType.ALL ->
+                        unifiedMediaPager.getCombinedMedia(genre.id)
+                    HomeScreenState.SortingType.POPULARITY ->
+                        unifiedMediaPager.getCombinedMedia(genre.id, SortType.POPULAR)
+                    HomeScreenState.SortingType.LATEST ->
+                        unifiedMediaPager.getCombinedMedia(genre.id, SortType.LATEST)
                 }
             },
-            onSuccess = { media ->
-                updateState {
-                    it.copy(categoriesMedia = media)
-                }
-            },
+            onSuccess = ::onCategoryMediaSuccess,
             onError = ::handleError
         )
-
     }
 
     private suspend fun loadGenresBlock(): List<HomeScreenState.GenreUiState> {
@@ -239,7 +221,7 @@ class HomeViewModel @Inject constructor(
     private fun loadGenres() {
         tryToCall(
             block = ::loadGenresBlock,
-            onSuccess = { genres -> updateState { it.copy(genres = genres.toList()) } },
+            onSuccess = { genres -> updateState { it.copy(genres = genres) } },
             onError = ::handleError
         )
     }
@@ -247,10 +229,7 @@ class HomeViewModel @Inject constructor(
     private fun getAccountDetails() {
         tryToCall(
             block = { accountUseCase.getAccountDetails() },
-            onSuccess = { accountDetails ->
-
-                updateState { it.copy(profileImage = accountDetails.avatarPath) }
-            },
+            onSuccess = { accountDetails -> updateState { it.copy(profileImage = accountDetails.avatarPath) } },
             onError = {}
         )
     }
@@ -260,24 +239,11 @@ class HomeViewModel @Inject constructor(
     }
 
     override fun onMediaClick(mediaId: Long, isMovie: Boolean) {
-        sendEffect(
-            HomeEffect.NavigateMediaDetails(
-                mediaId = mediaId,
-                isMovie = isMovie
-            )
-        )
+        sendEffect(HomeEffect.NavigateMediaDetails(mediaId, isMovie))
     }
 
-    override fun onSeeAllClick(
-        mediaContentType: MediaContentType,
-        mediaType: MediaType
-    ) {
-        sendEffect(
-            HomeEffect.NavigateToSeeAllScreen(
-                mediaContentType,
-                mediaType = mediaType
-            )
-        )
+    override fun onSeeAllClick(mediaContentType: MediaContentType, mediaType: MediaType) {
+        sendEffect(HomeEffect.NavigateToSeeAllScreen(mediaContentType, mediaType))
     }
 
     private fun <T> fetchPopularMedia(
@@ -310,8 +276,11 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    companion object {
-        const val HORIZONTAL_PAGER_COUNT = 7
+     companion object {
+         const val HORIZONTAL_PAGER_COUNT = 7
+         private const val TAB_MOVIES = 0
+         private const val TAB_SERIES = 1
+         private const val TAB_CATEGORIES = 2
         val homePageMoviesSections = listOf(
             MediaContentType.TOP_RATING,
             MediaContentType.NOW_PLAYING,
