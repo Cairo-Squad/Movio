@@ -60,12 +60,12 @@ class EpisodesDetailsViewModelTest {
         coEvery { manageSeriesUseCase.getEpisodes(seriesId, initialSeason) } returns listOf(
             Episode(
                 id = 1, episodeName = "Ep1", episodeNumber = 1, photoPath = "img1",
-                runtimeMinutes = 45, rating = 9.0f, seasonNumber = 1,
+                runtimeInMinutes = 45, rating = 9.0f, seasonNumber = 1,
                 seriesId = 123L
             ),
             Episode(
                 id = 2, episodeName = "Ep2", episodeNumber = 2, photoPath = "img2",
-                runtimeMinutes = 44, rating = 8.5f, seasonNumber = 1,
+                runtimeInMinutes = 44, rating = 8.5f, seasonNumber = 1,
                 seriesId = 123L
             )
         )

@@ -910,7 +910,7 @@ class ManageSeriesUseCaseTest {
             episodeNumber = 2,
             photoPath = "/photo.png",
             episodeName = "episode name",
-            runtimeMinutes = 45,
+            runtimeInMinutes = 45,
             rating = 9f,
             seasonNumber = 2,
             seriesId = 123

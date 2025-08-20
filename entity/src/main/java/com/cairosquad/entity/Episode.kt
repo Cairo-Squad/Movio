@@ -5,7 +5,7 @@ data class Episode(
     val episodeNumber: Int,
     val photoPath: String,
     val episodeName: String,
-    val runtimeMinutes: Int,
+    val runtimeInMinutes: Int,
     val rating: Float,
     val seasonNumber: Int,
     val seriesId: Long,

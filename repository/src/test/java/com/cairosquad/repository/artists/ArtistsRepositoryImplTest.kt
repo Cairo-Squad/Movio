@@ -1,6 +1,6 @@
 package com.cairosquad.repository.artists
 
-import com.cairosquad.domain.exception.DomainEmptyResponseException
+import com.cairosquad.domain.exception.NoDataException
 import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.repository.LanguageRepository
 import com.cairosquad.entity.Artist
@@ -87,7 +87,7 @@ class ArtistsRepositoryImplTest {
                 )
             } throws RepoEmptyResponseException()
 
-            assertFailsWith<DomainEmptyResponseException> {
+            assertFailsWith<NoDataException> {
                 repository.getArtistsByQuery(query, page)
             }
             coVerify(exactly = 1) { remoteDataSource.getArtistsByQuery(query, page) }
@@ -154,7 +154,7 @@ class ArtistsRepositoryImplTest {
             coEvery { localDataSource.getArtistsByCacheCode(cacheCode) } returns emptyList()
             coEvery { remoteDataSource.getArtistById(artistId) } throws RepoEmptyResponseException()
 
-            assertFailsWith<DomainEmptyResponseException> {
+            assertFailsWith<NoDataException> {
                 repository.getArtistById(artistId)
             }
             coVerify(exactly = 1) { remoteDataSource.getArtistById(artistId) }

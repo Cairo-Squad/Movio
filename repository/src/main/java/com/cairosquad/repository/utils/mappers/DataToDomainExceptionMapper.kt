@@ -1,8 +1,8 @@
 package com.cairosquad.repository.utils.mappers
 
-import com.cairosquad.domain.exception.DUnauthorizedException
-import com.cairosquad.domain.exception.DomainEmptyResponseException
-import com.cairosquad.domain.exception.DomainJsonParsingException
+import com.cairosquad.domain.exception.UnauthorizedActionException
+import com.cairosquad.domain.exception.NoDataException
+import com.cairosquad.domain.exception.ParsingException
 import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.exception.NetworkException
@@ -42,12 +42,12 @@ fun getDomainExceptionFromDataException(exception: DataSourceException): MovioEx
             is ConflictException -> NetworkException(exception.message)
             is BadRequestException -> NetworkException(exception.message)
             is NotFoundException -> UnknownException("Not Found")
-            is UnauthorizedException -> DUnauthorizedException(exception.message)
+            is UnauthorizedException -> UnauthorizedActionException(exception.message)
         }
         is ServerException -> NetworkException(exception.message)
         is NoInternetException -> InternetConnectionException(exception.message)
         is UnknownDataSourceException -> UnknownException(exception.message)
-        is RepoEmptyResponseException -> DomainEmptyResponseException(exception.message)
-        is RepoJsonParsingException -> DomainJsonParsingException(exception.message)
+        is RepoEmptyResponseException -> NoDataException(exception.message)
+        is RepoJsonParsingException -> ParsingException(exception.message)
     }
 }
