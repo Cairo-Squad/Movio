@@ -42,7 +42,7 @@ data class SeriesDetailsScreenState(
         val posterPath: String = "",
         val genres: List<String> = emptyList(),
         val seasonsCount: Int = 0,
-        val releaseDate: String = "",
+        val releaseDate: String? = null,
         val overview: String = "",
         val trailerPath: String = ""
     )

@@ -27,6 +27,7 @@ import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.details.DetailsFailContent
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsInteractionListener
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState
+import com.cairosquad.viewmodel.util.toLocalString
 
 @Composable
 fun EpisodesScreenContent(
@@ -39,7 +40,7 @@ fun EpisodesScreenContent(
     val seasonOptions = state.seasons.map {
         stringResource(
             com.cairosquad.ui.R.string.season,
-            it.seasonNumber
+            it.seasonNumber.toLocalString()
         )
     }
 
@@ -83,9 +84,9 @@ fun EpisodesScreenContent(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     userScrollEnabled = false,
                 ) {
-                    SeasonImage(state)
-                    SeasonDetails(state, seasonOptions, listener, seriesId)
-                    EpisodesSection(state)
+                    seasonImage(state)
+                    seasonDetails(state, seasonOptions, listener, seriesId)
+                    episodesSection(state)
                 }
             }}
     }

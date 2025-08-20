@@ -75,8 +75,8 @@
     <string name="similar_series">المسلسلات مشابهة</string>
     <string name="known_for">معروف بالتالي</string>
     <string name="less_with_dotes_behind"> ... أقل</string>
-    <string name="read_less_with_dots_behind"> ... اقرأأقل</string>
-    <string name="read_more_with_dots_behind"> ... اقرأأكثر</string>
+    <string name="read_less_with_dots_behind"> ... اقرأ أقل</string>
+    <string name="read_more_with_dots_behind"> ... اقرأ أكثر</string>
     <string name="top_cast">أفضل الممثلين</string>
     <string name="unauthorized_access">أنت غير مصرح لك بتنفيذ هذا الإجراء</string>
     <string name="error_parsing_data">حدث خطأ أثناء معالجة البيانات</string>

@@ -24,6 +24,13 @@ import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.details.DetailsFailContent
+import com.cairosquad.ui.details.movie.composable.CastSection
+import com.cairosquad.ui.details.movie.composable.MovieBackgroundSection
+import com.cairosquad.ui.details.movie.composable.MovieDescriptionSection
+import com.cairosquad.ui.details.movie.composable.MovieImageSection
+import com.cairosquad.ui.details.movie.composable.ReviewsSection
+import com.cairosquad.ui.details.movie.composable.SimilarMoviesSection
+import com.cairosquad.ui.details.movie.composable.movieBasicDetails
 import com.cairosquad.viewmodel.details.movie.MovieInteractionListener
 import com.cairosquad.viewmodel.details.movie.MovieScreenState
 
@@ -88,7 +95,7 @@ fun MovieContent(
                     userScrollEnabled = false
                 ) {
                     MovieImageSection(state)
-                    MovieBasicDetails(state, listener)
+                    movieBasicDetails(state, listener)
                     MovieDescriptionSection(state)
                     CastSection(state, listener)
                     ReviewsSection(state, listener)

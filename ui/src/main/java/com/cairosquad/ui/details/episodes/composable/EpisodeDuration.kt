@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.theme.Theme
 
 @Composable
-fun EpisodeDuration(episodeNumber: String, episodeDuration: Int) {
+fun EpisodeDuration(episodeNumber: String, episodeDuration: Int?) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -21,17 +21,19 @@ fun EpisodeDuration(episodeNumber: String, episodeDuration: Int) {
                 color = Theme.color.surfaces.onSurfaceContainer,
             )
         )
-        BasicText(
-            text = " • ",
-            style = Theme.textStyle.label.smallRegular12.copy(
-                color = Theme.color.surfaces.onSurfaceContainer,
+        if (episodeDuration != null) {
+            BasicText(
+                text = " • ",
+                style = Theme.textStyle.label.smallRegular12.copy(
+                    color = Theme.color.surfaces.onSurfaceContainer,
+                )
             )
-        )
-        BasicText(
-            text = stringResource(com.cairosquad.ui.R.string.m, episodeDuration),
-            style = Theme.textStyle.label.smallRegular12.copy(
-                color = Theme.color.surfaces.onSurfaceContainer,
+            BasicText(
+                text = stringResource(com.cairosquad.ui.R.string.m, episodeDuration),
+                style = Theme.textStyle.label.smallRegular12.copy(
+                    color = Theme.color.surfaces.onSurfaceContainer,
+                )
             )
-        )
+        }
     }
 }
