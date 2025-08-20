@@ -54,13 +54,14 @@ class MovieViewModel @AssistedInject constructor(
 
     fun updateStateAfterLoggingIn() {
         tryToCall(
+            onStart = ::closeAllBottomSheets,
             block = { accountUseCase.getAccountDetails() },
-            onSuccess = {
-                getMovieInFavorite()
-                getMovieIsRated()
-            },
+            onSuccess = ::updateRatedAndFavoriteMovies,
             onError = {}
         )
+    }
+
+    private fun closeAllBottomSheets() {
         updateState {
             it.copy(
                 isRateBottomSheetOpen = false,
@@ -71,6 +72,11 @@ class MovieViewModel @AssistedInject constructor(
                 showCreateListBottomSheet = false,
             )
         }
+    }
+
+    private fun updateRatedAndFavoriteMovies(response: Unit) {
+        getMovieInFavorite()
+        getMovieIsRated()
     }
 
     private fun getMovieIsRated() {

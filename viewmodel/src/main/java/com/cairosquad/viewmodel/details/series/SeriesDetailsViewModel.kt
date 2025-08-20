@@ -54,13 +54,14 @@ class SeriesDetailsViewModel @AssistedInject constructor(
 
     fun updateStateAfterLoggingIn() {
         tryToCall(
+            onStart = ::closeAllBottomSheets,
             block = { accountUseCase.getAccountDetails() },
-            onSuccess = {
-                getSeriesInFavorite()
-                getSeriesInRated()
-            },
+            onSuccess = ::updateRatedAndFavoriteSeries,
             onError = {}
         )
+    }
+
+    private fun closeAllBottomSheets() {
         updateState {
             it.copy(
                 showShareBottomSheet = false,
@@ -71,6 +72,11 @@ class SeriesDetailsViewModel @AssistedInject constructor(
                 showCreateListBottomSheet = false,
             )
         }
+    }
+
+    private fun updateRatedAndFavoriteSeries(response: Unit) {
+        getSeriesInFavorite()
+        getSeriesInRated()
     }
 
     private fun getSeriesInFavorite() {
