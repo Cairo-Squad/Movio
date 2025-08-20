@@ -6,9 +6,9 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.ui.details.series.composable.SeriesScreenBottomSheets
+import com.cairosquad.ui.details.series.composable.SeriesScreenSnackBar
 import com.cairosquad.ui.details.series.content.SeriesScreenContent
 import com.cairosquad.ui.details.series.content.SeriesScreenEffects
-import com.cairosquad.ui.details.series.composable.SeriesScreenSnackBar
 import com.cairosquad.viewmodel.details.series.SeriesDetailsViewModel
 
 @Composable

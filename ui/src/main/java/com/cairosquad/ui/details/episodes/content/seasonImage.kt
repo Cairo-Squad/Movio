@@ -22,7 +22,7 @@ import com.cairosquad.ui.BuildConfig
 import com.cairosquad.ui.movio_component.LoadingMovieImage
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState
 
-fun LazyListScope.SeasonImage(state: EpisodesDetailsScreenState) {
+fun LazyListScope.seasonImage(state: EpisodesDetailsScreenState) {
     item {
         when (state.basicDetailsSectionState) {
             EpisodesDetailsScreenState.ScreenStatus.LOADING -> {

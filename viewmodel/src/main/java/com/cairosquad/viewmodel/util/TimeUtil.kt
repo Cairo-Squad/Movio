@@ -44,8 +44,14 @@ internal object TimeUtil {
     }
 
     internal fun convertIntToHourMinuteFormat(time: Int): String {
-        val hours = time / 60
-        val minutes = time % 60
+
+        val hours = "%d".format(time / 60, Locale.getDefault())
+        val minutes = "%d".format(time % 60, Locale.getDefault())
+
+        if (Locale.getDefault().language == "ar") {
+            return "$hours س $minutes د"
+        }
+
         return "${hours}h ${minutes}min"
     }
 }

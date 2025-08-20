@@ -6,7 +6,7 @@ import com.cairosquad.ui.details.composable.BasicDetailsLoading
 import com.cairosquad.viewmodel.details.movie.MovieInteractionListener
 import com.cairosquad.viewmodel.details.movie.MovieScreenState
 
-fun LazyListScope.MovieBasicDetails(
+fun LazyListScope.movieBasicDetails(
     state: MovieScreenState,
     listener: MovieInteractionListener
 ) {
