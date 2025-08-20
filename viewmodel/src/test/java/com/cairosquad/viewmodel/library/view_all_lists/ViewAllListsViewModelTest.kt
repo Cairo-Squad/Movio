@@ -17,6 +17,7 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
@@ -60,13 +61,12 @@ class ViewAllListsViewModelTest {
         coEvery { accountUseCase.getSeriesLists(1) } returns emptyList()
 
         viewModel.onRefresh()
-        advanceTimeBy(500)
-        advanceUntilIdle()
 
-        viewModel.screenState.test {
-            assertThat(viewModel.screenState.value.isRefreshing).isTrue()
-            cancelAndIgnoreRemainingEvents()
-        }
+        runCurrent()
+        assertThat(viewModel.screenState.value.isRefreshing).isTrue()
+
+        advanceUntilIdle()
+        assertThat(viewModel.screenState.value.isRefreshing).isFalse()
     }
 
     @Test

@@ -176,11 +176,12 @@ class ViewAllListsViewModel @Inject constructor(
         updateState { it.copy(errorStatus = errorStatus) }
     }
 
-    private fun updateErrorStatus(throwable: Throwable) {
+    fun updateErrorStatus(throwable: Throwable) {
         updateState {
             it.copy(
                 errorStatus = handleException(throwable),
-                isRefreshing = false
+                isRefreshing = false,
+                screenStatus = ViewAllListsScreenState.SectionStatus.ERROR
             )
         }
     }

@@ -68,7 +68,7 @@ class ForYouViewModel @Inject constructor(
         .map { pagingData -> pagingData.map(map) }
         .cachedIn(scope)
 
-    private fun handleSearchException(e: Throwable): ErrorStatus {
+    fun handleSearchException(e: Throwable): ErrorStatus {
         return when (e) {
             is MovioException -> exceptionToErrorStatus(e)
             else -> ErrorStatus.UNKNOWN_ERROR
