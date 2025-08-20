@@ -30,9 +30,9 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.basic_component.Button
 import com.cairosquad.design_system.theme.Theme
-import com.cairosquad.ui.library.component.EmptyListContainer
-import com.cairosquad.ui.library.component.ListContainer
-import com.cairosquad.ui.library.component.SectionHeader
+import com.cairosquad.ui.library.composable.EmptyListContainer
+import com.cairosquad.ui.library.composable.ListContainer
+import com.cairosquad.ui.library.composable.SectionHeader
 import com.cairosquad.ui.movio_component.LoadingMovieCard
 import com.cairosquad.ui.movio_component.LoadingMovieImage
 import com.cairosquad.ui.movio_component.MovieCard

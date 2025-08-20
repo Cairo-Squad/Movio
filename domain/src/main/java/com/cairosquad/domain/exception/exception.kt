@@ -13,3 +13,6 @@ class DomainEmptyResponseException(message: String = "") : MovioException(messag
 class DomainJsonParsingException(message: String = "") : MovioException(message)
 
 class DUnauthorizedException(message: String = "") : MovioException(message)
+
+
+
