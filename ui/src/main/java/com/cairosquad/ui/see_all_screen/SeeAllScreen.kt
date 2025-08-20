@@ -135,7 +135,9 @@ fun SeeAllScreen(
                     selectedChipIndex = state.selectedGenreIndex,
                     onChipSelected = { index ->
                         viewModel.onGenreSelected(index)
-                    })
+                    },
+                    contentPadding = PaddingValues(horizontal = 16.dp)
+                )
 
                 if (contentType != MediaContentType.TRENDING) {
                     SeeAllMediaItems(
