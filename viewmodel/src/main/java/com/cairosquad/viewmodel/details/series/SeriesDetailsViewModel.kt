@@ -52,6 +52,27 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         getSimilarSeries()
     }
 
+    fun updateStateAfterLoggingIn() {
+        tryToCall(
+            block = { accountUseCase.getAccountDetails() },
+            onSuccess = {
+                getSeriesInFavorite()
+                getSeriesInRated()
+            },
+            onError = {}
+        )
+        updateState {
+            it.copy(
+                showShareBottomSheet = false,
+                showRateBottomSheet = false,
+                showSuccessRatedBottomSheet = false,
+                showAddToListBottomSheet = false,
+                showLoginBottomSheet = false,
+                showCreateListBottomSheet = false,
+            )
+        }
+    }
+
     private fun getSeriesInFavorite() {
         checkUserLoggedIn {
             loadFavoriteSeries()

@@ -59,7 +59,6 @@ import com.cairosquad.viewmodel.login.LoginInteractionListener
 import com.cairosquad.viewmodel.login.LoginScreenState
 import com.cairosquad.viewmodel.login.LoginViewModel
 
-
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
@@ -77,8 +76,16 @@ fun LoginScreen(
                 ForgetPasswordWebViewRoute(url = resetPasswordUrl)
             )
 
-            LoginEffect.NavigateToHome -> {
-                navController.navigate(AppRoute) {
+            LoginEffect.NavigateAfterLoginSuccessfully -> {
+                val onLoginSuccess: (() -> Unit)? = navController
+                        .getBackStackEntry(LoginRoute)
+                        .savedStateHandle["onLoginSuccess"]
+
+                onLoginSuccess?.also {
+                    navController
+                        .getBackStackEntry(LoginRoute)
+                        .savedStateHandle["onLoginSuccess"] = null
+                }?.invoke() ?: navController.navigate(AppRoute) {
                     popUpTo(LoginRoute) {
                         inclusive = true
                     }

@@ -72,17 +72,27 @@ fun MoreScreen(
     ObserveAsEffect(viewModel.effect) {
         when (it) {
             MoreScreenEffect.NavigateToLogin -> {
-                navController.navigate(LoginRoute) {
-                    popUpTo(AppRoute) {
-                        inclusive = true
-                    }
+                navController.navigate(LoginRoute)
+                fun onLoginSuccess() {
+                    navController.popBackStack()
+                    viewModel.checkUserLoggedInStatus()
                 }
+                navController
+                    .getBackStackEntry(LoginRoute)
+                    .savedStateHandle["onLoginSuccess"] = ::onLoginSuccess
             }
 
             MoreScreenEffect.NavigateToMyRatings -> {
                 navController.navigate(MyRatingsRoute)
             }
 
+            MoreScreenEffect.NavigateToLoginAfterLogout -> {
+                navController.navigate(LoginRoute) {
+                    popUpTo(AppRoute) {
+                        inclusive = true
+                    }
+                }
+            }
         }
     }
 

@@ -52,6 +52,27 @@ class MovieViewModel @AssistedInject constructor(
         getMovieIsRated()
     }
 
+    fun updateStateAfterLoggingIn() {
+        tryToCall(
+            block = { accountUseCase.getAccountDetails() },
+            onSuccess = {
+                getMovieInFavorite()
+                getMovieIsRated()
+            },
+            onError = {}
+        )
+        updateState {
+            it.copy(
+                isRateBottomSheetOpen = false,
+                isRatedSuccessBottomSheetOpen = false,
+                isNoAccountBottomSheetOpen = false,
+                isAddToListBottomSheetOpen = false,
+                isShareBottomSheetOpen = false,
+                showCreateListBottomSheet = false,
+            )
+        }
+    }
+
     private fun getMovieIsRated() {
         tryToCall(
             block = { getRatedItemsUseCase.getRatedMovies(1) },
