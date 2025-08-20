@@ -69,6 +69,7 @@ class SeriesDetailsViewModelTest {
     }
 
 
+
     @Test
     fun `should convert to error state when get series by id fails`() = runTest {
         coEvery { manageSeriesUseCase.getSeriesById(seriesId) } throws RuntimeException()
@@ -463,6 +464,7 @@ class SeriesDetailsViewModelTest {
         val status = viewModel.handleDetailsException(exception)
         assertThat(status).isEqualTo(ErrorStatus.NO_INTERNET)
     }
+
     companion object {
         private const val seriesId = 123L
         private val mockSeries = Series(
