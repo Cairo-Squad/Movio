@@ -72,8 +72,8 @@ fun RecentSearchItem(
             modifier = Modifier
                 .weight(1f)
                 .clip(RoundedCornerShape(8.dp))
-                .padding(vertical = 8.dp)
-                .clickable(onClick = { onRecentSearchItemClicked(recentItem) }),
+                .clickable(onClick = { onRecentSearchItemClicked(recentItem) })
+                .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {

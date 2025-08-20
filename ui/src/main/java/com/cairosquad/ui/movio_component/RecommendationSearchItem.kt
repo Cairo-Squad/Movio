@@ -75,8 +75,8 @@ fun RecommendationSearchItem(
             modifier = Modifier
                 .weight(1f)
                 .clip(RoundedCornerShape(8.dp))
-                .padding(vertical = 8.dp)
-                .clickable(onClick = { onSearchRecommendationItemClicked(recommendationItem) }),
+                .clickable(onClick = { onSearchRecommendationItemClicked(recommendationItem) })
+                .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
