@@ -48,6 +48,13 @@ fun ArtistBackgroundImage(state: ArtistScreenState) {
                 blur = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) 16 else 0,
                 isBlurForced = true
             )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(400.dp)
+                    .blur(16.dp)
+                    .background(Theme.color.surfaces.overlay)
+            )
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
                 Box(
                     modifier = Modifier

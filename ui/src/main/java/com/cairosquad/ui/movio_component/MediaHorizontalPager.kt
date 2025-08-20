@@ -122,6 +122,14 @@ fun MediaHorizontalPager(
 					blur = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) 20 else 0,
 					isBlurForced = true
 				)
+				Box(
+					modifier = Modifier
+						.fillMaxWidth()
+						.height(430.dp)
+						.blur(20.dp)
+						.offset(y = (-28).dp)
+						.background(Theme.color.surfaces.overlay)
+				)
 			}
 		}
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
