@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.usecase.AccountUseCase
+import com.cairosquad.domain.usecase.LoginUseCase
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Movie
@@ -27,7 +28,8 @@ class HomeViewModel @Inject constructor(
     private val manageMoviesUseCase: ManageMoviesUseCase,
     private val manageSeriesUseCase: ManageSeriesUseCase,
     private val accountUseCase: AccountUseCase,
-    private val unifiedMediaPager: UnifiedMediaPager
+    private val unifiedMediaPager: UnifiedMediaPager,
+    private val loginUseCase: LoginUseCase
 ) : BaseViewModel<HomeScreenState, HomeEffect>(initialState = HomeScreenState()),
     HomeInteractionsListener {
 
@@ -48,10 +50,12 @@ class HomeViewModel @Inject constructor(
                 fetchPopularMovies()
                 fetchAllMovieSectionsOrdered()
             }
+
             HomeScreenState.Tab.TV_SHOWS -> {
                 fetchPopularSeries()
                 fetchAllSeriesSectionsOrdered()
             }
+
             HomeScreenState.Tab.CATEGORIES -> {
                 loadGenres()
                 fetchMediaByCategory()
@@ -69,10 +73,12 @@ class HomeViewModel @Inject constructor(
                 fetchPopularMovies()
                 fetchAllMovieSectionsOrdered()
             }
+
             TAB_SERIES -> {
                 fetchPopularSeries()
                 fetchAllSeriesSectionsOrdered()
             }
+
             TAB_CATEGORIES -> {
                 loadGenres()
                 fetchMediaByCategory()
@@ -196,8 +202,10 @@ class HomeViewModel @Inject constructor(
                 when (screenState.value.selectedSortingType) {
                     HomeScreenState.SortingType.ALL ->
                         unifiedMediaPager.getCombinedMedia(genre.id)
+
                     HomeScreenState.SortingType.POPULARITY ->
                         unifiedMediaPager.getCombinedMedia(genre.id, SortType.POPULAR)
+
                     HomeScreenState.SortingType.LATEST ->
                         unifiedMediaPager.getCombinedMedia(genre.id, SortType.LATEST)
                 }
@@ -235,7 +243,16 @@ class HomeViewModel @Inject constructor(
     }
 
     override fun onProfileClick() {
-        sendEffect(HomeEffect.NavigateToProfile)
+        tryToCall(
+            block = { loginUseCase.isUserLoggedIn() },
+            onSuccess = ::navigateToProfileOrLogin,
+            onError = {}
+        )
+    }
+
+    private fun navigateToProfileOrLogin(isUserLoggedIn: Boolean) {
+        if (isUserLoggedIn) sendEffect(HomeEffect.NavigateToProfile)
+        else sendEffect(HomeEffect.NavigateToLogin)
     }
 
     override fun onMediaClick(mediaId: Long, isMovie: Boolean) {
@@ -276,11 +293,11 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-     companion object {
-         const val HORIZONTAL_PAGER_COUNT = 7
-         private const val TAB_MOVIES = 0
-         private const val TAB_SERIES = 1
-         private const val TAB_CATEGORIES = 2
+    companion object {
+        const val HORIZONTAL_PAGER_COUNT = 7
+        private const val TAB_MOVIES = 0
+        private const val TAB_SERIES = 1
+        private const val TAB_CATEGORIES = 2
         val homePageMoviesSections = listOf(
             MediaContentType.TOP_RATING,
             MediaContentType.NOW_PLAYING,

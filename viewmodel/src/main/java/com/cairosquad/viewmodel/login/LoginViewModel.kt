@@ -3,6 +3,7 @@ package com.cairosquad.viewmodel.login
 import androidx.lifecycle.viewModelScope
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.LoginUseCase
+import com.cairosquad.domain.usecase.ManageGuestUseCase
 import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
+    private val guestUseCase: ManageGuestUseCase
 ) : BaseViewModel<LoginScreenState, LoginEffect>(LoginScreenState()), LoginInteractionListener {
 
     override fun onUsernameChange(username: String) {
@@ -39,13 +41,11 @@ class LoginViewModel @Inject constructor(
         val isValid = validateFields()
         if (!isValid) return
 
+        val username = screenState.value.username
+        val password = screenState.value.password
+
         tryToCall(
-            block = {
-                loginUseCase.login(
-                    username = screenState.value.username,
-                    password = screenState.value.password
-                )
-            },
+            block = { loginUseCase.login(username, password) },
             onSuccess = ::onLoginSuccess,
             onError = ::handleError,
             onStart = ::startLoading,
@@ -61,13 +61,18 @@ class LoginViewModel @Inject constructor(
         updateState { it.copy(isLoading = true) }
     }
 
-    private fun onLoginSuccess(response: Unit) {
+    private suspend fun onLoginSuccess(response: Unit) {
+        guestUseCase.setGuestState(enteredAsGuest = false)
         updateState { it.copy(error = null) }
         sendEffect(LoginEffect.NavigateAfterLoginSuccessfully)
     }
 
     override fun onContinueAsAGuestClick() {
-        sendEffect(LoginEffect.NavigateToGuestHome)
+        tryToCall(
+            block = { guestUseCase.setGuestState(enteredAsGuest = true) },
+            onSuccess = { sendEffect(LoginEffect.NavigateToGuestHome) },
+            onError = {},
+        )
     }
 
     override fun onSignUpClick() {

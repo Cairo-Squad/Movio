@@ -3,12 +3,7 @@ package com.cairosquad.ui.navigation
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -66,9 +61,14 @@ fun AppNavigation(
                 SplashScreen(
                     onNavigateNext = {
                         coroutineScope.launch {
-                            val secondRoute = if (authGate.isUserLoggedIn()) AppRoute else LoginRoute
-                            val firstRoute = if (authGate.isOnboardingStateComplete()) secondRoute else OnboardingRoute
-                            navController.navigate(firstRoute) {
+                            val destination = when {
+                                authGate.isUserLoggedIn() -> AppRoute
+                                authGate.isEnteredAsGuest() -> AppRoute
+                                authGate.isOnboardingStateComplete() -> LoginRoute
+                                else -> OnboardingRoute
+                            }
+
+                            navController.navigate(destination) {
                                 popUpTo(SplashRoute) {
                                     inclusive = true
                                 }
@@ -111,13 +111,7 @@ fun AppNavigation(
             }
 
             composable<AppRoute> {
-                var isUserLoggedIn by remember { mutableStateOf(false) }
-
-                LaunchedEffect(Unit) {
-                    isUserLoggedIn = authGate.isUserLoggedIn()
-                }
-
-                AppScreen(isUserLoggedIn = isUserLoggedIn)
+                AppScreen()
             }
 
             composable<MovieRoute>(
