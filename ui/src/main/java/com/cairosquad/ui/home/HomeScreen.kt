@@ -7,6 +7,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.cairosquad.ui.home.content.HomeScreenContent
 import com.cairosquad.ui.navigation.LocalNavController
+import com.cairosquad.ui.navigation.LoginRoute
 import com.cairosquad.ui.navigation.MovieRoute
 import com.cairosquad.ui.navigation.SeeAllScreenRoute
 import com.cairosquad.ui.navigation.SeriesRoute
@@ -62,6 +63,10 @@ private fun effectHandler(
                     effect.mediaType
                 )
             )
+        }
+
+        HomeEffect.NavigateToLogin -> {
+            navController.navigate(LoginRoute)
         }
     }
 }
