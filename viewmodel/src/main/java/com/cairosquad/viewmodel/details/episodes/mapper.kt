@@ -14,7 +14,7 @@ fun Episode.toUiState() = EpisodesDetailsScreenState.EpisodeUiState(
     id = id,
     name = episodeName,
     number = episodeNumber,
-    runtime = runtimeMinutes,
+    runtime = runtimeInMinutes,
     rating = rating.roundToFirstDecimalPlace(),
     imageUrl = photoPath
 )

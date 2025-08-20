@@ -2,9 +2,9 @@ package com.cairosquad.viewmodel.see_all
 
 import androidx.paging.PagingData
 import app.cash.turbine.test
-import com.cairosquad.domain.exception.DUnauthorizedException
-import com.cairosquad.domain.exception.DomainEmptyResponseException
-import com.cairosquad.domain.exception.DomainJsonParsingException
+import com.cairosquad.domain.exception.UnauthorizedActionException
+import com.cairosquad.domain.exception.NoDataException
+import com.cairosquad.domain.exception.ParsingException
 import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.exception.NetworkException
@@ -89,9 +89,9 @@ class SeeAllViewModelTest {
             NetworkException() to ErrorStatus.NETWORK_ERROR,
             InternetConnectionException() to ErrorStatus.NO_INTERNET,
             UnknownException() to ErrorStatus.UNKNOWN_ERROR,
-            DUnauthorizedException() to ErrorStatus.UNAUTHORIZED,
-            DomainEmptyResponseException() to ErrorStatus.EMPTY,
-            DomainJsonParsingException() to ErrorStatus.PARSING_ERROR
+            UnauthorizedActionException() to ErrorStatus.UNAUTHORIZED,
+            NoDataException() to ErrorStatus.EMPTY,
+            ParsingException() to ErrorStatus.PARSING_ERROR
         )
 
         exceptionMapping.forEach { (exception, expectedStatus) ->
@@ -208,9 +208,9 @@ class SeeAllViewModelTest {
             NetworkException() to ErrorStatus.NETWORK_ERROR,
             InternetConnectionException() to ErrorStatus.NO_INTERNET,
             UnknownException() to ErrorStatus.UNKNOWN_ERROR,
-            DUnauthorizedException() to ErrorStatus.UNAUTHORIZED,
-            DomainEmptyResponseException() to ErrorStatus.EMPTY,
-            DomainJsonParsingException() to ErrorStatus.PARSING_ERROR,
+            UnauthorizedActionException() to ErrorStatus.UNAUTHORIZED,
+            NoDataException() to ErrorStatus.EMPTY,
+            ParsingException() to ErrorStatus.PARSING_ERROR,
             Exception() to ErrorStatus.UNKNOWN_ERROR
         )
 

@@ -128,7 +128,7 @@ fun Episode.toCacheDto(language: String): EpisodeCacheDto {
         episodeNumber = episodeNumber,
         photoPath = photoPath,
         episodeName = episodeName,
-        runtimeMinutes = runtimeMinutes,
+        runtimeMinutes = runtimeInMinutes,
         rating = rating,
         seasonNumber = seasonNumber,
         seriesId = seriesId,
@@ -147,7 +147,7 @@ fun EpisodeCacheDto.toEntity(): Episode {
         episodeNumber = episodeNumber,
         photoPath = photoPath,
         episodeName = episodeName,
-        runtimeMinutes = runtimeMinutes,
+        runtimeInMinutes = runtimeMinutes,
         rating = rating,
         seasonNumber = seasonNumber,
         seriesId = seriesId

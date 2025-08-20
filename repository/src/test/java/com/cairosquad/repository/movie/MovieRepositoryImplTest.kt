@@ -1,6 +1,6 @@
 package com.cairosquad.repository.movie
 
-import com.cairosquad.domain.exception.DomainEmptyResponseException
+import com.cairosquad.domain.exception.NoDataException
 import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.repository.LanguageRepository
 import com.cairosquad.entity.Genre
@@ -541,7 +541,7 @@ class MovieRepositoryImplTest {
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns emptyList()
         coEvery { remoteDataSource.getMovieById(movieId) } throws RepoEmptyResponseException()
 
-        assertFailsWith<DomainEmptyResponseException> {
+        assertFailsWith<NoDataException> {
             repository.getMovieById(movieId)
         }
         coVerify(exactly = 1) { remoteDataSource.getMovieById(movieId) }

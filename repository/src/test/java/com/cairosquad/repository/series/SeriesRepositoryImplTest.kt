@@ -1,6 +1,6 @@
 package com.cairosquad.repository.series
 
-import com.cairosquad.domain.exception.DomainEmptyResponseException
+import com.cairosquad.domain.exception.NoDataException
 import com.cairosquad.domain.model.SortType
 import com.cairosquad.domain.repository.LanguageRepository
 import com.cairosquad.entity.Episode
@@ -120,7 +120,7 @@ class SeriesRepositoryImplTest {
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
             coEvery { remoteDataSource.getSeriesById(seriesId) } throws RepoEmptyResponseException()
 
-            assertFailsWith<DomainEmptyResponseException> {
+            assertFailsWith<NoDataException> {
                 repository.getSeriesById(seriesId)
             }
             coVerify(exactly = 1) { remoteDataSource.getSeriesById(seriesId) }
@@ -512,7 +512,7 @@ class SeriesRepositoryImplTest {
             coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
             coEvery { remoteDataSource.getSeriesOfArtist(artistId) } throws RepoEmptyResponseException()
 
-            assertFailsWith<DomainEmptyResponseException> {
+            assertFailsWith<NoDataException> {
                 repository.getSeriesOfArtist(artistId)
             }
             coVerify(exactly = 1) { remoteDataSource.getSeriesOfArtist(artistId) }
@@ -580,7 +580,7 @@ class SeriesRepositoryImplTest {
                 )
             } throws RepoEmptyResponseException()
 
-            assertFailsWith<DomainEmptyResponseException> {
+            assertFailsWith<NoDataException> {
                 repository.getMoreRecommendedSeries(page, genreId)
             }
             coVerify(exactly = 1) { remoteDataSource.getMoreRecommendedSeries(page, genreId) }
@@ -977,7 +977,7 @@ class SeriesRepositoryImplTest {
             id = 1L,
             episodeNumber = 1,
             episodeName = "Episode 1",
-            runtimeMinutes = 45,
+            runtimeInMinutes = 45,
             rating = 4.0f,
             photoPath = "/episode_still.jpg",
             seasonNumber = 1,
