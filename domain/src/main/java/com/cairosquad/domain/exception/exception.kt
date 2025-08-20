@@ -8,8 +8,8 @@ class InternetConnectionException(message: String = "") : MovioException(message
 
 class UnknownException(message: String = "") : MovioException(message)
 
-class DomainEmptyResponseException(message: String = "") : MovioException(message)
+class NoDataException(message: String = "") : MovioException(message)
 
-class DomainJsonParsingException(message: String = "") : MovioException(message)
+class ParsingException(message: String = "") : MovioException(message)
 
-class DUnauthorizedException(message: String = "") : MovioException(message)
+class UnauthorizedActionException(message: String = "") : MovioException(message)

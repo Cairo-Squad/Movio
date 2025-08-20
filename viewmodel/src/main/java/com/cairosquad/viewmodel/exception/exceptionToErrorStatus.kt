@@ -1,8 +1,8 @@
 package com.cairosquad.viewmodel.exception
 
-import com.cairosquad.domain.exception.DUnauthorizedException
-import com.cairosquad.domain.exception.DomainEmptyResponseException
-import com.cairosquad.domain.exception.DomainJsonParsingException
+import com.cairosquad.domain.exception.UnauthorizedActionException
+import com.cairosquad.domain.exception.NoDataException
+import com.cairosquad.domain.exception.ParsingException
 import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.exception.NetworkException
@@ -16,10 +16,10 @@ fun exceptionToErrorStatus(e: MovioException): ErrorStatus {
 
         is InternetConnectionException -> ErrorStatus.NO_INTERNET
 
-        is DUnauthorizedException -> ErrorStatus.UNAUTHORIZED
+        is UnauthorizedActionException -> ErrorStatus.UNAUTHORIZED
 
-        is DomainEmptyResponseException -> ErrorStatus.EMPTY
+        is NoDataException -> ErrorStatus.EMPTY
 
-        is DomainJsonParsingException -> ErrorStatus.PARSING_ERROR
+        is ParsingException -> ErrorStatus.PARSING_ERROR
     }
 }

@@ -1,6 +1,6 @@
 package com.cairosquad.repository.utils.mappers
 
-import com.cairosquad.domain.exception.DUnauthorizedException
+import com.cairosquad.domain.exception.UnauthorizedActionException
 import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.exception.NetworkException
 import com.cairosquad.domain.exception.UnknownException
@@ -67,7 +67,7 @@ class TryToCallTest {
             tryToCall { throw exception }
         }
 
-        assertThat(result.exceptionOrNull()).isInstanceOf(DUnauthorizedException::class.java)
+        assertThat(result.exceptionOrNull()).isInstanceOf(UnauthorizedActionException::class.java)
         assertThat(result.exceptionOrNull()!!.message).isEqualTo("You are not authorized to perform this action")
     }
 
