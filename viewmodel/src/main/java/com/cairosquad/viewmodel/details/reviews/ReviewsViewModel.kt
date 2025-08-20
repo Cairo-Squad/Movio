@@ -34,9 +34,7 @@ class ReviewsViewModel @AssistedInject constructor(
         tryToCall(
             block = { getReviewsByType() },
             onSuccess = ::handleSuccess,
-
             onError = ::handleError,
-
             dispatcher = dispatcher
         )
     }
@@ -45,14 +43,12 @@ class ReviewsViewModel @AssistedInject constructor(
         return if (isMovie) {
             manageMoviesUseCase.getMovieReviews(mediaId)
         } else {
-            manageSeriesUseCase.getSeriesReviews(mediaId, 1)
+            manageSeriesUseCase.getSeriesReviews(mediaId, FIRST_PAGE)
         }
     }
 
     private fun handleError(error: Throwable) {
-        updateState {
-            it.copy(isLoading = false, error = error.message)
-        }
+        updateState { it.copy(isLoading = false, error = error.message) }
     }
 
     private fun handleSuccess(reviews: List<Review>) {
@@ -64,12 +60,13 @@ class ReviewsViewModel @AssistedInject constructor(
         }
     }
 
-    override fun onBackClick() {
-        sendEffect(ReviewsEffect.NavigateBack)
-    }
+    override fun onBackClick() { sendEffect(ReviewsEffect.NavigateBack) }
 
     override fun onRefresh() {
             getReviews()
+    }
 
+    companion object {
+        private const val FIRST_PAGE = 1
     }
 }

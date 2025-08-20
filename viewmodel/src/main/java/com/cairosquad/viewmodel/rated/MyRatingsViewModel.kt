@@ -33,7 +33,7 @@ class MyRatingsViewModel @Inject constructor(
                 isLoading = true,
                 ratedItems = Pager(
                     config = PagingConfig(
-                        pageSize = 20,
+                        pageSize = PAGE_SIZE,
                         enablePlaceholders = false
                     ),
                     pagingSourceFactory = {
@@ -52,13 +52,8 @@ class MyRatingsViewModel @Inject constructor(
     override fun onUndoClick() {
         val item = screenState.value.deletedItems.last().split(", ")
         when (item[0]) {
-            "movie" -> {
-                onUndoClickMovie(item)
-            }
-
-            "tv" -> {
-                onUndoClickSeries(item)
-            }
+            MOVIE -> onUndoClickMovie(item)
+            SERIES -> onUndoClickSeries(item)
         }
     }
 
@@ -165,8 +160,15 @@ class MyRatingsViewModel @Inject constructor(
                     snackMessageId = messageId
                 )
             }
-            delay(2000)
+            delay(SNACKBAR_DURATION)
             updateState { it.copy(showSnackBar = false) }
         }
+    }
+
+    companion object {
+        private const val MOVIE = "movie"
+        private const val SERIES = "tv"
+        private const val PAGE_SIZE = 20
+        private const val SNACKBAR_DURATION = 2000L
     }
 }

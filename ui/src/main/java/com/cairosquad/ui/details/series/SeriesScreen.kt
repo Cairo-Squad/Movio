@@ -22,8 +22,8 @@ fun SeriesScreen(
 
     val state by viewModel.screenState.collectAsStateWithLifecycle()
 
-
     SeriesScreenEffects(viewModel, state)
+
     Box {
         SeriesScreenContent(
             state = state,

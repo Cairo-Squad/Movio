@@ -63,7 +63,7 @@ class LoginViewModel @Inject constructor(
 
     private fun onLoginSuccess(response: Unit) {
         updateState { it.copy(error = null) }
-        sendEffect(LoginEffect.NavigateToHome)
+        sendEffect(LoginEffect.NavigateAfterLoginSuccessfully)
     }
 
     override fun onContinueAsAGuestClick() {
@@ -85,7 +85,7 @@ class LoginViewModel @Inject constructor(
         showSnackBar(R.string.something_went_wrong, isSuccessful = false)
     }
 
-    fun showSnackBar(messageId: Int, isSuccessful: Boolean, durationMillis: Long = 2000) {
+    fun showSnackBar(messageId: Int, isSuccessful: Boolean, durationMillis: Long = SNACKBAR_DURATION) {
         viewModelScope.launch {
             updateState {
                 it.copy(
@@ -123,7 +123,7 @@ class LoginViewModel @Inject constructor(
                 }
                 false
             }
-            username.length < 2 -> {
+            username.length < MIN_USERNAME_LENGTH -> {
                 updateState {
                     it.copy(
                         errors = it.errors.toMutableMap().apply {
@@ -155,7 +155,7 @@ class LoginViewModel @Inject constructor(
                 }
                 false
             }
-            password.length < 4 -> {
+            password.length < MIN_PASSWORD_LENGTH -> {
                 updateState {
                     it.copy(
                         errors = it.errors.toMutableMap().apply {
@@ -191,5 +191,11 @@ class LoginViewModel @Inject constructor(
                 }
             )
         }
+    }
+
+    companion object {
+        private const val MIN_USERNAME_LENGTH = 2
+        private const val MIN_PASSWORD_LENGTH = 4
+        private const val SNACKBAR_DURATION = 2000L
     }
 }
