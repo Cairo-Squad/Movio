@@ -19,7 +19,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,6 +36,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cairosquad.design_system.basic_component.Button
 import com.cairosquad.design_system.basic_component.Icon
 import com.cairosquad.design_system.basic_component.InputField
@@ -65,7 +65,7 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val navController = LocalNavController.current
-    val uiState by viewModel.screenState.collectAsState()
+    val uiState by viewModel.screenState.collectAsStateWithLifecycle()
     val resetPasswordUrl = "https://www.themoviedb.org/reset-password"
     val signUpUrl = "https://www.themoviedb.org/signup"
     var snackBarMessage by remember { mutableStateOf<String?>(null) }
@@ -78,8 +78,8 @@ fun LoginScreen(
 
             LoginEffect.NavigateAfterLoginSuccessfully -> {
                 val onLoginSuccess: (() -> Unit)? = navController
-                        .getBackStackEntry(LoginRoute)
-                        .savedStateHandle["onLoginSuccess"]
+                    .getBackStackEntry(LoginRoute)
+                    .savedStateHandle["onLoginSuccess"]
 
                 onLoginSuccess?.also {
                     navController
@@ -139,20 +139,22 @@ private fun LoginScreenContent(
             .systemBarsPadding()
             .fillMaxSize()
             .background(color = Theme.color.surfaces.surface)
-            .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
-
-        ) {
+    ) {
         LoginScreenHeader(
             Modifier
                 .fillMaxWidth()
                 .padding(top = 74.dp, bottom = 48.dp)
+                .padding(horizontal = 16.dp)
         )
 
         val usernameError = uiState.errors[LoginScreenState.FormField.USERNAME]
 
         InputField(
+            modifier = Modifier
+                .padding(bottom = 12.dp)
+                .padding(horizontal = 16.dp),
             value = uiState.username,
             onValueChange = { interactionListener.onUsernameChange(it) },
             placeholder = stringResource(R.string.user_name),
@@ -168,8 +170,7 @@ private fun LoginScreenContent(
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next
-            ),
-            modifier = Modifier.padding(bottom = 12.dp)
+            )
         )
 
         val passwordError = uiState.errors[LoginScreenState.FormField.PASSWORD]?.let {
@@ -179,6 +180,8 @@ private fun LoginScreenContent(
         }
 
         InputField(
+            modifier = Modifier
+                .padding(horizontal = 16.dp),
             value = uiState.password,
             onValueChange = { interactionListener.onPasswordChange(it) },
             placeholder = stringResource(R.string.password),
@@ -198,6 +201,7 @@ private fun LoginScreenContent(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .padding(bottom = 24.dp, top = 12.dp)
+                .padding(horizontal = 16.dp)
                 .fillMaxWidth()
         ) {
             Row(
@@ -243,14 +247,18 @@ private fun LoginScreenContent(
         }
 
         Button(
+            modifier = Modifier
+                .padding(bottom = 40.dp)
+                .padding(horizontal = 16.dp),
             text = stringResource(R.string.login),
             onClick = { interactionListener.onLoginClick() },
-            modifier = Modifier.padding(bottom = 40.dp),
             isLoading = uiState.isLoading
         )
 
         Row(
-            modifier = Modifier.padding(bottom = 20.dp),
+            modifier = Modifier
+                .padding(bottom = 20.dp)
+                .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -273,9 +281,10 @@ private fun LoginScreenContent(
             )
         }
         Button(
+            modifier = Modifier
+                .padding(horizontal = 16.dp),
             text = stringResource(R.string.continue_as_a_guest),
             onClick = { interactionListener.onContinueAsAGuestClick() },
-            modifier = Modifier,
             textStyle = Theme.textStyle.label.mediumMedium14,
             textColor = Theme.color.surfaces.onSurface,
             containerColor = Theme.color.surfaces.surface,
@@ -286,7 +295,8 @@ private fun LoginScreenContent(
         Row(
             modifier = Modifier
                 .wrapContentWidth()
-                .padding(bottom = 32.dp),
+                .padding(bottom = 32.dp)
+                .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
@@ -302,7 +312,6 @@ private fun LoginScreenContent(
                 modifier = Modifier.clickable { interactionListener.onSignUpClick() }
             )
         }
-
     }
 }
 
@@ -319,31 +328,11 @@ private fun PreviewLoginScreen() {
 }
 
 object PreviewLoginInteractionListener : LoginInteractionListener {
-    override fun onUsernameChange(username: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onPasswordChange(password: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onPasswordVisibilityIconClick() {
-        TODO("Not yet implemented")
-    }
-
-    override fun onForgetPasswordClick() {
-        TODO("Not yet implemented")
-    }
-
-    override fun onLoginClick() {
-        TODO("Not yet implemented")
-    }
-
-    override fun onContinueAsAGuestClick() {
-        TODO("Not yet implemented")
-    }
-
-    override fun onSignUpClick() {
-        TODO("Not yet implemented")
-    }
+    override fun onUsernameChange(username: String) {}
+    override fun onPasswordChange(password: String) {}
+    override fun onPasswordVisibilityIconClick() {}
+    override fun onForgetPasswordClick() {}
+    override fun onLoginClick() {}
+    override fun onContinueAsAGuestClick() {}
+    override fun onSignUpClick() {}
 }

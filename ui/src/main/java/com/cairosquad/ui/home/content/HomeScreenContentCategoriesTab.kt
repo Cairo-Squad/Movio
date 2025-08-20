@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -48,18 +47,17 @@ fun HomeScreenContentCategoriesTab(
             return
         }
 
-        else -> { }
+        else -> {}
     }
 
     LazyVerticalGrid(
         modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 12.dp),
+            .fillMaxSize(),
         state = lazyGridState,
         columns = GridCells.Adaptive(minSize = 101.33.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
-        contentPadding = PaddingValues(top = 132.dp, bottom = 16.dp)
+        contentPadding = PaddingValues(top = 132.dp, bottom = 16.dp, start = 16.dp, end = 16.dp)
     ) {
 
         item(span = { GridItemSpan(maxLineSpan) }) {
