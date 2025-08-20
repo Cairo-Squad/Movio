@@ -277,7 +277,7 @@ class HomeViewModel @Inject constructor(
     }
 
      companion object {
-         private const val HORIZONTAL_PAGER_COUNT = 7
+         const val HORIZONTAL_PAGER_COUNT = 7
          private const val TAB_MOVIES = 0
          private const val TAB_SERIES = 1
          private const val TAB_CATEGORIES = 2
