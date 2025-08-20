@@ -1,6 +1,7 @@
 package com.cairosquad.viewmodel.auth_gate
 
 import com.cairosquad.domain.usecase.LoginUseCase
+import com.cairosquad.domain.usecase.ManageGuestUseCase
 import com.cairosquad.domain.usecase.OnboardingUseCase
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
@@ -13,11 +14,13 @@ class AuthGateTest {
 
     private val loginUseCase: LoginUseCase = mockk(relaxed = true)
     private val onboardingUseCase: OnboardingUseCase = mockk(relaxed = true)
+    private val manageGuestUseCase: ManageGuestUseCase = mockk(relaxed = true)
+
     private lateinit var authGate: AuthGate
 
     @Before
     fun setup() {
-        authGate = AuthGate(loginUseCase, onboardingUseCase)
+        authGate = AuthGate(loginUseCase, onboardingUseCase, manageGuestUseCase)
     }
 
     @Test

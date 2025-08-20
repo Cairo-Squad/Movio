@@ -6,6 +6,7 @@ import com.cairosquad.viewmodel.util.MediaType
 
 sealed class HomeEffect {
     data object NavigateToProfile: HomeEffect()
+    data object NavigateToLogin: HomeEffect()
     data class NavigateMediaDetails(val mediaId :Long, val isMovie: Boolean) : HomeEffect()
     data class NavigateToSeeAllScreen(
         val mediaContentType: MediaContentType,

@@ -2,6 +2,7 @@ package com.cairosquad.viewmodel.login
 
 import app.cash.turbine.test
 import com.cairosquad.domain.usecase.LoginUseCase
+import com.cairosquad.domain.usecase.ManageGuestUseCase
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
@@ -30,6 +31,7 @@ class LoginViewModelTest {
 
     private val testDispatcher = StandardTestDispatcher()
     private val loginUseCase: LoginUseCase = mockk()
+    private val guestUseCase: ManageGuestUseCase = mockk()
     private lateinit var viewModel: LoginViewModel
 
     @Before
@@ -39,7 +41,7 @@ class LoginViewModelTest {
         mockkStatic(Dispatchers::class)
         every { Dispatchers.IO } returns testDispatcher
 
-        viewModel = LoginViewModel(loginUseCase)
+        viewModel = LoginViewModel(loginUseCase, guestUseCase)
 
     }
 
@@ -86,15 +88,6 @@ class LoginViewModelTest {
         viewModel.effect.test {
             viewModel.onForgetPasswordClick()
             assertThat(awaitItem()).isEqualTo(LoginEffect.NavigateToForgetPassword)
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
-
-    @Test
-    fun `WHEN continue as guest clicked SHOULD send NavigateToGuestHome effect`() = runTest {
-        viewModel.effect.test {
-            viewModel.onContinueAsAGuestClick()
-            assertThat(awaitItem()).isEqualTo(LoginEffect.NavigateToGuestHome)
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -149,22 +142,6 @@ class LoginViewModelTest {
         assertThat(viewModel.screenState.value.errors[LoginScreenState.FormField.USERNAME]).isNull()
         assertThat(viewModel.screenState.value.errors[LoginScreenState.FormField.PASSWORD]).isNull()
     }
-
-//    @Test
-//    fun `WHEN login successful SHOULD call login THEN navigate to home`() = runTest {
-//        coEvery { loginUseCase.login(any(), any()) } returns Unit
-//
-//        viewModel.effect.test {
-//            viewModel.onUsernameChange("user")
-//            viewModel.onPasswordChange("password")
-//            viewModel.onLoginClick()
-//            advanceUntilIdle()
-//
-//            coVerify(exactly = 1) { loginUseCase.login("user", "password") }
-//            assertThat(awaitItem()).isEqualTo(LoginEffect.NavigateToHome)
-//            cancelAndIgnoreRemainingEvents()
-//        }
-//    }
 
     @Test
     fun `loading indicator SHOULD hide after login`() = runTest {

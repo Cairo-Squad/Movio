@@ -15,6 +15,7 @@ import com.cairosquad.local.cache.series.SeasonEpisodeCacheDao
 import com.cairosquad.local.cache.series.SeasonEpisodeLocalDataSourceImpl
 import com.cairosquad.local.cache.series.SeriesCacheDao
 import com.cairosquad.local.cache.series.SeriesLocalDataSourceImpl
+import com.cairosquad.local.guest.GuestDataSourceImpl
 import com.cairosquad.local.language.LanguageDataStoreSourceImpl
 import com.cairosquad.local.login.LocalAuthenticationDataSourceImpl
 import com.cairosquad.local.login.dao.LoginDao
@@ -26,6 +27,7 @@ import com.cairosquad.local.utils.MovioDataBase
 import com.cairosquad.local.version.VersionDataSourceImpl
 import com.cairosquad.repository.account.data_source.local.AccountLocalDataSource
 import com.cairosquad.repository.artists.data_source.local.ArtistsLocalDataSource
+import com.cairosquad.repository.guest.data_source.local.GuestDataSource
 import com.cairosquad.repository.language.LanguageDataSource
 import com.cairosquad.repository.login.data_source.local.LocalAuthenticationDataSource
 import com.cairosquad.repository.movie.data_source.local.MoviesLocalDataSource
@@ -150,6 +152,14 @@ object LocalDataSourceModule {
     fun provideOnboardingDataSource(
         @ApplicationContext context: Context
     ): OnboardingDataSource = OnboardingDataSourceImpl(
+        context = context
+    )
+
+    @Provides
+    @Singleton
+    fun provideGuestDataSource(
+        @ApplicationContext context: Context
+    ): GuestDataSource = GuestDataSourceImpl(
         context = context
     )
 

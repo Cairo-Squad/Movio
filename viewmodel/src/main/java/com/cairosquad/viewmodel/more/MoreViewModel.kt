@@ -5,6 +5,7 @@ import com.cairosquad.domain.usecase.AccountUseCase
 import com.cairosquad.domain.usecase.GetAppVersionUseCase
 import com.cairosquad.domain.usecase.LanguageManagerUseCase
 import com.cairosquad.domain.usecase.LoginUseCase
+import com.cairosquad.domain.usecase.ManageGuestUseCase
 import com.cairosquad.domain.usecase.ThemeManagerUseCase
 import com.cairosquad.entity.Theme
 import com.cairosquad.viewmodel.base.BaseViewModel
