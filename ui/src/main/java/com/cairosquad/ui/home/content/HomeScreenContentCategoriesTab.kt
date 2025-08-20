@@ -51,13 +51,12 @@ fun HomeScreenContentCategoriesTab(
             return
         }
 
-        else -> { }
+        else -> {}
     }
 
     LazyVerticalGrid(
         modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 12.dp),
+            .fillMaxSize(),
         state = lazyGridState,
         columns = GridCells.Adaptive(minSize = 101.33.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
