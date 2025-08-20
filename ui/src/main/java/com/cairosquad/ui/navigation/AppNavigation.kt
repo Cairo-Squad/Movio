@@ -82,16 +82,13 @@ fun AppNavigation(
 
             composable<OnboardingRoute> {
                 OnboardingScreen(
-                    navigateToAuthOrHome = {
-                        coroutineScope.launch {
-                            val route = if (authGate.isUserLoggedIn()) AppRoute else LoginRoute
-                            navController.navigate(route) {
-                                popUpTo(OnboardingRoute) {
-                                    inclusive = true
-                                }
-
-                                launchSingleTop = true
+                    navigateToLoginScreen = {
+                        navController.navigate(LoginRoute) {
+                            popUpTo(OnboardingRoute) {
+                                inclusive = true
                             }
+
+                            launchSingleTop = true
                         }
                     }
                 )

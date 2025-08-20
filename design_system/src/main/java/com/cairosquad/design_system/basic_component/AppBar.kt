@@ -17,8 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
@@ -47,11 +45,6 @@ fun AppBar(
             .fillMaxWidth()
             .height(48.dp)
             .padding(vertical = 4.dp, horizontal = 16.dp)
-            .shadow(
-                elevation = 12.dp,
-                ambientColor = Color(0x0FFFFFFF),
-                spotColor = Color(0x0FFFFFFF)
-            )
     ) {
         if (onBackButtonClicked != null) {
             Icon(

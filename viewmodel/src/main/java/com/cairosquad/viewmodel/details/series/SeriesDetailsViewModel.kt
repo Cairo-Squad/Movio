@@ -56,6 +56,33 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         getSimilarSeries()
     }
 
+    fun updateStateAfterLoggingIn() {
+        tryToCall(
+            onStart = ::closeAllBottomSheets,
+            block = { accountUseCase.getAccountDetails() },
+            onSuccess = ::updateRatedAndFavoriteSeries,
+            onError = {}
+        )
+    }
+
+    private fun closeAllBottomSheets() {
+        updateState {
+            it.copy(
+                showShareBottomSheet = false,
+                showRateBottomSheet = false,
+                showSuccessRatedBottomSheet = false,
+                showAddToListBottomSheet = false,
+                showLoginBottomSheet = false,
+                showCreateListBottomSheet = false,
+            )
+        }
+    }
+
+    private fun updateRatedAndFavoriteSeries(response: Unit) {
+        getSeriesInFavorite()
+        getSeriesInRated()
+    }
+
     private fun getSeriesInFavorite() {
         checkUserLoggedIn { loadFavoriteSeries() }
     }

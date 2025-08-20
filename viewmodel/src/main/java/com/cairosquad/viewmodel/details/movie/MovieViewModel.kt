@@ -56,6 +56,33 @@ class MovieViewModel @AssistedInject constructor(
         getMovieIsRated()
     }
 
+    fun updateStateAfterLoggingIn() {
+        tryToCall(
+            onStart = ::closeAllBottomSheets,
+            block = { accountUseCase.getAccountDetails() },
+            onSuccess = ::updateRatedAndFavoriteMovies,
+            onError = {}
+        )
+    }
+
+    private fun closeAllBottomSheets() {
+        updateState {
+            it.copy(
+                isRateBottomSheetOpen = false,
+                isRatedSuccessBottomSheetOpen = false,
+                isNoAccountBottomSheetOpen = false,
+                isAddToListBottomSheetOpen = false,
+                isShareBottomSheetOpen = false,
+                showCreateListBottomSheet = false,
+            )
+        }
+    }
+
+    private fun updateRatedAndFavoriteMovies(response: Unit) {
+        getMovieInFavorite()
+        getMovieIsRated()
+    }
+
     private fun getMovieIsRated() {
         tryToCall(
             block = { getRatedItemsUseCase.getRatedMovies(FIRST_PAGE) },

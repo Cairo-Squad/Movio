@@ -34,13 +34,13 @@ import com.cairosquad.viewmodel.onboarding.OnboardingViewModel
 
 @Composable
 fun OnboardingScreen(
-    navigateToAuthOrHome: () -> Unit,
+    navigateToLoginScreen: () -> Unit,
     modifier: Modifier = Modifier,
     onboardingViewModel: OnboardingViewModel = hiltViewModel(),
 ) {
     ObserveAsEffect(onboardingViewModel.effect) { effect ->
         when (effect) {
-            OnboardingEffect.NavigateToAuthOrHome -> navigateToAuthOrHome()
+            OnboardingEffect.NavigateToAuthOrHome -> navigateToLoginScreen()
         }
     }
 
@@ -139,7 +139,7 @@ private fun OnboardingContent(
 private fun PreviewOnboardingScreen() {
     MovioTheme {
         OnboardingScreen(
-            navigateToAuthOrHome = {}
+            navigateToLoginScreen = {}
         )
     }
 }
