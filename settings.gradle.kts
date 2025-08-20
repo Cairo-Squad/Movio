@@ -18,7 +18,6 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-
 rootProject.name = "Movio"
 include(":app")
 include(":ui")

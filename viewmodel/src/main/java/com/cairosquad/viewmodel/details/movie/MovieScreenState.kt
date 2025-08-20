@@ -41,8 +41,8 @@ data class MovieScreenState(
         val posterPath: String = "",
         val genres: List<String> = emptyList(),
         val overview: String = "",
-        val releaseDate: String = "0",
-        val runtimeMinutes: String = "",
+        val releaseDate: String? = null,
+        val runtimeMinutes: String? = "",
         val trailerPath: String = ""
     )
 
@@ -67,8 +67,16 @@ data class MovieScreenState(
         ERROR
     }
 
+    enum class ListState {
+        INITIAL,
+        LOADING,
+        SUCCESS,
+        ERROR
+    }
+
     data class MoviesList(
         val id: Long,
-        val name: String
+        val name: String,
+        val addToListState: ListState = ListState.INITIAL,
     )
 }

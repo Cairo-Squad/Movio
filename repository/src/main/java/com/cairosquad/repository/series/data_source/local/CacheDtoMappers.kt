@@ -15,13 +15,12 @@ import com.cairosquad.repository.series.data_source.local.dto.SeriesWithoutGenre
 import com.cairosquad.repository.utils.sharedDto.local.CacheCodeDto
 
 
-fun List<Series>.toCacheCodeWithSeriesCacheDto(request: String): CacheCodeWithSeriesCacheDto {
+fun List<Series>.toCacheCodeWithSeriesCacheDto(request: String, language: String): CacheCodeWithSeriesCacheDto {
     return CacheCodeWithSeriesCacheDto(
         cacheCode = CacheCodeDto(cacheCode = request),
-        series = this.map { it.toCacheDto() }
+        series = this.map { it.toCacheDto(language = language) }
     )
 }
-
 
 fun SeriesCacheDto.toEntity(): Series {
     return Series(
@@ -42,7 +41,7 @@ fun List<SeriesCacheDto>.toEntityList(): List<Series> {
     return map { it.toEntity() }
 }
 
-fun Series.toCacheDto(): SeriesCacheDto {
+fun Series.toCacheDto(language: String): SeriesCacheDto {
     return SeriesCacheDto(
         seriesWithoutGenre = SeriesWithoutGenreCacheDto(
             id = id,
@@ -53,8 +52,9 @@ fun Series.toCacheDto(): SeriesCacheDto {
             releaseDate = releaseDate,
             trailerPath = trailerPath,
             seasonsCount = seasonsCount,
+            seriesIdWithLanguage = "$id$language"
         ),
-        genres = genres.toCacheDtoList()
+        genres = genres.toCacheDtoList(language = language)
     )
 }
 
@@ -70,21 +70,23 @@ fun List<GenreOfSeriesCacheDto>.toEntityList(): List<Genre> {
     return map { it.toEntity() }
 }
 
-fun Genre.toCacheDto(): GenreOfSeriesCacheDto {
+fun Genre.toCacheDto(language: String): GenreOfSeriesCacheDto {
     return GenreOfSeriesCacheDto(
         id = id,
-        name = name
+        name = name,
+        genreIdWithLanguage = "$id$language",
+        language = language
     )
 }
 
 @JvmName("toCacheGenre")
-fun List<Genre>.toCacheDtoList(): List<GenreOfSeriesCacheDto> {
-    return map { it.toCacheDto() }
+fun List<Genre>.toCacheDtoList(language: String): List<GenreOfSeriesCacheDto> {
+    return map { it.toCacheDto(language = language) }
 }
 
-fun Season.toCacheDto(): SeasonCacheDto {
+fun Season.toCacheDto(language: String): SeasonCacheDto {
     return SeasonCacheDto(
-        id = seriesId * 1000L + seasonNumber, // Unique ID combining seriesId and seasonNumber
+        id = seriesId * 1000L + seasonNumber,
         seriesId = seriesId,
         seasonNumber = seasonNumber,
         seasonName = seasonName,
@@ -92,14 +94,14 @@ fun Season.toCacheDto(): SeasonCacheDto {
         rating = rating,
         posterPath = posterPath,
         overview = overview,
-        airDate = airDate
+        airDate = airDate,
+        seasonIdWithLanguage = "${seriesId * 1000L + seasonNumber}$language"
     )
 }
 
-
 @JvmName("toCacheDtoListSeason")
-fun List<Season>.toCacheDtoList(): List<SeasonCacheDto> {
-    return map { it.toCacheDto() }
+fun List<Season>.toCacheDtoList(language: String): List<SeasonCacheDto> {
+    return map { it.toCacheDto(language = language) }
 }
 
 fun SeasonCacheDto.toEntity(): Season {
@@ -120,22 +122,23 @@ fun List<SeasonCacheDto>.toEntityList(): List<Season> {
     return map { it.toEntity() }
 }
 
-fun Episode.toCacheDto(): EpisodeCacheDto {
+fun Episode.toCacheDto(language: String): EpisodeCacheDto {
     return EpisodeCacheDto(
         id = id,
         episodeNumber = episodeNumber,
         photoPath = photoPath,
         episodeName = episodeName,
-        runtimeMinutes = runtimeMinutes,
+        runtimeMinutes = runtimeInMinutes,
         rating = rating,
         seasonNumber = seasonNumber,
-        seriesId = seriesId
+        seriesId = seriesId,
+        episodeIdWithLanguage = "$id$language"
     )
 }
 
 @JvmName("toCacheDtoListEpisode")
-fun List<Episode>.toCacheDtoList(): List<EpisodeCacheDto> {
-    return map { it.toCacheDto() }
+fun List<Episode>.toCacheDtoList(language: String): List<EpisodeCacheDto> {
+    return map { it.toCacheDto(language = language) }
 }
 
 fun EpisodeCacheDto.toEntity(): Episode {
@@ -144,7 +147,7 @@ fun EpisodeCacheDto.toEntity(): Episode {
         episodeNumber = episodeNumber,
         photoPath = photoPath,
         episodeName = episodeName,
-        runtimeMinutes = runtimeMinutes,
+        runtimeInMinutes = runtimeMinutes,
         rating = rating,
         seasonNumber = seasonNumber,
         seriesId = seriesId
@@ -156,16 +159,16 @@ fun List<EpisodeCacheDto>.toEntityList(): List<Episode> {
     return map { it.toEntity() }
 }
 
-fun List<Season>.toCacheCodeWithSeasonsCacheDto(request: String): CacheCodeWithSeasonsCacheDto {
+fun List<Season>.toCacheCodeWithSeasonsCacheDto(request: String, language: String): CacheCodeWithSeasonsCacheDto {
     return CacheCodeWithSeasonsCacheDto(
         cacheCode = CacheCodeDto(cacheCode = request),
-        seasons = this.toCacheDtoList()
+        seasons = this.toCacheDtoList(language = language)
     )
 }
 
-fun List<Episode>.toCacheCodeWithEpisodesCacheDto(request: String): CacheCodeWithEpisodesCacheDto {
+fun List<Episode>.toCacheCodeWithEpisodesCacheDto(request: String, language: String): CacheCodeWithEpisodesCacheDto {
     return CacheCodeWithEpisodesCacheDto(
         cacheCode = CacheCodeDto(cacheCode = request),
-        episodes = this.toCacheDtoList()
+        episodes = this.toCacheDtoList(language)
     )
 }

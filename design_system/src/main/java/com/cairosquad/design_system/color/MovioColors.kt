@@ -27,6 +27,8 @@ data class Surfaces(
     val onSurfaceAt3: Color,
     val onSurfaceAt4: Color,
     val onSurfaceAt5: Color,
+    val overlay: Color,
+    val horizontalImageOverlay: Color
 )
 
 data class Brand(

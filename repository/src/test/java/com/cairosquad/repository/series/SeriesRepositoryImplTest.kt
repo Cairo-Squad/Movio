@@ -1,7 +1,8 @@
 package com.cairosquad.repository.series
 
-import com.cairosquad.domain.exception.DomainEmptyResponseException
+import com.cairosquad.domain.exception.NoDataException
 import com.cairosquad.domain.model.SortType
+import com.cairosquad.domain.repository.LanguageRepository
 import com.cairosquad.entity.Episode
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Review
@@ -58,21 +59,29 @@ class SeriesRepositoryImplTest {
     private lateinit var remoteDataSource: SeriesRemoteDataSource
     private lateinit var localDataSource: SeriesLocalDataSource
     private lateinit var seasonEpisodeLocalDataSource: SeasonEpisodeLocalDataSource
+    private lateinit var languageRepository: LanguageRepository
 
     @Before
     fun setUp() {
+        languageRepository = mockk(relaxed = true)
         remoteDataSource = mockk(relaxed = true)
         localDataSource = mockk(relaxed = true)
         seasonEpisodeLocalDataSource = mockk(relaxed = true)
-        repository =
-            SeriesRepositoryImpl(remoteDataSource, localDataSource, seasonEpisodeLocalDataSource)
+        repository = SeriesRepositoryImpl(
+            remoteDataSource,
+            localDataSource,
+            seasonEpisodeLocalDataSource,
+            languageRepository
+        )
+
+        coEvery { languageRepository.getLanguage() } returns LANGUAGE
     }
 
     @Test
     fun `should return cached series when getSeriesById is called and cache is available`() =
         runTest {
             val seriesId = 1L
-            val cacheCode = getCacheCodeOfSeries(seriesId)
+            val cacheCode = getCacheCodeOfSeries(seriesId, LANGUAGE)
             val cachedSeries = listOf(cachedSeriesDto)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
@@ -88,7 +97,7 @@ class SeriesRepositoryImplTest {
     fun `should fetch data from remote when getSeriesById is called and cache is empty`() =
         runTest {
             val seriesId = 1L
-            val cacheCode = getCacheCodeOfSeries(seriesId)
+            val cacheCode = getCacheCodeOfSeries(seriesId, LANGUAGE)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
             coEvery { remoteDataSource.getSeriesById(seriesId) } returns seriesDetailsRemoteDto
@@ -106,12 +115,12 @@ class SeriesRepositoryImplTest {
     fun `should throw DomainEmptyResponseException when getSeriesById is called and remote returns empty`() =
         runTest {
             val seriesId = 1L
-            val cacheCode = getCacheCodeOfSeries(seriesId)
+            val cacheCode = getCacheCodeOfSeries(seriesId, LANGUAGE)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
             coEvery { remoteDataSource.getSeriesById(seriesId) } throws RepoEmptyResponseException()
 
-            assertFailsWith<DomainEmptyResponseException> {
+            assertFailsWith<NoDataException> {
                 repository.getSeriesById(seriesId)
             }
             coVerify(exactly = 1) { remoteDataSource.getSeriesById(seriesId) }
@@ -123,7 +132,7 @@ class SeriesRepositoryImplTest {
         runTest {
             val seriesId = 1L
             val page = 1
-            val cacheCode = getCacheCodeOfSeriesReviews(page, seriesId)
+            val cacheCode = getCacheCodeOfSeriesReviews(page, seriesId, LANGUAGE)
             val cachedReviews = listOf(cachedReviewDto)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesReviewsByCacheCode(cacheCode) } returns cachedReviews
@@ -140,7 +149,7 @@ class SeriesRepositoryImplTest {
         runTest {
             val seriesId = 1L
             val page = 1
-            val cacheCode = getCacheCodeOfSeriesReviews(page, seriesId)
+            val cacheCode = getCacheCodeOfSeriesReviews(page, seriesId, LANGUAGE)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesReviewsByCacheCode(cacheCode) } returns emptyList()
             coEvery { remoteDataSource.getSeriesReviews(seriesId, page) } returns listOf(
@@ -159,7 +168,7 @@ class SeriesRepositoryImplTest {
     fun `should return cached seasons when getSeriesSeasons is called and cache is available`() =
         runTest {
             val seriesId = 1L
-            val cacheCode = getCacheCodeOfSeriesSeasons(seriesId)
+            val cacheCode = getCacheCodeOfSeriesSeasons(seriesId, LANGUAGE)
             val cachedSeasons = listOf(cachedSeasonDto)
             coEvery { seasonEpisodeLocalDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { seasonEpisodeLocalDataSource.getSeasonsByCacheCode(cacheCode) } returns cachedSeasons
@@ -175,7 +184,7 @@ class SeriesRepositoryImplTest {
     fun `should fetch data from remote when getSeriesSeasons is called and cache is empty`() =
         runTest {
             val seriesId = 1L
-            val cacheCode = getCacheCodeOfSeriesSeasons(seriesId)
+            val cacheCode = getCacheCodeOfSeriesSeasons(seriesId, LANGUAGE)
             coEvery { seasonEpisodeLocalDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { seasonEpisodeLocalDataSource.getSeasonsByCacheCode(cacheCode) } returns emptyList()
             coEvery { remoteDataSource.getSeriesSeasons(seriesId) } returns listOf(seasonRemoteDto)
@@ -193,7 +202,7 @@ class SeriesRepositoryImplTest {
         runTest {
             val seriesId = 1L
             val seasonNumber = 1
-            val cacheCode = getCacheCodeOfEpisodes(seriesId, seasonNumber)
+            val cacheCode = getCacheCodeOfEpisodes(seriesId, seasonNumber, LANGUAGE)
             val cachedEpisodes = listOf(cachedEpisodeDto)
             coEvery { seasonEpisodeLocalDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { seasonEpisodeLocalDataSource.getEpisodesByCacheCode(cacheCode) } returns cachedEpisodes
@@ -209,7 +218,7 @@ class SeriesRepositoryImplTest {
     fun `should fetch data from remote when getEpisodes is called and cache is empty`() = runTest {
         val seriesId = 1L
         val seasonNumber = 1
-        val cacheCode = getCacheCodeOfEpisodes(seriesId, seasonNumber)
+        val cacheCode = getCacheCodeOfEpisodes(seriesId, seasonNumber, LANGUAGE)
         coEvery { seasonEpisodeLocalDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { seasonEpisodeLocalDataSource.getEpisodesByCacheCode(cacheCode) } returns emptyList()
         coEvery { remoteDataSource.getEpisodes(seriesId, seasonNumber) } returns listOf(
@@ -228,19 +237,19 @@ class SeriesRepositoryImplTest {
     fun `should return cached genres when getSeriesGenres is called and cache is available`() =
         runTest {
             val cachedGenres = listOf(cachedGenreDto)
-            coEvery { localDataSource.getSeriesGenres() } returns cachedGenres
+            coEvery { localDataSource.getSeriesGenresByLanguage(LANGUAGE) } returns cachedGenres
 
             val result = repository.getSeriesGenres()
 
             assertThat(result).isEqualTo(listOf(expectedGenre))
-            coVerify(exactly = 1) { localDataSource.getSeriesGenres() }
+            coVerify(exactly = 1) { localDataSource.getSeriesGenresByLanguage(LANGUAGE) }
             coVerify(exactly = 0) { remoteDataSource.getSeriesGenres() }
         }
 
     @Test
     fun `should fetch data from remote when getSeriesGenres is called and cache is empty`() =
         runTest {
-            coEvery { localDataSource.getSeriesGenres() } returns emptyList()
+            coEvery { localDataSource.getSeriesGenresByLanguage(LANGUAGE) } returns emptyList()
             coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
             coEvery { localDataSource.insertSeriesGenres(any()) } just Runs
 
@@ -256,7 +265,7 @@ class SeriesRepositoryImplTest {
         runTest {
             val page = 1
             val genreId: Long? = null
-            val cacheCode = getCacheCodeOfTopRatedSeries(page, genreId)
+            val cacheCode = getCacheCodeOfTopRatedSeries(page, genreId, LANGUAGE)
             val cachedSeries = listOf(cachedSeriesDto)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
@@ -273,7 +282,7 @@ class SeriesRepositoryImplTest {
         runTest {
             val page = 1
             val genreId: Long? = null
-            val cacheCode = getCacheCodeOfTopRatedSeries(page, genreId)
+            val cacheCode = getCacheCodeOfTopRatedSeries(page, genreId, LANGUAGE)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
             coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
@@ -301,7 +310,7 @@ class SeriesRepositoryImplTest {
         runTest {
             val seriesId = 1L
             val page = 1
-            val cacheCode = getCacheCodeOfSimilarSeries(seriesId, page)
+            val cacheCode = getCacheCodeOfSimilarSeries(seriesId, page, LANGUAGE)
             val cachedSeries = listOf(cachedSeriesDto)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
@@ -318,7 +327,7 @@ class SeriesRepositoryImplTest {
         runTest {
             val seriesId = 1L
             val page = 1
-            val cacheCode = getCacheCodeOfSimilarSeries(seriesId, page)
+            val cacheCode = getCacheCodeOfSimilarSeries(seriesId, page, LANGUAGE)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
             coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
@@ -346,7 +355,7 @@ class SeriesRepositoryImplTest {
         runTest {
             val page = 1
             val genreId: Long? = null
-            val cacheCode = getCacheCodeOfTrendingSeries(page, genreId)
+            val cacheCode = getCacheCodeOfTrendingSeries(page, genreId, LANGUAGE)
             val cachedSeries = listOf(cachedSeriesDto)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
@@ -363,7 +372,7 @@ class SeriesRepositoryImplTest {
         runTest {
             val page = 1
             val genreId: Long? = null
-            val cacheCode = getCacheCodeOfTrendingSeries(page, genreId)
+            val cacheCode = getCacheCodeOfTrendingSeries(page, genreId, LANGUAGE)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
             coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
@@ -392,7 +401,7 @@ class SeriesRepositoryImplTest {
             val page = 1
             val genreId: Long? = null
             val sortType: SortType? = null
-            val cacheCode = getCacheCodeOfAllSeries(page, genreId, sortType)
+            val cacheCode = getCacheCodeOfAllSeries(page, genreId, sortType, LANGUAGE)
             val cachedSeries = listOf(cachedSeriesDto)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
@@ -409,7 +418,7 @@ class SeriesRepositoryImplTest {
         val page = 1
         val genreId: Long? = null
         val sortType: SortType? = null
-        val cacheCode = getCacheCodeOfAllSeries(page, genreId, sortType)
+        val cacheCode = getCacheCodeOfAllSeries(page, genreId, sortType, LANGUAGE)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
         coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
@@ -456,7 +465,7 @@ class SeriesRepositoryImplTest {
     fun `should return cached series when getSeriesOfArtist is called and cache is available`() =
         runTest {
             val artistId = 100L
-            val cacheCode = getCacheCodeOfSeriesOfArtist(artistId)
+            val cacheCode = getCacheCodeOfSeriesOfArtist(artistId, LANGUAGE)
             val cachedSeries = listOf(cachedSeriesDto)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
@@ -472,7 +481,7 @@ class SeriesRepositoryImplTest {
     fun `should fetch data from remote when getSeriesOfArtist is called and cache is empty`() =
         runTest {
             val artistId = 100L
-            val cacheCode = getCacheCodeOfSeriesOfArtist(artistId)
+            val cacheCode = getCacheCodeOfSeriesOfArtist(artistId, LANGUAGE)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
             coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
@@ -497,13 +506,13 @@ class SeriesRepositoryImplTest {
     fun `should throw DomainEmptyResponseException when getSeriesOfArtist is called and remote returns empty`() =
         runTest {
             val artistId = 100L
-            val cacheCode = getCacheCodeOfSeriesOfArtist(artistId)
+            val cacheCode = getCacheCodeOfSeriesOfArtist(artistId, LANGUAGE)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
             coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
             coEvery { remoteDataSource.getSeriesOfArtist(artistId) } throws RepoEmptyResponseException()
 
-            assertFailsWith<DomainEmptyResponseException> {
+            assertFailsWith<NoDataException> {
                 repository.getSeriesOfArtist(artistId)
             }
             coVerify(exactly = 1) { remoteDataSource.getSeriesOfArtist(artistId) }
@@ -515,7 +524,7 @@ class SeriesRepositoryImplTest {
         runTest {
             val page = 1
             val genreId: Long? = null
-            val cacheCode = getCacheCodeOfMoreRecommendedSeries(page, genreId)
+            val cacheCode = getCacheCodeOfMoreRecommendedSeries(page, genreId, LANGUAGE)
             val cachedSeries = listOf(cachedSeriesDto)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
@@ -532,7 +541,7 @@ class SeriesRepositoryImplTest {
         runTest {
             val page = 1
             val genreId: Long? = null
-            val cacheCode = getCacheCodeOfMoreRecommendedSeries(page, genreId)
+            val cacheCode = getCacheCodeOfMoreRecommendedSeries(page, genreId, LANGUAGE)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
             coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
@@ -560,7 +569,7 @@ class SeriesRepositoryImplTest {
         runTest {
             val page = 1
             val genreId: Long? = null
-            val cacheCode = getCacheCodeOfMoreRecommendedSeries(page, genreId)
+            val cacheCode = getCacheCodeOfMoreRecommendedSeries(page, genreId, LANGUAGE)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
             coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
@@ -571,7 +580,7 @@ class SeriesRepositoryImplTest {
                 )
             } throws RepoEmptyResponseException()
 
-            assertFailsWith<DomainEmptyResponseException> {
+            assertFailsWith<NoDataException> {
                 repository.getMoreRecommendedSeries(page, genreId)
             }
             coVerify(exactly = 1) { remoteDataSource.getMoreRecommendedSeries(page, genreId) }
@@ -583,7 +592,7 @@ class SeriesRepositoryImplTest {
         runTest {
             val page = 1
             val genreId: Long? = null
-            val cacheCode = getCacheCodeOfOnTvSeries(page, genreId)
+            val cacheCode = getCacheCodeOfOnTvSeries(page, genreId, LANGUAGE)
             val cachedSeries = listOf(cachedSeriesDto)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
@@ -600,7 +609,7 @@ class SeriesRepositoryImplTest {
         runTest {
             val page = 1
             val genreId: Long? = null
-            val cacheCode = getCacheCodeOfOnTvSeries(page, genreId)
+            val cacheCode = getCacheCodeOfOnTvSeries(page, genreId, LANGUAGE)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
             coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
@@ -631,7 +640,7 @@ class SeriesRepositoryImplTest {
         runTest {
             val page = 1
             val genreId: Long? = null
-            val cacheCode = getCacheCodeOfAiringTodaySeries(page, genreId)
+            val cacheCode = getCacheCodeOfAiringTodaySeries(page, genreId, LANGUAGE)
             val cachedSeries = listOf(cachedSeriesDto)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
@@ -648,7 +657,7 @@ class SeriesRepositoryImplTest {
         runTest {
             val page = 1
             val genreId: Long? = null
-            val cacheCode = getCacheCodeOfAiringTodaySeries(page, genreId)
+            val cacheCode = getCacheCodeOfAiringTodaySeries(page, genreId, LANGUAGE)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
             coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
@@ -676,7 +685,7 @@ class SeriesRepositoryImplTest {
         runTest {
             val page = 1
             val genreId: Long? = null
-            val cacheCode = getCacheCodeOfFreeToWatchSeries(page, genreId)
+            val cacheCode = getCacheCodeOfFreeToWatchSeries(page, genreId, LANGUAGE)
             val cachedSeries = listOf(cachedSeriesDto)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
@@ -693,7 +702,7 @@ class SeriesRepositoryImplTest {
         runTest {
             val page = 1
             val genreId: Long? = null
-            val cacheCode = getCacheCodeOfFreeToWatchSeries(page, genreId)
+            val cacheCode = getCacheCodeOfFreeToWatchSeries(page, genreId, LANGUAGE)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
             coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
@@ -721,7 +730,7 @@ class SeriesRepositoryImplTest {
         runTest {
             val genreId = 1L
             val page = 1
-            val cacheCode = getCacheCodeOfSeriesByCategory(page, genreId)
+            val cacheCode = getCacheCodeOfSeriesByCategory(page, genreId, LANGUAGE)
             val cachedSeries = listOf(cachedSeriesDto)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
@@ -738,7 +747,7 @@ class SeriesRepositoryImplTest {
         runTest {
             val genreId = 1L
             val page = 1
-            val cacheCode = getCacheCodeOfSeriesByCategory(page, genreId)
+            val cacheCode = getCacheCodeOfSeriesByCategory(page, genreId, LANGUAGE)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
             coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
@@ -766,7 +775,7 @@ class SeriesRepositoryImplTest {
         runTest {
             val page = 1
             val genreId: Long? = null
-            val cacheCode = getCacheCodeOfPopularSeries(page, genreId)
+            val cacheCode = getCacheCodeOfPopularSeries(page, genreId, LANGUAGE)
             val cachedSeries = listOf(cachedSeriesDto)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns cachedSeries
@@ -783,7 +792,7 @@ class SeriesRepositoryImplTest {
         runTest {
             val page = 1
             val genreId: Long? = null
-            val cacheCode = getCacheCodeOfPopularSeries(page, genreId)
+            val cacheCode = getCacheCodeOfPopularSeries(page, genreId, LANGUAGE)
             coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
             coEvery { localDataSource.getSeriesByCacheCode(cacheCode) } returns emptyList()
             coEvery { remoteDataSource.getSeriesGenres() } returns listOf(genreRemoteDto)
@@ -807,7 +816,9 @@ class SeriesRepositoryImplTest {
         }
 
     private companion object {
-        private val seriesRemoteDto = SeriesRemoteDto(
+        const val LANGUAGE = "en"
+
+        val seriesRemoteDto = SeriesRemoteDto(
             id = 1L,
             name = "Test Series",
             voteAverage = 8.0f,
@@ -817,7 +828,7 @@ class SeriesRepositoryImplTest {
             releaseDate = "2023-01-01"
         )
 
-        private val seriesDetailsRemoteDto = SeriesDetailsRemoteDto(
+        val seriesDetailsRemoteDto = SeriesDetailsRemoteDto(
             id = 1L,
             name = "Test Series",
             voteAverage = 8.0,
@@ -828,18 +839,20 @@ class SeriesRepositoryImplTest {
             numberOfSeasons = 2
         )
 
-        private val expectedGenre = Genre(
+        val expectedGenre = Genre(
             id = 1L,
             name = "Drama"
         )
 
-        private val cachedGenreDto = GenreOfSeriesCacheDto(
+        val cachedGenreDto = GenreOfSeriesCacheDto(
             id = 1L,
             name = "Drama",
-            cachingTimestamp = System.currentTimeMillis()
+            cachingTimestamp = System.currentTimeMillis(),
+            genreIdWithLanguage = "${1L}$LANGUAGE",
+            language = LANGUAGE
         )
 
-        private val cachedSeriesDto = SeriesCacheDto(
+        val cachedSeriesDto = SeriesCacheDto(
             seriesWithoutGenre = SeriesWithoutGenreCacheDto(
                 id = 1L,
                 title = "Test Series",
@@ -849,12 +862,13 @@ class SeriesRepositoryImplTest {
                 overview = "A great series",
                 releaseDate = 1672531200000L,
                 seasonsCount = 2,
-                cachingTimestamp = System.currentTimeMillis()
+                cachingTimestamp = System.currentTimeMillis(),
+                seriesIdWithLanguage = "${1L}$LANGUAGE"
             ),
             genres = listOf(cachedGenreDto)
         )
 
-        private val expectedSeries = Series(
+        val expectedSeries = Series(
             id = 1L,
             title = "Test Series",
             rating = 4.0f,
@@ -866,7 +880,7 @@ class SeriesRepositoryImplTest {
             seasonsCount = 2
         )
 
-        private val reviewRemoteDto = ReviewRemoteDto(
+        val reviewRemoteDto = ReviewRemoteDto(
             id = "review1",
             author = "John Doe",
             authorDetails = AuthorDetailsDto(
@@ -877,17 +891,18 @@ class SeriesRepositoryImplTest {
             createdAt = "2023-01-01T00:00:00.000Z"
         )
 
-        private val cachedReviewDto = ReviewCacheDto(
+        val cachedReviewDto = ReviewCacheDto(
             id = "review1",
             author = "John Doe",
             authorPhotoPath = "/avatar.jpg",
             rating = 4.25f,
             date = 1672531200000L,
             description = "Great show!",
-            cachingTimestamp = System.currentTimeMillis()
+            cachingTimestamp = System.currentTimeMillis(),
+            reviewIdWithLanguage = "${"review1"}$LANGUAGE"
         )
 
-        private val expectedReview = Review(
+        val expectedReview = Review(
             id = "review1",
             author = "John Doe",
             authorPhotoPath = "/avatar.jpg",
@@ -896,7 +911,7 @@ class SeriesRepositoryImplTest {
             description = "Great show!"
         )
 
-        private val seasonRemoteDto = SeasonRemoteDto(
+        val seasonRemoteDto = SeasonRemoteDto(
             id = 1L,
             seasonNumber = 1,
             name = "Season 1",
@@ -907,7 +922,7 @@ class SeriesRepositoryImplTest {
             airDate = "2023-01-01"
         )
 
-        private val cachedSeasonDto = SeasonCacheDto(
+        val cachedSeasonDto = SeasonCacheDto(
             id = 1001L,
             seriesId = 1L,
             seasonNumber = 1,
@@ -917,10 +932,11 @@ class SeriesRepositoryImplTest {
             posterPath = "/season_poster.jpg",
             overview = "First season",
             airDate = 1672531200000L,
-            cachingTimestamp = System.currentTimeMillis()
+            cachingTimestamp = System.currentTimeMillis(),
+            seasonIdWithLanguage = "${1L}$LANGUAGE"
         )
 
-        private val expectedSeason = Season(
+        val expectedSeason = Season(
             seriesId = 1L,
             seasonNumber = 1,
             seasonName = "Season 1",
@@ -931,7 +947,7 @@ class SeriesRepositoryImplTest {
             airDate = 1672531200000L
         )
 
-        private val episodeRemoteDto = EpisodeRemoteDto(
+        val episodeRemoteDto = EpisodeRemoteDto(
             id = 1L,
             episodeNumber = 1,
             name = "Episode 1",
@@ -944,7 +960,7 @@ class SeriesRepositoryImplTest {
             seriesId = 1L
         )
 
-        private val cachedEpisodeDto = EpisodeCacheDto(
+        val cachedEpisodeDto = EpisodeCacheDto(
             id = 1L,
             episodeNumber = 1,
             episodeName = "Episode 1",
@@ -953,21 +969,22 @@ class SeriesRepositoryImplTest {
             photoPath = "/episode_still.jpg",
             seasonNumber = 1,
             seriesId = 1L,
-            cachingTimestamp = System.currentTimeMillis()
+            cachingTimestamp = System.currentTimeMillis(),
+            episodeIdWithLanguage = "${1L}$LANGUAGE"
         )
 
-        private val expectedEpisode = Episode(
+        val expectedEpisode = Episode(
             id = 1L,
             episodeNumber = 1,
             episodeName = "Episode 1",
-            runtimeMinutes = 45,
+            runtimeInMinutes = 45,
             rating = 4.0f,
             photoPath = "/episode_still.jpg",
             seasonNumber = 1,
             seriesId = 1L
         )
 
-        private val genreRemoteDto = GenreDto(
+        val genreRemoteDto = GenreDto(
             id = 1,
             name = "Drama"
         )

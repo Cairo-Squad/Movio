@@ -9,7 +9,6 @@ import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.base.BaseViewModel
-import com.cairosquad.viewmodel.rated.mappers.removeItem
 import com.cairosquad.viewmodel.rated.paging.RatedItemsPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -25,16 +24,16 @@ class MyRatingsViewModel @Inject constructor(
     MyRatingsInteractionListener {
 
     init {
-        loadRatedItems()
+        fetchRatedItems()
     }
 
-    private fun loadRatedItems() {
+    private fun fetchRatedItems() {
         updateState {
             it.copy(
                 isLoading = true,
                 ratedItems = Pager(
                     config = PagingConfig(
-                        pageSize = 20,
+                        pageSize = PAGE_SIZE,
                         enablePlaceholders = false
                     ),
                     pagingSourceFactory = {
@@ -50,16 +49,11 @@ class MyRatingsViewModel @Inject constructor(
         sendEffect(MyRatingsEffect.NavigateBack)
     }
 
-    override fun onUndoClicked() {
+    override fun onUndoClick() {
         val item = screenState.value.deletedItems.last().split(", ")
         when (item[0]) {
-            "movie" -> {
-                onUndoClickMovie(item)
-            }
-
-            "tv" -> {
-                onUndoClickSeries(item)
-            }
+            MOVIE -> onUndoClickMovie(item)
+            SERIES -> onUndoClickSeries(item)
         }
     }
 
@@ -69,7 +63,7 @@ class MyRatingsViewModel @Inject constructor(
                 manageSeriesUseCase.addSeriesRating(item[1].toLong(), item[2].toFloat() * 2)
             },
             onSuccess = {
-                loadRatedItems()
+                fetchRatedItems()
                 showSnackBar(R.string.series_rate_restore_success, true)
             },
             onError = {
@@ -84,7 +78,7 @@ class MyRatingsViewModel @Inject constructor(
                 manageMoviesUseCase.addMovieRating(item[1].toLong(), item[2].toFloat() * 2)
             },
             onSuccess = {
-                loadRatedItems()
+                fetchRatedItems()
                 showSnackBar(R.string.movie_rate_restore_success, true)
             },
             onError = {
@@ -94,11 +88,11 @@ class MyRatingsViewModel @Inject constructor(
     }
 
 
-    override fun onMovieClicked(movieId: Long) {
+    override fun onMovieClick(movieId: Long) {
         sendEffect(MyRatingsEffect.NavigateToMovieDetails(movieId))
     }
 
-    override fun onSeriesClicked(seriesId: Long) {
+    override fun onSeriesClick(seriesId: Long) {
         sendEffect(MyRatingsEffect.NavigateToSeriesDetails(seriesId))
     }
 
@@ -166,8 +160,15 @@ class MyRatingsViewModel @Inject constructor(
                     snackMessageId = messageId
                 )
             }
-            delay(2000)
+            delay(SNACKBAR_DURATION)
             updateState { it.copy(showSnackBar = false) }
         }
+    }
+
+    companion object {
+        private const val MOVIE = "movie"
+        private const val SERIES = "tv"
+        private const val PAGE_SIZE = 20
+        private const val SNACKBAR_DURATION = 2000L
     }
 }

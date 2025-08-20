@@ -1,7 +1,8 @@
 package com.cairosquad.repository.movie
 
-import com.cairosquad.domain.exception.DomainEmptyResponseException
+import com.cairosquad.domain.exception.NoDataException
 import com.cairosquad.domain.model.SortType
+import com.cairosquad.domain.repository.LanguageRepository
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Review
@@ -50,19 +51,27 @@ class MovieRepositoryImplTest {
     private lateinit var repository: MovieRepositoryImpl
     private lateinit var remoteDataSource: MoviesRemoteDataSource
     private lateinit var localDataSource: MoviesLocalDataSource
+    private lateinit var languageRepository: LanguageRepository
 
     @Before
     fun setUp() {
+        languageRepository = mockk(relaxed = true)
         remoteDataSource = mockk(relaxed = true)
         localDataSource = mockk(relaxed = true)
-        repository = MovieRepositoryImpl(remoteDataSource, localDataSource)
+        repository = MovieRepositoryImpl(
+            remoteDataSource,
+            localDataSource,
+            languageRepository
+        )
+
+        coEvery { languageRepository.getLanguage() } returns LANGUAGE
     }
 
     @Test
     fun `should return cached movies when getSimilarMovies is called and cache is available`() = runTest {
         val movieId = 1L
         val page = 1
-        val cacheCode = getCacheCodeOfSimilarMovies(movieId, page)
+        val cacheCode = getCacheCodeOfSimilarMovies(movieId, page, LANGUAGE)
         val cachedMovies = listOf(cachedMovieDto)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns cachedMovies
@@ -78,7 +87,7 @@ class MovieRepositoryImplTest {
     fun `should fetch data from remote when getSimilarMovies is called and cache is empty`() = runTest {
         val movieId = 1L
         val page = 1
-        val cacheCode = getCacheCodeOfSimilarMovies(movieId, page)
+        val cacheCode = getCacheCodeOfSimilarMovies(movieId, page, LANGUAGE)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns emptyList()
         coEvery { remoteDataSource.getMoviesGenres() } returns listOf(genreRemoteDto)
@@ -95,7 +104,7 @@ class MovieRepositoryImplTest {
     @Test
     fun `should return cached movies when getPersonalizedMovies is called and cache is available`() = runTest {
         val page = 1
-        val cacheCode = getCacheCodeOfPersonalizedMovies(page)
+        val cacheCode = getCacheCodeOfPersonalizedMovies(page, LANGUAGE)
         val cachedMovies = listOf(cachedMovieDto)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns cachedMovies
@@ -110,7 +119,7 @@ class MovieRepositoryImplTest {
     @Test
     fun `should fetch data from remote when getPersonalizedMovies is called and cache is empty`() = runTest {
         val page = 1
-        val cacheCode = getCacheCodeOfPersonalizedMovies(page)
+        val cacheCode = getCacheCodeOfPersonalizedMovies(page, LANGUAGE)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns emptyList()
         coEvery { remoteDataSource.getMoviesGenres() } returns listOf(genreRemoteDto)
@@ -126,7 +135,7 @@ class MovieRepositoryImplTest {
 
     @Test
     fun `should return cached movies when getSuggestedMovies is called and cache is available`() = runTest {
-        val cacheCode = getCacheCodeOfSuggestedMovies()
+        val cacheCode = getCacheCodeOfSuggestedMovies(LANGUAGE)
         val cachedMovies = listOf(cachedMovieDto)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns cachedMovies
@@ -140,7 +149,7 @@ class MovieRepositoryImplTest {
 
     @Test
     fun `should fetch data from remote when getSuggestedMovies is called and cache is empty`() = runTest {
-        val cacheCode = getCacheCodeOfSuggestedMovies()
+        val cacheCode = getCacheCodeOfSuggestedMovies(LANGUAGE)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns emptyList()
         coEvery { remoteDataSource.getMoviesGenres() } returns listOf(genreRemoteDto)
@@ -158,7 +167,7 @@ class MovieRepositoryImplTest {
     fun `should return cached movies when getTopRatingMovies is called and cache is available`() = runTest {
         val page = 1
         val genreId: Long? = null
-        val cacheCode = getCacheCodeOfTopRatedMovies(page, genreId)
+        val cacheCode = getCacheCodeOfTopRatedMovies(page, genreId, LANGUAGE)
         val cachedMovies = listOf(cachedMovieDto)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns cachedMovies
@@ -174,7 +183,7 @@ class MovieRepositoryImplTest {
     fun `should fetch data from remote when getTopRatingMovies is called and cache is empty`() = runTest {
         val page = 1
         val genreId: Long? = null
-        val cacheCode = getCacheCodeOfTopRatedMovies(page, genreId)
+        val cacheCode = getCacheCodeOfTopRatedMovies(page, genreId, LANGUAGE)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns emptyList()
         coEvery { remoteDataSource.getMoviesGenres() } returns listOf(genreRemoteDto)
@@ -192,7 +201,7 @@ class MovieRepositoryImplTest {
     fun `should return cached movies when getUpcomingMovies is called and cache is available`() = runTest {
         val page = 1
         val genreId: Long? = null
-        val cacheCode = getCacheCodeOfUpcomingMovies(page, genreId)
+        val cacheCode = getCacheCodeOfUpcomingMovies(page, genreId, LANGUAGE)
         val cachedMovies = listOf(cachedMovieDto)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns cachedMovies
@@ -208,7 +217,7 @@ class MovieRepositoryImplTest {
     fun `should fetch data from remote when getUpcomingMovies is called and cache is empty`() = runTest {
         val page = 1
         val genreId: Long? = null
-        val cacheCode = getCacheCodeOfUpcomingMovies(page, genreId)
+        val cacheCode = getCacheCodeOfUpcomingMovies(page, genreId, LANGUAGE)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns emptyList()
         coEvery { remoteDataSource.getMoviesGenres() } returns listOf(genreRemoteDto)
@@ -226,7 +235,7 @@ class MovieRepositoryImplTest {
     fun `should return cached movies when getNowPlayingMovies is called and cache is available`() = runTest {
         val page = 1
         val genreId: Long? = null
-        val cacheCode = getCacheCodeOfNowPlayingMovies(page, genreId)
+        val cacheCode = getCacheCodeOfNowPlayingMovies(page, genreId, LANGUAGE)
         val cachedMovies = listOf(cachedMovieDto)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns cachedMovies
@@ -242,7 +251,7 @@ class MovieRepositoryImplTest {
     fun `should fetch data from remote when getNowPlayingMovies is called and cache is empty`() = runTest {
         val page = 1
         val genreId: Long? = null
-        val cacheCode = getCacheCodeOfNowPlayingMovies(page, genreId)
+        val cacheCode = getCacheCodeOfNowPlayingMovies(page, genreId, LANGUAGE)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns emptyList()
         coEvery { remoteDataSource.getMoviesGenres() } returns listOf(genreRemoteDto)
@@ -260,7 +269,7 @@ class MovieRepositoryImplTest {
     fun `should return cached movies when getTrendingMovies is called and cache is available`() = runTest {
         val page = 1
         val genreId: Long? = null
-        val cacheCode = getCacheCodeOfTrendingMovies(page, genreId)
+        val cacheCode = getCacheCodeOfTrendingMovies(page, genreId, LANGUAGE)
         val cachedMovies = listOf(cachedMovieDto)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns cachedMovies
@@ -276,7 +285,7 @@ class MovieRepositoryImplTest {
     fun `should fetch data from remote when getTrendingMovies is called and cache is empty`() = runTest {
         val page = 1
         val genreId: Long? = null
-        val cacheCode = getCacheCodeOfTrendingMovies(page, genreId)
+        val cacheCode = getCacheCodeOfTrendingMovies(page, genreId, LANGUAGE)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns emptyList()
         coEvery { remoteDataSource.getMoviesGenres() } returns listOf(genreRemoteDto)
@@ -294,7 +303,7 @@ class MovieRepositoryImplTest {
     fun `should return cached movies when getMoreRecommendedMovies is called and cache is available`() = runTest {
         val page = 1
         val genreId: Long? = null
-        val cacheCode = getCacheCodeOfMoreRecommendedMovies(page, genreId)
+        val cacheCode = getCacheCodeOfMoreRecommendedMovies(page, genreId, LANGUAGE)
         val cachedMovies = listOf(cachedMovieDto)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns cachedMovies
@@ -310,7 +319,7 @@ class MovieRepositoryImplTest {
     fun `should fetch data from remote when getMoreRecommendedMovies is called and cache is empty`() = runTest {
         val page = 1
         val genreId: Long? = null
-        val cacheCode = getCacheCodeOfMoreRecommendedMovies(page, genreId)
+        val cacheCode = getCacheCodeOfMoreRecommendedMovies(page, genreId, LANGUAGE)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns emptyList()
         coEvery { remoteDataSource.getMoviesGenres() } returns listOf(genreRemoteDto)
@@ -328,7 +337,7 @@ class MovieRepositoryImplTest {
     fun `should fetch data from remote when getFreeToWatchMovies is called and cache is empty`() = runTest {
         val page = 1
         val genreId: Long? = null
-        val cacheCode = getCacheCodeOfFreeToWatchMovies(page, genreId)
+        val cacheCode = getCacheCodeOfFreeToWatchMovies(page, genreId, LANGUAGE)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns emptyList()
         coEvery { remoteDataSource.getMoviesGenres() } returns listOf(genreRemoteDto)
@@ -346,7 +355,7 @@ class MovieRepositoryImplTest {
     fun `should return cached movies when getMoviesByCategory is called and cache is available`() = runTest {
         val genreId = 1L
         val page = 1
-        val cacheCode = getCacheCodeOfMoviesByCategory(page, genreId)
+        val cacheCode = getCacheCodeOfMoviesByCategory(page, genreId, LANGUAGE)
         val cachedMovies = listOf(cachedMovieDto)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns cachedMovies
@@ -362,7 +371,7 @@ class MovieRepositoryImplTest {
     fun `should fetch data from remote when getMoviesByCategory is called and cache is empty`() = runTest {
         val genreId = 1L
         val page = 1
-        val cacheCode = getCacheCodeOfMoviesByCategory(page, genreId)
+        val cacheCode = getCacheCodeOfMoviesByCategory(page, genreId, LANGUAGE)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns emptyList()
         coEvery { remoteDataSource.getMoviesGenres() } returns listOf(genreRemoteDto)
@@ -380,7 +389,7 @@ class MovieRepositoryImplTest {
     fun `should return cached movies when getPopularMovies is called and cache is available`() = runTest {
         val page = 1
         val genreId: Long? = null
-        val cacheCode = getCacheCodeOfPopularMovies(page, genreId)
+        val cacheCode = getCacheCodeOfPopularMovies(page, genreId, LANGUAGE)
         val cachedMovies = listOf(cachedMovieDto)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns cachedMovies
@@ -396,7 +405,7 @@ class MovieRepositoryImplTest {
     fun `should fetch data from remote when getPopularMovies is called and cache is empty`() = runTest {
         val page = 1
         val genreId: Long? = null
-        val cacheCode = getCacheCodeOfPopularMovies(page, genreId)
+        val cacheCode = getCacheCodeOfPopularMovies(page, genreId, LANGUAGE)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns emptyList()
         coEvery { remoteDataSource.getMoviesGenres() } returns listOf(genreRemoteDto)
@@ -415,7 +424,7 @@ class MovieRepositoryImplTest {
         val page = 1
         val genreId: Long? = null
         val sortType: SortType? = null
-        val cacheCode = getCacheCodeOfAllMovies(page, genreId, sortType)
+        val cacheCode = getCacheCodeOfAllMovies(page, genreId, sortType, LANGUAGE)
         val cachedMovies = listOf(cachedMovieDto)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns cachedMovies
@@ -432,7 +441,7 @@ class MovieRepositoryImplTest {
         val page = 1
         val genreId: Long? = null
         val sortType: SortType? = null
-        val cacheCode = getCacheCodeOfAllMovies(page, genreId, sortType)
+        val cacheCode = getCacheCodeOfAllMovies(page, genreId, sortType, LANGUAGE)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns emptyList()
         coEvery { remoteDataSource.getMoviesGenres() } returns listOf(genreRemoteDto)
@@ -463,7 +472,7 @@ class MovieRepositoryImplTest {
     @Test
     fun `should return cached movies when getMoviesOfArtist is called and cache is available`() = runTest {
         val artistId = 100L
-        val cacheCode = getCacheCodeOfMoviesOfArtist(artistId)
+        val cacheCode = getCacheCodeOfMoviesOfArtist(artistId, LANGUAGE)
         val cachedMovies = listOf(cachedMovieDto)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns cachedMovies
@@ -478,7 +487,7 @@ class MovieRepositoryImplTest {
     @Test
     fun `should fetch data from remote when getMoviesOfArtist is called and cache is empty`() = runTest {
         val artistId = 100L
-        val cacheCode = getCacheCodeOfMoviesOfArtist(artistId)
+        val cacheCode = getCacheCodeOfMoviesOfArtist(artistId, LANGUAGE)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns emptyList()
         coEvery { remoteDataSource.getMoviesGenres() } returns listOf(genreRemoteDto)
@@ -495,7 +504,7 @@ class MovieRepositoryImplTest {
     @Test
     fun `should return cached movie when getMovieById is called and cache is available`() = runTest {
         val movieId = 1L
-        val cacheCode = getCacheCodeOfMovie(movieId)
+        val cacheCode = getCacheCodeOfMovie(movieId, LANGUAGE)
         val cachedMovies = listOf(cachedMovieDto)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns cachedMovies
@@ -510,7 +519,7 @@ class MovieRepositoryImplTest {
     @Test
     fun `should fetch data from remote when getMovieById is called and cache is empty`() = runTest {
         val movieId = 1L
-        val cacheCode = getCacheCodeOfMovie(movieId)
+        val cacheCode = getCacheCodeOfMovie(movieId, LANGUAGE)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns emptyList()
         coEvery { remoteDataSource.getMovieById(movieId) } returns movieDetailsRemoteDto
@@ -527,12 +536,12 @@ class MovieRepositoryImplTest {
     @Test
     fun `should throw DomainEmptyResponseException when getMovieById is called and remote returns empty`() = runTest {
         val movieId = 1L
-        val cacheCode = getCacheCodeOfMovie(movieId)
+        val cacheCode = getCacheCodeOfMovie(movieId, LANGUAGE)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMoviesByCacheCode(cacheCode) } returns emptyList()
         coEvery { remoteDataSource.getMovieById(movieId) } throws RepoEmptyResponseException()
 
-        assertFailsWith<DomainEmptyResponseException> {
+        assertFailsWith<NoDataException> {
             repository.getMovieById(movieId)
         }
         coVerify(exactly = 1) { remoteDataSource.getMovieById(movieId) }
@@ -543,7 +552,7 @@ class MovieRepositoryImplTest {
     fun `should return cached reviews when getMovieReviews is called and cache is available`() = runTest {
         val movieId = 1L
         val page = 1
-        val cacheCode = getCacheCodeOfMovieReviews(page, movieId)
+        val cacheCode = getCacheCodeOfMovieReviews(page, movieId, LANGUAGE)
         val cachedReviews = listOf(cachedReviewDto)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMovieReviewsByCacheCode(cacheCode) } returns cachedReviews
@@ -559,7 +568,7 @@ class MovieRepositoryImplTest {
     fun `should fetch data from remote when getMovieReviews is called and cache is empty`() = runTest {
         val movieId = 1L
         val page = 1
-        val cacheCode = getCacheCodeOfMovieReviews(page, movieId)
+        val cacheCode = getCacheCodeOfMovieReviews(page, movieId, LANGUAGE)
         coEvery { localDataSource.deleteExpiredCache(any()) } just Runs
         coEvery { localDataSource.getMovieReviewsByCacheCode(cacheCode) } returns emptyList()
         coEvery { remoteDataSource.getMovieReviews(movieId, page) } returns listOf(reviewRemoteDto)
@@ -575,18 +584,18 @@ class MovieRepositoryImplTest {
     @Test
     fun `should return cached genres when getMoviesGenres is called and cache is available`() = runTest {
         val cachedGenres = listOf(cachedGenreDto)
-        coEvery { localDataSource.getMovieGenres() } returns cachedGenres
+        coEvery { localDataSource.getMovieGenresByLanguage(LANGUAGE) } returns cachedGenres
 
         val result = repository.getMoviesGenres()
 
         assertThat(result).isEqualTo(listOf(expectedGenre))
-        coVerify(exactly = 1) { localDataSource.getMovieGenres() }
+        coVerify(exactly = 1) { localDataSource.getMovieGenresByLanguage(LANGUAGE) }
         coVerify(exactly = 0) { remoteDataSource.getMoviesGenres() }
     }
 
     @Test
     fun `should fetch data from remote when getMoviesGenres is called and cache is empty`() = runTest {
-        coEvery { localDataSource.getMovieGenres() } returns emptyList()
+        coEvery { localDataSource.getMovieGenresByLanguage(LANGUAGE) } returns emptyList()
         coEvery { remoteDataSource.getMoviesGenres() } returns listOf(genreRemoteDto)
         coEvery { localDataSource.insertMovieGenres(any()) } just Runs
 
@@ -598,6 +607,8 @@ class MovieRepositoryImplTest {
     }
 
     private companion object {
+        const val LANGUAGE = "en"
+
         private val movieRemoteDto = MovieRemoteDto(
             id = 1,
             title = "Test Movie",
@@ -622,7 +633,9 @@ class MovieRepositoryImplTest {
         private val cachedGenreDto = GenreOfMovieCacheDto(
             id = 1L,
             name = "Drama",
-            cachingTimestamp = System.currentTimeMillis()
+            cachingTimestamp = System.currentTimeMillis(),
+            genreIdWithLanguage = "${1L}${LANGUAGE}",
+            language = LANGUAGE
         )
 
         private val expectedGenre = Genre(
@@ -640,7 +653,8 @@ class MovieRepositoryImplTest {
                 overview = "A great movie",
                 releaseDate = 1672531200000L, // 2023-01-01
                 runtime = 120,
-                cachingTimestamp = System.currentTimeMillis()
+                cachingTimestamp = System.currentTimeMillis(),
+                movieIdWithLanguage = "${1L}${LANGUAGE}"
             ),
             genres = listOf(cachedGenreDto)
         )
@@ -675,7 +689,8 @@ class MovieRepositoryImplTest {
             rating = 4.25f,
             date = 1672531200000L,
             description = "Great movie!",
-            cachingTimestamp = System.currentTimeMillis()
+            cachingTimestamp = System.currentTimeMillis(),
+            reviewIdWithLanguage = "${"review1"}${LANGUAGE}"
         )
 
         private val expectedReview = Review(

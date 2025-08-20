@@ -5,30 +5,31 @@ import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.home.HomeScreenState.MovieSectionsState
 import com.cairosquad.viewmodel.util.MediaContentType
+import com.cairosquad.viewmodel.util.localizeNumbers
 import com.cairosquad.viewmodel.util.roundToFirstDecimalPlace
 
 
-fun Movie.toHomeMediaUiState() = HomeScreenState.MediaUiState(
+fun Movie.toUiState() = HomeScreenState.MediaUiState(
     id = id,
-    title = title,
+    title = title.localizeNumbers(),
     rating = rating.roundToFirstDecimalPlace(),
     posterPath = posterPath,
-    genres = genres.map(Genre::toHomeGenreUiState),
+    genres = genres.map(Genre::toUiState),
     isMovie = true
 )
 
-fun Series.toHomeMediaUiState() = HomeScreenState.MediaUiState(
+fun Series.toUiState() = HomeScreenState.MediaUiState(
     id = id,
-    title = title,
+    title = title.localizeNumbers(),
     rating = rating.roundToFirstDecimalPlace(),
     posterPath = posterPath,
-    genres = genres.map(Genre::toHomeGenreUiState),
+    genres = genres.map(Genre::toUiState),
     isMovie = false
 )
 
-fun Genre.toHomeGenreUiState() = HomeScreenState.GenreUiState(
+fun Genre.toUiState() = HomeScreenState.GenreUiState(
     id = id,
-    name = name,
+    name = name.localizeNumbers(),
 )
 fun MovieSectionsState.getSectionUiStateByContentType(type: MediaContentType): List<HomeScreenState.MediaUiState> {
     return when (type) {

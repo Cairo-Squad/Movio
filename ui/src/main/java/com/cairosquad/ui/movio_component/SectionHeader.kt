@@ -1,6 +1,5 @@
 package com.cairosquad.ui.movio_component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,15 +15,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.R
+import com.cairosquad.design_system.basic_component.Icon
 import com.cairosquad.design_system.basic_component.Text
 import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
@@ -37,6 +35,7 @@ fun SectionHeader(
     actionIcon: ImageVector? = null,
     onActionClick: () -> Unit = {}
 ) {
+    val layoutDirection = LocalLayoutDirection.current
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -53,8 +52,7 @@ fun SectionHeader(
         Row(
             modifier = Modifier
                 .clip(CircleShape)
-                .clickable(onClick = onActionClick)
-                .padding(horizontal = 4.dp, vertical = 2.dp),
+                .clickable(onClick = onActionClick),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
@@ -66,15 +64,16 @@ fun SectionHeader(
                 )
             }
             if (actionIcon != null) {
-                val layoutDirection = LocalConfiguration.current.layoutDirection
-                Image(
+                Icon(
                     modifier = Modifier
                         .size(16.dp)
-                        .scale(if (layoutDirection == LayoutDirection.Rtl.ordinal) -1f else 1f),
-                    imageVector = actionIcon,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    colorFilter = ColorFilter.tint(Theme.color.surfaces.onSurfaceVariant)
+                        .scale(
+                            scaleX = if (layoutDirection == LayoutDirection.Rtl) -1f else 1f,
+                            scaleY = 1f
+                        ),
+                    imageVector = ImageVector.vectorResource(R.drawable.arrow),
+                    contentDescription = "See All Icon",
+                    tint = Theme.color.surfaces.onSurfaceVariant
                 )
             }
         }

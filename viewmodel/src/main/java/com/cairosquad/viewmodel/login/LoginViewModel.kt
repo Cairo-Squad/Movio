@@ -16,32 +16,19 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase
 ) : BaseViewModel<LoginScreenState, LoginEffect>(LoginScreenState()), LoginInteractionListener {
-    override fun onUsernameChange(username: String) {
-        updateState {
-            it.copy(
-                username = username
-            )
-        }
 
+    override fun onUsernameChange(username: String) {
+        updateState { it.copy(username = username) }
         resetUsernameValidation()
     }
 
     override fun onPasswordChange(password: String) {
-        updateState {
-            it.copy(
-                password = password
-            )
-        }
-
+        updateState { it.copy(password = password) }
         resetPasswordValidation()
     }
 
     override fun onPasswordVisibilityIconClick() {
-        updateState {
-            it.copy(
-                isPasswordVisible = !it.isPasswordVisible
-            )
-        }
+        updateState { it.copy(isPasswordVisible = !it.isPasswordVisible) }
     }
 
     override fun onForgetPasswordClick() {
@@ -49,7 +36,9 @@ class LoginViewModel @Inject constructor(
     }
 
     override fun onLoginClick() {
-        validateFields()
+        val isValid = validateFields()
+        if (!isValid) return
+
         tryToCall(
             block = {
                 loginUseCase.login(
@@ -65,28 +54,16 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun endLoading() {
-        updateState {
-            it.copy(
-                isLoading = false
-            )
-        }
+        updateState { it.copy(isLoading = false) }
     }
 
     private fun startLoading() {
-        updateState {
-            it.copy(
-                isLoading = true
-            )
-        }
+        updateState { it.copy(isLoading = true) }
     }
 
     private fun onLoginSuccess(response: Unit) {
-        updateState {
-            it.copy(
-                error = null
-            )
-        }
-        sendEffect(LoginEffect.NavigateToHome)
+        updateState { it.copy(error = null) }
+        sendEffect(LoginEffect.NavigateAfterLoginSuccessfully)
     }
 
     override fun onContinueAsAGuestClick() {
@@ -108,7 +85,7 @@ class LoginViewModel @Inject constructor(
         showSnackBar(R.string.something_went_wrong, isSuccessful = false)
     }
 
-    fun showSnackBar(messageId: Int, isSuccessful: Boolean, durationMillis: Long = 2000) {
+    fun showSnackBar(messageId: Int, isSuccessful: Boolean, durationMillis: Long = SNACKBAR_DURATION) {
         viewModelScope.launch {
             updateState {
                 it.copy(
@@ -122,62 +99,77 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun validateFields() {
+    private fun validateFields(): Boolean {
         resetUsernameValidation()
         resetPasswordValidation()
 
-        validateUsername()
-        validatePassword()
+        val isUsernameValid = validateUsername()
+        val isPasswordValid = validatePassword()
+
+        return isUsernameValid && isPasswordValid
     }
 
-    private fun validateUsername() {
+    private fun validateUsername(): Boolean {
         val username = screenState.value.username
-        if (username.isEmpty()) {
-            updateState {
-                it.copy(
-                    errors = it.errors.toMutableMap().apply {
-                        this[LoginScreenState.FormField.USERNAME] =
-                            LoginScreenState.ValidationError.EMPTY_FIELD
-                    }
-                )
+        return when {
+            username.isEmpty() -> {
+                updateState {
+                    it.copy(
+                        errors = it.errors.toMutableMap().apply {
+                            this[LoginScreenState.FormField.USERNAME] =
+                                LoginScreenState.ValidationError.EMPTY_FIELD
+                        }
+                    )
+                }
+                false
             }
-        } else if (username.length < 2) {
-            updateState {
-                it.copy(
-                    errors = it.errors.toMutableMap().apply {
-                        this[LoginScreenState.FormField.USERNAME] =
-                            LoginScreenState.ValidationError.TOO_SHORT_FIELD
-                    }
-                )
+            username.length < MIN_USERNAME_LENGTH -> {
+                updateState {
+                    it.copy(
+                        errors = it.errors.toMutableMap().apply {
+                            this[LoginScreenState.FormField.USERNAME] =
+                                LoginScreenState.ValidationError.TOO_SHORT_FIELD
+                        }
+                    )
+                }
+                false
             }
-        } else {
-            resetUsernameValidation()
+            else -> {
+                resetUsernameValidation()
+                true
+            }
         }
     }
 
-    private fun validatePassword() {
+    private fun validatePassword(): Boolean {
         val password = screenState.value.password
-
-        if (password.isEmpty()) {
-            updateState {
-                it.copy(
-                    errors = it.errors.toMutableMap().apply {
-                        this[LoginScreenState.FormField.PASSWORD] =
-                            LoginScreenState.ValidationError.EMPTY_FIELD
-                    }
-                )
+        return when {
+            password.isEmpty() -> {
+                updateState {
+                    it.copy(
+                        errors = it.errors.toMutableMap().apply {
+                            this[LoginScreenState.FormField.PASSWORD] =
+                                LoginScreenState.ValidationError.EMPTY_FIELD
+                        }
+                    )
+                }
+                false
             }
-        } else if (password.length < 4) {
-            updateState {
-                it.copy(
-                    errors = it.errors.toMutableMap().apply {
-                        this[LoginScreenState.FormField.PASSWORD] =
-                            LoginScreenState.ValidationError.TOO_SHORT_FIELD
-                    }
-                )
+            password.length < MIN_PASSWORD_LENGTH -> {
+                updateState {
+                    it.copy(
+                        errors = it.errors.toMutableMap().apply {
+                            this[LoginScreenState.FormField.PASSWORD] =
+                                LoginScreenState.ValidationError.TOO_SHORT_FIELD
+                        }
+                    )
+                }
+                false
             }
-        } else {
-            resetPasswordValidation()
+            else -> {
+                resetPasswordValidation()
+                true
+            }
         }
     }
 
@@ -199,5 +191,11 @@ class LoginViewModel @Inject constructor(
                 }
             )
         }
+    }
+
+    companion object {
+        private const val MIN_USERNAME_LENGTH = 2
+        private const val MIN_PASSWORD_LENGTH = 4
+        private const val SNACKBAR_DURATION = 2000L
     }
 }

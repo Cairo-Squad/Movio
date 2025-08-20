@@ -4,29 +4,29 @@ import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.util.TimeUtil
+import com.cairosquad.viewmodel.util.localizeNumbers
 import com.cairosquad.viewmodel.util.roundToFirstDecimalPlace
 
-fun Artist.toArtistUiState() = ArtistScreenState.ArtistUiState(
+fun Artist.toUiState() = ArtistScreenState.ArtistUiState(
     id = id,
-    name = name,
+    name = name.localizeNumbers(),
     photoPath = photoPath,
     country = country,
     birthDate = TimeUtil.convertLongToNamedDate(birthDate),
-    biography = biography,
-    department = department
+    biography = biography.localizeNumbers(),
+    department = department.localizeNumbers()
 )
 
-fun Movie.toArtistMovieUiState() = ArtistScreenState.MovieUiState(
+fun Movie.toUiState() = ArtistScreenState.MovieUiState(
     id = id,
-    title = title,
+    title = title.localizeNumbers(),
     rating = rating.roundToFirstDecimalPlace(),
     posterPath = posterPath
 )
 
-fun Series.toArtistSeriesUiState() = ArtistScreenState.SeriesUiState(
+fun Series.toUiState() = ArtistScreenState.SeriesUiState(
     id = id,
-    title = title,
+    title = title.localizeNumbers(),
     rating = rating.roundToFirstDecimalPlace(),
     posterPath = posterPath
 )
-

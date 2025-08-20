@@ -42,7 +42,7 @@ class MoreViewModel @Inject constructor(
         }
     }
 
-    private fun checkUserLoggedInStatus() {
+    fun checkUserLoggedInStatus() {
         viewModelScope.launch {
             val isUserLoggedIn = loginUseCase.isUserLoggedIn()
             updateState { it.copy(isUserLoggedIn = isUserLoggedIn) }
@@ -123,7 +123,7 @@ class MoreViewModel @Inject constructor(
             account.removeAccountDetails()
         }
         updateState { it.copy( isLogoutButtonVisible = false) }
-        sendEffect(MoreScreenEffect.NavigateToLogin)
+        sendEffect(MoreScreenEffect.NavigateToLoginAfterLogout)
     }
 
     override fun onLogoutDismiss() {

@@ -1,11 +1,6 @@
 package com.cairosquad.ui.home.content
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -15,28 +10,18 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.basic_component.RefreshBox
-import com.cairosquad.design_system.basic_component.TabRow
-import com.cairosquad.design_system.theme.Theme
-import com.cairosquad.ui.R
-import com.cairosquad.ui.movio_component.AppBar
+import com.cairosquad.ui.home.composable.HomeLoading
+import com.cairosquad.ui.home.composable.HomeTabs
 import com.cairosquad.ui.movio_component.MediaSectionLayoutType
-import com.cairosquad.ui.utils.LoadingMoviesGrid
 import com.cairosquad.viewmodel.home.HomeInteractionsListener
 import com.cairosquad.viewmodel.home.HomeScreenState
 import com.cairosquad.viewmodel.home.HomeScreenState.DataRequestStatus.FAILED
 import com.cairosquad.viewmodel.home.HomeScreenState.DataRequestStatus.LOADING
 import com.cairosquad.viewmodel.home.HomeScreenState.DataRequestStatus.SUCCESS
 import com.cairosquad.viewmodel.home.HomeScreenState.Tab.CATEGORIES
-import com.cairosquad.viewmodel.home.HomeScreenState.Tab.MOVIES
-import com.cairosquad.viewmodel.home.HomeScreenState.Tab.TV_SHOWS
 import com.cairosquad.viewmodel.util.MediaContentType
 import com.cairosquad.viewmodel.util.MediaContentType.AIRING_TODAY
 import com.cairosquad.viewmodel.util.MediaContentType.FREE_TO_WATCH
@@ -85,101 +70,10 @@ fun HomeScreenContent(
             }
         }
 
-        TobContent(
+        TopContent(
             screenState,
             listener,
             scrollProgress
-        )
-    }
-}
-
-@Composable
-private fun HomeTabs(
-    screenState: HomeScreenState,
-    listener: HomeInteractionsListener,
-    lazyListState: LazyListState,
-    lazyGridState: LazyGridState,
-    modifier: Modifier = Modifier,
-) {
-    Crossfade(
-        modifier = modifier,
-        targetState = screenState.selectedTab
-    ) { selectedTab ->
-        when (selectedTab) {
-            MOVIES -> HomeScreenContentMoviesTab(screenState, listener, lazyListState)
-            TV_SHOWS -> HomeScreenContentSeriesTab(screenState, listener, lazyListState)
-            CATEGORIES -> HomeScreenContentCategoriesTab(screenState, listener, lazyGridState)
-        }
-    }
-}
-
-@Composable
-private fun HomeLoading(
-    modifier: Modifier = Modifier,
-) {
-    LoadingMoviesGrid(
-        modifier = modifier
-            .statusBarsPadding()
-            .padding(top = 48.dp)
-            .padding(top = 36.dp)
-    )
-}
-
-@Composable
-private fun TobContent(
-    screenState: HomeScreenState,
-    listener: HomeInteractionsListener,
-    scrollProgress: Float,
-    modifier: Modifier = Modifier
-) {
-    val topColor = lerp(
-        if (Theme.isDark) Color.Black else Color.White,
-        Theme.color.surfaces.surface,
-        scrollProgress
-    )
-
-    val bottomColor = lerp(
-        if (screenState.selectedTab == CATEGORIES)
-            Theme.color.surfaces.surface
-        else
-            Color.Transparent,
-        Theme.color.surfaces.surface,
-        scrollProgress
-    )
-
-    val animatedBrush = Brush.verticalGradient(
-        colors = listOf(topColor, bottomColor)
-    )
-
-    val tabsNamesResId = remember {
-        listOf(
-            R.string.movies,
-            R.string.tv_shows,
-            R.string.categories,
-        )
-    }
-
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(animatedBrush)
-    ) {
-        AppBar(
-            modifier = Modifier.statusBarsPadding(),
-            profileImage = screenState.profileImage,
-            onClickProfileImage = listener::onClickProfile
-        )
-
-        TabRow(
-            modifier = Modifier,
-            tabs = tabsNamesResId.map { stringResource(it) },
-            selectedTabIndex = screenState.selectedTab.ordinal,
-            onTabSelected = listener::onClickTab,
-            scrollProgress = scrollProgress,
-            tabColorWithScroll = Theme.color.brand.onPrimaryContainer,
-            tabColorWithNoScroll = Theme.color.brand.onPrimary,
-            indicatorColorWithScroll = Theme.color.gradiant.horizontalCategoriesGradient,
-            indicatorColorWithNoScroll = Theme.color.gradiant.horizontalGradient
         )
     }
 }

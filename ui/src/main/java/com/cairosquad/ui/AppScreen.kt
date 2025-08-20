@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -16,10 +17,11 @@ import com.cairosquad.ui.home.HomeScreen
 import com.cairosquad.ui.library.LibraryScreen
 import com.cairosquad.ui.more.MoreScreen
 import com.cairosquad.ui.navigation.LocalNavController
+import com.cairosquad.ui.navigation.LoginRoute
 import com.cairosquad.ui.search.SearchScreen
 
 @Composable
-fun AppScreen() {
+fun AppScreen(isUserLoggedIn: Boolean) {
     val navigationItems = remember {
         listOf(
             BottomNavItem(
@@ -53,6 +55,8 @@ fun AppScreen() {
         else navController.popBackStack()
     }
 
+    var isNavBarVisible by rememberSaveable { mutableStateOf(true) }
+
     Scaffold(
         topBar = {},
         navBar = {
@@ -64,13 +68,26 @@ fun AppScreen() {
                 selectedMenu = selectedScreenIndex
             )
         },
+        isNavBarVisible = isNavBarVisible,
         content = {
             when (selectedScreenIndex) {
-                0 -> HomeScreen(navigateToProfile = { selectedScreenIndex = 3 })
+                0 -> HomeScreen(navigateToProfile = {
+                    if (isUserLoggedIn) {
+                        selectedScreenIndex = 3
+                    } else {
+                        navController.navigate(LoginRoute)
+                    }
+                })
                 1 -> SearchScreen()
                 2 -> LibraryScreen()
-                3 -> MoreScreen()
-                else -> HomeScreen(navigateToProfile = { selectedScreenIndex = 3 })
+                3 -> MoreScreen(setNavBarVisibility = { isNavBarVisible = it })
+                else -> HomeScreen(navigateToProfile = {
+                    if (isUserLoggedIn) {
+                        selectedScreenIndex = 3
+                    } else {
+                        navController.navigate(LoginRoute)
+                    }
+                })
             }
         })
 }

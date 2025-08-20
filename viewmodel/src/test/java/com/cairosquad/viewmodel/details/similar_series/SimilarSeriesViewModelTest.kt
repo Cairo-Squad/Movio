@@ -106,7 +106,7 @@ class SimilarSeriesViewModelTest {
     @Test
     fun `should emit NavigateBack effect when onClickBack is called`() = runTest {
         viewModel.effect.test {
-            viewModel.onClickBack()
+            viewModel.onBackClick()
             assertThat(awaitItem()).isEqualTo(SimilarSeriesEffect.NavigateBack)
             cancelAndIgnoreRemainingEvents()
         }
@@ -116,7 +116,7 @@ class SimilarSeriesViewModelTest {
     fun `should emit NavigateToSeriesDetails effect when onSeriesClicked is called`() = runTest {
         val seriesId = 123L
         viewModel.effect.test {
-            viewModel.onSeriesClicked(seriesId)
+            viewModel.onSeriesClick(seriesId)
             assertThat(awaitItem()).isEqualTo(SimilarSeriesEffect.NavigateToSeriesDetails(seriesId))
             cancelAndIgnoreRemainingEvents()
         }

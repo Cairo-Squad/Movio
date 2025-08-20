@@ -42,16 +42,12 @@ android {
 
 dependencies {
     implementation(libs.navigation.compose)
-    implementation(libs.androidx.core.ktx)
+    implementation(libs.core.ktx)
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    implementation(libs.androidx.material3)
-    implementation(libs.androidx.foundation.layout.android)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    debugImplementation(libs.androidx.ui.tooling)
+    androidTestImplementation(libs.test.junit)
+    implementation(libs.material3)
+    implementation(platform(libs.compose.bom))
+    implementation(libs.bundles.compose)
     implementation(libs.lottie.compose)
     implementation(libs.accompanist.webview)
 }

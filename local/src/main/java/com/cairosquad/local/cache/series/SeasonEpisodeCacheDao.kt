@@ -36,7 +36,7 @@ interface SeasonEpisodeCacheDao {
     @Query(
         "DELETE FROM CacheCodeSeasonCrossRef " +
                 "WHERE " +
-                "NOT season_Id IN (SELECT season_id FROM SeasonCacheDto) " +
+                "NOT season_Id_language IN (SELECT season_id_language FROM SeasonCacheDto) " +
                 "OR NOT cacheCode IN (SELECT cacheCode FROM CacheCodeDto)"
     )
     suspend fun deleteCrossRefForNonExistingCacheCodeAndSeason()
@@ -44,7 +44,7 @@ interface SeasonEpisodeCacheDao {
     @Query(
         "DELETE FROM CacheCodeEpisodeCrossRef " +
                 "WHERE " +
-                "NOT episode_Id IN (SELECT episode_id FROM EpisodeCacheDto) " +
+                "NOT episode_Id_language IN (SELECT episode_id_language FROM EpisodeCacheDto) " +
                 "OR NOT cacheCode IN (SELECT cacheCode FROM CacheCodeDto)"
     )
     suspend fun deleteCrossRefForNonExistingCacheCodeAndEpisode()

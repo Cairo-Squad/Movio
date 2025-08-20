@@ -21,8 +21,8 @@ class UnifiedMediaPagingSource(
         val page = params.key ?: 1
 
         return try {
-            val movies = getMoviesPage(page,genreId).take(10).map{it.toHomeMediaUiState()}
-            val series = getSeriesPage(page,genreId).take(10).map{it.toHomeMediaUiState()}
+            val movies = getMoviesPage(page,genreId).take(10).map{it.toUiState()}
+            val series = getSeriesPage(page,genreId).take(10).map{it.toUiState()}
 
             val combined = (movies + series).shuffled()
 

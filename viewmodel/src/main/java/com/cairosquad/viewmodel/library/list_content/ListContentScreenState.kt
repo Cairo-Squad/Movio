@@ -24,7 +24,7 @@ data class ListContentScreenState(
         val posterPath: String = "",
         val genres: List<String> = emptyList(),
         val seasonsCount: Int = 0,
-        val releaseDate: String = "",
+        val releaseDate: String? = null,
         val overview: String = "",
         val trailerPath: String = ""
     )
@@ -36,8 +36,8 @@ data class ListContentScreenState(
         val posterPath: String = "",
         val genres: List<String> = emptyList(),
         val overview: String = "",
-        val releaseDate: String = "0",
-        val runtimeMinutes: String = "",
+        val releaseDate: String? = null,
+        val runtimeMinutes: String? = null,
         val trailerPath: String = ""
     )
 

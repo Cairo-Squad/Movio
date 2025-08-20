@@ -24,7 +24,9 @@ val lightThemeColors = MovioColors(
         onSurfaceAt2 = Color(0x61ACABAC),
         onSurfaceAt3 = Color(0x1FACABAC),
         onSurfaceAt4 = Color(0x66919191),
-        onSurfaceAt5 = Color(0x33663EF6)
+        onSurfaceAt5 = Color(0x33663EF6),
+        overlay = Color(0x52C2BDBD),
+        horizontalImageOverlay = Color(0xBD1D1D1D)
     ),
     system = System(
         error = Color(0xFFFEF4F2),

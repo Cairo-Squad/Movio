@@ -34,7 +34,7 @@ class SeeAllViewModel @Inject constructor(
     var contentType: MediaContentType = MediaContentType.TOP_RATING
     var mediaType: MediaType = MediaType.MOVIES
 
-    override fun onClickBack() {
+    override fun onBackClick() {
         sendEffect(SeeAllEffect.NavigateBack)
     }
 
@@ -57,7 +57,7 @@ class SeeAllViewModel @Inject constructor(
     }
 
 
-    override fun onClickMedia(mediaId: Long, isMovie: Boolean) {
+    override fun onMediaClick(mediaId: Long, isMovie: Boolean) {
         sendEffect(SeeAllEffect.NavigateMediaDetails(mediaId, isMovie))
     }
 
@@ -85,12 +85,7 @@ class SeeAllViewModel @Inject constructor(
                 media
             },
             onSuccess = { media ->
-                updateState {
-                    it.copy(
-                        mediaList = media,
-                        screenStatus = SeeAllScreenState.ScreenStatus.SUCCESS
-                    )
-                }
+                updateState { it.copy(mediaList = media, screenStatus = SeeAllScreenState.ScreenStatus.SUCCESS) }
             },
             onError = ::handleError,
 
@@ -98,24 +93,23 @@ class SeeAllViewModel @Inject constructor(
     }
 
     private fun loadDataFlow(genreId: Long?): Flow<PagingData<SeeAllScreenState.MediaUiState>> {
-        val (moviesFlowGetter, seriesFlowGetter) = getDataPagerFetcher2(contentType, genreId)
+        val (moviesFlowGetter, seriesFlowGetter) = getDataPagerFetcher(contentType, genreId)
 
         return when (mediaType) {
             MediaType.MOVIES -> {
                 moviesFlowGetter().map { pagingData ->
-                    pagingData.map { it.toSeeAllMediaUiState() }
+                    pagingData.map { it.toUiState() }
                 }
             }
-
             MediaType.SERIES -> {
                 seriesFlowGetter().map { pagingData ->
-                    pagingData.map { it.toSeeAllMediaUiState() }
+                    pagingData.map { it.toUiState() }
                 }
             }
         }
     }
 
-    fun getDataPagerFetcher2(
+    fun getDataPagerFetcher(
         contentType: MediaContentType,
         genreId: Long?
     ): Pair<() -> Flow<PagingData<Movie>>, () -> Flow<PagingData<Series>>> {
@@ -273,7 +267,7 @@ class SeeAllViewModel @Inject constructor(
                 val movieGenres = manageMoviesUseCase.getMoviesGenres()
                 buildSet {
                     add(defaultGenre)
-                    movieGenres.mapTo(this) { it.toSeeAllGenreUiState() }
+                    movieGenres.mapTo(this) { it.toUiState() }
                 }.toList()
             }
 
@@ -281,7 +275,7 @@ class SeeAllViewModel @Inject constructor(
                 val seriesGenres = manageSeriesUseCase.getSeriesGenres()
                 buildSet {
                     add(defaultGenre)
-                    seriesGenres.mapTo(this) { it.toSeeAllGenreUiState() }
+                    seriesGenres.mapTo(this) { it.toUiState() }
                 }.toList()
             }
         }

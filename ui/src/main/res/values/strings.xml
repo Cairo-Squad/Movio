@@ -58,7 +58,7 @@
     <string name="thank_you_for_your_rating">Thank you for your rating!</string>
     <string name="add_your_overall_rating_for_this">Add your overall rating for this %1$s</string>
     <string name="share_via">Share via</string>
-    <string name="season">Season %1$d</string>
+    <string name="season">Season %1$s</string>
     <string name="log_in_to_unlock_your_personal_library">Log in to unlock your personal library</string>
     <string name="access_your_ratings_and_have_the_ability_to_change_the_theme_and_language">Access your ratings and have the ability to change the theme and language.</string>
     <string name="my_ratings">My Ratings</string>
@@ -96,5 +96,8 @@
     <string name="english">English</string>
     <string name="arabic">Arabic</string>
     <string name="copied_to_clipboard_successfully">Copied to clipboard successfully.</string>
+    <string name="copied_to_clipboard_unsuccessfully">Failed to Copy to clipboard.</string>
+    <string name="series_link">Series link: </string>
+    <string name="movie_link">Movie link: </string>
     <string name="done">Done</string>
 </resources>

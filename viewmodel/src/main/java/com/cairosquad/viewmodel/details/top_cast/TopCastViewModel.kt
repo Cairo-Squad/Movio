@@ -10,8 +10,6 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import javax.inject.Inject
 
 @HiltViewModel(assistedFactory = TopCastViewModel.Factory::class)
 class TopCastViewModel @AssistedInject constructor(
@@ -37,38 +35,45 @@ class TopCastViewModel @AssistedInject constructor(
 
     fun getTopCast() {
         tryToCall(
-            onStart = {
-                updateState { it.copy(screenStatus = ScreenStatus.LOADING) }
-            },
-            block = {
-                getTopCastByMediaType()
-            },
-            onSuccess = ::handleSuccess,
-            onError = { throwable ->
-                updateState {
-                    it.copy(
-                        screenStatus = ScreenStatus.ERROR,
-                        error = throwable.message
-                    )
-                }
-            },
+            onStart = ::onFetchStart,
+            block = { getTopCastByMediaType() },
+            onSuccess = ::onFetchSuccess,
+            onError = ::onFetchError,
             dispatcher = dispatcher
         )
+    }
+
+    private fun onFetchStart() {
+        updateState { it.copy(screenStatus = ScreenStatus.LOADING) }
     }
 
     private suspend fun getTopCastByMediaType(): List<Artist> {
         return if (isMovie) {
             manageMoviesUseCase.getMovieTopCast(mediaId)
         } else {
-            manageSeriesUseCase.getSeriesTopCast(mediaId, 1)
+            manageSeriesUseCase.getSeriesTopCast(mediaId, FIRST_PAGE)
         }
     }
 
-    private fun handleSuccess(cast: List<Artist>) {
+    private fun onFetchSuccess(cast: List<Artist>) {
         updateState {
             it.copy(
                 screenStatus = ScreenStatus.SUCCESS,
-                cast = cast.map { it.toTopCastUiState() })
+                cast = cast.map { it.toUiState() }
+            )
         }
+    }
+
+    private fun onFetchError(throwable: Throwable) {
+        updateState {
+            it.copy(
+                screenStatus = ScreenStatus.ERROR,
+                error = throwable.message
+            )
+        }
+    }
+
+     companion object {
+         private const val FIRST_PAGE = 1
     }
 }

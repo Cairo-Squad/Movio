@@ -59,6 +59,10 @@ class SeriesLocalDataSourceImpl @Inject constructor(
         return genreDao.getSeriesGenres()
     }
 
+    override suspend fun getSeriesGenresByLanguage(language: String): List<GenreOfSeriesCacheDto> {
+        return genreDao.getSeriesGenresByLanguage(language)
+    }
+
     override suspend fun getSeriesReviewsByCacheCode(cacheCode: String): List<ReviewCacheDto> {
         return reviewDao.getReviewsByCacheCode(cacheCode)?.reviews ?: emptyList()
     }

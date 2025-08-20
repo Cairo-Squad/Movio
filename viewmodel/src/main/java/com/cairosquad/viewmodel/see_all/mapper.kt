@@ -3,28 +3,29 @@ package com.cairosquad.viewmodel.see_all
 import com.cairosquad.entity.Genre
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
+import com.cairosquad.viewmodel.util.localizeNumbers
 import com.cairosquad.viewmodel.util.roundToFirstDecimalPlace
 
 
-fun Movie.toSeeAllMediaUiState() = SeeAllScreenState.MediaUiState(
+fun Movie.toUiState() = SeeAllScreenState.MediaUiState(
     id = id,
-    title = title,
+    title = title.localizeNumbers(),
     rating = rating.roundToFirstDecimalPlace(),
     posterPath = posterPath,
-    genres = genres.map(Genre::toSeeAllGenreUiState),
+    genres = genres.map(Genre::toUiState),
     isMovie = true
 )
 
-fun Series.toSeeAllMediaUiState() = SeeAllScreenState.MediaUiState(
+fun Series.toUiState() = SeeAllScreenState.MediaUiState(
     id = id,
-    title = title,
+    title = title.localizeNumbers(),
     rating = rating.roundToFirstDecimalPlace(),
     posterPath = posterPath,
-    genres = genres.map(Genre::toSeeAllGenreUiState),
+    genres = genres.map(Genre::toUiState),
     isMovie = false
 )
 
-fun Genre.toSeeAllGenreUiState() = SeeAllScreenState.GenreUiState(
+fun Genre.toUiState() = SeeAllScreenState.GenreUiState(
     id = id,
-    name = name,
+    name = name.localizeNumbers(),
 )

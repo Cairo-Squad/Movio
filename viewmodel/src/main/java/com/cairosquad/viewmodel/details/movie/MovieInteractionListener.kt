@@ -9,9 +9,9 @@ interface MovieInteractionListener {
     fun onRateItClick()
     fun onPlayClick()
     fun onAddToListClick()
-    fun onCreateListClicked()
-    fun onClickList(id: Long)
-    fun onSubmitCreateListClicked()
+    fun onCreateListClick()
+    fun onClickList(listId: Long)
+    fun onSubmitCreateListClick()
     fun onDismissCreateListBottomSheet()
     fun onListValueChange(listName: String)
 
@@ -23,7 +23,7 @@ interface MovieInteractionListener {
     fun onSeeAllSimilarMoviesClick(movieId: Long)
     fun onMovieClick(movieId: Long)
 
-    fun onCopy(messageId: Int, isSuccessful: Boolean)
+    fun onCopy()
 
     fun onDismissShareBottomSheet()
     fun onDismissLoginBottomSheet()
@@ -32,7 +32,7 @@ interface MovieInteractionListener {
     fun onDismissRateSuccessBottomSheet()
 
     fun onRateChange(rate: Int)
-    fun onSubmitRateClicked(rate: Int)
+    fun onSubmitRateClick(rate: Int)
     fun onNavigateToLogin()
 
     fun onRefresh()

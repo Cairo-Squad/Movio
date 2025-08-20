@@ -4,9 +4,7 @@ import com.cairosquad.entity.Artist
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.details.artist.ArtistScreenState
-import com.cairosquad.viewmodel.details.artist.toArtistMovieUiState
-import com.cairosquad.viewmodel.details.artist.toArtistSeriesUiState
-import com.cairosquad.viewmodel.details.artist.toArtistUiState
+import com.cairosquad.viewmodel.details.artist.toUiState
 import com.cairosquad.viewmodel.util.TimeUtil
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
@@ -16,7 +14,7 @@ class ArtistUiStateMapperTest {
     @Test
     fun `should map Artist to ArtistUiState when toArtistUiState is called`() {
         // When
-        val uiState = artist.toArtistUiState()
+        val uiState = artist.toUiState()
 
         // Then
         assertThat(uiState).isEqualTo(
@@ -35,7 +33,7 @@ class ArtistUiStateMapperTest {
     @Test
     fun `should map Movie to MovieUiState when toArtistMovieUiState is called`() {
         // When
-        val uiState = movie.toArtistMovieUiState()
+        val uiState = movie.toUiState()
 
         // Then
         assertThat(uiState).isEqualTo(
@@ -51,7 +49,7 @@ class ArtistUiStateMapperTest {
     @Test
     fun `should map Series to SeriesUiState when toArtistSeriesUiState is called`() {
         // When
-        val uiState = series.toArtistSeriesUiState()
+        val uiState = series.toUiState()
 
         // Then
         assertThat(uiState).isEqualTo(

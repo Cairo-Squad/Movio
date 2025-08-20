@@ -205,7 +205,7 @@ class SeriesDetailsViewModelTest {
     @Test
     fun `should emit NavigateBack effect when back clicked`() = runTest {
         viewModel.effect.test {
-            viewModel.onBackClicked()
+            viewModel.onBackClick()
             assertThat(awaitItem()).isEqualTo(SeriesDetailEffect.NavigateBack)
             cancelAndIgnoreRemainingEvents()
         }
@@ -213,14 +213,14 @@ class SeriesDetailsViewModelTest {
 
     @Test
     fun `should show share bottom sheet when share clicked`() = runTest {
-        viewModel.onShareClicked()
+        viewModel.onShareClick()
         assertThat(viewModel.screenState.value.showShareBottomSheet).isTrue()
     }
 
     @Test
     fun `should emit PlayTrailer effect when play trailer clicked`() = runTest {
         viewModel.effect.test {
-            viewModel.onPlayTrailerClicked()
+            viewModel.onPlayTrailerClick()
             assertThat(awaitItem()).isEqualTo(SeriesDetailEffect.PlayTrailer)
             cancelAndIgnoreRemainingEvents()
         }
@@ -228,7 +228,7 @@ class SeriesDetailsViewModelTest {
 
     @Test
     fun `should hide share bottom sheet when dismiss share bottom sheet`() = runTest {
-        viewModel.onShareClicked()
+        viewModel.onShareClick()
         viewModel.onDismissShareBottomSheet()
         assertThat(viewModel.screenState.value.showShareBottomSheet).isFalse()
     }
@@ -236,7 +236,7 @@ class SeriesDetailsViewModelTest {
     @Test
     fun `should navigate to all artists screen when see all artists clicked`() = runTest {
         viewModel.effect.test {
-            viewModel.onSeeAllArtistsClicked(seriesId)
+            viewModel.onSeeAllArtistsClick(seriesId)
             assertThat(awaitItem()).isEqualTo(SeriesDetailEffect.NavigateToAllArtists(seriesId))
             cancelAndIgnoreRemainingEvents()
         }
@@ -245,7 +245,7 @@ class SeriesDetailsViewModelTest {
     @Test
     fun `should navigate to season details screen when season clicked`() = runTest {
         viewModel.effect.test {
-            viewModel.onSeasonClicked(seriesId, 1)
+            viewModel.onSeasonClick(seriesId, 1)
             assertThat(awaitItem()).isEqualTo(
                 SeriesDetailEffect.NavigateToSeasonDetails(
                     seriesId,
@@ -259,7 +259,7 @@ class SeriesDetailsViewModelTest {
     @Test
     fun `should navigate to all seasons screen when see all seasons clicked`() = runTest {
         viewModel.effect.test {
-            viewModel.onSeeAllSeasonsClicked(seriesId)
+            viewModel.onSeeAllSeasonsClick(seriesId)
             assertThat(awaitItem()).isEqualTo(SeriesDetailEffect.NavigateToAllSeasons(seriesId))
             cancelAndIgnoreRemainingEvents()
         }
@@ -268,7 +268,7 @@ class SeriesDetailsViewModelTest {
     @Test
     fun `should navigate to all reviews screen when see all reviews clicked`() = runTest {
         viewModel.effect.test {
-            viewModel.onSeeAllReviewsClicked(seriesId)
+            viewModel.onSeeAllReviewsClick(seriesId)
             assertThat(awaitItem()).isEqualTo(SeriesDetailEffect.NavigateToAllReviews(seriesId))
             cancelAndIgnoreRemainingEvents()
         }
@@ -277,7 +277,7 @@ class SeriesDetailsViewModelTest {
     @Test
     fun `should navigate to series details screen when series clicked`() = runTest {
         viewModel.effect.test {
-            viewModel.onSeriesClicked(seriesId)
+            viewModel.onSeriesClick(seriesId)
             assertThat(awaitItem()).isEqualTo(SeriesDetailEffect.NavigateToSeriesDetails(seriesId))
             cancelAndIgnoreRemainingEvents()
         }
@@ -286,7 +286,7 @@ class SeriesDetailsViewModelTest {
     @Test
     fun `should navigate to all similar series screen when see all similar clicked`() = runTest {
         viewModel.effect.test {
-            viewModel.onSeeAllSimilarClicked(seriesId)
+            viewModel.onSeeAllSimilarClick(seriesId)
             assertThat(awaitItem()).isEqualTo(SeriesDetailEffect.NavigateToAllSimilar(seriesId))
             cancelAndIgnoreRemainingEvents()
         }
@@ -304,7 +304,7 @@ class SeriesDetailsViewModelTest {
     @Test
     fun `should emit NavigateToArtistDetails effect when artist clicked`() = runTest {
         viewModel.effect.test {
-            viewModel.onArtistClicked(artist.id)
+            viewModel.onArtistClick(artist.id)
             assertThat(awaitItem()).isEqualTo(SeriesDetailEffect.NavigateToArtistDetails(artist.id))
             cancelAndIgnoreRemainingEvents()
         }
@@ -322,7 +322,7 @@ class SeriesDetailsViewModelTest {
     @Test
     fun `should open login bottom sheet when favorite clicked and not logged in`() = runTest {
         coEvery { loginUseCase.isUserLoggedIn() } returns false
-        viewModel.onFavoriteClicked()
+        viewModel.onFavoriteClick()
         advanceUntilIdle()
         assertThat(viewModel.screenState.value.showLoginBottomSheet).isTrue()
     }
@@ -332,7 +332,7 @@ class SeriesDetailsViewModelTest {
         coEvery { loginUseCase.isUserLoggedIn() } returns true
         viewModel.updateState { it.copy(isFavorite = false) }
         coEvery { accountUseCase.addSeriesToFavorite(seriesId) } returns Unit
-        viewModel.onFavoriteClicked()
+        viewModel.onFavoriteClick()
         advanceUntilIdle()
         assertThat(viewModel.screenState.value.isFavorite).isTrue()
         assertThat(viewModel.screenState.value.showSnackBar).isFalse()
@@ -344,7 +344,7 @@ class SeriesDetailsViewModelTest {
             coEvery { loginUseCase.isUserLoggedIn() } returns true
             viewModel.updateState { it.copy(isFavorite = true) }
             coEvery { accountUseCase.removeSeriesFromFavorite(seriesId) } returns Unit
-            viewModel.onFavoriteClicked()
+            viewModel.onFavoriteClick()
             advanceUntilIdle()
             assertThat(viewModel.screenState.value.isFavorite).isFalse()
             assertThat(viewModel.screenState.value.showSnackBar).isFalse()
@@ -355,7 +355,7 @@ class SeriesDetailsViewModelTest {
         coEvery { loginUseCase.isUserLoggedIn() } returns true
         viewModel.updateState { it.copy(isFavorite = false) }
         coEvery { accountUseCase.addSeriesToFavorite(seriesId) } throws RuntimeException()
-        viewModel.onFavoriteClicked()
+        viewModel.onFavoriteClick()
         advanceUntilIdle()
         assertThat(viewModel.screenState.value.showSnackBar).isFalse()
         assertThat(viewModel.screenState.value.isProcessSuccess).isFalse()
@@ -366,7 +366,7 @@ class SeriesDetailsViewModelTest {
         coEvery { loginUseCase.isUserLoggedIn() } returns true
         viewModel.updateState { it.copy(isFavorite = true) }
         coEvery { accountUseCase.removeSeriesFromFavorite(seriesId) } throws RuntimeException()
-        viewModel.onFavoriteClicked()
+        viewModel.onFavoriteClick()
         advanceUntilIdle()
         assertThat(viewModel.screenState.value.showSnackBar).isFalse()
         assertThat(viewModel.screenState.value.isProcessSuccess).isFalse()
@@ -375,7 +375,7 @@ class SeriesDetailsViewModelTest {
 	@Test
 	fun `should show login bottom sheet when rate clicked and not logged in`() = runTest {
 		coEvery { loginUseCase.isUserLoggedIn() } returns false
-		viewModel.onRateClicked()
+		viewModel.onRateClick()
 		advanceUntilIdle()
 		assertThat(viewModel.screenState.value.showLoginBottomSheet).isTrue()
 	}
@@ -383,14 +383,14 @@ class SeriesDetailsViewModelTest {
     @Test
     fun `should open rate bottom sheet when rate clicked and logged in`() = runTest {
         coEvery { loginUseCase.isUserLoggedIn() } returns true
-        viewModel.onRateClicked()
+        viewModel.onRateClick()
         advanceUntilIdle()
         assertThat(viewModel.screenState.value.showRateBottomSheet).isTrue()
     }
 
     @Test
     fun `should update state when create list clicked`() = runTest {
-        viewModel.onCreateListClicked()
+        viewModel.onCreateListClick()
         assertThat(viewModel.screenState.value.showCreateListBottomSheet).isTrue()
         assertThat(viewModel.screenState.value.showAddToListBottomSheet).isFalse()
     }
@@ -441,7 +441,7 @@ class SeriesDetailsViewModelTest {
             1,
             "Rated successfully"
         )
-        viewModel.onSubmitRateClicked(5)
+        viewModel.onSubmitRateClick(5)
         advanceUntilIdle()
         assertThat(viewModel.screenState.value.isRated).isTrue()
         assertThat(viewModel.screenState.value.showSnackBar).isFalse()

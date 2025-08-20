@@ -23,6 +23,13 @@ import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.details.DetailsFailContent
+import com.cairosquad.ui.details.artist.composable.ArtistBackgroundImage
+import com.cairosquad.ui.details.artist.composable.ArtistBiography
+import com.cairosquad.ui.details.artist.composable.ArtistDepartment
+import com.cairosquad.ui.details.artist.composable.ArtistImage
+import com.cairosquad.ui.details.artist.composable.ArtistInformation
+import com.cairosquad.ui.details.artist.composable.ArtistMoviesAndSeries
+import com.cairosquad.ui.details.artist.composable.ArtistName
 import com.cairosquad.viewmodel.details.artist.ArtistInteractionListener
 import com.cairosquad.viewmodel.details.artist.ArtistScreenState
 
@@ -71,7 +78,7 @@ fun ArtistScreenContent(
             }
         }
         AppBar(
-            onBackButtonClicked = listener::onClickBack,
+            onBackButtonClicked = listener::onBackClick,
             modifier = Modifier
                 .background(animatedBrush)
                 .windowInsetsPadding(WindowInsets.statusBars)

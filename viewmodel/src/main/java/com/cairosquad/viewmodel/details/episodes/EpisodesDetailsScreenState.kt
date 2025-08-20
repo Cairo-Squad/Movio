@@ -21,7 +21,7 @@ data class EpisodesDetailsScreenState(
         val id: Long = 0L,
         val name: String = "",
         val number: Int = 0,
-        val runtime: Int = 0,
+        val runtime: Int? = null,
         val rating: Float = 0F,
         val imageUrl: String = ""
     )

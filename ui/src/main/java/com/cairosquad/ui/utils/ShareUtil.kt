@@ -5,6 +5,8 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
+import android.widget.Toast
 import androidx.core.net.toUri
 import com.cairosquad.ui.R
 
@@ -36,15 +38,27 @@ object ShareUtil {
         onDismiss()
     }
 
-    fun copyLink(seriesUrl: String, context: Context, onDismiss: (Int, Boolean) -> Unit) {
+    fun copyLink(seriesUrl: String, context: Context, isSeries: Boolean, onDismiss: () -> Unit) {
         try {
+            val label =
+                context.getString(if (isSeries) R.string.series_link else R.string.movie_link)
             val clipboard =
                 context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
-            val clip = ClipData.newPlainText("Series link", seriesUrl)
+            val clip = ClipData.newPlainText(label, seriesUrl)
             clipboard?.setPrimaryClip(clip)
-            onDismiss(R.string.copied_to_clipboard_successfully, true)
+            onDismiss()
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                Toast.makeText(
+                    context,
+                    R.string.copied_to_clipboard_successfully,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
         } catch (_: Exception) {
-            onDismiss(R.string.copied_to_clipboard_successfully, false)
+            onDismiss()
+            Toast.makeText(context, R.string.copied_to_clipboard_unsuccessfully, Toast.LENGTH_SHORT)
+                .show()
         }
     }
 

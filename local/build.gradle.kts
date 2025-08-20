@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
-    id("org.jetbrains.kotlin.kapt")
+    alias(libs.plugins.kotlin.kapt)
     id("androidx.room") version "2.7.1"
 }
 
@@ -56,29 +56,28 @@ android {
 
 dependencies {
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.junit.ktx)
-    implementation(libs.androidx.datastore.preferences)
-    implementation(libs.androidx.datastore.core)
+    implementation(libs.core.ktx)
+    implementation(libs.test.junit.ktx)
+    implementation(libs.datastore.preferences)
+    implementation(libs.datastore.core)
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.test.junit)
 
     // Room
-    implementation(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.ktx)
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler)
+    implementation(libs.room.ktx)
 
     testImplementation(libs.mockk)
     testImplementation(libs.truth)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.androidx.room.testing)
-    testImplementation(libs.androidx.core.testing)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.room.testing)
+    testImplementation(libs.core.testing)
 
-    androidTestImplementation(libs.androidx.room.testing)
-    androidTestImplementation(libs.androidx.runner)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.kotlinx.coroutines.test)
-    androidTestImplementation(libs.androidx.core.testing)
+    androidTestImplementation(libs.room.testing)
+    androidTestImplementation(libs.runner)
+    androidTestImplementation(libs.coroutines.test)
+    androidTestImplementation(libs.core.testing)
     androidTestImplementation(libs.mockk)
     androidTestImplementation(libs.truth)
 
@@ -87,7 +86,7 @@ dependencies {
     kapt(libs.hilt.compiler)
 
     // Data Store
-    implementation(libs.bundles.datastore.preferences)
+    implementation(libs.bundles.datastore)
 
 
     implementation(project(":repository"))

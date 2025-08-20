@@ -38,11 +38,8 @@ fun SearchLoadingContentWithStickyHeader(
                 onValueChange = { },
                 placeholder = stringResource(R.string.search_with_dotes_ahead),
                 leadingIcon = R.drawable.search_bottom_nav,
-                onFocusChanged = {
-                    if (it) {
-                        listener.onClickSearchTextField()
-                    }
-                },
+                isFocusEnabled = false,
+                onClick = listener::onClickSearchTextField,
                 readOnly = true
             )
         }

@@ -15,7 +15,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
-import com.cairosquad.ui.details.similar_series.content.SimilarSeriesGrid
+import com.cairosquad.ui.details.similar_series.content.SimilarSeriesContent
 import com.cairosquad.ui.details.similar_series.content.SimilarSeriesScreenEffects
 import com.cairosquad.viewmodel.details.similar_series.SimilarSeriesViewModel
 
@@ -37,8 +37,8 @@ fun SimilarSeriesScreen(
     ) {
         AppBar(
             title = stringResource(R.string.similar_series),
-            onBackButtonClicked = { viewModel.onClickBack() },
+            onBackButtonClicked = { viewModel.onBackClick() },
         )
-        SimilarSeriesGrid(state, viewModel, seriesId)
+        SimilarSeriesContent(state, viewModel, seriesId)
     }
 }

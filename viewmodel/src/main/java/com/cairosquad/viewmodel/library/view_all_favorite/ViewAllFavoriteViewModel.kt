@@ -6,6 +6,8 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.AccountUseCase
+import com.cairosquad.entity.Movie
+import com.cairosquad.entity.Series
 import com.cairosquad.viewmodel.R
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
@@ -35,137 +37,43 @@ class ViewAllFavoriteViewModel @Inject constructor(
 
     private fun getFavoriteSeries() {
         tryToCall(
-            block = {
-                accountUseCase.getFavoriteSeries(1)
-            },
-            onSuccess = { seriesList ->
-                val filteredSeries = seriesList.filterNot { series ->
-                    series.id in screenState.value.deletedSeriesIds
-                }.map { it.toUiState() }
-                updateState {
-                    it.copy(
-                        series = filteredSeries,
-                        screenStatus = ViewAllFavoriteScreenState.SectionStatus.SUCCESS
-                    )
-                }
-            },
-            onError = {
-                updateScreenStatus(ViewAllFavoriteScreenState.SectionStatus.ERROR)
-                updateErrorStatus(it)
-            }
+            block = { accountUseCase.getFavoriteSeries(FIRST_PAGE) },
+            onSuccess = ::handleSeriesSuccess,
+            onError = ::handleFavoritesError
         )
     }
 
     private fun getFavoriteMovies() {
         tryToCall(
-            block = {
-                accountUseCase.getFavoriteMovies(1)
-            },
-            onSuccess = { movies ->
-                val filteredMovies = movies.filterNot { movie ->
-                    movie.id in screenState.value.deletedMoviesIds
-                }.map { it.toUiState() }
-                updateState {
-                    it.copy(
-                        movies = filteredMovies,
-                        screenStatus = ViewAllFavoriteScreenState.SectionStatus.SUCCESS
-                    )
-                }
-            },
-            onError = {
-                updateScreenStatus(ViewAllFavoriteScreenState.SectionStatus.ERROR)
-                updateErrorStatus(it)
-            }
+            block = { accountUseCase.getFavoriteMovies(FIRST_PAGE) },
+            onSuccess = ::handleMoviesSuccess,
+            onError = ::handleFavoritesError
         )
     }
 
-    override fun onBackClicked() {
-        sendEffect(ViewAllFavoriteEffect.OnNavigateBack)
-    }
+    override fun onBackClick() = sendEffect(ViewAllFavoriteEffect.OnNavigateBack)
 
-    override fun onMovieClicked(movieId: Long) {
-        sendEffect(ViewAllFavoriteEffect.OnMovieClicked(movieId))
-    }
+    override fun onMovieClick(movieId: Long) = sendEffect(ViewAllFavoriteEffect.OnMovieClicked(movieId))
 
-    override fun onSeriesClicked(seriesId: Long) {
-        sendEffect(ViewAllFavoriteEffect.OnSeriesClicked(seriesId))
-    }
+    override fun onSeriesClick(seriesId: Long) = sendEffect(ViewAllFavoriteEffect.OnSeriesClicked(seriesId))
 
     override fun onMovieDelete(movieId: Long) {
         tryToCall(
-            onStart = {
-                updateState { state ->
-                    state.copy(
-                        movies = state.movies.filter { it.id != movieId },
-                        deletedMoviesIds = state.deletedMoviesIds + movieId,
-                        deletedItems = state.deletedItems + "${movieId}, movie"
-                    )
-                }
-            },
+            onStart = { handleMovieDeleteStart(movieId) },
             block = { accountUseCase.removeMovieFromFavorite(movieId) },
-            onSuccess = {
-                updateState {
-                    it.copy(
-                        showSnackBar = true,
-                        isProcessSuccess = true,
-                        snackMessageId = R.string.movie_favorite_remove_success
-                    )
-                }
-            },
-            onError = {
-                updateState {
-                    it.copy(
-                        showSnackBar = true,
-                        isProcessSuccess = false,
-                        snackMessageId = R.string.movie_favorite_remove_fail
-                    )
-                }
-            },
-            onEnd = {
-                delay(2000)
-                updateState {
-                    it.copy(showSnackBar = false)
-                }
-            }
+            onSuccess = { handleMovieDeleteSuccess() },
+            onError = { handleMovieDeleteError() },
+            onEnd = { handleDeleteEnd() }
         )
     }
 
     override fun onSeriesDelete(seriesId: Long) {
         tryToCall(
-            onStart = {
-                updateState { state ->
-                    state.copy(
-                        series = state.series.filter { it.id != seriesId },
-                        deletedSeriesIds = state.deletedSeriesIds + seriesId,
-                        deletedItems = state.deletedItems + "${seriesId}, series"
-                    )
-                }
-            },
+            onStart = { handleSeriesDeleteStart(seriesId) },
             block = { accountUseCase.removeSeriesFromFavorite(seriesId) },
-            onSuccess = {
-                updateState {
-                    it.copy(
-                        showSnackBar = true,
-                        isProcessSuccess = true,
-                        snackMessageId = R.string.series_favorite_remove_success
-                    )
-                }
-            },
-            onError = {
-                updateState {
-                    it.copy(
-                        showSnackBar = true,
-                        isProcessSuccess = false,
-                        snackMessageId = R.string.series_favorite_remove_fail
-                    )
-                }
-            },
-            onEnd = {
-                delay(2000)
-                updateState {
-                    it.copy(showSnackBar = false)
-                }
-            }
+            onSuccess = { handleSeriesDeleteSuccess() },
+            onError = { handleSeriesDeleteError() },
+            onEnd = { handleDeleteEnd() }
         )
     }
 
@@ -173,68 +81,154 @@ class ViewAllFavoriteViewModel @Inject constructor(
         viewModelScope.launch {
             updateState { it.copy(isRefreshing = true) }
             getFavorites()
-            delay(500L)
+            delay(REFRESH_DELAY)
             updateState { it.copy(isRefreshing = true) }
         }
     }
 
-    override fun onUndoClicked() {
+    override fun onUndoClick() {
         tryToCall(
-            block = {
-                val item = screenState.value.deletedItems.last().split(", ")
-                when (item[1]) {
-                    "movie" -> {
-                        accountUseCase.addMovieToFavorite(item[0].toLong())
-                    }
+            block = { handleUndoBlock() },
+            onSuccess = { handleUndoSuccess() },
+            onError = { handleUndoError() },
+            onEnd = { handleDeleteEnd() }
+        )
+    }
 
-                    "series" -> {
-                        accountUseCase.addSeriesToFavorite(item[0].toLong())
-                    }
-                }
-            },
-            onSuccess = {
-                val item = screenState.value.deletedItems.last().split(", ")
+    private fun handleSeriesSuccess(seriesList: List<Series>) {
+        val filteredSeries = seriesList.filterNot { it.id in screenState.value.deletedSeriesIds }
+            .map { it.toUiState() }
+        updateState {
+            it.copy(
+                series = filteredSeries,
+                screenStatus = ViewAllFavoriteScreenState.SectionStatus.SUCCESS
+            )
+        }
+    }
 
-                when (item[1]) {
-                    "movie" -> {
-                        updateState {
-                            it.copy(
-                                deletedItems = it.deletedItems.dropLast(1),
-                                deletedMoviesIds = it.deletedMoviesIds.dropLast(1),
-                                showSnackBar = false
-                            )
-                        }
-                        getFavoriteMovies()
-                    }
+    private fun handleMoviesSuccess(movies: List<Movie>) {
+        val filteredMovies = movies.filterNot { it.id in screenState.value.deletedMoviesIds }
+            .map { it.toUiState() }
+        updateState {
+            it.copy(
+                movies = filteredMovies,
+                screenStatus = ViewAllFavoriteScreenState.SectionStatus.SUCCESS
+            )
+        }
+    }
 
-                    "series" -> {
-                        updateState {
-                            it.copy(
-                                deletedItems = it.deletedItems.dropLast(1),
-                                deletedSeriesIds = it.deletedSeriesIds.dropLast(1),
-                                showSnackBar = false
-                            )
-                        }
-                        getFavoriteSeries()
-                    }
-                }
-            },
-            onError = {
+    private fun handleFavoritesError(throwable: Throwable) {
+        updateScreenStatus(ViewAllFavoriteScreenState.SectionStatus.ERROR)
+        updateErrorStatus(throwable)
+    }
+
+    private fun handleMovieDeleteStart(movieId: Long) {
+        updateState { state ->
+            state.copy(
+                movies = state.movies.filter { it.id != movieId },
+                deletedMoviesIds = state.deletedMoviesIds + movieId,
+                deletedItems = state.deletedItems + "$movieId, movie"
+            )
+        }
+    }
+
+    private fun handleMovieDeleteSuccess() {
+        updateState {
+            it.copy(
+                showSnackBar = true,
+                isProcessSuccess = true,
+                snackMessageId = R.string.movie_favorite_remove_success
+            )
+        }
+    }
+
+    private fun handleMovieDeleteError() {
+        updateState {
+            it.copy(
+                showSnackBar = true,
+                isProcessSuccess = false,
+                snackMessageId = R.string.movie_favorite_remove_fail
+            )
+        }
+    }
+
+    private fun handleSeriesDeleteStart(seriesId: Long) {
+        updateState { state ->
+            state.copy(
+                series = state.series.filter { it.id != seriesId },
+                deletedSeriesIds = state.deletedSeriesIds + seriesId,
+                deletedItems = state.deletedItems + "$seriesId, series"
+            )
+        }
+    }
+
+    private fun handleSeriesDeleteSuccess() {
+        updateState {
+            it.copy(
+                showSnackBar = true,
+                isProcessSuccess = true,
+                snackMessageId = R.string.series_favorite_remove_success
+            )
+        }
+    }
+
+    private fun handleSeriesDeleteError() {
+        updateState {
+            it.copy(
+                showSnackBar = true,
+                isProcessSuccess = false,
+                snackMessageId = R.string.series_favorite_remove_fail
+            )
+        }
+    }
+
+    private suspend fun handleDeleteEnd() {
+        delay(SNACKBAR_DURATION)
+        updateState { it.copy(showSnackBar = false) }
+    }
+
+    private suspend fun handleUndoBlock() {
+        val item = screenState.value.deletedItems.last().split(ITEM_DELIMITER)
+        when (item[FIRST_PAGE]) {
+            TYPE_MOVIE -> accountUseCase.addMovieToFavorite(item[0].toLong())
+            TYPE_SERIES -> accountUseCase.addSeriesToFavorite(item[0].toLong())
+        }
+    }
+
+    private fun handleUndoSuccess() {
+        val item = screenState.value.deletedItems.last().split(ITEM_DELIMITER)
+        when (item[FIRST_PAGE]) {
+            TYPE_MOVIE -> {
                 updateState {
                     it.copy(
-                        showSnackBar = true,
-                        isProcessSuccess = false,
-                        snackMessageId = R.string.favorite_restore_fail
+                        deletedItems = it.deletedItems.dropLast(FIRST_PAGE),
+                        deletedMoviesIds = it.deletedMoviesIds.dropLast(FIRST_PAGE),
+                        showSnackBar = false
                     )
                 }
-            },
-            onEnd = {
-                delay(2000)
-                updateState {
-                    it.copy(showSnackBar = false)
-                }
+                getFavoriteMovies()
             }
-        )
+            TYPE_SERIES -> {
+                updateState {
+                    it.copy(
+                        deletedItems = it.deletedItems.dropLast(FIRST_PAGE),
+                        deletedSeriesIds = it.deletedSeriesIds.dropLast(FIRST_PAGE),
+                        showSnackBar = false
+                    )
+                }
+                getFavoriteSeries()
+            }
+        }
+    }
+
+    private fun handleUndoError() {
+        updateState {
+            it.copy(
+                showSnackBar = true,
+                isProcessSuccess = false,
+                snackMessageId = R.string.favorite_restore_fail
+            )
+        }
     }
 
     private fun updateScreenStatus(status: ViewAllFavoriteScreenState.SectionStatus) {
@@ -270,5 +264,14 @@ class ViewAllFavoriteViewModel @Inject constructor(
             is MovioException -> exceptionToErrorStatus(e)
             else -> ErrorStatus.UNKNOWN_ERROR
         }
+    }
+
+     companion object {
+        private const val FIRST_PAGE = 1
+        private const val REFRESH_DELAY = 500L
+        private const val SNACKBAR_DURATION = 2000L
+        private const val ITEM_DELIMITER = ", "
+        private const val TYPE_MOVIE = "movie"
+        private const val TYPE_SERIES = "series"
     }
 }

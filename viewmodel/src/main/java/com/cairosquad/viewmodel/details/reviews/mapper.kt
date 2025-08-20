@@ -1,15 +1,16 @@
 package com.cairosquad.viewmodel.details.reviews
 
 import com.cairosquad.entity.Review
+import com.cairosquad.viewmodel.util.localizeNumbers
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 fun Review.toUiState() = ReviewsScreenState.ReviewUiState(
-    reviewerName = author,
+    reviewerName = author.localizeNumbers(),
     reviewDate = Timestamp(date).toDateFormat(),
     rating = String.format(Locale.getDefault(), "%.1f", rating),
-    reviewText = description,
+    reviewText = description.localizeNumbers(),
     reviewerImageUrl = authorPhotoPath
 )
 

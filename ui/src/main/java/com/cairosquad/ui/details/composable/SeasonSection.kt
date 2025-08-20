@@ -18,6 +18,7 @@ import com.cairosquad.ui.BuildConfig
 import com.cairosquad.ui.movio_component.SeasonCard
 import com.cairosquad.ui.movio_component.SectionHeader
 import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState
+import com.cairosquad.viewmodel.util.toLocalString
 
 @Composable
 fun SeasonSection(
@@ -44,11 +45,11 @@ fun SeasonSection(
                 seriesName = seriesName,
                 seasonTitle = season.name,
                 seasonRate = season.rating,
-                totalNumberOfEpisodes = season.episodesCount.toString(),
+                totalNumberOfEpisodes = season.episodesCount.toLocalString(),
                 movieImage = BuildConfig.IMAGE_BASE_URL + season.posterPath,
                 yearOfPublish = season.airDate,
                 timeOfPublish = season.airDate,
-                currentSeason = season.number.toString(),
+                currentSeason = season.number.toLocalString(),
                 onClick = {
                     onSeasonClicked(seriesId, season.number)
                 },

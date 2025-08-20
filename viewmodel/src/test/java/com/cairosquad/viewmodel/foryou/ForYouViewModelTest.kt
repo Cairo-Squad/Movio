@@ -66,7 +66,7 @@ class ForYouViewModelTest {
         advanceUntilIdle()
 
         assertNotNull(viewModel.screenState.value.forYou)
-        assertEquals(ForYouState.ScreenStatus.SUCCESS, viewModel.screenState.value.screenStatus)
+        assertEquals(ForYouScreenState.ScreenStatus.SUCCESS, viewModel.screenState.value.screenStatus)
     }
 
     @Test
@@ -99,7 +99,7 @@ class ForYouViewModelTest {
         advanceUntilIdle()
 
         assertNotNull(viewModel.screenState.value.forYou)
-        assertEquals(ForYouState.ScreenStatus.SUCCESS, viewModel.screenState.value.screenStatus)
+        assertEquals(ForYouScreenState.ScreenStatus.SUCCESS, viewModel.screenState.value.screenStatus)
     }
 
     @Test
@@ -108,7 +108,7 @@ class ForYouViewModelTest {
         viewModel = ForYouViewModel(forYouPager)
 
         viewModel.effect.test {
-            viewModel.onMovieClicked(10L)
+            viewModel.onMovieClick(10L)
             assertEquals(ForYouEffect.NavigateToMovieDetails(10L), awaitItem())
             cancelAndConsumeRemainingEvents()
         }

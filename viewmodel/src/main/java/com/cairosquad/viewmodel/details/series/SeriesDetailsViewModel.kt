@@ -40,11 +40,15 @@ class SeriesDetailsViewModel @AssistedInject constructor(
     }
 
     init {
-        loadDetails()
+        initScreen()
+    }
+
+    private fun initScreen() {
+        fetchDetailsData()
         addSeriesToHistory()
     }
 
-    fun loadDetails() {
+    private fun fetchDetailsData() {
         getSeriesDetails()
         getTopCast()
         getSeasons()
@@ -52,21 +56,44 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         getSimilarSeries()
     }
 
-    private fun getSeriesInFavorite() {
-        checkUserLoggedIn {
-            loadFavoriteSeries()
+    fun updateStateAfterLoggingIn() {
+        tryToCall(
+            onStart = ::closeAllBottomSheets,
+            block = { accountUseCase.getAccountDetails() },
+            onSuccess = ::updateRatedAndFavoriteSeries,
+            onError = {}
+        )
+    }
+
+    private fun closeAllBottomSheets() {
+        updateState {
+            it.copy(
+                showShareBottomSheet = false,
+                showRateBottomSheet = false,
+                showSuccessRatedBottomSheet = false,
+                showAddToListBottomSheet = false,
+                showLoginBottomSheet = false,
+                showCreateListBottomSheet = false,
+            )
         }
     }
 
+    private fun updateRatedAndFavoriteSeries(response: Unit) {
+        getSeriesInFavorite()
+        getSeriesInRated()
+    }
+
+    private fun getSeriesInFavorite() {
+        checkUserLoggedIn { loadFavoriteSeries() }
+    }
+
     private fun getSeriesInRated() {
-        checkUserLoggedIn {
-            loadRatedSeries()
-        }
+        checkUserLoggedIn { loadRatedSeries() }
     }
 
     private fun loadRatedSeries() {
         tryToCall(
-            block = { ratedItemsUseCase.getRatedSeries(1) },
+            block = { ratedItemsUseCase.getRatedSeries(FIRST_PAGE) },
             onSuccess = ::onLoadRatedSeriesSuccess,
             onError = ::onLoadRatedSeriesError
         )
@@ -85,9 +112,7 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         }
     }
 
-    private fun onLoadRatedSeriesError(throwable: Throwable) {
-
-    }
+    private fun onLoadRatedSeriesError(throwable: Throwable) {}
 
     private fun checkUserLoggedIn(onLoggedIn: () -> Unit) {
         tryToCall(
@@ -102,7 +127,7 @@ class SeriesDetailsViewModel @AssistedInject constructor(
 
     private fun loadFavoriteSeries() {
         tryToCall(
-            block = { accountUseCase.getFavoriteSeries(1) },
+            block = { accountUseCase.getFavoriteSeries(FIRST_PAGE) },
             onSuccess = ::onLoadFavoriteSeriesSuccess,
             onError = {}
         )
@@ -120,15 +145,15 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         )
     }
 
-    override fun onBackClicked() {
+    override fun onBackClick() {
         sendEffect(SeriesDetailEffect.NavigateBack)
     }
 
-    override fun onShareClicked() {
+    override fun onShareClick() {
         updateState { it.copy(showShareBottomSheet = true) }
     }
 
-    override fun onFavoriteClicked() {
+    override fun onFavoriteClick() {
         tryToCall(
             block = loginUseCase::isUserLoggedIn,
             onSuccess = ::onFavoriteClickedSuccess,
@@ -165,7 +190,7 @@ class SeriesDetailsViewModel @AssistedInject constructor(
                     isFavorite = false
                 )
             }
-            delay(2000)
+            delay(SNACKBAR_DURATION)
             updateState { it.copy(showSnackBar = false) }
         }
     }
@@ -191,7 +216,7 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         showSnackBar(messageId = R.string.series_favorite_fail, isSuccessful = false)
     }
 
-    override fun onRateClicked() {
+    override fun onRateClick() {
         tryToCall(
             block = loginUseCase::isUserLoggedIn,
             onSuccess = ::onRateClickedSuccess,
@@ -211,11 +236,11 @@ class SeriesDetailsViewModel @AssistedInject constructor(
     }
 
 
-    override fun onPlayTrailerClicked() {
+    override fun onPlayTrailerClick() {
         sendEffect(SeriesDetailEffect.PlayTrailer)
     }
 
-    override fun onAddToListClicked() {
+    override fun onAddToListClick() {
         tryToCall(
             block = loginUseCase::isUserLoggedIn,
             onSuccess = { authed ->
@@ -230,7 +255,7 @@ class SeriesDetailsViewModel @AssistedInject constructor(
                         )
                     }
                     viewModelScope.launch {
-                        delay(2000)
+                        delay(SNACKBAR_DURATION)
                         updateState { it.copy(showSnackBar = false) }
                     }
                 }
@@ -242,7 +267,7 @@ class SeriesDetailsViewModel @AssistedInject constructor(
 
     private fun loadSeriesLists() {
         tryToCall(
-            block = { accountUseCase.getSeriesLists(1) },
+            block = { accountUseCase.getSeriesLists(FIRST_PAGE) },
             onSuccess = ::onLoadSeriesListsSuccess,
             onError = {}
         )
@@ -256,7 +281,7 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         }
     }
 
-    override fun onCreateListClicked() {
+    override fun onCreateListClick() {
         updateState { it.copy(showAddToListBottomSheet = false, showCreateListBottomSheet = true) }
     }
 
@@ -292,7 +317,7 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         updateState { it.copy(rating = rate) }
     }
 
-    override fun onSubmitRateClicked(rate: Int) {
+    override fun onSubmitRateClick(rate: Int) {
         tryToCall(
             block = { manageSeriesUseCase.addSeriesRating(seriesId, rate.toFloat() * 2) },
             onSuccess = { onSubmitRateClickedSuccess(rate) },
@@ -316,15 +341,11 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         showSnackBar(R.string.rated_failed, false)
     }
 
-    override fun onCopy(messageId: Int, isSuccessful: Boolean) {
+    override fun onCopy() {
         onDismissShareBottomSheet()
-        viewModelScope.launch {
-            delay(500)
-            showSnackBar(messageId, isSuccessful)
-        }
     }
 
-    fun showSnackBar(messageId: Int, isSuccessful: Boolean, durationMillis: Long = 2000) {
+    fun showSnackBar(messageId: Int, isSuccessful: Boolean, durationMillis: Long = SNACKBAR_DURATION) {
         viewModelScope.launch {
             updateState {
                 it.copy(
@@ -338,15 +359,15 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         }
     }
 
-    override fun onArtistClicked(artistId: Long) {
+    override fun onArtistClick(artistId: Long) {
         sendEffect(SeriesDetailEffect.NavigateToArtistDetails(artistId))
     }
 
-    override fun onSeeAllArtistsClicked(seriesId: Long) {
+    override fun onSeeAllArtistsClick(seriesId: Long) {
         sendEffect(SeriesDetailEffect.NavigateToAllArtists(seriesId))
     }
 
-    override fun onSeasonClicked(seriesId: Long, seasonNumber: Int) {
+    override fun onSeasonClick(seriesId: Long, seasonNumber: Int) {
         sendEffect(
             SeriesDetailEffect.NavigateToSeasonDetails(
                 seriesId = seriesId,
@@ -355,29 +376,19 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         )
     }
 
-    override fun onSeeAllSeasonsClicked(seriesId: Long) {
+    override fun onSeeAllSeasonsClick(seriesId: Long) {
         sendEffect(SeriesDetailEffect.NavigateToAllSeasons(seriesId))
     }
 
-    override fun onSeeAllReviewsClicked(seriesId: Long) {
-        sendEffect(SeriesDetailEffect.NavigateToAllReviews(seriesId))
-    }
+    override fun onSeeAllReviewsClick(seriesId: Long) { sendEffect(SeriesDetailEffect.NavigateToAllReviews(seriesId)) }
 
-    override fun onSeriesClicked(seriesId: Long) {
-        sendEffect(SeriesDetailEffect.NavigateToSeriesDetails(seriesId))
-    }
+    override fun onSeriesClick(seriesId: Long) { sendEffect(SeriesDetailEffect.NavigateToSeriesDetails(seriesId)) }
 
-    override fun onSeeAllSimilarClicked(seriesId: Long) {
-        sendEffect(SeriesDetailEffect.NavigateToAllSimilar(seriesId))
-    }
+    override fun onSeeAllSimilarClick(seriesId: Long) { sendEffect(SeriesDetailEffect.NavigateToAllSimilar(seriesId)) }
 
-    override fun onNavigateToLogin() {
-        sendEffect(SeriesDetailEffect.NavigateToLogin)
-    }
+    override fun onNavigateToLogin() { sendEffect(SeriesDetailEffect.NavigateToLogin) }
 
-    override fun onRefresh() {
-        loadDetails()
-    }
+    override fun onRefresh() { fetchDetailsData() }
 
     private fun getSeriesDetails() {
         tryToCall(
@@ -409,16 +420,14 @@ class SeriesDetailsViewModel @AssistedInject constructor(
     private fun getTopCast() {
         tryToCall(
             onStart = ::onGetTopCastStart,
-            block = { manageSeriesUseCase.getSeriesTopCast(seriesId, 1) },
+            block = { manageSeriesUseCase.getSeriesTopCast(seriesId, FIRST_PAGE) },
             onSuccess = ::onGetTopCastSuccess,
             onError = ::onGetTopCastError,
             dispatcher = Dispatchers.IO
         )
     }
 
-    private fun onGetTopCastStart() {
-        updateState { it.copy(castSectionState = SectionStatus.LOADING) }
-    }
+    private fun onGetTopCastStart() { updateState { it.copy(castSectionState = SectionStatus.LOADING) } }
 
     private fun onGetTopCastSuccess(cast: List<Artist>) {
         updateState {
@@ -429,9 +438,7 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         }
     }
 
-    private fun onGetTopCastError(throwable: Throwable) {
-        setError(throwable) { copy(castSectionState = SectionStatus.ERROR) }
-    }
+    private fun onGetTopCastError(throwable: Throwable) {setError(throwable) { copy(castSectionState = SectionStatus.ERROR) } }
 
     private fun getSeasons() {
         tryToCall(
@@ -443,9 +450,7 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         )
     }
 
-    private fun onGetSeasonsStart() {
-        updateState { it.copy(seasonsSectionState = SectionStatus.LOADING) }
-    }
+    private fun onGetSeasonsStart() {updateState { it.copy(seasonsSectionState = SectionStatus.LOADING) } }
 
     private fun onGetSeasonsSuccess(seasons: List<Season>) {
         updateState {
@@ -456,23 +461,19 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         }
     }
 
-    private fun onGetSeasonsError(throwable: Throwable) {
-        setError(throwable) { copy(seasonsSectionState = SectionStatus.ERROR) }
-    }
+    private fun onGetSeasonsError(throwable: Throwable) {setError(throwable) { copy(seasonsSectionState = SectionStatus.ERROR) } }
 
     private fun getReviews() {
         tryToCall(
             onStart = ::onGetReviewsStart,
-            block = { manageSeriesUseCase.getSeriesReviews(seriesId, 1) },
+            block = { manageSeriesUseCase.getSeriesReviews(seriesId, FIRST_PAGE) },
             onSuccess = ::onGetReviewsSuccess,
             onError = ::onGetReviewsError,
             dispatcher = Dispatchers.IO
         )
     }
 
-    private fun onGetReviewsStart() {
-        updateState { it.copy(reviewsSectionState = SectionStatus.LOADING) }
-    }
+    private fun onGetReviewsStart() {updateState { it.copy(reviewsSectionState = SectionStatus.LOADING) } }
 
     private fun onGetReviewsSuccess(reviews: List<Review>) {
         updateState {
@@ -483,23 +484,19 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         }
     }
 
-    private fun onGetReviewsError(throwable: Throwable) {
-        setError(throwable) { copy(reviewsSectionState = SectionStatus.ERROR) }
-    }
+    private fun onGetReviewsError(throwable: Throwable) {setError(throwable) { copy(reviewsSectionState = SectionStatus.ERROR) } }
 
     private fun getSimilarSeries() {
         tryToCall(
             onStart = ::onGetSimilarSeriesStart,
-            block = { manageSeriesUseCase.getSimilarSeries(seriesId, 1) },
+            block = { manageSeriesUseCase.getSimilarSeries(seriesId, FIRST_PAGE) },
             onSuccess = ::onGetSimilarSeriesSuccess,
             onError = ::onGetSimilarSeriesError,
             dispatcher = Dispatchers.IO
         )
     }
 
-    private fun onGetSimilarSeriesStart() {
-        updateState { it.copy(similarSeriesSectionState = SectionStatus.LOADING) }
-    }
+    private fun onGetSimilarSeriesStart() { updateState { it.copy(similarSeriesSectionState = SectionStatus.LOADING) } }
 
     private fun onGetSimilarSeriesSuccess(similarSeries: List<Series>) {
         updateState {
@@ -510,28 +507,24 @@ class SeriesDetailsViewModel @AssistedInject constructor(
         }
     }
 
-    private fun onGetSimilarSeriesError(throwable: Throwable) {
-        setError(throwable) { copy(similarSeriesSectionState = SectionStatus.ERROR) }
-    }
+    private fun onGetSimilarSeriesError(throwable: Throwable) { setError(throwable) { copy(similarSeriesSectionState = SectionStatus.ERROR) } }
 
     private fun setError(
         throwable: Throwable,
         updateSection: SeriesDetailsScreenState.() -> SeriesDetailsScreenState
     ) {
-        updateState {
-            it.updateSection().copy(
-                errorStatus = handleDetailsException(throwable)
-            )
-        }
+        updateState { it.updateSection().copy(errorStatus = handleDetailsException(throwable)) }
     }
 
     fun handleDetailsException(e: Throwable): ErrorStatus {
         return when (e) {
-            is MovioException -> {
-                exceptionToErrorStatus(e)
-            }
-
+            is MovioException -> { exceptionToErrorStatus(e) }
             else -> ErrorStatus.UNKNOWN_ERROR
         }
+    }
+
+     companion object {
+         private const val FIRST_PAGE = 1
+         private const val SNACKBAR_DURATION = 2000L
     }
 }

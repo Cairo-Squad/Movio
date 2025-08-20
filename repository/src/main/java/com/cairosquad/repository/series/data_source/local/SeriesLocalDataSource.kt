@@ -15,6 +15,8 @@ interface SeriesLocalDataSource {
 
     suspend fun getSeriesGenres(): List<GenreOfSeriesCacheDto>
 
+    suspend fun getSeriesGenresByLanguage(language: String): List<GenreOfSeriesCacheDto>
+
     suspend fun getSeriesReviewsByCacheCode(cacheCode: String): List<ReviewCacheDto>
 
     suspend fun insertCacheCodeWithReviews(cacheCodeWithReviewsCacheDto: CacheCodeWithReviewsCacheDto)

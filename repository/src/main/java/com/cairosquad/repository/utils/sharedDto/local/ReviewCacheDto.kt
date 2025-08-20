@@ -8,8 +8,10 @@ import java.util.Date
 
 @Entity(tableName = "ReviewCacheDto")
 data class ReviewCacheDto(
-    @ColumnInfo("review_id")
     @PrimaryKey
+    @ColumnInfo("review_id_language")
+    val reviewIdWithLanguage: String,
+    @ColumnInfo("review_id")
     val id: String,
     @ColumnInfo("author")
     val author: String,

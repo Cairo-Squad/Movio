@@ -10,5 +10,4 @@ data class CreditResponse(
     val id: Int,
     @SerialName("cast")
     val cast: List<ArtistRemoteDto?>? = null,
-    // TODO: Add crew?
 )

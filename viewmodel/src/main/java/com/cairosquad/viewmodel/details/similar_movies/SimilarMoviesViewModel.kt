@@ -2,6 +2,7 @@ package com.cairosquad.viewmodel.details.similar_movies
 
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
+import com.cairosquad.entity.Movie
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.details.similar_movies.SimilarMoviesScreenState.ScreenStatus
 import com.cairosquad.viewmodel.exception.ErrorStatus
@@ -18,57 +19,50 @@ class SimilarMoviesViewModel @Inject constructor(
 
     fun fetchSimilarMovies(movieId: Long) {
         tryToCall(
-            onStart = {
-                updateState {
-                    it.copy(
-                        screenStatus = ScreenStatus.LOADING
-                    )
-                }
-            },
-            block = {
-                manageMoviesUseCase.getSimilarMovies(movieId)
-            }, onSuccess = { movies ->
-                updateState {
-                    it.copy(
-                        screenStatus = ScreenStatus.SUCCESS,
-                        movies = movies.map { it.toUiState() }
-                    )
-                }
-            },
-            onError = { e ->
-                updateState {
-                    it.copy(
-                        screenStatus = ScreenStatus.ERROR,
-                        errorStatus = when (e) {
-                            is MovioException ->
-                                exceptionToErrorStatus(e)
-
-                            else -> ErrorStatus.UNKNOWN_ERROR
-
-                        }
-                    )
-                }
-
-            },
+            onStart = ::onFetchStart,
+            block = { manageMoviesUseCase.getSimilarMovies(movieId) },
+            onSuccess = ::onFetchSuccess,
+            onError = ::onFetchError,
             dispatcher = Dispatchers.IO
-
-
         )
-
     }
 
+    private fun onFetchStart() {
+        updateState { it.copy(screenStatus = ScreenStatus.LOADING) }
+    }
 
-    override fun onClickBack() {
+    private fun onFetchSuccess(movies: List<Movie>) {
+        updateState {
+            it.copy(
+                screenStatus = ScreenStatus.SUCCESS,
+                movies = movies.map { it.toUiState() }
+            )
+        }
+    }
+
+    private fun onFetchError(e: Throwable) {
+        updateState {
+            it.copy(
+                screenStatus = ScreenStatus.ERROR,
+                errorStatus = when (e) {
+                    is MovioException -> exceptionToErrorStatus(e)
+                    else -> ErrorStatus.UNKNOWN_ERROR
+                }
+            )
+        }
+    }
+
+    override fun onBackClick() {
         sendEffect(SimilarMoviesEffect.NavigateBack)
     }
 
-    override fun onMovieClicked(movieId: Long) {
+    override fun onMovieClick(movieId: Long) {
         sendEffect(SimilarMoviesEffect.NavigateToMovieDetails(movieId))
     }
 
     override fun onRefresh(movieId: Long) {
-            updateState { it.copy(isRefreshing = true) }
-            fetchSimilarMovies(movieId)
-            updateState { it.copy(isRefreshing = false) }
+        updateState { it.copy(isRefreshing = true) }
+        fetchSimilarMovies(movieId)
+        updateState { it.copy(isRefreshing = false) }
     }
 }

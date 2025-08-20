@@ -1,6 +1,7 @@
 package com.cairosquad.ui.details.episodes.content
 
 import android.os.Build
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -10,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.unit.dp
+import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.safe_image_viewer.safe_image_viewer.SafeImageViewer
 import com.cairosquad.ui.BuildConfig
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState
@@ -38,6 +40,16 @@ fun SeasonBackgroundImage(state: EpisodesDetailsScreenState) {
                 blur = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) 16 else 0,
                 isBlurForced = true
             )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(400.dp)
+                        .blur(16.dp)
+                        .offset(y = (-28).dp)
+                        .background(Theme.color.surfaces.overlay)
+                )
+            }
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
                 BottomFadingGradient()
             }

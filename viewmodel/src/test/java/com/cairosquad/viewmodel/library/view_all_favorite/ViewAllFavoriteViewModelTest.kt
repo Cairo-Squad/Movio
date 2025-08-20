@@ -67,7 +67,7 @@ class ViewAllFavoriteViewModelTest {
     @Test
     fun `should send effect OnNavigateBack when onBackClicked is called`() = runTest {
         viewModel.effect.test {
-            viewModel.onBackClicked()
+            viewModel.onBackClick()
             assertThat(awaitItem()).isEqualTo(ViewAllFavoriteEffect.OnNavigateBack)
             cancelAndIgnoreRemainingEvents()
         }
@@ -76,7 +76,7 @@ class ViewAllFavoriteViewModelTest {
     @Test
     fun `should send effect OnMovieClicked when onMovieClicked is called`() = runTest {
         viewModel.effect.test {
-            viewModel.onMovieClicked(movie.id)
+            viewModel.onMovieClick(movie.id)
             assertThat(awaitItem()).isEqualTo(ViewAllFavoriteEffect.OnMovieClicked(movie.id))
             cancelAndIgnoreRemainingEvents()
         }
@@ -85,7 +85,7 @@ class ViewAllFavoriteViewModelTest {
     @Test
     fun `should send effect OnSeriesClicked when onSeriesClicked is called`() = runTest {
         viewModel.effect.test {
-            viewModel.onSeriesClicked(series.id)
+            viewModel.onSeriesClick(series.id)
             assertThat(awaitItem()).isEqualTo(ViewAllFavoriteEffect.OnSeriesClicked(series.id))
             cancelAndIgnoreRemainingEvents()
         }
@@ -179,7 +179,7 @@ class ViewAllFavoriteViewModelTest {
 
         viewModel.onMovieDelete(movie.id)
 
-        viewModel.onUndoClicked()
+        viewModel.onUndoClick()
         advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.movies).isEqualTo(listOf(movie.toUiState()))
@@ -196,7 +196,7 @@ class ViewAllFavoriteViewModelTest {
 
         viewModel.onSeriesDelete(series.id)
 
-        viewModel.onUndoClicked()
+        viewModel.onUndoClick()
         advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.series).isEqualTo(listOf(series.toUiState()))
@@ -213,7 +213,7 @@ class ViewAllFavoriteViewModelTest {
 
         viewModel.onMovieDelete(movie.id)
 
-        viewModel.onUndoClicked()
+        viewModel.onUndoClick()
         advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.isProcessSuccess).isFalse()

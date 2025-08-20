@@ -24,7 +24,13 @@ interface GenreDao {
      @Query("Select * From GenreOfMovieCacheDto")
      suspend fun getMovieGenres(): List<GenreOfMovieCacheDto>
 
+     @Query("Select * From GenreOfMovieCacheDto where language = :language")
+     suspend fun getMovieGenresByLanguage(language: String): List<GenreOfMovieCacheDto>
+
      @Query("Select * From GenreOfMovieCacheDto")
      suspend fun getSeriesGenres(): List<GenreOfSeriesCacheDto>
+
+     @Query("Select * From GenreOfMovieCacheDto where language = :language")
+     suspend fun getSeriesGenresByLanguage(language: String): List<GenreOfSeriesCacheDto>
 
 }

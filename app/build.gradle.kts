@@ -6,15 +6,15 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.gms.google.services)
     alias(libs.plugins.google.firebase.crashlytics)
     alias(libs.plugins.google.firebase.perf)
     alias(libs.plugins.google.firebase.appdistribution)
+    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.ksp)
-    id("org.jetbrains.kotlin.kapt")
-    alias(libs.plugins.kotlin.serialization)
-    id("androidx.room") version "2.7.1"
-    id("dagger.hilt.android.plugin")
+    alias(libs.plugins.room)
+    alias(libs.plugins.hilt.android)
 }
 
 android {
@@ -95,42 +95,30 @@ hilt {
 }
 
 dependencies {
-    testImplementation(libs.junit)
-    implementation(libs.androidx.ui)
-    implementation(libs.firebase.perf)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.firebase.analytics)
-    implementation(libs.androidx.foundation)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.firebase.crashlytics)
+    implementation(libs.bundles.android.core)
     implementation(platform(libs.firebase.bom))
-    debugImplementation(libs.androidx.ui.tooling)
-    androidTestImplementation(libs.ui.test.junit4)
-    implementation(libs.androidx.activity.compose)
-    androidTestImplementation(libs.androidx.junit)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    debugImplementation(libs.androidx.ui.test.manifest)
-    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.bundles.firebase)
+    implementation(platform(libs.compose.bom))
+    implementation(libs.bundles.compose)
+    implementation(libs.bundles.lifecycle)
 
     implementation(libs.logging.interceptor)
 
     // --- Retrofit 3 ---
     implementation(libs.retrofit)
-    implementation(libs.converter.kotlinx.serialization)
-    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.retrofit.converter.kotlinx.serialization)
+    implementation(libs.serialization.json)
     implementation (libs.okhttp)
 
     // Room
-    implementation(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.ktx)
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler)
+    implementation(libs.room.ktx)
 
     // Dagger & Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
-    kapt(libs.androidx.hilt.compiler)
+    kapt(libs.hilt.androidx.compiler)
     implementation(libs.dagger)
     kapt(libs.dagger.compiler)
 

@@ -32,7 +32,7 @@ class ViewAllHistoryViewModel @Inject constructor(
 
     private fun loadHistoryMovies() {
         tryToCall(
-            block = { accountUseCase.getHistoryMovies(1) },
+            block = { accountUseCase.getHistoryMovies(FIRST_PAGE) },
             onSuccess = ::onLoadHistoryMoviesSuccess,
             onError = ::onLoadHistoryMoviesError
         )
@@ -56,7 +56,7 @@ class ViewAllHistoryViewModel @Inject constructor(
 
     private fun loadHistorySeries() {
         tryToCall(
-            block = { accountUseCase.getHistorySeries(1) },
+            block = { accountUseCase.getHistorySeries(FIRST_PAGE) },
             onSuccess = ::onLoadHistorySeriesSuccess,
             onError = ::onLoadHistorySeriesError
         )
@@ -77,15 +77,15 @@ class ViewAllHistoryViewModel @Inject constructor(
         updateErrorStatus(throwable)
     }
 
-    override fun onBackClicked() {
+    override fun onBackClick() {
         sendEffect(ViewAllHistoryEffect.OnNavigateBack)
     }
 
-    override fun onMovieClicked(movieId: Long) {
+    override fun onMovieClick(movieId: Long) {
         sendEffect(ViewAllHistoryEffect.OnMovieClicked(movieId))
     }
 
-    override fun onSeriesClicked(seriesId: Long) {
+    override fun onSeriesClick(seriesId: Long) {
         sendEffect(ViewAllHistoryEffect.OnSeriesClicked(seriesId))
     }
 
@@ -147,12 +147,12 @@ class ViewAllHistoryViewModel @Inject constructor(
         viewModelScope.launch {
             updateState { it.copy(isRefreshing = true) }
             loadHistory()
-            delay(500L)
+            delay(REFRESH_DELAY)
             updateState { it.copy(isRefreshing = true) }
         }
     }
 
-    override fun onUndoClicked() {
+    override fun onUndoClick() {
         tryToCall(
             block = ::onUndoClickedBlock,
             onSuccess = { onUndoClickedSuccess() },
@@ -161,26 +161,26 @@ class ViewAllHistoryViewModel @Inject constructor(
     }
 
     private suspend fun onUndoClickedBlock() {
-        val item = screenState.value.deletedItems.last().split(", ")
-        when (item[1]) {
-            "movie" -> accountUseCase.addMovieToHistory(item[0].toLong())
-            "tv" -> accountUseCase.addSeriesToHistory(item[0].toLong())
+        val item = screenState.value.deletedItems.last().split(ITEM_DELIMITER)
+        when (item[FIRST_PAGE]) {
+            TYPE_MOVIE -> accountUseCase.addMovieToHistory(item[0].toLong())
+            TYPE_TV -> accountUseCase.addSeriesToHistory(item[0].toLong())
         }
     }
 
     private fun onUndoClickedSuccess() {
-        val item = screenState.value.deletedItems.last().split(", ")
-        when (item[1]) {
-            "movie" -> onUndoMovieClicked()
-            "tv" -> onUndoSeriesClicked()
+        val item = screenState.value.deletedItems.last().split(ITEM_DELIMITER)
+        when (item[FIRST_PAGE]) {
+            TYPE_MOVIE -> onUndoMovieClicked()
+            TYPE_TV -> onUndoSeriesClicked()
         }
     }
 
     private fun onUndoMovieClicked() {
         updateState { state ->
             state.copy(
-                deletedItems = state.deletedItems.dropLast(1),
-                deletedMoviesIds = state.deletedMoviesIds.dropLast(1),
+                deletedItems = state.deletedItems.dropLast(FIRST_PAGE),
+                deletedMoviesIds = state.deletedMoviesIds.dropLast(FIRST_PAGE),
                 showSnackBar = false
             )
         }
@@ -190,8 +190,8 @@ class ViewAllHistoryViewModel @Inject constructor(
     private fun onUndoSeriesClicked() {
         updateState { state ->
             state.copy(
-                deletedItems = state.deletedItems.dropLast(1),
-                deletedSeriesIds = state.deletedSeriesIds.dropLast(1),
+                deletedItems = state.deletedItems.dropLast(FIRST_PAGE),
+                deletedSeriesIds = state.deletedSeriesIds.dropLast(FIRST_PAGE),
                 showSnackBar = false
             )
         }
@@ -238,8 +238,17 @@ class ViewAllHistoryViewModel @Inject constructor(
                     showSnackBar = true
                 )
             }
-            delay(2000)
+            delay(SNACKBAR_DURATION)
             updateState { it.copy(showSnackBar = false) }
         }
+    }
+
+    companion object {
+        private const val FIRST_PAGE = 1
+        private const val REFRESH_DELAY = 500L
+        private const val SNACKBAR_DURATION = 2000L
+        private const val ITEM_DELIMITER = ", "
+        private const val TYPE_MOVIE = "movie"
+        private const val TYPE_TV = "tv"
     }
 }
