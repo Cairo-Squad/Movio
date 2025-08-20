@@ -217,14 +217,12 @@ fun SafeImageViewer(
         ) {
             when {
                 isError -> {
-                    // Show empty image if an error happened
                     EmptyImagePlaceholder(backgroundColor)
                 }
                 !done ->  {
                     loadingPlaceholder()
                 }
                 done && bitmap != null -> {
-                    // Show actual image once classification is done
                     AsyncImage(
                         modifier = Modifier
                             .matchParentSize()
@@ -256,7 +254,6 @@ fun SafeImageViewer(
                 }
 
                 else -> {
-                    // Default: show empty image while loading or classifying
                     EmptyImagePlaceholder(backgroundColor)
                 }
             }
