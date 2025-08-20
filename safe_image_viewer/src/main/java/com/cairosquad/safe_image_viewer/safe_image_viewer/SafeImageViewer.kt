@@ -4,10 +4,12 @@ import android.graphics.Bitmap
 import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -17,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.DefaultAlpha
@@ -111,13 +114,14 @@ fun SafeImageViewer(
     isBlurForced: Boolean = false,
     // UI-related
     placeholder: Painter = painterResource(R.drawable.placeholder),
-    error: Painter = painterResource(R.drawable.error),
     onIsImageSafeChanged: (Boolean) -> Unit = {},
     loadingPlaceholder: @Composable () -> Unit = {},
     onToggleBlur: (@Composable () -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val iconColor = if (isSystemInDarkTheme()) Color(0xFFEBE6FE) else Color(0xFFE6DFFF)
+    val backgroundColor = if (isSystemInDarkTheme()) Color(0xFF252E3C) else Color(0xFFA1AEC3)
+
     var isImageSafe by remember { mutableStateOf(true) }
     var hasClassificationCompleted by remember { mutableStateOf(false) }
     var isBlurEnabled by remember { mutableStateOf(true) }
@@ -125,6 +129,7 @@ fun SafeImageViewer(
 
     // Track if this composable is still active
     var isActive by remember { mutableStateOf(true) }
+    var isError by remember { mutableStateOf(false) }
 
     // Reset state when model changes
     LaunchedEffect(model) {
@@ -196,6 +201,7 @@ fun SafeImageViewer(
                 if (enableLog) {
                     Log.e("SafeImageViewer", "Error processing image: ${e.localizedMessage}")
                 }
+                isError = true
                 hasClassificationCompleted = true
             }
         }
@@ -204,13 +210,21 @@ fun SafeImageViewer(
     Crossfade(
         modifier = modifier,
         targetState = hasClassificationCompleted
-    ) {
+    ) { done ->
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            if (it) {
-                if (bitmap != null) {
+            when {
+                isError -> {
+                    // Show empty image if an error happened
+                    EmptyImagePlaceholder(backgroundColor)
+                }
+                !done ->  {
+                    loadingPlaceholder()
+                }
+                done && bitmap != null -> {
+                    // Show actual image once classification is done
                     AsyncImage(
                         modifier = Modifier
                             .matchParentSize()
@@ -228,8 +242,6 @@ fun SafeImageViewer(
                         alpha = alpha,
                         alignment = alignment,
                         colorFilter = colorFilter,
-                        placeholder = placeholder,
-                        error = error,
                     )
                     if (!isImageSafe) {
                         Image(
@@ -242,9 +254,30 @@ fun SafeImageViewer(
                         )
                     }
                 }
-            } else {
-                loadingPlaceholder()
+
+                else -> {
+                    // Default: show empty image while loading or classifying
+                    EmptyImagePlaceholder(backgroundColor)
+                }
             }
         }
+    }
+}
+
+@Composable
+internal fun EmptyImagePlaceholder(backgroundColor: Color) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .clip(RoundedCornerShape(8.dp))
+            .background(backgroundColor),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            modifier = Modifier.size(24.dp),
+            imageVector = ImageVector.vectorResource(id = R.drawable.image_icon),
+            contentDescription = null,
+            colorFilter = ColorFilter.tint(Color(0xFFEFF1F5))
+        )
     }
 }
