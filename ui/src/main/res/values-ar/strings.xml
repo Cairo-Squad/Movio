@@ -54,7 +54,7 @@
     <string name="no_trailer_found_for_this_series">لم يتم العثور على عرض تشويقي لهذا المسلسل</string>
     <string name="something_went_wrong">حدث خطأ ما</string>
     <string name="episode">حلقة %1$s</string>
-    <string name="m">د%1$d</string>
+    <string name="m">%1$d د</string>
     <string name="thank_you_for_your_rating">شكرًا لتقييمك!</string>
     <string name="add_your_overall_rating_for_this">أعطنا تقييمك لهذا الـ%1$s</string>
     <string name="share_via">شارك عبر</string>
