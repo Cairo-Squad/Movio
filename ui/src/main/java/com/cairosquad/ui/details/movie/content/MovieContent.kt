@@ -103,8 +103,8 @@ fun MovieContent(
             .windowInsetsPadding(WindowInsets.statusBars)
             .fillMaxWidth(),
         onBackButtonClicked = listener::onBackClick,
-        onShareButtonClicked = listener::onShareClick,
-        onFavoriteButtonClicked = listener::onFavoriteClick,
+        onShareButtonClicked = if (state.basicDetailsSectionState != MovieScreenState.ScreenStatus.SUCCESS) null else listener::onShareClick,
+        onFavoriteButtonClicked = if (state.basicDetailsSectionState != MovieScreenState.ScreenStatus.SUCCESS) null else listener::onFavoriteClick,
         isFavorite = state.isFavorite
     )
 }
