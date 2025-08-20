@@ -27,6 +27,14 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.design_system.basic_component.Button
 import com.cairosquad.design_system.theme.Theme
+import com.cairosquad.ui.details.series.composable.SeriesBackgroundImage
+import com.cairosquad.ui.details.series.composable.SeriesBasicDetailsSection
+import com.cairosquad.ui.details.series.composable.SeriesImage
+import com.cairosquad.ui.details.series.composable.SeriesOverviewSection
+import com.cairosquad.ui.details.series.composable.SeriesReviewsSection
+import com.cairosquad.ui.details.series.composable.SeriesSeasonsSection
+import com.cairosquad.ui.details.series.composable.SeriesTopCastSection
+import com.cairosquad.ui.details.series.composable.SimilarSeriesSection
 import com.cairosquad.ui.movio_component.StateMessage
 import com.cairosquad.viewmodel.details.series.SeriesDetailsInteractionListener
 import com.cairosquad.viewmodel.details.series.SeriesDetailsScreenState

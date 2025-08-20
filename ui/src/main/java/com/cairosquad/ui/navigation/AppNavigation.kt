@@ -19,9 +19,9 @@ import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.AppScreen
-import com.cairosquad.ui.auth.ForgetPasswordWebViewScreen
+import com.cairosquad.ui.auth.content.ForgetPasswordWebViewScreen
 import com.cairosquad.ui.auth.LoginScreen
-import com.cairosquad.ui.auth.SignUpWebViewScreen
+import com.cairosquad.ui.auth.content.SignUpWebViewScreen
 import com.cairosquad.ui.details.Constants
 import com.cairosquad.ui.details.artist.ArtistScreen
 import com.cairosquad.ui.details.episodes.EpisodesScreen
@@ -32,10 +32,10 @@ import com.cairosquad.ui.details.series.SeriesScreen
 import com.cairosquad.ui.details.similar_movies.SimilarMoviesScreen
 import com.cairosquad.ui.details.similar_series.SimilarSeriesScreen
 import com.cairosquad.ui.details.top_cast.TopCastScreen
-import com.cairosquad.ui.library.list.ListScreen
-import com.cairosquad.ui.library.view_all.ViewAllFavorite
-import com.cairosquad.ui.library.view_all.ViewAllHistory
-import com.cairosquad.ui.library.view_all.ViewAllLists
+import com.cairosquad.ui.library.content.ListScreen
+import com.cairosquad.ui.library.content.ViewAllFavorite
+import com.cairosquad.ui.library.content.ViewAllHistory
+import com.cairosquad.ui.library.content.ViewAllLists
 import com.cairosquad.ui.onboarding.OnboardingScreen
 import com.cairosquad.ui.rated.MyRatingsScreen
 import com.cairosquad.ui.search.ForYouScreen
