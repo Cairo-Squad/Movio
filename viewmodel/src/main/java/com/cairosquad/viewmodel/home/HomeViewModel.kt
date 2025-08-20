@@ -63,7 +63,7 @@ class HomeViewModel @Inject constructor(
         }
         viewModelScope.launch {
             delay(500L)
-            updateState { it.copy(isRefreshing = false) }
+            updateState { it.copy(isRefreshing = false, dataRequestStatus = DataRequestStatus.SUCCESS) }
         }
     }
 

@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.basic_component.Chip
+import com.cairosquad.design_system.modifier.fillWidthOfParent
 import com.cairosquad.design_system.theme.MovioTheme
 
 @Composable
@@ -23,7 +24,8 @@ fun CategoriesChips(
 ) {
     LazyRow(
         modifier = modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .fillWidthOfParent(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         contentPadding = contentPadding,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
