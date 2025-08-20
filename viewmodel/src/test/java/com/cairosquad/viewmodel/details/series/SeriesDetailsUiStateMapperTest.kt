@@ -43,7 +43,7 @@ class SeriesDetailsUiStateMapperTest {
             posterPath = "/poster.jpg",
             genres = listOf(Genre(1, "Drama"), Genre(2, "Sci-Fi")),
             seasonsCount = 3,
-            releaseDate = TimeUtil.convertLongToTime(0L).let { 0L },
+            releaseDate = 0L,
             overview = "A great series",
             trailerPath = ""
         )
@@ -56,7 +56,7 @@ class SeriesDetailsUiStateMapperTest {
         assertThat(uiState.posterPath).isEqualTo("/poster.jpg")
         assertThat(uiState.genres).containsExactly("Drama", "Sci-Fi")
         assertThat(uiState.seasonsCount).isEqualTo(3)
-        assertThat(uiState.releaseDate).isEqualTo("01/01/1970")
+        assertThat(uiState.releaseDate).isEqualTo(null)
         assertThat(uiState.overview).isEqualTo("A great series")
         assertThat(uiState.trailerPath).isEmpty()
     }

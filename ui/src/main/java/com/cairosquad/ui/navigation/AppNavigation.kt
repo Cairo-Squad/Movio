@@ -19,8 +19,8 @@ import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.AppScreen
-import com.cairosquad.ui.auth.content.ForgetPasswordWebViewScreen
 import com.cairosquad.ui.auth.LoginScreen
+import com.cairosquad.ui.auth.content.ForgetPasswordWebViewScreen
 import com.cairosquad.ui.auth.content.SignUpWebViewScreen
 import com.cairosquad.ui.details.Constants
 import com.cairosquad.ui.details.artist.ArtistScreen

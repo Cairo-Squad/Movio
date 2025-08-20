@@ -5,10 +5,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.cairosquad.ui.details.movie.content.MovieContent
 import com.cairosquad.ui.details.movie.composable.MovieScreenBottomSheets
-import com.cairosquad.ui.details.movie.content.MovieScreenEffects
 import com.cairosquad.ui.details.movie.composable.MovieScreenSnackBar
+import com.cairosquad.ui.details.movie.content.MovieContent
+import com.cairosquad.ui.details.movie.content.MovieScreenEffects
 import com.cairosquad.viewmodel.details.movie.MovieViewModel
 
 @Composable

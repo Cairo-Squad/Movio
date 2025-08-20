@@ -59,7 +59,7 @@ fun SearchResultContent(
             readOnly = true
         )
         TabRow(
-            modifier = Modifier.padding(bottom = 12.dp),
+            modifier = Modifier,
             tabs = listOf(
                 stringResource(R.string.top_Results),
                 stringResource(R.string.movies),

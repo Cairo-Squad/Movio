@@ -3,6 +3,7 @@ package com.cairosquad.ui.see_all_screen.content
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBars
@@ -76,7 +77,9 @@ fun SeeAllScreenContent(
                     selectedChipIndex = state.selectedGenreIndex,
                     onChipSelected = { index ->
                         listener.onGenreSelected(index)
-                    })
+                    },
+                    contentPadding = PaddingValues(horizontal = 16.dp)
+                    )
 
                 if (contentType != MediaContentType.TRENDING) {
                     SeeAllMediaItems(

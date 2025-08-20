@@ -68,11 +68,7 @@ fun MoviesTabContent(
                 columns = GridCells.Adaptive(minSize = 101.33.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(
-                    start = 16.dp,
-                    end = 16.dp,
-                    bottom = 16.dp
-                )
+                contentPadding = PaddingValues(16.dp)
             ) {
                 item(span = { GridItemSpan(maxLineSpan) }) {
                     SearchResultText(noOfResults = movies.itemCount)

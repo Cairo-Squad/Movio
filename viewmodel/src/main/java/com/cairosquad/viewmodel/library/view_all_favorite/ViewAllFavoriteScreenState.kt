@@ -38,7 +38,7 @@ data class ViewAllFavoriteScreenState(
         val genres: List<String> = emptyList(),
         val overview: String = "",
         val releaseDate: String = "0",
-        val runtimeMinutes: String = "",
+        val runtimeMinutes: String? = null,
         val trailerPath: String = ""
     )
 
