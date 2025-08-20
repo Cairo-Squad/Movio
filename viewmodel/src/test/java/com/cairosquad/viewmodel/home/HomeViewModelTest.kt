@@ -165,15 +165,6 @@ class HomeViewModelTest {
         assertThat(viewModel.screenState.value.profileImage).isEqualTo("")
     }
 
-//    @Test
-//    fun `should emit navigate to profile when onClickProfile called`() = runTest {
-//        viewModel.effect.test {
-//            viewModel.onProfileClick()
-//            assertThat(awaitItem()).isEqualTo(HomeEffect.NavigateToProfile)
-//            cancelAndIgnoreRemainingEvents()
-//        }
-//    }
-
     @Test
     fun `should emit navigate to media details when onClickMedia called`() = runTest {
         viewModel.effect.test {

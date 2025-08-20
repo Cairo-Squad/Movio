@@ -92,15 +92,6 @@ class LoginViewModelTest {
         }
     }
 
-//    @Test
-//    fun `WHEN continue as guest clicked SHOULD send NavigateToGuestHome effect`() = runTest {
-//        viewModel.effect.test {
-//            viewModel.onContinueAsAGuestClick()
-//            assertThat(awaitItem()).isEqualTo(LoginEffect.NavigateToGuestHome)
-//            cancelAndIgnoreRemainingEvents()
-//        }
-//    }
-
     @Test
     fun `WHEN sign up clicked SHOULD send NavigateToSignUp effect`() = runTest {
         viewModel.effect.test {
@@ -151,22 +142,6 @@ class LoginViewModelTest {
         assertThat(viewModel.screenState.value.errors[LoginScreenState.FormField.USERNAME]).isNull()
         assertThat(viewModel.screenState.value.errors[LoginScreenState.FormField.PASSWORD]).isNull()
     }
-
-//    @Test
-//    fun `WHEN login successful SHOULD call login THEN navigate to home`() = runTest {
-//        coEvery { loginUseCase.login(any(), any()) } returns Unit
-//
-//        viewModel.effect.test {
-//            viewModel.onUsernameChange("user")
-//            viewModel.onPasswordChange("password")
-//            viewModel.onLoginClick()
-//            advanceUntilIdle()
-//
-//            coVerify(exactly = 1) { loginUseCase.login("user", "password") }
-//            assertThat(awaitItem()).isEqualTo(LoginEffect.NavigateToHome)
-//            cancelAndIgnoreRemainingEvents()
-//        }
-//    }
 
     @Test
     fun `loading indicator SHOULD hide after login`() = runTest {
