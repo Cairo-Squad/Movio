@@ -81,7 +81,7 @@ fun SearchResultContent(
             readOnly = true
         )
         TabRow(
-            modifier = Modifier.padding(bottom = 12.dp),
+            modifier = Modifier,
             tabs = listOf(
                 stringResource(R.string.top_Results),
                 stringResource(R.string.movies),
@@ -171,11 +171,7 @@ private fun AllResultsTabContent(
                 columns = GridCells.Adaptive(minSize = 101.33.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(
-                    start = 16.dp,
-                    end = 16.dp,
-                    bottom = 16.dp
-                )
+                contentPadding = PaddingValues(16.dp)
             ) {
                 item(span = { GridItemSpan(maxLineSpan) }) {
                     SearchResultText(noOfResults = movies.itemCount)
@@ -245,11 +241,7 @@ private fun MoviesTabContent(
                 columns = GridCells.Adaptive(minSize = 101.33.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(
-                    start = 16.dp,
-                    end = 16.dp,
-                    bottom = 16.dp
-                )
+                contentPadding = PaddingValues(16.dp)
             ) {
                 item(span = { GridItemSpan(maxLineSpan) }) {
                     SearchResultText(noOfResults = movies.itemCount)
@@ -327,11 +319,7 @@ private fun SeriesTabContent(
                 columns = GridCells.Adaptive(minSize = 101.33.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(
-                    start = 16.dp,
-                    end = 16.dp,
-                    bottom = 16.dp
-                )
+                contentPadding = PaddingValues(16.dp)
             ) {
                 item(span = { GridItemSpan(maxLineSpan) }) {
                     SearchResultText(noOfResults = series.itemCount)
@@ -407,11 +395,7 @@ private fun ArtistsTabContent(
                 columns = GridCells.Adaptive(minSize = 101.33.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(
-                    start = 16.dp,
-                    end = 16.dp,
-                    bottom = 16.dp
-                )
+                contentPadding = PaddingValues(16.dp)
             ) {
                 item(span = { GridItemSpan(maxLineSpan) }) {
                     SearchResultText(noOfResults = artist.itemCount)
