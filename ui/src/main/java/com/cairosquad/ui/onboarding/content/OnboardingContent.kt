@@ -18,15 +18,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cairosquad.design_system.basic_component.Text
 import com.cairosquad.design_system.modifier.dropShadow
-import com.cairosquad.design_system.theme.MovioTheme
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.R
 import com.cairosquad.ui.movio_component.SwitchToStartButton
-import com.cairosquad.ui.onboarding.OnboardingScreen
 import com.cairosquad.viewmodel.onboarding.OnboardingInteractionListener
 
 @Composable
@@ -109,16 +106,6 @@ fun OnboardingContent(
                 .padding(horizontal = 16.dp)
                 .padding(bottom = 32.dp),
             onSwipeComplete = { onboardingInteractionListener.onCompleteOnboarding() }
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun PreviewOnboardingScreen() {
-    MovioTheme {
-        OnboardingScreen(
-            navigateToAuthOrHome = {}
         )
     }
 }
