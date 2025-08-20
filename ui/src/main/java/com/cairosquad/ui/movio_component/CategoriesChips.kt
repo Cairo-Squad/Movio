@@ -20,13 +20,14 @@ fun CategoriesChips(
     selectedChipIndex: Int,
     onChipSelected: (Int) -> Unit,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     LazyRow(
         modifier = modifier
             .fillMaxWidth()
             .fillWidthOfParent(16.dp),
         verticalAlignment = Alignment.CenterVertically,
-        contentPadding = PaddingValues(horizontal = 16.dp),
+        contentPadding = contentPadding,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         itemsIndexed(categories) { index, categoryTitle ->

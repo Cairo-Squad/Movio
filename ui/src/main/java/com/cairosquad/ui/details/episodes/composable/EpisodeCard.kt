@@ -17,7 +17,7 @@ fun EpisodeCard(
     modifier: Modifier = Modifier,
     episodeName: String,
     episodeNumber: String,
-    episodeDuration: Int,
+    episodeDuration: Int?,
     episodeRating: String,
     episodeImageUrl: String? = null
 ) {

@@ -3,6 +3,7 @@ package com.cairosquad.viewmodel.details.series.season
 import com.cairosquad.entity.Season
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.util.TimeUtil
+import com.cairosquad.viewmodel.util.localizeNumbers
 import com.cairosquad.viewmodel.util.roundToFirstDecimalPlace
 
 data class SeasonDetailsScreenState(
@@ -33,11 +34,11 @@ fun Season.toUiState():SeasonDetailsScreenState.SeasonUiState {
     return SeasonDetailsScreenState.SeasonUiState(
         seriesId = seriesId,
         number = seasonNumber,
-        name = seasonName,
+        name = seasonName.localizeNumbers(),
         episodesCount = episodesCount,
         rating = rating.roundToFirstDecimalPlace(),
         posterPath = posterPath,
-        overview = overview,
+        overview = overview.localizeNumbers(),
         airDate = TimeUtil.convertLongToYear(airDate),
         timeOfPublish = TimeUtil.convertLongToNamedDate(airDate)
     )

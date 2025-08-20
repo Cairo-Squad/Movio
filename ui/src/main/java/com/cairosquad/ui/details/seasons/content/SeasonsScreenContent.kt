@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.AppBar
 import com.cairosquad.ui.details.composable.BlurredCircle
+import com.cairosquad.ui.details.seasons.composable.Seasons
 import com.cairosquad.viewmodel.details.series.season.SeasonDetailsInteractionListener
 import com.cairosquad.viewmodel.details.series.season.SeasonDetailsScreenState
 

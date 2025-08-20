@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import com.cairosquad.ui.details.DetailsFailContent
 import com.cairosquad.ui.details.composable.BlurredCircle
+import com.cairosquad.ui.details.reviews.composable.Reviews
 import com.cairosquad.viewmodel.details.reviews.ReviewsInteractionListener
 import com.cairosquad.viewmodel.details.reviews.ReviewsScreenState
 

@@ -38,7 +38,7 @@ data class ViewAllHistoryScreenState (
         val genres: List<String> = emptyList(),
         val overview: String = "",
         val releaseDate: String = "",
-        val runtimeMinutes: String = "",
+        val runtimeMinutes: String? = null,
         val trailerPath: String = ""
     )
 
