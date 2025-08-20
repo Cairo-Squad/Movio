@@ -2,7 +2,10 @@ package com.cairosquad.viewmodel.details.artist
 
 import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.domain.usecase.ManageArtistUseCase
+import com.cairosquad.entity.Movie
 import com.cairosquad.viewmodel.base.BaseViewModel
+import com.cairosquad.viewmodel.details.artist.ArtistScreenState.ArtistUiState
+import com.cairosquad.viewmodel.details.artist.ArtistScreenState.SeriesUiState
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
 import dagger.assisted.Assisted
@@ -23,6 +26,10 @@ class ArtistViewModel @AssistedInject constructor(
     }
 
     init {
+        initScreen()
+    }
+
+    private fun initScreen() {
         fetchArtistDetails(artistId)
         fetchArtistMovies(artistId)
         fetchArtistSeries(artistId)
@@ -30,79 +37,62 @@ class ArtistViewModel @AssistedInject constructor(
 
     fun fetchArtistDetails(artistId: Long) {
         tryToCall(
-            onStart = {
-                updateState { it.copy(screenStatus = ArtistScreenState.ScreenStatus.LOADING) }
-            },
-            block = {
-                manageArtistUseCase.getArtistById(artistId).toUiState()
-            },
-            onSuccess = { artist ->
-                updateState {
-                    it.copy(artist = artist, screenStatus = ArtistScreenState.ScreenStatus.SUCCESS)
-                }
-            }, onError = { e ->
-                updateState {
-                    it.copy(
-                        screenStatus = ArtistScreenState.ScreenStatus.FAILED,
-                        errorStatus = handleArtistException(e),
-                        showSnackBar = true,
-                        snackMessage = "Failed to load artist",
-                        isProcessSuccess = false
-                    )
-                }
-            }
+            onStart = ::setLoading,
+            block = { manageArtistUseCase.getArtistById(artistId).toUiState() },
+            onSuccess = ::handleArtistDetailsSuccess,
+            onError = ::handleArtistDetailsError
         )
     }
 
     fun fetchArtistMovies(artistId: Long) {
         tryToCall(
-            onStart = {
-                updateState { it.copy(screenStatus = ArtistScreenState.ScreenStatus.LOADING) }
-            },
-            block = {
-                manageArtistUseCase.getMoviesOfArtist(artistId)
-            },
-            onSuccess = { movies ->
-                updateState {
-                    it.copy(knownForMovies = movies.map { it.toUiState() })
-                }
-            },
-            onError = { e ->
-                updateState {
-                    it.copy(
-                        screenStatus = ArtistScreenState.ScreenStatus.FAILED,
-                        errorStatus = handleArtistException(e)
-                    )
-                }
-            }
+            onStart = ::setLoading,
+            block = { manageArtistUseCase.getMoviesOfArtist(artistId) },
+            onSuccess = ::handleArtistMoviesSuccess,
+            onError = ::handleDefaultError
         )
     }
 
     fun fetchArtistSeries(artistId: Long) {
         tryToCall(
-            onStart = {
-                updateState { it.copy(screenStatus = ArtistScreenState.ScreenStatus.LOADING) }
-            },
-            block = {
-                val series = manageArtistUseCase
-                    .getSeriesOfArtist(artistId)
-                    .map { it.toUiState() }
-                series
-            },
-            onSuccess = { series ->
-                updateState {
-                    it.copy(knownForSeries = series)
-                }
-            },
-            onError = { e ->
-                updateState {
-                    it.copy(
-                        screenStatus = ArtistScreenState.ScreenStatus.FAILED,
-                        errorStatus = handleArtistException(e)
-                    )
-                }
-            }
+            onStart = ::setLoading,
+            block = { manageArtistUseCase.getSeriesOfArtist(artistId).map { it.toUiState() } },
+            onSuccess = ::handleArtistSeriesSuccess,
+            onError = ::handleDefaultError
         )
+    }
+
+    private fun setLoading() {
+        updateState { it.copy(screenStatus = ArtistScreenState.ScreenStatus.LOADING) }
+    }
+
+    private fun handleArtistDetailsSuccess(artist: ArtistUiState) {
+        updateState { it.copy(artist = artist, screenStatus = ArtistScreenState.ScreenStatus.SUCCESS)} }
+
+    private fun handleArtistMoviesSuccess(movies: List<Movie>) {
+        updateState { it.copy(knownForMovies = movies.map { m -> m.toUiState() }) }
+    }
+
+    private fun handleArtistSeriesSuccess(series: List<SeriesUiState>) {
+        updateState { it.copy(knownForSeries = series) }
+    }
+
+    private fun handleArtistDetailsError(e: Throwable) {
+        updateState {
+            it.copy(
+                screenStatus = ArtistScreenState.ScreenStatus.FAILED,
+                errorStatus = handleArtistException(e),
+                showSnackBar = true,
+                snackMessage = FAILED_TO_LOAD_ARTIST_MESSAGE,
+                isProcessSuccess = false
+            )
+        }
+    }
+
+    private fun handleDefaultError(e: Throwable) {
+        updateState {
+            it.copy(screenStatus = ArtistScreenState.ScreenStatus.FAILED, errorStatus = handleArtistException(e))
+        }
     }
 
     override fun onBackClick() {
@@ -118,17 +108,17 @@ class ArtistViewModel @AssistedInject constructor(
     }
 
     override fun onRefresh() {
-            fetchArtistDetails(artistId)
-            fetchArtistMovies(artistId)
-            fetchArtistSeries(artistId)
+        fetchArtistDetails(artistId)
+        fetchArtistMovies(artistId)
+        fetchArtistSeries(artistId)
     }
-    private fun handleArtistException(e: Throwable): ErrorStatus {
-        return when (e) {
-            is MovioException -> {
-                exceptionToErrorStatus(e)
-            }
 
-            else -> ErrorStatus.UNKNOWN_ERROR
-        }
+    private fun handleArtistException(e: Throwable): ErrorStatus {
+        return if (e is MovioException) exceptionToErrorStatus(e)
+        else ErrorStatus.UNKNOWN_ERROR
+    }
+
+     companion object {
+         private const val FAILED_TO_LOAD_ARTIST_MESSAGE = "Failed to load artist"
     }
 }

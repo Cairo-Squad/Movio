@@ -27,17 +27,19 @@ class EpisodesDetailsViewModel @AssistedInject constructor(
     }
 
     init {
+        initScreen()
+    }
+
+    private fun initScreen() {
         getSeasons(seriesId)
         getEpisodes(seriesId, seasonNumber)
     }
 
     private fun getEpisodes(seriesId: Long, seasonNumber: Int) {
         tryToCall(
-            onStart = {
-                updateState { it.copy(episodesSectionState = ScreenStatus.LOADING) }
-            },
+            onStart = ::setEpisodesLoading,
             block = { manageSeriesUseCase.getEpisodes(seriesId, seasonNumber) },
-            onSuccess = ::setEpisodesToUiState,
+            onSuccess = ::handleEpisodesSuccess,
             onError = { throwable ->
                 setError(throwable) { copy(episodesSectionState = ScreenStatus.ERROR) }
             },
@@ -45,7 +47,21 @@ class EpisodesDetailsViewModel @AssistedInject constructor(
         )
     }
 
-    private fun setEpisodesToUiState(episodes: List<Episode>) {
+    private fun getSeasons(seriesId: Long) {
+        tryToCall(
+            onStart = ::setSeasonsLoading,
+            block = { manageSeriesUseCase.getSeriesSeasons(seriesId) },
+            onSuccess = ::handleSeasonsSuccess,
+            onError = ::handleSeasonsError,
+            dispatcher = Dispatchers.IO
+        )
+    }
+
+    private fun setEpisodesLoading() {
+        updateState { it.copy(episodesSectionState = ScreenStatus.LOADING) }
+    }
+
+    private fun handleEpisodesSuccess(episodes: List<Episode>) {
         updateState { currentState ->
             val selectedSeason =
                 currentState.seasons.firstOrNull { it.seasonNumber == seasonNumber }
@@ -64,34 +80,28 @@ class EpisodesDetailsViewModel @AssistedInject constructor(
         }
     }
 
-
-    private fun getSeasons(seriesId: Long) {
-        tryToCall(
-            onStart = { updateState { it.copy(basicDetailsSectionState = ScreenStatus.LOADING) } },
-            block = {
-                manageSeriesUseCase.getSeriesSeasons(seriesId)
-            },
-            onSuccess = { seasons ->
-                updateState {
-                    it.copy(
-                        basicDetailsSectionState = ScreenStatus.SUCCESS,
-                        seasons = seasons.map { season ->
-                            EpisodesDetailsScreenState.SeasonUiState(
-                                seasonNumber = season.seasonNumber,
-                                posterUrl = season.posterPath,
-                                episodesCount = season.episodesCount
-                            )
-                        }
-                    )
-                }
-            },
-            onError = {
-
-            },
-            dispatcher = Dispatchers.IO
-        )
+    private fun setSeasonsLoading() {
+        updateState { it.copy(basicDetailsSectionState = ScreenStatus.LOADING) }
     }
 
+    private fun handleSeasonsSuccess(seasons: List<com.cairosquad.entity.Season>) {
+        updateState {
+            it.copy(
+                basicDetailsSectionState = ScreenStatus.SUCCESS,
+                seasons = seasons.map { season ->
+                    EpisodesDetailsScreenState.SeasonUiState(
+                        seasonNumber = season.seasonNumber,
+                        posterUrl = season.posterPath,
+                        episodesCount = season.episodesCount
+                    )
+                }
+            )
+        }
+    }
+
+    private fun handleSeasonsError(error: Throwable) {
+        setError(error) { copy(basicDetailsSectionState = ScreenStatus.ERROR) }
+    }
 
     override fun onBackClick() {
         sendEffect(EpisodesDetailEffect.NavigateBack)
@@ -119,26 +129,19 @@ class EpisodesDetailsViewModel @AssistedInject constructor(
     }
 
     override fun onRefresh() {
-            getSeasons(seriesId)
-            getEpisodes(seriesId, seasonNumber)
+        getSeasons(seriesId)
+        getEpisodes(seriesId, seasonNumber)
     }
-
 
     private fun setError(
         throwable: Throwable,
         updateSection: EpisodesDetailsScreenState.() -> EpisodesDetailsScreenState
     ) {
-        updateState {
-            it.updateSection().copy(
-                errorStatus = handleDetailsException(throwable)
-            )
-        }
+        updateState { it.updateSection().copy(errorStatus = handleDetailsException(throwable))}
     }
 
     private fun handleDetailsException(error: Throwable): ErrorStatus {
-        return when (error) {
-            is MovioException -> exceptionToErrorStatus(error)
-            else -> ErrorStatus.UNKNOWN_ERROR
-        }
+        return if (error is MovioException) exceptionToErrorStatus(error)
+        else ErrorStatus.UNKNOWN_ERROR
     }
 }
