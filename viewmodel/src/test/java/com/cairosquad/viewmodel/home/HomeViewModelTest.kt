@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import com.cairosquad.domain.exception.InternetConnectionException
 import com.cairosquad.domain.exception.NetworkException
 import com.cairosquad.domain.usecase.AccountUseCase
+import com.cairosquad.domain.usecase.LoginUseCase
 import com.cairosquad.domain.usecase.ManageMoviesUseCase
 import com.cairosquad.domain.usecase.ManageSeriesUseCase
 import com.cairosquad.entity.Account
@@ -38,6 +39,7 @@ class HomeViewModelTest {
     private lateinit var manageSeriesUseCase: ManageSeriesUseCase
     private lateinit var accountUseCase: AccountUseCase
     private lateinit var unifiedMediaPager: UnifiedMediaPager
+    private lateinit var loginUseCase: LoginUseCase
     private lateinit var viewModel: HomeViewModel
 
     @Before
@@ -48,12 +50,14 @@ class HomeViewModelTest {
         manageMoviesUseCase = mockk(relaxed = true)
         manageSeriesUseCase = mockk(relaxed = true)
         accountUseCase = mockk(relaxed = true)
+        loginUseCase = mockk(relaxed = true)
         unifiedMediaPager = mockk(relaxed = true)
         viewModel = HomeViewModel(
             manageMoviesUseCase = manageMoviesUseCase,
             manageSeriesUseCase = manageSeriesUseCase,
             accountUseCase = accountUseCase,
-            unifiedMediaPager = unifiedMediaPager
+            unifiedMediaPager = unifiedMediaPager,
+            loginUseCase = loginUseCase
         )
     }
 
@@ -62,7 +66,8 @@ class HomeViewModelTest {
             manageMoviesUseCase = manageMoviesUseCase,
             manageSeriesUseCase = manageSeriesUseCase,
             accountUseCase = accountUseCase,
-            unifiedMediaPager = unifiedMediaPager
+            unifiedMediaPager = unifiedMediaPager,
+            loginUseCase = loginUseCase
         )
     }
 
@@ -158,15 +163,6 @@ class HomeViewModelTest {
         advanceUntilIdle()
 
         assertThat(viewModel.screenState.value.profileImage).isEqualTo("")
-    }
-
-    @Test
-    fun `should emit navigate to profile when onClickProfile called`() = runTest {
-        viewModel.effect.test {
-            viewModel.onProfileClick()
-            assertThat(awaitItem()).isEqualTo(HomeEffect.NavigateToProfile)
-            cancelAndIgnoreRemainingEvents()
-        }
     }
 
     @Test

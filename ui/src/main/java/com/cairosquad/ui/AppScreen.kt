@@ -17,11 +17,10 @@ import com.cairosquad.ui.home.HomeScreen
 import com.cairosquad.ui.library.LibraryScreen
 import com.cairosquad.ui.more.MoreScreen
 import com.cairosquad.ui.navigation.LocalNavController
-import com.cairosquad.ui.navigation.LoginRoute
 import com.cairosquad.ui.search.SearchScreen
 
 @Composable
-fun AppScreen(isUserLoggedIn: Boolean) {
+fun AppScreen() {
     val navigationItems = remember {
         listOf(
             BottomNavItem(
@@ -71,23 +70,11 @@ fun AppScreen(isUserLoggedIn: Boolean) {
         isNavBarVisible = isNavBarVisible,
         content = {
             when (selectedScreenIndex) {
-                0 -> HomeScreen(navigateToProfile = {
-                    if (isUserLoggedIn) {
-                        selectedScreenIndex = 3
-                    } else {
-                        navController.navigate(LoginRoute)
-                    }
-                })
+                0 -> HomeScreen(navigateToProfile = { selectedScreenIndex = 3 })
                 1 -> SearchScreen()
                 2 -> LibraryScreen()
                 3 -> MoreScreen(setNavBarVisibility = { isNavBarVisible = it })
-                else -> HomeScreen(navigateToProfile = {
-                    if (isUserLoggedIn) {
-                        selectedScreenIndex = 3
-                    } else {
-                        navController.navigate(LoginRoute)
-                    }
-                })
+                else -> HomeScreen(navigateToProfile = { selectedScreenIndex = 3 })
             }
         })
 }
