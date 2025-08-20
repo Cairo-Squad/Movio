@@ -11,6 +11,7 @@ import com.cairosquad.ui.BuildConfig
 import com.cairosquad.ui.details.episodes.composable.EpisodeCard
 import com.cairosquad.ui.movio_component.LoadingMovieImage
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState
+import com.cairosquad.viewmodel.util.localizeNumbers
 import com.cairosquad.viewmodel.util.toLocalString
 
 fun LazyListScope.episodesSection(state: EpisodesDetailsScreenState) {
@@ -29,7 +30,10 @@ fun LazyListScope.episodesSection(state: EpisodesDetailsScreenState) {
         EpisodesDetailsScreenState.ScreenStatus.SUCCESS -> {
             items(state.episodes) { episode ->
                 EpisodeCard(
-                    episodeNumber = episode.number.toLocalString().padStart(2, '0'),
+                    episodeNumber = episode.number
+                        .toString()
+                        .padStart(2, '0')
+                        .localizeNumbers(),
                     episodeImageUrl = BuildConfig.IMAGE_BASE_URL + episode.imageUrl,
                     episodeName = episode.name,
                     episodeDuration = episode.runtime,
