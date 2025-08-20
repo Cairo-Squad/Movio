@@ -2,8 +2,11 @@ package com.cairosquad.ui.details
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,6 +40,7 @@ fun DetailsFailContent(
         Button(
             modifier = Modifier
                 .align(Alignment.End)
+                .windowInsetsPadding(WindowInsets.navigationBars)
                 .padding(bottom = 32.dp)
                 .padding(horizontal = 16.dp),
             text = stringResource(R.string.try_again),

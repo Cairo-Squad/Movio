@@ -15,7 +15,7 @@ fun Episode.toUiState() = EpisodesDetailsScreenState.EpisodeUiState(
     id = id,
     name = episodeName.localizeNumbers(),
     number = episodeNumber,
-    runtime = runtimeMinutes.takeIf { it != 0 },
+    runtime = runtimeInMinutes.takeIf { it != 0 },
     rating = rating.roundToFirstDecimalPlace(),
     imageUrl = photoPath
 )
