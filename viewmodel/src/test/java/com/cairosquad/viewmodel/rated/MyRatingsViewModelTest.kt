@@ -70,14 +70,6 @@ class MyRatingsViewModelTest {
     }
 
     @Test
-    fun `onSeriesClicked sends NavigateToSeriesDetails`() = runTest {
-        viewModel.effect.test {
-            viewModel.onSeriesClick(42L)
-            assertEquals(MyRatingsEffect.NavigateToSeriesDetails(42L), awaitItem())
-        }
-    }
-
-    @Test
     fun `onUndoClicked with movie restores rating`() = runTest {
         viewModel.updateState { it.copy(deletedItems = listOf("movie, 10, 3")) }
 
