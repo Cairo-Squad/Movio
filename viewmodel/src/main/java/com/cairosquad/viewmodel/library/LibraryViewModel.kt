@@ -25,30 +25,34 @@ class LibraryViewModel @Inject constructor(
     private fun isUserLoggedIn() {
         tryToCall(
             block = loginUseCase::isUserLoggedIn,
-            onSuccess = { authed ->
-                updateState {
-                    it.copy(isUserAuthed = authed)
-                }
-                loadScreenData()
-            },
-            onError = { throwable ->
-                handleError(throwable) { copy(screenStatus = LibraryScreenState.SectionStatus.ERROR) }
-            }
+            onSuccess = ::onUserLoggedInSuccess,
+            onError = ::onUserLoggedInError
         )
+    }
+
+    private fun onUserLoggedInSuccess(authed: Boolean) {
+        updateState { it.copy(isUserAuthed = authed) }
+        loadScreenData()
+    }
+
+    private fun onUserLoggedInError(e: Throwable) {
+        handleError(e) { copy(screenStatus = LibraryScreenState.SectionStatus.ERROR) }
     }
 
     private fun loadScreenData() {
         tryToCall(
             block = ::loadScreenState,
-            onSuccess = {
-                updateState {
-                    it.copy(screenStatus = LibraryScreenState.SectionStatus.SUCCESS)
-                }
-            },
-            onError = { throwable ->
-                handleError(throwable) { copy(screenStatus = LibraryScreenState.SectionStatus.ERROR) }
-            }
+            onSuccess = ::onLoadScreenDataSuccess,
+            onError = ::onLoadScreenDataError
         )
+    }
+
+    private fun onLoadScreenDataSuccess(@Suppress("UNUSED_PARAMETER") unit: Unit) {
+        updateState { it.copy(screenStatus = LibraryScreenState.SectionStatus.SUCCESS) }
+    }
+
+    private fun onLoadScreenDataError(e: Throwable) {
+        handleError(e) { copy(screenStatus = LibraryScreenState.SectionStatus.ERROR) }
     }
 
     fun loadScreenState() {
@@ -92,67 +96,70 @@ class LibraryViewModel @Inject constructor(
         sendEffect(LibraryEffect.NavigateToSeriesDetails(seriesId))
     }
 
-
-
     private fun loadMoviesLists() {
-        updateState {it.copy(listsSectionState = LibraryScreenState.SectionStatus.LOADING) }
+        updateState { it.copy(listsSectionState = LibraryScreenState.SectionStatus.LOADING) }
         tryToCall(
             block = { accountUseCase.getMoviesLists(1) },
             onSuccess = ::onLoadingMoviesListsSuccess,
-            onError = { throwable ->
-                handleError(throwable) { copy(listsSectionState = LibraryScreenState.SectionStatus.ERROR) }
-            }
+            onError = ::onLoadingMoviesListsError
         )
     }
 
     private fun onLoadingMoviesListsSuccess(mediaLists: List<MediaList>) {
         updateState {
             it.copy(
-                movieLists = mediaLists.map { mediaList -> mediaList.toUiState() },
+                movieLists = mediaLists.map(MediaList::toUiState),
                 listsSectionState = LibraryScreenState.SectionStatus.SUCCESS
             ).recalculateScreenStatus()
         }
     }
 
+    private fun onLoadingMoviesListsError(e: Throwable) {
+        handleError(e) { copy(listsSectionState = LibraryScreenState.SectionStatus.ERROR) }
+    }
+
     private fun loadSeriesLists() {
-        updateState {it.copy(listsSectionState = LibraryScreenState.SectionStatus.LOADING) }
+        updateState { it.copy(listsSectionState = LibraryScreenState.SectionStatus.LOADING) }
         tryToCall(
             block = { accountUseCase.getSeriesLists(1) },
             onSuccess = ::onLoadingSeriesListsSuccess,
-            onError = { throwable ->
-                handleError(throwable) { copy(listsSectionState = LibraryScreenState.SectionStatus.ERROR) }
-            },
+            onError = ::onLoadingSeriesListsError
         )
     }
 
     private fun onLoadingSeriesListsSuccess(mediaLists: List<MediaList>) {
         updateState {
             it.copy(
-                seriesLists = mediaLists.map { mediaList -> mediaList.toUiState() },
+                seriesLists = mediaLists.map(MediaList::toUiState),
                 listsSectionState = LibraryScreenState.SectionStatus.SUCCESS
             ).recalculateScreenStatus()
         }
     }
 
+    private fun onLoadingSeriesListsError(e: Throwable) {
+        handleError(e) { copy(listsSectionState = LibraryScreenState.SectionStatus.ERROR) }
+    }
 
     private fun loadFavoriteMovies() {
-        updateState {it.copy(favoritesSectionState = LibraryScreenState.SectionStatus.LOADING) }
+        updateState { it.copy(favoritesSectionState = LibraryScreenState.SectionStatus.LOADING) }
         tryToCall(
             block = { accountUseCase.getFavoriteMovies(1) },
             onSuccess = ::onLoadingFavoriteMoviesSuccess,
-            onError = { throwable ->
-                handleError(throwable) { copy(favoritesSectionState = LibraryScreenState.SectionStatus.ERROR) }
-            }
+            onError = ::onLoadingFavoriteMoviesError
         )
     }
 
     private fun onLoadingFavoriteMoviesSuccess(movies: List<Movie>) {
         updateState {
             it.copy(
-                favoriteMovies = movies.map { it.toUiState() },
+                favoriteMovies = movies.map(Movie::toUiState),
                 favoritesSectionState = LibraryScreenState.SectionStatus.SUCCESS
             ).recalculateScreenStatus()
         }
+    }
+
+    private fun onLoadingFavoriteMoviesError(e: Throwable) {
+        handleError(e) { copy(favoritesSectionState = LibraryScreenState.SectionStatus.ERROR) }
     }
 
     private fun loadFavoriteSeries() {
@@ -160,69 +167,73 @@ class LibraryViewModel @Inject constructor(
         tryToCall(
             block = { accountUseCase.getFavoriteSeries(1) },
             onSuccess = ::onLoadingFavoriteSeriesSuccess,
-            onError = { throwable ->
-                handleError(throwable) { copy(favoritesSectionState = LibraryScreenState.SectionStatus.ERROR) }
-            }
+            onError = ::onLoadingFavoriteSeriesError
         )
     }
 
     private fun onLoadingFavoriteSeriesSuccess(series: List<Series>) {
         updateState {
             it.copy(
-                favoriteSeries = series.map { it.toUiState() },
+                favoriteSeries = series.map(Series::toUiState),
                 favoritesSectionState = LibraryScreenState.SectionStatus.SUCCESS
             ).recalculateScreenStatus()
         }
     }
 
+    private fun onLoadingFavoriteSeriesError(e: Throwable) {
+        handleError(e) { copy(favoritesSectionState = LibraryScreenState.SectionStatus.ERROR) }
+    }
 
     private fun loadHistoryMovies() {
         updateState { it.copy(historySectionState = LibraryScreenState.SectionStatus.LOADING) }
         tryToCall(
             block = { accountUseCase.getHistoryMovies(1) },
             onSuccess = ::onLoadingHistoryMoviesSuccess,
-            onError = { throwable ->
-                handleError(throwable) { copy(historySectionState = LibraryScreenState.SectionStatus.ERROR) }
-            }
+            onError = ::onLoadingHistoryMoviesError
         )
     }
 
     private fun onLoadingHistoryMoviesSuccess(movies: List<Movie>) {
         updateState {
             it.copy(
-                historyMovies = movies.map { movie -> movie.toUiState() },
+                historyMovies = movies.map(Movie::toUiState),
                 historySectionState = LibraryScreenState.SectionStatus.SUCCESS
             ).recalculateScreenStatus()
         }
     }
 
+    private fun onLoadingHistoryMoviesError(e: Throwable) {
+        handleError(e) { copy(historySectionState = LibraryScreenState.SectionStatus.ERROR) }
+    }
+
     private fun loadHistorySeries() {
-        updateState {it.copy(historySectionState = LibraryScreenState.SectionStatus.LOADING) }
+        updateState { it.copy(historySectionState = LibraryScreenState.SectionStatus.LOADING) }
         tryToCall(
             block = { accountUseCase.getHistorySeries(1) },
             onSuccess = ::onLoadingHistorySeriesSuccess,
-            onError = { throwable ->
-                handleError(throwable) { copy(historySectionState = LibraryScreenState.SectionStatus.ERROR) }
-            }
+            onError = ::onLoadingHistorySeriesError
         )
     }
 
     private fun onLoadingHistorySeriesSuccess(series: List<Series>) {
         updateState {
             it.copy(
-                historySeries = series.map { series -> series.toUiState() },
+                historySeries = series.map(Series::toUiState),
                 historySectionState = LibraryScreenState.SectionStatus.SUCCESS
             ).recalculateScreenStatus()
         }
     }
 
+    private fun onLoadingHistorySeriesError(e: Throwable) {
+        handleError(e) { copy(historySectionState = LibraryScreenState.SectionStatus.ERROR) }
+    }
 
     private fun LibraryScreenState.recalculateScreenStatus(): LibraryScreenState {
         val sectionStates = listOf(listsSectionState, favoritesSectionState, historySectionState)
         val newStatus = when {
             sectionStates.all { it == LibraryScreenState.SectionStatus.ERROR } -> LibraryScreenState.SectionStatus.ERROR
             sectionStates.any { it == LibraryScreenState.SectionStatus.LOADING } -> LibraryScreenState.SectionStatus.LOADING
-            sectionStates.any{ it == LibraryScreenState.SectionStatus.SUCCESS } -> LibraryScreenState.SectionStatus.SUCCESS
+            sectionStates.any { it == LibraryScreenState.SectionStatus.SUCCESS } -> LibraryScreenState.SectionStatus.SUCCESS
             else -> LibraryScreenState.SectionStatus.ERROR
         }
         return copy(screenStatus = newStatus)
@@ -238,20 +249,13 @@ class LibraryViewModel @Inject constructor(
                 errorStatus = handleLibraryException(throwable),
                 isRefreshing = false
             ).recalculateScreenStatus()
-
         }
-
     }
 
     private fun handleLibraryException(e: Throwable): ErrorStatus {
         return when (e) {
-
-            is MovioException ->{
-                exceptionToErrorStatus(e)
-            }
-            else -> {
-                ErrorStatus.UNKNOWN_ERROR
-            }
+            is MovioException -> exceptionToErrorStatus(e)
+            else -> ErrorStatus.UNKNOWN_ERROR
         }
     }
 }

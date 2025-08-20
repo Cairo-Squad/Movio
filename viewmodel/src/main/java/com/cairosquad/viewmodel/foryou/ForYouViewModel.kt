@@ -8,6 +8,7 @@ import com.cairosquad.domain.exception.MovioException
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
+import com.cairosquad.viewmodel.foryou.ForYouScreenState.MovieUiState
 import com.cairosquad.viewmodel.foryou.ForYouScreenState.ScreenStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -19,11 +20,59 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ForYouViewModel @Inject constructor(private val forYouPager: ForYouPager) :
-    BaseViewModel<ForYouScreenState, ForYouEffect>(ForYouScreenState()), ForYouInteractionListener {
+class ForYouViewModel @Inject constructor(
+    private val forYouPager: ForYouPager
+) : BaseViewModel<ForYouScreenState, ForYouEffect>(ForYouScreenState()), ForYouInteractionListener {
 
     init {
         getForYouMovies()
+    }
+
+    private fun getForYouMovies() {
+        tryToCall(
+            onStart = ::onFetchStart,
+            block = {
+                cacheMappedPagingData(
+                    scope = viewModelScope,
+                    fetch = { forYouPager.movies() },
+                    map = { it.toUiState() }
+                )
+            },
+            onSuccess = ::onFetchSuccess,
+            onError = ::onFetchError,
+            dispatcher = Dispatchers.IO
+        )
+    }
+
+    private fun onFetchStart() {
+        updateScreenStatus(ScreenStatus.LOADING)
+        updateErrorStatus(null)
+        updateState { it.copy(isEmpty = false) }
+    }
+
+    private fun onFetchSuccess(forYouMovies: Flow<PagingData<MovieUiState>>) {
+        updateState { it.copy(forYou = forYouMovies) }
+        updateScreenStatus(ScreenStatus.SUCCESS)
+    }
+
+    private fun onFetchError(e: Throwable) {
+        updateScreenStatus(ScreenStatus.FAILED)
+        updateErrorStatus(handleSearchException(e))
+    }
+
+    private fun <T : Any, R : Any> cacheMappedPagingData(
+        scope: CoroutineScope,
+        fetch: () -> Flow<PagingData<T>>,
+        map: (T) -> R
+    ): Flow<PagingData<R>> = fetch()
+        .map { pagingData -> pagingData.map(map) }
+        .cachedIn(scope)
+
+    private fun handleSearchException(e: Throwable): ErrorStatus {
+        return when (e) {
+            is MovioException -> exceptionToErrorStatus(e)
+            else -> ErrorStatus.UNKNOWN_ERROR
+        }
     }
 
     fun updateScreenStatus(status: ScreenStatus) {
@@ -34,59 +83,20 @@ class ForYouViewModel @Inject constructor(private val forYouPager: ForYouPager) 
         updateState { it.copy(errorStatus = errorStatus) }
     }
 
-    private fun getForYouMovies() {
-        updateScreenStatus(ScreenStatus.LOADING)
-        updateErrorStatus(null)
-        updateState { it.copy(isEmpty = false) }
-
-        tryToCall(
-            block = {
-                val forYouMovies = cacheMappedPagingData(
-                    scope = viewModelScope,
-                    fetch = { forYouPager.movies() },
-                    map = { it.toUiState() }
-                )
-                forYouMovies
-            },
-            onSuccess = { forYouMovies ->
-                updateState { it.copy(forYou = forYouMovies) }
-                updateScreenStatus(ScreenStatus.SUCCESS)
-            },
-            onError = { e ->
-                updateScreenStatus(ScreenStatus.FAILED)
-                updateErrorStatus(handleSearchException(e))
-            },
-            dispatcher = Dispatchers.IO
-        )
-    }
-    private fun <T : Any, R : Any> cacheMappedPagingData(
-        scope: CoroutineScope,
-        fetch: () -> Flow<PagingData<T>>,
-        map: (T) -> R
-    ): Flow<PagingData<R>> = fetch()
-        .map { pagingData -> pagingData.map(map) }
-        .cachedIn(scope)
-
-    fun handleSearchException(e: Throwable): ErrorStatus {
-        return when (e) {
-            is MovioException -> {
-                exceptionToErrorStatus(e)
-            }
-
-            else -> ErrorStatus.UNKNOWN_ERROR
-        }
-    }
-
     override fun onRefresh() {
         viewModelScope.launch {
             updateState { it.copy(isRefreshing = true) }
             getForYouMovies()
-            delay(500L)
+            delay(ON_REFRESH)
             updateState { it.copy(isRefreshing = false) }
         }
     }
 
     override fun onMovieClick(movieId: Long) {
         sendEffect(ForYouEffect.NavigateToMovieDetails(movieId))
+    }
+
+     companion object {
+         private const val ON_REFRESH = 500L
     }
 }

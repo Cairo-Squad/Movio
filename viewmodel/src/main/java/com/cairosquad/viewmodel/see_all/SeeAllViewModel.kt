@@ -85,12 +85,7 @@ class SeeAllViewModel @Inject constructor(
                 media
             },
             onSuccess = { media ->
-                updateState {
-                    it.copy(
-                        mediaList = media,
-                        screenStatus = SeeAllScreenState.ScreenStatus.SUCCESS
-                    )
-                }
+                updateState { it.copy(mediaList = media, screenStatus = SeeAllScreenState.ScreenStatus.SUCCESS) }
             },
             onError = ::handleError,
 
@@ -106,7 +101,6 @@ class SeeAllViewModel @Inject constructor(
                     pagingData.map { it.toUiState() }
                 }
             }
-
             MediaType.SERIES -> {
                 seriesFlowGetter().map { pagingData ->
                     pagingData.map { it.toUiState() }

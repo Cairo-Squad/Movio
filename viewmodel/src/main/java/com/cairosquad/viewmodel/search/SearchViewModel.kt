@@ -11,6 +11,9 @@ import com.cairosquad.domain.usecase.ManageSearchHistoryUseCase
 import com.cairosquad.viewmodel.base.BaseViewModel
 import com.cairosquad.viewmodel.exception.ErrorStatus
 import com.cairosquad.viewmodel.exception.exceptionToErrorStatus
+import com.cairosquad.viewmodel.search.SearchScreenState.ArtistUiState
+import com.cairosquad.viewmodel.search.SearchScreenState.MovieUiState
+import com.cairosquad.viewmodel.search.SearchScreenState.SeriesUiState
 import com.cairosquad.viewmodel.search.paging.SearchPager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -43,49 +46,20 @@ class SearchViewModel @Inject constructor(
     }
 
     fun getPersonalizedMovies() {
-
         tryToCall(
-            block = {
-                val forYou = manageMoviesUseCase.getPersonalizedMovies(1).map { it.toUiState() }
-                forYou
-            },
-            onSuccess = { forYou ->
-                updateState { it.copy(forYou = forYou) }
-            },
-            onError = { e ->
-                updateState {
-                    it.copy(
-                        screenStatus = SearchScreenState.ScreenStatus.FAILED,
-                        errorStatus = handleSearchException(e)
-                    )
-                }
-            }
+            onStart = ::onFetchStart,
+            block = { manageMoviesUseCase.getPersonalizedMovies(1).map { it.toUiState() } },
+            onSuccess = ::onPersonalizedMoviesSuccess,
+            onError = ::onFetchError
         )
     }
 
     fun getSuggestedMovies() {
         tryToCall(
-            block = {
-                val exploreMore = manageMoviesUseCase.getSuggestedMovies().map { it.toUiState() }
-                exploreMore
-            },
-            onSuccess = { exploreMore ->
-                updateState {
-                    it.copy(
-                        screenStatus = SearchScreenState.ScreenStatus.EXPLORE,
-                        exploreMore = exploreMore,
-                        errorStatus = null
-                    )
-                }
-            },
-            onError = { e ->
-                updateState {
-                    it.copy(
-                        screenStatus = SearchScreenState.ScreenStatus.FAILED,
-                        errorStatus = handleSearchException(e)
-                    )
-                }
-            }
+            onStart = ::onFetchStart,
+            block = { manageMoviesUseCase.getSuggestedMovies().map { it.toUiState() } },
+            onSuccess = ::onSuggestedMoviesSuccess,
+            onError = ::onFetchError
         )
     }
 
@@ -96,9 +70,7 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun enterSearchMode(query: String) {
-        updateState {
-            it.copy(query = query)
-        }
+        updateState { it.copy(query = query) }
     }
 
     private fun debounceSearchSuggestions(query: String) {
@@ -118,12 +90,7 @@ class SearchViewModel @Inject constructor(
 
     private fun updateSuggestions(suggestions: Pair<List<String>, List<String>>) {
         val (recent, recommendations) = suggestions
-        updateState {
-            it.copy(
-                recentSearch = recent,
-                searchRecommendation = recommendations
-            )
-        }
+        updateState { it.copy(recentSearch = recent, searchRecommendation = recommendations) }
     }
 
     override fun onCancelSearch() {
@@ -145,33 +112,30 @@ class SearchViewModel @Inject constructor(
         setLoading()
 
         tryToCall(
+            onStart = ::onFetchStart,
             block = {
                 val movies = cacheMappedPagingData(query, searchPager::movies) { it.toUiState() }
                 val series = cacheMappedPagingData(query, searchPager::series) { it.toUiState() }
                 val artists = cacheMappedPagingData(query, searchPager::artists) { it.toUiState() }
                 Triple(movies, series, artists)
             },
-            onSuccess = { (movies, series, artists) ->
-                updateState {
-                    it.copy(
-                        screenStatus = SearchScreenState.ScreenStatus.RESULT,
-                        movies = movies,
-                        series = series,
-                        artists = artists,
-                        errorStatus = null
-                    )
-                }
-            },
-            onError = { e ->
-                updateState {
-                    it.copy(
-                        screenStatus = SearchScreenState.ScreenStatus.FAILED,
-                        errorStatus = handleSearchException(e)
-                    )
-                }
-            },
+            onSuccess = ::onSearchSuccess,
+            onError = ::onFetchError,
             dispatcher = Dispatchers.IO
         )
+    }
+
+    private fun onSearchSuccess(result: Triple<Flow<PagingData<MovieUiState>>, Flow<PagingData<SeriesUiState>>, Flow<PagingData<ArtistUiState>>>) {
+        val (movies, series, artists) = result
+        updateState {
+            it.copy(
+                screenStatus = SearchScreenState.ScreenStatus.RESULT,
+                movies = movies,
+                series = series,
+                artists = artists,
+                errorStatus = null
+            )
+        }
     }
 
     private fun <T : Any, R : Any> cacheMappedPagingData(
@@ -179,11 +143,8 @@ class SearchViewModel @Inject constructor(
         fetch: (String) -> Flow<PagingData<T>>,
         map: (T) -> R
     ): Flow<PagingData<R>> {
-        return fetch(query)
-            .map { it.map(map) }
-            .cachedIn(viewModelScope)
+        return fetch(query).map { it.map(map) }.cachedIn(viewModelScope)
     }
-
 
     override fun onRecentSearchItemClick(query: String) {
         updateState { it.copy(query = query) }
@@ -194,36 +155,16 @@ class SearchViewModel @Inject constructor(
         tryToCall(
             block = { manageSearchHistoryUseCase.clearAllHistory() },
             onSuccess = { updateState { it.copy(recentSearch = emptyList(), errorStatus = null) } },
-            onError = { e ->
-                updateState {
-                    it.copy(
-                        screenStatus = SearchScreenState.ScreenStatus.FAILED,
-                        errorStatus = handleSearchException(e)
-                    )
-                }
-            }, dispatcher = Dispatchers.IO
+            onError = ::onFetchError,
+            dispatcher = Dispatchers.IO
         )
     }
 
     override fun onRemoveHistoryItem(query: String) {
         tryToCall(
             block = { manageSearchHistoryUseCase.removeQueryFromHistory(query) },
-            onSuccess = {
-                updateState {
-                    it.copy(
-                        recentSearch = it.recentSearch.filterNot { item -> item == query },
-                        errorStatus = null
-                    )
-                }
-            },
-            onError = { e ->
-                updateState {
-                    it.copy(
-                        screenStatus = SearchScreenState.ScreenStatus.FAILED,
-                        errorStatus = handleSearchException(e)
-                    )
-                }
-            },
+            onSuccess = { updateState { it.copy(recentSearch = it.recentSearch.filterNot { item -> item == query }, errorStatus = null) } },
+            onError = ::onFetchError,
             dispatcher = Dispatchers.IO
         )
     }
@@ -236,7 +177,6 @@ class SearchViewModel @Inject constructor(
                     query = "",
                     recentSearch = emptyList()
                 )
-
                 SearchScreenState.ScreenStatus.RESULT -> it.copy(screenStatus = SearchScreenState.ScreenStatus.SEARCH)
                 else -> it
             }
@@ -255,9 +195,7 @@ class SearchViewModel @Inject constructor(
                 Pair(recent, recommendations)
             },
             onSuccess = ::updateSuggestions,
-            onError = {
-                updateState { it.copy(recentSearch = prev) }
-            }
+            onError = { updateState { it.copy(recentSearch = prev) } }
         )
         updateState { it.copy(screenStatus = SearchScreenState.ScreenStatus.SEARCH) }
     }
@@ -293,23 +231,34 @@ class SearchViewModel @Inject constructor(
 
     override fun onTabPagingError(error: Throwable) {
         val status = handleSearchException(error)
-        updateState {
-            it.copy(errorStatus = status)
-        }
+        updateState { it.copy(errorStatus = status) }
     }
 
     private fun setLoading() {
+        updateState { it.copy(screenStatus = SearchScreenState.ScreenStatus.LOADING) }
+    }
+
+    private fun onFetchStart() {
+        updateState { it.copy(screenStatus = SearchScreenState.ScreenStatus.LOADING, errorStatus = null) }
+    }
+
+    private fun onPersonalizedMoviesSuccess(forYou: List<MovieUiState>) {
+        updateState { it.copy(forYou = forYou, screenStatus = SearchScreenState.ScreenStatus.EXPLORE) }
+    }
+
+    private fun onSuggestedMoviesSuccess(exploreMore: List<MovieUiState>) {
         updateState {
-            it.copy(screenStatus = SearchScreenState.ScreenStatus.LOADING)
+            it.copy(screenStatus = SearchScreenState.ScreenStatus.EXPLORE, exploreMore = exploreMore, errorStatus = null)
         }
+    }
+
+    private fun onFetchError(e: Throwable) {
+        updateState { it.copy(screenStatus = SearchScreenState.ScreenStatus.FAILED, errorStatus = handleSearchException(e)) }
     }
 
     private fun handleSearchException(e: Throwable): ErrorStatus {
         return when (e) {
-            is MovioException -> {
-                exceptionToErrorStatus(e)
-            }
-
+            is MovioException -> exceptionToErrorStatus(e)
             else -> ErrorStatus.UNKNOWN_ERROR
         }
     }
