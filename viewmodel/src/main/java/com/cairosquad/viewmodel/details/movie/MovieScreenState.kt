@@ -41,8 +41,8 @@ data class MovieScreenState(
         val posterPath: String = "",
         val genres: List<String> = emptyList(),
         val overview: String = "",
-        val releaseDate: String = "0",
-        val runtimeMinutes: String = "",
+        val releaseDate: String? = null,
+        val runtimeMinutes: String? = "",
         val trailerPath: String = ""
     )
 

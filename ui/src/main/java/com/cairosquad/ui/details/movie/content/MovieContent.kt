@@ -88,7 +88,7 @@ fun MovieContent(
                     userScrollEnabled = false
                 ) {
                     MovieImageSection(state)
-                    MovieBasicDetails(state, listener)
+                    movieBasicDetails(state, listener)
                     MovieDescriptionSection(state)
                     CastSection(state, listener)
                     ReviewsSection(state, listener)

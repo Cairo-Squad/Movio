@@ -15,6 +15,7 @@ import com.cairosquad.design_system.R
 import com.cairosquad.design_system.basic_component.InfoChip
 import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.ActionBar
+import com.cairosquad.viewmodel.util.toLocalString
 import java.util.Locale
 
 @Composable
@@ -22,7 +23,7 @@ fun BasicDetails(
     title: String,
     genres: List<String>,
     rating: Float,
-    releaseDate: String,
+    releaseDate: String?,
     seasonsCount: Int? = null,
     runtimeMinutes: String? = null,
     onRateClicked: () -> Unit,
@@ -64,7 +65,7 @@ fun BasicDetails(
                 InfoChip(
                     text = stringResource(
                         R.string.seasons_count,
-                        seasonsCount
+                        seasonsCount.toLocalString()
                     ),
                     imgRes = R.drawable.ic_media
                 )
@@ -75,10 +76,12 @@ fun BasicDetails(
                     imgRes = R.drawable.time,
                 )
             }
-            InfoChip(
-                text = releaseDate,
-                imgRes = R.drawable.date,
-            )
+            if (releaseDate != null) {
+                InfoChip(
+                    text = releaseDate,
+                    imgRes = R.drawable.date,
+                )
+            }
         }
         ActionBar(
             onRateClicked = onRateClicked,

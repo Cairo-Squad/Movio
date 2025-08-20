@@ -58,7 +58,7 @@
     <string name="thank_you_for_your_rating">شكرًا لتقييمك!</string>
     <string name="add_your_overall_rating_for_this">أعطنا تقييمك لهذا الـ%1$s</string>
     <string name="share_via">شارك عبر</string>
-    <string name="season">الموسم %1$d</string>
+    <string name="season">الموسم %1$s</string>
     <string name="favorite">المفضلة</string>
     <string name="this_list_has_empty">هذه القائمة فارغة</string>
     <string name="library">المكتبه</string>

@@ -19,8 +19,9 @@ import com.cairosquad.design_system.theme.Theme
 import com.cairosquad.ui.movio_component.LoadingMovieImage
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsInteractionListener
 import com.cairosquad.viewmodel.details.episodes.EpisodesDetailsScreenState
+import com.cairosquad.viewmodel.util.toLocalString
 
-fun LazyListScope.SeasonDetails(
+fun LazyListScope.seasonDetails(
     state: EpisodesDetailsScreenState,
     seasonOptions: List<String>,
     listener: EpisodesDetailsInteractionListener,
@@ -60,7 +61,7 @@ fun LazyListScope.SeasonDetails(
                         modifier = Modifier.padding(bottom = 8.dp),
                         text = stringResource(
                             com.cairosquad.ui.R.string.episodes,
-                            state.season.episodesCount
+                            state.season.episodesCount.toLocalString()
                         ),
                         style = Theme.textStyle.headline.mediumMedium18.copy(
                             color = Theme.color.surfaces.onSurface
@@ -70,7 +71,7 @@ fun LazyListScope.SeasonDetails(
                     AppDropDownMenu(
                         selectedText = stringResource(
                             R.string.season,
-                            state.selectedSeasonNumber
+                            state.selectedSeasonNumber.toLocalString()
                         ),
                         options = seasonOptions,
                         imgRes = R.drawable.drop_down_arrow,

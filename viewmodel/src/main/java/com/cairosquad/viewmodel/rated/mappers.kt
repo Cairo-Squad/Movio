@@ -4,6 +4,7 @@ import androidx.paging.PagingData
 import androidx.paging.filter
 import com.cairosquad.entity.Movie
 import com.cairosquad.entity.Series
+import com.cairosquad.viewmodel.util.localizeNumbers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -12,7 +13,7 @@ import kotlinx.coroutines.flow.map
  */
 fun Movie.toUiState(userRating: Double): MyRatingsScreenState.RatedItemUiState = MyRatingsScreenState.RatedItemUiState(
     id = id,
-    title = title,
+    title = title.localizeNumbers(),
     posterPath = posterPath,
     releaseDate = releaseDate.toString(),
     rating = rating.toDouble(),
@@ -25,7 +26,7 @@ fun Movie.toUiState(userRating: Double): MyRatingsScreenState.RatedItemUiState =
  */
 fun Series.toUiState(userRating: Double): MyRatingsScreenState.RatedItemUiState = MyRatingsScreenState.RatedItemUiState(
     id = id,
-    title = title,
+    title = title.localizeNumbers(),
     posterPath = posterPath,
     releaseDate = releaseDate.toString(),
     rating = rating.toDouble(),
