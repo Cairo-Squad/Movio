@@ -251,6 +251,7 @@ private fun MediaHorizontalPagerCard(
 			contentDescription = stringResource(R.string.movie_poster),
 			loadingPlaceholder = { LoadingMovieImage(Modifier.fillMaxSize()) },
 		)
+		if (isImageSafe){
 		Icon(
 			modifier = Modifier
 				.alpha(lerp(0f, 1f, isCurrentPageFloat))
@@ -261,7 +262,7 @@ private fun MediaHorizontalPagerCard(
 			imageVector = ImageVector.vectorResource(id = R.drawable.outline_play),
 			contentDescription = stringResource(R.string.play),
 			tint = Theme.color.brand.onPrimary,
-		)
+		)}
 		var bottomSectionDp by remember { mutableIntStateOf(20) }
 		val density = LocalDensity.current
 
