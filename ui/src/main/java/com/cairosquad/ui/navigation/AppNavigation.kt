@@ -66,9 +66,14 @@ fun AppNavigation(
                 SplashScreen(
                     onNavigateNext = {
                         coroutineScope.launch {
-                            val secondRoute = if (authGate.isUserLoggedIn()) AppRoute else LoginRoute
-                            val firstRoute = if (authGate.isOnboardingStateComplete()) secondRoute else OnboardingRoute
-                            navController.navigate(firstRoute) {
+                            val destination = when {
+                                authGate.isUserLoggedIn() -> AppRoute
+                                authGate.isEnteredAsGuest() -> AppRoute
+                                authGate.isOnboardingStateComplete() -> LoginRoute
+                                else -> OnboardingRoute
+                            }
+
+                            navController.navigate(destination) {
                                 popUpTo(SplashRoute) {
                                     inclusive = true
                                 }
@@ -113,7 +118,7 @@ fun AppNavigation(
             composable<AppRoute> {
                 var isUserLoggedIn by remember { mutableStateOf(false) }
 
-                LaunchedEffect(Unit) {
+                LaunchedEffect(navController.currentDestination) {
                     isUserLoggedIn = authGate.isUserLoggedIn()
                 }
 
