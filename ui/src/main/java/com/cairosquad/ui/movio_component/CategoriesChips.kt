@@ -19,7 +19,7 @@ fun CategoriesChips(
     selectedChipIndex: Int,
     onChipSelected: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+    contentPadding: PaddingValues = PaddingValues( horizontal = 16.dp),
 ) {
     LazyRow(
         modifier = modifier
