@@ -3,7 +3,6 @@ package com.cairosquad.ui.details.similar_series.content
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -23,9 +22,8 @@ fun SimilarSeriesContent(
     seriesId: Long
 ) {
     LazyVerticalGrid(
-        modifier = Modifier.padding(horizontal = 16.dp),
         columns = GridCells.Adaptive(minSize = 101.33.dp),
-        contentPadding = PaddingValues(vertical = 16.dp),
+        contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {

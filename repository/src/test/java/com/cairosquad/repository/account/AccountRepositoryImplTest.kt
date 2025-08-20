@@ -393,4 +393,111 @@ class AccountRepositoryImplTest {
 
         coVerify { localDataSource.removeAccount() }
     }
+
+    @Test
+    fun `getRatedMovies returns empty list if account id is null`() = runTest {
+        coEvery { localDataSource.getAccountId() } returns null
+
+        val result = repository.getRatedMovies(1)
+
+        assertThat(result).isEmpty()
+        coVerify(exactly = 0) { remoteDataSource.getRatedMovies(any(), any()) }
+    }
+
+    @Test
+    fun `getRatedMovies returns list with ratings if account id exists`() = runTest {
+        val accountId = 123L
+        coEvery { localDataSource.getAccountId() } returns accountId
+        coEvery { remoteDataSource.getRatedMovies(accountId, 1) } returns listOf(
+            MovieRemoteDto(userRating = 7.5)
+        )
+
+        val result = repository.getRatedMovies(1)
+
+        assertThat(result).isNotEmpty()
+        assertThat(result.first().second).isEqualTo(7.5)
+    }
+
+    @Test
+    fun `getRatedSeries returns empty list if account id is null`() = runTest {
+        coEvery { localDataSource.getAccountId() } returns null
+
+        val result = repository.getRatedSeries(1)
+
+        assertThat(result).isEmpty()
+        coVerify(exactly = 0) { remoteDataSource.getRatedSeries(any(), any()) }
+    }
+
+    @Test
+    fun `getRatedSeries returns list with ratings if account id exists`() = runTest {
+        val accountId = 123L
+        coEvery { localDataSource.getAccountId() } returns accountId
+        coEvery { remoteDataSource.getRatedSeries(accountId, 1) } returns listOf(
+            SeriesRemoteDto(userRating = 8.0)
+        )
+
+        val result = repository.getRatedSeries(1)
+
+        assertThat(result).isNotEmpty()
+        assertThat(result.first().second).isEqualTo(8.0)
+    }
+
+    @Test
+    fun `removeMovieFromFavorite does nothing when account id is null`() = runTest {
+        coEvery { localDataSource.getAccountId() } returns null
+
+        repository.removeMovieFromFavorite(10L)
+
+        coVerify(exactly = 0) { remoteDataSource.removeMovieFromFavorite(any(), any()) }
+    }
+
+    @Test
+    fun `removeMovieFromFavorite calls remote data source when account id exists`() = runTest {
+        val accountId = 123L
+        val movieId = 10L
+        coEvery { localDataSource.getAccountId() } returns accountId
+        coEvery { remoteDataSource.removeMovieFromFavorite(accountId, movieId) } just Runs
+
+        repository.removeMovieFromFavorite(movieId)
+
+        coVerify { remoteDataSource.removeMovieFromFavorite(accountId, movieId) }
+    }
+
+    @Test
+    fun `removeSeriesFromFavorite does nothing when account id is null`() = runTest {
+        coEvery { localDataSource.getAccountId() } returns null
+
+        repository.removeSeriesFromFavorite(20L)
+
+        coVerify(exactly = 0) { remoteDataSource.removeSeriesFromFavorite(any(), any()) }
+    }
+
+    @Test
+    fun `removeSeriesFromFavorite calls remote data source when account id exists`() = runTest {
+        val accountId = 123L
+        val seriesId = 20L
+        coEvery { localDataSource.getAccountId() } returns accountId
+        coEvery { remoteDataSource.removeSeriesFromFavorite(accountId, seriesId) } just Runs
+
+        repository.removeSeriesFromFavorite(seriesId)
+
+        coVerify { remoteDataSource.removeSeriesFromFavorite(accountId, seriesId) }
+    }
+
+    @Test
+    fun `getSeriesOfList returns list of series`() = runTest {
+        val listId = 100L
+        coEvery { localDataSource.getAccount() } returns mockk(relaxed = true)
+        coEvery { remoteSeriesDataSource.getSeriesGenres() } returns listOf(
+            GenreDto(id = 1, name = "Drama")
+        )
+        coEvery { remoteDataSource.getSeriesOfList(listId, 1) } returns listOf(
+            SeriesRemoteDto()
+        )
+
+        val result = repository.getSeriesOfList(listId, 1)
+
+        assertThat(result).isNotEmpty()
+        coVerify { remoteDataSource.getSeriesOfList(listId, 1) }
+    }
 }
