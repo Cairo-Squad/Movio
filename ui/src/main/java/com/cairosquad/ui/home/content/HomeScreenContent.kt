@@ -64,7 +64,7 @@ fun HomeScreenContent(
 
         Crossfade(targetState = screenState.dataRequestStatus) { dataRequestStatus ->
             when (dataRequestStatus) {
-                LOADING -> HomeLoading()
+                LOADING -> HomeLoading(screenState, listener, 0f)
                 FAILED -> HomeFailContent(screenState.errorStatus, listener)
                 SUCCESS -> HomeTabs(screenState, listener, lazyListState, lazyGridState)
             }
