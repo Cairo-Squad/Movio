@@ -62,7 +62,7 @@ fun HomeScreenContent(
         onRefresh = { listener.onRefresh() }
     ) {
 
-        Crossfade(targetState = screenState.dataRequestStatus) { dataRequestStatus ->
+        Crossfade(targetState = if (screenState.isRefreshing) LOADING else screenState.dataRequestStatus) { dataRequestStatus ->
             when (dataRequestStatus) {
                 LOADING -> HomeLoading()
                 FAILED -> HomeFailContent(screenState.errorStatus, listener)
