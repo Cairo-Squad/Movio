@@ -53,11 +53,12 @@ fun MediaHorizontalPagerCard(
 ) {
 
     var isImageSafe by remember { mutableStateOf(true) }
-
+    val imageOverlayColor = Theme.color.surfaces.horizontalImageOverlay.copy(
+        (lerp(Theme.color.surfaces.horizontalImageOverlay.alpha, 0f, isCurrentPageFloat))
+    )
     Box(
         modifier
             .clip(RoundedCornerShape(8.dp))
-            .alpha(lerp(0.50f, 1f, isCurrentPageFloat))
     ) {
         SafeImageViewer(
             modifier = Modifier.fillMaxSize(),
@@ -79,7 +80,11 @@ fun MediaHorizontalPagerCard(
         )
         var bottomSectionDp by remember { mutableIntStateOf(20) }
         val density = LocalDensity.current
-
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(imageOverlayColor, RoundedCornerShape(8.dp))
+        )
         Box(
             modifier = Modifier
                 .alpha(lerp(0f, 1f, isCurrentPageFloat))
