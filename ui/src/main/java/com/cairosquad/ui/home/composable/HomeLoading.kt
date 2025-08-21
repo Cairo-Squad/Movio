@@ -74,7 +74,8 @@ fun HomeLoading(
         modifier = modifier
             .fillMaxSize()
     ) {
-        Row(Modifier.fillMaxWidth()) {
+        Row(Modifier.fillMaxWidth()
+            .padding(16.dp)) {
             Icon(
                 modifier = Modifier.size(height = 28.dp, width = 25.dp),
                 imageVector = ImageVector.vectorResource(R.drawable.logo),
